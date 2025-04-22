@@ -1,0 +1,65 @@
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore;
+
+namespace QLDV_KiemNghiem_BE.Models;
+
+[Table("PhieuNhapKhoChiTiet")]
+public partial class PhieuNhapKhoChiTiet
+{
+    [Key]
+    [Column("MaID")]
+    [StringLength(50)]
+    public string MaId { get; set; } = null!;
+
+    [StringLength(50)]
+    public string? MaPhieuNhapKho { get; set; }
+
+    [Column("MaPLHC")]
+    [StringLength(50)]
+    public string? MaPlhc { get; set; }
+
+    [Column("TenPLHC")]
+    [StringLength(200)]
+    public string? TenPlhc { get; set; }
+
+    [StringLength(500)]
+    public string? DieuKienBaoQuan { get; set; }
+
+    [StringLength(50)]
+    public string? DonViTinh { get; set; }
+
+    [Column(TypeName = "decimal(18, 2)")]
+    public decimal? SoLuong { get; set; }
+
+    [Column(TypeName = "decimal(18, 2)")]
+    public decimal? DonGia { get; set; }
+
+    [Column(TypeName = "decimal(18, 2)")]
+    public decimal? ThanhTien { get; set; }
+
+    [StringLength(500)]
+    public string? GhiChu { get; set; }
+
+    [Column(TypeName = "datetime")]
+    public DateTime? NgayTao { get; set; }
+
+    [StringLength(50)]
+    public string? NguoiTao { get; set; }
+
+    [StringLength(50)]
+    public string? NguoiSua { get; set; }
+
+    [Column(TypeName = "datetime")]
+    public DateTime? NgaySua { get; set; }
+
+    [ForeignKey("MaPhieuNhapKho")]
+    [InverseProperty("PhieuNhapKhoChiTiets")]
+    public virtual PhieuNhapKho? MaPhieuNhapKhoNavigation { get; set; }
+
+    [ForeignKey("MaPlhc")]
+    [InverseProperty("PhieuNhapKhoChiTiets")]
+    public virtual PhuLieuHoaChat? MaPlhcNavigation { get; set; }
+}

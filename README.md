@@ -1,2 +1,1 @@
-# QLDV_KiemNgiem_Tuna
-github chứa sourcode dự án quản lý kiểm nghiệm cho trung tâm kiểm nghiệm tuna
+Đây là dự án xây dựng  hệ thống quản lý dịch vụ kiểm nghiem thuốc của trung tâm kiểm nghiệm tuna
