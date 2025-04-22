@@ -15,4 +15,10 @@
     </PackageReference>
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Interfaces\Auth\" />
+    <Folder Include="Interfaces\Khoa\" />
+    <Folder Include="Interfaces\ChuVu\" />
+  </ItemGroup>
+
 </Project>
