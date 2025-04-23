@@ -3,7 +3,7 @@ export interface Mau {
   MaMau?: string;
   TenMau?: string;
   LoaiMau?: string;
-  MaPhieuDangKy?: string;
+  DuocDien?: string;
   TieuChuan?: string;
   SoLo?: string;
   DonViSanXuat?: string;
@@ -23,4 +23,28 @@ export interface Mau {
   NguoiSua?: string;
   NgayTao?: string;
   NgaySua?: string;
+}
+
+export interface Anh {
+  image?: string;
+  nameImage?: string;
+}
+
+export interface FormMau {
+  TenMau: string;
+  LoaiMau: string;
+  DuocDien: string;
+  SoLo: string;
+  DonViSanXuat: string;
+  NgaySanXuat: string;
+  Anh: Anh[];
+  HanSD: string;
+  SoLuong: number;
+  DonViTinh: string;
+  YeuCauKiemNghiem: string;
+  DieuKienBaoQuan: string;
+  LuuMau?: number;
+  XuatKetQua?: number;
+  TinhTrangMau: string;
+  GhiChu?: string;
 }

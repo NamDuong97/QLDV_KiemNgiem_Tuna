@@ -25,7 +25,7 @@ interface TableProps {
   isCheckboxAll?: boolean;
 }
 
-const Tables = (props: TableProps) => {
+const TablePLHC = (props: TableProps) => {
   const { tableBody, tableHead, isCheckboxAll, setIsCheckboxAll } = props;
 
   const handleCheckboxAll = () => setIsCheckboxAll();
@@ -95,7 +95,7 @@ const Tables = (props: TableProps) => {
               </TableCell>
               <TableCell align="center">
                 <Box className="flex gap-2 items-center justify-center">
-                  <p className="text-base/4 font-medium">{item.TieuChuan}</p>
+                  <p className="text-base/4 font-medium">{item.DuocDien}</p>
                 </Box>
               </TableCell>
               <TableCell align="center">
@@ -116,4 +116,4 @@ const Tables = (props: TableProps) => {
   );
 };
 
-export default Tables;
+export default TablePLHC;

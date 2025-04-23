@@ -25,6 +25,18 @@ const dataLoaiMau = [
   },
 ];
 
+const dataDuocDien = [
+  {
+    name: "Việt Nam 5",
+  },
+  {
+    name: "Trung Quốc",
+  },
+  {
+    name: "Châu Âu",
+  },
+];
+
 const tableHead = [
   {
     id: "TenPhuLieu_HC",
@@ -212,15 +224,10 @@ const EditMau = (props: EditMauProps) => {
                       </Box>
                       <Box className="col-span-12 2xl:col-span-4 grid grid-cols-1">
                         <Box className="col-span-12 2xl:col-span-6">
-                          <Inputs
-                            title="Tiêu Chuẩn"
-                            placeholder="Nhập Tiêu Chuẩn"
-                            className="h-[42px]"
-                            sx={{
-                              input: {
-                                padding: "9.5px 14px",
-                              },
-                            }}
+                          <SelectComponent
+                            title="Dược Điển"
+                            data={dataDuocDien}
+                            dataDefault="Vui lòng chọn Dược Điển"
                           />
                         </Box>
                         <Box className="col-span-12 2xl:col-span-6">
@@ -388,7 +395,7 @@ const EditMau = (props: EditMauProps) => {
                   >
                     <button
                       className="bg-gray-500 px-6 py-2 rounded cursor-pointer hover:bg-gray-400 shadow-[3px_3px_2px_rgba(0,0,0,0.4)]"
-                        onClick={handleClickOpenPopupSignUpPKHC}
+                      onClick={handleClickOpenPopupSignUpPKHC}
                     >
                       <span className="text-lg/6 font-bold text-white">
                         Thêm thông tin phụ kiện hóa chất

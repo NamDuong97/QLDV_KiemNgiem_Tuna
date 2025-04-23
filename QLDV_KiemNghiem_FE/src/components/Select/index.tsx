@@ -6,7 +6,7 @@ import {
   SelectChangeEvent,
   Typography,
 } from "@mui/material";
-import { useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 
 interface Props {
   data?: any;
@@ -14,15 +14,14 @@ interface Props {
   errors?: any;
   title?: string;
   height?: string;
+  handleChange: (event: SelectChangeEvent) => void;
+  select?: string;
 }
 
 const SelectComponent = (props: Props) => {
-  const { data, errors, title, height, dataDefault } = props;
+  const { data, errors, title, height, dataDefault, handleChange, select } =
+    props;
 
-  const [selectGender, setSelectGender] = useState("");
-  const handleChangeGender = (event: SelectChangeEvent) => {
-    setSelectGender(event.target.value);
-  };
   return (
     <Box className={`w-full ${height ? height : "h-[106px]"}`}>
       {title && (
@@ -31,13 +30,15 @@ const SelectComponent = (props: Props) => {
       <Box>
         <FormControl sx={{ width: "100%" }}>
           <Select
-            value={selectGender}
-            onChange={handleChangeGender}
+            value={select}
+            onChange={handleChange}
             displayEmpty
             inputProps={{ "aria-label": "Without label" }}
             className="h-[42px] mb-2"
           >
-            <MenuItem value="">{dataDefault}</MenuItem>
+            <MenuItem disabled value="">
+              {dataDefault}
+            </MenuItem>
             {data.map((item: any, index: any) => (
               <MenuItem key={index} value={item.name}>
                 {item.name}

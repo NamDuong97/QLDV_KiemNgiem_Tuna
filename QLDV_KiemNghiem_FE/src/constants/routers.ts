@@ -59,7 +59,7 @@ export const APP_ROUTES = {
       title: "Thêm Mẫu",
     },
     Edit_MAU: {
-      to: "/dang-ky-dich-vu-kiem-nghiem/cap-nhat-thong-tin-mau",
+      to: "/dang-ky-dich-vu-kiem-nghiem/cap-nhat-thong-tin-mau/:id",
       title: "Sửa Mẫu",
     },
   },

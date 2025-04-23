@@ -13,11 +13,10 @@ import SquareIcon from "@mui/icons-material/Square";
 import IndeterminateCheckBoxIcon from "@mui/icons-material/IndeterminateCheckBox";
 import { Align, TableHeader } from "../../../../models/Table";
 import { Mau } from "../../../../models/mau";
-import PopupSignUpPKHC from "../PopupEditPK-HC";
-import PopupEditPKHC from "../PopupEditPK-HC";
+import PopupSignUpPKHC from "../PopupSignUpPK-HC";
+import PopupEditPKHC from "../PopupSignUpPK-HC";
 import { useState } from "react";
 import classes from "./styles.module.scss";
-
 
 interface TableProps {
   tableBody: Mau[];
@@ -103,7 +102,7 @@ const Tables = (props: TableProps) => {
               </TableCell>
               <TableCell align="center">
                 <Box className="flex gap-2 items-center justify-center">
-                  <p className="text-base/4 font-medium">{item.DuocDien}</p>
+                  <p className="text-base/4 font-medium">{item.TieuChuan}</p>
                 </Box>
               </TableCell>
               <TableCell align="center">

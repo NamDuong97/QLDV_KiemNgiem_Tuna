@@ -1,19 +1,19 @@
-import { Box, Typography } from "@mui/material";
+import { Box, SelectChangeEvent } from "@mui/material";
 import { AnimatePresence, motion } from "motion/react";
-import { useCallback, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Inputs } from "../../../components/Inputs";
 import { Align } from "../../../models/Table";
 import { useNavigate } from "react-router";
 import { APP_ROUTES } from "../../../constants/routers";
-import { FaVideo } from "react-icons/fa";
 import { Textarea } from "../../../components/Textarea";
 import SelectComponent from "../../../components/Select";
-import { useDropzone } from "react-dropzone";
-import ReactPlayer from "react-player";
 import PopupSignUpPKHC from "./PopupSignUpPK-HC";
 import Tables from "./Table";
-
-interface CreateMauProps {}
+import PopupListImage from "./PopupListImage";
+import yup from "../../../configs/yup.custom";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { useForm } from "react-hook-form";
+import { FormMau } from "../../../models/mau";
 
 const dataLoaiMau = [
   {
@@ -24,6 +24,18 @@ const dataLoaiMau = [
   },
   {
     name: "Gấp 3 (G3)",
+  },
+];
+
+const dataDuocDien = [
+  {
+    name: "Việt Nam 5",
+  },
+  {
+    name: "Trung Quốc",
+  },
+  {
+    name: "Châu Âu",
   },
 ];
 
@@ -64,64 +76,122 @@ const tableBody = [
   {
     TenMau: "A",
     LoaiMau: "Gap 1",
-    TieuChuan: "Dược Điển VN5",
+    DuocDien: "Dược Điển VN5",
     SoLo: "SKGJHF",
     KhoiLuong: "25(kg)",
   },
   {
     TenMau: "A",
     LoaiMau: "Gap 1",
-    TieuChuan: "Dược Điển VN5",
+    DuocDien: "Dược Điển VN5",
     SoLo: "SKGJHF",
     KhoiLuong: "25(kg)",
   },
   {
     TenMau: "A",
     LoaiMau: "Gap 1",
-    TieuChuan: "Dược Điển VN5",
+    DuocDien: "Dược Điển VN5",
     SoLo: "SKGJHF",
     KhoiLuong: "25(kg)",
   },
   {
     TenMau: "A",
     LoaiMau: "Gap 1",
-    TieuChuan: "Dược Điển VN5",
+    DuocDien: "Dược Điển VN5",
     SoLo: "SKGJHF",
     KhoiLuong: "25(kg)",
   },
 ];
 
-const CreateMau = (props: CreateMauProps) => {
+const CreateMau = () => {
   const [isTag2, setIsTag2] = useState(false);
   const [isCheckboxAll, setIsCheckboxAll] = useState(false);
   const naginate = useNavigate();
   const [openPopupSignUpPKHC, setOpenPopupSignUpPKHC] = useState(false);
-  const [dataVideo, setDataVideo] = useState<string | undefined>(undefined);
+  const [openPopupListImage, setOpenPopupListImage] = useState(false);
 
-  const onDrop = useCallback((acceptedFiles: any) => {
-    acceptedFiles.forEach((file: any) => {
-      const reader = new FileReader();
-      reader.onabort = () => console.log("file reading was aborted");
-      reader.onerror = () => console.log("file reading has failed");
-      reader.onload = () => {
-        const videoUrl = reader.result as string;
-        setDataVideo(videoUrl);
-      };
-      reader.readAsDataURL(file);
-    });
-  }, []);
+  const [selectDuocDien, setSelectDuocDien] = useState("");
+  const handleChangeDuocDien = (event: SelectChangeEvent) => {
+    const value: string = event.target.value;
+    setSelectDuocDien(value);
+  };
 
-  const { acceptedFiles, getRootProps, getInputProps } = useDropzone({
-    onDrop,
-  });
+  const [selectLoaiMau, setSelectLoaiMau] = useState("");
+  const handleChangeLoaiMau = (event: SelectChangeEvent) => {
+    const value: string = event.target.value;
+    setSelectLoaiMau(value);
+  };
 
   const handleClickOpenPopupSignUpPKHC = () => {
     setOpenPopupSignUpPKHC(true);
   };
 
+  const handleClickOpenPopupListImage = () => {
+    setOpenPopupListImage(true);
+  };
+
   const handleClosePopupSignUpPKHC = () => {
     setOpenPopupSignUpPKHC(false);
   };
+
+  const handleClosePopupListImage = () => {
+    setOpenPopupListImage(false);
+  };
+
+  let schema = useMemo(() => {
+    return yup.object().shape({
+      TenMau: yup.string().required("Vui lòng nhập tên mẫu"),
+      LoaiMau: yup.string().required("Vui lòng chọn loại mẫu"),
+      DuocDien: yup.string().required("Vui lòng chọn dược điển"),
+      SoLo: yup.string().required("Vui lòng nhập số lô"),
+      DonViSanXuat: yup.string().required("Vui lòng nhập đơn vị sản xuất"),
+      NgaySanXuat: yup.string().required("Vui lòng chọn ngày sản xuất"),
+      Anh: yup.array().required("Yêu cầu upload Ảnh"),
+      HanSD: yup.string().required("Vui lòng chọn hạn sử dụng"),
+      SoLuong: yup.number().required("Vui lòng nhập số lượng"),
+      DonViTinh: yup.string().required("Vui lòng nhập đơn vị tính"),
+      YeuCauKiemNghiem: yup
+        .string()
+        .required("Vui lòng nhập yêu cầu kiểm nghiệm"),
+      DieuKienBaoQuan: yup
+        .string()
+        .required("Vui lòng chọn điều kiện bảo quản"),
+      LuuMau: yup.number().oneOf([0, 1], "Chọn lưu mẫu hoặc không"),
+      XuatKetQua: yup.number().oneOf([0, 1], "Chọn xuất kết quả hoặc không"),
+      TinhTrangMau: yup.string().required("Vui lòng nhập tình trạng mẫu"),
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm<FormMau>({
+    resolver: yupResolver(schema),
+    mode: "onChange",
+  });
+
+  useEffect(() => {
+    reset({
+      TenMau: "",
+      LoaiMau: "",
+      DuocDien: "",
+      SoLo: "",
+      DonViSanXuat: "",
+      NgaySanXuat: "",
+      Anh: [],
+      HanSD: "",
+      SoLuong: 0,
+      DonViTinh: "",
+      YeuCauKiemNghiem: "",
+      DieuKienBaoQuan: "",
+      LuuMau: 0,
+      XuatKetQua: 0,
+      TinhTrangMau: "",
+    });
+  }, []);
 
   return (
     <AnimatePresence mode="wait">
@@ -198,227 +268,181 @@ const CreateMau = (props: CreateMauProps) => {
                   exit={{ x: 10, opacity: 0 }}
                   transition={{ duration: 0.5 }}
                 >
-                  <Box className="px-12 py-7 grid grid-cols-1 gap-1">
-                    <Box className="col-span-1 grid grid-cols-12 gap-1 2xl:gap-16">
-                      <Box className="col-span-12 2xl:col-span-4 h-52 sm:h-[265px] 2xl:h-52">
-                        <Box className="flex gap-2">
-                          <p className="text-xl/2 font-bold mt-2 pb-4">Video</p>
-                          {dataVideo && acceptedFiles[0]?.size < 5000000 && (
-                            <button
-                              {...getRootProps()}
-                              className="flex items-start border border-solid border-gray-300 px-2 h-6 cursor-pointer rounded-sm hover:border-none hover:bg-blue-500 hover:text-white"
-                            >
-                              Upload Video
-                            </button>
-                          )}
-                        </Box>
-                        <input {...getInputProps()} />
-                        {dataVideo && acceptedFiles[0]?.size < 5000000 ? (
-                          <Box className="rounded-lg h-[150px] sm:h-52 2xl:h-[150px]">
-                            <ReactPlayer
-                              url={dataVideo}
-                              width="100%"
-                              height="100%"
-                              controls={true}
-                              style={{
-                                borderRadius: 8,
-                              }}
-                              className="bg-amber-300"
-                            />
-                          </Box>
-                        ) : (
-                          <button
-                            className="bg-[#D1D5DC] rounded-lg w-full sm:h-52 2xl:h-auto flex justify-center items-center py-11 cursor-pointer"
-                            {...getRootProps()}
-                          >
-                            <FaVideo className="w-[60px] h-[60px] text-gray-500" />
-                          </button>
-                        )}
-                        {acceptedFiles[0]?.size >= 5000000 && (
-                          <Typography className="text-[#af1c10] font-medium text-xs/[140%] pt-2">
-                            Kích thước file phải dưới 5Mb
-                          </Typography>
-                        )}
-                      </Box>
-                      <Box className="col-span-12 2xl:col-span-4 grid grid-cols-1">
-                        <Box className="col-span-12 2xl:col-span-6">
-                          <Inputs
-                            title="Tên Mẫu"
-                            placeholder="Nhập Tên Mẫu"
-                            className="h-[42px]"
-                            sx={{
-                              input: {
-                                padding: "9.5px 14px",
-                              },
-                            }}
-                          />
-                        </Box>
-                        <Box className="col-span-12 2xl:col-span-6">
-                          <SelectComponent
-                            title="Loại Mẫu"
-                            data={dataLoaiMau}
-                            dataDefault="Vui lòng chọn Loại Mẫu"
-                          />
-                        </Box>
-                      </Box>
-                      <Box className="col-span-12 2xl:col-span-4 grid grid-cols-1">
-                        <Box className="col-span-12 2xl:col-span-6">
-                          <Inputs
-                            title="Tiêu Chuẩn"
-                            placeholder="Nhập Tiêu Chuẩn"
-                            className="h-[42px]"
-                            sx={{
-                              input: {
-                                padding: "9.5px 14px",
-                              },
-                            }}
-                          />
-                        </Box>
-                        <Box className="col-span-12 2xl:col-span-6">
-                          <Inputs
-                            title="Số Lô"
-                            placeholder="Nhập Số Lô"
-                            className="h-[42px]"
-                            sx={{
-                              input: {
-                                padding: "9.5px 14px",
-                              },
-                            }}
-                          />
-                        </Box>
-                      </Box>
-                    </Box>
-                    <Box className="col-span-1 grid grid-cols-12 gap-1 2xl:gap-16">
-                      <Box className="col-span-12 2xl:col-span-4 grid grid-cols-1">
-                        <Box className="col-span-12 2xl:col-span-6">
-                          <Inputs
-                            title="Đơn Vị Sản Xuất"
-                            placeholder="Nhập Đơn Vị Sản Xuất"
-                            className="h-[42px]"
-                            sx={{
-                              input: {
-                                padding: "9.5px 14px",
-                              },
-                            }}
-                          />
-                        </Box>
-                        <Box className="col-span-12 2xl:col-span-6">
-                          <Inputs
-                            title="Ngày Sản Xuất"
-                            type="date"
-                            className="h-[42px]"
-                            sx={{
-                              input: {
-                                padding: "9.5px 14px",
-                              },
-                            }}
-                          />
-                        </Box>
-                      </Box>
-                      <Box className="col-span-12 2xl:col-span-4 grid grid-cols-1">
-                        <Box className="col-span-12 2xl:col-span-6">
-                          <Inputs
-                            title="Hạn Sử Dụng"
-                            type="date"
-                            className="h-[42px]"
-                            sx={{
-                              input: {
-                                padding: "9.5px 14px",
-                              },
-                            }}
-                          />
-                        </Box>
-                        <Box className="col-span-12 2xl:col-span-6">
-                          <Inputs
-                            title="Khối Lượng"
-                            placeholder="Nhập Khối Lượng"
-                            className="h-[42px]"
-                            sx={{
-                              input: {
-                                padding: "9.5px 14px",
-                              },
-                            }}
-                          />
-                        </Box>
-                      </Box>
-                      <Box className="col-span-12 2xl:col-span-4 grid grid-cols-1">
-                        <Box className="col-span-12 2xl:col-span-6">
-                          <Inputs
-                            title="Đơn Vị Tính"
-                            placeholder="Nhập Đơn Vị Tính"
-                            className="h-[42px]"
-                            sx={{
-                              input: {
-                                padding: "9.5px 14px",
-                              },
-                            }}
-                          />
-                        </Box>
-                        <Box className="col-span-12 2xl:col-span-6">
-                          <Inputs
-                            title="Tình Trạng Mãu"
-                            placeholder="Nhập Tình Trạng Mãu"
-                            className="h-[42px]"
-                            sx={{
-                              input: {
-                                padding: "9.5px 14px",
-                              },
-                            }}
-                          />
-                        </Box>
-                      </Box>
-                    </Box>
-                    <Box className="col-span-1 grid grid-cols-12 gap-6 2xl:gap-[24px_64px]">
-                      <Box className="col-span-12 2xl:col-span-6">
-                        <p className="!font-semibold text-base/6 text-gray_80 mb-2">
-                          Lưu Mẫu
+                  <Box className="px-12 py-7 grid grid-cols-12 gap-[1px_24px]">
+                    <Box className="col-span-12 2xl:col-span-4">
+                      <Box className="grid gap-2">
+                        <p className="!font-semibold text-base/6 text-gray_80">
+                          Ảnh
                         </p>
-                        <Box className="gap-2 flex items-center border border-solid border-gray-300 rounded py-[10px] px-4 w-full">
-                          <input type="checkbox" className="w-5 h-5" />
-                          <span className="text-base/6 font-medium">
-                            (Nếu có vui lòng tích chọn)
-                          </span>
-                        </Box>
-                      </Box>
-                      <Box className="col-span-12 2xl:col-span-6 gap-2">
-                        <p className="!font-semibold text-base/6 text-gray_80 mb-2">
-                          Xuất Kết Quả
-                        </p>
-                        <Box className="gap-2 flex items-center border border-solid border-gray-300 rounded py-[10px] px-4 w-full h-[42px]">
-                          <input type="checkbox" className="w-5 h-5" />
-                          <span className="text-base/6 font-medium">
-                            (Nếu có vui lòng tích chọn)
-                          </span>
-                        </Box>
-                      </Box>
-                      <Box className="col-span-12 2xl:col-span-12">
-                        <Inputs
-                          title="Điều Kiện Bảo Quản"
-                          placeholder="Điều Kiện Bảo Quản"
-                          className="h-[42px]"
-                          sx={{
-                            input: {
-                              padding: "9.5px 14px",
-                            },
-                          }}
-                        />
+                        <button
+                          className="bg-blue-500 text-white px-6 py-2 rounded cursor-pointer hover:bg-blue-600 shadow-[3px_3px_2px_rgba(0,0,0,0.4)]"
+                          onClick={handleClickOpenPopupListImage}
+                        >
+                          Danh Sách Ảnh
+                        </button>
                       </Box>
                     </Box>
-                    <Box className="col-span-1 grid grid-cols-12 gap-6 2xl:gap-16 mt-6 2xl:mt-0">
-                      <Box className="col-span-12 2xl:col-span-6 grid grid-cols-1">
-                        <Textarea
-                          title="Ghi Chú"
-                          className="max-h-[149px] min-h-[149px]"
-                          height="h-auto"
-                        />
+                    <Box className="col-span-12 2xl:col-span-4">
+                      <Inputs
+                        title="Tên Mẫu"
+                        placeholder="Nhập Tên Mẫu"
+                        className="h-[42px]"
+                        sx={{
+                          input: {
+                            padding: "9.5px 14px",
+                          },
+                        }}
+                      />
+                    </Box>
+                    <Box className="col-span-12 2xl:col-span-4">
+                      <SelectComponent
+                        title="Loại Mẫu"
+                        data={dataLoaiMau}
+                        dataDefault="Vui lòng chọn Loại Mẫu"
+                        select={selectLoaiMau}
+                        handleChange={handleChangeLoaiMau}
+                      />
+                    </Box>
+                    <Box className="col-span-12 2xl:col-span-4">
+                      <SelectComponent
+                        title="Dược Điển"
+                        data={dataDuocDien}
+                        dataDefault="Vui lòng chọn Dược Điển"
+                        select={selectDuocDien}
+                        handleChange={handleChangeDuocDien}
+                      />
+                    </Box>
+                    <Box className="col-span-12 2xl:col-span-4">
+                      <Inputs
+                        title="Số Lô"
+                        placeholder="Nhập Số Lô"
+                        className="h-[42px]"
+                        sx={{
+                          input: {
+                            padding: "9.5px 14px",
+                          },
+                        }}
+                      />
+                    </Box>
+                    <Box className="col-span-12 2xl:col-span-4">
+                      <Inputs
+                        title="Ngày Sản Xuất"
+                        type="date"
+                        className="h-[42px]"
+                        sx={{
+                          input: {
+                            padding: "9.5px 14px",
+                          },
+                        }}
+                      />
+                    </Box>
+                    <Box className="col-span-12 2xl:col-span-6">
+                      <Inputs
+                        title="Hạn Sử Dụng"
+                        type="date"
+                        className="h-[42px]"
+                        sx={{
+                          input: {
+                            padding: "9.5px 14px",
+                          },
+                        }}
+                      />
+                    </Box>
+                    <Box className="col-span-12 2xl:col-span-6">
+                      <Inputs
+                        title="Số Lượng"
+                        placeholder="Nhập Số Lượng"
+                        className="h-[42px]"
+                        sx={{
+                          input: {
+                            padding: "9.5px 14px",
+                          },
+                        }}
+                      />
+                    </Box>
+                    <Box className="col-span-12 2xl:col-span-6">
+                      <Inputs
+                        title="Đơn Vị Tính"
+                        placeholder="Nhập Đơn Vị Tính"
+                        className="h-[42px]"
+                        sx={{
+                          input: {
+                            padding: "9.5px 14px",
+                          },
+                        }}
+                      />
+                    </Box>
+                    <Box className="col-span-12 2xl:col-span-6">
+                      <Inputs
+                        title="Tình Trạng Mãu"
+                        placeholder="Nhập Tình Trạng Mãu"
+                        className="h-[42px]"
+                        sx={{
+                          input: {
+                            padding: "9.5px 14px",
+                          },
+                        }}
+                      />
+                    </Box>
+                    <Box className="col-span-12 2xl:col-span-6">
+                      <p className="!font-semibold text-base/6 text-gray_80 mb-2">
+                        Lưu Mẫu
+                      </p>
+                      <Box className="gap-2 flex items-center border border-solid border-gray-300 rounded py-[10px] px-4 w-full">
+                        <input type="checkbox" className="w-5 h-5" />
+                        <span className="text-base/6 font-medium">
+                          (Nếu có vui lòng tích chọn)
+                        </span>
                       </Box>
-                      <Box className="col-span-12 2xl:col-span-6 grid grid-cols-1">
-                        <Textarea
-                          title="Yêu Cầu Kiểm Nghiệm"
-                          className="max-h-[149px] min-h-[149px]"
-                          height="h-auto"
-                        />
+                    </Box>
+                    <Box className="col-span-12 2xl:col-span-6 gap-2">
+                      <p className="!font-semibold text-base/6 text-gray_80 mb-2">
+                        Xuất Kết Quả
+                      </p>
+                      <Box className="gap-2 flex items-center border border-solid border-gray-300 rounded py-[10px] px-4 w-full h-[42px]">
+                        <input type="checkbox" className="w-5 h-5" />
+                        <span className="text-base/6 font-medium">
+                          (Nếu có vui lòng tích chọn)
+                        </span>
                       </Box>
+                    </Box>
+                    <Box className="col-span-12 2xl:col-span-6">
+                      <Inputs
+                        title="Điều Kiện Bảo Quản"
+                        placeholder="Điều Kiện Bảo Quản"
+                        className="h-[42px]"
+                        sx={{
+                          input: {
+                            padding: "9.5px 14px",
+                          },
+                        }}
+                      />
+                    </Box>
+                    <Box className="col-span-12 2xl:col-span-6">
+                      <Inputs
+                        title="Đơn Vị Sản Xuất"
+                        placeholder="Nhập Đơn Vị Sản Xuất"
+                        className="h-[42px]"
+                        sx={{
+                          input: {
+                            padding: "9.5px 14px",
+                          },
+                        }}
+                      />
+                    </Box>
+                    <Box className="col-span-12 2xl:col-span-6 grid grid-cols-1">
+                      <Textarea
+                        title="Ghi Chú"
+                        className="max-h-[149px] min-h-[149px]"
+                        height="h-auto"
+                      />
+                    </Box>
+                    <Box className="col-span-12 2xl:col-span-6 grid grid-cols-1">
+                      <Textarea
+                        title="Yêu Cầu Kiểm Nghiệm"
+                        className="max-h-[149px] min-h-[149px]"
+                        height="h-auto"
+                      />
                     </Box>
                   </Box>
                 </motion.div>
@@ -546,6 +570,10 @@ const CreateMau = (props: CreateMauProps) => {
       <PopupSignUpPKHC
         openPopupSignUpPKHC={openPopupSignUpPKHC}
         handleClosePopupSignUpPKHC={handleClosePopupSignUpPKHC}
+      />
+      <PopupListImage
+        open={openPopupListImage}
+        handleClose={handleClosePopupListImage}
       />
     </AnimatePresence>
   );

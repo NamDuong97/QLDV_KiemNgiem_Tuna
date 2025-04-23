@@ -29,11 +29,21 @@ const PopupNofitication = (props: Props) => {
 
   const navigate = useNavigate();
 
+  const handleRedirectSignUpDVKN = () => {
+    navigate(APP_ROUTES.TUNA_CUSTOMER.FORM_SIGN_UP_DVKN.to);
+    window.location.reload();
+  };
+
+  const handleCloseNofitication = () => {
+    handleClosePopupNofitication;
+    window.location.reload();
+  };
+
   return (
     <Dialog
       open={openPopupNofitication}
       maxWidth="lg"
-      onClose={handleClosePopupNofitication}
+      onClose={handleCloseNofitication}
       aria-labelledby="alert-dialog-title"
       aria-describedby="alert-dialog-description"
     >
@@ -41,7 +51,7 @@ const PopupNofitication = (props: Props) => {
         <Box className="absolute top-2 right-5">
           <button
             className="bg-gray-400 rounded-full p-[6px] hover:bg-gray-500 cursor-pointer"
-            onClick={handleClosePopupNofitication}
+            onClick={handleCloseNofitication}
           >
             <IoMdClose className="w-6 h-6 text-gray-300" />
           </button>
@@ -75,9 +85,7 @@ const PopupNofitication = (props: Props) => {
                 </button>
                 <button
                   className="font-bold text-center w-full sm:w-[154px] bg-blue-500 py-2 text-white rounded-md hover:bg-blue-400 cursor-pointer"
-                  onClick={() =>
-                    navigate(APP_ROUTES.TUNA_CUSTOMER.FORM_SIGN_UP_DVKN.to)
-                  }
+                  onClick={handleRedirectSignUpDVKN}
                 >
                   Đăng Ký Phiếu Mới
                 </button>
