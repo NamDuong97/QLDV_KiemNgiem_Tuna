@@ -35,13 +35,24 @@ const Tables = (props: TableProps) => {
 
   const handleCheckboxAll = (e: any) => {
     const { name, checked } = e.target;
-    let tempCheckbox = listCheckBox.map((item: any) =>
-      item.image === name ? { ...item, isChecked: checked } : item
-    );
-    setListCheckBox(tempCheckbox);
+    if (name === "allCheckbox") {
+      let tempCheckbox = listCheckBox.map((item: any) => {
+        return { ...item, isChecked: checked };
+      });
+      setListCheckBox(tempCheckbox);
+    } else {
+      let tempCheckbox = listCheckBox.map((item: any) =>
+        item.name === name ? { ...item, isChecked: checked } : item
+      );
+      setListCheckBox(tempCheckbox);
+    }
   };
 
-  console.log("listCheckBox", listCheckBox);
+  const handleCheckedAll = () => {
+    return listCheckBox.length > 0
+      ? listCheckBox.filter((item: any) => item.isChecked !== true).length < 1
+      : false;
+  };
 
   const handleAlign = (align: string) => {
     switch (align) {
@@ -83,13 +94,13 @@ const Tables = (props: TableProps) => {
         <TableHead className="bg-[#D9D9D9]">
           <TableRow>
             <TableCell align="center" padding="checkbox" sx={{ padding: 0 }}>
-              <IconButton>
-                {listCheckBox.length ? (
-                  <IndeterminateCheckBoxIcon className="rounded-2xl text-gray-500" />
-                ) : (
-                  <SquareIcon className="rounded-2xl text-gray-400" />
-                )}
-              </IconButton>
+              <input
+                type="checkbox"
+                className="size-4 cursor-pointer"
+                name="allCheckbox"
+                checked={handleCheckedAll()}
+                onChange={handleCheckboxAll}
+              />
             </TableCell>
             {tableHead.map((item, index) => (
               <TableCell key={index} padding="normal">
@@ -101,9 +112,9 @@ const Tables = (props: TableProps) => {
           </TableRow>
         </TableHead>
         <TableBody className="bg-white">
-          {listCheckBox.map((item: any) => (
+          {listCheckBox.map((item: any, index: any) => (
             <TableRow
-              key={item.image}
+              key={index}
               sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
               hover={true}
               className="cursor-pointer"
@@ -112,14 +123,14 @@ const Tables = (props: TableProps) => {
                 <input
                   type="checkbox"
                   className="size-4 cursor-pointer"
-                  checked={item.image ? listCheckBox.isChecked : false}
-                  name={item.image}
+                  checked={item.isChecked || false}
+                  name={item.name}
                   onChange={handleCheckboxAll}
                 />
               </TableCell>
               <TableCell align="center">
                 <Box className="flex gap-2 items-center justify-center">
-                  <img src={item.image} alt={item.image} className="w-14" />
+                  <img src={item.base64} alt={item.name} className="w-14" />
                 </Box>
               </TableCell>
             </TableRow>

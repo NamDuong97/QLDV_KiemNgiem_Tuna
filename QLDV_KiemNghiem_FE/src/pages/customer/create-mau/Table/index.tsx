@@ -12,15 +12,12 @@ import {
 import SquareIcon from "@mui/icons-material/Square";
 import IndeterminateCheckBoxIcon from "@mui/icons-material/IndeterminateCheckBox";
 import { Align, TableHeader } from "../../../../models/Table";
-import { Mau } from "../../../../models/mau";
-import PopupSignUpPKHC from "../PopupEditPK-HC";
 import PopupEditPKHC from "../PopupEditPK-HC";
 import { useState } from "react";
 import classes from "./styles.module.scss";
 
-
 interface TableProps {
-  tableBody: Mau[];
+  tableBody: any;
   tableHead: TableHeader[];
   handleSort?: (value: string) => void;
   setIsCheckboxAll: () => void;
@@ -66,8 +63,8 @@ const Tables = (props: TableProps) => {
                 )}
               </IconButton>
             </TableCell>
-            {tableHead.map((item) => (
-              <TableCell key={item.id} padding="normal">
+            {tableHead.map((item, index) => (
+              <TableCell key={index} padding="normal">
                 <Box className={`flex items-center ${handleAlign(item.align)}`}>
                   <p className="text-lg/4 font-bold">{item.label}</p>
                 </Box>
@@ -76,7 +73,7 @@ const Tables = (props: TableProps) => {
           </TableRow>
         </TableHead>
         <TableBody className="bg-white">
-          {tableBody.map((item, index) => (
+          {tableBody.map((item: any, index: number) => (
             <TableRow
               key={index}
               sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
@@ -92,28 +89,34 @@ const Tables = (props: TableProps) => {
                     className="text-base/4 font-medium hover:underline cursor-pointer"
                     onClick={handleClickOpenPopupEditPKHC}
                   >
-                    {item.TenMau}
+                    {item.TenPhuLieu_HC}
                   </p>
                 </Box>
               </TableCell>
               <TableCell align="center">
                 <Box className="flex gap-2 items-center justify-center">
-                  <p className="text-base/4 font-medium">{item.LoaiMau}</p>
+                  <p className="text-base/4 font-medium">
+                    {item.SoLuongCungCap}
+                  </p>
                 </Box>
               </TableCell>
               <TableCell align="center">
                 <Box className="flex gap-2 items-center justify-center">
-                  <p className="text-base/4 font-medium">{item.DuocDien}</p>
+                  <p className="text-base/4 font-medium">{item.DonViTinh}</p>
                 </Box>
               </TableCell>
               <TableCell align="center">
                 <Box className="flex gap-2 items-center justify-center">
-                  <p className="text-base/4 font-medium">{item.SoLo}</p>
+                  <p className="text-base/4 font-medium">
+                    {item.MaLoaiPhuLieu_HC}
+                  </p>
                 </Box>
               </TableCell>
               <TableCell align="center">
                 <Box className="flex gap-2 items-center justify-center">
-                  <p className="text-base/4 font-medium">{item.KhoiLuong}</p>
+                  <p className="text-base/4 font-medium truncate w-[167px]">
+                    {item.GhiChu}
+                  </p>
                 </Box>
               </TableCell>
             </TableRow>

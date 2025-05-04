@@ -190,13 +190,22 @@ const FormSignUpDVKN = (props: FormSignUpDVKNProps) => {
     return yup
       .object()
       .shape({
-        DonViGuiMau: yup.string().required("Yêu cầu nhập đơn vị gửi mẫu"),
-        NguoiGuiMau: yup.string().required("Yêu cầu nhập người gửi mẫu"),
+        DonViGuiMau: yup
+          .string()
+          .required("Yêu cầu nhập đơn vị gửi mẫu")
+          .max(500, "Ký tự nhập không vượt quá 500 ký tự"),
+        NguoiGuiMau: yup
+          .string()
+          .required("Yêu cầu nhập người gửi mẫu")
+          .max(200, "Ký tự nhập không vượt quá 200 ký tự"),
         SoDienThoai: yup
           .string()
           .required("Yêu cầu nhập số điện thoại")
           .max(12, "Số điện thoại phải nhập là 12 ký tự"),
-        Email: yup.string().required("Yêu cầu nhập địa chỉ email"),
+        Email: yup
+          .string()
+          .required("Yêu cầu nhập địa chỉ email")
+          .max(50, "Ký tự nhập không vượt quá 50 ký tự"),
         DiaChiLienHe: yup.string().required("Yêu cầu nhập địa chỉ liên hệ"),
         HinhThucGuiMau: yup.string().required("Yêu cầu chọn hình thức gửi mẫu"),
         HinhThucTraKQ: yup
@@ -459,6 +468,7 @@ const FormSignUpDVKN = (props: FormSignUpDVKNProps) => {
                   <Box className="col-span-12 2xl:col-span-6">
                     <Inputs
                       title="Số Điện Thoại"
+                      type="number"
                       className="h-[42px]"
                       name="SoDienThoai"
                       inputRef={register("SoDienThoai")}
@@ -468,6 +478,14 @@ const FormSignUpDVKN = (props: FormSignUpDVKNProps) => {
                         input: {
                           padding: "9.5px 14px",
                         },
+                        'input[type="number"]': {
+                          "-moz-appearance": "textfield",
+                        },
+                        'input[type="number"]::-webkit-outer-spin-button, input[type="number"]::-webkit-inner-spin-button':
+                          {
+                            "-webkit-appearance": "none",
+                            margin: 0,
+                          },
                       }}
                     />
                   </Box>
@@ -798,8 +816,8 @@ const FormSignUpDVKN = (props: FormSignUpDVKNProps) => {
       SoDienThoai: "",
       Email: "",
       DiaChiLienHe: "",
-      HinhThucGuiMau: "",
-      HinhThucTraKQ: "",
+      HinhThucGuiMau: selectHinhThucGuiMau,
+      HinhThucTraKQ: selectHinhThucTraKQ,
       DiaChiGiaoMau: "",
       KetQuaTiengViet: 0,
       KetQuaTiengAnh: 0,

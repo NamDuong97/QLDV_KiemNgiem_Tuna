@@ -16,11 +16,20 @@ interface Props {
   height?: string;
   handleChange: (event: SelectChangeEvent) => void;
   select?: string;
+  name?: string;
 }
 
 const SelectComponent = (props: Props) => {
-  const { data, errors, title, height, dataDefault, handleChange, select } =
-    props;
+  const {
+    data,
+    errors,
+    title,
+    height,
+    dataDefault,
+    handleChange,
+    select,
+    name,
+  } = props;
 
   return (
     <Box className={`w-full ${height ? height : "h-[106px]"}`}>
@@ -31,6 +40,7 @@ const SelectComponent = (props: Props) => {
         <FormControl sx={{ width: "100%" }}>
           <Select
             value={select}
+            name={name}
             onChange={handleChange}
             displayEmpty
             inputProps={{ "aria-label": "Without label" }}

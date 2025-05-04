@@ -39,7 +39,7 @@ export interface FormMau {
   NgaySanXuat: string;
   Anh: Anh[];
   HanSD: string;
-  SoLuong: number;
+  SoLuong: string;
   DonViTinh: string;
   YeuCauKiemNghiem: string;
   DieuKienBaoQuan: string;

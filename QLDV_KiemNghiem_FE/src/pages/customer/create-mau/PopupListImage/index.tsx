@@ -1,5 +1,5 @@
 import { Box, Dialog } from "@mui/material";
-import { AnimatePresence, motion } from "framer-motion";
+import { motion } from "framer-motion";
 import { IoMdClose } from "react-icons/io";
 import Tables from "./Table";
 import { Align } from "../../../../models/Table";
@@ -20,20 +20,6 @@ const tableHead = [
   },
 ];
 
-const listErrorImage = [
-  {
-    length: 4,
-    isTrungLap: false,
-    content: "Ảnh đã được upload tối đa là 5 hình",
-  },
-  {
-    length: 4,
-    isTrungLap: true,
-    content: "Ảnh không được trùng lặp",
-  },
-  ,
-];
-
 const PopupListImage = (props: Props) => {
   const { open, handleClose } = props;
 
@@ -46,33 +32,63 @@ const PopupListImage = (props: Props) => {
     return dataImageTemp ? JSON.parse(dataImageTemp) : [];
   });
 
-  const handleTrungLap = (img: any) => {};
+  var lengthCheckbox = listCheckBox.filter(
+    (item: any) => item.isChecked
+  ).length;
 
-  const onDrop = useCallback((acceptedFiles: any) => {
-    acceptedFiles.forEach((file: any) => {
-      const reader = new FileReader();
-      reader.onabort = () => console.log("file reading was aborted");
-      reader.onerror = () => console.log("file reading has failed");
-      reader.onload = () => {
-        const img = reader.result as string;
-        listImage.map((item: any) => {
-          if (item && item.image === img) {
-            // setErrorIsTrungLap(false);
-            // listImage.length <= 4 &&
-            //   listImage.push({
-            //     image: img,
-            //   });
-            // setListImage([...listImage]);
-            console.log("ko tìm thấy");
-          }
-          console.log("tìm thấy");
-        });
-      };
-      reader.readAsDataURL(file);
-    });
-  }, []);
+  const onDrop = useCallback(
+    (acceptedFiles: any) => {
+      acceptedFiles.forEach((file: any) => {
+        const isDuplicate = listImage.some(
+          (img: any) =>
+            img.name === file.name &&
+            img.size === file.size &&
+            img.lastModified === file.lastModified
+        );
+
+        if (!isDuplicate) {
+          const reader = new FileReader();
+          reader.onabort = () => console.log("file reading was aborted");
+          reader.onerror = () => console.log("file reading has failed");
+          reader.onload = () => {
+            const imgData = reader.result as string;
+            const newImage = {
+              name: file.name,
+              size: file.size,
+              lastModified: file.lastModified,
+              base64: imgData,
+            };
+            setListImage((prev: any[]) => [...prev, newImage]);
+            setErrorIsTrungLap(false);
+          };
+          reader.readAsDataURL(file);
+        } else {
+          setErrorIsTrungLap(true);
+        }
+      });
+    },
+    [listImage]
+  );
 
   const { getRootProps, getInputProps } = useDropzone({ onDrop });
+
+  const handeleRemoveImage = () => {
+    const temp = listCheckBox.filter((item: any) => item.isChecked);
+    const updatedImages = listImage.filter((item: any) => {
+      return !temp.some(
+        (subitem: any) =>
+          subitem.base64 === item.base64 &&
+          subitem.name === item.name &&
+          subitem.size === item.size &&
+          subitem.lastModified === item.lastModified
+      );
+    });
+    setListImage(updatedImages);
+    setListCheckBox([]);
+  };
+
+  console.log("listCheckBox", listCheckBox);
+  console.log("listImage", listImage);
 
   useEffect(() => {
     sessionStorage.setItem("ImageTemp", JSON.stringify(listImage));
@@ -83,9 +99,8 @@ const PopupListImage = (props: Props) => {
     <Dialog
       open={open}
       maxWidth="lg"
+      key="popupListImage"
       onClose={handleClose}
-      aria-labelledby="alert-dialog-title"
-      aria-describedby="alert-dialog-description"
     >
       <Box className="relative px-7 py-6 w-[320px] sm:w-[550px] md:w-[620px]">
         <Box className="absolute top-2 right-5">
@@ -96,34 +111,39 @@ const PopupListImage = (props: Props) => {
             <IoMdClose className="w-6 h-6 text-gray-300" />
           </button>
         </Box>
-        <AnimatePresence mode="wait">
+        <Box>
           <motion.div
-            key="signup"
+            key="listImage"
             initial={{ y: 0, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             exit={{ y: 0, opacity: 0 }}
-            transition={{ duration: 0.7 }}
+            transition={{ duration: 0.5 }}
           >
             <Box className="grid gap-6">
               <Box className="py-2">
                 <h1 className="font-bold text-3xl">Danh Sách Ảnh</h1>
               </Box>
               <Box className="grid gap-4">
-                <Box className="flex justify-between">
-                  <button
-                    onClick={() => setListCheckBox([])}
-                    className="font-bold text-center bg-gray-500 py-2 px-4 text-white rounded-md hover:bg-gray-400 cursor-pointer shadow-[3px_3px_2px_rgba(0,0,0,0.4)]"
-                  >
-                    Xóa Ảnh
+                <Box
+                  className={`flex ${
+                    lengthCheckbox ? "justify-between" : "justify-end"
+                  }`}
+                >
+                  {lengthCheckbox > 0 && (
+                    <button
+                      onClick={handeleRemoveImage}
+                      className="font-bold text-center bg-gray-500 py-2 px-4 text-white rounded-md hover:bg-gray-400 cursor-pointer shadow-[3px_3px_2px_rgba(0,0,0,0.4)]"
+                    >
+                      Xóa Ảnh
+                    </button>
+                  )}
+
+                  <Box {...getRootProps()}>
+                    <button className="font-bold text-center bg-blue-500 py-2 px-4 text-white rounded-md hover:bg-blue-400 cursor-pointer shadow-[3px_3px_2px_rgba(0,0,0,0.4)]">
+                      Thêm Ảnh
+                    </button>
                     <input {...getInputProps()} />
-                  </button>
-                  <button
-                    {...getRootProps()}
-                    className="font-bold text-center bg-blue-500 py-2 px-4 text-white rounded-md hover:bg-blue-400 cursor-pointer shadow-[3px_3px_2px_rgba(0,0,0,0.4)]"
-                  >
-                    Thêm Ảnh
-                    <input {...getInputProps()} />
-                  </button>
+                  </Box>
                 </Box>
 
                 <Tables
@@ -131,28 +151,20 @@ const PopupListImage = (props: Props) => {
                   setListCheckBox={setListCheckBox}
                   listCheckBox={listCheckBox}
                 />
-                {listErrorImage.map(
-                  (item: any) =>
-                    item?.length <= listImage.length &&
-                    item?.errorImage === ErrorisTrungLap && (
-                      <p className="text-red-500 text-lg/6">{item.content}</p>
-                    )
+                {listImage.length >= 5 && (
+                  <p className="text-red-500 text-lg/6">
+                    Ảnh đã được upload tối đa là 5 hình
+                  </p>
                 )}
-              </Box>
-              <Box className="flex gap-12 md:px-32">
-                <button
-                  className="font-bold text-center w-full bg-blue-500 py-2 text-white rounded-md hover:bg-blue-400 cursor-pointer"
-                  onClick={handleClose}
-                >
-                  Hủy
-                </button>
-                <button className="font-bold text-center w-full bg-blue-500 py-2 text-white rounded-md hover:bg-blue-400 cursor-pointer">
-                  Lưu
-                </button>
+                {ErrorisTrungLap && (
+                  <p className="text-red-500 text-lg/6">
+                    Ảnh không được trùng lặp
+                  </p>
+                )}
               </Box>
             </Box>
           </motion.div>
-        </AnimatePresence>
+        </Box>
       </Box>
     </Dialog>
   );

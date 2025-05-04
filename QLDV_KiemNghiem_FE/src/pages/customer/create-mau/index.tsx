@@ -72,43 +72,16 @@ const tableHead = [
   },
 ];
 
-const tableBody = [
-  {
-    TenMau: "A",
-    LoaiMau: "Gap 1",
-    DuocDien: "Dược Điển VN5",
-    SoLo: "SKGJHF",
-    KhoiLuong: "25(kg)",
-  },
-  {
-    TenMau: "A",
-    LoaiMau: "Gap 1",
-    DuocDien: "Dược Điển VN5",
-    SoLo: "SKGJHF",
-    KhoiLuong: "25(kg)",
-  },
-  {
-    TenMau: "A",
-    LoaiMau: "Gap 1",
-    DuocDien: "Dược Điển VN5",
-    SoLo: "SKGJHF",
-    KhoiLuong: "25(kg)",
-  },
-  {
-    TenMau: "A",
-    LoaiMau: "Gap 1",
-    DuocDien: "Dược Điển VN5",
-    SoLo: "SKGJHF",
-    KhoiLuong: "25(kg)",
-  },
-];
-
 const CreateMau = () => {
   const [isTag2, setIsTag2] = useState(false);
   const [isCheckboxAll, setIsCheckboxAll] = useState(false);
   const naginate = useNavigate();
   const [openPopupSignUpPKHC, setOpenPopupSignUpPKHC] = useState(false);
   const [openPopupListImage, setOpenPopupListImage] = useState(false);
+  const [listPLHC, setListPLHC] = useState(() => {
+    const dataPLHCTemp = sessionStorage.getItem("PLHCTemp");
+    return dataPLHCTemp ? JSON.parse(dataPLHCTemp) : [];
+  });
 
   const [selectDuocDien, setSelectDuocDien] = useState("");
   const handleChangeDuocDien = (event: SelectChangeEvent) => {
@@ -130,10 +103,6 @@ const CreateMau = () => {
     setOpenPopupListImage(true);
   };
 
-  const handleClosePopupSignUpPKHC = () => {
-    setOpenPopupSignUpPKHC(false);
-  };
-
   const handleClosePopupListImage = () => {
     setOpenPopupListImage(false);
   };
@@ -148,7 +117,7 @@ const CreateMau = () => {
       NgaySanXuat: yup.string().required("Vui lòng chọn ngày sản xuất"),
       Anh: yup.array().required("Yêu cầu upload Ảnh"),
       HanSD: yup.string().required("Vui lòng chọn hạn sử dụng"),
-      SoLuong: yup.number().required("Vui lòng nhập số lượng"),
+      SoLuong: yup.string().required("Vui lòng nhập số lượng"),
       DonViTinh: yup.string().required("Vui lòng nhập đơn vị tính"),
       YeuCauKiemNghiem: yup
         .string()
@@ -183,7 +152,7 @@ const CreateMau = () => {
       NgaySanXuat: "",
       Anh: [],
       HanSD: "",
-      SoLuong: 0,
+      SoLuong: "",
       DonViTinh: "",
       YeuCauKiemNghiem: "",
       DieuKienBaoQuan: "",
@@ -193,79 +162,94 @@ const CreateMau = () => {
     });
   }, []);
 
+  useEffect(() => {
+    sessionStorage.setItem("PLHCTemp", JSON.stringify(listPLHC));
+  }, [listPLHC]);
+
   return (
-    <AnimatePresence mode="wait">
-      <motion.div
-        key="form-signup-dvkm"
-        initial={{ x: 0, opacity: 0 }}
-        animate={{ x: 0, opacity: 1 }}
-        exit={{ x: 0, opacity: 0 }}
-        transition={{ duration: 0.7 }}
-      >
-        <Box className="grid gap-6 py-16 px-6">
-          <Box className="flex items-center gap-6 justify-center">
-            <Box className={`${isTag2 && "hidden md:block"}`}>
-              <Box className="flex items-center gap-3">
-                <p className="p-2 w-9 h-9 rounded-full bg-blue-500 flex items-center justify-center">
-                  <span className="text-white text-xl/6">1</span>
-                </p>
-                <p className="text-blue-500 text-xl/6">
-                  Thông tin mẫu gửi kiểm nghiệm
-                </p>
+    <Box>
+      <AnimatePresence mode="sync">
+        <motion.div
+          key="form-signup-dvkm"
+          initial={{ x: 0, opacity: 0 }}
+          animate={{ x: 0, opacity: 1 }}
+          exit={{ x: 0, opacity: 0 }}
+          transition={{ duration: 0.7 }}
+        >
+          <Box className="grid gap-6 py-16 px-6">
+            <Box className="flex items-center gap-6 justify-center">
+              <Box className={`${isTag2 && "hidden md:block"}`}>
+                <Box
+                  className="flex items-center gap-3 cursor-pointer"
+                  onClick={() => setIsTag2(false)}
+                >
+                  <p className="p-2 w-9 h-9 rounded-full bg-blue-500 flex items-center justify-center">
+                    <span className="text-white text-xl/6">1</span>
+                  </p>
+                  <p className="text-blue-500 text-xl/6">
+                    Thông tin mẫu gửi kiểm nghiệm
+                  </p>
+                </Box>
               </Box>
-            </Box>
-            {isTag2 ? (
-              <AnimatePresence mode="wait">
-                <motion.hr
-                  initial={{ color: "#d1d5dc" }}
-                  animate={{ color: "#2b7fff" }}
-                  exit={{ color: "#4a5565" }}
-                  transition={{ duration: 0.7, ease: "easeInOut" }}
-                  className="w-52 border-[1px] rounded-lg hidden md:block"
-                />
-                <Box className="flex items-center gap-3">
-                  <motion.p
-                    initial={{ backgroundColor: "#99a1af" }}
-                    animate={{ backgroundColor: "#2b7fff" }}
-                    exit={{ backgroundColor: "#99a1af" }}
-                    transition={{ duration: 0.7, ease: "easeInOut" }}
-                    className="p-2 w-9 h-9 rounded-full flex items-center justify-center"
-                  >
-                    <span className="text-white text-xl/6">2</span>
-                  </motion.p>
-                  <motion.p
-                    initial={{ color: "#4a5565" }}
+              {isTag2 ? (
+                <Box className="flex items-center gap-6 justify-center">
+                  <motion.hr
+                    initial={{ color: "#d1d5dc" }}
                     animate={{ color: "#2b7fff" }}
                     exit={{ color: "#4a5565" }}
                     transition={{ duration: 0.7, ease: "easeInOut" }}
-                    className="text-xl/6"
+                    className="w-52 border-[1px] rounded-lg hidden md:block"
+                  />
+                  <Box
+                    className="flex items-center gap-3 cursor-pointer"
+                    onClick={() => setIsTag2(true)}
                   >
-                    Danh sách phụ kiện - hóa chất
-                  </motion.p>
+                    <motion.p
+                      key="form-signup-dvkm-rounded-2"
+                      initial={{ backgroundColor: "#99a1af" }}
+                      animate={{ backgroundColor: "#2b7fff" }}
+                      exit={{ backgroundColor: "#99a1af" }}
+                      transition={{ duration: 0.7, ease: "easeInOut" }}
+                      className="p-2 w-9 h-9 rounded-full flex items-center justify-center"
+                    >
+                      <span className="text-white text-xl/6">2</span>
+                    </motion.p>
+                    <motion.p
+                      key="form-signup-dvkm-text"
+                      initial={{ color: "#4a5565" }}
+                      animate={{ color: "#2b7fff" }}
+                      exit={{ color: "#4a5565" }}
+                      transition={{ duration: 0.7, ease: "easeInOut" }}
+                      className="text-xl/6"
+                    >
+                      Danh sách phụ kiện - hóa chất
+                    </motion.p>
+                  </Box>
                 </Box>
-              </AnimatePresence>
-            ) : (
-              <>
-                <hr className="text-gray-300 w-52 border-[1px] rounded-lg hidden md:block" />
-                <Box className="hidden md:flex items-center gap-3">
-                  <p className="p-2 w-9 h-9 rounded-full bg-gray-400 flex items-center justify-center">
-                    <span className="text-white text-xl/6">2</span>
-                  </p>
-                  <p className="text-gray-600 text-xl/6">
-                    Danh sách phụ kiện - hóa chất
-                  </p>
-                </Box>
-              </>
-            )}
-          </Box>
-          <Box className="border border-solid border-gray-300 rounded-[10px]">
-            {!isTag2 ? (
-              <AnimatePresence mode="wait">
+              ) : (
+                <>
+                  <hr className="text-gray-300 w-52 border-[1px] rounded-lg hidden md:block" />
+                  <Box
+                    className="hidden md:flex items-center gap-3 cursor-pointer"
+                    onClick={() => setIsTag2(true)}
+                  >
+                    <p className="p-2 w-9 h-9 rounded-full bg-gray-400 flex items-center justify-center">
+                      <span className="text-white text-xl/6">2</span>
+                    </p>
+                    <p className="text-gray-600 text-xl/6">
+                      Danh sách phụ kiện - hóa chất
+                    </p>
+                  </Box>
+                </>
+              )}
+            </Box>
+            <Box className="border border-solid border-gray-300 rounded-[10px]">
+              {!isTag2 ? (
                 <motion.div
-                  key="tag1"
-                  initial={{ x: 10, opacity: 0 }}
+                  key="form-signup-dvkm-tag1"
+                  initial={{ x: 0, opacity: 0 }}
                   animate={{ x: 0, opacity: 1 }}
-                  exit={{ x: 10, opacity: 0 }}
+                  exit={{ x: 0, opacity: 0 }}
                   transition={{ duration: 0.5 }}
                 >
                   <Box className="px-12 py-7 grid grid-cols-12 gap-[1px_24px]">
@@ -286,6 +270,9 @@ const CreateMau = () => {
                       <Inputs
                         title="Tên Mẫu"
                         placeholder="Nhập Tên Mẫu"
+                        name="TenMau"
+                        inputRef={register("TenMau")}
+                        errorMessage={errors.TenMau?.message}
                         className="h-[42px]"
                         sx={{
                           input: {
@@ -298,8 +285,10 @@ const CreateMau = () => {
                       <SelectComponent
                         title="Loại Mẫu"
                         data={dataLoaiMau}
+                        name="TenMau"
                         dataDefault="Vui lòng chọn Loại Mẫu"
                         select={selectLoaiMau}
+                        errors={errors.LoaiMau?.message}
                         handleChange={handleChangeLoaiMau}
                       />
                     </Box>
@@ -307,8 +296,10 @@ const CreateMau = () => {
                       <SelectComponent
                         title="Dược Điển"
                         data={dataDuocDien}
+                        name="DuocDien"
                         dataDefault="Vui lòng chọn Dược Điển"
                         select={selectDuocDien}
+                        errors={errors.DuocDien?.message}
                         handleChange={handleChangeDuocDien}
                       />
                     </Box>
@@ -316,6 +307,9 @@ const CreateMau = () => {
                       <Inputs
                         title="Số Lô"
                         placeholder="Nhập Số Lô"
+                        name="SoLo"
+                        inputRef={register("SoLo")}
+                        errorMessage={errors.SoLo?.message}
                         className="h-[42px]"
                         sx={{
                           input: {
@@ -328,6 +322,9 @@ const CreateMau = () => {
                       <Inputs
                         title="Ngày Sản Xuất"
                         type="date"
+                        name="NgaySanXuat"
+                        inputRef={register("NgaySanXuat")}
+                        errorMessage={errors.NgaySanXuat?.message}
                         className="h-[42px]"
                         sx={{
                           input: {
@@ -340,6 +337,9 @@ const CreateMau = () => {
                       <Inputs
                         title="Hạn Sử Dụng"
                         type="date"
+                        name="HanSD"
+                        inputRef={register("HanSD")}
+                        errorMessage={errors.HanSD?.message}
                         className="h-[42px]"
                         sx={{
                           input: {
@@ -352,11 +352,23 @@ const CreateMau = () => {
                       <Inputs
                         title="Số Lượng"
                         placeholder="Nhập Số Lượng"
+                        name="SoLuong"
+                        type="number"
+                        inputRef={register("SoLuong")}
+                        errorMessage={errors.SoLuong?.message}
                         className="h-[42px]"
                         sx={{
                           input: {
                             padding: "9.5px 14px",
                           },
+                          '& input[type="number"]': {
+                            MozAppearance: "textfield",
+                          },
+                          '& input[type="number"]::-webkit-outer-spin-button,& input[type="number"]::-webkit-inner-spin-button':
+                            {
+                              WebkitAppearance: "none",
+                              margin: 0,
+                            },
                         }}
                       />
                     </Box>
@@ -364,6 +376,9 @@ const CreateMau = () => {
                       <Inputs
                         title="Đơn Vị Tính"
                         placeholder="Nhập Đơn Vị Tính"
+                        name="DonViTinh"
+                        inputRef={register("DonViTinh")}
+                        errorMessage={errors.DonViTinh?.message}
                         className="h-[42px]"
                         sx={{
                           input: {
@@ -376,6 +391,9 @@ const CreateMau = () => {
                       <Inputs
                         title="Tình Trạng Mãu"
                         placeholder="Nhập Tình Trạng Mãu"
+                        name="TinhTrangMau"
+                        inputRef={register("TinhTrangMau")}
+                        errorMessage={errors.TinhTrangMau?.message}
                         className="h-[42px]"
                         sx={{
                           input: {
@@ -410,6 +428,9 @@ const CreateMau = () => {
                       <Inputs
                         title="Điều Kiện Bảo Quản"
                         placeholder="Điều Kiện Bảo Quản"
+                        name="DieuKienBaoQuan"
+                        inputRef={register("DieuKienBaoQuan")}
+                        errorMessage={errors.DieuKienBaoQuan?.message}
                         className="h-[42px]"
                         sx={{
                           input: {
@@ -422,6 +443,9 @@ const CreateMau = () => {
                       <Inputs
                         title="Đơn Vị Sản Xuất"
                         placeholder="Nhập Đơn Vị Sản Xuất"
+                        name="DonViSanXuat"
+                        inputRef={register("DonViSanXuat")}
+                        errorMessage={errors.DonViSanXuat?.message}
                         className="h-[42px]"
                         sx={{
                           input: {
@@ -440,20 +464,21 @@ const CreateMau = () => {
                     <Box className="col-span-12 2xl:col-span-6 grid grid-cols-1">
                       <Textarea
                         title="Yêu Cầu Kiểm Nghiệm"
+                        name="YeuCauKiemNghiem"
+                        inputRef={register("YeuCauKiemNghiem")}
+                        errorMessage={errors.YeuCauKiemNghiem?.message}
                         className="max-h-[149px] min-h-[149px]"
                         height="h-auto"
                       />
                     </Box>
                   </Box>
                 </motion.div>
-              </AnimatePresence>
-            ) : (
-              <AnimatePresence mode="wait">
+              ) : (
                 <motion.div
-                  key="tag2"
-                  initial={{ x: -10, opacity: 0 }}
+                  key="form-signup-dvkm-tag2"
+                  initial={{ x: 0, opacity: 0 }}
                   animate={{ x: 0, opacity: 1 }}
-                  exit={{ x: -10, opacity: 0 }}
+                  exit={{ x: 0, opacity: 0 }}
                   transition={{ duration: 0.5 }}
                 >
                   <Box
@@ -473,20 +498,18 @@ const CreateMau = () => {
                       tableHead={tableHead}
                       setIsCheckboxAll={() => setIsCheckboxAll(!isCheckboxAll)}
                       isCheckboxAll={isCheckboxAll}
-                      tableBody={tableBody}
+                      tableBody={listPLHC}
                     />
                   </Box>
                 </motion.div>
-              </AnimatePresence>
-            )}
+              )}
 
-            <Box
-              className={`border-t border-solid border-gray-300 py-4 px-4 sm:px-8 flex justify-between`}
-            >
-              {isTag2 ? (
-                <AnimatePresence mode="wait">
+              <Box
+                className={`border-t border-solid border-gray-300 py-4 px-4 sm:px-8 flex justify-between`}
+              >
+                {isTag2 ? (
                   <motion.div
-                    key="btn_back"
+                    key="btn_quay_lai"
                     initial={{ x: 0, opacity: 0 }}
                     animate={{ x: 0, opacity: 1 }}
                     exit={{ x: 0, opacity: 0 }}
@@ -501,9 +524,7 @@ const CreateMau = () => {
                       </span>
                     </button>
                   </motion.div>
-                </AnimatePresence>
-              ) : (
-                <AnimatePresence mode="wait">
+                ) : (
                   <motion.div
                     key="btn_back_page"
                     initial={{ x: 0, opacity: 0 }}
@@ -522,10 +543,8 @@ const CreateMau = () => {
                       </span>
                     </button>
                   </motion.div>
-                </AnimatePresence>
-              )}
-              {isTag2 ? (
-                <AnimatePresence mode="wait">
+                )}
+                {isTag2 ? (
                   <motion.div
                     key="btn_submit"
                     initial={{ x: 0, opacity: 0 }}
@@ -542,9 +561,7 @@ const CreateMau = () => {
                       </span>
                     </button>
                   </motion.div>
-                </AnimatePresence>
-              ) : (
-                <AnimatePresence mode="wait">
+                ) : (
                   <motion.div
                     key="btn_next"
                     initial={{ x: 0, opacity: 0 }}
@@ -561,21 +578,25 @@ const CreateMau = () => {
                       </span>
                     </button>
                   </motion.div>
-                </AnimatePresence>
-              )}
+                )}
+              </Box>
             </Box>
           </Box>
-        </Box>
-      </motion.div>
-      <PopupSignUpPKHC
-        openPopupSignUpPKHC={openPopupSignUpPKHC}
-        handleClosePopupSignUpPKHC={handleClosePopupSignUpPKHC}
-      />
+        </motion.div>
+      </AnimatePresence>
+
       <PopupListImage
         open={openPopupListImage}
         handleClose={handleClosePopupListImage}
       />
-    </AnimatePresence>
+
+      <PopupSignUpPKHC
+        openPopupSignUpPKHC={openPopupSignUpPKHC}
+        handleClosePopupSignUpPKHC={() => setOpenPopupSignUpPKHC(false)}
+        setListPLHC={setListPLHC}
+        listPLHC={listPLHC}
+      />
+    </Box>
   );
 };
 

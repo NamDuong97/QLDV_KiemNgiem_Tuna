@@ -13,10 +13,9 @@ import SquareIcon from "@mui/icons-material/Square";
 import IndeterminateCheckBoxIcon from "@mui/icons-material/IndeterminateCheckBox";
 import { Align, TableHeader } from "../../../../models/Table";
 import { Mau } from "../../../../models/mau";
-import PopupSignUpPKHC from "../PopupSignUpPK-HC";
-import PopupEditPKHC from "../PopupSignUpPK-HC";
 import { useState } from "react";
 import classes from "./styles.module.scss";
+import PopupEditPKHC from "../../edit-mau/PopupSignUpPK-HC";
 
 interface TableProps {
   tableBody: Mau[];
