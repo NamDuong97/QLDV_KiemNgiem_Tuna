@@ -49,9 +49,7 @@ export const Inputs = (props: InputsProps) => {
   return (
     <FormControl fullWidth className="gap-2 grid h-[106px]">
       {title && (
-        <p className="!font-semibold text-base/6 text-gray_80">
-          {title}
-        </p>
+        <p className="!font-semibold text-base/6 text-gray_80">{title}</p>
       )}
       <OutlinedInput
         type={type || "text"}
@@ -68,9 +66,13 @@ export const Inputs = (props: InputsProps) => {
         onFocus={onFocus}
         sx={sx}
         disabled={disabled}
+        inputProps={{
+          step: "0.01",
+          min: "0",
+        }}
       />
       {errorMessage && (
-        <Typography className="text-[#af1c10] font-medium text-xs/[140%]">
+        <Typography className="text-[#af1c10] !font-medium !text-sm/[140%]">
           {errorMessage}
         </Typography>
       )}

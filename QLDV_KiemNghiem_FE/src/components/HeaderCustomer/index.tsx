@@ -14,6 +14,7 @@ import AccountPopup from "../Popup/AccountPopup";
 import LoginCustomer from "../Login/Customer";
 import { CgMenuGridO } from "react-icons/cg";
 import { AnimatePresence, motion } from "framer-motion";
+import { IoIosCloseCircle } from "react-icons/io";
 
 interface HeaderProps {}
 
@@ -21,47 +22,47 @@ const dataMessages = [
   {
     status: true,
     fullname: "Tun Tun",
-    time: "6h",
+    time: "6 giờ",
   },
   {
     status: true,
     fullname: "Tun Tun",
-    time: "6h",
+    time: "6 giờ",
   },
   {
     status: true,
     fullname: "Tun Tun",
-    time: "6h",
+    time: "6 giờ",
   },
   {
     status: false,
     fullname: "Tun Tun",
-    time: "6h",
+    time: "6 giờ",
   },
   {
     status: true,
     fullname: "Tun Tun",
-    time: "6h",
+    time: "6 giờ",
   },
   {
     status: false,
     fullname: "Tun Tun",
-    time: "6h",
+    time: "6 giờ",
   },
   {
     status: true,
     fullname: "Tun Tun",
-    time: "6h",
+    time: "6 giờ",
   },
   {
     status: false,
     fullname: "Tun Tun",
-    time: "6h",
+    time: "6 giờ",
   },
   {
     status: true,
     fullname: "Tun Tun",
-    time: "6h",
+    time: "6 giờ",
   },
 ];
 
@@ -97,35 +98,42 @@ const StyledBadge = styled(Badge)(({ theme }) => ({
 export default function HeaderCustomer(props: HeaderProps) {
   const {} = props;
 
-  const [openAccount, setOpenAccount] = useState(false);
-  const [openNotifications, setOpenNotifications] = useState(false);
-  const isLogin = false;
+  const isLogin = true;
   const [openLoginCustomer, setOpenLoginCustomer] = useState(false);
   const handleOpenLoginCustomer = () => setOpenLoginCustomer(true);
   const handleCloseLoginCustomer = () => setOpenLoginCustomer(false);
   const [openMenu, setOpenMenu] = useState(false);
   const [isDanhMuc, setIsDanhMuc] = useState(false);
-
-  const toggleDrawerMenu = (newOpen: boolean) => () => {
-    setOpenMenu(newOpen);
-  };
-
+  const [anchorElNotifications, setAnchorElNotifications] =
+    useState<HTMLButtonElement | null>(null);
+  const openNotifications = Boolean(anchorElNotifications);
+  const [anchorElAccountPopup, setAnchorElAccountPopup] =
+    useState<HTMLButtonElement | null>(null);
+  const openAccountPopup = Boolean(anchorElAccountPopup);
   const navigate = useNavigate();
 
-  const handleOpenAccount = () => {
-    setOpenAccount(!openAccount);
+  const handleClickNotifications = (
+    event: React.MouseEvent<HTMLButtonElement>
+  ) => {
+    setAnchorElNotifications(event.currentTarget);
   };
 
-  const handleCloseAccount = () => {
-    setOpenAccount(false);
-  };
-
-  const handleOpenNotifications = () => {
-    setOpenNotifications(!openNotifications);
+  const handleClickAccountPopup = (
+    event: React.MouseEvent<HTMLButtonElement>
+  ) => {
+    setAnchorElAccountPopup(event.currentTarget);
   };
 
   const handleCloseNotifications = () => {
-    setOpenNotifications(false);
+    setAnchorElNotifications(null);
+  };
+
+  const handleCloseAccountPopup = () => {
+    setAnchorElAccountPopup(null);
+  };
+
+  const toggleDrawerMenu = (newOpen: boolean) => () => {
+    setOpenMenu(newOpen);
   };
 
   // const handleRedirectLogout = () => {
@@ -153,6 +161,7 @@ export default function HeaderCustomer(props: HeaderProps) {
                 alt="imageLogo"
                 className="!w-9 !h-9 text-black"
               />
+              <span className="font-bold text-2xl/6 text-[#6a0bd6]">Tuna</span>
             </Box>
           </button>
         </Box>
@@ -178,7 +187,9 @@ export default function HeaderCustomer(props: HeaderProps) {
                   <li
                     className="hover:text-blue-600 cursor-pointer text-base/6"
                     onClick={() =>
-                      navigate(APP_ROUTES.TUNA_CUSTOMER.FORM_SIGN_UP_DVKN.to)
+                      navigate(
+                        `${APP_ROUTES.TUNA_CUSTOMER.FORM_SIGN_UP_DVKN.to}?tuna=thong-tin-chung`
+                      )
                     }
                   >
                     Đăng Ký Dịch Vụ Kiểm Nghiệm
@@ -193,7 +204,7 @@ export default function HeaderCustomer(props: HeaderProps) {
         </Box>
         <Box className="gap-4 flex items-center">
           <Box>
-            <button className="flex items-center justify-between p-2 rounded-full bg-slate-300 cursor-pointer hover:bg-blue-300">
+            <button className="hidden sm:flex items-center justify-between p-2 rounded-full bg-slate-300 cursor-pointer hover:bg-blue-300">
               <FaSearch className="text-gray-600" />
             </button>
           </Box>
@@ -216,8 +227,7 @@ export default function HeaderCustomer(props: HeaderProps) {
               disableInteractive
             >
               <IconButton
-                onClick={handleOpenNotifications}
-                onBlur={handleCloseNotifications}
+                onClick={handleClickNotifications}
                 className="relative"
               >
                 <StyledBadge
@@ -233,6 +243,9 @@ export default function HeaderCustomer(props: HeaderProps) {
             <NotificationsPopup
               dataMessages={dataMessages}
               openNotifications={openNotifications}
+              anchorElNotifications={anchorElNotifications}
+              handleCloseNotifications={handleCloseNotifications}
+              handleOpenLoginCustomer={handleOpenLoginCustomer}
             />
           </Box>
           {isLogin ? (
@@ -259,15 +272,18 @@ export default function HeaderCustomer(props: HeaderProps) {
                   aria-label="account of current user"
                   aria-controls="menu-appbar"
                   aria-haspopup="true"
-                  onClick={handleOpenAccount}
-                  onBlur={handleCloseAccount}
+                  onClick={handleClickAccountPopup}
                   color="inherit"
                   className="relative !p-2"
                 >
                   <AccountCircle className="text-gray-700" />
                 </IconButton>
               </Tooltip>
-              <AccountPopup openAccount={openAccount} />
+              <AccountPopup
+                openAccountPopup={openAccountPopup}
+                anchorElAccountPopup={anchorElAccountPopup}
+                handleCloseAccountPopup={handleCloseAccountPopup}
+              />
             </Box>
           ) : (
             <button
@@ -286,19 +302,30 @@ export default function HeaderCustomer(props: HeaderProps) {
         handleCloseLoginCustomer={handleCloseLoginCustomer}
       />
       <Drawer open={openMenu} onClose={toggleDrawerMenu(false)}>
-        <Box className="flex justify-center p-4 w-[200px] md:w-[300px]">
+        <Box className="flex justify-center p-4 w-[300px] md:w-[350px]">
           <Box className="grid gap-6 w-full">
-            <Box className="flex items-center gap-2">
-              <img
-                src={image.imageLogo}
-                alt="imageLogo"
-                className="w-9 h-9 sm:!w-12 sm:!h-12 text-black"
-              />
+            <Box className="flex justify-between items-center">
+              <Box className="flex items-center gap-2">
+                <img
+                  src={image.imageLogo}
+                  alt="imageLogo"
+                  className="w-9 h-9 sm:!w-12 sm:!h-12 text-black"
+                />
+                <span className="font-bold text-2xl/6 sm:text-4xl/6 text-[#6a0bd6]">
+                  Tuna
+                </span>
+              </Box>
+              <Box onClick={toggleDrawerMenu(false)}>
+                <IoIosCloseCircle className="w-8 h-8 text-gray-300" />
+              </Box>
             </Box>
             <Box className="grid gap-4">
               <Box
                 className="hover:text-blue-600 cursor-pointer flex items-center text-xl/6 sm:text-2xl/6 font-semibold"
-                onClick={handleRedirectHome}
+                onClick={() => {
+                  setOpenMenu(false);
+                  handleRedirectHome();
+                }}
               >
                 Trang Chủ
               </Box>
@@ -323,9 +350,12 @@ export default function HeaderCustomer(props: HeaderProps) {
                   >
                     <li
                       className="hover:text-blue-600 cursor-pointer text-base/6 sm:text-lg/6 font-semibold"
-                      onClick={() =>
-                        navigate(APP_ROUTES.TUNA_CUSTOMER.FORM_SIGN_UP_DVKN.to)
-                      }
+                      onClick={() => {
+                        setOpenMenu(false);
+                        navigate(
+                          `${APP_ROUTES.TUNA_CUSTOMER.FORM_SIGN_UP_DVKN.to}?tuna=thong-tin-chung`
+                        );
+                      }}
                     >
                       Đăng Ký Dịch Vụ Kiểm Nghiệm
                     </li>

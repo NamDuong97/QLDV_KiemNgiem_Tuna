@@ -1,3 +1,5 @@
+import { FormMau } from "./mau";
+
 export interface PhieuDangKy {
   MaID?: string;
   MaKH?: string;
@@ -29,8 +31,7 @@ export interface FormPhieuDangKy {
   DiaChiLienHe: string;
   HinhThucGuiMau: string;
   HinhThucTraKQ: string;
-  DiaChiGiaoMau?: string; 
-  KetQuaTiengViet?: number;
+  DiaChiGiaoMau?: string;
   KetQuaTiengAnh?: number;
   NgayGiaoMau: string;
 }

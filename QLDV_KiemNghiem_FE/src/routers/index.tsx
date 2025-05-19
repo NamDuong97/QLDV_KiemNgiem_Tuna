@@ -15,8 +15,12 @@ import LayoutAdmin from "../pages/admin/layout-admin";
 import LayoutCustomer from "../pages/customer/layout";
 import Home from "../pages/customer/home";
 import FormSignUpDVKN from "../pages/customer/form-signup-DVKN";
-import CreateMau from "../pages/customer/create-mau";
-import EditMau from "../pages/customer/edit-mau";
+import CreateMau from "../pages/customer/form-signup-DVKN/create-mau";
+import EditMau from "../pages/customer/form-signup-DVKN/edit-mau";
+import PhieuDKyDVKN from "../pages/customer/manager/PhieuDKyDVKN";
+import Edit_PhieuDKyDVKN from "../pages/customer/manager/PhieuDKyDVKN/Edit_PhieuDKyDVKN";
+import PhieuDKyDVKN_CreateMau from "../pages/customer/manager/PhieuDKyDVKN/Edit_PhieuDKyDVKN/PhieuDKyDVKN_CreateMau";
+import PhieuDKyDVKN_EditMau from "../pages/customer/manager/PhieuDKyDVKN/Edit_PhieuDKyDVKN/PhieuDKyDVKN_EditMau";
 
 interface Props {}
 
@@ -85,6 +89,22 @@ const Routers = (props: Props) => {
           <Route
             path={APP_ROUTES.TUNA_CUSTOMER.Edit_MAU.to}
             element={<EditMau />}
+          />
+          <Route
+            path={APP_ROUTES.TUNA_CUSTOMER.PHIEU_DKY_DVKN.to}
+            element={<PhieuDKyDVKN />}
+          />
+          <Route
+            path={APP_ROUTES.TUNA_CUSTOMER.EDIT_PHIEU_DKY_DVKN.to}
+            element={<Edit_PhieuDKyDVKN />}
+          />
+          <Route
+            path={APP_ROUTES.TUNA_CUSTOMER.EDIT_PHIEU_DKY_DVKN.CREATE_MAU.to}
+            element={<PhieuDKyDVKN_CreateMau />}
+          />
+          <Route
+            path={APP_ROUTES.TUNA_CUSTOMER.EDIT_PHIEU_DKY_DVKN.Edit_MAU.to}
+            element={<PhieuDKyDVKN_EditMau />}
           />
         </Route>
       </Routes>

@@ -10,7 +10,7 @@ export interface Mau {
   NgaySanXuat?: string;
   Video?: string;
   HanSD?: string;
-  KhoiLuong?: any;
+  SoLuong?: any;
   DonViTinh?: string;
   YeuCauKiemNghiem?: string;
   TinhTrangMau?: string;
@@ -33,12 +33,12 @@ export interface Anh {
 export interface FormMau {
   TenMau: string;
   LoaiMau: string;
-  DuocDien: string;
+  TieuChuan: string;
+  DichVu: string;
   SoLo: string;
   DonViSanXuat: string;
   NgaySanXuat: string;
-  Anh: Anh[];
-  HanSD: string;
+  HanSuDung: string;
   SoLuong: string;
   DonViTinh: string;
   YeuCauKiemNghiem: string;
@@ -47,4 +47,5 @@ export interface FormMau {
   XuatKetQua?: number;
   TinhTrangMau: string;
   GhiChu?: string;
+  Anh: Anh[];
 }

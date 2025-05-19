@@ -10,7 +10,7 @@ export default function LayoutCustomer() {
       <Box>
         <HeaderCustomer />
         <Box className="flex justify-center min-h-screen">
-          <Box className="max-w-[1440px] w-full pt-14">
+          <Box className="max-w-[1440px] w-full pt-16">
             <Outlet />
           </Box>
         </Box>
