@@ -48,6 +48,9 @@ public partial class PhieuDeXuatMuaPlhc
     [Column(TypeName = "datetime")]
     public DateTime? NgaySua { get; set; }
 
+    [InverseProperty("MaPhieuDeXuatMuaNavigation")]
+    public virtual ICollection<ChiTietPhieuDeXuatMuaPlhc> ChiTietPhieuDeXuatMuaPlhcs { get; set; } = new List<ChiTietPhieuDeXuatMuaPlhc>();
+
     [ForeignKey("ManvDuyet")]
     [InverseProperty("PhieuDeXuatMuaPlhcManvDuyetNavigations")]
     public virtual NhanVien? ManvDuyetNavigation { get; set; }
@@ -55,7 +58,4 @@ public partial class PhieuDeXuatMuaPlhc
     [ForeignKey("ManvLap")]
     [InverseProperty("PhieuDeXuatMuaPlhcManvLapNavigations")]
     public virtual NhanVien? ManvLapNavigation { get; set; }
-
-    [InverseProperty("MaPhieuDeXuatMuaNavigation")]
-    public virtual ICollection<PhieuDeXuatMuaPlhcchiTiet> PhieuDeXuatMuaPlhcchiTiets { get; set; } = new List<PhieuDeXuatMuaPlhcchiTiet>();
 }

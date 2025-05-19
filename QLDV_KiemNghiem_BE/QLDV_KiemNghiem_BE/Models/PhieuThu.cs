@@ -17,9 +17,6 @@ public partial class PhieuThu
     [StringLength(50)]
     public string? MaPhieuThu { get; set; }
 
-    [StringLength(50)]
-    public string? ManvTao { get; set; }
-
     public string? LyDoThu { get; set; }
 
     [Column(TypeName = "decimal(18, 2)")]
@@ -45,6 +42,9 @@ public partial class PhieuThu
 
     [Column(TypeName = "datetime")]
     public DateTime? NgaySua { get; set; }
+
+    [StringLength(50)]
+    public string? ManvTao { get; set; }
 
     [ForeignKey("MaLienKetChungTu")]
     [InverseProperty("PhieuThus")]

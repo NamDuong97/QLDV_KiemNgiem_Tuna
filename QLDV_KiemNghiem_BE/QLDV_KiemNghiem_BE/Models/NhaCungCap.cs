@@ -41,8 +41,8 @@ public partial class NhaCungCap
     public DateTime? NgaySua { get; set; }
 
     [InverseProperty("MaNhaCungCapNavigation")]
-    public virtual ICollection<HoaDonMuaPlhc> HoaDonMuaPlhcs { get; set; } = new List<HoaDonMuaPlhc>();
+    public virtual ICollection<HoaDonMuaPlhcchiTiet> HoaDonMuaPlhcchiTiets { get; set; } = new List<HoaDonMuaPlhcchiTiet>();
 
     [InverseProperty("MaNhaCungCapNavigation")]
-    public virtual ICollection<PhuLieuHoaChat> PhuLieuHoaChats { get; set; } = new List<PhuLieuHoaChat>();
+    public virtual ICollection<PhuLieuHoaChatKho> PhuLieuHoaChatKhos { get; set; } = new List<PhuLieuHoaChatKho>();
 }

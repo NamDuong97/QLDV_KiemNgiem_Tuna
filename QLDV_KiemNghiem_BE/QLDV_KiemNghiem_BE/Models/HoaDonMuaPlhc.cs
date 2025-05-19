@@ -23,15 +23,6 @@ public partial class HoaDonMuaPlhc
     [Column(TypeName = "datetime")]
     public DateTime? NgayLap { get; set; }
 
-    [StringLength(200)]
-    public string? NhaCungCap { get; set; }
-
-    [StringLength(50)]
-    public string? SoLo { get; set; }
-
-    [StringLength(50)]
-    public string? MaNhaCungCap { get; set; }
-
     [Column(TypeName = "decimal(18, 2)")]
     public decimal? TongTien { get; set; }
 
@@ -60,10 +51,6 @@ public partial class HoaDonMuaPlhc
 
     [InverseProperty("MaHoaDonNavigation")]
     public virtual ICollection<HoaDonMuaPlhcchiTiet> HoaDonMuaPlhcchiTiets { get; set; } = new List<HoaDonMuaPlhcchiTiet>();
-
-    [ForeignKey("MaNhaCungCap")]
-    [InverseProperty("HoaDonMuaPlhcs")]
-    public virtual NhaCungCap? MaNhaCungCapNavigation { get; set; }
 
     [ForeignKey("ManvLap")]
     [InverseProperty("HoaDonMuaPlhcs")]

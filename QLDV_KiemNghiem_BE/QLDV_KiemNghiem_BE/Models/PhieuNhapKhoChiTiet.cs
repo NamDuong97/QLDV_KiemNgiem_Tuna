@@ -17,10 +17,6 @@ public partial class PhieuNhapKhoChiTiet
     [StringLength(50)]
     public string? MaPhieuNhapKho { get; set; }
 
-    [Column("MaPLHC")]
-    [StringLength(50)]
-    public string? MaPlhc { get; set; }
-
     [Column("TenPLHC")]
     [StringLength(200)]
     public string? TenPlhc { get; set; }
@@ -55,11 +51,21 @@ public partial class PhieuNhapKhoChiTiet
     [Column(TypeName = "datetime")]
     public DateTime? NgaySua { get; set; }
 
+    [Column("MaDM_PLHC")]
+    [StringLength(50)]
+    public string? MaDmPlhc { get; set; }
+
+    [StringLength(500)]
+    public string? TenNhaCungCap { get; set; }
+
+    [StringLength(50)]
+    public string? SoLo { get; set; }
+
+    [ForeignKey("MaDmPlhc")]
+    [InverseProperty("PhieuNhapKhoChiTiets")]
+    public virtual DmPhuLieuHoaChat? MaDmPlhcNavigation { get; set; }
+
     [ForeignKey("MaPhieuNhapKho")]
     [InverseProperty("PhieuNhapKhoChiTiets")]
     public virtual PhieuNhapKho? MaPhieuNhapKhoNavigation { get; set; }
-
-    [ForeignKey("MaPlhc")]
-    [InverseProperty("PhieuNhapKhoChiTiets")]
-    public virtual PhuLieuHoaChat? MaPlhcNavigation { get; set; }
 }

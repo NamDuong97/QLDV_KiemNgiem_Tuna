@@ -17,18 +17,11 @@ public partial class ChiTietPhieuDuTru
     [StringLength(50)]
     public string? MaPhieuDuTru { get; set; }
 
-    [Column("MaPLHC")]
-    [StringLength(50)]
-    public string? MaPlhc { get; set; }
-
     [StringLength(50)]
     public string? DonViTinh { get; set; }
 
     [Column(TypeName = "decimal(18, 2)")]
     public decimal? SoLuong { get; set; }
-
-    [Column(TypeName = "decimal(18, 2)")]
-    public decimal? Dongia { get; set; }
 
     [StringLength(500)]
     public string? GhiChu { get; set; }
@@ -48,11 +41,15 @@ public partial class ChiTietPhieuDuTru
     [Column(TypeName = "datetime")]
     public DateTime? NgaySua { get; set; }
 
+    [Column("MaDM_PLHC")]
+    [StringLength(50)]
+    public string? MaDmPlhc { get; set; }
+
+    [ForeignKey("MaDmPlhc")]
+    [InverseProperty("ChiTietPhieuDuTrus")]
+    public virtual DmPhuLieuHoaChat? MaDmPlhcNavigation { get; set; }
+
     [ForeignKey("MaPhieuDuTru")]
     [InverseProperty("ChiTietPhieuDuTrus")]
     public virtual PhieuDuTru? MaPhieuDuTruNavigation { get; set; }
-
-    [ForeignKey("MaPlhc")]
-    [InverseProperty("ChiTietPhieuDuTrus")]
-    public virtual PhuLieuHoaChat? MaPlhcNavigation { get; set; }
 }

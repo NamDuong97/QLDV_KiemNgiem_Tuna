@@ -6,7 +6,7 @@ namespace QLDV_KiemNghiem_BE.Interfaces
     public interface IPhieuDangKyRepository
     {
         Task<IEnumerable<PhieuDangKy>> GetPhieuDangKiesAllAsync();
-        Task<IEnumerable<PhieuDangKy>> GetPhieuDangKiesAsync(PhieuDangKy phieuDangKy);
+        Task<IEnumerable<PhieuDangKy>> GetPhieuDangKiesAsync(string maKH);
         void CreatePhieuDangKyAsync(PhieuDangKy phieuDangKy);
     }
 }

@@ -6,30 +6,40 @@ using Microsoft.EntityFrameworkCore;
 
 namespace QLDV_KiemNghiem_BE.Models;
 
-[Table("Mau_PLHC_CungCap")]
-public partial class MauPlhcCungCap
+[Keyless]
+[Table("PhieuDangKy_PhuLieuHoaChat")]
+public partial class PhieuDangKyPhuLieuHoaChat
 {
-    [Key]
-    [Column("MaID")]
     [StringLength(50)]
-    public string MaId { get; set; } = null!;
+    public string? MaPhieuDangKy { get; set; }
 
     [Column("MaPLHC")]
     [StringLength(50)]
     public string? MaPlhc { get; set; }
 
-    [StringLength(50)]
-    public string? MaMau { get; set; }
+    [Column("TenPLHC")]
+    [StringLength(200)]
+    public string? TenPlhc { get; set; }
+
+    [StringLength(200)]
+    public string? TenHienThi { get; set; }
+
+    public int? SoLuong { get; set; }
 
     [StringLength(50)]
     public string? DonViTinh { get; set; }
 
-    public int? SoLuongCungCap { get; set; }
-
-    [StringLength(500)]
+    [StringLength(200)]
     public string? GhiChu { get; set; }
 
-    public bool? TrangThai { get; set; }
+    [Column(TypeName = "datetime")]
+    public DateTime? NgayHetHan { get; set; }
+
+    [StringLength(200)]
+    public string? TenNhaCungCap { get; set; }
+
+    [StringLength(50)]
+    public string? SoLo { get; set; }
 
     [StringLength(50)]
     public string? NguoiTao { get; set; }
@@ -43,11 +53,9 @@ public partial class MauPlhcCungCap
     [Column(TypeName = "datetime")]
     public DateTime? NgaySua { get; set; }
 
-    [ForeignKey("MaMau")]
-    [InverseProperty("MauPlhcCungCaps")]
-    public virtual Mau? MaMauNavigation { get; set; }
+    [ForeignKey("MaPhieuDangKy")]
+    public virtual PhieuDangKy? MaPhieuDangKyNavigation { get; set; }
 
     [ForeignKey("MaPlhc")]
-    [InverseProperty("MauPlhcCungCaps")]
-    public virtual PhuLieuHoaChat? MaPlhcNavigation { get; set; }
+    public virtual DmPhuLieuHoaChat? MaPlhcNavigation { get; set; }
 }

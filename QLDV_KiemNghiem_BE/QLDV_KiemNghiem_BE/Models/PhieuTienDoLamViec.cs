@@ -23,9 +23,6 @@ public partial class PhieuTienDoLamViec
     [StringLength(50)]
     public string? ManvXuLy { get; set; }
 
-    [StringLength(50)]
-    public string? MaMau { get; set; }
-
     [StringLength(500)]
     public string? TenGiaiDoanThucHien { get; set; }
 
@@ -59,6 +56,9 @@ public partial class PhieuTienDoLamViec
 
     [Column(TypeName = "datetime")]
     public DateTime? NgaySua { get; set; }
+
+    [StringLength(50)]
+    public string? MaMau { get; set; }
 
     [ForeignKey("MaMau")]
     [InverseProperty("PhieuTienDoLamViecs")]

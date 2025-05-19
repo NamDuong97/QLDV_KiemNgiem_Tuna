@@ -49,12 +49,12 @@ public partial class TieuChuan
     public DateTime? NgaySua { get; set; }
 
     [InverseProperty("MaTieuChuanNavigation")]
-    public virtual ICollection<ChiTietPhieuDangKy> ChiTietPhieuDangKies { get; set; } = new List<ChiTietPhieuDangKy>();
-
-    [InverseProperty("MaTieuChuanNavigation")]
     public virtual ICollection<ChiTieu> ChiTieus { get; set; } = new List<ChiTieu>();
 
     [ForeignKey("MaDuocDien")]
     [InverseProperty("TieuChuans")]
     public virtual DuocDien? MaDuocDienNavigation { get; set; }
+
+    [InverseProperty("MaTieuChuanNavigation")]
+    public virtual ICollection<Mau> Maus { get; set; } = new List<Mau>();
 }

@@ -1,6 +1,6 @@
 ﻿namespace QLDV_KiemNghiem_BE.Interfaces.ManagerInterface
 {
-    public class IServiceManager
+    public interface IServiceManager
     {
         IPhieuDangKyService PhieuDangKy { get; }
     }

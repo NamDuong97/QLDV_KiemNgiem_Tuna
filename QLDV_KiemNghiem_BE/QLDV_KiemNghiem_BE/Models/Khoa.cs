@@ -20,9 +20,6 @@ public partial class Khoa
     [StringLength(200)]
     public string? TenKhoa { get; set; }
 
-    [StringLength(500)]
-    public string? GhiChu { get; set; }
-
     public bool? TrangThai { get; set; }
 
     [StringLength(50)]
@@ -37,8 +34,8 @@ public partial class Khoa
     [Column(TypeName = "datetime")]
     public DateTime? NgaySua { get; set; }
 
-    [InverseProperty("MaKhoaNavigation")]
-    public virtual ICollection<Mau> Maus { get; set; } = new List<Mau>();
+    [StringLength(500)]
+    public string? GhiChu { get; set; }
 
     [InverseProperty("MaKhoaNavigation")]
     public virtual ICollection<NhanVien> NhanViens { get; set; } = new List<NhanVien>();
