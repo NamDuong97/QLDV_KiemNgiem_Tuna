@@ -15,7 +15,7 @@ namespace QLDV_KiemNghiem_BE.Services
         }
         public async Task<IEnumerable<PhieuDangKy>> GetPhieuDangKiesAllAsync()
         {
-            return await _repositoryManager.PhieuDangKy.GetPhieuDangKiesAllAsync();
+          return await _repositoryManager.PhieuDangKy.GetPhieuDangKiesAllAsync();
         }
         public async Task<IEnumerable<PhieuDangKy>> GetPhieuDangKiesAsync(string maKH)
         {

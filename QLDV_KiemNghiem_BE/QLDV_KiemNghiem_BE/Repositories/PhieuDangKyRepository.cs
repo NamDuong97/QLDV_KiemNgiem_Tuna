@@ -28,7 +28,7 @@ namespace QLDV_KiemNghiem_BE.Repositories
         }
         public void CreatePhieuDangKyAsync(PhieuDangKy phieuDangKy)
         {
-            _context.PhieuDangKies.Add(phieuDangKy);
+           _context.PhieuDangKies.Add(phieuDangKy);
         }
     }
 }

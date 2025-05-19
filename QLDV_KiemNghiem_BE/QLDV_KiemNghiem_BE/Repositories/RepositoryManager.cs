@@ -15,6 +15,7 @@ namespace QLDV_KiemNghiem_BE.Repositories
             _context = dataContext;
             _phieuDangKy = new Lazy<IPhieuDangKyRepository>(() => new PhieuDangKyRepository(dataContext, mapper));
         }
+
         public IPhieuDangKyRepository PhieuDangKy => _phieuDangKy.Value;
         public async Task<bool> SaveChangesAsync() => await _context.SaveChangesAsync() > 0;
     }
