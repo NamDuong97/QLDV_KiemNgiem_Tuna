@@ -20,44 +20,8 @@ public partial class ChiTietPhieuDeXuatPhongBan
     [StringLength(50)]
     public string? MaMau { get; set; }
 
-    [Column(TypeName = "decimal(18, 2)")]
-    public decimal? ThoiGianHoanThanh { get; set; }
-
-    [StringLength(50)]
-    public string? MaTieuChuan { get; set; }
-
-    [StringLength(50)]
-    public string? DonViTinh { get; set; }
-
-    [Column(TypeName = "decimal(18, 2)")]
-    public decimal? SoLuong { get; set; }
-
-    [StringLength(50)]
-    public string? Solo { get; set; }
-
-    [StringLength(200)]
-    public string? DieuKienBaoQuan { get; set; }
-
-    [StringLength(200)]
-    public string? DonViSanXuat { get; set; }
-
     [Column(TypeName = "datetime")]
-    public DateTime? NgaySanXuat { get; set; }
-
-    [Column(TypeName = "datetime")]
-    public DateTime? HanSuDung { get; set; }
-
-    public string? YeuCauKiemNghiem { get; set; }
-
-    [StringLength(500)]
-    public string? TinhTrangMau { get; set; }
-
-    public bool? LuuMau { get; set; }
-
-    public bool? XuatKetQua { get; set; }
-
-    [StringLength(50)]
-    public string? TrangThaiNhanMau { get; set; }
+    public DateTime? NgayNhanMau { get; set; }
 
     [StringLength(50)]
     public string? GhiChu { get; set; }
@@ -74,12 +38,21 @@ public partial class ChiTietPhieuDeXuatPhongBan
     [Column(TypeName = "datetime")]
     public DateTime? NgaySua { get; set; }
 
+    [Column(TypeName = "datetime")]
+    public DateTime? NgayTuChoi { get; set; }
+
+    [StringLength(500)]
+    public string? LyDoTuChoi { get; set; }
+
+    [StringLength(50)]
+    public string? ManvTuChoi { get; set; }
+
     [ForeignKey("MaMau")]
     public virtual Mau? MaMauNavigation { get; set; }
 
     [ForeignKey("MaPhieuDeXuat")]
     public virtual PhieuDeXuatPhongBan? MaPhieuDeXuatNavigation { get; set; }
 
-    [ForeignKey("MaTieuChuan")]
-    public virtual TieuChuan? MaTieuChuanNavigation { get; set; }
+    [ForeignKey("ManvTuChoi")]
+    public virtual NhanVien? ManvTuChoiNavigation { get; set; }
 }

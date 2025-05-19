@@ -53,8 +53,6 @@ public partial class PhieuDangKy
     [StringLength(50)]
     public string? TrangThaiId { get; set; }
 
-    public bool? KetQuaTiengViet { get; set; }
-
     public bool? KetQuaTiengAnh { get; set; }
 
     [Column(TypeName = "datetime")]
@@ -71,9 +69,6 @@ public partial class PhieuDangKy
 
     [Column(TypeName = "datetime")]
     public DateTime? NgaySua { get; set; }
-
-    [InverseProperty("MaPhieuDangKyNavigation")]
-    public virtual ICollection<ChiTietPhieuDangKy> ChiTietPhieuDangKies { get; set; } = new List<ChiTietPhieuDangKy>();
 
     [InverseProperty("MaPhieuDangKyNavigation")]
     public virtual ICollection<HoaDonThu> HoaDonThus { get; set; } = new List<HoaDonThu>();

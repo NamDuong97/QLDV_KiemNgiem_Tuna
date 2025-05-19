@@ -1,4 +1,5 @@
-﻿using QLDV_KiemNghiem_BE.Data;
+﻿using AutoMapper;
+using QLDV_KiemNghiem_BE.Data;
 using QLDV_KiemNghiem_BE.Interfaces;
 using QLDV_KiemNghiem_BE.Interfaces.ManagerInterface;
 
@@ -8,9 +9,11 @@ namespace QLDV_KiemNghiem_BE.Repositories
     {
         private readonly DataContext _context;
         private readonly Lazy<IPhieuDangKyRepository> _phieuDangKy;
-        public RepositoryManager(DataContext dataContext) {
+        private readonly IMapper _mapper;
+        public RepositoryManager(DataContext dataContext, IMapper mapper)
+        {
             _context = dataContext;
-            _phieuDangKy = new Lazy<IPhieuDangKyRepository>(() => new PhieuDangKyRepository(dataContext));
+            _phieuDangKy = new Lazy<IPhieuDangKyRepository>(() => new PhieuDangKyRepository(dataContext, mapper));
         }
 
         public IPhieuDangKyRepository PhieuDangKy => _phieuDangKy.Value;

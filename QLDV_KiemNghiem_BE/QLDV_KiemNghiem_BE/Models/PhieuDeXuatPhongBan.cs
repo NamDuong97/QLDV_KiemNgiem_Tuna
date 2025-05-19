@@ -41,14 +41,6 @@ public partial class PhieuDeXuatPhongBan
     [StringLength(100)]
     public string? TrangThai { get; set; }
 
-    [StringLength(50)]
-    public string? ManvTuChoi { get; set; }
-
-    public string? LyDoTuChoi { get; set; }
-
-    [Column(TypeName = "datetime")]
-    public DateTime? ThoiGianTuChoi { get; set; }
-
     [Column(TypeName = "datetime")]
     public DateTime? NgayTao { get; set; }
 
@@ -76,8 +68,4 @@ public partial class PhieuDeXuatPhongBan
     [ForeignKey("ManvTiepNhan")]
     [InverseProperty("PhieuDeXuatPhongBanManvTiepNhanNavigations")]
     public virtual NhanVien? ManvTiepNhanNavigation { get; set; }
-
-    [ForeignKey("ManvTuChoi")]
-    [InverseProperty("PhieuDeXuatPhongBanManvTuChoiNavigations")]
-    public virtual NhanVien? ManvTuChoiNavigation { get; set; }
 }

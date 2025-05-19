@@ -41,9 +41,6 @@ public partial class DichVu
     [Column(TypeName = "datetime")]
     public DateTime? NgaySua { get; set; }
 
-    [InverseProperty("MadvNavigation")]
-    public virtual ICollection<ChiTietPhieuDangKy> ChiTietPhieuDangKies { get; set; } = new List<ChiTietPhieuDangKy>();
-
     [ForeignKey("MaLoaidv")]
     [InverseProperty("DichVus")]
     public virtual LoaiDichVu? MaLoaidvNavigation { get; set; }

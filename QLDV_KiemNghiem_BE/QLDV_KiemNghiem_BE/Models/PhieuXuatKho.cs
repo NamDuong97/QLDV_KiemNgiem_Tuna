@@ -15,9 +15,6 @@ public partial class PhieuXuatKho
     public string MaId { get; set; } = null!;
 
     [StringLength(50)]
-    public string? MaPhieuDuTru { get; set; }
-
-    [StringLength(50)]
     public string? MaPhieuXuatKho { get; set; }
 
     [StringLength(50)]
@@ -52,6 +49,9 @@ public partial class PhieuXuatKho
 
     [Column(TypeName = "datetime")]
     public DateTime? NgaySua { get; set; }
+
+    [StringLength(50)]
+    public string? MaPhieuDuTru { get; set; }
 
     [InverseProperty("MaPhieuXuatKhoNavigation")]
     public virtual ICollection<ChiTietPhieuXuatKho> ChiTietPhieuXuatKhos { get; set; } = new List<ChiTietPhieuXuatKho>();

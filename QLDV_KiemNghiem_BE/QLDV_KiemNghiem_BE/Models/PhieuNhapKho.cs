@@ -23,9 +23,6 @@ public partial class PhieuNhapKho
     [StringLength(50)]
     public string? ManvNhapKho { get; set; }
 
-    [StringLength(200)]
-    public string? NhaCungCap { get; set; }
-
     [StringLength(100)]
     public string? NguoiGiaoHang { get; set; }
 

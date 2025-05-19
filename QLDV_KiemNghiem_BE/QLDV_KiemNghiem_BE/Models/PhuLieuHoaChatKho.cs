@@ -6,8 +6,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace QLDV_KiemNghiem_BE.Models;
 
-[Table("PhuLieu_HoaChat")]
-public partial class PhuLieuHoaChat
+[Table("PhuLieu_HoaChat_Kho")]
+public partial class PhuLieuHoaChatKho
 {
     [Key]
     [Column("MaID")]
@@ -22,9 +22,9 @@ public partial class PhuLieuHoaChat
     [StringLength(200)]
     public string? TenPlhc { get; set; }
 
-    [Column("MaLoaiPLHC")]
+    [Column("MaDM_PLHC")]
     [StringLength(50)]
-    public string? MaLoaiPlhc { get; set; }
+    public string? MaDmPlhc { get; set; }
 
     [StringLength(50)]
     public string? DonViTinh { get; set; }
@@ -75,35 +75,14 @@ public partial class PhuLieuHoaChat
     [Column(TypeName = "datetime")]
     public DateTime? NgaySua { get; set; }
 
-    [InverseProperty("MaPhuLieuHcNavigation")]
-    public virtual ICollection<ChiTietHoaDonThuBoSung> ChiTietHoaDonThuBoSungs { get; set; } = new List<ChiTietHoaDonThuBoSung>();
-
     [InverseProperty("MaPlhcNavigation")]
-    public virtual ICollection<ChiTietPhieuDuTru> ChiTietPhieuDuTrus { get; set; } = new List<ChiTietPhieuDuTru>();
+    public virtual ICollection<ChiTietPhieuDeXuatMuaPlhc> ChiTietPhieuDeXuatMuaPlhcs { get; set; } = new List<ChiTietPhieuDeXuatMuaPlhc>();
 
-    [InverseProperty("MaPlhcNavigation")]
-    public virtual ICollection<ChiTietPhieuXuatKho> ChiTietPhieuXuatKhos { get; set; } = new List<ChiTietPhieuXuatKho>();
-
-    [InverseProperty("MaPlhcNavigation")]
-    public virtual ICollection<HoaDonMuaPlhcchiTiet> HoaDonMuaPlhcchiTiets { get; set; } = new List<HoaDonMuaPlhcchiTiet>();
-
-    [ForeignKey("MaLoaiPlhc")]
-    [InverseProperty("PhuLieuHoaChats")]
-    public virtual LoaiPhuLieuHoaChat? MaLoaiPlhcNavigation { get; set; }
+    [ForeignKey("MaDmPlhc")]
+    [InverseProperty("PhuLieuHoaChatKhos")]
+    public virtual DmPhuLieuHoaChat? MaDmPlhcNavigation { get; set; }
 
     [ForeignKey("MaNhaCungCap")]
-    [InverseProperty("PhuLieuHoaChats")]
+    [InverseProperty("PhuLieuHoaChatKhos")]
     public virtual NhaCungCap? MaNhaCungCapNavigation { get; set; }
-
-    [InverseProperty("MaPlhcNavigation")]
-    public virtual ICollection<MauPlhcCan> MauPlhcCans { get; set; } = new List<MauPlhcCan>();
-
-    [InverseProperty("MaPlhcNavigation")]
-    public virtual ICollection<MauPlhcCungCap> MauPlhcCungCaps { get; set; } = new List<MauPlhcCungCap>();
-
-    [InverseProperty("MaPlhcNavigation")]
-    public virtual ICollection<PhieuDeXuatMuaPlhcchiTiet> PhieuDeXuatMuaPlhcchiTiets { get; set; } = new List<PhieuDeXuatMuaPlhcchiTiet>();
-
-    [InverseProperty("MaPlhcNavigation")]
-    public virtual ICollection<PhieuNhapKhoChiTiet> PhieuNhapKhoChiTiets { get; set; } = new List<PhieuNhapKhoChiTiet>();
 }

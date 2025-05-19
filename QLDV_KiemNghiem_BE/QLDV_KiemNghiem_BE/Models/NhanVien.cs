@@ -143,9 +143,6 @@ public partial class NhanVien
     [InverseProperty("ManvTiepNhanNavigation")]
     public virtual ICollection<PhieuDeXuatPhongBan> PhieuDeXuatPhongBanManvTiepNhanNavigations { get; set; } = new List<PhieuDeXuatPhongBan>();
 
-    [InverseProperty("ManvTuChoiNavigation")]
-    public virtual ICollection<PhieuDeXuatPhongBan> PhieuDeXuatPhongBanManvTuChoiNavigations { get; set; } = new List<PhieuDeXuatPhongBan>();
-
     [InverseProperty("ManvLapPhieuNavigation")]
     public virtual ICollection<PhieuDuTru> PhieuDuTrus { get; set; } = new List<PhieuDuTru>();
 
