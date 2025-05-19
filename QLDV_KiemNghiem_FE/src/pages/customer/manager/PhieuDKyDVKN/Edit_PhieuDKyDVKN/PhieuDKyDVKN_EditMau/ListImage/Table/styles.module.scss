@@ -1,0 +1,14 @@
+@media only screen and (max-width: 767px) {
+  .tableReponsive {
+    width: 100% !important;
+    max-width: 100%;
+    overflow-x: auto !important;
+    position: relative;
+    height: 265px;
+  }
+
+  .table {
+    width: 560px !important;
+    position: absolute;
+  }
+}

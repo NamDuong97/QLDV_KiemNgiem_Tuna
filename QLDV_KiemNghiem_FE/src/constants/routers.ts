@@ -59,8 +59,24 @@ export const APP_ROUTES = {
       title: "Thêm Mẫu",
     },
     Edit_MAU: {
-      to: "/dang-ky-dich-vu-kiem-nghiem/cap-nhat-thong-tin-mau",
+      to: "/dang-ky-dich-vu-kiem-nghiem/cap-nhat-thong-tin-mau/:id",
       title: "Sửa Mẫu",
+    },
+    PHIEU_DKY_DVKN: {
+      to: "/quan-ly-phieu-dang-ky-dich-vu-kiem-nghiem",
+      title: "Trang quản lý phiếu đăng ký dịch vụ kiểm nghiệm",
+    },
+    EDIT_PHIEU_DKY_DVKN: {
+      to: "/quan-ly-phieu-dang-ky-dich-vu-kiem-nghiem/:id",
+      title: "Trang sửa phiếu đăng ký dịch vụ kiểm nghiệm",
+      CREATE_MAU: {
+        to: "/quan-ly-phieu-dang-ky-dich-vu-kiem-nghiem/:id/them-thong-tin-mau",
+        title: "Thêm Mẫu",
+      },
+      Edit_MAU: {
+        to: "/quan-ly-phieu-dang-ky-dich-vu-kiem-nghiem/:id/:id",
+        title: "Sửa Mẫu",
+      },
     },
   },
 };
