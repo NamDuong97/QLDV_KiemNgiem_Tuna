@@ -17,9 +17,6 @@ public partial class Lkct
     [StringLength(50)]
     public string? MaPhieu { get; set; }
 
-    [StringLength(50)]
-    public string? ManvTao { get; set; }
-
     [Column("NoiDungCT")]
     public string? NoiDungCt { get; set; }
 
@@ -44,6 +41,9 @@ public partial class Lkct
 
     [Column(TypeName = "datetime")]
     public DateTime? NgaySua { get; set; }
+
+    [StringLength(50)]
+    public string? ManvTao { get; set; }
 
     [ForeignKey("MaHd")]
     [InverseProperty("Lkcts")]

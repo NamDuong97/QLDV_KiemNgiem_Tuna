@@ -22,15 +22,8 @@ public partial class PhieuChi
     [Column(TypeName = "decimal(18, 2)")]
     public decimal? SoTien { get; set; }
 
-    [StringLength(50)]
-    public string? ManvTao { get; set; }
-
     [Column(TypeName = "datetime")]
     public DateTime? NgayChi { get; set; }
-
-    [Column("MaHoaDonMuaPLHC")]
-    [StringLength(50)]
-    public string? MaHoaDonMuaPlhc { get; set; }
 
     [StringLength(100)]
     public string? TrangThai { get; set; }
@@ -46,6 +39,13 @@ public partial class PhieuChi
 
     [Column(TypeName = "datetime")]
     public DateTime? NgaySua { get; set; }
+
+    [Column("MaHoaDonMuaPLHC")]
+    [StringLength(50)]
+    public string? MaHoaDonMuaPlhc { get; set; }
+
+    [StringLength(50)]
+    public string? ManvTao { get; set; }
 
     [ForeignKey("MaHoaDonMuaPlhc")]
     [InverseProperty("PhieuChis")]

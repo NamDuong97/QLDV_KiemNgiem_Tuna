@@ -21,9 +21,6 @@ public partial class Mau
     public string? TenMau { get; set; }
 
     [StringLength(50)]
-    public string? MaKhoa { get; set; }
-
-    [StringLength(50)]
     public string? MaLoaiMau { get; set; }
 
     [StringLength(50)]
@@ -89,13 +86,6 @@ public partial class Mau
     [InverseProperty("MaMauNavigation")]
     public virtual ICollection<ChiTietHoaDonThu> ChiTietHoaDonThus { get; set; } = new List<ChiTietHoaDonThu>();
 
-    [InverseProperty("MaMauNavigation")]
-    public virtual ICollection<ChiTietPhieuDangKy> ChiTietPhieuDangKies { get; set; } = new List<ChiTietPhieuDangKy>();
-
-    [ForeignKey("MaKhoa")]
-    [InverseProperty("Maus")]
-    public virtual Khoa? MaKhoaNavigation { get; set; }
-
     [ForeignKey("MaLoaiMau")]
     [InverseProperty("Maus")]
     public virtual LoaiMau? MaLoaiMauNavigation { get; set; }
@@ -103,6 +93,10 @@ public partial class Mau
     [ForeignKey("MaPhieuDangKy")]
     [InverseProperty("Maus")]
     public virtual PhieuDangKy? MaPhieuDangKyNavigation { get; set; }
+
+    [ForeignKey("MaTieuChuan")]
+    [InverseProperty("Maus")]
+    public virtual TieuChuan? MaTieuChuanNavigation { get; set; }
 
     [ForeignKey("Madv")]
     [InverseProperty("Maus")]
@@ -114,12 +108,6 @@ public partial class Mau
 
     [InverseProperty("MaMauNavigation")]
     public virtual ICollection<MauHinhAnh> MauHinhAnhs { get; set; } = new List<MauHinhAnh>();
-
-    [InverseProperty("MaMauNavigation")]
-    public virtual ICollection<MauPlhcCan> MauPlhcCans { get; set; } = new List<MauPlhcCan>();
-
-    [InverseProperty("MaMauNavigation")]
-    public virtual ICollection<MauPlhcCungCap> MauPlhcCungCaps { get; set; } = new List<MauPlhcCungCap>();
 
     [InverseProperty("MaMauNavigation")]
     public virtual ICollection<PhanCongNoiBo> PhanCongNoiBos { get; set; } = new List<PhanCongNoiBo>();

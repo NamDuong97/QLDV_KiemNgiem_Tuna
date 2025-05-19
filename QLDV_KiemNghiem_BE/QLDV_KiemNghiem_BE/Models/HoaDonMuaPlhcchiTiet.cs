@@ -17,13 +17,6 @@ public partial class HoaDonMuaPlhcchiTiet
     [StringLength(50)]
     public string? MaHoaDon { get; set; }
 
-    [Column("MaPLHC")]
-    [StringLength(50)]
-    public string? MaPlhc { get; set; }
-
-    [StringLength(500)]
-    public string? DieuKienBaoQuan { get; set; }
-
     [Column("TenPLHC")]
     [StringLength(200)]
     public string? TenPlhc { get; set; }
@@ -58,11 +51,31 @@ public partial class HoaDonMuaPlhcchiTiet
     [Column(TypeName = "datetime")]
     public DateTime? NgaySua { get; set; }
 
+    [StringLength(50)]
+    public string? SoLo { get; set; }
+
+    [StringLength(50)]
+    public string? MaNhaCungCap { get; set; }
+
+    [StringLength(200)]
+    public string? TenNhaCungCap { get; set; }
+
+    [Column("MaDM_PLHC")]
+    [StringLength(50)]
+    public string? MaDmPlhc { get; set; }
+
+    [Column(TypeName = "datetime")]
+    public DateTime? NgayHetHan { get; set; }
+
+    [ForeignKey("MaDmPlhc")]
+    [InverseProperty("HoaDonMuaPlhcchiTiets")]
+    public virtual DmPhuLieuHoaChat? MaDmPlhcNavigation { get; set; }
+
     [ForeignKey("MaHoaDon")]
     [InverseProperty("HoaDonMuaPlhcchiTiets")]
     public virtual HoaDonMuaPlhc? MaHoaDonNavigation { get; set; }
 
-    [ForeignKey("MaPlhc")]
+    [ForeignKey("MaNhaCungCap")]
     [InverseProperty("HoaDonMuaPlhcchiTiets")]
-    public virtual PhuLieuHoaChat? MaPlhcNavigation { get; set; }
+    public virtual NhaCungCap? MaNhaCungCapNavigation { get; set; }
 }

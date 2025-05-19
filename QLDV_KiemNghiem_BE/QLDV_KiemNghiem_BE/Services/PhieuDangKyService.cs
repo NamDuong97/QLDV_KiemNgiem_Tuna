@@ -1,9 +1,12 @@
-﻿using QLDV_KiemNghiem_BE.Interfaces.ManagerInterface;
+﻿using Microsoft.AspNetCore.Mvc.ModelBinding;
+using QLDV_KiemNghiem_BE.Interfaces;
+using QLDV_KiemNghiem_BE.Interfaces.ManagerInterface;
 using QLDV_KiemNghiem_BE.Models;
+using System;
 
 namespace QLDV_KiemNghiem_BE.Services
 {
-    public class PhieuDangKyService
+    public class PhieuDangKyService : IPhieuDangKyService
     {
         private readonly IRepositoryManager _repositoryManager;
         public PhieuDangKyService(IRepositoryManager repositoryManager)
@@ -14,9 +17,9 @@ namespace QLDV_KiemNghiem_BE.Services
         {
           return await _repositoryManager.PhieuDangKy.GetPhieuDangKiesAllAsync();
         }
-        public async Task<IEnumerable<PhieuDangKy>> GetPhieuDangKiesAsync(PhieuDangKy phieuDangKy)
+        public async Task<IEnumerable<PhieuDangKy>> GetPhieuDangKiesAsync(string maKH)
         {
-            return await _repositoryManager.PhieuDangKy.GetPhieuDangKiesAsync(phieuDangKy);
+            return await _repositoryManager.PhieuDangKy.GetPhieuDangKiesAsync(maKH);
         }
         public async Task<bool> CreatePhieuDangKyAsync(PhieuDangKy phieuDangKy)
         {
