@@ -52,7 +52,7 @@ namespace QLDV_KiemNghiem_BE.Controllers
                 .SelectMany(v => v.Errors)
                 .Select(e => e.ErrorMessage)
                 .ToList();
-                _logger.LogDebug("Tao phieu dang ky that bai");
+                _logger.LogDebug("Loi validate tham so dau vao");
                 return BadRequest(new { Errors = errors });
             }
             bool create = await _service.PhieuDangKy.CreatePhieuDangKyAsync(phieuDangKy);
@@ -68,5 +68,56 @@ namespace QLDV_KiemNghiem_BE.Controllers
             }
         }
 
+        [HttpPut]
+        [Route("updatePhieuDangKy")]
+        public async Task<ActionResult> updatePhieuDangKy(PhieuDangKy phieuDangKy)
+        {
+            if (ModelState.IsValid)
+            {
+                var errors = ModelState.Values
+                .SelectMany(v => v.Errors)
+                .Select(e => e.ErrorMessage)
+                .ToList();
+                _logger.LogDebug("Loi validate tham so dau vao");
+                return BadRequest(new { Errors = errors });
+            }
+            bool update = await _service.PhieuDangKy.UpdatePhieuDangKyAsync(phieuDangKy);
+            if (update)
+            {
+                _logger.LogDebug("Cap nhat phieu dang ky thanh cong");
+                return Ok(phieuDangKy);
+            }
+            else
+            {
+                _logger.LogDebug("Cap nhat phieu dang ky that bai");
+                return BadRequest();
+            }
+        }
+
+        [HttpDelete]
+        [Route("deletePhieuDangKy")]
+        public async Task<ActionResult> deletePhieuDangKy(PhieuDangKy phieuDangKy)
+        {
+            var checkExists = await _service.PhieuDangKy.CheckExistPhieuDangKyAsync(phieuDangKy.MaId);
+            if (checkExists != null)
+            {
+                bool delete = await _service.PhieuDangKy.DeletePhieuDangKyAsync(phieuDangKy);
+                if (delete)
+                {
+                    _logger.LogDebug("Cap nhat phieu dang ky thanh cong");
+                    return Ok(phieuDangKy);
+                }
+                else
+                {
+                    _logger.LogDebug("Cap nhat phieu dang ky that bai");
+                    return BadRequest();
+                }
+            }
+            else
+            {
+                _logger.LogDebug("Phieu dang ky khong ton tai");
+                return BadRequest();
+            }
+        }
     }
 }

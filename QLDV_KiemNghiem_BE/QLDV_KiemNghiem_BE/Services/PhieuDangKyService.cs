@@ -27,5 +27,26 @@ namespace QLDV_KiemNghiem_BE.Services
             bool check = await _repositoryManager.SaveChangesAsync();
             return check;
         }
+
+        public async Task<bool> UpdatePhieuDangKyAsync(PhieuDangKy phieuDangKy)
+        {
+            _repositoryManager.PhieuDangKy.UpdatePhieuDangKyAsync(phieuDangKy);
+            bool check = await _repositoryManager.SaveChangesAsync();
+            return check;
+        }
+
+        public async Task<bool> DeletePhieuDangKyAsync(PhieuDangKy phieuDangKy)
+        {
+            // Xoa cac mau co lien quan den phieu dang ky bi xoa
+            _repositoryManager.PhieuDangKy.DeletePhieuDangKyAsync(phieuDangKy);
+            bool check = await _repositoryManager.SaveChangesAsync();
+            return check;
+        }
+
+        public async Task<PhieuDangKy?> CheckExistPhieuDangKyAsync(string id)
+        {
+            return await _repositoryManager.PhieuDangKy.CheckExistPhieuDangKyAsync(id);
+        }
+
     }
 }

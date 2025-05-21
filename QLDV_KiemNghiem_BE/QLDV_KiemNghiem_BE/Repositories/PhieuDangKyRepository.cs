@@ -30,5 +30,21 @@ namespace QLDV_KiemNghiem_BE.Repositories
         {
            _context.PhieuDangKies.Add(phieuDangKy);
         }
+
+        public void UpdatePhieuDangKyAsync(PhieuDangKy phieuDangKy)
+        {
+            _context.PhieuDangKies.Update(phieuDangKy);
+        }
+
+        public void DeletePhieuDangKyAsync(PhieuDangKy phieuDangKy)
+        {
+            _context.PhieuDangKies.Remove(phieuDangKy);
+        }
+
+        public async Task<PhieuDangKy?> CheckExistPhieuDangKyAsync(string id)
+        {
+            var result = await _context.PhieuDangKies.FindAsync(id);
+            return result;
+        }
     }
 }
