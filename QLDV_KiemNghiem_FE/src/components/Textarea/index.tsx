@@ -46,22 +46,17 @@ export const Textarea = (props: InputsProps) => {
     height,
   } = props;
 
-  const { ref: refInput, ...inputProps } = inputRef || { ref: null };
-
   return (
     <FormControl
       fullWidth
       className={`gap-2 grid ${height ? height : "h-[106px]"}`}
     >
       {title && (
-        <p className="!font-semibold text-base/6 text-gray_80">
-          {title}
-        </p>
+        <p className="!font-semibold text-base/6 text-gray_80">{title}</p>
       )}
       <textarea
         autoComplete="off"
         placeholder={placeholder}
-        fullWidth
         name={name}
         defaultValue={defaultValue}
         value={value}
@@ -69,8 +64,7 @@ export const Textarea = (props: InputsProps) => {
           className,
           "border border-solid border-gray-300 rounded text-lg/6 px-[14px] py-[9.5px]"
         )}
-        {...inputProps}
-        inputRef={refInput}
+        {...inputRef}
         readOnly={readOnly}
         onFocus={onFocus}
         sx={sx}
