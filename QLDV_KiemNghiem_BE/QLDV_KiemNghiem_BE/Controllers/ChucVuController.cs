@@ -5,7 +5,7 @@ namespace QLDV_KiemNghiem_BE.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class KhoaController : ControllerBase
+    public class ChucVuController : ControllerBase
     {
     }
 }
