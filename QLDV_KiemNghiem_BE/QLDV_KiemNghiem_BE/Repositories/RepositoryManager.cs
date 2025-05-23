@@ -9,17 +9,24 @@ namespace QLDV_KiemNghiem_BE.Repositories
     {
         private readonly DataContext _context;
         private readonly Lazy<IPhieuDangKyRepository> _phieuDangKy;
+<<<<<<< HEAD
         private readonly Lazy<IMauRepository> _mau;
         private readonly Lazy<IPhieuDangKyPhuLieuHoaChatRepository> _phieuDangKyPhuLieuHoaChat;
         private readonly Lazy<IDmPhuLieuHoaChatRepository> _dmPhuLieuHoaChat;
    
+=======
+        private readonly IMapper _mapper;
+>>>>>>> fc6d0264aa04ba2547ac84d8521223587ec9cb6e
         public RepositoryManager(DataContext dataContext, IMapper mapper)
         {
             _context = dataContext;
             _phieuDangKy = new Lazy<IPhieuDangKyRepository>(() => new PhieuDangKyRepository(dataContext, mapper));
+<<<<<<< HEAD
             _mau = new Lazy<IMauRepository>(() => new MauRepository(dataContext, mapper));
             _phieuDangKyPhuLieuHoaChat = new Lazy<IPhieuDangKyPhuLieuHoaChatRepository>(() => new PhieuDangKyPhuLieuHoaChatRepository(dataContext, mapper));
             _dmPhuLieuHoaChat = new Lazy<IDmPhuLieuHoaChatRepository>(() => new DmPhuLieuHoaChatRepository(dataContext, mapper));
+=======
+>>>>>>> fc6d0264aa04ba2547ac84d8521223587ec9cb6e
         }
 
         public IPhieuDangKyRepository PhieuDangKy => _phieuDangKy.Value;

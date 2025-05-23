@@ -17,11 +17,19 @@ builder.Services.AddScoped<IServiceManager, ServiceManager>();
 
 builder.Services.AddAutoMapper(op => op.AddProfile<MappingProfile>(),typeof(Program));
 
+<<<<<<< HEAD
 builder.Services.AddControllers(); // thay vì AddControllers()
 
 var app = builder.Build();
 
 //Configure the HTTP request pipeline. 
+=======
+builder.Services.AddControllers();
+
+var app = builder.Build();
+
+//Configure the HTTP request pipeline.
+>>>>>>> fc6d0264aa04ba2547ac84d8521223587ec9cb6e
 
 app.UseHttpsRedirection();
 

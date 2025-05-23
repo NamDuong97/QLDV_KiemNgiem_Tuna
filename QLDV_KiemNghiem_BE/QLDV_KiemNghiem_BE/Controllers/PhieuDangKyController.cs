@@ -52,7 +52,11 @@ namespace QLDV_KiemNghiem_BE.Controllers
                 .SelectMany(v => v.Errors)
                 .Select(e => e.ErrorMessage)
                 .ToList();
+<<<<<<< HEAD
                 _logger.LogDebug("Loi validate tham so dau vao");
+=======
+                _logger.LogDebug("Tao phieu dang ky that bai");
+>>>>>>> fc6d0264aa04ba2547ac84d8521223587ec9cb6e
                 return BadRequest(new { Errors = errors });
             }
             bool create = await _service.PhieuDangKy.CreatePhieuDangKyAsync(phieuDangKy);
@@ -68,6 +72,7 @@ namespace QLDV_KiemNghiem_BE.Controllers
             }
         }
 
+<<<<<<< HEAD
         [HttpPut]
         [Route("updatePhieuDangKy")]
         public async Task<ActionResult> updatePhieuDangKy(PhieuDangKy phieuDangKy)
@@ -119,5 +124,7 @@ namespace QLDV_KiemNghiem_BE.Controllers
                 return BadRequest();
             }
         }
+=======
+>>>>>>> fc6d0264aa04ba2547ac84d8521223587ec9cb6e
     }
 }
