@@ -9,7 +9,7 @@ const Edit_PhieuDKyDVKN = (props: Props) => {
   const url = useLocation();
   const id = decodeURIComponent(url.pathname.split("/")[2]);
 
-  const data = sessionStorage.getItem("DataPhieuDangKy");
+  const data = localStorage.getItem("DataPhieuDangKy");
   const dataSuaPhieuDangKy = data
     ? JSON.parse(data).find((item: any) => item.NguoiGuiMau === id)
     : [];

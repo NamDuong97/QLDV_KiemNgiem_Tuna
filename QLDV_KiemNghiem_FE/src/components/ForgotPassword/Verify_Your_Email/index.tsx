@@ -7,7 +7,7 @@ import { image } from "../../../constants/image";
 
 interface VerifyYourEmailProps {
   tabPage: boolean;
-  dataEmail: string;
+  dataEmail: any;
   handleRedirectLogin: () => void;
 }
 
@@ -43,16 +43,18 @@ const VerifyYourEmail = (props: VerifyYourEmailProps) => {
               <Box className="text-center gap-2 grid">
                 <h1 className="text-3xl font-bold">Verify your email</h1>
                 <Typography className="text-base/6 font-medium text-gray-400">
-                  We've sent a link to your email address:
+                  Chúng tôi đã gửi liên kết đến địa chỉ email của bạn:
                 </Typography>
-                <p className="text-base/6 font-bold text-black">{dataEmail}</p>
+                <p className="text-base/6 font-bold text-black">
+                  {dataEmail.EmailCaNhan}
+                </p>
                 <Typography className="text-base/6 font-medium text-gray-400">
-                  Please click Back Login to continue Login
+                  Vui lòng nhấp vào Quay lại Đăng nhập để tiếp tục Đăng nhập
                 </Typography>
               </Box>
               <Box className="flex justify-center">
                 <Button variant="contained" onClick={handleRedirectLogin}>
-                  Back Login
+                  Quay lại Đăng Nhập
                 </Button>
               </Box>
             </Box>

@@ -1,8 +1,9 @@
 import { Box, Pagination } from "@mui/material";
-import React, { MouseEvent, useState } from "react";
-import PopoverBolocChoXetDuyet from "./PopoverBolocChoXetDuyet";
+import { MouseEvent, useState } from "react";
 import TableChoXetDuyet from "./TableChoXetDuyet";
 import { Align } from "../../../../../../models/Table";
+import PopupHuyPhieu from "./PopupHuyPhieu";
+import PopupBolocChoXetDuyet from "./PopupBolocChoXetDuyet";
 
 interface Props {}
 
@@ -40,26 +41,16 @@ const tableHead = [
 ];
 
 const ChoXetDuyet = (props: Props) => {
-  const data = sessionStorage.getItem("DataPhieuDangKy");
+  const data = localStorage.getItem("DataPhieuDangKy");
   const dataPhieuDKy = data ? JSON.parse(data) : [];
   const [listCheckbox, setListCheckbox] = useState<any[]>([]);
+  const [openPopupHuyPhieu, setOpenPopupHuyPhieu] = useState(false);
 
-  const [anchorElPopoverBolocChoXetDuyet, setAnchorElPopoverBolocChoXetDuyet] =
-    useState<HTMLButtonElement | null>(null);
-  const openPopoverBolocChoXetDuyet = Boolean(anchorElPopoverBolocChoXetDuyet);
-
-  const handleClickPopoverBolocChoXetDuyet = (
-    event: MouseEvent<HTMLButtonElement>
-  ) => {
-    setAnchorElPopoverBolocChoXetDuyet(event.currentTarget);
-  };
-
-  const handleClosePopoverBolocChoXetDuyet = () => {
-    setAnchorElPopoverBolocChoXetDuyet(null);
-  };
+  const [openPopupBolocChoXetDuyet, setOpenPopupBolocChoXetDuyet] =
+    useState(false);
 
   const handleHuyPhieu = () => {
-    console.log("listCheckbox", listCheckbox);
+    setOpenPopupHuyPhieu(true);
   };
 
   return (
@@ -67,7 +58,7 @@ const ChoXetDuyet = (props: Props) => {
       <Box className="flex justify-between">
         <Box>
           <button
-            onClick={handleClickPopoverBolocChoXetDuyet}
+            onClick={() => setOpenPopupBolocChoXetDuyet(true)}
             className="border border-solid border-gray-300 rounded-md px-3 py-[6px] text-[#677788] font-medium text-xs/4 sm:text-sm/6 flex items-center gap-2 cursor-pointer shadow-[inset_0_0_3px_rgba(0,0,0,0.2)] hover:shadow-none"
           >
             Bộ Lọc
@@ -75,11 +66,6 @@ const ChoXetDuyet = (props: Props) => {
               0
             </span>
           </button>
-          <PopoverBolocChoXetDuyet
-            open={openPopoverBolocChoXetDuyet}
-            anchorEl={anchorElPopoverBolocChoXetDuyet}
-            handleClose={handleClosePopoverBolocChoXetDuyet}
-          />
         </Box>
         {listCheckbox?.length > 0 && (
           <Box>
@@ -121,6 +107,14 @@ const ChoXetDuyet = (props: Props) => {
           }}
         />
       </Box>
+      <PopupHuyPhieu
+        open={openPopupHuyPhieu}
+        handleClose={() => setOpenPopupHuyPhieu(false)}
+      />
+      <PopupBolocChoXetDuyet
+        open={openPopupBolocChoXetDuyet}
+        handleClose={() => setOpenPopupBolocChoXetDuyet(false)}
+      />
     </Box>
   );
 };

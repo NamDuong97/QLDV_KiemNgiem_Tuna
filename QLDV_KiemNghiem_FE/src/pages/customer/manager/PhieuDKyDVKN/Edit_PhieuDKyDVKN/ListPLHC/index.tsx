@@ -15,6 +15,7 @@ import InputSearch from "../../../../../../components/InputSearch";
 import { useLocation, useNavigate } from "react-router";
 import { IoArrowBackCircleOutline } from "react-icons/io5";
 import { APP_ROUTES } from "../../../../../../constants/routers";
+import PopupXoaPLHC from "./PopupXoaPLHC";
 
 interface ListPLHCProps {
   dataListPLHC?: any[];
@@ -101,11 +102,8 @@ const ListPLHC = (props: ListPLHCProps) => {
 
   const [valueSearch, setValueSearch] = useState("");
   const [tableBody, settableBody] = useState(() => {
-    console.log("currentItems", dataListPLHC);
-
     return dataListPLHC ? dataListPLHC : [];
   });
-  console.log("tableBody", tableBody);
 
   const [listCheckbox, setListCheckbox] = useState<any[]>([]);
   const [dataEditPLHC, setDataEditPLHC] = useState<any>();
@@ -119,6 +117,8 @@ const ListPLHC = (props: ListPLHCProps) => {
   const currentItems = tableBody?.slice(indexOfFirstItem, indexOfLastItem);
 
   const totalPages = Math.ceil(tableBody && tableBody.length / itemsPerPage);
+
+  const [openPopupXoaPLHC, setOpenPopupXoaPLHC] = useState(false);
 
   let schema = useMemo(() => {
     return yup.object().shape({
@@ -582,7 +582,8 @@ const ListPLHC = (props: ListPLHCProps) => {
               <Box className="flex justify-between gap-6">
                 {listCheckbox.length > 0 && (
                   <button
-                    onClick={handleXoaPLHC}
+                    type="button"
+                    onClick={() => setOpenPopupXoaPLHC(true)}
                     className="text-lg/6 font-bold text-center border border-solid border-red-500 text-red-500 px-4 py-1 lg:px-10 lg:py-2 hover:text-white rounded-md hover:bg-red-500 cursor-pointer"
                   >
                     Xóa
@@ -648,6 +649,11 @@ const ListPLHC = (props: ListPLHCProps) => {
           </button>
         </Box>
       </Box>
+      <PopupXoaPLHC
+        open={openPopupXoaPLHC}
+        handleClose={() => setOpenPopupXoaPLHC(false)}
+        listCheckbox={listCheckbox}
+      />
     </motion.div>
   );
 };

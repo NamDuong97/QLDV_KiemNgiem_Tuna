@@ -9,6 +9,7 @@ import InputSearch from "../../../../../../components/InputSearch";
 import { APP_ROUTES } from "../../../../../../constants/routers";
 import { IoArrowBackCircleOutline } from "react-icons/io5";
 import ThongBao from "./ThongBao";
+import PopupXoaMau from "./PopupXoaMau";
 
 interface ListMauProps {
   dataListMau?: any[];
@@ -54,20 +55,17 @@ const ListMau = (props: ListMauProps) => {
   const [tableBody, settableBody] = useState(() => {
     return dataListMau ? dataListMau : [];
   });
-
   const [listCheckbox, setListCheckbox] = useState<any[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(10);
   const navigate = useNavigate();
   const url = useLocation().pathname;
-
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentItems = tableBody?.slice(indexOfFirstItem, indexOfLastItem);
-
   const totalPages = Math.ceil(tableBody && tableBody.length / itemsPerPage);
-
   const [openThongBao, setOpenThongBao] = useState(false);
+  const [openPopupXoaMau, setOpenPopupXoaMau] = useState(false);
 
   useEffect(() => {
     const dataTableBody = dataListMau ? dataListMau : [];
@@ -96,23 +94,6 @@ const ListMau = (props: ListMauProps) => {
 
   const handleCloseThongBao = () => {
     setOpenThongBao(false);
-  };
-
-  const handleXoaMau = () => {
-    // const data = tableBody.filter((item: any) => {
-    //   return !listCheckbox.some(
-    //     (subitem: any) => subitem.TenMau === item.TenMau
-    //   );
-    // });
-    // const dataTest = sessionStorage.getItem("PhieuDangKy");
-    // const dataPhieuDangky = dataTest ? JSON.parse(dataTest) : null;
-    // const PhieuDangKy = {
-    //   ...dataPhieuDangky,
-    //   Mau: data,
-    // };
-    // sessionStorage.setItem("PhieuDangKy", JSON.stringify(PhieuDangKy));
-    // settableBody(data);
-    // setListCheckbox([]);
   };
 
   return (
@@ -166,7 +147,7 @@ const ListMau = (props: ListMauProps) => {
             {listCheckbox.length > 0 && (
               <button
                 className="px-4 py-1 lg:px-6 lg:py-2 rounded cursor-pointer border border-solid border-red-500 text-red-500 group hover:bg-red-500"
-                onClick={handleXoaMau}
+                onClick={() => setOpenPopupXoaMau(true)}
               >
                 <span className="text-base/4 lg:text-lg/6 font-bold text-red-500 group-hover:text-white">
                   Xóa Mẫu
@@ -225,6 +206,12 @@ const ListMau = (props: ListMauProps) => {
         </Box>
       </Box>
       <ThongBao open={openThongBao} handleClose={handleCloseThongBao} />
+      <PopupXoaMau
+        open={openPopupXoaMau}
+        handleClose={() => setOpenPopupXoaMau(false)}
+        listCheckbox={listCheckbox}
+      />
+      ;
     </motion.div>
   );
 };

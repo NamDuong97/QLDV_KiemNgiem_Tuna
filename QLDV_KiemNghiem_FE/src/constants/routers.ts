@@ -44,6 +44,11 @@ export const APP_ROUTES = {
       to: "/tuna/account",
       title: "Quản Lý Tài Khoản",
     },
+    QUAN_LY_PHIEU_DANG_KY_DICH_VU_KIEM_NGHIEM: {
+      to: "/tuna/quan-ly-phieu-dang-ky-dich-vu-kiem-nghiem",
+      title: "Quản Lý Phiếu đăng ký dịch vụ kiểm nghiệm",
+      id: "/tuna/quan-ly-phieu-dang-ky-dich-vu-kiem-nghiem/:id",
+    },
   },
   TUNA_CUSTOMER: {
     HOME: {
@@ -77,6 +82,11 @@ export const APP_ROUTES = {
         to: "/quan-ly-phieu-dang-ky-dich-vu-kiem-nghiem/:id/:id",
         title: "Sửa Mẫu",
       },
+    },
+    QUAN_LY_HOA_DON: {
+      to: "/quan-ly-hoa-don",
+      title: "Trang quản lý hóa đơn",
+      id: "/quan-ly-hoa-don/:id",
     },
   },
 };

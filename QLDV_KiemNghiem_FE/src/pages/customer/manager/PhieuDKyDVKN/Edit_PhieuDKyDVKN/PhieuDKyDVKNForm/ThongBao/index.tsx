@@ -40,8 +40,8 @@ const ThongBao = (props: Props) => {
       aria-labelledby="alert-dialog-title"
       aria-describedby="alert-dialog-description"
     >
-      <Box className="relative px-7 py-6 w-auto md:w-[785px]">
-        <Box className="absolute top-2 right-5">
+      <Box className="!relative px-7 py-6 w-auto md:w-[785px]">
+        <Box className="!absolute top-2 right-5">
           <button
             className="bg-gray-400 rounded-full p-[6px] hover:bg-gray-500 cursor-pointer"
             onClick={handleCloseNofitication}

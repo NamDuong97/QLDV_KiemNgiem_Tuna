@@ -17,9 +17,10 @@ import { useNavigate } from "react-router";
 import yup from "../../../configs/yup.custom";
 import { APP_ROUTES } from "../../../constants/routers";
 import { Inputs } from "../../Inputs";
+import { InputTextField } from "../../InputTextField";
 
 interface LoginForm {
-  email: string;
+  username: string;
   password: string;
 }
 
@@ -30,11 +31,14 @@ const Login = () => {
 
   let schema = useMemo(() => {
     return yup.object().shape({
-      email: yup
+      username: yup
         .string()
-        .required("Email is required")
-        .email("Please enter a valid email address"),
-      password: yup.string().required("Password is required"),
+        .required("Yêu cầu nhập Tài khoản")
+        .max(200, "Tài khoản nhập phải dưới 200 ký tự"),
+      password: yup
+        .string()
+        .required("Yêu cầu nhập mật khẩu")
+        .max(200, "Mật khẩu nhập phải dưới 200 ký tự"),
     }); // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -49,7 +53,7 @@ const Login = () => {
     // const form = new FormData();
     // form.append("email", data.email)
     // form.append("password", data.password)
-    if (data.email === "admin123@gmail.com" && data.password === "123")
+    if (data.username === "admin123" && data.password === "123")
       router(APP_ROUTES.TUNA_ADMIN.DASHBOARD.to);
     else {
       setIsError(true);
@@ -67,7 +71,7 @@ const Login = () => {
 
   useEffect(() => {
     reset({
-      email: "",
+      username: "",
       password: "",
     });
   }, []);
@@ -87,24 +91,25 @@ const Login = () => {
                 <Box className="gap-3 grid">
                   <Box className="gap-6 grid">
                     <Box>
-                      <Inputs
-                        type="email"
-                        name="email"
-                        inputRef={register("email")}
-                        errorMessage={errors.email?.message}
-                        placeholder="Enter your email/username"
-                        readOnly
-                        onFocus={(e) => e.target.removeAttribute("readOnly")}
+                      <InputTextField
+                        title="Tài Khoản"
+                        name="username"
+                        variant="standard"
+                        className="w-full"
+                        inputRef={register("username")}
+                        errorMessage={errors.username?.message}
                       />
                     </Box>
                     <Box>
                       <Box>
-                        <Inputs
+                        <InputTextField
+                          title="Mật Khẩu"
                           type="password"
                           name="password"
+                          variant="standard"
+                          className="w-full"
                           inputRef={register("password")}
                           errorMessage={errors.password?.message}
-                          placeholder="Enter your password"
                         />
                       </Box>
                       <Box className="text-end">

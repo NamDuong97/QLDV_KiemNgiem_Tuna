@@ -14,31 +14,16 @@ const ThongBao = (props: Props) => {
 
   const navigate = useNavigate();
   const url = useLocation().pathname;
-
-  const handleRedirectListMau = () => {
-    navigate(`${url}?tuna=danh-sach-phu-lieu-hoa-chat`);
-  };
-
-  const handleXacNhan = () => {
-    navigate(
-      `${APP_ROUTES.TUNA_CUSTOMER.PHIEU_DKY_DVKN.to}?tuna=cho-xet-duyet`
-    );
-  };
+  
 
   const handleCloseNofitication = () => {
     handleClose?.();
   };
 
   return (
-    <Dialog
-      open={open}
-      maxWidth="lg"
-      onClose={handleCloseNofitication}
-      aria-labelledby="alert-dialog-title"
-      aria-describedby="alert-dialog-description"
-    >
-      <Box className="relative px-7 py-6 w-auto md:w-[785px]">
-        <Box className="absolute top-2 right-5">
+    <Dialog open={open} maxWidth="lg" onClose={handleCloseNofitication}>
+      <Box className="!relative px-7 py-6 w-auto md:w-[785px]">
+        <Box className="!absolute top-2 right-5">
           <button
             className="bg-gray-400 rounded-full p-[6px] hover:bg-gray-500 cursor-pointer"
             onClick={handleCloseNofitication}
@@ -68,14 +53,20 @@ const ThongBao = (props: Props) => {
                 <button
                   type="button"
                   className="font-bold text-center text-white bg-[#f8cf00] px-4 py-1 lg:px-6 lg:py-2 rounded-md hover:bg-yellow-500 cursor-pointer"
-                  onClick={handleClose}
+                  onClick={() =>
+                    navigate(
+                      "/quan-ly-phieu-dang-ky-dich-vu-kiem-nghiem?tuna=cho-xet-duyet"
+                    )
+                  }
                 >
-                  Quay Lại
+                  Quay Lại Trang Quản Lý
                 </button>
                 <button
                   type="button"
                   className="font-bold text-center text-white bg-[#0099f8] px-4 py-1 lg:px-6 lg:py-2 rounded-md hover:bg-blue-500 cursor-pointer"
-                  onClick={handleRedirectListMau}
+                  onClick={() =>
+                    navigate(`${url}?tuna=danh-sach-phu-lieu-hoa-chat`)
+                  }
                 >
                   Tiếp tục
                 </button>

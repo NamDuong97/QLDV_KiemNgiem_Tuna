@@ -35,3 +35,14 @@ export interface FormPhieuDangKy {
   KetQuaTiengAnh?: number;
   NgayGiaoMau: string;
 }
+
+export interface FormBoLocPhieuDangKyChoXetDuyet {
+  NgayBatDau: string;
+  NgayKetThuc: string;
+}
+
+export interface FormBoLocQuanLyPhieuDKyDVHN {
+  KetQua?: string;
+  NgayBatDau?: string;
+  NgayKetThuc?: string;
+}

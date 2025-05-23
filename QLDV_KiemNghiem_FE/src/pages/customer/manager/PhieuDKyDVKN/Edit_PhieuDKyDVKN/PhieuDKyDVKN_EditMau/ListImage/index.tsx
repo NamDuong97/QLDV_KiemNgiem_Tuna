@@ -3,6 +3,7 @@ import Tables from "./Table";
 import { Dispatch, useCallback, useEffect, useState } from "react";
 import { useDropzone } from "react-dropzone";
 import { Align } from "../../../../../../../models/Table";
+import PopupXoaAnh from "./PopupXoaAnh";
 
 interface Props {
   errorsMessage?: any;
@@ -24,6 +25,7 @@ const ListImage = (props: Props) => {
   const [selectedRow, setSelectedRow] = useState<string | null>(null);
 
   const [ErrorisTrungLap, setErrorIsTrungLap] = useState(false);
+  const [openPopupXoaAnh, setOpenPopupXoaAnh] = useState(false);
 
   const onDrop = useCallback(
     (acceptedFiles: any) => {
@@ -61,21 +63,6 @@ const ListImage = (props: Props) => {
 
   const { getRootProps, getInputProps } = useDropzone({ onDrop });
 
-  const handeleRemoveImage = () => {
-    const temp = listImage.filter((item: any) => item.name === selectedRow);
-    const updatedImages = listImage.filter((item: any) => {
-      return !temp.some(
-        (subitem: any) =>
-          subitem.base64 === item.base64 &&
-          subitem.name === item.name &&
-          subitem.size === item.size &&
-          subitem.lastModified === item.lastModified
-      );
-    });
-    setListImage(updatedImages);
-    setSelectedRow(null);
-  };
-
   useEffect(() => {
     sessionStorage.setItem("ImageTemp", JSON.stringify(listImage));
     setListImage(listImage);
@@ -86,7 +73,7 @@ const ListImage = (props: Props) => {
       <Box className={`flex justify-end gap-6`}>
         {selectedRow && (
           <p
-            onClick={handeleRemoveImage}
+            onClick={() => setOpenPopupXoaAnh(true)}
             className="px-4 py-1 lg:px-6 lg:py-2 rounded cursor-pointer border border-solid border-red-500 text-red-500 group hover:bg-red-500"
           >
             <span className="text-base/6 md:text-lg/6 font-bold text-red-500 group-hover:text-white">
@@ -112,7 +99,7 @@ const ListImage = (props: Props) => {
         selectedRow={selectedRow}
         listImage={listImage}
       />
-      {listImage.length >= 5 && (
+      {listImage?.length >= 5 && (
         <p className="text-[#af1c10] text-lg/6">
           Ảnh đã được upload tối đa là 5 hình
         </p>
@@ -123,6 +110,10 @@ const ListImage = (props: Props) => {
       {errorsMessage && (
         <p className="text-[#af1c10] text-lg/6">{errorsMessage}</p>
       )}
+      <PopupXoaAnh
+        open={openPopupXoaAnh}
+        handleClose={() => setOpenPopupXoaAnh(false)}
+      />
     </Box>
   );
 };

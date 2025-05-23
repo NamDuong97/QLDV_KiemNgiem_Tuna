@@ -3,30 +3,36 @@ import { Box, Button, Container, Link, Typography } from "@mui/material";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import { useMemo, useState } from "react";
-import { useForm, SubmitHandler } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import ExitToAppIcon from "@mui/icons-material/ExitToApp";
 import VerifyYourEmail from "./Verify_Your_Email";
 import { useNavigate } from "react-router";
 import yup from "../../configs/yup.custom";
 import { APP_ROUTES } from "../../constants/routers";
-import { Inputs } from "../Inputs";
+import { InputTextField } from "../InputTextField";
 
 interface LoginForm {
-  email: string;
+  TenTaiKhoan: string;
+  EmailCaNhan: string;
 }
 
 const ForgotPassword = () => {
   const router = useNavigate();
   const [tabPage, setTabPage] = useState(true);
   const [isSentEmail, setIsSentEmail] = useState(false);
-  const [dataEmail, setDataEmail] = useState("");
+  const [dataEmail, setDataEmail] = useState({});
 
   let schema = useMemo(() => {
     return yup.object().shape({
-      email: yup
+      TenTaiKhoan: yup
         .string()
-        .required("Email is required")
-        .email("Please enter a valid email address"),
+        .required("Yêu cầu nhập Tài khoản")
+        .max(200, "Tài khoản nhập phải dưới 200 ký tự"),
+      EmailCaNhan: yup
+        .string()
+        .required("Yêu cầu nhập email")
+        .max(50, "Email nhập phải dưới 50 ký tự")
+        .email("Yêu cầu nhập đúng định dạng email"),
     }); // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -39,14 +45,13 @@ const ForgotPassword = () => {
   const onSubmit = (data: LoginForm) => {
     // const form = new FormData();
     // form.append("email", data.email)
-    setDataEmail(data.email);
+    setDataEmail(data);
     setIsSentEmail(true);
     setTabPage(!tabPage);
   };
 
-  // const onSubmit: SubmitHandler<LoginForm> = (data) => console.log(data)
   const handleRedirectLogin = () => {
-    router(APP_ROUTES.LOGIN.to);
+    router(APP_ROUTES.TUNA_ADMIN.LOGIN.to);
   };
 
   return (
@@ -72,26 +77,27 @@ const ForgotPassword = () => {
                   <Box className="text-center gap-2 grid">
                     <h1 className="text-3xl font-bold">Forgot password?</h1>
                     <Typography className="text-base/6 font-medium text-gray-400">
-                      Enter the email address you used when you joined and we'll
-                      send you instructions to reset your password.
+                      Nhập tài khoản bạn đã sử dụng khi tham gia và chúng tôi sẽ
+                      gửi cho bạn mật khẩu mới.
                     </Typography>
                   </Box>
                   <form autoComplete="off" onSubmit={handleSubmit(onSubmit)}>
                     <Box className="gap-3 grid">
                       <Box className="gap-6 grid">
-                        <Box>
-                          <Inputs
-                            type="email"
-                            name="email"
-                            inputRef={register("email")}
-                            errorMessage={errors.email?.message}
-                            placeholder="Enter your email"
-                            readOnly
-                            onFocus={(e) =>
-                              e.target.removeAttribute("readOnly")
-                            }
-                          />
-                        </Box>
+                        <InputTextField
+                          title="Tài Khoản"
+                          variant="standard"
+                          className="w-full"
+                          inputRef={register("TenTaiKhoan")}
+                          errorMessage={errors.TenTaiKhoan?.message}
+                        />
+                        <InputTextField
+                          title="Email"
+                          variant="standard"
+                          className="w-full"
+                          inputRef={register("EmailCaNhan")}
+                          errorMessage={errors.EmailCaNhan?.message}
+                        />
                       </Box>
                       <Box>
                         <Button
