@@ -8,5 +8,8 @@ namespace QLDV_KiemNghiem_BE.Interfaces
         Task<IEnumerable<PhieuDangKy>> GetPhieuDangKiesAllAsync();
         Task<IEnumerable<PhieuDangKy>> GetPhieuDangKiesAsync(string maKH);
         void CreatePhieuDangKyAsync(PhieuDangKy phieuDangKy);
+        void UpdatePhieuDangKyAsync(PhieuDangKy phieuDangKy);
+        void DeletePhieuDangKyAsync(PhieuDangKy phieuDangKy);
+        Task<PhieuDangKy?> CheckExistPhieuDangKyAsync(string id);
     }
 }

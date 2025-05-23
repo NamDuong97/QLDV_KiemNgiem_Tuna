@@ -17,15 +17,20 @@ builder.Services.AddScoped<IServiceManager, ServiceManager>();
 
 builder.Services.AddAutoMapper(op => op.AddProfile<MappingProfile>(),typeof(Program));
 
-builder.Services.AddControllers();
+builder.Services.AddControllers(); // thay vì AddControllers()
 
 var app = builder.Build();
 
-//Configure the HTTP request pipeline.
+//Configure the HTTP request pipeline. 
 
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
+
+app.MapControllerRoute(
+  name: "default",
+  pattern: "{controller=Home}/{action=Index}/{id?}",
+  defaults: new { controller = "Home", action = "Index" });
 
 app.MapControllers();
 
