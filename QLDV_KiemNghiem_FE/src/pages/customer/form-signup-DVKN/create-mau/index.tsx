@@ -132,8 +132,8 @@ const CreateMau = () => {
         .string()
         .required("Yêu cầu nhập Điều kiện bảo quản")
         .max(200, "Điều kiện bảo quản nhập không quá 200 ký tự"),
-      LuuMau: yup.number().transform((value, item) => (item ? 1 : 0)),
-      XuatKetQua: yup.number().transform((value, item) => (item ? 1 : 0)),
+      LuuMau: yup.number().transform((_, item) => (item ? 1 : 0)),
+      XuatKetQua: yup.number().transform((_, item) => (item ? 1 : 0)),
       Anh: yup
         .array()
         .typeError("Yêu cầu thêm  Ảnh")

@@ -15,7 +15,6 @@ import { useLocation, useNavigate } from "react-router";
 import { Dispatch, SetStateAction } from "react";
 import { Align, TableHeader } from "../../../../../../../models/Table";
 import { Mau } from "../../../../../../../models/mau";
-import { APP_ROUTES } from "../../../../../../../constants/routers";
 
 interface TableMauProps {
   tableBody: Mau[];

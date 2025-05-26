@@ -22,7 +22,7 @@ const dataHinhThucGuiTra = [
 const PhieuDKyDVKNForm = (props: Props) => {
   const { handleRedirectTag2 } = props;
   const dataSession = sessionStorage.getItem("PhieuDangKy");
-  const [data, setdata] = useState<FormPhieuDangKy>(
+  const [data] = useState<FormPhieuDangKy>(
     dataSession ? JSON.parse(dataSession) : {}
   );
 
@@ -65,7 +65,7 @@ const PhieuDKyDVKNForm = (props: Props) => {
         otherwise: (schema) => schema.notRequired().transform(() => undefined),
       }),
       NgayGiaoMau: yup.string().required("Yêu cầu chọn ngày giao mẫu"),
-      KetQuaTiengAnh: yup.number().transform((value, item) => (item ? 1 : 0)),
+      KetQuaTiengAnh: yup.number().transform((_, item) => (item ? 1 : 0)),
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

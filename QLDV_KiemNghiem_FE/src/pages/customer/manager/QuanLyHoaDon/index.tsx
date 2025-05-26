@@ -1,12 +1,11 @@
 import { Box, Pagination } from "@mui/material";
 import { useState } from "react";
-import { useLocation, useNavigate } from "react-router";
+// import { useLocation, useNavigate } from "react-router";
 import { Align } from "../../../../models/Table";
 import TableQuanLyHoaDon from "./Table";
 import PopupBoloc from "./PopupBoloc";
 import { motion } from "motion/react";
 
-interface PhieuDKyDVKNProps {}
 
 const tableHead = [
   {
@@ -59,9 +58,9 @@ const tableBody = [
   },
 ];
 
-const QuanLyHoaDon = (props: PhieuDKyDVKNProps) => {
-  const navigate = useNavigate();
-  const url = useLocation();
+const QuanLyHoaDon = () => {
+  // const navigate = useNavigate();
+  // const url = useLocation();
 
   const [openPopupBoloc, setOpenPopupBoloc] = useState(false);
 

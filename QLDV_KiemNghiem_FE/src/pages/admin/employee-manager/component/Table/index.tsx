@@ -13,11 +13,11 @@ import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import { FaRegEdit } from "react-icons/fa";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import IndeterminateCheckBoxIcon from "@mui/icons-material/IndeterminateCheckBox";
-import { AccountManager, statusAccount } from "../../../../../models/Account";
+import { statusAccount } from "../../../../../models/Account";
 import { TableHeader } from "../../../../../models/Table";
 import ModelEdit from "../ModelEdit";
 interface TableProps {
-  tableBody: AccountManager[];
+  tableBody: any[];
   tableHead: TableHeader[];
   handleSort: (value: string) => void;
   sort: string | null;

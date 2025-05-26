@@ -3,7 +3,7 @@ import Box from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
 import AccountCircle from "@mui/icons-material/AccountCircle";
 import { Badge, styled, Tooltip, useMediaQuery, useTheme } from "@mui/material";
-import { icons, image } from "../../../constants/image";
+import { image } from "../../../constants/image";
 import NotificationsActiveIcon from "@mui/icons-material/NotificationsActive";
 import SpaceDashboardIcon from "@mui/icons-material/SpaceDashboard";
 import ViewComfyIcon from "@mui/icons-material/ViewComfy";
@@ -17,21 +17,6 @@ interface HeaderProps {
   handleMenuDashBoard: () => void;
   handleToggleDrawer: () => void;
 }
-
-const language = [
-  {
-    image: icons.iconVietNam,
-    name: "Việt Nam",
-  },
-  {
-    image: icons.iconItaly,
-    name: "Italy",
-  },
-  {
-    image: icons.iconUS,
-    name: "English (US)",
-  },
-];
 
 const dataMessages = [
   {
@@ -231,9 +216,7 @@ export default function HeaderDefault(props: HeaderProps) {
             }}
             disableInteractive
           >
-            <IconButton
-            onClick={handleClickNotificationsPopover}
-            >
+            <IconButton onClick={handleClickNotificationsPopover}>
               <StyledBadge
                 overlap="circular"
                 anchorOrigin={{ vertical: "top", horizontal: "right" }}

@@ -51,7 +51,10 @@ const Tables = (props: TableProps) => {
           <TableRow>
             {tableHead.map((item, index) => (
               <TableCell key={index} padding="normal">
-                <Box className={`flex items-center ${handleAlign(item.align)}`}>
+                <Box
+                  className={`flex items-center 
+                  ${handleAlign(item.align)}`}
+                >
                   <p className="text-lg/4 font-bold">{item.label}</p>
                 </Box>
               </TableCell>

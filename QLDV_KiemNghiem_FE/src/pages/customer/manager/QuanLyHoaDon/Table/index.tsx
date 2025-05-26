@@ -1,6 +1,6 @@
 import {
   Box,
-  IconButton,
+  // IconButton,
   Paper,
   Table,
   TableBody,
@@ -9,12 +9,12 @@ import {
   TableHead,
   TableRow,
 } from "@mui/material";
-import SquareIcon from "@mui/icons-material/Square";
-import IndeterminateCheckBoxIcon from "@mui/icons-material/IndeterminateCheckBox";
-import { useNavigate } from "react-router";
-import { Dispatch, SetStateAction } from "react";
+// import SquareIcon from "@mui/icons-material/Square";
+// import IndeterminateCheckBoxIcon from "@mui/icons-material/IndeterminateCheckBox";
+// import { useNavigate } from "react-router";
+// import { Dispatch, SetStateAction } from "react";
 import { Align } from "../../../../../models/Table";
-import { APP_ROUTES } from "../../../../../constants/routers";
+// import { APP_ROUTES } from "../../../../../constants/routers";
 
 interface TableProps {
   tableBody: any[];
@@ -25,7 +25,7 @@ interface TableProps {
 const TableQuanLyHoaDon = (props: TableProps) => {
   const { tableBody, tableHead } = props;
 
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
   const handleAlign = (align: string) => {
     switch (align) {
@@ -38,9 +38,9 @@ const TableQuanLyHoaDon = (props: TableProps) => {
     }
   };
 
-  const changeUrlParam = (url: any, id: any) => {
-    return url.replace(/:id/, id);
-  };
+  // const changeUrlParam = (url: any, id: any) => {
+  //   return url.replace(/:id/, id);
+  // };
 
   return (
     <TableContainer component={Paper}>

@@ -1,6 +1,5 @@
 import { Box, IconButton } from "@mui/material";
 import { Outlet } from "react-router";
-import { AnimatePresence, motion } from "motion/react";
 import { useEffect, useState } from "react";
 import { AiOutlineMenuUnfold } from "react-icons/ai";
 import { FiMenu } from "react-icons/fi";
