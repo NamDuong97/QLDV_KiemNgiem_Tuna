@@ -1,47 +1,54 @@
 import { Box, Pagination, Popover, Stack } from "@mui/material";
 import { useState } from "react";
-import PersonAddIcon from "@mui/icons-material/PersonAdd";
+// import PersonAddIcon from "@mui/icons-material/PersonAdd";
 import FilterListIcon from "@mui/icons-material/FilterList";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import DoneIcon from "@mui/icons-material/Done";
-import InputSearch from "../../../components/InputSearch";
+// import InputSearch from "../../../components/InputSearch";
 import ModelCreate from "./component/ModelCreate";
 import EmployeeListFilter from "../../../components/Popup/Filter/EmployeeListFilter";
 import Table from "./component/Table";
 import ModelDelete from "./component/ModelDelete";
-import { statusAccountType } from "../../../models/Account-Type";
+// import { statusAccountType } from "../../../models/Account-Type";
 import { statusAccount } from "../../../models/Account";
+import { Align } from "../../../models/Table";
 
 const tableHead = [
   {
     id: "accountName",
     sort: true,
     label: "Tên Tài Khoản",
+    align: Align.Center,
   },
   {
     id: "Khoa",
     sort: false,
     label: "Khoa",
+    align: Align.Center,
   },
   {
     id: "bophan",
     sort: false,
     label: "Bộ Phận",
+    align: Align.Center,
   },
   {
     id: "chucvu",
     sort: false,
     label: "Chức Vụ",
+    align: Align.Center,
   },
   {
     id: "tennhanvien",
     sort: false,
     label: "Tên Nhân Viên",
+    align: Align.Center,
   },
   {
     id: "trangthai",
     sort: false,
     label: "Trạng Thái",
+    align: Align.Center,
   },
 ];
 
@@ -92,7 +99,7 @@ const AccountManager = () => {
   const openFilter = Boolean(anchorElFilter);
   const [isCheckboxAll, setIsCheckboxAll] = useState(false);
 
-  const handleOpenCreateEdit = () => setOpenCreateEdit(true);
+  // const handleOpenCreateEdit = () => setOpenCreateEdit(true);
   const handleCloseCreateEdit = () => setOpenCreateEdit(false);
 
   const handleOpenDelete = () => setOpenDelete(true);
@@ -143,10 +150,10 @@ const AccountManager = () => {
         <Box className="border-[1px] border-solid border-gray-300 shadow-2xs rounded-2xl bg-gray-50">
           <Box className="p-4 border-b-[1px] border-solid border-gray-300 shadow-2xs flex justify-between">
             <Box>
-              <InputSearch
+              {/* <InputSearch
                 name="searchManagerAccount"
                 placeholder="Tìm Kiếm..."
-              />
+              /> */}
             </Box>
             <Box className="flex gap-4">
               {isCheckboxAll && (

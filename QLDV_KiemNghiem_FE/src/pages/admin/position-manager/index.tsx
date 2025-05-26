@@ -4,33 +4,38 @@ import PersonAddIcon from "@mui/icons-material/PersonAdd";
 import FilterListIcon from "@mui/icons-material/FilterList";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import DoneIcon from "@mui/icons-material/Done";
-import InputSearch from "../../../components/InputSearch";
-import ModelCreate from "./component/ModelCreate";
+// import InputSearch from "../../../components/InputSearch";
+// import ModelCreate from "./component/ModelCreate";
 import EmployeeListFilter from "../../../components/Popup/Filter/EmployeeListFilter";
 import { statusPosition } from "../../../models/Position";
 import Table from "./component/Table";
 import ModelDelete from "./component/ModelDelete";
+import { Align } from "../../../models/Table";
 
 const tableHead = [
   {
     id: "id",
     sort: true,
     label: "Mã Chức Vụ",
+    align: Align.Center,
   },
   {
     id: "chucvu",
     sort: false,
     label: "Chức Vụ",
+    align: Align.Center,
   },
   {
     id: "userCreate",
     sort: false,
     label: "Người Tạo",
+    align: Align.Center,
   },
   {
     id: "trangthai",
     sort: false,
     label: "Trạng Thái",
+    align: Align.Center,
   },
 ];
 
@@ -79,9 +84,9 @@ const numberRow = [
 const PositionManager = () => {
   const [selectNumberRow, setSelectNumberRow] = useState(numberRow[0]);
   const [sort, setSort] = useState<string | null>(null);
-  const [openCreate, setOpenCreate] = useState(false);
-  const handleOpenCreate = () => setOpenCreate(true);
-  const handleCloseCreate = () => setOpenCreate(false);
+  // const [openCreate, setOpenCreate] = useState(false);
+  // const handleOpenCreate = () => setOpenCreate(true);
+  // const handleCloseCreate = () => setOpenCreate(false);
   const [anchorElSelectNumberRow, setAnchorElSelectNumberRow] =
     useState<HTMLButtonElement | null>(null);
   const [anchorElFilter, setAnchorElFilter] =
@@ -128,7 +133,7 @@ const PositionManager = () => {
         <Box>
           <button
             className="flex gap-2 px-4 py-2 bg-blue-400 rounded-md text-white hover:bg-blue-500 hover:ease-in-out hover:duration-500 cursor-pointer"
-            onClick={handleOpenCreate}
+            // onClick={handleOpenCreate}
           >
             <PersonAddIcon /> <p className="font-medium">Thêm Chức vụ</p>
           </button>
@@ -139,10 +144,10 @@ const PositionManager = () => {
         <Box className="border-[1px] border-solid border-gray-300 shadow-2xs rounded-2xl bg-gray-50">
           <Box className="p-4 border-b-[1px] border-solid border-gray-300 shadow-2xs flex justify-between">
             <Box>
-              <InputSearch
+              {/* <InputSearch
                 name="searchManagerAccount"
                 placeholder="Tìm Kiếm..."
-              />
+              /> */}
             </Box>
             <Box className="flex gap-4">
               {isCheckboxAll && (
@@ -260,10 +265,10 @@ const PositionManager = () => {
           </Box>
         </Box>
       </Box>
-      <ModelCreate
+      {/* <ModelCreate
         openCreate={openCreate}
         handleCloseCreate={handleCloseCreate}
-      />
+      /> */}
       <ModelDelete
         openDelete={openDelete}
         handleCloseDelete={handleCloseDelete}

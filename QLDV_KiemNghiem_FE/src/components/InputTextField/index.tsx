@@ -1,6 +1,5 @@
 import {
   FormControl,
-  OutlinedInput,
   SxProps,
   TextField,
   Theme,
@@ -36,9 +35,9 @@ export const InputTextField = (props: InputTextFieldProps) => {
     defaultValue,
     inputRef,
     errorMessage,
-    isShowError,
+    // isShowError,
     readOnly,
-    autocomplete,
+    // autocomplete,
     onFocus,
     disabled,
     className,

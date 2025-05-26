@@ -5,7 +5,6 @@ import {
   Theme,
   Typography,
 } from "@mui/material";
-import React from "react";
 
 interface InputsProps {
   title?: string;
@@ -36,9 +35,9 @@ export const Inputs = (props: InputsProps) => {
     defaultValue,
     inputRef,
     errorMessage,
-    isShowError,
+    // isShowError,
     readOnly,
-    autocomplete,
+    // autocomplete,
     onFocus,
     disabled,
     className,

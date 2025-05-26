@@ -8,7 +8,7 @@ import { FaRegArrowAltCircleLeft } from "react-icons/fa";
 import ListImage from "./ListImage";
 import yup from "../../../../../../configs/yup.custom";
 import { FormMau } from "../../../../../../models/mau";
-import { APP_ROUTES } from "../../../../../../constants/routers";
+// import { APP_ROUTES } from "../../../../../../constants/routers";
 import { Inputs } from "../../../../../../components/Inputs";
 import InputSelect from "../../../../../../components/InputSelect";
 import { Textarea } from "../../../../../../components/Textarea";
@@ -134,8 +134,8 @@ const PhieuDKyDVKN_CreateMau = () => {
         .string()
         .required("Yêu cầu nhập Điều kiện bảo quản")
         .max(200, "Điều kiện bảo quản nhập không quá 200 ký tự"),
-      LuuMau: yup.number().transform((value, item) => (item ? 1 : 0)),
-      XuatKetQua: yup.number().transform((value, item) => (item ? 1 : 0)),
+      LuuMau: yup.number().transform((_, item) => (item ? 1 : 0)),
+      XuatKetQua: yup.number().transform((_, item) => (item ? 1 : 0)),
       Anh: yup
         .array()
         .typeError("Yêu cầu thêm  Ảnh")
@@ -160,6 +160,7 @@ const PhieuDKyDVKN_CreateMau = () => {
   });
 
   const handleCreateMau = (data: FormMau) => {
+    console.log('data',data);
     
     sessionStorage.removeItem("ImageTemp");
     naginate(

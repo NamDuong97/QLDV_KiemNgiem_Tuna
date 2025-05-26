@@ -6,7 +6,6 @@ import { IoPersonSharp } from "react-icons/io5";
 import { useLocation, useNavigate } from "react-router";
 import { motion } from "motion/react";
 
-interface SidebarProps {}
 
 const dataSideBar = [
   {
@@ -29,7 +28,7 @@ const dataSideBar = [
   },
 ];
 
-const Sidebar = (props: SidebarProps) => {
+const Sidebar = () => {
   const navigate = useNavigate();
 
   const urlPage = useLocation().pathname.split("/")[1];

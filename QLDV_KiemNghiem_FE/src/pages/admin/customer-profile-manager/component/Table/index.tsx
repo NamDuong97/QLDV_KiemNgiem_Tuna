@@ -1,7 +1,7 @@
 import {
   Box,
   IconButton,
-  TableBody,
+  // TableBody,
   TableCell,
   TableContainer,
   TableHead,
@@ -10,10 +10,13 @@ import {
 import { useState } from "react";
 import SquareIcon from "@mui/icons-material/Square";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
-import { FaRegEdit } from "react-icons/fa";
+// import { FaRegEdit } from "react-icons/fa";
 import IndeterminateCheckBoxIcon from "@mui/icons-material/IndeterminateCheckBox";
 import { TableHeader } from "../../../../../models/Table";
-import { PositionManager, statusPosition } from "../../../../../models/Position";
+import {
+  PositionManager,
+  // statusPosition,
+} from "../../../../../models/Position";
 interface TableProps {
   tableBody: PositionManager[];
   tableHead: TableHeader[];
@@ -22,13 +25,18 @@ interface TableProps {
 }
 
 const Table = (props: TableProps) => {
-  const { tableBody, tableHead, handleSort, sort } = props;
+  const {
+    // tableBody,
+    tableHead,
+    handleSort,
+    sort,
+  } = props;
 
   const [isSort, setIsSort] = useState<string | null>(null);
   const [isCheckboxAll, setIsCheckboxAll] = useState(false);
-  const [openEdit, setOpenEdit] = useState(false);
-  const handleOpenEdit = () => setOpenEdit(true);
-  const handleCloseEdit = () => setOpenEdit(false);
+  // const [openEdit, setOpenEdit] = useState(false);
+  // const handleOpenEdit = () => setOpenEdit(true);
+  // const handleCloseEdit = () => setOpenEdit(false);
 
   const handleIsSort = (value: string) => {
     setIsSort(value);
@@ -39,24 +47,24 @@ const Table = (props: TableProps) => {
     setIsCheckboxAll(!isCheckboxAll);
   };
 
-  const handleStatus = (status: string) => {
-    switch (status) {
-      case statusPosition.activity:
-        return (
-          <span className="bg-green-600 text-base rounded text-white p-1">
-            {status}
-          </span>
-        );
-      case statusPosition.canceled:
-        return (
-          <span className="bg-yellow-400 text-base rounded text-white p-1">
-            {status}
-          </span>
-        );
-      default:
-        return null;
-    }
-  };
+  // const handleStatus = (status: string) => {
+  //   switch (status) {
+  //     case statusPosition.activity:
+  //       return (
+  //         <span className="bg-green-600 text-base rounded text-white p-1">
+  //           {status}
+  //         </span>
+  //       );
+  //     case statusPosition.canceled:
+  //       return (
+  //         <span className="bg-yellow-400 text-base rounded text-white p-1">
+  //           {status}
+  //         </span>
+  //       );
+  //     default:
+  //       return null;
+  //   }
+  // };
 
   return (
     <TableContainer>
@@ -117,7 +125,7 @@ const Table = (props: TableProps) => {
             </TableCell>
           </TableRow>
         </TableHead>
-        <TableBody className="bg-white">
+        {/* <TableBody className="bg-white">
           {tableBody.map((item, index) => (
             <TableRow
               key={index}
@@ -128,14 +136,14 @@ const Table = (props: TableProps) => {
                 <input type="checkbox" className="size-4 cursor-pointer" />
               </TableCell>
               <TableCell align="center">
-                <p className="text-base/4 font-medium">{item.id}</p>
+                <p className="text-base/4 font-medium"></p>
               </TableCell>
               <TableCell align="center">
                 <Box className="flex gap-2 items-center justify-center">
-                  <p className="text-base/4 font-medium">{item.position}</p>
+                  <p className="text-base/4 font-medium"></p>
                 </Box>
               </TableCell>
-              <TableCell align="center">{handleStatus(item.status)}</TableCell>
+              <TableCell align="center"></TableCell>
               <TableCell>
                 <Box className="flex justify-center">
                   <button
@@ -149,7 +157,7 @@ const Table = (props: TableProps) => {
               </TableCell>
             </TableRow>
           ))}
-        </TableBody>
+        </TableBody> */}
       </table>
     </TableContainer>
   );

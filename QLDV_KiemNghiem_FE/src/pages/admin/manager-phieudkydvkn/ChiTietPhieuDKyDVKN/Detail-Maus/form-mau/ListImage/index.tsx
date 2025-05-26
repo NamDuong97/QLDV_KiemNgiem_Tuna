@@ -1,7 +1,5 @@
 import { Box } from "@mui/material";
 import Tables from "./Table";
-import { Dispatch, useCallback, useEffect, useState } from "react";
-import { useDropzone } from "react-dropzone";
 import { Align } from "../../../../../../../models/Table";
 
 interface Props {

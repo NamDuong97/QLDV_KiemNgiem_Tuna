@@ -1,11 +1,9 @@
 import { Box, Pagination } from "@mui/material";
-import { MouseEvent, useState } from "react";
+import { useState } from "react";
 import TableChoXetDuyet from "./TableChoXetDuyet";
 import { Align } from "../../../../../../models/Table";
 import PopupHuyPhieu from "./PopupHuyPhieu";
 import PopupBolocChoXetDuyet from "./PopupBolocChoXetDuyet";
-
-interface Props {}
 
 const tableHead = [
   {
@@ -40,7 +38,7 @@ const tableHead = [
   },
 ];
 
-const ChoXetDuyet = (props: Props) => {
+const ChoXetDuyet = () => {
   const data = localStorage.getItem("DataPhieuDangKy");
   const dataPhieuDKy = data ? JSON.parse(data) : [];
   const [listCheckbox, setListCheckbox] = useState<any[]>([]);

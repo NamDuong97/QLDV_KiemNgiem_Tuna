@@ -1,8 +1,6 @@
 import { Box, Popover } from "@mui/material";
 import { RxAvatar } from "react-icons/rx";
-import { FaVoteYea } from "react-icons/fa";
 import { FaDoorOpen } from "react-icons/fa";
-import { RiBillLine } from "react-icons/ri";
 import { useNavigate } from "react-router";
 import { APP_ROUTES } from "../../../../constants/routers";
 

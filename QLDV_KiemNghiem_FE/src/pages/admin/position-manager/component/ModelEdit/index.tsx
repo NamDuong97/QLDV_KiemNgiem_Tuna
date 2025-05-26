@@ -10,8 +10,6 @@ import {
 } from "@mui/material";
 import { useEffect, useMemo, useState } from "react";
 import CloseIcon from "@mui/icons-material/Close";
-import { FaArrowAltCircleLeft } from "react-icons/fa";
-import { FaArrowAltCircleRight } from "react-icons/fa";
 import { FaRegSave } from "react-icons/fa";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
@@ -36,21 +34,21 @@ const status = [
 const ModelEdit = (props: ModelCreateProps) => {
   const { openEdit, handleCloseEdit } = props;
 
-  const [isTabForm, setIsTabForm] = useState(1);
+  // const [isTabForm, setIsTabForm] = useState(1);
   const [selectStatus, setSelectStatus] = useState("");
 
   const handleCloseModelEdit = () => {
     handleCloseEdit();
-    setIsTabForm(1);
+    // setIsTabForm(1);
   };
 
-  const handleNextTabForm = () => {
-    setIsTabForm(isTabForm + 1);
-  };
+  // const handleNextTabForm = () => {
+  //   setIsTabForm(isTabForm + 1);
+  // };
 
-  const handleBackTabForm = () => {
-    setIsTabForm(isTabForm - 1);
-  };
+  // const handleBackTabForm = () => {
+  //   setIsTabForm(isTabForm - 1);
+  // };
 
   const handleChangeStatus = (event: SelectChangeEvent) => {
     setSelectStatus(event.target.value);

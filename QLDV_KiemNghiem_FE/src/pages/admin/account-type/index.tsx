@@ -4,62 +4,62 @@ import PersonAddIcon from "@mui/icons-material/PersonAdd";
 import FilterListIcon from "@mui/icons-material/FilterList";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import DoneIcon from "@mui/icons-material/Done";
-import InputSearch from "../../../components/InputSearch";
+// import InputSearch from "../../../components/InputSearch";
 import ModelCreate from "./component/ModelCreate";
 import EmployeeListFilter from "../../../components/Popup/Filter/EmployeeListFilter";
-import Table from "./component/Table";
+// import Table from "./component/Table";
 import ModelDelete from "./component/ModelDelete";
-import { statusAccountType } from "../../../models/Account-Type";
+// import { statusAccountType } from "../../../models/Account-Type";
 
-const tableHead = [
-  {
-    id: "accountTypeID",
-    sort: true,
-    label: "Mã Loại Tài Khoản",
-  },
-  {
-    id: "accountTypeName",
-    sort: false,
-    label: "Tên Loại Tài Khoản",
-  },
-  {
-    id: "UserCreate",
-    sort: false,
-    label: "Người Tạo",
-  },
-  {
-    id: "trangthai",
-    sort: false,
-    label: "Trạng Thái",
-  },
-];
+// const tableHead = [
+//   {
+//     id: "accountTypeID",
+//     sort: true,
+//     label: "Mã Loại Tài Khoản",
+//   },
+//   {
+//     id: "accountTypeName",
+//     sort: false,
+//     label: "Tên Loại Tài Khoản",
+//   },
+//   {
+//     id: "UserCreate",
+//     sort: false,
+//     label: "Người Tạo",
+//   },
+//   {
+//     id: "trangthai",
+//     sort: false,
+//     label: "Trạng Thái",
+//   },
+// ];
 
-const tableBody = [
-  {
-    accountTypeID: "L1",
-    accountTypeName: "Loại 1",
-    userCreate: "TN010695",
-    statusAccountType: statusAccountType.activity,
-  },
-  {
-    accountTypeID: "L2",
-    accountTypeName: "Loại 2",
-    userCreate: "TN010695",
-    statusAccountType: statusAccountType.activity,
-  },
-  {
-    accountTypeID: "L3",
-    accountTypeName: "Loại 3",
-    userCreate: "TN010695",
-    statusAccountType: statusAccountType.activity,
-  },
-  {
-    accountTypeID: "L4",
-    accountTypeName: "Loại 4",
-    userCreate: "TN010695",
-    statusAccountType: statusAccountType.activity,
-  },
-];
+// const tableBody = [
+//   {
+//     accountTypeID: "L1",
+//     accountTypeName: "Loại 1",
+//     userCreate: "TN010695",
+//     statusAccountType: statusAccountType.activity,
+//   },
+//   {
+//     accountTypeID: "L2",
+//     accountTypeName: "Loại 2",
+//     userCreate: "TN010695",
+//     statusAccountType: statusAccountType.activity,
+//   },
+//   {
+//     accountTypeID: "L3",
+//     accountTypeName: "Loại 3",
+//     userCreate: "TN010695",
+//     statusAccountType: statusAccountType.activity,
+//   },
+//   {
+//     accountTypeID: "L4",
+//     accountTypeName: "Loại 4",
+//     userCreate: "TN010695",
+//     statusAccountType: statusAccountType.activity,
+//   },
+// ];
 
 const numberRow = [
   {
@@ -78,7 +78,7 @@ const numberRow = [
 
 const AccountTypeManager = () => {
   const [selectNumberRow, setSelectNumberRow] = useState(numberRow[0]);
-  const [sort, setSort] = useState<string | null>(null);
+  // const [sort, setSort] = useState<string | null>(null);
   const [openCreateEdit, setOpenCreateEdit] = useState(false);
   const [openDelete, setOpenDelete] = useState(false);
   const [anchorElSelectNumberRow, setAnchorElSelectNumberRow] =
@@ -87,12 +87,12 @@ const AccountTypeManager = () => {
     useState<HTMLButtonElement | null>(null);
   const openSelectNumberRow = Boolean(anchorElSelectNumberRow);
   const openFilter = Boolean(anchorElFilter);
-  const [isCheckboxAll, setIsCheckboxAll] = useState(false);
+  // const [isCheckboxAll, setIsCheckboxAll] = useState(false);
 
   const handleOpenCreateEdit = () => setOpenCreateEdit(true);
   const handleCloseCreateEdit = () => setOpenCreateEdit(false);
 
-  const handleOpenDelete = () => setOpenDelete(true);
+  // const handleOpenDelete = () => setOpenDelete(true);
   const handleCloseDelete = () => setOpenDelete(false);
 
   const handleClickSelectNumberRow = (
@@ -111,9 +111,9 @@ const AccountTypeManager = () => {
     setAnchorElFilter(null);
   };
 
-  const handleSort = (value: string) => {
-    setSort(sort === value ? null : value);
-  };
+  // const handleSort = (value: string) => {
+  //   setSort(sort === value ? null : value);
+  // };
 
   const handleSelectNumberRow = (value: any) => {
     setSelectNumberRow(value);
@@ -140,13 +140,13 @@ const AccountTypeManager = () => {
         <Box className="border-[1px] border-solid border-gray-300 shadow-2xs rounded-2xl bg-gray-50">
           <Box className="p-4 border-b-[1px] border-solid border-gray-300 shadow-2xs flex justify-between">
             <Box>
-              <InputSearch
+              {/* <InputSearch
                 name="searchManagerAccount"
                 placeholder="Tìm Kiếm..."
-              />
+              /> */}
             </Box>
             <Box className="flex gap-4">
-              {isCheckboxAll && (
+              {/* {isCheckboxAll && (
                 <Box>
                   <button
                     className="flex items-center gap-2 px-6 py-2 border-[1px] border-solid border-gray-300 rounded-md hover:bg-gray-300 cursor-pointer hover:shadow-md hover:ease-in-out hover:duration-500"
@@ -155,7 +155,7 @@ const AccountTypeManager = () => {
                     Xóa
                   </button>
                 </Box>
-              )}
+              )} */}
               <Box className="flex items-center relative">
                 <button
                   className="flex items-center gap-2 px-4 py-2 border-[1px] border-solid group border-gray-300 rounded-md hover:bg-gray-300 cursor-pointer hover:shadow-md hover:ease-in-out hover:duration-500"
@@ -186,14 +186,14 @@ const AccountTypeManager = () => {
             </Box>
           </Box>
           <Box>
-            <Table
+            {/* <Table
               tableHead={tableHead}
               tableBody={tableBody}
               handleSort={handleSort}
               sort={sort}
               isCheckboxAll={isCheckboxAll}
               setIsCheckboxAll={() => setIsCheckboxAll(!isCheckboxAll)}
-            />
+            /> */}
           </Box>
           <Box className="px-4 pt-5 pb-5 border-t-[1px] border-b-0 border-solid border-gray-300 shadow-2xs rounded-bl-2xl rounded-br-2xl flex">
             <Box className="flex-1 flex gap-2">

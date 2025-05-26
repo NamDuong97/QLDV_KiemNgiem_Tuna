@@ -6,7 +6,6 @@ import TableQuanLyPhieuDKyDVHN from "./Table";
 import { Pagination } from "@mui/material";
 import { Align } from "../../../models/Table";
 
-interface Props {}
 
 const tableHead = [
   {
@@ -51,7 +50,7 @@ const tableBody = [
   },
 ];
 
-const QuanLyPhieuDKyDVHN = (props: Props) => {
+const QuanLyPhieuDKyDVHN = () => {
   const [anchorElPopupBoloc, setAnchorElPopupBoloc] =
     useState<HTMLButtonElement | null>(null);
 
