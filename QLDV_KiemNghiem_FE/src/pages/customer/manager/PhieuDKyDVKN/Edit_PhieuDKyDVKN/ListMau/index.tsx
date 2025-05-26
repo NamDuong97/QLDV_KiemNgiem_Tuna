@@ -6,7 +6,6 @@ import { useEffect, useState } from "react";
 import { Align } from "../../../../../../models/Table";
 import removeVietnameseTones from "../../../../../../configs/removeVietnameseTones";
 import InputSearch from "../../../../../../components/InputSearch";
-import { APP_ROUTES } from "../../../../../../constants/routers";
 import { IoArrowBackCircleOutline } from "react-icons/io5";
 import ThongBao from "./ThongBao";
 import PopupXoaMau from "./PopupXoaMau";
@@ -85,6 +84,8 @@ const ListMau = (props: ListMauProps) => {
   }, [valueSearch]);
 
   const handlePageChange = (event: any, value: number) => {
+    console.log('event',event);
+    
     setCurrentPage(value);
   };
 

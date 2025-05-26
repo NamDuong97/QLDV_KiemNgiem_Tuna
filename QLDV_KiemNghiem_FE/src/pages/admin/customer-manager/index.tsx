@@ -3,35 +3,41 @@ import { useState } from "react";
 import FilterListIcon from "@mui/icons-material/FilterList";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import DoneIcon from "@mui/icons-material/Done";
-import InputSearch from "../../../components/InputSearch";
+// import InputSearch from "../../../components/InputSearch";
 import EmployeeListFilter from "../../../components/Popup/Filter/EmployeeListFilter";
 import Table from "./component/Table";
+import { Align } from "../../../models/Table";
 
 const tableHead = [
   {
     id: "id",
     sort: false,
     label: "ID",
+    align: Align.Center,
   },
   {
     id: "fullname",
     sort: false,
     label: "Tên Khách Hàng",
+    align: Align.Center,
   },
   {
     id: "phoneNumber",
     sort: false,
     label: "Số Điện Thoại",
+    align: Align.Center,
   },
   {
     id: "address",
     sort: false,
     label: "Địa Chỉ",
+    align: Align.Center,
   },
   {
     id: "email",
     sort: false,
     label: "Email",
+    align: Align.Center,
   },
 ];
 
@@ -133,10 +139,10 @@ const CustomerManager = () => {
         <Box className="border-[1px] border-solid border-gray-300 shadow-2xs rounded-2xl bg-gray-50">
           <Box className="p-4 border-b-[1px] border-solid border-gray-300 shadow-2xs flex justify-between">
             <Box>
-              <InputSearch
+              {/* <InputSearch
                 name="searchManagerAccount"
                 placeholder="Tìm Kiếm..."
-              />
+              /> */}
             </Box>
             <Box className="flex items-center relative">
               <button

@@ -1,4 +1,4 @@
-import { Box, Pagination, SelectChangeEvent } from "@mui/material";
+import { Box, Pagination } from "@mui/material";
 import { motion } from "motion/react";
 import { Align } from "../../../../../models/Table";
 import TablePLHC from "./TablePLHC";
@@ -276,6 +276,8 @@ const ListPLHC = (props: ListPLHCProps) => {
   };
 
   const handlePageChange = (event: any, value: number) => {
+    console.log('event',event);
+    
     setCurrentPage(value);
   };
 

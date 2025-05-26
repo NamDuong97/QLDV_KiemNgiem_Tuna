@@ -4,50 +4,50 @@ import ListImage from "./ListImage";
 import { Inputs } from "../../../../../../components/Inputs";
 import { Textarea } from "../../../../../../components/Textarea";
 
-const dataLoaiMau = [
-  {
-    label: "Gấp 1 (G1)",
-    value: "Gấp 1 (G1)",
-  },
-  {
-    label: "Gấp 2 (G2)",
-    value: "Gấp 2 (G2)",
-  },
-  {
-    label: "Gấp 3 (G3)",
-    value: "Gấp 3 (G3)",
-  },
-];
+// const dataLoaiMau = [
+//   {
+//     label: "Gấp 1 (G1)",
+//     value: "Gấp 1 (G1)",
+//   },
+//   {
+//     label: "Gấp 2 (G2)",
+//     value: "Gấp 2 (G2)",
+//   },
+//   {
+//     label: "Gấp 3 (G3)",
+//     value: "Gấp 3 (G3)",
+//   },
+// ];
 
-const dataTieuChuan = [
-  {
-    label: "Việt Nam 5",
-    value: "Việt Nam 5",
-  },
-  {
-    label: "Trung Quốc",
-    value: "Trung Quốc",
-  },
-  {
-    label: "Châu Âu",
-    value: "Châu Âu",
-  },
-];
+// const dataTieuChuan = [
+//   {
+//     label: "Việt Nam 5",
+//     value: "Việt Nam 5",
+//   },
+//   {
+//     label: "Trung Quốc",
+//     value: "Trung Quốc",
+//   },
+//   {
+//     label: "Châu Âu",
+//     value: "Châu Âu",
+//   },
+// ];
 
-const dataDichVu = [
-  {
-    label: "ABC",
-    value: "ABC",
-  },
-  {
-    label: "ABC",
-    value: "ABC",
-  },
-  {
-    label: "ABC",
-    value: "ABC",
-  },
-];
+// const dataDichVu = [
+//   {
+//     label: "ABC",
+//     value: "ABC",
+//   },
+//   {
+//     label: "ABC",
+//     value: "ABC",
+//   },
+//   {
+//     label: "ABC",
+//     value: "ABC",
+//   },
+// ];
 
 const FormMaus = () => {
   return (

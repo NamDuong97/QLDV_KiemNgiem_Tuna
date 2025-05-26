@@ -65,7 +65,7 @@ const PhieuDKyDVKNForm = (props: Props) => {
         otherwise: (schema) => schema.notRequired().transform(() => undefined),
       }),
       NgayGiaoMau: yup.string().required("Yêu cầu chọn ngày giao mẫu"),
-      KetQuaTiengAnh: yup.number().transform((value, item) => (item ? 1 : 0)),
+      KetQuaTiengAnh: yup.number().transform((_, item) => (item ? 1 : 0)),
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -85,6 +85,7 @@ const PhieuDKyDVKNForm = (props: Props) => {
 
   const onSubmitPhieuDkyDV = (data: FormPhieuDangKy) => {
     // sessionStorage.setItem("PhieuDangKy", JSON.stringify(data));
+    console.log("data,", data);
   };
 
   useEffect(() => {

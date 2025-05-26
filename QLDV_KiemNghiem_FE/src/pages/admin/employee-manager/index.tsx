@@ -4,53 +4,52 @@ import PersonAddIcon from "@mui/icons-material/PersonAdd";
 import FilterListIcon from "@mui/icons-material/FilterList";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import DoneIcon from "@mui/icons-material/Done";
-import { Align } from "../../../models/Table";
+// import { Align } from "../../../models/Table";
 import { image } from "../../../constants/image";
 import { statusAccount } from "../../../models/Account";
-import InputSearch from "../../../components/InputSearch";
+// import InputSearch from "../../../components/InputSearch";
 import ModelCreate from "./component/ModelCreate";
 import EmployeeListFilter from "../../../components/Popup/Filter/EmployeeListFilter";
 
-interface Props {}
 
-const tableHead = [
-  {
-    id: "userName",
-    sort: true,
-    label: "Tên Tài Khoản",
-    align: Align.Center,
-  },
-  {
-    id: "password",
-    sort: false,
-    label: "Mật Khẩu",
-    align: Align.Center,
-  },
-  {
-    id: "image",
-    sort: false,
-    label: "Ảnh",
-    align: Align.Center,
-  },
-  {
-    id: "fullName",
-    sort: true,
-    label: "Họ tên Nhân Viên",
-    align: Align.Center,
-  },
-  {
-    id: "role",
-    sort: false,
-    label: "Chức vụ",
-    align: Align.Center,
-  },
-  {
-    id: "status",
-    sort: false,
-    label: "Trạng Thái",
-    align: Align.Center,
-  },
-];
+// const tableHead = [
+//   {
+//     id: "userName",
+//     sort: true,
+//     label: "Tên Tài Khoản",
+//     align: Align.Center,
+//   },
+//   {
+//     id: "password",
+//     sort: false,
+//     label: "Mật Khẩu",
+//     align: Align.Center,
+//   },
+//   {
+//     id: "image",
+//     sort: false,
+//     label: "Ảnh",
+//     align: Align.Center,
+//   },
+//   {
+//     id: "fullName",
+//     sort: true,
+//     label: "Họ tên Nhân Viên",
+//     align: Align.Center,
+//   },
+//   {
+//     id: "role",
+//     sort: false,
+//     label: "Chức vụ",
+//     align: Align.Center,
+//   },
+//   {
+//     id: "status",
+//     sort: false,
+//     label: "Trạng Thái",
+//     align: Align.Center,
+//   },
+// ];
 
 const tableBody = [
   {
@@ -115,9 +114,9 @@ const numberRow = [
   },
 ];
 
-const ListEmployeeManager = (props: Props) => {
+const ListEmployeeManager = () => {
   const [selectNumberRow, setSelectNumberRow] = useState(numberRow[0]);
-  const [sort, setSort] = useState<string | null>(null);
+  // const [sort, setSort] = useState<string | null>(null);
   const [openCreate, setOpenCreate] = useState(false);
   const handleOpenCreate = () => setOpenCreate(true);
   const handleCloseCreate = () => setOpenCreate(false);
@@ -145,9 +144,9 @@ const ListEmployeeManager = (props: Props) => {
     setAnchorElFilter(null);
   };
 
-  const handleSort = (value: string) => {
-    setSort(sort === value ? null : value);
-  };
+  // const handleSort = (value: string) => {
+  //   setSort(sort === value ? null : value);
+  // };
 
   const handleSelectNumberRow = (value: any) => {
     setSelectNumberRow(value);
@@ -187,10 +186,10 @@ const ListEmployeeManager = (props: Props) => {
         <Box className="border-[1px] border-solid border-gray-300 shadow-2xs rounded-2xl bg-gray-50">
           <Box className="p-4 border-b-[1px] border-solid border-gray-300 shadow-2xs flex justify-between">
             <Box>
-              <InputSearch
+              {/* <InputSearch
                 name="searchManagerAccount"
                 placeholder="Tìm Kiếm..."
-              />
+              /> */}
             </Box>
             <Box className="flex items-center relative">
               <button

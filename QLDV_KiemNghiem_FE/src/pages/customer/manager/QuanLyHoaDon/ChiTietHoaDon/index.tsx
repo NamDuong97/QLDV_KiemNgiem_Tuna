@@ -1,6 +1,6 @@
-type Props = {};
 
-const ChiTietHoaDon = (props: Props) => {
+
+const ChiTietHoaDon = () => {
   return <div>Trang chi tiết</div>;
 };
 

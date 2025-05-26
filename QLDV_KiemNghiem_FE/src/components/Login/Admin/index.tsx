@@ -16,7 +16,6 @@ import CancelIcon from "@mui/icons-material/Cancel";
 import { useNavigate } from "react-router";
 import yup from "../../../configs/yup.custom";
 import { APP_ROUTES } from "../../../constants/routers";
-import { Inputs } from "../../Inputs";
 import { InputTextField } from "../../InputTextField";
 
 interface LoginForm {

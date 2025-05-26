@@ -3,9 +3,7 @@ import PhieuDKyDVKNForm from "./PhieuDKyDVKNForm";
 import ListMau from "./ListMau";
 import ListPLHC from "./ListPLHC";
 
-type Props = {};
-
-const Edit_PhieuDKyDVKN = (props: Props) => {
+const Edit_PhieuDKyDVKN = () => {
   const url = useLocation();
   const id = decodeURIComponent(url.pathname.split("/")[2]);
 

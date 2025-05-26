@@ -1,5 +1,4 @@
 import { Box, MenuItem, Typography } from "@mui/material";
-import React from "react";
 
 interface LanguagePopupProps {
   openLanguage: boolean;

@@ -8,7 +8,7 @@ import {
   Select,
   SelectChangeEvent,
 } from "@mui/material";
-import React, { useMemo, useState } from "react";
+import React, { useState } from "react";
 import CloseIcon from "@mui/icons-material/Close";
 import { MdEdit } from "react-icons/md";
 import { FaUserAlt } from "react-icons/fa";
@@ -17,13 +17,7 @@ import { FaArrowAltCircleLeft } from "react-icons/fa";
 import { FaArrowAltCircleRight } from "react-icons/fa";
 import { FaRegSave } from "react-icons/fa";
 import { useDropzone } from "react-dropzone";
-import { yupResolver } from "@hookform/resolvers/yup";
-import { useForm } from "react-hook-form";
-import {
-  Account,
-  FormAccount,
-} from "../../../../../models/Account";
-import yup from "../../../../../configs/yup.custom";
+import { Account } from "../../../../../models/Account";
 import { Inputs } from "../../../../../components/Inputs";
 
 interface ModelCreateProps {
@@ -115,10 +109,7 @@ const ModelCreate = (props: ModelCreateProps) => {
 
   const [isTabForm, setIsTabForm] = useState(1);
 
-  const [isUploadFile, setIsUploadFile] = useState(null);
-
-  const { getRootProps, getInputProps, isDragActive, acceptedFiles } =
-    useDropzone({ onDrop });
+  const { getRootProps, getInputProps } = useDropzone({ onDrop });
 
   // const uploadFile = acceptedFiles[0];
   // console.log("uploadFile", uploadFile, dataUrl);
@@ -166,36 +157,36 @@ const ModelCreate = (props: ModelCreateProps) => {
     return idAccount;
   };
 
-  let schema = useMemo(() => {
-    return yup.object().shape({
-      fullname: yup.string().required("Yêu cầu nhập họ tên"),
-      CCCD: yup.string().required("Yêu cầu nhập căn cước công dân"),
-      gender: yup.string().required("Yêu cầu chọn giới tính"),
-      phoneNumber: yup.string().required("Yêu cầu nhập số điện thoại"),
-      address: yup.string().required("Yêu cầu nhập địa chỉ"),
-      department: yup.string().required("Yêu cầu chọn Khoa"),
-      role: yup.string().required("Yêu cầu chọn Chức vụ"),
-      idPersonCreate: yup.string().required("Yêu cầu nhập Mã người tạo"),
-      expirationTime: yup.string().required("Yêu cầu chọn thời gian hết hạn"),
-    }); // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  // let schema = useMemo(() => {
+  //   return yup.object().shape({
+  //     fullname: yup.string().required("Yêu cầu nhập họ tên"),
+  //     CCCD: yup.string().required("Yêu cầu nhập căn cước công dân"),
+  //     gender: yup.string().required("Yêu cầu chọn giới tính"),
+  //     phoneNumber: yup.string().required("Yêu cầu nhập số điện thoại"),
+  //     address: yup.string().required("Yêu cầu nhập địa chỉ"),
+  //     department: yup.string().required("Yêu cầu chọn Khoa"),
+  //     role: yup.string().required("Yêu cầu chọn Chức vụ"),
+  //     idPersonCreate: yup.string().required("Yêu cầu nhập Mã người tạo"),
+  //     expirationTime: yup.string().required("Yêu cầu chọn thời gian hết hạn"),
+  //   }); // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, []);
 
-  const {
-    register,
-    handleSubmit,
-    reset,
-    formState: { errors },
-  } = useForm<FormAccount>({
-    resolver: yupResolver(schema),
-    mode: "onChange",
-  });
+  // const {
+  //   register,
+  //   handleSubmit,
+  //   reset,
+  //   formState: { errors },
+  // } = useForm<FormAccount>({
+  //   resolver: yupResolver(schema),
+  //   mode: "onChange",
+  // });
 
-  const onSubmit = (data: FormAccount) => {
-    // const form = new FormData();
-    // form.append("email", data.email)
-    // form.append("password", data.password)
-    console.log(data);
-  };
+  // const onSubmit = (data: FormAccount) => {
+  //   // const form = new FormData();
+  //   // form.append("email", data.email)
+  //   // form.append("password", data.password)
+  //   console.log(data);
+  // };
 
   const handleSwitchForm = (value: any) => {
     switch (value) {
@@ -258,8 +249,8 @@ const ModelCreate = (props: ModelCreateProps) => {
                 <Inputs
                   placeholder="Nhập Họ Tên"
                   title="Họ Tên"
-                  inputRef={register("fullname")}
-                  errorMessage={errors.fullname?.message}
+                  // inputRef={register("fullname")}
+                  // errorMessage={errors.fullname?.message}
                 />
               </Box>
             </Grid2>
@@ -269,8 +260,8 @@ const ModelCreate = (props: ModelCreateProps) => {
                 <Inputs
                   placeholder="Nhập Số Căn Cước Công Dân"
                   title="Số Căn Cước Công Dân"
-                  inputRef={register("CCCD")}
-                  errorMessage={errors.CCCD?.message}
+                  // inputRef={register("CCCD")}
+                  // errorMessage={errors.CCCD?.message}
                 />
               </Box>
             </Grid2>
@@ -298,7 +289,7 @@ const ModelCreate = (props: ModelCreateProps) => {
                       ))}
                     </Select>
                   </FormControl>
-                  <span className="text-red-500">{errors.gender?.message}</span>
+                  {/* <span className="text-red-500">{errors.gender?.message}</span> */}
                 </Box>
               </Box>
             </Grid2>
@@ -555,7 +546,10 @@ const ModelCreate = (props: ModelCreateProps) => {
           </Grid2>
         </Box>
         <Box className="border-[1px] border-solid border-gray-300 rounded-md py-6 gap-8 grid">
-          <form autoComplete="off" onSubmit={handleSubmit(onSubmit)}>
+          <form
+            autoComplete="off"
+            // onSubmit={handleSubmit(onSubmit)}
+          >
             {handleSwitchForm(isTabForm)}
           </form>
         </Box>

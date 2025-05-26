@@ -36,7 +36,7 @@ const status = [
 ];
 
 const ModelEdit = (props: ModelEditProps) => {
-  const { openCreateEdit, handleCloseCreateEdit, name } = props;
+  const { openCreateEdit, handleCloseCreateEdit } = props;
 
   const [selectStatus, setSelectStatus] = useState("");
 

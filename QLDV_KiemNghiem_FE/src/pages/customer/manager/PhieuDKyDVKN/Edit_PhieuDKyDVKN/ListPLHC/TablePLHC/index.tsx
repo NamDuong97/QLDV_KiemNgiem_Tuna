@@ -11,7 +11,7 @@ import {
 } from "@mui/material";
 import SquareIcon from "@mui/icons-material/Square";
 import IndeterminateCheckBoxIcon from "@mui/icons-material/IndeterminateCheckBox";
-import { Dispatch, SetStateAction, useState } from "react";
+import { Dispatch, SetStateAction } from "react";
 import { Align, TableHeader } from "../../../../../../../models/Table";
 
 interface TableProps {

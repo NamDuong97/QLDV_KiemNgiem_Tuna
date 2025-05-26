@@ -1,6 +1,6 @@
-interface DashboardProps {}
 
-const Dashboard = (props: DashboardProps) => {
+
+const Dashboard = () => {
   return <div>Trang Dashboard</div>;
 };
 

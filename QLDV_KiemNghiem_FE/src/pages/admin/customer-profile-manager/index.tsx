@@ -2,52 +2,52 @@ import { Box, Pagination, Popover, Stack } from "@mui/material";
 import { useState } from "react";
 import FilterListIcon from "@mui/icons-material/FilterList";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
-import DoneIcon from "@mui/icons-material/Done";
-import InputSearch from "../../../components/InputSearch";
+// import DoneIcon from "@mui/icons-material/Done";
+// import InputSearch from "../../../components/InputSearch";
 import EmployeeListFilter from "../../../components/Popup/Filter/EmployeeListFilter";
-import { statusPosition } from "../../../models/Position";
-import Table from "./component/Table";
+// import { statusPosition } from "../../../models/Position";
+// import Table from "./component/Table";
 
-const tableHead = [
-  {
-    id: "id",
-    sort: false,
-    label: "ID",
-  },
-  {
-    id: "chucvu",
-    sort: false,
-    label: "Chức Vụ",
-  },
-  {
-    id: "trangthai",
-    sort: false,
-    label: "Trạng Thái",
-  },
-];
+// const tableHead = [
+//   {
+//     id: "id",
+//     sort: false,
+//     label: "ID",
+//   },
+//   {
+//     id: "chucvu",
+//     sort: false,
+//     label: "Chức Vụ",
+//   },
+//   {
+//     id: "trangthai",
+//     sort: false,
+//     label: "Trạng Thái",
+//   },
+// ];
 
-const tableBody = [
-  {
-    id: "001",
-    position: "Giám Đốc",
-    status: statusPosition.activity,
-  },
-  {
-    id: "002",
-    position: "Phó Giám Đốc",
-    status: statusPosition.activity,
-  },
-  {
-    id: "003",
-    position: "Trường Phòng",
-    status: statusPosition.canceled,
-  },
-  {
-    id: "004",
-    position: "Nhân viên",
-    status: statusPosition.activity,
-  },
-];
+// const tableBody = [
+//   {
+//     id: "001",
+//     position: "Giám Đốc",
+//     status: statusPosition.activity,
+//   },
+//   {
+//     id: "002",
+//     position: "Phó Giám Đốc",
+//     status: statusPosition.activity,
+//   },
+//   {
+//     id: "003",
+//     position: "Trường Phòng",
+//     status: statusPosition.canceled,
+//   },
+//   {
+//     id: "004",
+//     position: "Nhân viên",
+//     status: statusPosition.activity,
+//   },
+// ];
 
 const numberRow = [
   {
@@ -65,42 +65,47 @@ const numberRow = [
 ];
 
 const CustomerProfileManager = () => {
-  const [selectNumberRow, setSelectNumberRow] = useState(numberRow[0]);
-  const [sort, setSort] = useState<string | null>(null);
-  const [openCreate, setOpenCreate] = useState(false);
-  const handleOpenCreate = () => setOpenCreate(true);
-  const handleCloseCreate = () => setOpenCreate(false);
-  const [anchorElSelectNumberRow, setAnchorElSelectNumberRow] =
-    useState<HTMLButtonElement | null>(null);
+  const [selectNumberRow, 
+    // setSelectNumberRow
+
+  ] = useState(numberRow[0]);
+  // const [sort, setSort] = useState<string | null>(null);
+  // const [openCreate, setOpenCreate] = useState(false);
+  // const handleOpenCreate = () => setOpenCreate(true);
+  // const handleCloseCreate = () => setOpenCreate(false);
+  // const [anchorElSelectNumberRow, setAnchorElSelectNumberRow] =
+  //   useState<HTMLButtonElement | null>(null);
   const [anchorElFilter, setAnchorElFilter] =
     useState<HTMLButtonElement | null>(null);
-  const openSelectNumberRow = Boolean(anchorElSelectNumberRow);
+  // const openSelectNumberRow = Boolean(anchorElSelectNumberRow);
   const openFilter = Boolean(anchorElFilter);
 
   const handleClickSelectNumberRow = (
     event: React.MouseEvent<HTMLButtonElement>
   ) => {
-    setAnchorElSelectNumberRow(event.currentTarget);
+    console.log('event',event);
+    
+    // setAnchorElSelectNumberRow(event.currentTarget);
   };
   const handleClickFilter = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorElFilter(event.currentTarget);
   };
 
-  const handleCloseSelectNumberRow = () => {
-    setAnchorElSelectNumberRow(null);
-  };
+  // const handleCloseSelectNumberRow = () => {
+  //   // setAnchorElSelectNumberRow(null);
+  // };
   const handleCloseFilter = () => {
     setAnchorElFilter(null);
   };
 
-  const handleSort = (value: string) => {
-    setSort(sort === value ? null : value);
-  };
+  // const handleSort = (value: string) => {
+  //   setSort(sort === value ? null : value);
+  // };
 
-  const handleSelectNumberRow = (value: any) => {
-    setSelectNumberRow(value);
-    handleCloseSelectNumberRow();
-  };
+  // const handleSelectNumberRow = (value: any) => {
+  //   setSelectNumberRow(value);
+  //   handleCloseSelectNumberRow();
+  // };
 
   return (
     <Box className="p-6">
@@ -112,10 +117,10 @@ const CustomerProfileManager = () => {
         <Box className="border-[1px] border-solid border-gray-300 shadow-2xs rounded-2xl bg-gray-50">
           <Box className="p-4 border-b-[1px] border-solid border-gray-300 shadow-2xs flex justify-between">
             <Box>
-              <InputSearch
+              {/* <InputSearch
                 name="searchManagerAccount"
                 placeholder="Tìm Kiếm..."
-              />
+              /> */}
             </Box>
             <Box className="flex items-center relative">
               <button
@@ -166,9 +171,9 @@ const CustomerProfileManager = () => {
                   <p className="w-6 h-6">{selectNumberRow.number}</p>
                   <KeyboardArrowDownIcon />
                 </button>
-                <Popover
+                {/* <Popover
                   open={openSelectNumberRow}
-                  anchorEl={anchorElSelectNumberRow}
+                  // anchorEl={anchorElSelectNumberRow}
                   onClose={handleCloseSelectNumberRow}
                   anchorOrigin={{
                     vertical: "bottom",
@@ -204,7 +209,7 @@ const CustomerProfileManager = () => {
                       </button>
                     </Box>
                   ))}
-                </Popover>
+                </Popover> */}
               </Box>
               <p>trong số 24</p>
             </Box>

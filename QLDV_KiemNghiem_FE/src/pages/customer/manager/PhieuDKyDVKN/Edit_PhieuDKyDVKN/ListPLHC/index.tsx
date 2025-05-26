@@ -1,4 +1,4 @@
-import { Box, IconButton, Pagination, SelectChangeEvent } from "@mui/material";
+import { Box, IconButton, Pagination } from "@mui/material";
 import { motion } from "motion/react";
 import TablePLHC from "./TablePLHC";
 import { useEffect, useMemo, useState } from "react";
@@ -248,6 +248,7 @@ const ListPLHC = (props: ListPLHCProps) => {
   const TenDM_PLHC = useWatch({ control, name: "TenDM_PLHC" });
 
   const createPLHC = (data: FormPhuLieuHoaChat) => {
+    console.log("data", data);
     // const PhieuDangKy = {
     //   ...dataPhieuDangky,
     //   PLHC: [data, ...(dataPhieuDangky?.PLHC || [])],
@@ -257,6 +258,8 @@ const ListPLHC = (props: ListPLHCProps) => {
   };
 
   const editPLHC = (data: FormPhuLieuHoaChat) => {
+    console.log("data", data);
+
     // const index = dataPhieuDangky?.PLHC.findIndex(
     //   (item: any) => item.TenPLHC === dataEditPLHC?.TenPLHC
     // );
@@ -276,25 +279,27 @@ const ListPLHC = (props: ListPLHCProps) => {
   };
 
   const handlePageChange = (event: any, value: number) => {
+    console.log("event", event);
+
     setCurrentPage(value);
   };
 
-  const handleXoaPLHC = () => {
-    // const data = tableBody.filter((item: any) => {
-    //   return !listCheckbox.some(
-    //     (subitem: any) => subitem.TenPLHC === item.TenPLHC
-    //   );
-    // });
-    // const dataTest = sessionStorage.getItem("PhieuDangKy");
-    // const dataPhieuDangky = dataTest ? JSON.parse(dataTest) : null;
-    // const PhieuDangKy = {
-    //   ...dataPhieuDangky,
-    //   PLHC: data,
-    // };
-    // sessionStorage.setItem("PhieuDangKy", JSON.stringify(PhieuDangKy));
-    // settableBody(data);
-    // setListCheckbox([]);
-  };
+  // const handleXoaPLHC = () => {
+  //   // const data = tableBody.filter((item: any) => {
+  //   //   return !listCheckbox.some(
+  //   //     (subitem: any) => subitem.TenPLHC === item.TenPLHC
+  //   //   );
+  //   // });
+  //   // const dataTest = sessionStorage.getItem("PhieuDangKy");
+  //   // const dataPhieuDangky = dataTest ? JSON.parse(dataTest) : null;
+  //   // const PhieuDangKy = {
+  //   //   ...dataPhieuDangky,
+  //   //   PLHC: data,
+  //   // };
+  //   // sessionStorage.setItem("PhieuDangKy", JSON.stringify(PhieuDangKy));
+  //   // settableBody(data);
+  //   // setListCheckbox([]);
+  // };
 
   useEffect(() => {
     if (dataEditPLHC)

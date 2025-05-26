@@ -85,6 +85,8 @@ const ListMau = (props: ListMauProps) => {
   }, [valueSearch]);
 
   const handlePageChange = (event: any, value: number) => {
+    console.log('event',event);
+    
     setCurrentPage(value);
   };
 
