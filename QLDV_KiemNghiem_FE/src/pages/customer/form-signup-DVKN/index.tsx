@@ -205,7 +205,7 @@ const FormSignUpDVKN = () => {
   };
 
   return (
-    <AnimatePresence mode="wait">
+    <AnimatePresence mode="popLayout">
       <motion.div
         key="form-signup-dvkm"
         initial={{ x: 0, opacity: 0 }}

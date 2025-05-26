@@ -7,11 +7,10 @@ import { icons, image } from "../../../constants/image";
 import NotificationsActiveIcon from "@mui/icons-material/NotificationsActive";
 import SpaceDashboardIcon from "@mui/icons-material/SpaceDashboard";
 import ViewComfyIcon from "@mui/icons-material/ViewComfy";
-import NotificationsPopup from "../../Popup/NotificationsPopup/index";
-import AccountPopup from "../../Popup/AccountPopup";
-import LanguagePopup from "../../Popup/LanguagePopup";
 import { APP_ROUTES } from "../../../constants/routers";
 import { useNavigate } from "react-router";
+import PopoverAccountAdmin from "./PopoverAccountAdmin";
+import NotificationsPopover from "../../Popup/NotificationsPopover/index";
 
 interface HeaderProps {
   isMenuDashBoard: boolean;
@@ -114,42 +113,35 @@ const StyledBadge = styled(Badge)(({ theme }) => ({
 export default function HeaderDefault(props: HeaderProps) {
   const { handleMenuDashBoard, isMenuDashBoard, handleToggleDrawer } = props;
 
-  const [openAccount, setOpenAccount] = useState(false);
-  const [openLanguage, setOpenLanguage] = useState(false);
-  const [selectLang, setSelectLang] = useState<string>(icons.iconVietNam);
-  const [openNotifications, setOpenNotifications] = useState(false);
+  const [anchorElPopoverAccountAdmin, setAnchorElPopoverAccountAdmin] =
+    useState<HTMLButtonElement | null>(null);
+  const [anchorElNotificationsPopover, setAnchorElNotificationsPopover] =
+    useState<HTMLButtonElement | null>(null);
+  const openPopoverAccountAdmin = Boolean(anchorElPopoverAccountAdmin);
+  const openNotificationsPopover = Boolean(anchorElNotificationsPopover);
   const theme = useTheme();
   const isLaptop = useMediaQuery(theme.breakpoints.up("lg"));
 
   const navigate = useNavigate();
 
-  const handleOpenAccount = () => {
-    setOpenAccount(!openAccount);
+  const handleClickPopoverAccountAdmin = (
+    event: React.MouseEvent<HTMLButtonElement>
+  ) => {
+    setAnchorElPopoverAccountAdmin(event.currentTarget);
   };
 
-  const handleCloseAccount = () => {
-    setOpenAccount(false);
+  const handleClosePopoverAccountAdmin = () => {
+    setAnchorElPopoverAccountAdmin(null);
   };
 
-  const handleOpenLanguage = () => {
-    setOpenLanguage(!openLanguage);
+  const handleClickNotificationsPopover = (
+    event: React.MouseEvent<HTMLButtonElement>
+  ) => {
+    setAnchorElNotificationsPopover(event.currentTarget);
   };
 
-  const handleCloseLang = () => {
-    setOpenLanguage(false);
-  };
-
-  const handleOpenNotifications = () => {
-    setOpenNotifications(!openNotifications);
-  };
-
-  const handleCloseNotifications = () => {
-    setOpenNotifications(false);
-  };
-
-  const handleChangeLang = (value: string) => {
-    setSelectLang(value);
-    setOpenLanguage(false);
+  const handleCloseNotificationsPopover = () => {
+    setAnchorElNotificationsPopover(null);
   };
 
   // const handleRedirectLogout = () => {
@@ -161,7 +153,7 @@ export default function HeaderDefault(props: HeaderProps) {
   };
 
   return (
-    <header className="bg-white px-[18px] flex py-1 fixed z-50 w-full border-b border-solid border-gray-300">
+    <div className="bg-white px-[18px] flex py-2 w-full border-b border-solid border-gray-300 fixed z-99">
       <Box className="flex-1 flex items-center gap-1">
         {isLaptop ? (
           <Tooltip
@@ -215,7 +207,7 @@ export default function HeaderDefault(props: HeaderProps) {
             <img
               src={image.imageLogo}
               alt="imageLogo"
-              className="!w-8 !h-8 text-black"
+              className="!w-12 !h-12"
             />
           </Box>
         </button>
@@ -240,9 +232,7 @@ export default function HeaderDefault(props: HeaderProps) {
             disableInteractive
           >
             <IconButton
-              onClick={handleOpenNotifications}
-              onBlur={handleCloseNotifications}
-              className="relative"
+            onClick={handleClickNotificationsPopover}
             >
               <StyledBadge
                 overlap="circular"
@@ -254,42 +244,10 @@ export default function HeaderDefault(props: HeaderProps) {
             </IconButton>
           </Tooltip>
 
-          <NotificationsPopup
+          <NotificationsPopover
             dataMessages={dataMessages}
-            openNotifications={openNotifications}
-          />
-        </Box>
-        <Box>
-          <Tooltip
-            title="Ngôn Ngữ"
-            placement="top"
-            slotProps={{
-              popper: {
-                modifiers: [
-                  {
-                    name: "offset",
-                    options: {
-                      offset: [0, -10],
-                    },
-                  },
-                ],
-              },
-            }}
-            disableInteractive
-          >
-            <IconButton
-              onClick={handleOpenLanguage}
-              onBlur={handleCloseLang}
-              className="relative"
-            >
-              <img src={selectLang} alt="iconVietNam" className="w-6 h-6" />
-            </IconButton>
-          </Tooltip>
-
-          <LanguagePopup
-            openLanguage={openLanguage}
-            language={language}
-            handleChangeLang={handleChangeLang}
+            openNotifications={openNotificationsPopover}
+            handleCloseNotifications={handleCloseNotificationsPopover}
           />
         </Box>
         <Box>
@@ -312,21 +270,20 @@ export default function HeaderDefault(props: HeaderProps) {
           >
             <IconButton
               size="large"
-              aria-label="account of current user"
-              aria-controls="menu-appbar"
-              aria-haspopup="true"
-              onClick={handleOpenAccount}
-              onBlur={handleCloseAccount}
+              onClick={handleClickPopoverAccountAdmin}
               color="inherit"
               className="relative !p-2"
             >
               <AccountCircle className="text-gray-700" />
             </IconButton>
           </Tooltip>
-
-          <AccountPopup openAccount={openAccount} />
+          <PopoverAccountAdmin
+            open={openPopoverAccountAdmin}
+            anchorEl={anchorElPopoverAccountAdmin}
+            handleClose={handleClosePopoverAccountAdmin}
+          />
         </Box>
       </Box>
-    </header>
+    </div>
   );
 }

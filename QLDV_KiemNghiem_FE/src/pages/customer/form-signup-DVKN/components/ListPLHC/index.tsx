@@ -299,7 +299,7 @@ const ListPLHC = (props: ListPLHCProps) => {
   };
 
   const handleGuiPhieu = () => {
-    sessionStorage.setItem(
+    localStorage.setItem(
       "DataPhieuDangKy",
       JSON.stringify([dataPhieuDangky])
     );

@@ -49,7 +49,7 @@ const InputSelect2 = (props: InputSelectProps) => {
               {...selectProps}
               options={options.map((item) => ({
                 value: item.value,
-                label: item.label ?? item.value,
+                label: item.value,
               }))}
               isMulti={isMulti}
               value={value}

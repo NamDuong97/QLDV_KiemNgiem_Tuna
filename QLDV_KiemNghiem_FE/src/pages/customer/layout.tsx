@@ -8,9 +8,11 @@ export default function LayoutCustomer() {
   return (
     <ThemeRegistry>
       <Box>
-        <HeaderCustomer />
+        <Box className="flex justify-center">
+          <HeaderCustomer />
+        </Box>
         <Box className="flex justify-center min-h-screen">
-          <Box className="max-w-[1440px] w-full pt-16">
+          <Box className={`max-w-[1440px] w-full Outlet`}>
             <Outlet />
           </Box>
         </Box>

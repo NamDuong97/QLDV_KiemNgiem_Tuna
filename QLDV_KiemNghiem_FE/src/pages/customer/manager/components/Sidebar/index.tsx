@@ -1,9 +1,10 @@
 import { APP_ROUTES } from "../../../../../constants/routers";
-import { Box, Drawer } from "@mui/material";
+import { Box } from "@mui/material";
 import { FaVoteYea } from "react-icons/fa";
 import { RiBillLine } from "react-icons/ri";
 import { IoPersonSharp } from "react-icons/io5";
 import { useLocation, useNavigate } from "react-router";
+import { motion } from "motion/react";
 
 interface SidebarProps {}
 
@@ -18,13 +19,13 @@ const dataSideBar = [
     name: "Quản Lý Phiếu Đăng Ký Dịch Vụ Kiểm Nghiệm",
     url: `${APP_ROUTES.TUNA_CUSTOMER.PHIEU_DKY_DVKN.to}?tuna=cho-xet-duyet`,
     icon: <FaVoteYea className="w-[42px] h-[42px] text-[#404dd2]" />,
-    urlHienThi: APP_ROUTES.TUNA_CUSTOMER.PHIEU_DKY_DVKN.to.split("/")[1],
+    urlHienThi: "quan-ly-phieu-dang-ky-dich-vu-kiem-nghiem",
   },
   {
     name: "Quản Lý Hóa Đơn",
-    url: "#",
+    url: APP_ROUTES.TUNA_CUSTOMER.QUAN_LY_HOA_DON.to,
     icon: <RiBillLine className="w-7 h-7 text-[#2b89d1]" />,
-    urlHienThi: "",
+    urlHienThi: "quan-ly-hoa-don",
   },
 ];
 
@@ -32,9 +33,17 @@ const Sidebar = (props: SidebarProps) => {
   const navigate = useNavigate();
 
   const urlPage = useLocation().pathname.split("/")[1];
+  console.log("urlPage", urlPage, APP_ROUTES.TUNA_CUSTOMER.QUAN_LY_HOA_DON.to);
 
   return (
-    <div className="border border-solid border-gray-300 rounded-[10px] px-4 py-2 w-[300px] grid gap-1">
+    <motion.div
+      key="sidebar"
+      initial={{ x: 0, opacity: 0 }}
+      animate={{ x: 0, opacity: 1 }}
+      exit={{ x: 0, opacity: 0 }}
+      transition={{ duration: 0.7 }}
+      className="border border-solid border-gray-300 rounded-[10px] px-4 py-2 w-[300px] grid gap-1"
+    >
       {dataSideBar.map((item, index) => (
         <Box
           key={index}
@@ -53,7 +62,7 @@ const Sidebar = (props: SidebarProps) => {
           </p>
         </Box>
       ))}
-    </div>
+    </motion.div>
   );
 };
 

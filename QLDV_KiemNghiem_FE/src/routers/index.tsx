@@ -21,6 +21,10 @@ import PhieuDKyDVKN from "../pages/customer/manager/PhieuDKyDVKN";
 import Edit_PhieuDKyDVKN from "../pages/customer/manager/PhieuDKyDVKN/Edit_PhieuDKyDVKN";
 import PhieuDKyDVKN_CreateMau from "../pages/customer/manager/PhieuDKyDVKN/Edit_PhieuDKyDVKN/PhieuDKyDVKN_CreateMau";
 import PhieuDKyDVKN_EditMau from "../pages/customer/manager/PhieuDKyDVKN/Edit_PhieuDKyDVKN/PhieuDKyDVKN_EditMau";
+import QuanLyHoaDon from "../pages/customer/manager/QuanLyHoaDon";
+import LayoutCustomerManager from "../pages/customer/manager/layout";
+import QuanLyPhieuDKyDVHN from "../pages/admin/manager-phieudkydvkn";
+import ChiTietPhieuDKyDVKN from "../pages/admin/manager-phieudkydvkn/ChiTietPhieuDKyDVKN";
 
 interface Props {}
 
@@ -74,6 +78,19 @@ const Routers = (props: Props) => {
             path={APP_ROUTES.TUNA_ADMIN.FORGOTPASSWORD.to}
             element={<ForGotPasswordPage />}
           />
+
+          <Route
+            path={
+              APP_ROUTES.TUNA_ADMIN.QUAN_LY_PHIEU_DANG_KY_DICH_VU_KIEM_NGHIEM.to
+            }
+            element={<QuanLyPhieuDKyDVHN />}
+          />
+          <Route
+            path={
+              APP_ROUTES.TUNA_ADMIN.QUAN_LY_PHIEU_DANG_KY_DICH_VU_KIEM_NGHIEM.id
+            }
+            element={<ChiTietPhieuDKyDVKN />}
+          />
         </Route>
 
         <Route element={<LayoutCustomer />}>
@@ -90,10 +107,18 @@ const Routers = (props: Props) => {
             path={APP_ROUTES.TUNA_CUSTOMER.Edit_MAU.to}
             element={<EditMau />}
           />
-          <Route
-            path={APP_ROUTES.TUNA_CUSTOMER.PHIEU_DKY_DVKN.to}
-            element={<PhieuDKyDVKN />}
-          />
+
+          {/* Trang Quản lý phía Khách hàng */}
+          <Route element={<LayoutCustomerManager />}>
+            <Route
+              path={APP_ROUTES.TUNA_CUSTOMER.PHIEU_DKY_DVKN.to}
+              element={<PhieuDKyDVKN />}
+            />
+            <Route
+              path={APP_ROUTES.TUNA_CUSTOMER.QUAN_LY_HOA_DON.to}
+              element={<QuanLyHoaDon />}
+            />
+          </Route>
           <Route
             path={APP_ROUTES.TUNA_CUSTOMER.EDIT_PHIEU_DKY_DVKN.to}
             element={<Edit_PhieuDKyDVKN />}

@@ -44,8 +44,8 @@ const LoginCustomer = (props: LoginCustomerProps) => {
         setIsSignUpLoginRepassword("login");
       }}
     >
-      <Box className="relative px-7 py-6 w-auto sm:w-[458px]">
-        <Box className="absolute top-4 right-4">
+      <Box className="!relative px-7 py-6 w-auto sm:w-[458px]">
+        <Box className="!absolute top-4 right-4">
           <button
             className="bg-gray-400 rounded-full p-[6px] hover:bg-gray-500 cursor-pointer"
             onClick={() => {

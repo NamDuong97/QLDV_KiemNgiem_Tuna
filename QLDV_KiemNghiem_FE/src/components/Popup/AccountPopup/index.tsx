@@ -52,7 +52,13 @@ const AccountPopup = (props: AccountPopupProps) => {
             Quản lý phiếu DKDVKN
           </p>
         </Box>
-        <Box className="flex gap-2 items-center hover:bg-[rgb(230,236,246)] cursor-pointer rounded p-1">
+        <Box
+          className="flex gap-2 items-center hover:bg-[rgb(230,236,246)] cursor-pointer rounded p-1"
+          onClick={() => {
+            navigate(APP_ROUTES.TUNA_CUSTOMER.QUAN_LY_HOA_DON.to);
+            handleCloseAccountPopup?.();
+          }}
+        >
           <RiBillLine className="w-6 h-6 text-[#2b89d1]" />
           <p className="text-gray-800 text-base/6 font-medium">
             Quản lý hóa đơn

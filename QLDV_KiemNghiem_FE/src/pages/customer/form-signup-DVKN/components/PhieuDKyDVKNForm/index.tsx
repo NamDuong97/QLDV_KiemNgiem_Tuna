@@ -41,7 +41,14 @@ const PhieuDKyDVKNForm = (props: Props) => {
       SoDienThoai: yup
         .string()
         .required("Yêu cầu nhập số điện thoại")
-        .max(50, "Số điện thoại nhập phải dưới 50 ký tự")
+        .test(
+          "Bắt đầu bằng số 0",
+          "Số điện thoại nhập phải bắt đầu bằng số 0",
+          (value) => {
+            return value?.startsWith("0");
+          }
+        )
+        .max(12, "Số điện thoại nhập phải dưới 12 ký tự")
         .min(8, "Số điện thoại nhập phải trên 8 ký tự"),
       Email: yup
         .string()
@@ -169,11 +176,11 @@ const PhieuDKyDVKNForm = (props: Props) => {
                   padding: "9.5px 14px",
                 },
                 'input[type="number"]': {
-                  "-moz-appearance": "textfield",
+                  MozAppearance: "textfield",
                 },
                 'input[type="number"]::-webkit-outer-spin-button, input[type="number"]::-webkit-inner-spin-button':
                   {
-                    "-webkit-appearance": "none",
+                    WebkitAppearance: "none",
                     margin: 0,
                   },
               }}

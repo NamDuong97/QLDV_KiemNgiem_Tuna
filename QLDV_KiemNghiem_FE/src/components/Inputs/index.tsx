@@ -23,6 +23,7 @@ interface InputsProps {
   autocomplete?: any;
   disabled?: boolean;
   sx?: SxProps<Theme>;
+  height?: string;
 }
 
 export const Inputs = (props: InputsProps) => {
@@ -42,12 +43,16 @@ export const Inputs = (props: InputsProps) => {
     disabled,
     className,
     sx,
+    height,
   } = props;
 
   const { ref: refInput, ...inputProps } = inputRef || { ref: null };
 
   return (
-    <FormControl fullWidth className="gap-2 grid h-[106px]">
+    <FormControl
+      fullWidth
+      className={`gap-2 grid  ${height ? height : "h-[106px]"}`}
+    >
       {title && (
         <p className="!font-semibold text-base/6 text-gray_80">{title}</p>
       )}

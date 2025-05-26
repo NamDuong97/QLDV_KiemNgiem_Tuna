@@ -1,11 +1,9 @@
 import { Avatar, Box, Button, Popover } from "@mui/material";
 import { DataMessenger } from "../../../models/dataMessenger";
-import { useState } from "react";
-import RegisterTestingProfile from "../Notifications/RegisterTestingProfile";
 import { ImHappy } from "react-icons/im";
 import { GoDotFill } from "react-icons/go";
 
-interface NotificationsPopupProps {
+interface NotificationsPopoverProps {
   dataMessages: DataMessenger[];
   openNotifications: boolean;
   anchorElNotifications?: HTMLButtonElement | null;
@@ -13,7 +11,7 @@ interface NotificationsPopupProps {
   handleOpenLoginCustomer?: () => void;
 }
 
-const NotificationsPopup = (props: NotificationsPopupProps) => {
+const NotificationsPopover = (props: NotificationsPopoverProps) => {
   const {
     dataMessages,
     openNotifications,
@@ -23,14 +21,6 @@ const NotificationsPopup = (props: NotificationsPopupProps) => {
   } = props;
 
   const isLogin = false;
-
-  const [openRegisterTestingProfile, setOpenRegisterTestingProfile] =
-    useState(false);
-
-  const handleOpenRegisterTestingProfile = () =>
-    setOpenRegisterTestingProfile(true);
-  const handleCloseRegisterTestingProfile = () =>
-    setOpenRegisterTestingProfile(false);
 
   return (
     <Popover
@@ -67,7 +57,7 @@ const NotificationsPopup = (props: NotificationsPopupProps) => {
                 <Button
                   key={index}
                   className={`flex gap-2 items-center py-3 cursor-pointer rounded w-full hover:!bg-gray-100`}
-                  onClick={handleOpenRegisterTestingProfile}
+                  // onClick={handleOpenRegisterTestingProfile}
                 >
                   <Box className="px-2">
                     <Avatar />
@@ -104,7 +94,7 @@ const NotificationsPopup = (props: NotificationsPopupProps) => {
             </Box>
           </>
         ) : (
-          <Box className="flex items-center justify-center h-full py-5 px-6">
+          <Box className="flex items-center justify-center py-5 px-6">
             <Box className="grid gap-6 w-full">
               <Box className="grid gap-3">
                 <Box className="flex justify-center">
@@ -131,12 +121,8 @@ const NotificationsPopup = (props: NotificationsPopupProps) => {
           </Box>
         )}
       </Box>
-      <RegisterTestingProfile
-        openRegisterTestingProfile={openRegisterTestingProfile}
-        handleCloseRegisterTestingProfile={handleCloseRegisterTestingProfile}
-      />
     </Popover>
   );
 };
 
-export default NotificationsPopup;
+export default NotificationsPopover;

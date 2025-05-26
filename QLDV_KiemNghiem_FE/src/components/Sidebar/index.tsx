@@ -12,6 +12,7 @@ import {
   DepartmentManager,
   DivisionManager,
   EmployeeManager,
+  PhieuDKyDVKNManager,
   PositionManager,
   // SidebarTab,
 } from "../../models/Sidebar";
@@ -25,6 +26,7 @@ import { RiAccountPinCircleFill } from "react-icons/ri";
 import { RiAccountBox2Fill } from "react-icons/ri";
 import { FaUsersCog } from "react-icons/fa";
 import { SiGoogleclassroom } from "react-icons/si";
+import { TiDocumentText } from "react-icons/ti";
 
 interface SideBarProps {
   drawerWidth: number;
@@ -35,45 +37,9 @@ interface SideBarProps {
 
 const SideBar = (props: SideBarProps) => {
   const { drawerWidth, isMenuDashBoard, toggleDrawer, isToggleDrawer } = props;
-
-  // const [isSetting, setIsSetting] = useState(false);
-  // const [isEmployeeManager, setIsEmployeeManager] = useState(false);
-  // const [isCustomerManager, setIsCustomerManager] = useState(false);
-  // const [isDepartmentManager, setIsDepartmentManager] = useState(false);
-  // const [isAccountTypeManager, setIsAccountTypeManager] = useState(false);
-  // const [isAccountManager, setIsAccountManager] = useState(false);
-  // const [isDivisionManager, setIsDivisionManager] = useState(false);
-  // const [isPositionManager, setIsPositionManager] = useState(false);
-  // const [isCustomerProfileManager, setIsCustomerProfileManager] =
-  //   useState(false);
   const pathname = useLocation().pathname;
 
   const navigate = useNavigate();
-
-  // const handleMenuClick = (value: string) => {
-  //   switch (value) {
-  //     case SidebarTab.setting:
-  //       return setIsSetting(!isSetting);
-  //     case SidebarTab.employeeManager:
-  //       return setIsEmployeeManager(!isEmployeeManager);
-  //     case SidebarTab.positionManager:
-  //       return setIsPositionManager(!isPositionManager);
-  //     case SidebarTab.customerManager:
-  //       return setIsCustomerManager(!isCustomerManager);
-  //     case SidebarTab.customerProfileManager:
-  //       return setIsCustomerProfileManager(!isCustomerProfileManager);
-  //     case SidebarTab.departmentManager:
-  //       return setIsDepartmentManager(!isDepartmentManager);
-  //     case SidebarTab.accountTypeManager:
-  //       return setIsAccountTypeManager(!isAccountTypeManager);
-  //     case SidebarTab.accountManager:
-  //       return setIsAccountManager(!isAccountManager);
-  //     case SidebarTab.divisionManager:
-  //       return setIsDivisionManager(!isDivisionManager);
-  //     default:
-  //       return null;
-  //   }
-  // };
 
   const handleRedirect = (value?: string) => {
     switch (value) {
@@ -93,6 +59,10 @@ const SideBar = (props: SideBarProps) => {
         return navigate(APP_ROUTES.TUNA_ADMIN.ACCOUNT_TYPE.to);
       case DivisionManager:
         return navigate(APP_ROUTES.TUNA_ADMIN.DIVISION.to);
+      case PhieuDKyDVKNManager:
+        return navigate(
+          APP_ROUTES.TUNA_ADMIN.QUAN_LY_PHIEU_DANG_KY_DICH_VU_KIEM_NGHIEM.to
+        );
       default:
         return navigate(APP_ROUTES.TUNA_ADMIN.DASHBOARD.to);
     }
@@ -109,7 +79,7 @@ const SideBar = (props: SideBarProps) => {
             [`& .MuiDrawer-paper`]: {
               width: drawerWidth,
               boxSizing: "border-box",
-              marginTop: 7.1,
+              marginTop: 8.1,
               overflow: "auto",
             },
           }}
@@ -268,6 +238,30 @@ const SideBar = (props: SideBarProps) => {
                   >
                     <SiGoogleclassroom className="!w-7 !h-7" />
                     <p className="text-base !font-bold">Khoa</p>
+                  </button>
+                </Box>
+              </Box>
+              <Box className="py-2 pl-4 pr-2 gap-4 grid">
+                <Box className="gap-4 grid">
+                  <button
+                    className={clsx(
+                      "flex items-start gap-2 w-full hover:text-blue-500 cursor-pointer",
+                      {
+                        "text-blue-500":
+                          pathname ===
+                          APP_ROUTES.TUNA_ADMIN
+                            .QUAN_LY_PHIEU_DANG_KY_DICH_VU_KIEM_NGHIEM.to,
+                      }
+                    )}
+                    onClick={() => handleRedirect(PhieuDKyDVKNManager)}
+                  >
+                    <div className="w-8">
+                      <TiDocumentText className="!w-8 !h-8" />
+                    </div>
+
+                    <p className="text-base !font-bold whitespace-normal text-start">
+                      Phiếu đăng ký dịch vụ kiểm nghiệm
+                    </p>
                   </button>
                 </Box>
               </Box>
@@ -440,6 +434,19 @@ const SideBar = (props: SideBarProps) => {
                     >
                       <SiGoogleclassroom className="!w-7 !h-7" />
                     </Tooltip>
+                  </button>
+                </Box>
+                <Box className="flex items-center justify-center p-[10px]">
+                  <button
+                    className={clsx("hover:text-blue-500 cursor-pointer", {
+                      "text-blue-500":
+                        pathname ===
+                        APP_ROUTES.TUNA_ADMIN
+                          .QUAN_LY_PHIEU_DANG_KY_DICH_VU_KIEM_NGHIEM.to,
+                    })}
+                    onClick={() => handleRedirect(PhieuDKyDVKNManager)}
+                  >
+                    <TiDocumentText className="!w-8 !h-8" />
                   </button>
                 </Box>
               </Box>
@@ -624,6 +631,30 @@ const SideBar = (props: SideBarProps) => {
               >
                 <SiGoogleclassroom className="!w-7 !h-7" />
                 <p className="text-base !font-bold">Khoa</p>
+              </button>
+            </Box>
+          </Box>
+          <Box className="py-2 pl-4 pr-2 gap-4 grid">
+            <Box className="gap-4 grid">
+              <button
+                className={clsx(
+                  "flex items-start gap-2 w-full hover:text-blue-500 cursor-pointer",
+                  {
+                    "text-blue-500":
+                      pathname ===
+                      APP_ROUTES.TUNA_ADMIN
+                        .QUAN_LY_PHIEU_DANG_KY_DICH_VU_KIEM_NGHIEM.to,
+                  }
+                )}
+                onClick={() => handleRedirect(PhieuDKyDVKNManager)}
+              >
+                <div className="w-7">
+                  <TiDocumentText className="!w-7 !h-7" />
+                </div>
+
+                <p className="text-base !font-bold whitespace-normal text-start">
+                  Phiếu đăng ký dịch vụ kiểm nghiệm
+                </p>
               </button>
             </Box>
           </Box>

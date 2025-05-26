@@ -36,7 +36,7 @@ export default function LayoutAdmin() {
               />
             )}
           </Box>
-          <Box className="w-full mt-14">
+          <Box className="w-full">
             <Outlet />
           </Box>
         </Box>
