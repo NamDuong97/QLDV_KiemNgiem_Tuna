@@ -5,7 +5,7 @@ namespace QLDV_KiemNghiem_BE.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class AuthController : ControllerBase
+    public class AuthKhachHangController : ControllerBase
     {
     }
 }

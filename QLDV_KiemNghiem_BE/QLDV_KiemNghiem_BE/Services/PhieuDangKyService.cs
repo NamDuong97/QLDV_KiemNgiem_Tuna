@@ -18,14 +18,19 @@ namespace QLDV_KiemNghiem_BE.Services
             _mapper = mapper;
         }
 
-        public async Task<IEnumerable<PhieuDangKy>> GetPhieuDangKiesAllAsync()
+        public async Task<IEnumerable<PhieuDangKyDto>> GetPhieuDangKiesAllAsync()
         {
-          return await _repositoryManager.PhieuDangKy.GetPhieuDangKiesAllAsync();
+            var phieuDangKies =  await _repositoryManager.PhieuDangKy.GetPhieuDangKiesAllAsync();
+            var result =  _mapper.Map<List<PhieuDangKyDto>>(phieuDangKies);
+            var phuLieuHoaChat = _repositoryManager.PhieuDangKyPhuLieuHoaChat.GetPhieuDangKyPhuLieuHoaChatAllAsync();
+            return result;
         }
 
-        public async Task<IEnumerable<PhieuDangKy>> GetPhieuDangKiesAsync(string maKH)
+        public async Task<IEnumerable<PhieuDangKyDto>> GetPhieuDangKiesAsync(string maKH)
         {
-            return await _repositoryManager.PhieuDangKy.GetPhieuDangKiesAsync(maKH);
+            var phieuDangKies = await _repositoryManager.PhieuDangKy.GetPhieuDangKiesAsync(maKH);
+            var result = _mapper.Map<List<PhieuDangKyDto>>(phieuDangKies);
+            return result;
         }
 
         public async Task<bool> CreatePhieuDangKyAsync(PhieuDangKyDto phieuDangKyDto)

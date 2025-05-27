@@ -1,7 +1,13 @@
-﻿namespace QLDV_KiemNghiem_BE.Interfaces.BoPhan
+﻿using QLDV_KiemNghiem_BE.Models;
+
+namespace QLDV_KiemNghiem_BE.Interfaces
 {
     public interface IBoPhanRepository
     {
-        //lsldsds
+        Task<IEnumerable<BoPhan>> GetBoPhansAllAsync();
+        Task<BoPhan?> FindBoPhanAsync(string maBoPhan);
+        void CreateBoPhanAsync(BoPhan BoPhan);
+        void UpdateBoPhanAsync(BoPhan BoPhan);
+        void DeleteBoPhanAsync(BoPhan BoPhan);
     }
 }

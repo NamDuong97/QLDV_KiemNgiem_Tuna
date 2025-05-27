@@ -10,6 +10,9 @@ namespace QLDV_KiemNghiem_BE.Interfaces.ManagerInterface
         IPhieuDangKyPhuLieuHoaChatService PhieuDangKyPhuLieuHoaChat { get; }
         ITieuChuanService TieuChuan { get; }
         IChiTieuService ChiTieu { get; }    
-        IPhuongPhapService PhuongPhap { get; }  
+        IPhuongPhapService PhuongPhap { get; }
+        IBoPhanService BoPhan { get; }
+        IKhoaService Khoa { get; }
+        IChucVuService ChucVu { get; }
     }
 }

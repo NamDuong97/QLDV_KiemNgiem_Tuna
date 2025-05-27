@@ -16,6 +16,9 @@ namespace QLDV_KiemNghiem_BE.Services
         private readonly Lazy<ITieuChuanService> _tieuChuanService;
         private readonly Lazy<IChiTieuService> _chiTieuService;
         private readonly Lazy<IPhuongPhapService> _phuongPhapService;
+        private readonly Lazy<IBoPhanService> _boPhanService;
+        private readonly Lazy<IKhoaService> _khoaService;
+        private readonly Lazy<IChucVuService> _chucVuService;
 
 
         public ServiceManager(IRepositoryManager repositoryManager, IMapper mapper)
@@ -29,6 +32,9 @@ namespace QLDV_KiemNghiem_BE.Services
             _tieuChuanService = new Lazy<ITieuChuanService>(() => new TieuChuanService(repositoryManager, mapper));
             _chiTieuService = new Lazy<IChiTieuService>(() => new ChiTieuService(repositoryManager, mapper));
             _phuongPhapService = new Lazy<IPhuongPhapService>(() => new PhuongPhapService(repositoryManager, mapper));
+            _boPhanService = new Lazy<IBoPhanService>(() => new BoPhanService(repositoryManager, mapper));
+            _khoaService = new Lazy<IKhoaService>(() => new KhoaService(repositoryManager, mapper));
+            _chucVuService = new Lazy<IChucVuService>(() => new ChucVuService(repositoryManager, mapper));
         }
 
         public IPhieuDangKyService PhieuDangKy => _phieuDangKyService.Value;
@@ -38,6 +44,9 @@ namespace QLDV_KiemNghiem_BE.Services
         public ITieuChuanService TieuChuan => _tieuChuanService.Value;
         public IChiTieuService ChiTieu => _chiTieuService.Value;
         public IPhuongPhapService PhuongPhap => _phuongPhapService.Value;
+        public IBoPhanService BoPhan => _boPhanService.Value;
+        public IKhoaService Khoa => _khoaService.Value;
+        public IChucVuService ChucVu => _chucVuService.Value;
 
     }
 }

@@ -20,7 +20,7 @@ namespace QLDV_KiemNghiem_BE.Repositories
         }
         public async Task<IEnumerable<PhieuDangKy>> GetPhieuDangKiesAllAsync()
         {
-            return await _context.PhieuDangKies.ToListAsync();
+            return await _context.PhieuDangKies.Include(item => item.Maus).ToListAsync();
         }
         public async Task<IEnumerable<PhieuDangKy>> GetPhieuDangKiesAsync(string maKH)
         {

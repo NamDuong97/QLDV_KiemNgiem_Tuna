@@ -5,8 +5,8 @@ namespace QLDV_KiemNghiem_BE.Interfaces
 {
     public interface IPhieuDangKyService
     {
-        Task<IEnumerable<PhieuDangKy>> GetPhieuDangKiesAllAsync();
-        Task<IEnumerable<PhieuDangKy>> GetPhieuDangKiesAsync(string maKH);
+        Task<IEnumerable<PhieuDangKyDto>> GetPhieuDangKiesAllAsync();
+        Task<IEnumerable<PhieuDangKyDto>> GetPhieuDangKiesAsync(string maKH);
         Task<bool> CreatePhieuDangKyAsync(PhieuDangKyDto phieuDangKyDto);
         Task<bool> UpdatePhieuDangKyAsync(PhieuDangKyDto phieuDangKyDto);
         Task<bool> DeletePhieuDangKyAsync(PhieuDangKy phieuDangKy);

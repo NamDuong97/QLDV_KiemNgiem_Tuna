@@ -17,6 +17,9 @@ namespace QLDV_KiemNghiem_BE.Repositories
         private readonly Lazy<IChiTieuRepositoty> _chiTieu;
         private readonly Lazy<IPhuongPhapRepository> _phuongPhap;
         private readonly Lazy<IDuocDienRepository> _duocDien;
+        private readonly Lazy<IBoPhanRepository> _boPhan;
+        private readonly Lazy<IKhoaRepository> _khoa;
+        private readonly Lazy<IChucVuRepository> _chucVu;
 
 
         private readonly IMapper _mapper;
@@ -33,6 +36,9 @@ namespace QLDV_KiemNghiem_BE.Repositories
             _chiTieu = new Lazy<IChiTieuRepositoty>(() => new ChiTieuRepository(dataContext, mapper));
             _phuongPhap = new Lazy<IPhuongPhapRepository>(() => new PhuongPhapRepository(dataContext, mapper));
             _duocDien = new Lazy<IDuocDienRepository>(() => new DuocDienRepository(dataContext, mapper));
+            _boPhan = new Lazy<IBoPhanRepository>(() => new BoPhanRepository(dataContext, mapper));
+            _khoa = new Lazy<IKhoaRepository>(() => new KhoaRepository(dataContext, mapper));
+            _chucVu = new Lazy<IChucVuRepository>(() => new ChucVuRepository(dataContext, mapper));
         }
 
         public IPhieuDangKyRepository PhieuDangKy => _phieuDangKy.Value;
@@ -43,6 +49,9 @@ namespace QLDV_KiemNghiem_BE.Repositories
         public IChiTieuRepositoty ChiTieu => _chiTieu.Value;
         public IPhuongPhapRepository PhuongPhap => _phuongPhap.Value;
         public IDuocDienRepository DuocDien => _duocDien.Value;
+        public IBoPhanRepository BoPhan => _boPhan.Value;
+        public IKhoaRepository Khoa => _khoa.Value;
+        public IChucVuRepository ChucVu => _chucVu.Value;
         public async Task<bool> SaveChangesAsync() => await _context.SaveChangesAsync() > 0;
     }
 }

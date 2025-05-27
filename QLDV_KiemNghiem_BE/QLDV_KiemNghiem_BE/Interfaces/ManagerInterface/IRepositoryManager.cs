@@ -10,6 +10,9 @@
         IChiTieuRepositoty ChiTieu { get;  }
         IPhuongPhapRepository PhuongPhap { get; }  
         IDuocDienRepository DuocDien { get; }
+        IBoPhanRepository BoPhan { get; }
+        IKhoaRepository Khoa { get; }
+        IChucVuRepository ChucVu { get; }
         Task<bool> SaveChangesAsync();
     }
 }
