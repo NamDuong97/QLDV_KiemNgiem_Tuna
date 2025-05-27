@@ -28,16 +28,25 @@ namespace QLDV_KiemNghiem_BE.Controllers
         public async Task<ActionResult> getPhieuDangKyAll()
         {
             var phieuDangKys = await _service.PhieuDangKy.GetPhieuDangKiesAllAsync();
-            _logger.LogDebug("get toan bo phieu dang ky");
+            _logger.LogDebug("lay toan bo phieu dang ky");
             return Ok(phieuDangKys);
         }
 
         [HttpGet]
-        [Route("getPhieuDangKy")]
-        public async Task<ActionResult> getPhieuDangKy(string maKH)
+        [Route("getPhieuDangKiesOfCustomer")]
+        public async Task<ActionResult> getPhieuDangKiesOfCustomer(string maKH)
         {
-            var phieuDangKy = await _service.PhieuDangKy.GetPhieuDangKiesAsync(maKH);
-            _logger.LogDebug("get toan bo phieu dang ky cua khach hang: " + maKH);
+            var phieuDangKy = await _service.PhieuDangKy.GetPhieuDangKiesOfCustomerAsync(maKH);
+            _logger.LogDebug("lay toan bo phieu dang ky cua khach hang: " + maKH);
+            return Ok(phieuDangKy);
+        }
+
+        [HttpGet]
+        [Route("findPhieuDangKy")]
+        public async Task<ActionResult> findPhieuDangKy(string maPhieuDangKy)
+        {
+            var phieuDangKy = await _service.PhieuDangKy.FindPhieuDangKyAsync(maPhieuDangKy);
+            _logger.LogDebug("lay phieu dang ky co ma phieu: " + maPhieuDangKy);
             return Ok(phieuDangKy);
         }
 
@@ -53,6 +62,11 @@ namespace QLDV_KiemNghiem_BE.Controllers
                 .ToList();
                 _logger.LogError("Loi validate tham so dau vao");
                 return BadRequest(new { Errors = errors });
+            }
+            if(phieuDangKyDto?.Maus?.Count() == 0 || phieuDangKyDto?.PhieuDangKyPhuLieuHoaChats?.Count() == 0)
+            {
+                _logger.LogDebug("Phiếu đăng ký cung cấp thiếu mẫu hoặc phụ liệu hoá chất");
+                return BadRequest("Phiếu đăng ký không thể thiếu mẫu và phụ liệu hoá chất, vui lòng cung cấp đầy đủ");
             }
             bool create = await _service.PhieuDangKy.CreatePhieuDangKyAsync(phieuDangKyDto);
             if (create)

@@ -19,6 +19,11 @@ namespace QLDV_KiemNghiem_BE.Repositories
         {
             return await _context.PhieuDangKyPhuLieuHoaChats.ToListAsync(); 
         }
+
+        public async Task<IEnumerable<PhieuDangKyPhuLieuHoaChat>> GetPhieuDangKyPhuLieuHoaChatByPhieuDangKyAsync(string maPhieuDangKy)
+        {
+            return await _context.PhieuDangKyPhuLieuHoaChats.Where(item => item.MaPhieuDangKy == maPhieuDangKy).ToListAsync();
+        }
         public void CreatePhieuDangKyPhuLieuHoaChatAsync(PhieuDangKyPhuLieuHoaChat phieuDangKyPhuLieuHoaChat)
         {
             _context.PhieuDangKyPhuLieuHoaChats.Add(phieuDangKyPhuLieuHoaChat);

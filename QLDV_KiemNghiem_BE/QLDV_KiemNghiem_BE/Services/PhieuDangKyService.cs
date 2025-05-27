@@ -20,19 +20,53 @@ namespace QLDV_KiemNghiem_BE.Services
 
         public async Task<IEnumerable<PhieuDangKyDto>> GetPhieuDangKiesAllAsync()
         {
-            var phieuDangKies =  await _repositoryManager.PhieuDangKy.GetPhieuDangKiesAllAsync();
-            var result =  _mapper.Map<List<PhieuDangKyDto>>(phieuDangKies);
-            var phuLieuHoaChat = _repositoryManager.PhieuDangKyPhuLieuHoaChat.GetPhieuDangKyPhuLieuHoaChatAllAsync();
-            return result;
+            List<PhieuDangKyDto> phieuDangKyDtos = new List<PhieuDangKyDto>(); // lưu những phiếu đăng ký đã chuyển sang Dto
+            var phieuDangKies =  await _repositoryManager.PhieuDangKy.GetPhieuDangKiesAllAsync(); // lấy ra các phiếu đăng ký domain
+            foreach (var item in phieuDangKies)
+            {
+                List<MauDto> mauDtos = new List<MauDto>(); // lưu những mẫu đã chuyển sang Dto
+                var phieuDangKyDto = _mapper.Map<PhieuDangKyDto>(item);
+                foreach (var mau  in item.Maus)
+                {
+                    var mauDto = _mapper.Map<MauDto>(item);
+                    mauDto.MauHinhAnhs = _mapper.Map<List<MauHinhAnhDto>>(mau.MauHinhAnhs);
+                    mauDtos.Add(mauDto);
+                }
+                phieuDangKyDto.Maus = mauDtos;
+                phieuDangKyDto.PhieuDangKyPhuLieuHoaChats = (IEnumerable<PhieuDangKyPhuLieuHoaChatDto>) await _repositoryManager.PhieuDangKyPhuLieuHoaChat.GetPhieuDangKyPhuLieuHoaChatByPhieuDangKyAsync(item.MaId);
+                phieuDangKyDtos.Add(phieuDangKyDto);
+            }  
+            return phieuDangKyDtos;
         }
-
-        public async Task<IEnumerable<PhieuDangKyDto>> GetPhieuDangKiesAsync(string maKH)
+        public async Task<IEnumerable<PhieuDangKyDto>> GetPhieuDangKiesOfCustomerAsync(string maKH)
         {
-            var phieuDangKies = await _repositoryManager.PhieuDangKy.GetPhieuDangKiesAsync(maKH);
-            var result = _mapper.Map<List<PhieuDangKyDto>>(phieuDangKies);
+            List<PhieuDangKyDto> phieuDangKyDtos = new List<PhieuDangKyDto>(); // lưu những phiếu đăng ký đã chuyển sang Dto
+            var phieuDangKies = await _repositoryManager.PhieuDangKy.GetPhieuDangKiesOfCustomerAsync(maKH);
+            foreach (var item in phieuDangKies)
+            {
+                List<MauDto> mauDtos = new List<MauDto>(); // lưu những mẫu đã chuyển sang Dto
+                var phieuDangKyDto = _mapper.Map<PhieuDangKyDto>(item);
+                foreach (var mau in item.Maus)
+                {
+                    var mauDto = _mapper.Map<MauDto>(item);
+                    mauDto.MauHinhAnhs = _mapper.Map<List<MauHinhAnhDto>>(mau.MauHinhAnhs);
+                    mauDtos.Add(mauDto);
+                }
+                phieuDangKyDto.Maus = mauDtos;
+                phieuDangKyDto.PhieuDangKyPhuLieuHoaChats = (IEnumerable<PhieuDangKyPhuLieuHoaChatDto>)await _repositoryManager.PhieuDangKyPhuLieuHoaChat.GetPhieuDangKyPhuLieuHoaChatByPhieuDangKyAsync(item.MaId);
+                phieuDangKyDtos.Add(phieuDangKyDto);
+            }
+            return phieuDangKyDtos;
+        }
+        public async Task<PhieuDangKyDto?> FindPhieuDangKyAsync(string maPhieuDangKy)
+        {
+            var phieuDangKy = await _repositoryManager.PhieuDangKy.FindPhieuDangKyAsync(maPhieuDangKy);
+            if (phieuDangKy == null) return null;
+            var result = _mapper.Map<PhieuDangKyDto>(phieuDangKy);
+            result.Maus = _mapper.Map<List<MauDto>>(phieuDangKy.Maus);
+            result.PhieuDangKyPhuLieuHoaChats = _mapper.Map<List<PhieuDangKyPhuLieuHoaChatDto>>(phieuDangKy.PhieuDangKyPhuLieuHoaChats);
             return result;
         }
-
         public async Task<bool> CreatePhieuDangKyAsync(PhieuDangKyDto phieuDangKyDto)
         {
             PhieuDangKy phieuDangKyDomain = new PhieuDangKy();

@@ -77,6 +77,6 @@ namespace QLDV_KiemNghiem_BE.DTO
 
         [DataType(DataType.DateTime, ErrorMessage = "Ngày sửa không hợp lệ")]
         public DateTime? NgaySua { get; set; }
-        public  ICollection<MauHinhAnhDto> HinhAnhs { get; set; } = new List<MauHinhAnhDto>();
+        public  ICollection<MauHinhAnhDto> MauHinhAnhs { get; set; } = new List<MauHinhAnhDto>();
     }
 }

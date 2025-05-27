@@ -4,6 +4,7 @@ using QLDV_KiemNghiem_BE.Data;
 using QLDV_KiemNghiem_BE.DTO;
 using QLDV_KiemNghiem_BE.Interfaces;
 using QLDV_KiemNghiem_BE.Models;
+using System;
 using System.Linq;
 
 
@@ -20,11 +21,16 @@ namespace QLDV_KiemNghiem_BE.Repositories
         }
         public async Task<IEnumerable<PhieuDangKy>> GetPhieuDangKiesAllAsync()
         {
-            return await _context.PhieuDangKies.Include(item => item.Maus).ToListAsync();
+            return await _context.PhieuDangKies.Include(item => item.Maus).ThenInclude(item => item.MauHinhAnhs).ToListAsync();
         }
-        public async Task<IEnumerable<PhieuDangKy>> GetPhieuDangKiesAsync(string maKH)
+        public async Task<IEnumerable<PhieuDangKy>> GetPhieuDangKiesOfCustomerAsync(string maKH)
         {
-            return await _context.PhieuDangKies.ToListAsync();
+            return await _context.PhieuDangKies.Where(item => item.MaKh == maKH).Include(item => item.Maus).ThenInclude(item => item.MauHinhAnhs).ToListAsync();
+        }
+        public async Task<PhieuDangKy?> FindPhieuDangKyAsync(string maPhieuDangKy)
+        {
+            return await _context.PhieuDangKies.Include(p => p.Maus).Include(p => p.PhieuDangKyPhuLieuHoaChats) 
+            .FirstOrDefaultAsync(p => p.MaId == maPhieuDangKy);
         }
         public void CreatePhieuDangKyAsync(PhieuDangKy phieuDangKy)
         {

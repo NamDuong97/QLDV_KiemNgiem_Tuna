@@ -13,6 +13,7 @@
         IBoPhanRepository BoPhan { get; }
         IKhoaRepository Khoa { get; }
         IChucVuRepository ChucVu { get; }
+        IMauHinhAnhRepository MauHinhAnh { get; }
         Task<bool> SaveChangesAsync();
     }
 }

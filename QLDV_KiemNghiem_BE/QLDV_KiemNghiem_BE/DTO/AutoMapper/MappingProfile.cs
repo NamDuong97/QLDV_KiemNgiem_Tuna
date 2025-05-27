@@ -13,6 +13,7 @@ namespace QLDV_KiemNghiem_BE.DTO.AutoMapper
             CreateMap<TieuChuan, TieuChuanDto>().ReverseMap();
             CreateMap<ChiTieu, ChiTieuDto>().ReverseMap();
             CreateMap<PhuongPhap, PhuongPhapDto>().ReverseMap();
+            CreateMap<MauHinhAnh, MauHinhAnhDto>().ReverseMap();
         }
     }
 }

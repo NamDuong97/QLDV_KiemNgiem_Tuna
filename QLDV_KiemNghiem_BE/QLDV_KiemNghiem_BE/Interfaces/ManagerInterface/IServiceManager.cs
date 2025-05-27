@@ -14,5 +14,6 @@ namespace QLDV_KiemNghiem_BE.Interfaces.ManagerInterface
         IBoPhanService BoPhan { get; }
         IKhoaService Khoa { get; }
         IChucVuService ChucVu { get; }
+        IMauHinhAnhService MauHinhAnh { get; }
     }
 }
