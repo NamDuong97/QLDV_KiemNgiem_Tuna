@@ -19,7 +19,7 @@ namespace QLDV_KiemNghiem_BE.Repositories
         {
             return await _context.Maus.ToListAsync();
         }
-        public async Task<Mau> GetMauAsync(string maMau)
+        public async Task<Mau?> GetMauAsync(string maMau)
         {
             return await _context.Maus.Where(item => item.MaId == maMau).SingleOrDefaultAsync();
         }

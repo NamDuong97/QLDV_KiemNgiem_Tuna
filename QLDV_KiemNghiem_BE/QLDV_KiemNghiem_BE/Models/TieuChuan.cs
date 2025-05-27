@@ -14,9 +14,6 @@ public partial class TieuChuan
     [StringLength(50)]
     public string MaId { get; set; } = null!;
 
-    [StringLength(50)]
-    public string? MaDuocDien { get; set; }
-
     [StringLength(200)]
     public string? TenTieuChuan { get; set; }
 
@@ -48,8 +45,11 @@ public partial class TieuChuan
     [Column(TypeName = "datetime")]
     public DateTime? NgaySua { get; set; }
 
-    [InverseProperty("MaTieuChuanNavigation")]
-    public virtual ICollection<ChiTieu> ChiTieus { get; set; } = new List<ChiTieu>();
+    [StringLength(50)]
+    public string? MaTieuChuan { get; set; }
+
+    [StringLength(50)]
+    public string? MaDuocDien { get; set; }
 
     [ForeignKey("MaDuocDien")]
     [InverseProperty("TieuChuans")]
@@ -57,4 +57,7 @@ public partial class TieuChuan
 
     [InverseProperty("MaTieuChuanNavigation")]
     public virtual ICollection<Mau> Maus { get; set; } = new List<Mau>();
+
+    [InverseProperty("MaTieuChuanNavigation")]
+    public virtual ICollection<TieuChuanChiTieu> TieuChuanChiTieus { get; set; } = new List<TieuChuanChiTieu>();
 }

@@ -15,7 +15,7 @@ namespace QLDV_KiemNghiem_BE.Services
         {
             return await _repositoryManager.Mau.GetMauAllAsync();
         }
-        public async Task<Mau> GetMauAsync(string maMau)
+        public async Task<Mau?> GetMauAsync(string maMau)
         {
             return await _repositoryManager.Mau.GetMauAsync(maMau);
         }
@@ -27,12 +27,22 @@ namespace QLDV_KiemNghiem_BE.Services
         }
         public async Task<bool> UpdateMauAsync(Mau mau)
         {
+            var mauDomain = await _repositoryManager.Mau.GetMauAsync(mau.MaId);
+            if (mauDomain == null)
+            {
+                return false;
+            }
             _repositoryManager.Mau.UpdateMauAsync(mau);
             bool check = await _repositoryManager.SaveChangesAsync();
             return check;
         }
         public async Task<bool> DeleteMauAsync(Mau mau)
         {
+            var mauDomain = await _repositoryManager.Mau.GetMauAsync(mau.MaId);
+            if (mauDomain == null)
+            {
+                return false;
+            }
             _repositoryManager.Mau.DeleteMauAsync(mau);
             bool check = await _repositoryManager.SaveChangesAsync();
             return check;

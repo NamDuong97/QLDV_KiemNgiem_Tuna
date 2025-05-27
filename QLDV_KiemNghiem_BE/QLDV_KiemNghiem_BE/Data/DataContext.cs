@@ -126,6 +126,8 @@ public partial class DataContext : DbContext
 
     public virtual DbSet<TieuChuan> TieuChuans { get; set; }
 
+    public virtual DbSet<TieuChuanChiTieu> TieuChuanChiTieus { get; set; }
+
     public virtual DbSet<TrangThaiPhieuDk> TrangThaiPhieuDks { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -195,8 +197,6 @@ public partial class DataContext : DbContext
         modelBuilder.Entity<ChiTieu>(entity =>
         {
             entity.HasKey(e => e.MaId).HasName("PK__ChiTieu__2725BF40BC1B7449");
-
-            entity.HasOne(d => d.MaTieuChuanNavigation).WithMany(p => p.ChiTieus).HasConstraintName("Fk_ChiTieu_TieuChuan");
         });
 
         modelBuilder.Entity<ChiTieuPhuongPhap>(entity =>
@@ -227,7 +227,7 @@ public partial class DataContext : DbContext
 
         modelBuilder.Entity<DuocDien>(entity =>
         {
-            entity.HasKey(e => e.MaId).HasName("PK__DuocDien__2725BF406601CC67");
+            entity.HasKey(e => e.MaId).HasName("PK_Duocdien_265");
         });
 
         modelBuilder.Entity<HoaDonMuaPlhc>(entity =>
@@ -605,7 +605,16 @@ public partial class DataContext : DbContext
         {
             entity.HasKey(e => e.MaId).HasName("PK__TieuChua__2725BF402CED50C6");
 
-            entity.HasOne(d => d.MaDuocDienNavigation).WithMany(p => p.TieuChuans).HasConstraintName("Fk_TieuChuan_DuocDien");
+            entity.HasOne(d => d.MaDuocDienNavigation).WithMany(p => p.TieuChuans).HasConstraintName("FK_TieuChuan_DuocDien");
+        });
+
+        modelBuilder.Entity<TieuChuanChiTieu>(entity =>
+        {
+            entity.HasKey(e => e.MaId).HasName("PK__TieuChua__2725BF4085D69F1B");
+
+            entity.HasOne(d => d.MaChiTieuNavigation).WithMany(p => p.TieuChuanChiTieus).HasConstraintName("FK_TieuChuan_ChiTieu_ChiTieu");
+
+            entity.HasOne(d => d.MaTieuChuanNavigation).WithMany(p => p.TieuChuanChiTieus).HasConstraintName("FK_TieuChuan_ChiTieu_TieuChuan");
         });
 
         modelBuilder.Entity<TrangThaiPhieuDk>(entity =>

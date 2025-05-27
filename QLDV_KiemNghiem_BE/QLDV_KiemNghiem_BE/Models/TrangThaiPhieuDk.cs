@@ -36,6 +36,9 @@ public partial class TrangThaiPhieuDk
     [Column(TypeName = "datetime")]
     public DateTime? NgaySua { get; set; }
 
+    [StringLength(500)]
+    public string? Ghichu { get; set; }
+
     [InverseProperty("TrangThai")]
     public virtual ICollection<PhieuDangKy> PhieuDangKies { get; set; } = new List<PhieuDangKy>();
 }

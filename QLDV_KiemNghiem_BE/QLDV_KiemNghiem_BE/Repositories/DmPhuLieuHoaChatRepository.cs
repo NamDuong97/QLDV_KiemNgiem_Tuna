@@ -9,28 +9,33 @@ namespace QLDV_KiemNghiem_BE.Repositories
 {
     public class DmPhuLieuHoaChatRepository : IDmPhuLieuHoaChatRepository
     {
-        private readonly DataContext _dataContext;
+        private readonly DataContext _context;
         private readonly IMapper _mapper;   
         public DmPhuLieuHoaChatRepository(DataContext dataContext, IMapper mapper)
         {
-            _dataContext = dataContext;
+            _context = dataContext;
             _mapper = mapper;
         }
         public async Task<IEnumerable<DmPhuLieuHoaChat>> GetDmPhuLieuHoaChatAllAsync()
         {
-           return await _dataContext.DmPhuLieuHoaChats.ToListAsync();
+           return await _context.DmPhuLieuHoaChats.ToListAsync();
         }
+        public async Task<DmPhuLieuHoaChat?> FindDmPhuLieuHoaChatAsync(string id)
+        {
+            return await _context.DmPhuLieuHoaChats.FindAsync(id);
+        }
+
         public void CreateDmPhuLieuHoaChatAsync(DmPhuLieuHoaChat plhc)
         {
-            _dataContext.DmPhuLieuHoaChats.Add(plhc);
+            _context.DmPhuLieuHoaChats.Add(plhc);
         }
         public void UpdateDmPhuLieuHoaChatAsync(DmPhuLieuHoaChat plhc)
         {
-            _dataContext.DmPhuLieuHoaChats.Update(plhc);
+            _context.DmPhuLieuHoaChats.Update(plhc);
         }
         public void DeleteDmPhuLieuHoaChatAsync(DmPhuLieuHoaChat plhc)
         {
-            _dataContext.DmPhuLieuHoaChats.Remove(plhc);
+            _context.DmPhuLieuHoaChats.Remove(plhc);
         }
     }
 }

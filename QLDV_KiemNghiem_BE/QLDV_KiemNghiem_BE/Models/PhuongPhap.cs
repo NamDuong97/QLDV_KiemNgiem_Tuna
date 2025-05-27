@@ -42,6 +42,8 @@ public partial class PhuongPhap
     [Column(TypeName = "datetime")]
     public DateTime? NgaySua { get; set; }
 
+    public string? NoiDung { get; set; }
+
     [InverseProperty("MaPpNavigation")]
     public virtual ICollection<ChiTieuPhuongPhap> ChiTieuPhuongPhaps { get; set; } = new List<ChiTieuPhuongPhap>();
 }
