@@ -32,6 +32,17 @@ namespace QLDV_KiemNghiem_BE.Controllers
             return Ok(result);
         }
 
+
+        [HttpGet]
+        [Route("findDmPhuLieuHoaChat")]
+        public async Task<ActionResult> findDmPhuLieuHoaChat(string id)
+        {
+            var dmPhuLieuHoaChat = await _service.DmPhuLieuHoaChat.GetDmPhuLieuHoaChatAllAsync();
+            var result = _mapper.Map<IEnumerable<DmPhuLieuHoaChatDto>>(dmPhuLieuHoaChat);
+            _logger.LogDebug("lay toan bo danh muc phu lieu hoa chat");
+            return Ok(result);
+        }
+
         [HttpPost]
         [Route("createDmPhuLieuHoaChat")]
         public async Task<ActionResult> createDmPhuLieuHoaChat(DmPhuLieuHoaChat dmPhuLieuHoaChat)

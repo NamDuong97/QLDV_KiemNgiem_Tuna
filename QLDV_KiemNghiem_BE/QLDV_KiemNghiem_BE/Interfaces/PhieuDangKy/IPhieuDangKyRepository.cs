@@ -11,5 +11,7 @@ namespace QLDV_KiemNghiem_BE.Interfaces
         void UpdatePhieuDangKyAsync(PhieuDangKy phieuDangKy);
         void DeletePhieuDangKyAsync(PhieuDangKy phieuDangKy);
         Task<PhieuDangKy?> CheckExistPhieuDangKyAsync(string id);
+        Task<int> DuTinhThoiGianKiemNghiem(string maTieuChuan);
+
     }
 }

@@ -47,6 +47,10 @@ public partial class HoaDonThu
     [Column(TypeName = "datetime")]
     public DateTime? NgaySua { get; set; }
 
+    [Column("SoDKPT")]
+    [StringLength(50)]
+    public string? SoDkpt { get; set; }
+
     [InverseProperty("MaHdNavigation")]
     public virtual ICollection<ChiTietHoaDonThu> ChiTietHoaDonThus { get; set; } = new List<ChiTietHoaDonThu>();
 

@@ -6,7 +6,10 @@
         IMauRepository Mau { get; }
         IDmPhuLieuHoaChatRepository DmPhuLieuHoaChat { get; }
         IPhieuDangKyPhuLieuHoaChatRepository PhieuDangKyPhuLieuHoaChat { get; }
-
+        ITieuChuanRepository TieuChuan { get; }
+        IChiTieuRepositoty ChiTieu { get;  }
+        IPhuongPhapRepository PhuongPhap { get; }  
+        IDuocDienRepository DuocDien { get; }
         Task<bool> SaveChangesAsync();
     }
 }

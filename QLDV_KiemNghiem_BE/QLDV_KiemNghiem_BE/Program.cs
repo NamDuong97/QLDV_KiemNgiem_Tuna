@@ -7,7 +7,6 @@ using QLDV_KiemNghiem_BE.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
-//Add services to the container.
 builder.Services.AddDbContext<DataContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
@@ -19,9 +18,11 @@ builder.Services.AddAutoMapper(op => op.AddProfile<MappingProfile>(),typeof(Prog
 
 builder.Services.AddControllers(); // thay vì AddControllers()
 
-var app = builder.Build();
+builder.Services.AddControllers();
 
-//Configure the HTTP request pipeline. 
+builder.Logging.AddDebug();   // Ghi ra Debug output
+
+var app = builder.Build();
 
 app.UseHttpsRedirection();
 

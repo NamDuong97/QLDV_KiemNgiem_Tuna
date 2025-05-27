@@ -19,6 +19,11 @@ namespace QLDV_KiemNghiem_BE.Services
         {
             return await _repositoryManager.DmPhuLieuHoaChat.GetDmPhuLieuHoaChatAllAsync();
         }
+        public async Task<DmPhuLieuHoaChat?> FindDmPhuLieuHoaChatAsync(string id)
+        {
+            return await _repositoryManager.DmPhuLieuHoaChat.FindDmPhuLieuHoaChatAsync(id);
+        }
+
         public async Task<bool> CreateDmPhuLieuHoaChatAsync(DmPhuLieuHoaChat plhc)
         {
             _repositoryManager.DmPhuLieuHoaChat.CreateDmPhuLieuHoaChatAsync(plhc);
@@ -28,12 +33,22 @@ namespace QLDV_KiemNghiem_BE.Services
 
         public async Task<bool> UpdateDmPhuLieuHoaChatAsync(DmPhuLieuHoaChat plhc)
         {
+            var dmPhuLieuHoaChatDomain = await _repositoryManager.DmPhuLieuHoaChat.FindDmPhuLieuHoaChatAsync(plhc.MaId);
+            if (dmPhuLieuHoaChatDomain == null)
+            {
+                return false;
+            }
             _repositoryManager.DmPhuLieuHoaChat.UpdateDmPhuLieuHoaChatAsync(plhc);
             bool check = await _repositoryManager.SaveChangesAsync();
             return check;
         }
         public async Task<bool> DeleteDmPhuLieuHoaChatAsync(DmPhuLieuHoaChat plhc)
         {
+            var dmPhuLieuHoaChatDomain = await _repositoryManager.DmPhuLieuHoaChat.FindDmPhuLieuHoaChatAsync(plhc.MaId);
+            if (dmPhuLieuHoaChatDomain == null)
+            {
+                return false;
+            }
             _repositoryManager.DmPhuLieuHoaChat.DeleteDmPhuLieuHoaChatAsync(plhc);
             bool check = await _repositoryManager.SaveChangesAsync();
             return check;

@@ -42,9 +42,10 @@ namespace QLDV_KiemNghiem_BE.Controllers
             return Ok(phieuDangKy);
         }
 
+        // action nay ca nguoi dung va quan tri vien deu su dung
         [HttpPost]
         [Route("createPhieuDangKy")]
-        public async Task<ActionResult> createPhieuDangKy(PhieuDangKy phieuDangKy)
+        public async Task<ActionResult> createPhieuDangKy(PhieuDangKyDto phieuDangKyDto)
         {
             if (ModelState.IsValid)
             {
@@ -52,14 +53,14 @@ namespace QLDV_KiemNghiem_BE.Controllers
                 .SelectMany(v => v.Errors)
                 .Select(e => e.ErrorMessage)
                 .ToList();
-                _logger.LogDebug("Loi validate tham so dau vao");
+                _logger.LogError("Loi validate tham so dau vao");
                 return BadRequest(new { Errors = errors });
             }
-            bool create = await _service.PhieuDangKy.CreatePhieuDangKyAsync(phieuDangKy);
+            bool create = await _service.PhieuDangKy.CreatePhieuDangKyAsync(phieuDangKyDto);
             if (create)
             {
                 _logger.LogDebug("Tao phieu dang ky thanh cong");
-                return Ok(phieuDangKy);
+                return Ok(phieuDangKyDto);
             }
             else
             {
@@ -68,9 +69,10 @@ namespace QLDV_KiemNghiem_BE.Controllers
             }
         }
 
+        // action nay ca nguoi dung va quan tri vien deu su dung
         [HttpPut]
         [Route("updatePhieuDangKy")]
-        public async Task<ActionResult> updatePhieuDangKy(PhieuDangKy phieuDangKy)
+        public async Task<ActionResult> updatePhieuDangKy(PhieuDangKyDto phieuDangKyDto)
         {
             if (ModelState.IsValid)
             {
@@ -78,14 +80,14 @@ namespace QLDV_KiemNghiem_BE.Controllers
                 .SelectMany(v => v.Errors)
                 .Select(e => e.ErrorMessage)
                 .ToList();
-                _logger.LogDebug("Loi validate tham so dau vao");
+                _logger.LogError("Loi validate tham so dau vao");
                 return BadRequest(new { Errors = errors });
             }
-            bool update = await _service.PhieuDangKy.UpdatePhieuDangKyAsync(phieuDangKy);
+            bool update = await _service.PhieuDangKy.UpdatePhieuDangKyAsync(phieuDangKyDto);
             if (update)
             {
                 _logger.LogDebug("Cap nhat phieu dang ky thanh cong");
-                return Ok(phieuDangKy);
+                return Ok(phieuDangKyDto);
             }
             else
             {
@@ -117,6 +119,23 @@ namespace QLDV_KiemNghiem_BE.Controllers
             {
                 _logger.LogDebug("Phieu dang ky khong ton tai");
                 return BadRequest();
+            }
+        }
+
+        [HttpGet]
+        [Route("duTinhThoiGianKiemNghiem")]
+        public async Task<ActionResult> duTinhThoiGianKiemNghiem(string maTieuChuan)
+        {
+            int time = await _service.PhieuDangKy.DuTinhThoiGianKiemNghiem(maTieuChuan);
+            if (time != 0)
+            {
+                _logger.LogDebug("Tra ket qua thoi gian du tinh kiem nghiem thanh cong");
+                return Ok(time);
+            }
+            else 
+            {
+                _logger.LogDebug("Ma tieu chuan chua ton tai trong CSDL");
+                return BadRequest(time);
             }
         }
     }

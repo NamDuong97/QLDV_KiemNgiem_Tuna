@@ -83,6 +83,8 @@ public partial class Mau
     [Column(TypeName = "datetime")]
     public DateTime? NgaySua { get; set; }
 
+    public int? ThoiGianTieuChuan { get; set; }
+
     [InverseProperty("MaMauNavigation")]
     public virtual ICollection<ChiTietHoaDonThu> ChiTietHoaDonThus { get; set; } = new List<ChiTietHoaDonThu>();
 

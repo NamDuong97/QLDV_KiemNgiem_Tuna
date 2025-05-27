@@ -70,6 +70,10 @@ public partial class PhieuDangKy
     [Column(TypeName = "datetime")]
     public DateTime? NgaySua { get; set; }
 
+    [Column("SoDKPT")]
+    [StringLength(50)]
+    public string? SoDkpt { get; set; }
+
     [InverseProperty("MaPhieuDangKyNavigation")]
     public virtual ICollection<HoaDonThu> HoaDonThus { get; set; } = new List<HoaDonThu>();
 

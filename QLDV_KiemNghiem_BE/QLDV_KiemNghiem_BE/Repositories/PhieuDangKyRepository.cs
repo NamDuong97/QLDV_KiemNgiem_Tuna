@@ -46,5 +46,12 @@ namespace QLDV_KiemNghiem_BE.Repositories
             var result = await _context.PhieuDangKies.FindAsync(id);
             return result;
         }
+
+        public async Task<int> DuTinhThoiGianKiemNghiem(string maTieuChuan)
+        {
+            var result = await _context.Database.ExecuteSqlRawAsync("exec ThoiGianDuTinhKiemNghiem @maTieuChuan = {0}", maTieuChuan);
+            return result;
+        }
+
     }
 }

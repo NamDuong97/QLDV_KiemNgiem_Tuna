@@ -8,6 +8,8 @@ namespace QLDV_KiemNghiem_BE.Interfaces.ManagerInterface
         IMauService Mau { get; }
         IDmPhuLieuHoaChatService DmPhuLieuHoaChat { get; }
         IPhieuDangKyPhuLieuHoaChatService PhieuDangKyPhuLieuHoaChat { get; }
-
+        ITieuChuanService TieuChuan { get; }
+        IChiTieuService ChiTieu { get; }    
+        IPhuongPhapService PhuongPhap { get; }  
     }
 }

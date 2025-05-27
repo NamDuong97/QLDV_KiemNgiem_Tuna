@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc.ModelBinding;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
+using QLDV_KiemNghiem_BE.DTO;
 using QLDV_KiemNghiem_BE.Interfaces;
 using QLDV_KiemNghiem_BE.Interfaces.ManagerInterface;
 using QLDV_KiemNghiem_BE.Models;
@@ -9,28 +11,66 @@ namespace QLDV_KiemNghiem_BE.Services
     public class PhieuDangKyService : IPhieuDangKyService
     {
         private readonly IRepositoryManager _repositoryManager;
-        public PhieuDangKyService(IRepositoryManager repositoryManager)
+        private IMapper _mapper;
+        public PhieuDangKyService(IRepositoryManager repositoryManager, IMapper mapper)
         {
             _repositoryManager = repositoryManager;
+            _mapper = mapper;
         }
+
         public async Task<IEnumerable<PhieuDangKy>> GetPhieuDangKiesAllAsync()
         {
           return await _repositoryManager.PhieuDangKy.GetPhieuDangKiesAllAsync();
         }
+
         public async Task<IEnumerable<PhieuDangKy>> GetPhieuDangKiesAsync(string maKH)
         {
             return await _repositoryManager.PhieuDangKy.GetPhieuDangKiesAsync(maKH);
         }
-        public async Task<bool> CreatePhieuDangKyAsync(PhieuDangKy phieuDangKy)
+
+        public async Task<bool> CreatePhieuDangKyAsync(PhieuDangKyDto phieuDangKyDto)
         {
-            _repositoryManager.PhieuDangKy.CreatePhieuDangKyAsync(phieuDangKy);
+            PhieuDangKy phieuDangKyDomain = new PhieuDangKy();
+            phieuDangKyDomain = _mapper.Map<PhieuDangKy>(phieuDangKyDto);
+            _repositoryManager.PhieuDangKy.CreatePhieuDangKyAsync(phieuDangKyDomain);
+            // Them danh sach mau vao CSDL
+            foreach (var x in phieuDangKyDto.Maus)
+            {
+                Mau mauDomain = new Mau();
+                mauDomain = _mapper.Map<Mau>(x);
+                mauDomain.MaPhieuDangKy = phieuDangKyDomain.MaId;
+                mauDomain.MaMau = mauDomain.TenMau + mauDomain.Madv + DateTime.Now.ToString();
+                mauDomain.NgayTao = DateTime.Now;
+                _repositoryManager.Mau.CreateMauAsync(mauDomain);
+            }
+            // Them danh sach plhc vao CSDL
+            foreach (var x in phieuDangKyDto.PhieuDangKyPhuLieuHoaChats)
+            {
+                var phieuDangKyPhuLieuHoaChatDomain = _mapper.Map<PhieuDangKyPhuLieuHoaChat>(x);
+                _repositoryManager.PhieuDangKyPhuLieuHoaChat.CreatePhieuDangKyPhuLieuHoaChatAsync(phieuDangKyPhuLieuHoaChatDomain);
+            }
+            // Ghi vao CSDL
             bool check = await _repositoryManager.SaveChangesAsync();
             return check;
         }
 
-        public async Task<bool> UpdatePhieuDangKyAsync(PhieuDangKy phieuDangKy)
+        public async Task<bool> UpdatePhieuDangKyAsync(PhieuDangKyDto phieuDangKyDto)
         {
-            _repositoryManager.PhieuDangKy.UpdatePhieuDangKyAsync(phieuDangKy);
+            var phieuDangKyDomain = _mapper.Map<PhieuDangKy>(phieuDangKyDto);
+            _repositoryManager.PhieuDangKy.UpdatePhieuDangKyAsync(phieuDangKyDomain);
+            // Them danh sach mau vao CSDL
+            foreach (var x in phieuDangKyDto.Maus)
+            {
+                var mauDomain = _mapper.Map<Mau>(x);
+                _repositoryManager.Mau.UpdateMauAsync(mauDomain);
+            }
+            // Them danh sach plhc vao CSDL
+            foreach (var x in phieuDangKyDto.PhieuDangKyPhuLieuHoaChats)
+            {
+                var phieuDangKyPhuLieuHoaChatDomain = _mapper.Map<PhieuDangKyPhuLieuHoaChat>(x);
+                _repositoryManager.PhieuDangKyPhuLieuHoaChat.UpdatePhieuDangKyPhuLieuHoaChatAsync(phieuDangKyPhuLieuHoaChatDomain);
+            }
+            // Ghi vao CSDL
             bool check = await _repositoryManager.SaveChangesAsync();
             return check;
         }
@@ -46,6 +86,16 @@ namespace QLDV_KiemNghiem_BE.Services
         public async Task<PhieuDangKy?> CheckExistPhieuDangKyAsync(string id)
         {
             return await _repositoryManager.PhieuDangKy.CheckExistPhieuDangKyAsync(id);
+        }
+
+        public async Task<int> DuTinhThoiGianKiemNghiem(string maTieuChuan)
+        {
+            var checkExistTieuChuan = await _repositoryManager.TieuChuan.FindTieuChuanAsync(maTieuChuan);
+            if(checkExistTieuChuan == null)
+            {
+                return 0;
+            }
+            return await _repositoryManager.PhieuDangKy.DuTinhThoiGianKiemNghiem(maTieuChuan);
         }
 
     }
