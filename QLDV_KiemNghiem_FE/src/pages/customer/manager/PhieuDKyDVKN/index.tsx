@@ -21,11 +21,6 @@ const dataTag = [
     urlTag: `${APP_ROUTES.TUNA_CUSTOMER.PHIEU_DKY_DVKN.to}?tuna=${keyTag.Da_Duyet}`,
     key: keyTag.Da_Duyet,
   },
-  {
-    name: "Đã hủy",
-    urlTag: `${APP_ROUTES.TUNA_CUSTOMER.PHIEU_DKY_DVKN.to}?tuna=${keyTag.Da_Huy}`,
-    key: keyTag.Da_Huy,
-  },
 ];
 
 const PhieuDKyDVKN = () => {

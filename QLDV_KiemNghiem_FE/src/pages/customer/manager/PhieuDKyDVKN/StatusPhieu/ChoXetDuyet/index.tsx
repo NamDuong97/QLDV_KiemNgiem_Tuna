@@ -4,6 +4,7 @@ import TableChoXetDuyet from "./TableChoXetDuyet";
 import { Align } from "../../../../../../models/Table";
 import PopupHuyPhieu from "./PopupHuyPhieu";
 import PopupBolocChoXetDuyet from "./PopupBolocChoXetDuyet";
+import { usePhieuDKyDVHNALL } from "../../../../../../hooks/customer/usePhieuDKyDVHN";
 
 const tableHead = [
   {
@@ -50,6 +51,12 @@ const ChoXetDuyet = () => {
   const handleHuyPhieu = () => {
     setOpenPopupHuyPhieu(true);
   };
+
+  const { data: dataPhieuDkyAll } = usePhieuDKyDVHNALL({
+    queryKey: "getALLPhieuDangKyDVKN",
+  });
+
+  console.log("dataPhieuDkyAll", dataPhieuDkyAll);
 
   return (
     <Box className="grid gap-4">

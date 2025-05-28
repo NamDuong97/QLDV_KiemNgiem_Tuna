@@ -9,19 +9,10 @@ interface Props {
   handleClose?: () => void;
 }
 
-const PopupDuyetBo = (props: Props) => {
+const PopupTuChoiPhongKHDT = (props: Props) => {
   const { open, handleClose } = props;
 
   const navigate = useNavigate();
-  const userName = "Ban lãnh đạo";
-  const handleContentByName = () => {
-    switch (userName as string) {
-      case "Phòng Kế Hoạch và Đầu Tư":
-        return "Sơ duyệt thành công, vui lòng đợi BLĐ phê duyệt!";
-      case "Ban lãnh đạo":
-        return "Phiếu đăng ký dịch vụ được được phê duyệt thành công!";
-    }
-  };
 
   return (
     <AnimatePresence mode="wait">
@@ -48,20 +39,32 @@ const PopupDuyetBo = (props: Props) => {
               </Box>
               <Box className="text-center">
                 <p className="text-xl/6 font-medium text-gray-800">
-                  {handleContentByName()}
+                  Lorem ipsum is a dummy text used to replace text in some areas
+                  just for the purpose of an example.
                 </p>
               </Box>
-              <Box className="">
+              <Box className="flex justify-center gap-6">
                 <button
-                  onClick={() =>
-                    navigate(
-                      APP_ROUTES.TUNA_ADMIN
-                        .QUAN_LY_PHIEU_DANG_KY_DICH_VU_KIEM_NGHIEM.to
-                    )
-                  }
-                  className="font-bold text-center text-white bg-[#0099f8] border-[2px] border-solid border-gray-300 px-4 py-1 lg:px-6 lg:py-2 rounded-md hover:bg-blue-500 cursor-pointer shadow-[0_4px_4px_rgba(0,0,0,0.25)] w-full"
+                  // onClick={() =>
+                  //   navigate(
+                  //     APP_ROUTES.TUNA_ADMIN
+                  //       .QUAN_LY_PHIEU_DANG_KY_DICH_VU_KIEM_NGHIEM.to
+                  //   )
+                  // }
+                  className="font-bold text-center text-white bg-yellow-400 border-[2px] border-solid border-gray-300 px-4 py-1 lg:px-6 lg:py-2 rounded-md hover:bg-yellow-500 cursor-pointer shadow-[0_4px_4px_rgba(0,0,0,0.25)]"
                 >
-                  Quay lại danh sách phiếu đăng ký dịch vụ kiểm nghiệm
+                  Chấp nhận đề xuất hủy
+                </button>
+                <button
+                  // onClick={() =>
+                  //   navigate(
+                  //     APP_ROUTES.TUNA_ADMIN
+                  //       .QUAN_LY_PHIEU_DANG_KY_DICH_VU_KIEM_NGHIEM.to
+                  //   )
+                  // }
+                  className="font-bold text-center text-white bg-[#0099f8] border-[2px] border-solid border-gray-300 px-4 py-1 lg:px-6 lg:py-2 rounded-md hover:bg-blue-500 cursor-pointer shadow-[0_4px_4px_rgba(0,0,0,0.25)]"
+                >
+                  Tiếp tục dịch vụ
                 </button>
               </Box>
             </Box>
@@ -72,4 +75,4 @@ const PopupDuyetBo = (props: Props) => {
   );
 };
 
-export default PopupDuyetBo;
+export default PopupTuChoiPhongKHDT;

@@ -1,106 +1,71 @@
-import { Box } from "@mui/material";
-import { motion } from "motion/react";
-import { useState } from "react";
-import { useLocation } from "react-router";
-import { Inputs } from "../../../../components/Inputs";
-import DetailMaus from "./Detail-Maus";
-import DetailPLHCs from "./Detail-PLHC";
-import PopupHuyPhieu from "./PopupHuyPhieu";
-import PopupDuyetBo from "./PopupDuyetBo";
-import PopupTuChoiPhongKHDT from "./PopupTuChoiPhongKHDT";
-//Chờ tiếp nhận xử lý, Chờ BLĐ xét duyệt
-const ChiTietPhieuDKyDVKN = () => {
-  const NameID = useLocation().pathname.split("/")[3];
-  const [isTag, setIsTag] = useState(1);
-  const userName = "Ban lãnh đạo";
-  const statusPhongKHDT = "Chờ tiếp nhận xử lý"
+import { Box, Dialog } from "@mui/material";
+import { AnimatePresence, motion } from "framer-motion";
+import { IoMdClose } from "react-icons/io";
+import { useNavigate } from "react-router";
+import { APP_ROUTES } from "../../../constants/routers";
+import { Inputs } from "../../../components/Inputs";
+import { useEffect, useState } from "react";
+import DetailMaus from "../manager-phieudkydvkn/ChiTietPhieuDKyDVKN/Detail-Maus";
+import DetailPLHCs from "../manager-phieudkydvkn/ChiTietPhieuDKyDVKN/Detail-PLHC";
+import { Align } from "../../../models/Table";
+import TablePhieuDKDVKN from "./TablePhieuDKDVKN";
 
+interface Props {
+  open: boolean;
+  handleClose?: () => void;
+}
+
+const tableHead = [
+  {
+    id: "SoDKPT",
+    sort: false,
+    label: "Số đăng ký phân tích",
+    align: Align.Left,
+  },
+  {
+    id: "NguoiGuiMau",
+    sort: false,
+    label: "Người gửi mẫu",
+    align: Align.Center,
+  },
+  {
+    id: "DonViGuiMau",
+    sort: false,
+    label: "Đơn vị gửi mẫu",
+    align: Align.Center,
+  },
+  {
+    id: "NgayGiaoMau",
+    sort: false,
+    label: "Ngày giao mẫu",
+    align: Align.Center,
+  },
+  {
+    id: "KetQua",
+    sort: false,
+    label: "Kết Quả",
+    align: Align.Center,
+  },
+];
+
+const tableBody = [
+  {
+    SoDKPT: "KD02546",
+    NguoiGuiMau: "Nguyễn Văn A",
+    DonViGuiMau: "Công ty ABC",
+    NgayGiaoMau: "25/04/2025",
+    KetQua: 1,
+  },
+];
+
+const PopupThongBaoPhieuDKDVKN = (props: Props) => {
+  const { open, handleClose } = props;
+
+  const navigate = useNavigate();
   const HinhThucTraKQ = "Bưu điện";
-  const [openPopupHuyPhieu, setOpenPopupHuyPhieu] = useState(false);
-  const [openPopupDuyetBo, setOpenPopupDuyetBo] = useState(false);
-  const [openPopupTuChoiPhongKHDT, setOpenPopupTuChoiPhongKHDT] =
-    useState(false);
-
-  const handleClickOpenPopupHuyPhieu = () => {
-    setOpenPopupHuyPhieu(true);
-  };
-
-  const handleClickOpenPopupDuyetBo = () => {
-    setOpenPopupDuyetBo(true);
-  };
-
-  const handleClickOpenPopupTuChoiPhongKHDT = () => {
-    setOpenPopupTuChoiPhongKHDT(true);
-  };
-
-  const handleClosePopupDuyetBo = () => {
-    setOpenPopupDuyetBo(false);
-  };
-
-  const handleClosePopupHuyPhieu = () => {
-    setOpenPopupHuyPhieu(false);
-  };
-
-  const handleClosePopupTuChoiPhongKHDT = () => {
-    setOpenPopupTuChoiPhongKHDT(false);
-  };
-
-  const handleShowByUserName = () => {
-    switch (userName as string) {
-      case "Phòng Kế Hoạch và Đầu Tư": {
-        return (
-          <div className="pt-6 flex justify-between">
-            <div>
-              <p className="text-2xl/6 font-bold text-gray-800">{NameID}</p>
-            </div>
-            <div className="flex gap-4">
-              <button
-                onClick={handleClickOpenPopupHuyPhieu}
-                className="px-6 py-3 text-base/4 font-medium text-white bg-yellow-400 border-[2px] border-solid border-gray-300 rounded-[6px] shadow-[0_4px_4px_rgba(0,0,0,0.25)] hover:bg-yellow-500 cursor-pointer"
-              >
-                Từ chối tiếp nhận
-              </button>
-              <button
-                onClick={handleClickOpenPopupDuyetBo}
-                className="px-6 py-3 text-base/4 font-medium text-white bg-blue-500 border-[2px] border-solid border-gray-300 rounded-[6px] shadow-[0_4px_4px_rgba(0,0,0,0.25)] hover:bg-blue-600 cursor-pointer"
-              >
-                Duyệt sơ bộ
-              </button>
-            </div>
-          </div>
-        );
-      }
-      case "Ban lãnh đạo": {
-        return (
-          <div className="pt-6 flex justify-between">
-            <div>
-              <p className="text-2xl/6 font-bold text-gray-800">{NameID}</p>
-            </div>
-            <div className="flex gap-4">
-              <button
-                onClick={handleClickOpenPopupTuChoiPhongKHDT}
-                className="px-6 py-3 text-base/4 font-medium text-white bg-green-400 border-[2px] border-solid border-gray-300 rounded-[6px] shadow-[0_4px_4px_rgba(0,0,0,0.25)] hover:bg-green-500 cursor-pointer"
-              >
-                Thông báo từ chối
-              </button>
-              <button
-                onClick={handleClickOpenPopupHuyPhieu}
-                className="px-6 py-3 text-base/4 font-medium text-white bg-yellow-400 border-[2px] border-solid border-gray-300 rounded-[6px] shadow-[0_4px_4px_rgba(0,0,0,0.25)] hover:bg-yellow-500 cursor-pointer"
-              >
-                Từ chối tiếp nhận
-              </button>
-              <button
-                onClick={handleClickOpenPopupDuyetBo}
-                className="px-6 py-3 text-base/4 font-medium text-white bg-blue-500 border-[2px] border-solid border-gray-300 rounded-[6px] shadow-[0_4px_4px_rgba(0,0,0,0.25)] hover:bg-blue-600 cursor-pointer"
-              >
-                Phê duyệt
-              </button>
-            </div>
-          </div>
-        );
-      }
-    }
-  };
+  const [isTag, setIsTag] = useState(1);
+  const [isListData, setIsListData] = useState(false);
+  const data: number = 1;
 
   const handleTag = () => {
     switch (isTag) {
@@ -340,35 +305,86 @@ const ChiTietPhieuDKyDVKN = () => {
     }
   };
 
+  const handleData = () => {
+    switch (isListData) {
+      case false: {
+        return (
+          <div className="grid gap-2 px-7 pt-6 overflow-y-auto whitespace-nowrap h-[500px] ">
+            {handleTag()}
+            {handleShowByTag()}
+          </div>
+        );
+      }
+      case true: {
+        return (
+          <div className="grid gap-2 px-7">
+            <TablePhieuDKDVKN tableBody={tableBody} tableHead={tableHead} />
+          </div>
+        );
+      }
+    }
+  };
+
+  useEffect(() => {
+    if (data > 1) {
+      setIsListData(true);
+    } else setIsListData(false);
+  }, []);
+
   return (
-    <motion.div
-      key="QuanLyPhieuDKyDVHN"
-      initial={{ x: 0, opacity: 0 }}
-      animate={{ x: 0, opacity: 1 }}
-      exit={{ x: 0, opacity: 0 }}
-      transition={{ duration: 0.7 }}
-      className="p-6 grid gap-6"
-    >
-      {handleShowByUserName()}
-      <hr className="text-gray-300" />
-      <div className="grid gap-2">
-        {handleTag()}
-        {handleShowByTag()}
-      </div>
-      <PopupHuyPhieu
-        open={openPopupHuyPhieu}
-        handleClose={handleClosePopupHuyPhieu}
-      />
-      <PopupDuyetBo
-        open={openPopupDuyetBo}
-        handleClose={handleClosePopupDuyetBo}
-      />
-      <PopupTuChoiPhongKHDT
-        open={openPopupTuChoiPhongKHDT}
-        handleClose={handleClosePopupTuChoiPhongKHDT}
-      />
-    </motion.div>
+    <AnimatePresence mode="wait">
+      <motion.div
+        key="PopupDuyetBo"
+        initial={{ y: 0, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        exit={{ y: 0, opacity: 0 }}
+        transition={{ duration: 0.7 }}
+      >
+        <Dialog open={open} onClose={handleClose} maxWidth="lg">
+          <Box className="w-auto md:w-[1024px]">
+            <Box className="py-3 text-center flex border-b border-solid border-gray-300 px-7">
+              <h1 className="ml-12 font-bold text-3xl flex-1">Thông báo</h1>
+              <button
+                className="bg-gray-400 rounded-full p-[6px] hover:bg-gray-500 cursor-pointer"
+                onClick={handleClose}
+              >
+                <IoMdClose className="w-6 h-6 text-gray-300" />
+              </button>
+            </Box>
+            {handleData()}
+            <Box className="px-7 py-6 flex justify-center gap-6">
+              <button
+                onClick={() => {
+                  handleClose?.();
+                  navigate(
+                    APP_ROUTES.TUNA_ADMIN
+                      .QUAN_LY_PHIEU_DANG_KY_DICH_VU_KIEM_NGHIEM.to
+                  );
+                }}
+                className={`font-bold text-center text-white bg-[#0099f8] border-[2px] border-solid border-gray-300 px-4 py-1 lg:px-6 lg:py-2 rounded-md hover:bg-blue-500 cursor-pointer shadow-[0_4px_4px_rgba(0,0,0,0.25)]
+                  `}
+              >
+                Vào Trang quản lý phiếu đăng ký chưa duyệt.
+              </button>
+              {data === 1 && (
+                <button
+                  // onClick={() =>
+                  //   navigate(
+                  //     APP_ROUTES.TUNA_ADMIN
+                  //       .QUAN_LY_PHIEU_DANG_KY_DICH_VU_KIEM_NGHIEM.to
+                  //   )
+                  // }
+                  className="font-bold text-center text-white bg-green-500 border-[2px] border-solid border-gray-300 px-4 py-1 lg:px-32 lg:py-2 rounded-md hover:bg-green-600 cursor-pointer shadow-[0_4px_4px_rgba(0,0,0,0.25)]"
+                >
+                  Duyệt sơ bộ
+                </button>
+              )}
+            </Box>
+          </Box>
+        </Dialog>
+      </motion.div>
+    </AnimatePresence>
   );
 };
 
-export default ChiTietPhieuDKyDVKN;
+export default PopupThongBaoPhieuDKDVKN;

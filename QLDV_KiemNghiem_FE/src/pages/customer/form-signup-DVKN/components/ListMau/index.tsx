@@ -57,7 +57,7 @@ const ListMau = (props: ListMauProps) => {
 
   const [listCheckbox, setListCheckbox] = useState<any[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage] = useState(10);
+  const [itemsPerPage] = useState(3);
   const naginate = useNavigate();
 
   const indexOfLastItem = currentPage * itemsPerPage;
@@ -85,8 +85,8 @@ const ListMau = (props: ListMauProps) => {
   }, [valueSearch]);
 
   const handlePageChange = (event: any, value: number) => {
-    console.log('event',event);
-    
+    console.log("event", event);
+
     setCurrentPage(value);
   };
 
@@ -115,7 +115,6 @@ const ListMau = (props: ListMauProps) => {
         animate={{ x: 0, opacity: 1 }}
         exit={{ x: 0, opacity: 0 }}
         transition={{ duration: 0.5 }}
-        
       >
         <Box className="gap-5 sm:gap-0 flex flex-wrap-reverse sm:flex-nowrap justify-end sm:justify-between items-center py-2 sm:py-4 px-4">
           <Box className="w-full sm:w-auto">
@@ -204,10 +203,12 @@ const ListMau = (props: ListMauProps) => {
         >
           <button
             className={`bg-blue-500 px-4 py-1 lg:px-6 lg:py-2 rounded cursor-pointer hover:bg-blue-400 shadow-[inset_0_0_6px_rgba(0,0,0,0.2)] hover:shadow-none ${
-              tableBody?.length <= 0 &&
+              (tableBody?.length === undefined || tableBody?.length === 0) &&
               "disabled:bg-blue-300 hover:cursor-no-drop"
             }`}
-            disabled={tableBody?.length <= 0 && true}
+            disabled={
+              (tableBody?.length === undefined || tableBody?.length === 0) && true
+            }
             onClick={handleRedirectTag3}
           >
             <span className="text-lg/6 font-bold text-amber-50">Tiếp</span>

@@ -7,17 +7,15 @@ import Footer from "../../components/Footer";
 export default function LayoutCustomer() {
   return (
     <ThemeRegistry>
-      <Box>
-        <Box className="flex justify-center">
-          <HeaderCustomer />
-        </Box>
-        <Box className="flex justify-center min-h-screen">
-          <Box className={`max-w-[1440px] w-full Outlet`}>
-            <Outlet />
-          </Box>
-        </Box>
-        <Footer />
+      <Box className="flex justify-center">
+        <HeaderCustomer />
       </Box>
+      <Box className="flex justify-center min-h-screen">
+        <Box className={`max-w-[1440px] w-full Outlet`}>
+          <Outlet />
+        </Box>
+      </Box>
+      <Footer />
     </ThemeRegistry>
   );
 }

@@ -32,7 +32,6 @@ const Sidebar = () => {
   const navigate = useNavigate();
 
   const urlPage = useLocation().pathname.split("/")[1];
-  console.log("urlPage", urlPage, APP_ROUTES.TUNA_CUSTOMER.QUAN_LY_HOA_DON.to);
 
   return (
     <motion.div
