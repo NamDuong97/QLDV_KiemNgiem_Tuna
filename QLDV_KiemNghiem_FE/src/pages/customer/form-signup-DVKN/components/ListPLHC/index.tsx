@@ -108,7 +108,7 @@ const ListPLHC = (props: ListPLHCProps) => {
   const [listCheckbox, setListCheckbox] = useState<any[]>([]);
   const [dataEditPLHC, setDataEditPLHC] = useState<any>();
   const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage] = useState(10); //Số dòng hiển thị
+  const [itemsPerPage] = useState(5); //Số dòng hiển thị
 
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
@@ -276,8 +276,8 @@ const ListPLHC = (props: ListPLHCProps) => {
   };
 
   const handlePageChange = (event: any, value: number) => {
-    console.log('event',event);
-    
+    console.log("event", event);
+
     setCurrentPage(value);
   };
 
@@ -301,10 +301,7 @@ const ListPLHC = (props: ListPLHCProps) => {
   };
 
   const handleGuiPhieu = () => {
-    localStorage.setItem(
-      "DataPhieuDangKy",
-      JSON.stringify([dataPhieuDangky])
-    );
+    localStorage.setItem("DataPhieuDangKy", JSON.stringify([dataPhieuDangky]));
     sessionStorage.removeItem("PhieuDangKy");
     handleClickOpenPopupNofitication?.();
   };
@@ -350,7 +347,7 @@ const ListPLHC = (props: ListPLHCProps) => {
       const search = valueSearch.trim().toLowerCase();
       const keywords = removeVietnameseTones(search).split(/\s+/);
 
-      const filtered = dataTableBody.filter((item: any) => {
+      const filtered = dataTableBody?.filter((item: any) => {
         const target = removeVietnameseTones(item.TenPLHC.toLowerCase());
         return keywords.every((keyword) => target.includes(keyword));
       });
@@ -440,11 +437,11 @@ const ListPLHC = (props: ListPLHCProps) => {
                     padding: "9.5px 14px",
                   },
                   'input[type="number"]': {
-                    "-moz-appearance": "textfield",
+                    MozAppearance: "textfield",
                   },
                   'input[type="number"]::-webkit-outer-spin-button, input[type="number"]::-webkit-inner-spin-button':
                     {
-                      "-webkit-appearance": "none",
+                      WebkitAppearance: "none",
                       margin: 0,
                     },
                 }}

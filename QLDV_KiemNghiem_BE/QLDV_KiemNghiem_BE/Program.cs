@@ -10,6 +10,17 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<DataContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(name: "AllowFrontend",
+        policy =>
+        {
+            policy.WithOrigins("http://localhost:5175") // Cho phép frontend
+                  .AllowAnyHeader()
+                  .AllowAnyMethod();
+        });
+});
+
 builder.Services.AddScoped<IRepositoryManager, RepositoryManager>();
 
 builder.Services.AddScoped<IServiceManager, ServiceManager>();
@@ -33,6 +44,8 @@ builder.Services.AddControllers();
 builder.Logging.AddDebug();   // Ghi ra Debug output
 
 var app = builder.Build();
+
+app.UseCors("AllowFrontend");
 
 app.UseHttpsRedirection();
 

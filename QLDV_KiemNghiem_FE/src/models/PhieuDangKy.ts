@@ -1,5 +1,8 @@
 // import { FormMau } from "./mau";
 
+import { FormMau } from "./mau";
+import { FormPhuLieuHoaChat } from "./PhuLieuHoaChat";
+
 export interface PhieuDangKy {
   MaID?: string;
   MaKH?: string;
@@ -36,13 +39,29 @@ export interface FormPhieuDangKy {
   NgayGiaoMau: string;
 }
 
+export interface PhieuDangKy {
+  donViGuiMau: string;
+  nguoiGuiMau: string;
+  soDienThoai: string;
+  email: string;
+  diaChiLienHe: string;
+  hinhThucGuiMau: string;
+  hinhThucTraKQ: string;
+  diaChiGiaoMau?: string;
+  ketQuaTiengAnh?: number;
+  ngayGiaoMau: string;
+  maus: FormMau[];
+  phieuDangKyPhuLieuHoaChats: FormPhuLieuHoaChat[];
+}
+
 export interface FormBoLocPhieuDangKyChoXetDuyet {
   NgayBatDau: string;
   NgayKetThuc: string;
 }
 
 export interface FormBoLocQuanLyPhieuDKyDVHN {
-  KetQua?: string;
-  NgayBatDau?: string;
-  NgayKetThuc?: string;
+  trangThai?: string;
+  maKH?: string;
+  ngayBatDau?: string;
+  ngayKetThuc?: string;
 }
