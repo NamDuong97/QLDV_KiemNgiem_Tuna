@@ -17,11 +17,11 @@ namespace QLDV_KiemNghiem_BE.Repositories
         }
         public async Task<IEnumerable<Mau>> GetMauAllAsync()
         {
-            return await _context.Maus.ToListAsync();
+            return await _context.Maus.Include(item => item.MauHinhAnhs).ToListAsync();
         }
         public async Task<Mau?> GetMauAsync(string maMau)
         {
-            return await _context.Maus.Where(item => item.MaId == maMau).SingleOrDefaultAsync();
+            return await _context.Maus.Include(item => item.MauHinhAnhs).Where(item => item.MaId == maMau).SingleOrDefaultAsync();
         }
         public void CreateMauAsync(Mau mau)
         {

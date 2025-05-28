@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using QLDV_KiemNghiem_BE.DTO;
+using QLDV_KiemNghiem_BE.DTO.Parameter;
 using QLDV_KiemNghiem_BE.Interfaces.ManagerInterface;
 using QLDV_KiemNghiem_BE.Models;
 using System;
@@ -23,20 +24,27 @@ namespace QLDV_KiemNghiem_BE.Controllers
             _mapper = mapper;
         }
 
+        // action này dùng cho nhân viên phòng kế hoạch đầu tư sử dụng để xem
         [HttpGet]
         [Route("getPhieuDangKyAll")]
-        public async Task<ActionResult> getPhieuDangKyAll()
+        public async Task<ActionResult> getPhieuDangKyAll(PhieuDangKyParam phieuDangKyParam)
         {
-            var phieuDangKys = await _service.PhieuDangKy.GetPhieuDangKiesAllAsync();
+            if(phieuDangKyParam == null)
+            {
+                _logger.LogError("Thieu tham so truyen vao");
+                return BadRequest("Thieu tham so truyen vao");
+            }
+            var phieuDangKys = await _service.PhieuDangKy.GetPhieuDangKiesAllAsync(phieuDangKyParam);
             _logger.LogDebug("lay toan bo phieu dang ky");
             return Ok(phieuDangKys);
         }
 
+        // action này dùng để hiển thị phiếu đăng ký cho khách hàng cụ thể
         [HttpGet]
         [Route("getPhieuDangKiesOfCustomer")]
-        public async Task<ActionResult> getPhieuDangKiesOfCustomer(string maKH)
+        public async Task<ActionResult> getPhieuDangKiesOfCustomer(string maKH, string maTrangThaiPhieuDangKy)
         {
-            var phieuDangKy = await _service.PhieuDangKy.GetPhieuDangKiesOfCustomerAsync(maKH);
+            var phieuDangKy = await _service.PhieuDangKy.GetPhieuDangKiesOfCustomerAsync(maKH, maTrangThaiPhieuDangKy);
             _logger.LogDebug("lay toan bo phieu dang ky cua khach hang: " + maKH);
             return Ok(phieuDangKy);
         }

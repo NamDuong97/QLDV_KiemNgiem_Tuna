@@ -12,7 +12,7 @@ public partial class Mau
     [Key]
     [Column("MaID")]
     [StringLength(50)]
-    public string MaId { get; set; } = null!;
+    public string MaId { get; set; } = Guid.NewGuid().ToString();
 
     [StringLength(50)]
     public string? MaMau { get; set; }

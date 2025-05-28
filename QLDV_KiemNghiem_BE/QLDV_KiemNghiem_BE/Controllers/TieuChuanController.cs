@@ -41,7 +41,7 @@ namespace QLDV_KiemNghiem_BE.Controllers
 
         [HttpPost]
         [Route("createTieuChuan")]
-        public async Task<ActionResult> createTieuChuan(TieuChuan tieuChuan)
+        public async Task<ActionResult> createTieuChuan(TieuChuanDto tieuChuanDto)
         {
             if (ModelState.IsValid)
             {
@@ -52,11 +52,11 @@ namespace QLDV_KiemNghiem_BE.Controllers
                 _logger.LogError("Loi validate tham so dau vao");
                 return BadRequest(new { Errors = errors });
             }
-            bool create = await _service.TieuChuan.CreateTieuChuanAsync(tieuChuan);
+            bool create = await _service.TieuChuan.CreateTieuChuanAsync(tieuChuanDto);
             if (create)
             {
                 _logger.LogDebug("Tao phieu dang ky thanh cong");
-                return Ok(tieuChuan);
+                return Ok(tieuChuanDto);
             }
             else
             {
@@ -82,7 +82,7 @@ namespace QLDV_KiemNghiem_BE.Controllers
             if (update)
             {
                 _logger.LogDebug("Cap nhat phieu dang ky thanh cong");
-                return Ok(TieuChuanDto);
+                return Ok(tieuChuanDto);
             }
             else
             {
@@ -118,4 +118,4 @@ namespace QLDV_KiemNghiem_BE.Controllers
         }
     }
 }
-}
+

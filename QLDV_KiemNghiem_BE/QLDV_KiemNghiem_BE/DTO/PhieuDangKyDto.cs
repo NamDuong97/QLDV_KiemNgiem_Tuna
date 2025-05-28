@@ -68,9 +68,9 @@ namespace QLDV_KiemNghiem_BE.DTO
         public DateTime? NgaySua { get; set; }
         public string? SoDkpt { get; set; }
 
-        public IEnumerable<MauDto> Maus = new List<MauDto>();
+        public List<MauDto> Maus { get; set; } = new List<MauDto>();
 
-        public IEnumerable<PhieuDangKyPhuLieuHoaChatDto> PhieuDangKyPhuLieuHoaChats = new List<PhieuDangKyPhuLieuHoaChatDto>();
+        public IEnumerable<PhieuDangKyPhuLieuHoaChatDto> PhieuDangKyPhuLieuHoaChats { get; set; } = new List<PhieuDangKyPhuLieuHoaChatDto>();
         
     }
 }

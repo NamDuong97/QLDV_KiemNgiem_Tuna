@@ -27,7 +27,7 @@ namespace QLDV_KiemNghiem_BE.Services
             _repositoryManager = repositoryManager;
             _mapper = mapper;
             _phieuDangKyService = new Lazy<IPhieuDangKyService>(() => new PhieuDangKyService(repositoryManager, mapper));
-            _mauService = new Lazy<IMauService>(() => new MauService(repositoryManager));
+            _mauService = new Lazy<IMauService>(() => new MauService(repositoryManager, mapper));
             _dmPhuLieuHoaChatService = new Lazy<IDmPhuLieuHoaChatService>(() => new DmPhuLieuHoaChatService(repositoryManager, mapper));
             _phieuDangKyPhuLieuHoaChatService = new Lazy<IPhieuDangKyPhuLieuHoaChatService>(() => new PhieuDangKyPhuLieuHoaChatService(repositoryManager, mapper));
             _tieuChuanService = new Lazy<ITieuChuanService>(() => new TieuChuanService(repositoryManager, mapper));
