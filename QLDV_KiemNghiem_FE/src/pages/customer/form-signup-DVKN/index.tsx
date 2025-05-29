@@ -1,12 +1,12 @@
 import { Box } from "@mui/material";
 import { AnimatePresence, motion } from "motion/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import PopupNofitication from "./components/PopupNofitication";
 import PhieuDKyDVKNForm from "./components/PhieuDKyDVKNForm";
 import ListMau from "./components/ListMau";
 import ListPLHC from "./components/ListPLHC";
 import clsx from "clsx";
-import { useLocation, useNavigate } from "react-router";
+import { redirect, useLocation, useNavigate } from "react-router";
 import { APP_ROUTES } from "../../../constants/routers";
 
 const FormSignUpDVKN = () => {
@@ -203,6 +203,30 @@ const FormSignUpDVKN = () => {
         );
     }
   };
+
+  useEffect(() => {
+    const dataSession = sessionStorage.getItem("PhieuDangKy");
+    const data = dataSession ? JSON.parse(dataSession) : {};
+    if (
+      ((isTag === "danh-sach-mau" || isTag === "danh-sach-phu-lieu-hoa-chat") &&
+        Object.keys(data).length <= 0) ||
+      data.Maus?.length <= 0
+    ) {
+      navigate(
+        `${APP_ROUTES.TUNA_CUSTOMER.FORM_SIGN_UP_DVKN.to}?tuna=thong-tin-chung`
+      );
+    }
+    if (
+      (isTag === "danh-sach-phu-lieu-hoa-chat" &&
+        Object.keys(data).length > 0 &&
+        data.Mau?.length === undefined) ||
+      data.Mau?.length === 0
+    ) {
+      navigate(
+        `${APP_ROUTES.TUNA_CUSTOMER.FORM_SIGN_UP_DVKN.to}?tuna=danh-sach-mau`
+      );
+    }
+  }, [isTag, navigate]);
 
   return (
     <AnimatePresence mode="popLayout">

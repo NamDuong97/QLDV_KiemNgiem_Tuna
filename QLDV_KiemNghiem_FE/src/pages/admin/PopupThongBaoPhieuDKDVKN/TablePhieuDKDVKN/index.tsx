@@ -1,6 +1,5 @@
 import {
   Box,
-  // IconButton,
   Paper,
   Table,
   TableBody,
@@ -9,12 +8,7 @@ import {
   TableHead,
   TableRow,
 } from "@mui/material";
-// import SquareIcon from "@mui/icons-material/Square";
-// import IndeterminateCheckBoxIcon from "@mui/icons-material/IndeterminateCheckBox";
-// import { useNavigate } from "react-router";
-// import { Dispatch, SetStateAction } from "react";
-import { Align } from "../../../../../models/Table";
-// import { APP_ROUTES } from "../../../../../constants/routers";
+import { Align } from "../../../../models/Table";
 
 interface TableProps {
   tableBody: any[];
@@ -22,10 +16,8 @@ interface TableProps {
   handleSort?: (value: string) => void;
 }
 
-const TableQuanLyHoaDon = (props: TableProps) => {
+const TablePhieuDKDVKN = (props: TableProps) => {
   const { tableBody, tableHead } = props;
-
-  // const navigate = useNavigate();
 
   const handleAlign = (align: string) => {
     switch (align) {
@@ -37,10 +29,6 @@ const TableQuanLyHoaDon = (props: TableProps) => {
         return "justify-end";
     }
   };
-
-  // const changeUrlParam = (url: any, id: any) => {
-  //   return url.replace(/:id/, id);
-  // };
 
   return (
     <TableContainer component={Paper}>
@@ -68,15 +56,6 @@ const TableQuanLyHoaDon = (props: TableProps) => {
             >
               <TableCell align="left">
                 <Box className="flex gap-2 items-center justify-start">
-                  <p
-                    className="text-sm/4 sm:text-base/4 font-medium"
-                  >
-                    {item?.MaHD}
-                  </p>
-                </Box>
-              </TableCell>
-              <TableCell align="center">
-                <Box className="flex gap-2 items-center justify-center">
                   <p className="text-sm/4 sm:text-base/4 font-medium">
                     {item?.SoDKPT}
                   </p>
@@ -85,28 +64,28 @@ const TableQuanLyHoaDon = (props: TableProps) => {
               <TableCell align="center">
                 <Box className="flex gap-2 items-center justify-center">
                   <p className="text-sm/4 sm:text-base/4 font-medium">
-                    {item?.TongTien ? item?.TongTien : "Đang cập nhật..."}
+                    {item?.NguoiGuiMau}
                   </p>
                 </Box>
               </TableCell>
               <TableCell align="center">
                 <Box className="flex gap-2 items-center justify-center">
                   <p className="text-sm/4 sm:text-base/4 font-medium">
-                    {item?.NgayLap}
+                    {item?.DonViGuiMau}
                   </p>
                 </Box>
               </TableCell>
               <TableCell align="center">
                 <Box className="flex gap-2 items-center justify-center">
                   <p className="text-sm/4 sm:text-base/4 font-medium">
-                    {item?.GhiChu}
+                    {item?.NgayGiaoMau}
                   </p>
                 </Box>
               </TableCell>
               <TableCell align="center">
                 <Box className="flex gap-2 items-center justify-center">
                   <p className="text-sm/4 sm:text-base/4 font-medium">
-                    {item?.TrangThai}
+                    {item?.KetQua === 1 ? "Tiếng Anh" : "Tiếng Việt"}
                   </p>
                 </Box>
               </TableCell>
@@ -118,4 +97,4 @@ const TableQuanLyHoaDon = (props: TableProps) => {
   );
 };
 
-export default TableQuanLyHoaDon;
+export default TablePhieuDKDVKN;

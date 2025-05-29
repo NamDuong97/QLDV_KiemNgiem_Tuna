@@ -3,7 +3,7 @@ import { AnimatePresence, motion } from "motion/react";
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
 import yup from "../../../../configs/yup.custom";
 import { FormMau } from "../../../../models/mau";
 import { Inputs } from "../../../../components/Inputs";
@@ -59,7 +59,7 @@ const dataDichVu = [
 ];
 
 const CreateMau = () => {
-  const naginate = useNavigate();
+  const navigate = useNavigate();
 
   const dataTest = sessionStorage.getItem("PhieuDangKy");
   const dataPhieuDangky = dataTest ? JSON.parse(dataTest) : null;
@@ -80,10 +80,39 @@ const CreateMau = () => {
             (item: any) => item.TenMau === value
           );
           return !isTrungLap ? true : false;
-        }),
+        })
+        .test(
+          "kiểm tra định dạng",
+          "Tên Mẫu nhập phải bằng kiểu chữ a-zA-z và cuối số không được phép để khoảng trắng",
+          (value) => {
+            return /^[\p{L}]+(?: [\p{L}]+)*$/u.test(value);
+          }
+        ),
       LoaiMau: yup.string().required("Yêu cầu chọn Loại mẫu"),
       TieuChuan: yup.string().required("Yêu cầu chọn Tiêu chuẩn"),
       DichVu: yup.string().required("Yêu cầu chọn Dịch vụ"),
+      ThoiGianTieuChuan: yup
+        .string()
+        .when("TieuChuan", ([TieuChuan], schema) => {
+          return schema.test(
+            "dữ liệu tiêu chuẩn phải có",
+            "Yêu cầu chọn Tiêu chuẩn",
+            () => {
+              return TieuChuan;
+            }
+          );
+        }),
+      NgayDuKienTraKetQua: yup
+        .string()
+        .when(["DichVu", "TieuChuan"], ([DichVu], schema) => {
+          return schema.test(
+            "dữ liệu tiêu chuẩn và Dịch vụ phải có",
+            "Yêu cầu chọn Tiêu chuẩn và Dịch vụ",
+            () => {
+              return DichVu;
+            }
+          );
+        }),
       SoLo: yup
         .string()
         .required("Yêu cầu nhập Số lô")
@@ -157,6 +186,10 @@ const CreateMau = () => {
     mode: "onChange",
   });
 
+  // const TenMau = useWatch({ control, name: "TenMau" });
+  // const TieuChuan = useWatch({ control, name: "TieuChuan" });
+  // const DichVu = useWatch({ control, name: "DichVu" });
+
   const handleCreateMau = (data: FormMau) => {
     const PhieuDangKy = {
       ...dataPhieuDangky,
@@ -164,7 +197,7 @@ const CreateMau = () => {
     };
     sessionStorage.setItem("PhieuDangKy", JSON.stringify(PhieuDangKy));
     sessionStorage.removeItem("ImageTemp");
-    naginate(
+    navigate(
       `${APP_ROUTES.TUNA_CUSTOMER.FORM_SIGN_UP_DVKN.to}?tuna=danh-sach-mau`
     );
   };
@@ -175,6 +208,8 @@ const CreateMau = () => {
       LoaiMau: "",
       TieuChuan: "",
       DichVu: "",
+      ThoiGianTieuChuan: "",
+      NgayDuKienTraKetQua: "",
       SoLo: "",
       DonViSanXuat: "",
       NgaySanXuat: "",
@@ -213,8 +248,8 @@ const CreateMau = () => {
                     className="cursor-pointer"
                     onClick={() => {
                       sessionStorage.removeItem("ImageTemp");
-                      naginate(
-                        `${APP_ROUTES.TUNA_CUSTOMER.FORM_SIGN_UP_DVKN.to}`
+                      navigate(
+                        `${APP_ROUTES.TUNA_CUSTOMER.FORM_SIGN_UP_DVKN.to}?tuna=danh-sach-mau`
                       );
                     }}
                   >
@@ -250,6 +285,7 @@ const CreateMau = () => {
                         inputRef={register("TenMau")}
                         errorMessage={errors.TenMau?.message}
                         className="h-[42px]"
+                        height={"h-[120px]"}
                         sx={{
                           input: {
                             padding: "9.5px 14px",
@@ -319,6 +355,38 @@ const CreateMau = () => {
                         inputRef={register("NgaySanXuat")}
                         errorMessage={errors.NgaySanXuat?.message}
                         className="h-[42px]"
+                        sx={{
+                          input: {
+                            padding: "9.5px 14px",
+                          },
+                        }}
+                      />
+                    </Box>
+                    <Box className="col-span-12 md:col-span-6">
+                      <Inputs
+                        title="Thời gian tiêu chuẩn"
+                        name="ThoiGianTieuChuan"
+                        placeholder="Vui lòng Tiêu Chuẩn"
+                        inputRef={register("ThoiGianTieuChuan")}
+                        errorMessage={errors.ThoiGianTieuChuan?.message}
+                        className="h-[42px]"
+                        disabled
+                        sx={{
+                          input: {
+                            padding: "9.5px 14px",
+                          },
+                        }}
+                      />
+                    </Box>
+                    <Box className="col-span-12 md:col-span-6">
+                      <Inputs
+                        title="Ngày dự kiến trả kết quả"
+                        name="NgayDuKienTraKetQua"
+                        placeholder="Vui lòng Tiêu Chuẩn và Dịch vụ"
+                        inputRef={register("NgayDuKienTraKetQua")}
+                        errorMessage={errors.NgayDuKienTraKetQua?.message}
+                        className="h-[42px]"
+                        disabled
                         sx={{
                           input: {
                             padding: "9.5px 14px",
