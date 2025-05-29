@@ -9,12 +9,12 @@ namespace QLDV_KiemNghiem_BE.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class PhuongPhapController : ControllerBase
+    public class LoaiMauController : ControllerBase
     {
         private readonly IServiceManager _service;
-        private readonly ILogger<PhuongPhapController> _logger;
+        private readonly ILogger<LoaiMauController> _logger;
         private readonly IMapper _mapper;
-        public PhuongPhapController(IServiceManager serviceManager, ILogger<PhuongPhapController> logger, IMapper mapper)
+        public LoaiMauController(IServiceManager serviceManager, ILogger<LoaiMauController> logger, IMapper mapper)
         {
             _service = serviceManager;
             _logger = logger;
@@ -22,26 +22,26 @@ namespace QLDV_KiemNghiem_BE.Controllers
         }
 
         [HttpGet]
-        [Route("getPhuongPhapAll")]
-        public async Task<ActionResult> getPhuongPhapAll()
+        [Route("getLoaiMauAll")]
+        public async Task<ActionResult> getLoaiMauAll()
         {
-            var result = await _service.PhuongPhap.GetPhuongPhapsAllAsync();
-            _logger.LogDebug("get toan bo phuong phap");
+            var result = await _service.LoaiMau.GetLoaiMausAllAsync();
+            _logger.LogDebug("get toan bo loai mau");
             return Ok(result);
         }
 
         [HttpGet]
-        [Route("getPhuongPhap")]
-        public async Task<ActionResult> getPhuongPhap(string maPhuongPhap)
+        [Route("getLoaiMau")]
+        public async Task<ActionResult> getLoaiMau(string maLoaiMau)
         {
-            var result = await _service.PhuongPhap.FindPhuongPhapAsync(maPhuongPhap);
-            _logger.LogDebug("lay phuong phap can tim: " + maPhuongPhap);
+            var result = await _service.LoaiMau.FindLoaiMauAsync(maLoaiMau);
+            _logger.LogDebug("lay loai mau can tim: " + maLoaiMau);
             return Ok(result);
         }
 
         [HttpPost]
-        [Route("createPhuongPhap")]
-        public async Task<ActionResult> createPhuongPhap(PhuongPhapDto PhuongPhapDto)
+        [Route("createLoaiMau")]
+        public async Task<ActionResult> createLoaiMau(LoaiMauDto LoaiMauDto)
         {
             if (ModelState.IsValid)
             {
@@ -52,22 +52,22 @@ namespace QLDV_KiemNghiem_BE.Controllers
                 _logger.LogError("Loi validate tham so dau vao");
                 return BadRequest(new { Errors = errors });
             }
-            bool create = await _service.PhuongPhap.CreatePhuongPhapAsync(PhuongPhapDto);
+            bool create = await _service.LoaiMau.CreateLoaiMauAsync(LoaiMauDto);
             if (create)
             {
-                _logger.LogDebug("Tao phuong phap thanh cong");
-                return Ok(PhuongPhapDto);
+                _logger.LogDebug("Tao loai mau thanh cong");
+                return Ok(LoaiMauDto);
             }
             else
             {
-                _logger.LogDebug("Tao phuong phap that bai");
+                _logger.LogDebug("Tao loai mau that bai");
                 return BadRequest();
             }
         }
 
         [HttpPut]
-        [Route("updatePhuongPhap")]
-        public async Task<ActionResult> updatePhuongPhap(PhuongPhapDto PhuongPhapDto)
+        [Route("updateLoaiMau")]
+        public async Task<ActionResult> updateLoaiMau(LoaiMauDto LoaiMauDto)
         {
             if (ModelState.IsValid)
             {
@@ -78,43 +78,44 @@ namespace QLDV_KiemNghiem_BE.Controllers
                 _logger.LogError("Loi validate tham so dau vao");
                 return BadRequest(new { Errors = errors });
             }
-            bool update = await _service.PhuongPhap.UpdatePhuongPhapAsync(PhuongPhapDto);
+            bool update = await _service.LoaiMau.UpdateLoaiMauAsync(LoaiMauDto);
             if (update)
             {
-                _logger.LogDebug("Cap nhat phuong phap thanh cong");
-                return Ok(PhuongPhapDto);
+                _logger.LogDebug("Cap nhat loai mau thanh cong");
+                return Ok(LoaiMauDto);
             }
             else
             {
-                _logger.LogDebug("Cap nhat phuong phap that bai");
+                _logger.LogDebug("Cap nhat loai mau that bai");
                 return BadRequest();
             }
         }
 
         [HttpDelete]
-        [Route("deletePhuongPhap")]
-        public async Task<ActionResult> deletePhuongPhap(PhuongPhap PhuongPhap)
+        [Route("deleteLoaiMau")]
+        public async Task<ActionResult> deleteLoaiMau(LoaiMau LoaiMau)
         {
-            var checkExists = await _service.PhuongPhap.FindPhuongPhapAsync(PhuongPhap.MaId);
+            var checkExists = await _service.LoaiMau.FindLoaiMauAsync(LoaiMau.MaId);
             if (checkExists != null)
             {
-                bool delete = await _service.PhuongPhap.DeletePhuongPhapAsync(PhuongPhap);
+                bool delete = await _service.LoaiMau.DeleteLoaiMauAsync(LoaiMau);
                 if (delete)
                 {
-                    _logger.LogDebug("Cap nhat phuong phap thanh cong");
-                    return Ok(PhuongPhap);
+                    _logger.LogDebug("Cap nhat loai mau thanh cong");
+                    return Ok(LoaiMau);
                 }
                 else
                 {
-                    _logger.LogDebug("Cap nhat phuong phap that bai");
+                    _logger.LogDebug("Cap nhat loai mau that bai");
                     return BadRequest();
                 }
             }
             else
             {
-                _logger.LogDebug("phuong phap khong ton tai");
+                _logger.LogDebug("loai mau khong ton tai");
                 return BadRequest();
             }
         }
     }
 }
+

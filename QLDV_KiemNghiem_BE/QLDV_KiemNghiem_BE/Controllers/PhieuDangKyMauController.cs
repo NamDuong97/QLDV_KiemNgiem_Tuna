@@ -9,12 +9,12 @@ namespace QLDV_KiemNghiem_BE.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class MauController : ControllerBase
+    public class PhieuDangKyMauController : ControllerBase
     {
         private readonly IServiceManager _service;
-        private readonly ILogger<MauController> _logger;
+        private readonly ILogger<PhieuDangKyMauController> _logger;
         private readonly IMapper _mapper;
-        public MauController(IServiceManager serviceManager, ILogger<MauController> logger, IMapper mapper)
+        public PhieuDangKyMauController(IServiceManager serviceManager, ILogger<PhieuDangKyMauController> logger, IMapper mapper)
         {
             _service = serviceManager;
             _logger = logger;
@@ -25,7 +25,7 @@ namespace QLDV_KiemNghiem_BE.Controllers
         [Route("getMauAll")]
         public async Task<ActionResult> getMauAll()
         {
-            var result = await _service.Mau.GetMauAllAsync();
+            var result = await _service.PhieuDangKyMau.GetPhieuDangKyMauAllAsync();
             _logger.LogDebug("get toan bo phieu dang ky");
             return Ok(result);
         }
@@ -34,14 +34,14 @@ namespace QLDV_KiemNghiem_BE.Controllers
         [Route("getMau")]
         public async Task<ActionResult> getMau(string maMau)
         {
-            var result = await _service.Mau.GetMauAsync(maMau);
+            var result = await _service.PhieuDangKyMau.GetPhieuDangKyMauAsync(maMau);
             _logger.LogDebug("lay tieu chuan can tim: " + maMau);
             return Ok(result);
         }
 
         [HttpPost]
         [Route("createMau")]
-        public async Task<ActionResult> createMau(MauDto mauDto)
+        public async Task<ActionResult> createMau(PhieuDangKyMauDto mauDto)
         {
             if (ModelState.IsValid)
             {
@@ -57,7 +57,7 @@ namespace QLDV_KiemNghiem_BE.Controllers
                 _logger.LogDebug("Thieu du lieu dau vao");
                 return BadRequest("Thieu du lieu dau vao");
             }
-            bool create = await _service.Mau.CreateMauAsync(mauDto);
+            bool create = await _service.PhieuDangKyMau.CreatePhieuDangKyMauAsync(mauDto);
             if (create)
             {
                 _logger.LogDebug("Them mau thanh cong");
@@ -72,7 +72,7 @@ namespace QLDV_KiemNghiem_BE.Controllers
 
         [HttpPut]
         [Route("updateMau")]
-        public async Task<ActionResult> updateMau(MauDto MauDto)
+        public async Task<ActionResult> updateMau(PhieuDangKyMauDto MauDto)
         {
             if (ModelState.IsValid)
             {
@@ -83,7 +83,7 @@ namespace QLDV_KiemNghiem_BE.Controllers
                 _logger.LogError("Loi validate tham so dau vao");
                 return BadRequest(new { Errors = errors });
             }
-            bool update = await _service.Mau.UpdateMauAsync(MauDto);
+            bool update = await _service.PhieuDangKyMau.UpdatePhieuDangKyMauAsync(MauDto);
             if (update)
             {
                 _logger.LogDebug("Cap nhat phieu dang ky thanh cong");
@@ -98,12 +98,12 @@ namespace QLDV_KiemNghiem_BE.Controllers
 
         [HttpDelete]
         [Route("deleteMau")]
-        public async Task<ActionResult> deleteMau(Mau Mau)
+        public async Task<ActionResult> deleteMau(PhieuDangKyMau Mau)
         {
-            var checkExists = await _service.Mau.GetMauAsync(Mau.MaId);
+            var checkExists = await _service.PhieuDangKyMau.GetPhieuDangKyMauAsync(Mau.MaId);
             if (checkExists != null)
             {
-                bool delete = await _service.Mau.DeleteMauAsync(Mau.MaId);
+                bool delete = await _service.PhieuDangKyMau.DeletePhieuDangKyMauAsync(Mau.MaId);
                 if (delete)
                 {
                     _logger.LogDebug("Cap nhat phieu dang ky thanh cong");

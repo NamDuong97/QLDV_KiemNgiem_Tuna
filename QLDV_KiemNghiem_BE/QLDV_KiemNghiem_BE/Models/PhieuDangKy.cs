@@ -86,13 +86,10 @@ public partial class PhieuDangKy
     public virtual NhanVien? ManvNhanMauNavigation { get; set; }
 
     [InverseProperty("MaPhieuDangKyNavigation")]
-    public virtual ICollection<Mau> Maus { get; set; } = new List<Mau>();
+    public virtual ICollection<PhieuDangKyMau> PhieuDangKyMaus { get; set; } = new List<PhieuDangKyMau>();
 
     [InverseProperty("MaPhieuDangKyNavigation")]
     public virtual ICollection<PhieuDeXuatPhongBan> PhieuDeXuatPhongBans { get; set; } = new List<PhieuDeXuatPhongBan>();
-
-    //[InverseProperty("MaPhieuDangKyNavigation")]
-    //public virtual ICollection<PhieuDangKyPhuLieuHoaChat> PhieuDangKyPhuLieuHoaChats { get; set; } = new List<PhieuDangKyPhuLieuHoaChat>();
 
     [ForeignKey("TrangThaiId")]
     [InverseProperty("PhieuDangKies")]

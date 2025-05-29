@@ -3,24 +3,28 @@ using System.ComponentModel.DataAnnotations;
 
 namespace QLDV_KiemNghiem_BE.DTO
 {
-    public class DuocDienDto
+    public class LoaiMauDto
     {
         public string MaId { get; set; } = null!;
 
         [StringLength(50)]
-        public string? MaDuocDien { get; set; }
+        public string? MaLoaiMau { get; set; }
 
         [StringLength(200)]
-        public string? TenDuocDien { get; set; }
+        public string? TenLoaiMau { get; set; }
+
+        [StringLength(500)]
+        public string? Mota { get; set; }
+        public bool? TrangThai { get; set; }
+
+        [Column(TypeName = "datetime")]
+        public DateTime? NgayTao { get; set; }
 
         [StringLength(50)]
         public string? NguoiTao { get; set; }
 
         [StringLength(50)]
         public string? NguoiSua { get; set; }
-
-        [Column(TypeName = "datetime")]
-        public DateTime? NgayTao { get; set; }
 
         [Column(TypeName = "datetime")]
         public DateTime? NgaySua { get; set; }

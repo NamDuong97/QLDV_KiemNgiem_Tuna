@@ -26,18 +26,27 @@ namespace QLDV_KiemNghiem_BE.Controllers
         public async Task<ActionResult> getTieuChuanAll()
         {
             var result = await _service.TieuChuan.GetTieuChuansAllAsync();
-            _logger.LogDebug("get toan bo phieu dang ky");
+            _logger.LogDebug("get toan bo tieu chuan");
             return Ok(result);
         }
 
         [HttpGet]
-        [Route("getTieuChuan")]
-        public async Task<ActionResult> getTieuChuan(string maTieuChuan)
+        [Route("getTieuChuanByID")]
+        public async Task<ActionResult> getTieuChuanByID(string maTieuChuan)
         {
             var result = await _service.TieuChuan.FindTieuChuanAsync(maTieuChuan);
             _logger.LogDebug("lay tieu chuan can tim: " + maTieuChuan);
             return Ok(result);
         }
+
+        //[HttpGet]
+        //[Route("getTieuChuanByName")]
+        //public async Task<ActionResult> getTieuChuanByName(string tenTieuChuan)
+        //{
+        //    var result = await _service.TieuChuan.FindTieuChuanByNameAsync(tenTieuChuan);
+        //    _logger.LogDebug("lay tieu chuan can tim: " + tenTieuChuan);
+        //    return Ok(result);
+        //}
 
         [HttpPost]
         [Route("createTieuChuan")]
@@ -55,12 +64,12 @@ namespace QLDV_KiemNghiem_BE.Controllers
             bool create = await _service.TieuChuan.CreateTieuChuanAsync(tieuChuanDto);
             if (create)
             {
-                _logger.LogDebug("Tao phieu dang ky thanh cong");
+                _logger.LogDebug("Tao tieu chuan thanh cong");
                 return Ok(tieuChuanDto);
             }
             else
             {
-                _logger.LogDebug("Tao phieu dang ky that bai");
+                _logger.LogDebug("Tao tieu chuan that bai");
                 return BadRequest();
             }
         }
@@ -81,12 +90,12 @@ namespace QLDV_KiemNghiem_BE.Controllers
             bool update = await _service.TieuChuan.UpdateTieuChuanAsync(tieuChuanDto);
             if (update)
             {
-                _logger.LogDebug("Cap nhat phieu dang ky thanh cong");
+                _logger.LogDebug("Cap nhat tieu chuan thanh cong");
                 return Ok(tieuChuanDto);
             }
             else
             {
-                _logger.LogDebug("Cap nhat phieu dang ky that bai");
+                _logger.LogDebug("Cap nhat tieu chuan that bai");
                 return BadRequest();
             }
         }
@@ -101,18 +110,18 @@ namespace QLDV_KiemNghiem_BE.Controllers
                 bool delete = await _service.TieuChuan.DeleteTieuChuanAsync(TieuChuan);
                 if (delete)
                 {
-                    _logger.LogDebug("Cap nhat phieu dang ky thanh cong");
+                    _logger.LogDebug("Cap nhat tieu chuan thanh cong");
                     return Ok(TieuChuan);
                 }
                 else
                 {
-                    _logger.LogDebug("Cap nhat phieu dang ky that bai");
+                    _logger.LogDebug("Cap nhat tieu chuan that bai");
                     return BadRequest();
                 }
             }
             else
             {
-                _logger.LogDebug("Phieu dang ky khong ton tai");
+                _logger.LogDebug("tieu chuan khong ton tai");
                 return BadRequest();
             }
         }

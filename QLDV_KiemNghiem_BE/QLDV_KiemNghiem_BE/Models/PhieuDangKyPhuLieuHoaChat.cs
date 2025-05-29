@@ -54,7 +54,6 @@ public partial class PhieuDangKyPhuLieuHoaChat
     public DateTime? NgaySua { get; set; }
 
     [ForeignKey("MaPhieuDangKy")]
-    //[InverseProperty("PhieuDangKyPhuLieuHoaChats")]
     public virtual PhieuDangKy? MaPhieuDangKyNavigation { get; set; }
 
     [ForeignKey("MaPlhc")]

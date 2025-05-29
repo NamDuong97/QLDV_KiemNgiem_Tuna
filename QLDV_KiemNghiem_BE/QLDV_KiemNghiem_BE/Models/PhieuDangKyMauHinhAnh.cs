@@ -6,8 +6,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace QLDV_KiemNghiem_BE.Models;
 
-[Table("Mau_HinhAnh")]
-public partial class MauHinhAnh
+[Table("PhieuDangKy_Mau_HinhAnh")]
+public partial class PhieuDangKyMauHinhAnh
 {
     [Key]
     [Column("MaID")]
@@ -44,6 +44,6 @@ public partial class MauHinhAnh
     public DateTime? NgaySua { get; set; }
 
     [ForeignKey("MaMau")]
-    [InverseProperty("MauHinhAnhs")]
-    public virtual Mau? MaMauNavigation { get; set; }
+    [InverseProperty("PhieuDangKyMauHinhAnhs")]
+    public virtual PhieuDangKyMau? MaMauNavigation { get; set; }
 }

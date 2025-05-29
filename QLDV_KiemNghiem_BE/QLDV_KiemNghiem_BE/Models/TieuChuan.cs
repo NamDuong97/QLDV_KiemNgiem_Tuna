@@ -48,15 +48,8 @@ public partial class TieuChuan
     [StringLength(50)]
     public string? MaTieuChuan { get; set; }
 
-    [StringLength(50)]
-    public string? MaDuocDien { get; set; }
-
-    [ForeignKey("MaDuocDien")]
-    [InverseProperty("TieuChuans")]
-    public virtual DuocDien? MaDuocDienNavigation { get; set; }
-
     [InverseProperty("MaTieuChuanNavigation")]
-    public virtual ICollection<Mau> Maus { get; set; } = new List<Mau>();
+    public virtual ICollection<PhieuDangKyMau> PhieuDangKyMaus { get; set; } = new List<PhieuDangKyMau>();
 
     [InverseProperty("MaTieuChuanNavigation")]
     public virtual ICollection<TieuChuanChiTieu> TieuChuanChiTieus { get; set; } = new List<TieuChuanChiTieu>();

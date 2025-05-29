@@ -6,22 +6,20 @@ using Microsoft.EntityFrameworkCore;
 
 namespace QLDV_KiemNghiem_BE.Models;
 
-[Table("Mau")]
-public partial class Mau
+[Table("PhieuDangKy_Mau")]
+public partial class PhieuDangKyMau
 {
     [Key]
     [Column("MaID")]
     [StringLength(50)]
-    public string MaId { get; set; } = Guid.NewGuid().ToString();
+    public string MaId { get; set; } = null!;
 
+    [Column("MaDm_Mau")]
     [StringLength(50)]
-    public string? MaMau { get; set; }
+    public string? MaDmMau { get; set; }
 
     [StringLength(200)]
     public string? TenMau { get; set; }
-
-    [StringLength(50)]
-    public string? MaLoaiMau { get; set; }
 
     [StringLength(50)]
     public string? MaTieuChuan { get; set; }
@@ -85,44 +83,52 @@ public partial class Mau
 
     public int? ThoiGianTieuChuan { get; set; }
 
+    [Column("MaPDK_Mau")]
+    [StringLength(50)]
+    public string? MaPdkMau { get; set; }
+
+    [Column("LoaiDV")]
+    [StringLength(50)]
+    public string? LoaiDv { get; set; }
+
     [InverseProperty("MaMauNavigation")]
     public virtual ICollection<ChiTietHoaDonThu> ChiTietHoaDonThus { get; set; } = new List<ChiTietHoaDonThu>();
 
-    [ForeignKey("MaLoaiMau")]
-    [InverseProperty("Maus")]
-    public virtual LoaiMau? MaLoaiMauNavigation { get; set; }
+    [ForeignKey("MaDmMau")]
+    [InverseProperty("PhieuDangKyMaus")]
+    public virtual DmMau? MaDmMauNavigation { get; set; }
 
     [ForeignKey("MaPhieuDangKy")]
-    [InverseProperty("Maus")]
+    [InverseProperty("PhieuDangKyMaus")]
     public virtual PhieuDangKy? MaPhieuDangKyNavigation { get; set; }
 
     [ForeignKey("MaTieuChuan")]
-    [InverseProperty("Maus")]
+    [InverseProperty("PhieuDangKyMaus")]
     public virtual TieuChuan? MaTieuChuanNavigation { get; set; }
 
     [ForeignKey("Madv")]
-    [InverseProperty("Maus")]
+    [InverseProperty("PhieuDangKyMaus")]
     public virtual DichVu? MadvNavigation { get; set; }
 
     [ForeignKey("ManvThucHien")]
-    [InverseProperty("Maus")]
+    [InverseProperty("PhieuDangKyMaus")]
     public virtual NhanVien? ManvThucHienNavigation { get; set; }
 
-    [InverseProperty("MaMauNavigation")]
-    public virtual ICollection<MauHinhAnh> MauHinhAnhs { get; set; } = new List<MauHinhAnh>();
-
-    [InverseProperty("MaMauNavigation")]
+    [InverseProperty("MaPdkMauNavigation")]
     public virtual ICollection<PhanCongNoiBo> PhanCongNoiBos { get; set; } = new List<PhanCongNoiBo>();
 
     [InverseProperty("MaMauNavigation")]
+    public virtual ICollection<PhieuDangKyMauHinhAnh> PhieuDangKyMauHinhAnhs { get; set; } = new List<PhieuDangKyMauHinhAnh>();
+
+    [InverseProperty("MaPdkMauNavigation")]
     public virtual ICollection<PhieuDuTru> PhieuDuTrus { get; set; } = new List<PhieuDuTru>();
 
-    [InverseProperty("MaMauNavigation")]
+    [InverseProperty("MaPdkMauNavigation")]
     public virtual ICollection<PhieuLuuMau> PhieuLuuMaus { get; set; } = new List<PhieuLuuMau>();
 
-    [InverseProperty("MaMauNavigation")]
+    [InverseProperty("MaPdkMauNavigation")]
     public virtual ICollection<PhieuPhanTichKetQua> PhieuPhanTichKetQuas { get; set; } = new List<PhieuPhanTichKetQua>();
 
-    [InverseProperty("MaMauNavigation")]
+    [InverseProperty("MaPdkMauNavigation")]
     public virtual ICollection<PhieuTienDoLamViec> PhieuTienDoLamViecs { get; set; } = new List<PhieuTienDoLamViec>();
 }

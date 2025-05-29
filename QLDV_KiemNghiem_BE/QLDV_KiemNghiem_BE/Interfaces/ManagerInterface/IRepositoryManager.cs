@@ -3,17 +3,18 @@
     public interface IRepositoryManager
     {
         IPhieuDangKyRepository PhieuDangKy { get; }
-        IMauRepository Mau { get; }
+        IPhieuDangKyMauRepository PhieuDangKyMau { get; }
         IDmPhuLieuHoaChatRepository DmPhuLieuHoaChat { get; }
         IPhieuDangKyPhuLieuHoaChatRepository PhieuDangKyPhuLieuHoaChat { get; }
         ITieuChuanRepository TieuChuan { get; }
         IChiTieuRepositoty ChiTieu { get;  }
         IPhuongPhapRepository PhuongPhap { get; }  
-        IDuocDienRepository DuocDien { get; }
         IBoPhanRepository BoPhan { get; }
         IKhoaRepository Khoa { get; }
         IChucVuRepository ChucVu { get; }
-        IMauHinhAnhRepository MauHinhAnh { get; }
+        IPhieuDangKyMauHinhAnhRepository PhieuDangKyMauHinhAnh { get; }
+        ILoaiMauRepository LoaiMau { get; }
+        ILoaiDichVuRepository LoaiDichVu { get; }
         Task<bool> SaveChangesAsync();
     }
 }

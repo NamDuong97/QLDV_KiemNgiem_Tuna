@@ -20,8 +20,9 @@ public partial class PhieuDuTru
     [StringLength(50)]
     public string? ManvLapPhieu { get; set; }
 
+    [Column("MaPDK_Mau")]
     [StringLength(50)]
-    public string? MaMau { get; set; }
+    public string? MaPdkMau { get; set; }
 
     [Column(TypeName = "datetime")]
     public DateTime? NgayLap { get; set; }
@@ -44,9 +45,9 @@ public partial class PhieuDuTru
     [InverseProperty("PhieuDuTrus")]
     public virtual Khoa? MaKhoaNavigation { get; set; }
 
-    [ForeignKey("MaMau")]
+    [ForeignKey("MaPdkMau")]
     [InverseProperty("PhieuDuTrus")]
-    public virtual Mau? MaMauNavigation { get; set; }
+    public virtual PhieuDangKyMau? MaPdkMauNavigation { get; set; }
 
     [ForeignKey("ManvLapPhieu")]
     [InverseProperty("PhieuDuTrus")]

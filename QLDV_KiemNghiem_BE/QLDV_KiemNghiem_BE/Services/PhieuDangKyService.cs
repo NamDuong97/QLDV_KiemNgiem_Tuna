@@ -38,7 +38,7 @@ namespace QLDV_KiemNghiem_BE.Services
                 foreach (var mau  in item.Maus)
                 {
                     var mauDto = _mapper.Map<MauDto>(mau);
-                    mauDto.MauHinhAnhs = _mapper.Map<List<MauHinhAnhDto>>(mau.MauHinhAnhs);
+                    mauDto.MauHinhAnhs = _mapper.Map<List<PhieuDangKyMauHinhAnhDto>>(mau.MauHinhAnhs);
                     mauDtos.Add(mauDto);
                 }
                 phieuDangKyDto.Maus = mauDtos;
@@ -58,7 +58,7 @@ namespace QLDV_KiemNghiem_BE.Services
                 foreach (var mau in item.Maus)
                 {
                     var mauDto = _mapper.Map<MauDto>(item);
-                    mauDto.MauHinhAnhs = _mapper.Map<List<MauHinhAnhDto>>(mau.MauHinhAnhs);
+                    mauDto.MauHinhAnhs = _mapper.Map<List<PhieuDangKyMauHinhAnhDto>>(mau.MauHinhAnhs);
                     mauDtos.Add(mauDto);
                 }
                 phieuDangKyDto.Maus = mauDtos;
@@ -88,7 +88,7 @@ namespace QLDV_KiemNghiem_BE.Services
                 Mau mauDomain = new Mau();
                 mauDomain = _mapper.Map<Mau>(x);
                 mauDomain.MaPhieuDangKy = phieuDangKyDomain.MaId;
-                mauDomain.MaMau = mauDomain.TenMau + mauDomain.Madv + DateTime.Now.ToString();
+                mauDomain.MaMau = mauDomain.TenMau + mauDomain.Madv + "-" + mauDomain.ThoiGianTieuChuan.ToString() + DateTime.Now.ToString();
                 mauDomain.NgayTao = DateTime.Now;
                 _repositoryManager.Mau.CreateMauAsync(mauDomain);
             }

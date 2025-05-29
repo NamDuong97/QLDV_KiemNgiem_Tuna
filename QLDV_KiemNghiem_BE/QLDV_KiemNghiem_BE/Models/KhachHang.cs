@@ -50,11 +50,20 @@ public partial class KhachHang
     [Column(TypeName = "datetime")]
     public DateTime? NgaySua { get; set; }
 
-    [InverseProperty("MaKhNavigation")]
-    public virtual ICollection<PhieuDangKy> PhieuDangKies { get; set; } = new List<PhieuDangKy>();
+    [StringLength(100)]
+    public string? TenTaiKhoan { get; set; }
+
+    [StringLength(200)]
+    public string? MatKhau { get; set; }
+
+    [Column(TypeName = "datetime")]
+    public DateTime? NgaySuaMatKhau { get; set; }
+
+    [Column(TypeName = "datetime")]
+    public DateTime? NgayHetHanMatKhau { get; set; }
 
     [InverseProperty("MaKhNavigation")]
-    public virtual ICollection<TaiKhoanKhachHang> TaiKhoanKhachHangs { get; set; } = new List<TaiKhoanKhachHang>();
+    public virtual ICollection<PhieuDangKy> PhieuDangKies { get; set; } = new List<PhieuDangKy>();
 
     [InverseProperty("MaKhNavigation")]
     public virtual ICollection<ThongBaoChoKhachHang> ThongBaoChoKhachHangs { get; set; } = new List<ThongBaoChoKhachHang>();

@@ -38,5 +38,5 @@ public partial class LoaiMau
     public DateTime? NgaySua { get; set; }
 
     [InverseProperty("MaLoaiMauNavigation")]
-    public virtual ICollection<Mau> Maus { get; set; } = new List<Mau>();
+    public virtual ICollection<DmMau> DmMaus { get; set; } = new List<DmMau>();
 }

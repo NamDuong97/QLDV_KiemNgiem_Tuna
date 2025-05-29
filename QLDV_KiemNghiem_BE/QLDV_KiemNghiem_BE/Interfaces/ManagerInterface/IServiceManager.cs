@@ -5,7 +5,7 @@ namespace QLDV_KiemNghiem_BE.Interfaces.ManagerInterface
     public interface IServiceManager
     {
         IPhieuDangKyService PhieuDangKy { get; }
-        IMauService Mau { get; }
+        IPhieuDangKyMauService PhieuDangKyMau { get; }
         IDmPhuLieuHoaChatService DmPhuLieuHoaChat { get; }
         IPhieuDangKyPhuLieuHoaChatService PhieuDangKyPhuLieuHoaChat { get; }
         ITieuChuanService TieuChuan { get; }
@@ -14,6 +14,8 @@ namespace QLDV_KiemNghiem_BE.Interfaces.ManagerInterface
         IBoPhanService BoPhan { get; }
         IKhoaService Khoa { get; }
         IChucVuService ChucVu { get; }
-        IMauHinhAnhService MauHinhAnh { get; }
+        IPhieuDangKyMauHinhAnhService MauHinhAnh { get; }
+        ILoaiMauService LoaiMau { get; }
+        ILoaiDichVuService LoaiDichVu { get; }
     }
 }

@@ -45,7 +45,7 @@ namespace QLDV_KiemNghiem_BE.Controllers
 
         [HttpPost]
         [Route("createDmPhuLieuHoaChat")]
-        public async Task<ActionResult> createDmPhuLieuHoaChat(DmPhuLieuHoaChat dmPhuLieuHoaChat)
+        public async Task<ActionResult> createDmPhuLieuHoaChat(DmPhuLieuHoaChatDto dmPhuLieuHoaChat)
         {
             if (ModelState.IsValid)
             {
@@ -72,7 +72,7 @@ namespace QLDV_KiemNghiem_BE.Controllers
 
         [HttpPut]
         [Route("updateDmPhuLieuHoaChat")]
-        public async Task<ActionResult> updateDmPhuLieuHoaChat(DmPhuLieuHoaChat dmPhuLieuHoaChat)
+        public async Task<ActionResult> updateDmPhuLieuHoaChat(DmPhuLieuHoaChatDto dmPhuLieuHoaChat)
         {
             if (ModelState.IsValid)
             {
@@ -98,7 +98,7 @@ namespace QLDV_KiemNghiem_BE.Controllers
 
         [HttpDelete]
         [Route("deleteDmPhuLieuHoaChat")]
-        public async Task<ActionResult> deleteDmPhuLieuHoaChat(DmPhuLieuHoaChat dmPhuLieuHoaChat)
+        public async Task<ActionResult> deleteDmPhuLieuHoaChat(DmPhuLieuHoaChatDto dmPhuLieuHoaChat)
         {
            
             bool create = await _service.DmPhuLieuHoaChat.UpdateDmPhuLieuHoaChatAsync(dmPhuLieuHoaChat);

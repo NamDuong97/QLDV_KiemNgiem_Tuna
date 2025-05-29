@@ -7,8 +7,8 @@ namespace QLDV_KiemNghiem_BE.Interfaces
     {
         Task<IEnumerable<PhuongPhapDto>> GetPhuongPhapsAllAsync();
         Task<PhuongPhapDto?> FindPhuongPhapAsync(string maPhuongPhap);
-        Task<bool> CreatePhuongPhapAsync(PhuongPhap phuongPhap);
-        Task<bool> UpdatePhuongPhapAsync(PhuongPhap phuongPhap);
+        Task<bool> CreatePhuongPhapAsync(PhuongPhapDto phuongPhapDto);
+        Task<bool> UpdatePhuongPhapAsync(PhuongPhapDto phuongPhapDto);
         Task<bool> DeletePhuongPhapAsync(PhuongPhap phuongPhap);
     }
 }

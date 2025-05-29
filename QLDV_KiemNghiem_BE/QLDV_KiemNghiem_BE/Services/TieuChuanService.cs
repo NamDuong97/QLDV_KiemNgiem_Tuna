@@ -28,6 +28,12 @@ namespace QLDV_KiemNghiem_BE.Services
             var result = _mapper.Map<TieuChuanDto>(tieuChuanDomain);
             return result;
         }
+        //public async Task<TieuChuanDto?> FindTieuChuanByNameAsync(string tenTieuChuan)
+        //{
+        //    var tieuChuanDomain = await _repositoryManager.TieuChuan.FindTieuChuanByNameAsync(tenTieuChuan);
+        //    var result = _mapper.Map<TieuChuanDto>(tieuChuanDomain);
+        //    return result;
+        //}
         public async Task<bool> CreateTieuChuanAsync(TieuChuanDto tieuChuanDto)
         {
             var tieuChuanDomain = _mapper.Map<TieuChuan>(tieuChuanDto);

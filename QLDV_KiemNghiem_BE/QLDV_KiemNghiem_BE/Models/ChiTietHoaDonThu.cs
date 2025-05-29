@@ -47,5 +47,5 @@ public partial class ChiTietHoaDonThu
 
     [ForeignKey("MaMau")]
     [InverseProperty("ChiTietHoaDonThus")]
-    public virtual Mau? MaMauNavigation { get; set; }
+    public virtual PhieuDangKyMau? MaMauNavigation { get; set; }
 }

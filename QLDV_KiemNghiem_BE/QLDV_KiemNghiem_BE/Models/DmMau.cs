@@ -6,33 +6,22 @@ using Microsoft.EntityFrameworkCore;
 
 namespace QLDV_KiemNghiem_BE.Models;
 
-[Table("TaiKhoan_KhachHang")]
-public partial class TaiKhoanKhachHang
+[Table("Dm_Mau")]
+public partial class DmMau
 {
     [Key]
     [Column("MaID")]
     [StringLength(50)]
     public string MaId { get; set; } = null!;
 
-    [Column("MaTK")]
     [StringLength(50)]
-    public string? MaTk { get; set; }
+    public string? TenMau { get; set; }
 
-    [StringLength(200)]
-    public string? TenTaiKhoan { get; set; }
-
-    [StringLength(200)]
-    public string? MatKhau { get; set; }
-
-    [Column("MaKH")]
     [StringLength(50)]
-    public string? MaKh { get; set; }
+    public string? MaLoaiMau { get; set; }
 
-    [Column(TypeName = "datetime")]
-    public DateTime? NgaySuaMatKhau { get; set; }
-
-    [Column(TypeName = "datetime")]
-    public DateTime? NgayHetHanMatKhau { get; set; }
+    [StringLength(500)]
+    public string? GhiChu { get; set; }
 
     public bool? TrangThai { get; set; }
 
@@ -48,7 +37,10 @@ public partial class TaiKhoanKhachHang
     [Column(TypeName = "datetime")]
     public DateTime? NgaySua { get; set; }
 
-    [ForeignKey("MaKh")]
-    [InverseProperty("TaiKhoanKhachHangs")]
-    public virtual KhachHang? MaKhNavigation { get; set; }
+    [ForeignKey("MaLoaiMau")]
+    [InverseProperty("DmMaus")]
+    public virtual LoaiMau? MaLoaiMauNavigation { get; set; }
+
+    [InverseProperty("MaDmMauNavigation")]
+    public virtual ICollection<PhieuDangKyMau> PhieuDangKyMaus { get; set; } = new List<PhieuDangKyMau>();
 }

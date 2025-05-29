@@ -20,8 +20,9 @@ public partial class PhanCongNoiBo
     [StringLength(50)]
     public string? ManvXyLy { get; set; }
 
+    [Column("MaPDK_Mau")]
     [StringLength(50)]
-    public string? MaMau { get; set; }
+    public string? MaPdkMau { get; set; }
 
     [Column(TypeName = "datetime")]
     public DateTime? LamTu { get; set; }
@@ -56,9 +57,9 @@ public partial class PhanCongNoiBo
     [InverseProperty("MaPhanCongNoiBoNavigation")]
     public virtual ICollection<LichSuPhanCong> LichSuPhanCongs { get; set; } = new List<LichSuPhanCong>();
 
-    [ForeignKey("MaMau")]
+    [ForeignKey("MaPdkMau")]
     [InverseProperty("PhanCongNoiBos")]
-    public virtual Mau? MaMauNavigation { get; set; }
+    public virtual PhieuDangKyMau? MaPdkMauNavigation { get; set; }
 
     [ForeignKey("ManvPhanCong")]
     [InverseProperty("PhanCongNoiBoManvPhanCongNavigations")]

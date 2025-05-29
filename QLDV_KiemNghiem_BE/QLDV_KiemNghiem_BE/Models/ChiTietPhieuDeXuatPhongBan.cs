@@ -17,11 +17,9 @@ public partial class ChiTietPhieuDeXuatPhongBan
     [StringLength(50)]
     public string? MaPhieuDeXuat { get; set; }
 
+    [Column("MaPDK_Mau")]
     [StringLength(50)]
-    public string? MaMau { get; set; }
-
-    [Column(TypeName = "datetime")]
-    public DateTime? NgayNhanMau { get; set; }
+    public string? MaPdkMau { get; set; }
 
     [StringLength(50)]
     public string? GhiChu { get; set; }
@@ -47,8 +45,11 @@ public partial class ChiTietPhieuDeXuatPhongBan
     [StringLength(50)]
     public string? ManvTuChoi { get; set; }
 
-    [ForeignKey("MaMau")]
-    public virtual Mau? MaMauNavigation { get; set; }
+    [Column(TypeName = "datetime")]
+    public DateTime? NgayThucHienKiemNghiem { get; set; }
+
+    [ForeignKey("MaPdkMau")]
+    public virtual PhieuDangKyMau? MaPdkMauNavigation { get; set; }
 
     [ForeignKey("MaPhieuDeXuat")]
     public virtual PhieuDeXuatPhongBan? MaPhieuDeXuatNavigation { get; set; }

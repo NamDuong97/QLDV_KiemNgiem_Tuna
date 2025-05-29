@@ -38,6 +38,9 @@ public partial class LoaiDichVu
     [Column(TypeName = "datetime")]
     public DateTime? NgaySua { get; set; }
 
+    [StringLength(50)]
+    public string? ThoiGianMongMuonHoanThanh { get; set; }
+
     [InverseProperty("MaLoaidvNavigation")]
     public virtual ICollection<DichVu> DichVus { get; set; } = new List<DichVu>();
 }

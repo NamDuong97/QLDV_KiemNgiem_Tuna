@@ -29,20 +29,22 @@ namespace QLDV_KiemNghiem_BE.Services
             var result = _mapper.Map<PhuongPhapDto>(phuongPhapDomain);
             return result;
         }
-        public async Task<bool> CreatePhuongPhapAsync(PhuongPhap phuongPhap)
+        public async Task<bool> CreatePhuongPhapAsync(PhuongPhapDto phuongPhapDto)
         {
-            _repositoryManager.PhuongPhap.CreatePhuongPhapAsync(phuongPhap);
+            var phuongPhapDomain = _mapper.Map<PhuongPhap>(phuongPhapDto);
+            _repositoryManager.PhuongPhap.CreatePhuongPhapAsync(phuongPhapDomain);
             bool check = await _repositoryManager.SaveChangesAsync();
             return check;
         }
-        public async Task<bool> UpdatePhuongPhapAsync(PhuongPhap phuongPhap)
+        public async Task<bool> UpdatePhuongPhapAsync(PhuongPhapDto phuongPhapDto)
         {
-            var PhuongPhapDomain = await _repositoryManager.PhuongPhap.FindPhuongPhapAsync(phuongPhap.MaId);
+            var PhuongPhapDomain = await _repositoryManager.PhuongPhap.FindPhuongPhapAsync(phuongPhapDto.MaId);
             if (PhuongPhapDomain == null)
             {
                 return false;
             }
-            _repositoryManager.PhuongPhap.UpdatePhuongPhapAsync(phuongPhap);
+            var phuongPhapDomain = _mapper.Map<PhuongPhap>(phuongPhapDto);
+            _repositoryManager.PhuongPhap.UpdatePhuongPhapAsync(phuongPhapDomain);
             bool check = await _repositoryManager.SaveChangesAsync();
             return check;
         }
