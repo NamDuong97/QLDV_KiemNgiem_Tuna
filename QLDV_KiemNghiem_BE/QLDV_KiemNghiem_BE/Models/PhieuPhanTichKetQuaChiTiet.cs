@@ -29,13 +29,6 @@ public partial class PhieuPhanTichKetQuaChiTiet
     [StringLength(50)]
     public string? DonVi { get; set; }
 
-    [Column("MaPP")]
-    [StringLength(50)]
-    public string? MaPp { get; set; }
-
-    [StringLength(500)]
-    public string? TenPhuongPhap { get; set; }
-
     [StringLength(500)]
     public string? GhiChu { get; set; }
 
@@ -54,12 +47,12 @@ public partial class PhieuPhanTichKetQuaChiTiet
     [Column(TypeName = "datetime")]
     public DateTime? NgaySua { get; set; }
 
+    [StringLength(200)]
+    public string? MucChatLuong { get; set; }
+
     [ForeignKey("MaChiTieu")]
     public virtual ChiTieu? MaChiTieuNavigation { get; set; }
 
     [ForeignKey("MaPhieuKetQua")]
     public virtual PhieuPhanTichKetQua? MaPhieuKetQuaNavigation { get; set; }
-
-    [ForeignKey("MaPp")]
-    public virtual PhuongPhap? MaPpNavigation { get; set; }
 }

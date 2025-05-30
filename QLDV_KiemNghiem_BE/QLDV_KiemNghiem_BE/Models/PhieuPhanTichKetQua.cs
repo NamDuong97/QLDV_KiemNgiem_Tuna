@@ -17,8 +17,9 @@ public partial class PhieuPhanTichKetQua
     [StringLength(50)]
     public string? MaPhieuKetQua { get; set; }
 
+    [Column("MaPDK_Mau")]
     [StringLength(50)]
-    public string? MaMau { get; set; }
+    public string? MaPdkMau { get; set; }
 
     [StringLength(500)]
     public string? TenMau { get; set; }
@@ -61,13 +62,15 @@ public partial class PhieuPhanTichKetQua
     [Column(TypeName = "datetime")]
     public DateTime? NgaySua { get; set; }
 
+    public string? YeuCauKiemNghiem { get; set; }
+
     [ForeignKey("MaKhoa")]
     [InverseProperty("PhieuPhanTichKetQuas")]
     public virtual Khoa? MaKhoaNavigation { get; set; }
 
-    [ForeignKey("MaMau")]
+    [ForeignKey("MaPdkMau")]
     [InverseProperty("PhieuPhanTichKetQuas")]
-    public virtual Mau? MaMauNavigation { get; set; }
+    public virtual PhieuDangKyMau? MaPdkMauNavigation { get; set; }
 
     [ForeignKey("ManvKiemTra")]
     [InverseProperty("PhieuPhanTichKetQuaManvKiemTraNavigations")]

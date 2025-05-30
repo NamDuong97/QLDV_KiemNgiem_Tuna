@@ -31,7 +31,4 @@ public partial class DuocDien
 
     [Column(TypeName = "datetime")]
     public DateTime? NgaySua { get; set; }
-
-    [InverseProperty("MaDuocDienNavigation")]
-    public virtual ICollection<TieuChuan> TieuChuans { get; set; } = new List<TieuChuan>();
 }

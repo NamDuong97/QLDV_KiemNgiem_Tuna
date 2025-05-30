@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using QLDV_KiemNghiem_BE.DTO;
+using QLDV_KiemNghiem_BE.DTO.Parameter;
 using QLDV_KiemNghiem_BE.Interfaces.ManagerInterface;
 using QLDV_KiemNghiem_BE.Models;
 using System;
@@ -23,31 +24,45 @@ namespace QLDV_KiemNghiem_BE.Controllers
             _mapper = mapper;
         }
 
+        // action này dùng cho nhân viên phòng kế hoạch đầu tư sử dụng để xem
         [HttpGet]
         [Route("getPhieuDangKyAll")]
-        public async Task<ActionResult> getPhieuDangKyAll()
+        public async Task<ActionResult> getPhieuDangKyAll(PhieuDangKyParam phieuDangKyParam)
         {
-            var phieuDangKys = await _service.PhieuDangKy.GetPhieuDangKiesAllAsync();
-            var result = _mapper.Map<IEnumerable<PhieuDangKyDto>>(phieuDangKys);
-            _logger.LogDebug("get toan bo phieu dang ky");
-            return Ok(result);
+            if(phieuDangKyParam == null)
+            {
+                _logger.LogError("Thieu tham so truyen vao");
+                return BadRequest("Thieu tham so truyen vao");
+            }
+            var phieuDangKys = await _service.PhieuDangKy.GetPhieuDangKiesAllAsync(phieuDangKyParam);
+            _logger.LogDebug("lay toan bo phieu dang ky");
+            return Ok(phieuDangKys);
         }
 
+        // action này dùng để hiển thị phiếu đăng ký cho khách hàng cụ thể
         [HttpGet]
-        [Route("getPhieuDangKy")]
-        public async Task<ActionResult> getPhieuDangKy(string maKH)
+        [Route("getPhieuDangKiesOfCustomer")]
+        public async Task<ActionResult> getPhieuDangKiesOfCustomer(string maKH, string maTrangThaiPhieuDangKy)
         {
-            var phieuDangKy = await _service.PhieuDangKy.GetPhieuDangKiesAsync(maKH);
-            _logger.LogDebug("get toan bo phieu dang ky cua khach hang: " + maKH);
+            var phieuDangKy = await _service.PhieuDangKy.GetPhieuDangKiesOfCustomerAsync(maKH, maTrangThaiPhieuDangKy);
+            _logger.LogDebug("lay toan bo phieu dang ky cua khach hang: " + maKH);
             return Ok(phieuDangKy);
         }
 
-        // action nay ca nguoi dung va quan tri vien deu su dung
+        [HttpGet]
+        [Route("findPhieuDangKy")]
+        public async Task<ActionResult> findPhieuDangKy(string maPhieuDangKy)
+        {
+            var phieuDangKy = await _service.PhieuDangKy.FindPhieuDangKyAsync(maPhieuDangKy);
+            _logger.LogDebug("lay phieu dang ky co ma phieu: " + maPhieuDangKy);
+            return Ok(phieuDangKy);
+        }
+
         [HttpPost]
         [Route("createPhieuDangKy")]
         public async Task<ActionResult> createPhieuDangKy(PhieuDangKyDto phieuDangKyDto)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
                 var errors = ModelState.Values
                 .SelectMany(v => v.Errors)
@@ -55,6 +70,11 @@ namespace QLDV_KiemNghiem_BE.Controllers
                 .ToList();
                 _logger.LogError("Loi validate tham so dau vao");
                 return BadRequest(new { Errors = errors });
+            }
+            if(phieuDangKyDto?.Maus?.Count() == 0 || phieuDangKyDto?.PhieuDangKyPhuLieuHoaChats?.Count() == 0)
+            {
+                _logger.LogDebug("Phiếu đăng ký cung cấp thiếu mẫu hoặc phụ liệu hoá chất");
+                return BadRequest("Phiếu đăng ký không thể thiếu mẫu và phụ liệu hoá chất, vui lòng cung cấp đầy đủ");
             }
             bool create = await _service.PhieuDangKy.CreatePhieuDangKyAsync(phieuDangKyDto);
             if (create)
@@ -69,7 +89,6 @@ namespace QLDV_KiemNghiem_BE.Controllers
             }
         }
 
-        // action nay ca nguoi dung va quan tri vien deu su dung
         [HttpPut]
         [Route("updatePhieuDangKy")]
         public async Task<ActionResult> updatePhieuDangKy(PhieuDangKyDto phieuDangKyDto)

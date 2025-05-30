@@ -77,6 +77,21 @@ export interface PhieuDangKy {
   phieuDangKyPhuLieuHoaChats: FormPhuLieuHoaChat[];
 }
 
+export interface PhieuDangKy {
+  donViGuiMau: string;
+  nguoiGuiMau: string;
+  soDienThoai: string;
+  email: string;
+  diaChiLienHe: string;
+  hinhThucGuiMau: string;
+  hinhThucTraKQ: string;
+  diaChiGiaoMau?: string;
+  ketQuaTiengAnh?: number;
+  ngayGiaoMau: string;
+  maus: FormMau[];
+  phieuDangKyPhuLieuHoaChats: FormPhuLieuHoaChat[];
+}
+
 export interface FormBoLocPhieuDangKyChoXetDuyet {
   NgayBatDau: string;
   NgayKetThuc: string;

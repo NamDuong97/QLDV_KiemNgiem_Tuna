@@ -58,6 +58,7 @@ const ChoTiepNhanXuLy = (props: Props) => {
     setOpenPopupHuyPhieu(true);
   };
 
+<<<<<<< HEAD:QLDV_KiemNghiem_FE/src/pages/customer/manager/PhieuDKyDVKN/StatusPhieu/ChoTiepNhanXuLy/index.tsx
   const { data: dataChoTiepNhanXuLy } = usePhieuDKyDVKNALL({
     queryKey: "dataChoTiepNhanXuLy",
     maKH: "KH001",
@@ -65,6 +66,13 @@ const ChoTiepNhanXuLy = (props: Props) => {
   });
 
   console.log("dataChoTiepNhanXuLy", dataChoTiepNhanXuLy);
+=======
+  const { data: dataPhieuDkyAll } = usePhieuDKyDVHNALL({
+    queryKey: "getALLPhieuDangKyDVKN",
+  });
+
+  console.log("dataPhieuDkyAll", dataPhieuDkyAll);
+>>>>>>> main:QLDV_KiemNghiem_FE/src/pages/customer/manager/PhieuDKyDVKN/StatusPhieu/ChoXetDuyet/index.tsx
 
   return (
     <Box className="grid gap-4">

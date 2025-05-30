@@ -24,6 +24,16 @@ builder.Services.AddCors(options =>
 builder.Services.AddScoped<IRepositoryManager, RepositoryManager>();
 
 builder.Services.AddScoped<IServiceManager, ServiceManager>();
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(name: "AllowFrontend",
+        policy =>
+        {
+            policy.WithOrigins("http://localhost:5175") // Cho phép frontend
+                  .AllowAnyHeader()
+                  .AllowAnyMethod();
+        });
+});
 
 builder.Services.AddAutoMapper(op => op.AddProfile<MappingProfile>(),typeof(Program));
 
@@ -40,6 +50,8 @@ app.UseCors("AllowFrontend");
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
+
+app.UseCors("AllowFrontend");
 
 app.MapControllerRoute(
   name: "default",

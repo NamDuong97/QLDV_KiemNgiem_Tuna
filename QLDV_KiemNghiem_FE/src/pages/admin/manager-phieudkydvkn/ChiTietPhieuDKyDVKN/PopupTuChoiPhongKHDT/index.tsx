@@ -2,7 +2,6 @@ import { Box, Dialog } from "@mui/material";
 import { AnimatePresence, motion } from "framer-motion";
 import { IoMdClose } from "react-icons/io";
 import { useNavigate } from "react-router";
-import { APP_ROUTES } from "../../../../../constants/routers";
 
 interface Props {
   open: boolean;

@@ -28,20 +28,28 @@ namespace QLDV_KiemNghiem_BE.Services
             var result = _mapper.Map<TieuChuanDto>(tieuChuanDomain);
             return result;
         }
-        public async Task<bool> CreateTieuChuanAsync(TieuChuan tieuChuan)
+        //public async Task<TieuChuanDto?> FindTieuChuanByNameAsync(string tenTieuChuan)
+        //{
+        //    var tieuChuanDomain = await _repositoryManager.TieuChuan.FindTieuChuanByNameAsync(tenTieuChuan);
+        //    var result = _mapper.Map<TieuChuanDto>(tieuChuanDomain);
+        //    return result;
+        //}
+        public async Task<bool> CreateTieuChuanAsync(TieuChuanDto tieuChuanDto)
         {
-            _repositoryManager.TieuChuan.CreateTieuChuanAsync(tieuChuan);
+            var tieuChuanDomain = _mapper.Map<TieuChuan>(tieuChuanDto);
+            _repositoryManager.TieuChuan.CreateTieuChuanAsync(tieuChuanDomain);
             bool check = await _repositoryManager.SaveChangesAsync();
             return check;   
         }
-        public async Task<bool> UpdateTieuChuanAsync(TieuChuan tieuChuan)
+        public async Task<bool> UpdateTieuChuanAsync(TieuChuanDto tieuChuanDto)
         {
-            var TieuChuanDomain = await _repositoryManager.TieuChuan.FindTieuChuanAsync(tieuChuan.MaId);
-            if (TieuChuanDomain == null)
+            var tieuChuanDomain = _mapper.Map<TieuChuan>(tieuChuanDto);
+            var tieuChuanCheck = await _repositoryManager.TieuChuan.FindTieuChuanAsync(tieuChuanDto.MaId);
+            if (tieuChuanCheck == null)
             {
                 return false;
             }
-            _repositoryManager.TieuChuan.UpdateTieuChuanAsync(tieuChuan);
+            _repositoryManager.TieuChuan.UpdateTieuChuanAsync(tieuChuanDomain);
             bool check = await _repositoryManager.SaveChangesAsync();
             return check;
         }

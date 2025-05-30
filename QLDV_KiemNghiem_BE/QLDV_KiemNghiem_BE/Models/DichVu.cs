@@ -46,5 +46,5 @@ public partial class DichVu
     public virtual LoaiDichVu? MaLoaidvNavigation { get; set; }
 
     [InverseProperty("MadvNavigation")]
-    public virtual ICollection<Mau> Maus { get; set; } = new List<Mau>();
+    public virtual ICollection<PhieuDangKyMau> PhieuDangKyMaus { get; set; } = new List<PhieuDangKyMau>();
 }

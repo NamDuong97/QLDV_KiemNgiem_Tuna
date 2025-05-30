@@ -148,6 +148,35 @@ const ChiTietPhieuDKyDVKN = () => {
             );
         }
       }
+      case "Ban lãnh đạo": {
+        return (
+          <div className="pt-6 flex justify-between">
+            <div>
+              <p className="text-2xl/6 font-bold text-gray-800">{NameID}</p>
+            </div>
+            <div className="flex gap-4">
+              <button
+                onClick={handleClickOpenPopupTuChoiPhongKHDT}
+                className="px-6 py-3 text-base/4 font-medium text-white bg-green-400 border-[2px] border-solid border-gray-300 rounded-[6px] shadow-[0_4px_4px_rgba(0,0,0,0.25)] hover:bg-green-500 cursor-pointer"
+              >
+                Thông báo từ chối
+              </button>
+              <button
+                onClick={handleClickOpenPopupHuyPhieu}
+                className="px-6 py-3 text-base/4 font-medium text-white bg-yellow-400 border-[2px] border-solid border-gray-300 rounded-[6px] shadow-[0_4px_4px_rgba(0,0,0,0.25)] hover:bg-yellow-500 cursor-pointer"
+              >
+                Từ chối tiếp nhận
+              </button>
+              <button
+                onClick={handleClickOpenPopupDuyetBo}
+                className="px-6 py-3 text-base/4 font-medium text-white bg-blue-500 border-[2px] border-solid border-gray-300 rounded-[6px] shadow-[0_4px_4px_rgba(0,0,0,0.25)] hover:bg-blue-600 cursor-pointer"
+              >
+                Phê duyệt
+              </button>
+            </div>
+          </div>
+        );
+      }
     }
   };
 
