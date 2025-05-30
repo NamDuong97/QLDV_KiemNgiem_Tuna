@@ -15,7 +15,6 @@ import LayoutAdmin from "../pages/admin/layout-admin";
 import LayoutCustomer from "../pages/customer/layout";
 import Home from "../pages/customer/home";
 import FormSignUpDVKN from "../pages/customer/form-signup-DVKN";
-import CreateMau from "../pages/customer/form-signup-DVKN/create-mau";
 import EditMau from "../pages/customer/form-signup-DVKN/edit-mau";
 import PhieuDKyDVKN from "../pages/customer/manager/PhieuDKyDVKN";
 import Edit_PhieuDKyDVKN from "../pages/customer/manager/PhieuDKyDVKN/Edit_PhieuDKyDVKN";
@@ -98,14 +97,6 @@ const Routers = (props: Props) => {
           <Route
             path={APP_ROUTES.TUNA_CUSTOMER.FORM_SIGN_UP_DVKN.to}
             element={<FormSignUpDVKN />}
-          />
-          <Route
-            path={APP_ROUTES.TUNA_CUSTOMER.CREATE_MAU.to}
-            element={<CreateMau />}
-          />
-          <Route
-            path={APP_ROUTES.TUNA_CUSTOMER.Edit_MAU.to}
-            element={<EditMau />}
           />
 
           {/* Trang Quản lý phía Khách hàng */}

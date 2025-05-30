@@ -26,9 +26,9 @@ export default function LayoutAdmin() {
     setOpenPopupThongBaoPhieuDKDVKN(false);
   };
 
-  useEffect(() => {
-    setOpenPopupThongBaoPhieuDKDVKN(true);
-  }, []);
+  // useEffect(() => {
+  //   setOpenPopupThongBaoPhieuDKDVKN(true);
+  // }, []);
 
   return (
     <ThemeRegistry>

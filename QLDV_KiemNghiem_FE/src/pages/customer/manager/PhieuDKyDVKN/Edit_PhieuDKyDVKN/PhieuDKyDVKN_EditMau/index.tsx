@@ -61,17 +61,16 @@ const dataDichVu = [
 const PhieuDKyDVKN_EditMau = () => {
   const naginate = useNavigate();
   const id = decodeURIComponent(useLocation().pathname.split("/")[3]);
+  // const url = useLocation().pathname.split("/")[2];
+  // console.log("url", url);
 
-  const data = sessionStorage.getItem("PhieuDangKy");
+  const data = localStorage.getItem("DataPhieuDangKy");
   const dataPhieuDangky = data ? JSON.parse(data) : null;
   const dataSuaMau = data
-    ? JSON.parse(data).Mau.find((item: any) => item.TenMau === id)
+    ? JSON.parse(data).Mau?.find((item: any) => item.TenMau === id)
     : [];
 
-  const [listImage, setListImage] = useState(() => {
-    const dataImageTemp = sessionStorage.getItem("ImageTemp");
-    return dataImageTemp ? JSON.parse(dataImageTemp) : [];
-  });
+  const [listImage, setListImage] = useState([]);
 
   let schema = useMemo(() => {
     return yup.object().shape({

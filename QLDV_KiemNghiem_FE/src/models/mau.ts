@@ -30,9 +30,22 @@ export interface Anh {
   nameImage?: string;
 }
 
+export interface phieuDangKyMauHinhAnhs {
+  maId: string;
+  maMau: string;
+  ten: string;
+  dinhDang: string;
+  ghiChu: string;
+  loaiAnh: string;
+  trangThai: number;
+  nguoiTao: string;
+  nguoiSua: string;
+  ngayTao: string;
+  ngaySua: string;
+}
+
 export interface FormMau {
   TenMau: string;
-  LoaiMau: string;
   TieuChuan: string;
   DichVu: string;
   ThoiGianTieuChuan?: string;
@@ -49,5 +62,36 @@ export interface FormMau {
   XuatKetQua?: number;
   TinhTrangMau: string;
   GhiChu?: string;
+  Anh: Anh[];
+}
+
+export interface FormMau2 {
+  maId: string;
+  maDmMau: string;
+  tenMau: string;
+  maTieuChuan: string;
+  maPhieuDangKy: string;
+  manvThucHien: string;
+  madv: string;
+  soLo: string;
+  donViSanXuat: string;
+  ngaySanXuat: string;
+  hanSuDung: string;
+  donViTinh: string;
+  soLuong: number;
+  yeuCauKiemNghiem: string;
+  tinhTrangMau: string;
+  dieuKienBaoQuan: string;
+  luuMau: boolean;
+  xuatKetQua: boolean;
+  trangThaiNhanMau: string;
+  ghiChu: string;
+  nguoiTao: string;
+  nguoiSua: string;
+  ngayTao: string;
+  ngaySua: string;
+  thoiGianTieuChuan: string;
+  maPdkMau: string | null;
+  loaiDv: string;
   Anh: Anh[];
 }

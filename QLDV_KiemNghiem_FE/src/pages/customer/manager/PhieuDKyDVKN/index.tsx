@@ -1,25 +1,26 @@
 import { Box } from "@mui/material";
 import { useLocation, useNavigate } from "react-router";
 import { APP_ROUTES } from "../../../../constants/routers";
-import ChoXetDuyet from "./StatusPhieu/ChoXetDuyet";
 import { motion } from "motion/react";
+import ChoTiepNhanXuLy from "./StatusPhieu/ChoTiepNhanXuLy";
 
 const keyTag = {
-  Cho_Xet_Duyet: "cho-xet-duyet",
-  Da_Duyet: "da-duyet",
-  Da_Huy: "da-huy",
+  Cho_Tiep_Nhan_Xu_Ly: "cho-tiep-nhan-xu-ly",
+  Cho_BLD_Xet_Duyet: "cho-ban-lanh-dao-xet-duyet",
 };
 
 const dataTag = [
   {
-    name: "Chờ xét duyệt",
-    urlTag: `${APP_ROUTES.TUNA_CUSTOMER.PHIEU_DKY_DVKN.to}?tuna=${keyTag.Cho_Xet_Duyet}`,
-    key: keyTag.Cho_Xet_Duyet,
+    name: "Chờ tiếp nhận xử lý",
+    urlTag: `${APP_ROUTES.TUNA_CUSTOMER.PHIEU_DKY_DVKN.to}?tuna=${keyTag.Cho_Tiep_Nhan_Xu_Ly}`,
+    key: keyTag.Cho_Tiep_Nhan_Xu_Ly,
+    maID: "TT01",
   },
   {
-    name: "Đã duyệt",
-    urlTag: `${APP_ROUTES.TUNA_CUSTOMER.PHIEU_DKY_DVKN.to}?tuna=${keyTag.Da_Duyet}`,
-    key: keyTag.Da_Duyet,
+    name: "Chờ BLĐ xét duyệt",
+    urlTag: `${APP_ROUTES.TUNA_CUSTOMER.PHIEU_DKY_DVKN.to}?tuna=${keyTag.Cho_BLD_Xet_Duyet}`,
+    key: keyTag.Cho_BLD_Xet_Duyet,
+    maID: "TT02",
   },
 ];
 
@@ -28,6 +29,8 @@ const PhieuDKyDVKN = () => {
   const url = useLocation();
   const queryParams = new URLSearchParams(url.search);
   const isTag = queryParams.get("tuna");
+  const maIDTrangThai = dataTag.find((item) => item.key === isTag)?.maID;
+  console.log("maIDTrangThai", maIDTrangThai);
 
   // const handleClickMenu = () => {
   //   return isSidebarMobile
@@ -37,12 +40,10 @@ const PhieuDKyDVKN = () => {
 
   const handleTagStatus = () => {
     switch (isTag) {
-      case "cho-xet-duyet":
-        return <ChoXetDuyet />;
-      case "da-duyet":
-        return <div>Trang đã duyệt</div>;
-      case "da-huy":
-        return <div>Trang đã hủy</div>;
+      case keyTag.Cho_Tiep_Nhan_Xu_Ly:
+        return <ChoTiepNhanXuLy maIDTrangThai={maIDTrangThai} />;
+      case keyTag.Cho_BLD_Xet_Duyet:
+        return <div>Chờ BLĐ xét duyệt</div>;
     }
   };
 

@@ -7,7 +7,6 @@ import { Align } from "../../../../../../models/Table";
 import removeVietnameseTones from "../../../../../../configs/removeVietnameseTones";
 import InputSearch from "../../../../../../components/InputSearch";
 import { IoArrowBackCircleOutline } from "react-icons/io5";
-import ThongBao from "./ThongBao";
 import PopupXoaMau from "./PopupXoaMau";
 
 interface ListMauProps {
@@ -63,7 +62,6 @@ const ListMau = (props: ListMauProps) => {
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentItems = tableBody?.slice(indexOfFirstItem, indexOfLastItem);
   const totalPages = Math.ceil(tableBody && tableBody.length / itemsPerPage);
-  const [openThongBao, setOpenThongBao] = useState(false);
   const [openPopupXoaMau, setOpenPopupXoaMau] = useState(false);
 
   useEffect(() => {
@@ -84,17 +82,9 @@ const ListMau = (props: ListMauProps) => {
   }, [valueSearch]);
 
   const handlePageChange = (event: any, value: number) => {
-    console.log('event',event);
-    
+    console.log("event", event);
+
     setCurrentPage(value);
-  };
-
-  const handleClickOpenThongBao = () => {
-    setOpenThongBao(true);
-  };
-
-  const handleCloseThongBao = () => {
-    setOpenThongBao(false);
   };
 
   return (
@@ -124,11 +114,11 @@ const ListMau = (props: ListMauProps) => {
         <Box className="hidden sm:block">
           <button
             type="button"
-            onClick={handleClickOpenThongBao}
+            onClick={() => navigate(`${url}?tuna=danh-sach-phu-lieu-hoa-chat`)}
             className="px-4 py-1 lg:px-6 lg:py-2 rounded cursor-pointer border border-solid border-blue-500 text-blue-500 group hover:bg-blue-500"
           >
             <span className="text-base/6 md:text-lg/6 font-bold text-blue-500 group-hover:text-white">
-              Lưu
+              Tiếp
             </span>
           </button>
         </Box>
@@ -197,16 +187,15 @@ const ListMau = (props: ListMauProps) => {
         <Box className="block sm:hidden pt-6">
           <button
             type="button"
-            onClick={handleClickOpenThongBao}
+            onClick={() => navigate(`${url}?tuna=danh-sach-phu-lieu-hoa-chat`)}
             className="py-2 w-full rounded cursor-pointer border border-solid border-blue-500 text-blue-500 group hover:bg-blue-500"
           >
             <span className="text-base/6 md:text-lg/6 font-bold text-blue-500 group-hover:text-white">
-              Lưu
+              Tiếp
             </span>
           </button>
         </Box>
       </Box>
-      <ThongBao open={openThongBao} handleClose={handleCloseThongBao} />
       <PopupXoaMau
         open={openPopupXoaMau}
         handleClose={() => setOpenPopupXoaMau(false)}

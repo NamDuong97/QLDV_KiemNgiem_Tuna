@@ -1,16 +1,15 @@
 import { Box, IconButton } from "@mui/material";
 import { motion } from "motion/react";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo } from "react";
 import { useForm, useWatch } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { useNavigate } from "react-router";
+import { useLocation, useNavigate } from "react-router";
 import { FormPhieuDangKy } from "../../../../../../models/PhieuDangKy";
 import yup from "../../../../../../configs/yup.custom";
 import { Inputs } from "../../../../../../components/Inputs";
 import InputSelect from "../../../../../../components/InputSelect";
 import { APP_ROUTES } from "../../../../../../constants/routers";
 import { MdOutlineDoorBack } from "react-icons/md";
-import ThongBao from "./ThongBao";
 
 interface Props {
   dataPhieuDangKy?: any;
@@ -25,15 +24,7 @@ const PhieuDKyDVKNForm = (props: Props) => {
   const { dataPhieuDangKy } = props;
 
   const navigate = useNavigate();
-  const [openThongBao, setOpenThongBao] = useState(false);
-
-  const handleClickOpenThongBao = () => {
-    setOpenThongBao(true);
-  };
-
-  const handleCloseThongBao = () => {
-    setOpenThongBao(false);
-  };
+  const url = useLocation().pathname;
 
   let schema = useMemo(() => {
     return yup.object().shape({
@@ -135,11 +126,11 @@ const PhieuDKyDVKNForm = (props: Props) => {
           <Box className="hidden sm:block">
             <button
               type="button"
-              onClick={handleClickOpenThongBao}
+              onClick={() => navigate(`${url}?tuna=danh-sach-mau`)}
               className="px-4 py-1 lg:px-6 lg:py-2 rounded cursor-pointer border border-solid border-blue-500 text-blue-500 group hover:bg-blue-500"
             >
               <span className="text-base/6 md:text-lg/6 font-bold text-blue-500 group-hover:text-white">
-                Lưu
+                Tiếp
               </span>
             </button>
           </Box>
@@ -311,20 +302,15 @@ const PhieuDKyDVKNForm = (props: Props) => {
         <Box className="block sm:hidden">
           <button
             type="button"
-            onClick={handleClickOpenThongBao}
+            onClick={() => navigate(`${url}?tuna=danh-sach-mau`)}
             className="py-2 w-full rounded cursor-pointer border border-solid border-blue-500 text-blue-500 group hover:bg-blue-500"
           >
             <span className="text-base/6 md:text-lg/6 font-bold text-blue-500 group-hover:text-white">
-              Lưu
+              Tiếp
             </span>
           </button>
         </Box>
       </motion.div>
-      <ThongBao
-        open={openThongBao}
-        handleClose={handleCloseThongBao}
-        onSubmit={handleSubmit(onSubmitPhieuDkyDV)}
-      />
     </form>
   );
 };

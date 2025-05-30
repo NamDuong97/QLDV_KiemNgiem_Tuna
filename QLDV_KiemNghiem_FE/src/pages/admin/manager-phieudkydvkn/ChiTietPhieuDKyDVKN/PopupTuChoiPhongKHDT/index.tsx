@@ -17,7 +17,7 @@ const PopupTuChoiPhongKHDT = (props: Props) => {
   return (
     <AnimatePresence mode="wait">
       <motion.div
-        key="PopupDuyetBo"
+        key="PopupTuChoiPhongKHDT"
         initial={{ y: 0, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         exit={{ y: 0, opacity: 0 }}
