@@ -22,6 +22,9 @@ namespace QLDV_KiemNghiem_BE.Services
         private readonly Lazy<IPhieuDangKyMauHinhAnhService> _mauHinhAnhService;
         private readonly Lazy<ILoaiMauService> _loaiMauService;
         private readonly Lazy<ILoaiDichVuService> _loaiDichVuService;
+        private readonly Lazy<IDmMauService> _dmMauService;
+        private readonly Lazy<ITrangThaiPhieuDkService> _trangThaiPhieuDkService;
+
         public ServiceManager(IRepositoryManager repositoryManager, IMapper mapper)
         {
             _repositoryManager = repositoryManager;
@@ -39,6 +42,8 @@ namespace QLDV_KiemNghiem_BE.Services
             _mauHinhAnhService = new Lazy<IPhieuDangKyMauHinhAnhService>(() => new PhieuDangKyMauHinhAnhService(repositoryManager, mapper));
             _loaiMauService = new Lazy<ILoaiMauService>(() => new LoaiMauService(repositoryManager, mapper));
             _loaiDichVuService = new Lazy<ILoaiDichVuService>(() => new LoaiDichVuService(repositoryManager, mapper));
+            _dmMauService = new Lazy<IDmMauService>(() => new DmMauService(repositoryManager, mapper));
+            _trangThaiPhieuDkService = new Lazy<ITrangThaiPhieuDkService>(() => new TrangThaiPhieuDkService(repositoryManager, mapper));
         }
 
         public IPhieuDangKyService PhieuDangKy => _phieuDangKyService.Value;
@@ -54,6 +59,8 @@ namespace QLDV_KiemNghiem_BE.Services
         public IPhieuDangKyMauHinhAnhService MauHinhAnh => _mauHinhAnhService.Value;
         public ILoaiMauService LoaiMau => _loaiMauService.Value;
         public ILoaiDichVuService LoaiDichVu => _loaiDichVuService.Value;
+        public IDmMauService DmMau => _dmMauService.Value;
+        public ITrangThaiPhieuDkService TrangThaiPhieuDk => _trangThaiPhieuDkService.Value;
 
     }
 }

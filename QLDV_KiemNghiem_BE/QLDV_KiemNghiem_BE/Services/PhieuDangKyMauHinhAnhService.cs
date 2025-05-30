@@ -6,11 +6,11 @@ using QLDV_KiemNghiem_BE.Models;
 
 namespace QLDV_KiemNghiem_BE.Services
 {
-    public class PhieuDangKyPhieuDangKyMauHinhAnhService : IPhieuDangKyMauHinhAnhService
+    public class PhieuDangKyMauHinhAnhService : IPhieuDangKyMauHinhAnhService
     {
         private readonly IRepositoryManager _repositoryManager;
         private readonly IMapper _mapper;
-        public PhieuDangKyPhieuDangKyMauHinhAnhService(IRepositoryManager repositoryManager, IMapper mapper)
+        public PhieuDangKyMauHinhAnhService(IRepositoryManager repositoryManager, IMapper mapper)
         {
             _repositoryManager = repositoryManager;
             _mapper = mapper;

@@ -8,12 +8,12 @@ namespace QLDV_KiemNghiem_BE.DTO.AutoMapper
         public MappingProfile()
         {
             CreateMap<PhieuDangKy, PhieuDangKyDto>().ReverseMap();
-            CreateMap<Mau, MauDto>().ReverseMap();
+            CreateMap<PhieuDangKyMau, PhieuDangKyMauDto>().ReverseMap();
             CreateMap<PhieuDangKyPhuLieuHoaChat, PhieuDangKyPhuLieuHoaChatDto>().ReverseMap();
             CreateMap<TieuChuan, TieuChuanDto>().ReverseMap();
             CreateMap<ChiTieu, ChiTieuDto>().ReverseMap();
             CreateMap<PhuongPhap, PhuongPhapDto>().ReverseMap();
-            CreateMap<MauHinhAnh, PhieuDangKyMauHinhAnhDto>().ReverseMap();
+            CreateMap<PhieuDangKyMauHinhAnh, PhieuDangKyMauHinhAnhDto>().ReverseMap();
         }
     }
 }

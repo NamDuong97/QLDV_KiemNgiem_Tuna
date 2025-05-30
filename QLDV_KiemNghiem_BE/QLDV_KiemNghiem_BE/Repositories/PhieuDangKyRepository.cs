@@ -29,17 +29,17 @@ namespace QLDV_KiemNghiem_BE.Repositories
 
             foreach (var item in result)
             {
-                await _context.Entry(item).Collection(p => p.Maus).Query().Include(m => m.MauHinhAnhs).LoadAsync();
+                await _context.Entry(item).Collection(p => p.PhieuDangKyMaus).Query().Include(m => m.PhieuDangKyMauHinhAnhs).LoadAsync();
             }
             return result;
         }
         public async Task<IEnumerable<PhieuDangKy>> GetPhieuDangKiesOfCustomerAsync(string maKH, string maTrangThaiPhieuDangKy)
         {
-            return await _context.PhieuDangKies.Where(item => item.MaKh == maKH && item.TrangThaiId == maTrangThaiPhieuDangKy).Include(item => item.Maus).ThenInclude(item => item.MauHinhAnhs).ToListAsync();
+            return await _context.PhieuDangKies.Where(item => item.MaKh == maKH && item.TrangThaiId == maTrangThaiPhieuDangKy).Include(item => item.PhieuDangKyMaus).ThenInclude(item => item.PhieuDangKyMauHinhAnhs).ToListAsync();
         }
         public async Task<PhieuDangKy?> FindPhieuDangKyAsync(string maPhieuDangKy)
         {
-            return await _context.PhieuDangKies.Include(p => p.Maus)
+            return await _context.PhieuDangKies.Include(p => p.PhieuDangKyMaus).ThenInclude(item => item.PhieuDangKyMauHinhAnhs)
             .FirstOrDefaultAsync(p => p.MaId == maPhieuDangKy);
         }
         public void CreatePhieuDangKyAsync(PhieuDangKy phieuDangKy)

@@ -42,6 +42,8 @@ public partial class DataContext : DbContext
 
     public virtual DbSet<DmPhuLieuHoaChat> DmPhuLieuHoaChats { get; set; }
 
+    public virtual DbSet<DuocDien> DuocDiens { get; set; }
+
     public virtual DbSet<HoaDonMuaPlhc> HoaDonMuaPlhcs { get; set; }
 
     public virtual DbSet<HoaDonMuaPlhcchiTiet> HoaDonMuaPlhcchiTiets { get; set; }
@@ -230,6 +232,10 @@ public partial class DataContext : DbContext
             entity.HasKey(e => e.MaId).HasName("PK__Dm_PhuLi__2725BF408A556418");
         });
 
+        modelBuilder.Entity<DuocDien>(entity =>
+        {
+            entity.HasKey(e => e.MaId).HasName("PK_Duocdien_265");
+        });
 
         modelBuilder.Entity<HoaDonMuaPlhc>(entity =>
         {
@@ -385,9 +391,9 @@ public partial class DataContext : DbContext
 
         modelBuilder.Entity<PhieuDangKyPhuLieuHoaChat>(entity =>
         {
-            entity.HasOne(d => d.MaPhieuDangKyNavigation).WithMany().HasConstraintName("FK_PhieuDangKy_PhuLieuHoaChat_PhieuDangKy");
+            entity.HasKey(e => e.MaId).HasName("PK__PhieuDan__2725BF40963C7A59");
 
-            entity.HasOne(d => d.MaPlhcNavigation).WithMany().HasConstraintName("FK_PhieuDangKy_PhuLieuHoaChat_Dm_PhuLieu_HoaChat");
+            entity.HasOne(d => d.MaPlhcNavigation).WithMany(p => p.PhieuDangKyPhuLieuHoaChats).HasConstraintName("FK_PhieuDangKy_PhuLieuHoaChat_Dm_PhuLieu_HoaChat");
         });
 
         modelBuilder.Entity<PhieuDeXuatMuaPlhc>(entity =>

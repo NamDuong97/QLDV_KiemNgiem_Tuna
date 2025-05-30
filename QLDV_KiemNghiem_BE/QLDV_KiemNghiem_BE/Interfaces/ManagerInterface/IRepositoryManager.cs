@@ -1,4 +1,6 @@
-﻿namespace QLDV_KiemNghiem_BE.Interfaces.ManagerInterface
+﻿using QLDV_KiemNghiem_BE.Models;
+
+namespace QLDV_KiemNghiem_BE.Interfaces.ManagerInterface
 {
     public interface IRepositoryManager
     {
@@ -15,6 +17,8 @@
         IPhieuDangKyMauHinhAnhRepository PhieuDangKyMauHinhAnh { get; }
         ILoaiMauRepository LoaiMau { get; }
         ILoaiDichVuRepository LoaiDichVu { get; }
+        IDmMauRepository DmMau { get; }
+        ITrangThaiPhieuDkRepository TrangThaiPhieuDk { get; }
         Task<bool> SaveChangesAsync();
     }
 }

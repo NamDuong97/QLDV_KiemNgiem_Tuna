@@ -5,7 +5,7 @@ namespace QLDV_KiemNghiem_BE.DTO
 {
     public class PhieuDangKyDto
     {
-        public string MaId { get; set; } = string.Empty;
+        public string? MaId { get; set; } = null;
 
         [Required(ErrorMessage = "Mã khách hàng không thể thiếu")]
         [StringLength(50, ErrorMessage = "Mã khách hàng tối đa 50 ký tự")]

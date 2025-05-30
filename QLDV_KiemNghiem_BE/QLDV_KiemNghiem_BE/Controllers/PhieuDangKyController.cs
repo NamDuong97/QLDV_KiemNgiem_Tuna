@@ -62,7 +62,7 @@ namespace QLDV_KiemNghiem_BE.Controllers
         [Route("createPhieuDangKy")]
         public async Task<ActionResult> createPhieuDangKy(PhieuDangKyDto phieuDangKyDto)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
                 var errors = ModelState.Values
                 .SelectMany(v => v.Errors)
