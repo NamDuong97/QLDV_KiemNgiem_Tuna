@@ -149,7 +149,7 @@ export default function HeaderCustomer(props: HeaderProps) {
     <div className="w-full max-w-[1840px] 2xl:max-w-full sticky">
       <header
         id="heightRef"
-        className={`flex justify-center px-[18px] bg-white py-2 w-full border border-solid border-gray-300 heightRef -top-full`}
+        className={`flex justify-center px-[18px] bg-white text-slate-900 shadow py-2 w-full border border-solid border-gray-300 heightRef -top-full`}
       >
         <Box className="max-w-[1440px] flex justify-between w-full px-6">
           <Box className="flex items-center gap-1">
@@ -236,14 +236,14 @@ export default function HeaderCustomer(props: HeaderProps) {
               >
                 <IconButton
                   onClick={handleClickNotifications}
-                  className="relative"
+                  className="bg-[#22c55e]"
                 >
                   <StyledBadge
                     overlap="circular"
                     anchorOrigin={{ vertical: "top", horizontal: "right" }}
                     variant="dot"
                   >
-                    <NotificationsActiveIcon className="text-white" />
+                    <NotificationsActiveIcon className="text-[#0f172a]" />
                   </StyledBadge>
                 </IconButton>
               </Tooltip>
@@ -284,7 +284,7 @@ export default function HeaderCustomer(props: HeaderProps) {
                     color="inherit"
                     className="relative !p-2"
                   >
-                    <AccountCircle className="text-white" />
+                    <AccountCircle className="text-[#1e3a8a]" />
                   </IconButton>
                 </Tooltip>
                 <AccountPopup

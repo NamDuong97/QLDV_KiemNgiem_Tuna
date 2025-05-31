@@ -270,7 +270,6 @@ const FormThongTinMau = (props: FormThongTinMauProps) => {
     );
 
     const updatedMau = [...dataPhieuDangky?.Maus];
-
     const MaDm_Mau = dataDMMau.find(
       (item: any) => item.tenMau === data.tenMau
     ).maId;

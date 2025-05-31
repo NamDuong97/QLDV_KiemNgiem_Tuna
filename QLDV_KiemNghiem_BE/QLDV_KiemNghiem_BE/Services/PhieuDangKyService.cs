@@ -111,6 +111,7 @@ namespace QLDV_KiemNghiem_BE.Services
                     mauDomain.MaPdkMau = mauDomain.TenMau + "_" + mauDomain.Madv + "_" + PublicFunc.getTimeSystem() + "_" + mauDomain.ThoiGianTieuChuan.ToString();
                     mauDomain.NgayTao = DateTime.Now;
                     // Thêm hình ảnh vào CSDL
+                    Console.WriteLine("So luong hinh anh trong mau: " + mau.PhieuDangKyMauHinhAnhs.Count);
                     foreach (var img in mau.PhieuDangKyMauHinhAnhs)
                     {
                         PhieuDangKyMauHinhAnh hinhAnh = new PhieuDangKyMauHinhAnh();
@@ -118,6 +119,7 @@ namespace QLDV_KiemNghiem_BE.Services
                         hinhAnh.MaId = Guid.NewGuid().ToString();
                         hinhAnh.MaMau = mauDomain.MaId;
                         hinhAnh.NgayTao = DateTime.Now;
+                        Console.WriteLine("Them anh: " + hinhAnh.Ten);
                         _repositoryManager.PhieuDangKyMauHinhAnh.CreatePhieuDangKyMauHinhAnhAsync(hinhAnh);
                     }
                     _repositoryManager.PhieuDangKyMau.CreatePhieuDangKyMauAsync(mauDomain);
@@ -127,8 +129,8 @@ namespace QLDV_KiemNghiem_BE.Services
             {
                 return false;
             }
-          
-            if(phieuDangKyDto.PhieuDangKyPhuLieuHoaChats.Count()> 0)
+
+            if (phieuDangKyDto.PhieuDangKyPhuLieuHoaChats.Count() > 0)
             {
                 // Them danh sach plhc vao CSDL
                 foreach (var plhc in phieuDangKyDto.PhieuDangKyPhuLieuHoaChats)
@@ -140,11 +142,12 @@ namespace QLDV_KiemNghiem_BE.Services
                     phieuDangKyPhuLieuHoaChatDomain.NgayTao = DateTime.Now;
                     _repositoryManager.PhieuDangKyPhuLieuHoaChat.CreatePhieuDangKyPhuLieuHoaChatAsync(phieuDangKyPhuLieuHoaChatDomain);
                 }
-            }else
+            }
+            else
             {
                 return false;
             }
-            
+
             _repositoryManager.PhieuDangKy.CreatePhieuDangKyAsync(phieuDangKyDomain);
             // Ghi vao CSDL
             bool check = await _repositoryManager.SaveChangesAsync();

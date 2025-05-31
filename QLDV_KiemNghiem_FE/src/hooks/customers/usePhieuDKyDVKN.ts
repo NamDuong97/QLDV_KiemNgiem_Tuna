@@ -1,4 +1,4 @@
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQueries, useQuery } from "@tanstack/react-query";
 import PhieuDKyDVKN_Services from "../../services/customers/PhieuDKyDVKN_Services";
 
 interface Props {
@@ -11,19 +11,29 @@ interface Props {
 }
 
 export const useGetPhieuDangKyKiemNghiemByTrangThai = (props: Props) => {
-  const { queryKey, maTrangThaiPhieuDangKy, maKH } = props;
-  return useQuery({
-    queryKey: [queryKey],
-    queryFn: async () => {
-      const params = {
-        maKH: maKH,
-        maTrangThaiPhieuDangKy: maTrangThaiPhieuDangKy,
-      };
-      const response =
-        await PhieuDKyDVKN_Services.getPhieuDangKyKiemNghiemByTrangThai(params);
-      return response;
-    },
+  const { queryKey, maKH } = props;
+  const trangThaiIDs = ["TT01", "TT02", "TT03", "TT04", "TT05"];
+  const results = useQueries({
+    queries: trangThaiIDs.map((id) => ({
+      queryKey: [queryKey, id],
+      queryFn: async () => {
+        const params = {
+          maKH: maKH,
+          maTrangThaiPhieuDangKy: id,
+        };
+
+        const response =
+          await PhieuDKyDVKN_Services.getPhieuDangKyKiemNghiemByTrangThai(
+            params
+          );
+        return response;
+      },
+    })),
   });
+  return {
+    data: results.flatMap((r) => r || []),
+    isLoading: results.some((r) => r.isLoading),
+  };
 };
 
 export const useGetDmMauAll = (props: Props) => {
