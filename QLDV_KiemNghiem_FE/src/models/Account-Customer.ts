@@ -3,6 +3,13 @@ export enum statusAccount {
   retired = "Đã Hủy",
 }
 
+export const keyTag = {
+  Cho_Xu_Ly: "cho-xu-ly",
+  Da_Duyet: "da-duyet",
+  Dang_Kiem_Nghiem: "dang-kiem-nghiem",
+  Hoan_Thanh: "hoan-thanh",
+};
+
 export interface FormAccountCustomerLogin {
   username: string;
   password: string;

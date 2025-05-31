@@ -1,44 +1,51 @@
+import { Suspense, lazy } from "react";
 import { Route, Routes } from "react-router";
 import { APP_ROUTES } from "../constants/routers";
-import Dashboard from "../pages/admin/dashboard";
-import LoginPage from "../pages/admin/login";
-import ForGotPasswordPage from "../pages/admin/forgot-password";
-import ListEmployeeManager from "../pages/admin/employee-manager";
-import PositionManager from "../pages/admin/position-manager";
-import CustomerManager from "../pages/admin/customer-manager";
-import CustomerProfileManager from "../pages/admin/customer-profile-manager";
-import AccountTypeManager from "../pages/admin/account-type";
-import AccountManager from "../pages/admin/account";
-import DivisionManager from "../pages/admin/division";
-import DepartmentManager from "../pages/admin/department";
+
 import LayoutAdmin from "../pages/admin/layout-admin";
 import LayoutCustomer from "../pages/customer/layout";
-import Home from "../pages/customer/home";
-import FormSignUpDVKN from "../pages/customer/form-signup-DVKN";
-import CreateMau from "../pages/customer/form-signup-DVKN/create-mau";
-import EditMau from "../pages/customer/form-signup-DVKN/edit-mau";
-import PhieuDKyDVKN from "../pages/customer/manager/PhieuDKyDVKN";
-import Edit_PhieuDKyDVKN from "../pages/customer/manager/PhieuDKyDVKN/Edit_PhieuDKyDVKN";
-import PhieuDKyDVKN_CreateMau from "../pages/customer/manager/PhieuDKyDVKN/Edit_PhieuDKyDVKN/PhieuDKyDVKN_CreateMau";
-import PhieuDKyDVKN_EditMau from "../pages/customer/manager/PhieuDKyDVKN/Edit_PhieuDKyDVKN/PhieuDKyDVKN_EditMau";
-import QuanLyHoaDon from "../pages/customer/manager/QuanLyHoaDon";
 import LayoutCustomerManager from "../pages/customer/manager/layout";
-import QuanLyPhieuDKyDVHN from "../pages/admin/manager-phieudkydvkn";
-import ChiTietPhieuDKyDVKN from "../pages/admin/manager-phieudkydvkn/ChiTietPhieuDKyDVKN";
+import PhieuDKyDVKN from "../pages/customer/manager/phieuDKyDVKN";
+import QuanLyHoaDon from "../pages/customer/manager/quanLyHoaDon";
+import EditPhieuDKyDVKN from "../pages/customer/manager/phieuDKyDVKN/editPhieuDKyDVKN";
 
-interface Props {}
+const Dashboard = lazy(() => import("../pages/admin/dashboard"));
+const LoginPage = lazy(() => import("../pages/admin/login"));
+const ForGotPasswordPage = lazy(() => import("../pages/admin/forgot-password"));
+// const ListEmployeeManager = lazy(
+//   () => import("../pages/admin/employee-manager")
+// );
+// const PositionManager = lazy(() => import("../pages/admin/position-manager"));
+// const CustomerManager = lazy(() => import("../pages/admin/customer-manager"));
+// const CustomerProfileManager = lazy(
+//   () => import("../pages/admin/customer-profile-manager")
+// );
+// const AccountTypeManager = lazy(() => import("../pages/admin/account-type"));
+// const AccountManager = lazy(() => import("../pages/admin/account"));
+// const DivisionManager = lazy(() => import("../pages/admin/division"));
+// const DepartmentManager = lazy(() => import("../pages/admin/department"));
 
-const Routers = (props: Props) => {
-  const {} = props;
+const Home = lazy(() => import("../pages/customer/home"));
+const FormSignUpDVKN = lazy(() => import("../pages/customer/formSignUpDVKN"));
+
+const QuanLyPhieuDKyDVHN = lazy(
+  () => import("../pages/admin/manager-phieudkydvkn")
+);
+const ChiTietPhieuDKyDVKN = lazy(
+  () => import("../pages/admin/manager-phieudkydvkn/ChiTietPhieuDKyDVKN")
+);
+
+const Routers = () => {
   return (
-    <div>
+    <Suspense>
       <Routes>
+        {/* Admin Routes */}
         <Route path="/tuna" element={<LayoutAdmin />}>
           <Route
             path={APP_ROUTES.TUNA_ADMIN.DASHBOARD.to}
             element={<Dashboard />}
           />
-          <Route
+          {/* <Route
             path={APP_ROUTES.TUNA_ADMIN.EMPLOYEE_MANAGER.to}
             element={<ListEmployeeManager />}
           />
@@ -69,7 +76,7 @@ const Routers = (props: Props) => {
           <Route
             path={APP_ROUTES.TUNA_ADMIN.ACCOUNT.to}
             element={<AccountManager />}
-          />
+          /> */}
           <Route
             path={APP_ROUTES.TUNA_ADMIN.LOGIN.to}
             element={<LoginPage />}
@@ -93,22 +100,15 @@ const Routers = (props: Props) => {
           />
         </Route>
 
+        {/* Customer Routes */}
         <Route element={<LayoutCustomer />}>
           <Route path={APP_ROUTES.TUNA_CUSTOMER.HOME.to} element={<Home />} />
           <Route
             path={APP_ROUTES.TUNA_CUSTOMER.FORM_SIGN_UP_DVKN.to}
             element={<FormSignUpDVKN />}
           />
-          <Route
-            path={APP_ROUTES.TUNA_CUSTOMER.CREATE_MAU.to}
-            element={<CreateMau />}
-          />
-          <Route
-            path={APP_ROUTES.TUNA_CUSTOMER.Edit_MAU.to}
-            element={<EditMau />}
-          />
 
-          {/* Trang Quản lý phía Khách hàng */}
+          {/* Customer Manager Pages */}
           <Route element={<LayoutCustomerManager />}>
             <Route
               path={APP_ROUTES.TUNA_CUSTOMER.PHIEU_DKY_DVKN.to}
@@ -121,19 +121,11 @@ const Routers = (props: Props) => {
           </Route>
           <Route
             path={APP_ROUTES.TUNA_CUSTOMER.EDIT_PHIEU_DKY_DVKN.to}
-            element={<Edit_PhieuDKyDVKN />}
-          />
-          <Route
-            path={APP_ROUTES.TUNA_CUSTOMER.EDIT_PHIEU_DKY_DVKN.CREATE_MAU.to}
-            element={<PhieuDKyDVKN_CreateMau />}
-          />
-          <Route
-            path={APP_ROUTES.TUNA_CUSTOMER.EDIT_PHIEU_DKY_DVKN.Edit_MAU.to}
-            element={<PhieuDKyDVKN_EditMau />}
+            element={<EditPhieuDKyDVKN />}
           />
         </Route>
       </Routes>
-    </div>
+    </Suspense>
   );
 };
 

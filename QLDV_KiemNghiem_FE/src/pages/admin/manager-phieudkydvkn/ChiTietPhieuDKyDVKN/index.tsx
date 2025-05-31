@@ -8,17 +8,20 @@ import DetailPLHCs from "./Detail-PLHC";
 import PopupHuyPhieu from "./PopupHuyPhieu";
 import PopupDuyetBo from "./PopupDuyetBo";
 import PopupTuChoiPhongKHDT from "./PopupTuChoiPhongKHDT";
-//Chờ tiếp nhận xử lý, Chờ BLĐ xét duyệt
+import PopupPhanCongPhongCM from "./PopupPhanCongPhongCM";
+
 const ChiTietPhieuDKyDVKN = () => {
   const NameID = useLocation().pathname.split("/")[3];
   const [isTag, setIsTag] = useState(1);
-  const userName = "Ban lãnh đạo";
-  const statusPhongKHDT = "Chờ tiếp nhận xử lý"
+  const userName = "Phòng Kế Hoạch và Đầu Tư"; // "Phòng Kế Hoạch và Đầu Tư" || "Ban lãnh đạo"
+  const statusPhieuDKyDVKN = "Chờ BLĐ xét duyệt"; // "Chờ tiếp nhận xử lý" || "Chờ BLĐ xét duyệt"
 
   const HinhThucTraKQ = "Bưu điện";
   const [openPopupHuyPhieu, setOpenPopupHuyPhieu] = useState(false);
   const [openPopupDuyetBo, setOpenPopupDuyetBo] = useState(false);
   const [openPopupTuChoiPhongKHDT, setOpenPopupTuChoiPhongKHDT] =
+    useState(false);
+  const [openPopupPhanCongPhongCM, setOpenPopupPhanCongPhongCM] =
     useState(false);
 
   const handleClickOpenPopupHuyPhieu = () => {
@@ -33,6 +36,10 @@ const ChiTietPhieuDKyDVKN = () => {
     setOpenPopupTuChoiPhongKHDT(true);
   };
 
+  const handleClickOpenPopupPhanCongPhongCM = () => {
+    setOpenPopupPhanCongPhongCM(true);
+  };
+
   const handleClosePopupDuyetBo = () => {
     setOpenPopupDuyetBo(false);
   };
@@ -45,59 +52,101 @@ const ChiTietPhieuDKyDVKN = () => {
     setOpenPopupTuChoiPhongKHDT(false);
   };
 
+  const handleClosePopupPhanCongPhongCM = () => {
+    setOpenPopupPhanCongPhongCM(false);
+  };
+
   const handleShowByUserName = () => {
     switch (userName as string) {
       case "Phòng Kế Hoạch và Đầu Tư": {
-        return (
-          <div className="pt-6 flex justify-between">
-            <div>
-              <p className="text-2xl/6 font-bold text-gray-800">{NameID}</p>
-            </div>
-            <div className="flex gap-4">
-              <button
-                onClick={handleClickOpenPopupHuyPhieu}
-                className="px-6 py-3 text-base/4 font-medium text-white bg-yellow-400 border-[2px] border-solid border-gray-300 rounded-[6px] shadow-[0_4px_4px_rgba(0,0,0,0.25)] hover:bg-yellow-500 cursor-pointer"
-              >
-                Từ chối tiếp nhận
-              </button>
-              <button
-                onClick={handleClickOpenPopupDuyetBo}
-                className="px-6 py-3 text-base/4 font-medium text-white bg-blue-500 border-[2px] border-solid border-gray-300 rounded-[6px] shadow-[0_4px_4px_rgba(0,0,0,0.25)] hover:bg-blue-600 cursor-pointer"
-              >
-                Duyệt sơ bộ
-              </button>
-            </div>
-          </div>
-        );
+        switch (statusPhieuDKyDVKN as string) {
+          case "Chờ tiếp nhận xử lý":
+            return (
+              <div className="pt-6 flex justify-between items-center">
+                <div>
+                  <p className="text-2xl/6 font-bold text-gray-800">{NameID}</p>
+                </div>
+                <div className="flex gap-4">
+                  <button
+                    onClick={handleClickOpenPopupHuyPhieu}
+                    className="px-6 py-3 text-base/4 font-medium text-white bg-yellow-400 border-[2px] border-solid border-gray-300 rounded-[6px] shadow-[0_4px_4px_rgba(0,0,0,0.25)] hover:bg-yellow-500 cursor-pointer"
+                  >
+                    Từ chối tiếp nhận
+                  </button>
+                  <button
+                    onClick={handleClickOpenPopupDuyetBo}
+                    className="px-6 py-3 text-base/4 font-medium text-white bg-blue-500 border-[2px] border-solid border-gray-300 rounded-[6px] shadow-[0_4px_4px_rgba(0,0,0,0.25)] hover:bg-blue-600 cursor-pointer"
+                  >
+                    Duyệt sơ bộ
+                  </button>
+                </div>
+              </div>
+            );
+          case "Chờ BLĐ xét duyệt":
+            return (
+              <div className="pt-6 flex justify-between items-center">
+                <div>
+                  <p className="text-2xl/6 font-bold text-gray-800">{NameID}</p>
+                </div>
+                <div className="flex gap-4">
+                  <button
+                    onClick={handleClickOpenPopupPhanCongPhongCM}
+                    className="px-6 py-3 text-base/4 font-medium bg-teal-600 text-white hover:bg-teal-700 border-[2px] border-solid border-gray-300 rounded-[6px] shadow-[0_4px_4px_rgba(0,0,0,0.25)] cursor-pointer"
+                  >
+                    Phân Công Phòng Chuyên Môn
+                  </button>
+                </div>
+              </div>
+            );
+          default:
+            return (
+              <div className="pt-6 flex justify-between items-center">
+                <div>
+                  <p className="text-2xl/6 font-bold text-gray-800">{NameID}</p>
+                </div>
+              </div>
+            );
+        }
       }
       case "Ban lãnh đạo": {
-        return (
-          <div className="pt-6 flex justify-between">
-            <div>
-              <p className="text-2xl/6 font-bold text-gray-800">{NameID}</p>
-            </div>
-            <div className="flex gap-4">
-              <button
-                onClick={handleClickOpenPopupTuChoiPhongKHDT}
-                className="px-6 py-3 text-base/4 font-medium text-white bg-green-400 border-[2px] border-solid border-gray-300 rounded-[6px] shadow-[0_4px_4px_rgba(0,0,0,0.25)] hover:bg-green-500 cursor-pointer"
-              >
-                Thông báo từ chối
-              </button>
-              <button
-                onClick={handleClickOpenPopupHuyPhieu}
-                className="px-6 py-3 text-base/4 font-medium text-white bg-yellow-400 border-[2px] border-solid border-gray-300 rounded-[6px] shadow-[0_4px_4px_rgba(0,0,0,0.25)] hover:bg-yellow-500 cursor-pointer"
-              >
-                Từ chối tiếp nhận
-              </button>
-              <button
-                onClick={handleClickOpenPopupDuyetBo}
-                className="px-6 py-3 text-base/4 font-medium text-white bg-blue-500 border-[2px] border-solid border-gray-300 rounded-[6px] shadow-[0_4px_4px_rgba(0,0,0,0.25)] hover:bg-blue-600 cursor-pointer"
-              >
-                Phê duyệt
-              </button>
-            </div>
-          </div>
-        );
+        switch (statusPhieuDKyDVKN as string) {
+          case "Chờ BLĐ xét duyệt":
+            return (
+              <div className="pt-6 flex justify-between items-center">
+                <div>
+                  <p className="text-2xl/6 font-bold text-gray-800">{NameID}</p>
+                </div>
+                <div className="flex gap-4">
+                  <button
+                    onClick={handleClickOpenPopupTuChoiPhongKHDT}
+                    className="px-6 py-3 text-base/4 font-medium text-white bg-green-400 border-[2px] border-solid border-gray-300 rounded-[6px] shadow-[0_4px_4px_rgba(0,0,0,0.25)] hover:bg-green-500 cursor-pointer"
+                  >
+                    Thông báo từ chối
+                  </button>
+                  <button
+                    onClick={handleClickOpenPopupHuyPhieu}
+                    className="px-6 py-3 text-base/4 font-medium text-white bg-yellow-400 border-[2px] border-solid border-gray-300 rounded-[6px] shadow-[0_4px_4px_rgba(0,0,0,0.25)] hover:bg-yellow-500 cursor-pointer"
+                  >
+                    Từ chối tiếp nhận
+                  </button>
+                  <button
+                    onClick={handleClickOpenPopupDuyetBo}
+                    className="px-6 py-3 text-base/4 font-medium text-white bg-blue-500 border-[2px] border-solid border-gray-300 rounded-[6px] shadow-[0_4px_4px_rgba(0,0,0,0.25)] hover:bg-blue-600 cursor-pointer"
+                  >
+                    Phê duyệt
+                  </button>
+                </div>
+              </div>
+            );
+          default:
+            return (
+              <div className="pt-6 flex justify-between items-center">
+                <div>
+                  <p className="text-2xl/6 font-bold text-gray-800">{NameID}</p>
+                </div>
+              </div>
+            );
+        }
       }
     }
   };
@@ -366,6 +415,10 @@ const ChiTietPhieuDKyDVKN = () => {
       <PopupTuChoiPhongKHDT
         open={openPopupTuChoiPhongKHDT}
         handleClose={handleClosePopupTuChoiPhongKHDT}
+      />
+      <PopupPhanCongPhongCM
+        open={openPopupPhanCongPhongCM}
+        handleClose={handleClosePopupPhanCongPhongCM}
       />
     </motion.div>
   );

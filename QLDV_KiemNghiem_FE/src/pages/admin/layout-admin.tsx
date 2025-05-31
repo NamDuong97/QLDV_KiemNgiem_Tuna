@@ -1,5 +1,5 @@
 import { Box } from "@mui/material";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import ThemeRegistry from "../../configs/ThemeRegistry";
 import { Outlet, useLocation } from "react-router";
 import SideBar from "../../components/Sidebar";
@@ -26,9 +26,9 @@ export default function LayoutAdmin() {
     setOpenPopupThongBaoPhieuDKDVKN(false);
   };
 
-  useEffect(() => {
-    setOpenPopupThongBaoPhieuDKDVKN(true);
-  }, []);
+  // useEffect(() => {
+  //   setOpenPopupThongBaoPhieuDKDVKN(true);
+  // }, []);
 
   return (
     <ThemeRegistry>

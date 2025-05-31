@@ -1,4 +1,4 @@
-import { Avatar, Box, Button, Popover } from "@mui/material";
+import { Avatar, Box, Popover } from "@mui/material";
 import { DataMessenger } from "../../../models/dataMessenger";
 import { ImHappy } from "react-icons/im";
 import { GoDotFill } from "react-icons/go";

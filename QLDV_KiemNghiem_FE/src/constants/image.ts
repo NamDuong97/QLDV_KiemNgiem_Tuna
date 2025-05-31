@@ -16,10 +16,12 @@ import imageClick from "../asset/img/click.svg";
 import imageDefault from "../asset/img/image_defaulf.jpg";
 import imageLogo from "../asset/img/logo-cicle.png";
 import imageBanner from "../asset/img/Banner-Header.png";
+import imageTunaLogo from "../asset/img/tuna_logo.png";
 
 export const image = {
   imageClick,
   imageDefault,
   imageLogo,
   imageBanner,
+  imageTunaLogo,
 };

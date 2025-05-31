@@ -3,9 +3,8 @@ import { useState } from "react";
 // import { useLocation, useNavigate } from "react-router";
 import { Align } from "../../../../models/Table";
 import TableQuanLyHoaDon from "./Table";
-import PopupBoloc from "./PopupBoloc";
 import { motion } from "motion/react";
-
+import PopupBoloc from "./popupBoloc";
 
 const tableHead = [
   {

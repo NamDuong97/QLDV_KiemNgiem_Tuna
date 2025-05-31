@@ -15,11 +15,9 @@ interface InputsProps {
   defaultValue?: string;
   inputRef?: any;
   errorMessage?: string | null;
-  isShowError?: boolean;
   className?: string;
   readOnly?: any;
   onFocus?: (e: any) => void;
-  autocomplete?: any;
   disabled?: boolean;
   sx?: SxProps<Theme>;
   height?: string;
@@ -35,9 +33,7 @@ export const Inputs = (props: InputsProps) => {
     defaultValue,
     inputRef,
     errorMessage,
-    // isShowError,
     readOnly,
-    // autocomplete,
     onFocus,
     disabled,
     className,

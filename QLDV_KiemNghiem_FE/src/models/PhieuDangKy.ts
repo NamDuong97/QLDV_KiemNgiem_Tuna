@@ -1,31 +1,7 @@
 // import { FormMau } from "./mau";
 
-import { FormMau } from "./mau";
-import { FormPhuLieuHoaChat } from "./PhuLieuHoaChat";
-
-export interface PhieuDangKy {
-  MaID?: string;
-  MaKH?: string;
-  ManvNhanMau?: string;
-  NguoiNhanMau?: string;
-  DonViGuiMau?: string;
-  NguoiGuiMau?: string;
-  SoDienThoai?: string;
-  Email?: string;
-  DiaChiLienHe?: string;
-  HinhThucGuiMau?: string;
-  HinhThucTraKQ?: string;
-  DiaChiGiaoMau?: string;
-  TrangThaiID?: string;
-  KetQuaTiengViet?: boolean;
-  KetQuaTiengAnh?: boolean;
-  NgayGiaoMau?: string;
-  NgayThucHien?: string;
-  NguoiSua?: string;
-  NgayTao?: string;
-  NgaySua?: string;
-}
-
+import { Maus } from "./mau";
+import { PhuLieuHoaChat } from "./PhuLieuHoaChat";
 export interface FormPhieuDangKy {
   DonViGuiMau: string;
   NguoiGuiMau: string;
@@ -35,23 +11,46 @@ export interface FormPhieuDangKy {
   HinhThucGuiMau: string;
   HinhThucTraKQ: string;
   DiaChiGiaoMau?: string;
-  KetQuaTiengAnh?: number;
+  KetQuaTiengAnh?: boolean;
   NgayGiaoMau: string;
+  Maus: Maus[];
+  PLHC: PhuLieuHoaChat[];
+}
+
+export interface FormPhieuDangKyTemp {
+  DonViGuiMau?: string;
+  NguoiGuiMau?: string;
+  SoDienThoai?: string;
+  Email?: string;
+  DiaChiLienHe?: string;
+  HinhThucGuiMau?: string;
+  HinhThucTraKQ?: string;
+  DiaChiGiaoMau?: string;
+  KetQuaTiengAnh?: boolean;
+  NgayGiaoMau?: string;
+  Maus?: Maus[];
+  PLHC?: PhuLieuHoaChat[];
 }
 
 export interface PhieuDangKy {
+  maId: string;
+  maKh: string;
+  manvNhanMau: string;
+  nguoiNhanMau: string;
   donViGuiMau: string;
   nguoiGuiMau: string;
   soDienThoai: string;
   email: string;
   diaChiLienHe: string;
   hinhThucGuiMau: string;
-  hinhThucTraKQ: string;
+  hinhThucTraKq: string;
   diaChiGiaoMau?: string;
-  ketQuaTiengAnh?: number;
+  trangThaiId: string;
+  ketQuaTiengAnh: boolean;
   ngayGiaoMau: string;
-  maus: FormMau[];
-  phieuDangKyPhuLieuHoaChats: FormPhuLieuHoaChat[];
+  ngayThucHien: string | null;
+  Maus: Maus[];
+  PhieuDangKyPhuLieuHoaChats: PhuLieuHoaChat[];
 }
 
 export interface FormBoLocPhieuDangKyChoXetDuyet {
@@ -59,9 +58,30 @@ export interface FormBoLocPhieuDangKyChoXetDuyet {
   NgayKetThuc: string;
 }
 
+export interface FormThemMauVaoDanhMuc {
+  tenMau: string;
+  maID: string;
+}
+
+export interface FormThemTieuChuanVaoDanhMuc {
+  tenTieuChuan: string;
+}
+
 export interface FormBoLocQuanLyPhieuDKyDVHN {
   trangThai?: string;
   maKH?: string;
   ngayBatDau?: string;
   ngayKetThuc?: string;
+}
+
+export interface ParamsPhieuDangKy {
+  trangThaiID?: string;
+  maKH?: string;
+  timeFrom?: string;
+  timeTo?: string;
+}
+
+export interface ParamsPhieuDangKyByTrangThai {
+  maTrangThaiPhieuDangKy?: string;
+  maKH?: string;
 }
