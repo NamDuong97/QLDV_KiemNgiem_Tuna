@@ -14,6 +14,14 @@ namespace QLDV_KiemNghiem_BE.DTO.AutoMapper
             CreateMap<ChiTieu, ChiTieuDto>().ReverseMap();
             CreateMap<PhuongPhap, PhuongPhapDto>().ReverseMap();
             CreateMap<PhieuDangKyMauHinhAnh, PhieuDangKyMauHinhAnhDto>().ReverseMap();
+            CreateMap<DmMau, DmMauDto>().ReverseMap();
+            CreateMap<DmPhuLieuHoaChat, DmPhuLieuHoaChatDto>().ReverseMap();
+            CreateMap<LoaiDichVu, LoaiDichVuDto>().ReverseMap();
+            CreateMap<TrangThaiPhieuDk, TrangThaiPhieuDkDto>().ReverseMap();
+            CreateMap<BoPhan, BoPhanDto>().ReverseMap();
+            CreateMap<ChucVu, ChucVuDto>().ReverseMap();
+            CreateMap<Khoa, KhoaDto>().ReverseMap();
+            CreateMap<LoaiMau, LoaiMauDto>().ReverseMap();
         }
     }
 }

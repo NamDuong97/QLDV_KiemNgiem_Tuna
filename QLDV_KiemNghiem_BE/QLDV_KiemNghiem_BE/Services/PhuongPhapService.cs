@@ -32,6 +32,8 @@ namespace QLDV_KiemNghiem_BE.Services
         public async Task<bool> CreatePhuongPhapAsync(PhuongPhapDto phuongPhapDto)
         {
             var phuongPhapDomain = _mapper.Map<PhuongPhap>(phuongPhapDto);
+            phuongPhapDomain.MaId = Guid.NewGuid().ToString();
+            phuongPhapDomain.NgayTao = DateTime.Now;
             _repositoryManager.PhuongPhap.CreatePhuongPhapAsync(phuongPhapDomain);
             bool check = await _repositoryManager.SaveChangesAsync();
             return check;

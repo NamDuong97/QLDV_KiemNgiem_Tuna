@@ -30,6 +30,7 @@ namespace QLDV_KiemNghiem_BE.Services
         public async Task<bool> CreatePhieuDangKyMauHinhAnhAsync(PhieuDangKyMauHinhAnhDto PhieuDangKyMauHinhAnh)
         {
             var PhieuDangKyMauHinhAnhDomain = _mapper.Map<PhieuDangKyMauHinhAnh>(PhieuDangKyMauHinhAnh);
+            PhieuDangKyMauHinhAnhDomain.MaId = Guid.NewGuid().ToString();
             _repositoryManager.PhieuDangKyMauHinhAnh.CreatePhieuDangKyMauHinhAnhAsync(PhieuDangKyMauHinhAnhDomain);
             bool check = await _repositoryManager.SaveChangesAsync();
             return check;

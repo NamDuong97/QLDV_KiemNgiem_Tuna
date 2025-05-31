@@ -39,6 +39,7 @@ namespace QLDV_KiemNghiem_BE.Services
             // Khoi tao 1 ob PhieuDangKyMauDomain moi kem ID tu dong tang
             PhieuDangKyMau PhieuDangKyMauDomain = new PhieuDangKyMau();
             PhieuDangKyMauDomain = _mapper.Map<PhieuDangKyMau>(PhieuDangKyMauDto);
+            PhieuDangKyMauDomain.MaId = Guid.NewGuid().ToString();
             _repositoryManager.PhieuDangKyMau.CreatePhieuDangKyMauAsync(PhieuDangKyMauDomain);
             // kiem tra neu co hinh anh gui len hay k
             if (PhieuDangKyMauDto.PhieuDangKyMauHinhAnhs.Count() > 0)

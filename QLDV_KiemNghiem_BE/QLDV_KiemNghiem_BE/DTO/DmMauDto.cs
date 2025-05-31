@@ -5,7 +5,7 @@ namespace QLDV_KiemNghiem_BE.DTO
 {
     public class DmMauDto
     {
-        public string MaId { get; set; } = null!;
+        public string? MaId { get; set; }
 
         [StringLength(50)]
         public string? TenMau { get; set; }

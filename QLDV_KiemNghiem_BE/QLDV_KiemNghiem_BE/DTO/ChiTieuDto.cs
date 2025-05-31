@@ -5,7 +5,7 @@ namespace QLDV_KiemNghiem_BE.DTO
 {
     public class ChiTieuDto
     {
-        public string MaId { get; set; } = null!;
+        public string? MaId { get; set; }
 
         [StringLength(200)]
         public string? MaChiTieu { get; set; }

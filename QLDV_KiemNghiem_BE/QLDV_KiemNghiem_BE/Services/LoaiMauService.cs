@@ -31,6 +31,7 @@ namespace QLDV_KiemNghiem_BE.Services
         public async Task<bool> CreateLoaiMauAsync(LoaiMauDto LoaiMauDto)
         {
             var LoaiMauDomain = _mapper.Map<LoaiMau>(LoaiMauDto);
+            LoaiMauDomain.MaId = Guid.NewGuid().ToString();
             _repositoryManager.LoaiMau.CreateLoaiMauAsync(LoaiMauDomain);
             bool check = await _repositoryManager.SaveChangesAsync();
             return check;

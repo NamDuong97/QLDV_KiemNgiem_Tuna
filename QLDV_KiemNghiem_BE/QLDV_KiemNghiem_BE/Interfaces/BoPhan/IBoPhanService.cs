@@ -7,8 +7,8 @@ namespace QLDV_KiemNghiem_BE.Interfaces
     {
         Task<IEnumerable<BoPhanDto>> GetBoPhansAllAsync();
         Task<BoPhanDto?> FindBoPhanAsync(string maBoPhan);
-        Task<bool> CreateBoPhanAsync(BoPhan BoPhan);
-        Task<bool> UpdateBoPhanAsync(BoPhan BoPhan);
+        Task<bool> CreateBoPhanAsync(BoPhanDto BoPhan);
+        Task<bool> UpdateBoPhanAsync(BoPhanDto BoPhan);
         Task<bool> DeleteBoPhanAsync(BoPhan BoPhan);
     }
 }

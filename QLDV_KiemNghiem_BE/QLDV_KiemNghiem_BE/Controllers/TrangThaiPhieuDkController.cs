@@ -52,7 +52,7 @@ namespace QLDV_KiemNghiem_BE.Controllers
         [Route("createTrangThaiPhieuDk")]
         public async Task<ActionResult> createTrangThaiPhieuDk(TrangThaiPhieuDkDto TrangThaiPhieuDkDto)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
                 var errors = ModelState.Values
                 .SelectMany(v => v.Errors)
@@ -78,7 +78,7 @@ namespace QLDV_KiemNghiem_BE.Controllers
         [Route("updateTrangThaiPhieuDk")]
         public async Task<ActionResult> updateTrangThaiPhieuDk(TrangThaiPhieuDkDto TrangThaiPhieuDkDto)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
                 var errors = ModelState.Values
                 .SelectMany(v => v.Errors)

@@ -98,8 +98,8 @@ namespace QLDV_KiemNghiem_BE.Services
             phieuDangKyDomain = _mapper.Map<PhieuDangKy>(phieuDangKyDto);
             phieuDangKyDomain.MaId = Guid.NewGuid().ToString();
             phieuDangKyDomain.TrangThaiId = "TT01";
-          
-            if(phieuDangKyDto?.Maus?.Count() > 0)
+            phieuDangKyDomain.NgayTao = DateTime.Now;
+            if (phieuDangKyDto?.Maus?.Count() > 0)
             {
                 // Them danh sach mau vao CSDL
                 foreach (var mau in phieuDangKyDto.Maus)

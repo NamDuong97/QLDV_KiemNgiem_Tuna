@@ -93,7 +93,7 @@ namespace QLDV_KiemNghiem_BE.Controllers
         [Route("updatePhieuDangKy")]
         public async Task<ActionResult> updatePhieuDangKy(PhieuDangKyDto phieuDangKyDto)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
                 var errors = ModelState.Values
                 .SelectMany(v => v.Errors)

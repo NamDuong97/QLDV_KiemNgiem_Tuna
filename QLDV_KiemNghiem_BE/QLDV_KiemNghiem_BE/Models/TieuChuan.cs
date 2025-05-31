@@ -12,7 +12,7 @@ public partial class TieuChuan
     [Key]
     [Column("MaID")]
     [StringLength(50)]
-    public string MaId { get; set; } = null!;
+    public string? MaId { get; set; }
 
     [StringLength(200)]
     public string? TenTieuChuan { get; set; }

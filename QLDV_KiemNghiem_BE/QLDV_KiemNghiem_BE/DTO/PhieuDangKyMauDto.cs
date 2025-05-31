@@ -6,7 +6,7 @@ namespace QLDV_KiemNghiem_BE.DTO
 {
     public class PhieuDangKyMauDto
     {
-        public string MaId { get; set; } = null!;
+        public string? MaId { get; set; }
 
         [Column("MaDm_Mau")]
         [StringLength(50)]

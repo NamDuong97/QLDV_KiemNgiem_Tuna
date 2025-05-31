@@ -22,8 +22,8 @@ namespace QLDV_KiemNghiem_BE.Controllers
         }
 
         [HttpGet]
-        [Route("getMauAll")]
-        public async Task<ActionResult> getMauAll()
+        [Route("getPhieuDangKyMauAll")]
+        public async Task<ActionResult> getPhieuDangKyMauAll()
         {
             var result = await _service.PhieuDangKyMau.GetPhieuDangKyMauAllAsync();
             _logger.LogDebug("get toan bo phieu dang ky");
@@ -31,8 +31,8 @@ namespace QLDV_KiemNghiem_BE.Controllers
         }
 
         [HttpGet]
-        [Route("getMau")]
-        public async Task<ActionResult> getMau(string maMau)
+        [Route("getPhieuDangKyMau")]
+        public async Task<ActionResult> getPhieuDangKyMau(string maMau)
         {
             var result = await _service.PhieuDangKyMau.GetPhieuDangKyMauAsync(maMau);
             _logger.LogDebug("lay tieu chuan can tim: " + maMau);
@@ -40,10 +40,10 @@ namespace QLDV_KiemNghiem_BE.Controllers
         }
 
         [HttpPost]
-        [Route("createMau")]
-        public async Task<ActionResult> createMau(PhieuDangKyMauDto mauDto)
+        [Route("createPhieuDangKyMau")]
+        public async Task<ActionResult> createPhieuDangKyMau(PhieuDangKyMauDto mauDto)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
                 var errors = ModelState.Values
                 .SelectMany(v => v.Errors)
@@ -71,10 +71,10 @@ namespace QLDV_KiemNghiem_BE.Controllers
         }
 
         [HttpPut]
-        [Route("updateMau")]
-        public async Task<ActionResult> updateMau(PhieuDangKyMauDto MauDto)
+        [Route("updatePhieuDangKyMau")]
+        public async Task<ActionResult> updatePhieuDangKyMau(PhieuDangKyMauDto MauDto)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
                 var errors = ModelState.Values
                 .SelectMany(v => v.Errors)
@@ -97,8 +97,8 @@ namespace QLDV_KiemNghiem_BE.Controllers
         }
 
         [HttpDelete]
-        [Route("deleteMau")]
-        public async Task<ActionResult> deleteMau(PhieuDangKyMau Mau)
+        [Route("deletePhieuDangKyMau")]
+        public async Task<ActionResult> deletePhieuDangKyMau(PhieuDangKyMau Mau)
         {
             var checkExists = await _service.PhieuDangKyMau.GetPhieuDangKyMauAsync(Mau.MaId);
             if (checkExists != null)

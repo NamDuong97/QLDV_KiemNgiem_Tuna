@@ -37,6 +37,7 @@ namespace QLDV_KiemNghiem_BE.Services
         public async Task<bool> CreateDmMauAsync(DmMauDto DmMauDto)
         {
             var DmMauDomain = _mapper.Map<DmMau>(DmMauDto);
+            DmMauDomain.MaId = Guid.NewGuid().ToString();
             _repositoryManager.DmMau.CreateDmMauAsync(DmMauDomain);
             bool check = await _repositoryManager.SaveChangesAsync();
             return check;

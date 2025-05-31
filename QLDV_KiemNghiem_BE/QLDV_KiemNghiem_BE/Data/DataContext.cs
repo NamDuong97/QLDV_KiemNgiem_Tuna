@@ -42,8 +42,6 @@ public partial class DataContext : DbContext
 
     public virtual DbSet<DmPhuLieuHoaChat> DmPhuLieuHoaChats { get; set; }
 
-    public virtual DbSet<DuocDien> DuocDiens { get; set; }
-
     public virtual DbSet<HoaDonMuaPlhc> HoaDonMuaPlhcs { get; set; }
 
     public virtual DbSet<HoaDonMuaPlhcchiTiet> HoaDonMuaPlhcchiTiets { get; set; }
@@ -230,11 +228,6 @@ public partial class DataContext : DbContext
         modelBuilder.Entity<DmPhuLieuHoaChat>(entity =>
         {
             entity.HasKey(e => e.MaId).HasName("PK__Dm_PhuLi__2725BF408A556418");
-        });
-
-        modelBuilder.Entity<DuocDien>(entity =>
-        {
-            entity.HasKey(e => e.MaId).HasName("PK_Duocdien_265");
         });
 
         modelBuilder.Entity<HoaDonMuaPlhc>(entity =>

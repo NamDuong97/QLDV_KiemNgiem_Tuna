@@ -47,7 +47,7 @@ namespace QLDV_KiemNghiem_BE.Controllers
         [Route("createDmPhuLieuHoaChat")]
         public async Task<ActionResult> createDmPhuLieuHoaChat(DmPhuLieuHoaChatDto dmPhuLieuHoaChat)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
                 var errors = ModelState.Values
                 .SelectMany(v => v.Errors)
@@ -74,7 +74,7 @@ namespace QLDV_KiemNghiem_BE.Controllers
         [Route("updateDmPhuLieuHoaChat")]
         public async Task<ActionResult> updateDmPhuLieuHoaChat(DmPhuLieuHoaChatDto dmPhuLieuHoaChat)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
                 var errors = ModelState.Values
                 .SelectMany(v => v.Errors)

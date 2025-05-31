@@ -52,7 +52,7 @@ namespace QLDV_KiemNghiem_BE.Controllers
         [Route("createTieuChuan")]
         public async Task<ActionResult> createTieuChuan(TieuChuanDto tieuChuanDto)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
                 var errors = ModelState.Values
                 .SelectMany(v => v.Errors)
@@ -78,7 +78,7 @@ namespace QLDV_KiemNghiem_BE.Controllers
         [Route("updateTieuChuan")]
         public async Task<ActionResult> updateTieuChuan(TieuChuanDto tieuChuanDto)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
                 var errors = ModelState.Values
                 .SelectMany(v => v.Errors)

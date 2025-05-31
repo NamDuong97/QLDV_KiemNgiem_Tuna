@@ -43,7 +43,7 @@ namespace QLDV_KiemNghiem_BE.Controllers
         [Route("createLoaiDichVu")]
         public async Task<ActionResult> createLoaiDichVu(LoaiDichVuDto LoaiDichVuDto)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
                 var errors = ModelState.Values
                 .SelectMany(v => v.Errors)
@@ -69,7 +69,7 @@ namespace QLDV_KiemNghiem_BE.Controllers
         [Route("updateLoaiDichVu")]
         public async Task<ActionResult> updateLoaiDichVu(LoaiDichVuDto LoaiDichVuDto)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
                 var errors = ModelState.Values
                 .SelectMany(v => v.Errors)
