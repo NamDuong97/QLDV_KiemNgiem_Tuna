@@ -129,7 +129,11 @@ public partial class DataContext : DbContext
     public virtual DbSet<TrangThaiPhieuDk> TrangThaiPhieuDks { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        => optionsBuilder.UseSqlServer("Name=DefaultConnection");
+    {
+        optionsBuilder.UseSqlServer("Name=DefaultConnection");
+        optionsBuilder.EnableSensitiveDataLogging();
+    }
+
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

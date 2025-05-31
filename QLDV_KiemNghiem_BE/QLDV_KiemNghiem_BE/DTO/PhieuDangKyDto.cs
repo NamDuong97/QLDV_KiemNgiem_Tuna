@@ -67,10 +67,7 @@ namespace QLDV_KiemNghiem_BE.DTO
         [DataType(DataType.DateTime, ErrorMessage = "Ngày sửa không hợp lệ")]
         public DateTime? NgaySua { get; set; }
         public string? SoDkpt { get; set; }
-
         public List<PhieuDangKyMauDto> Maus { get; set; } = new List<PhieuDangKyMauDto>();
-
         public IEnumerable<PhieuDangKyPhuLieuHoaChatDto> PhieuDangKyPhuLieuHoaChats { get; set; } = new List<PhieuDangKyPhuLieuHoaChatDto>();
-        
     }
 }
