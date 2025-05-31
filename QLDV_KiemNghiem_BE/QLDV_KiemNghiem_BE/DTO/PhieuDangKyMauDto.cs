@@ -84,7 +84,6 @@ namespace QLDV_KiemNghiem_BE.DTO
         [Column("LoaiDV")]
         [StringLength(50)]
         public string? LoaiDv { get; set; }
-
         public ICollection<PhieuDangKyMauHinhAnhDto> PhieuDangKyMauHinhAnhs { get; set; } = new List<PhieuDangKyMauHinhAnhDto>();
     }
 }

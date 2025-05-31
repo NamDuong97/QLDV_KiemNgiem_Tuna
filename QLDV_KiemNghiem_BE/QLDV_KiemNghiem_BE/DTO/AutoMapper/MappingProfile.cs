@@ -7,13 +7,15 @@ namespace QLDV_KiemNghiem_BE.DTO.AutoMapper
     {
         public MappingProfile()
         {
-            CreateMap<PhieuDangKy, PhieuDangKyDto>().ReverseMap();
-            CreateMap<PhieuDangKyMau, PhieuDangKyMauDto>().ReverseMap();
+            CreateMap<PhieuDangKy, PhieuDangKyDto>().ReverseMap().ForMember(dest => dest.PhieuDangKyMaus, opt => opt.Ignore());
+            CreateMap<PhieuDangKyMau, PhieuDangKyMauDto>().ReverseMap().ForMember(dest => dest.PhieuDangKyMauHinhAnhs, opt => opt.Ignore());
             CreateMap<PhieuDangKyPhuLieuHoaChat, PhieuDangKyPhuLieuHoaChatDto>().ReverseMap();
             CreateMap<TieuChuan, TieuChuanDto>().ReverseMap();
             CreateMap<ChiTieu, ChiTieuDto>().ReverseMap();
             CreateMap<PhuongPhap, PhuongPhapDto>().ReverseMap();
             CreateMap<PhieuDangKyMauHinhAnh, PhieuDangKyMauHinhAnhDto>().ReverseMap();
+                //.ForMember(dest => dest.MaId, opt => opt.Ignore()) // tránh ánh xạ lại ID cũ
+                //.ForMember(dest => dest.MaMau, opt => opt.Ignore());
             CreateMap<DmMau, DmMauDto>().ReverseMap();
             CreateMap<DmPhuLieuHoaChat, DmPhuLieuHoaChatDto>().ReverseMap();
             CreateMap<LoaiDichVu, LoaiDichVuDto>().ReverseMap();

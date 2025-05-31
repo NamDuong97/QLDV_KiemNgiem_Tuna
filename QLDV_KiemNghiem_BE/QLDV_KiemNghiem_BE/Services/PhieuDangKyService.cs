@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.EntityFrameworkCore;
+using QLDV_KiemNghiem_BE.Data;
 using QLDV_KiemNghiem_BE.DTO;
 using QLDV_KiemNghiem_BE.DTO.Parameter;
 using QLDV_KiemNghiem_BE.Interfaces;
@@ -11,6 +13,7 @@ namespace QLDV_KiemNghiem_BE.Services
 {
     public class PhieuDangKyService : IPhieuDangKyService
     {
+        private readonly DataContext _context;
         private readonly IRepositoryManager _repositoryManager;
         private IMapper _mapper;
         public PhieuDangKyService(IRepositoryManager repositoryManager, IMapper mapper)
@@ -111,13 +114,21 @@ namespace QLDV_KiemNghiem_BE.Services
                     mauDomain.MaPdkMau = mauDomain.TenMau + "_" + mauDomain.Madv + "_" + PublicFunc.getTimeSystem() + "_" + mauDomain.ThoiGianTieuChuan.ToString();
                     mauDomain.NgayTao = DateTime.Now;
                     // Thêm hình ảnh vào CSDL
+                    Console.WriteLine("So luong hinh anh trong mau: " + mau.PhieuDangKyMauHinhAnhs.Count);
                     foreach (var img in mau.PhieuDangKyMauHinhAnhs)
                     {
-                        PhieuDangKyMauHinhAnh hinhAnh = new PhieuDangKyMauHinhAnh();
-                        hinhAnh = _mapper.Map<PhieuDangKyMauHinhAnh>(img);
-                        hinhAnh.MaId = Guid.NewGuid().ToString();
-                        hinhAnh.MaMau = mauDomain.MaId;
-                        hinhAnh.NgayTao = DateTime.Now;
+                        var hinhAnh = new PhieuDangKyMauHinhAnh
+                        {
+                            MaId = Guid.NewGuid().ToString(),
+                            MaMau = mauDomain.MaId,
+                            Ten = img.Ten,
+                            DinhDang = img.DinhDang,
+                            GhiChu = img.GhiChu,
+                            LoaiAnh = img.LoaiAnh,
+                            TrangThai = img.TrangThai,
+                            NguoiTao = img.NguoiTao,
+                            NgayTao = DateTime.Now
+                        };
                         _repositoryManager.PhieuDangKyMauHinhAnh.CreatePhieuDangKyMauHinhAnhAsync(hinhAnh);
                     }
                     _repositoryManager.PhieuDangKyMau.CreatePhieuDangKyMauAsync(mauDomain);
