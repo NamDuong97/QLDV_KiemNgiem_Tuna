@@ -10,7 +10,7 @@ import { FormBoLocHoaDon } from "../../../../../models/HoaDon";
 import { useForm } from "react-hook-form";
 import { useEffect, useMemo } from "react";
 import yup from "../../../../../configs/yup.custom";
-import InputSelectTrangThai from "./InputSelectTrangThai";
+import InputSelectTrangThai from "./InputSelectTrangThai/";
 
 interface Props {
   open: boolean;

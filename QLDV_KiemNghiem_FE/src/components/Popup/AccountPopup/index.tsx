@@ -41,9 +41,7 @@ const AccountPopup = (props: AccountPopupProps) => {
         <Box
           className="flex gap-2 items-center hover:bg-[rgb(230,236,246)] cursor-pointer rounded p-1"
           onClick={() => {
-            navigate(
-              `${APP_ROUTES.TUNA_CUSTOMER.PHIEU_DKY_DVKN.to}?tuna=cho-xet-duyet`
-            );
+            navigate(`${APP_ROUTES.TUNA_CUSTOMER.PHIEU_DKY_DVKN.to}`);
             handleCloseAccountPopup?.();
           }}
         >

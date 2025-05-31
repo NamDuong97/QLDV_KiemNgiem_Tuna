@@ -1,53 +1,86 @@
-export interface Mau {
-  MaID?: string;
-  MaMau?: string;
-  TenMau?: string;
-  LoaiMau?: string;
-  DuocDien?: string;
-  TieuChuan?: string;
-  SoLo?: string;
-  DonViSanXuat?: string;
-  NgaySanXuat?: string;
-  Video?: string;
-  HanSD?: string;
-  SoLuong?: any;
-  DonViTinh?: string;
-  YeuCauKiemNghiem?: string;
-  TinhTrangMau?: string;
-  DieuKienBaoQuan?: string;
-  LuuMau?: string;
-  XuatKetQua?: string;
-  TrangThaiNhanMau?: string;
-  GhiChu?: string;
-  NguoiTao?: string;
-  NguoiSua?: string;
-  NgayTao?: string;
-  NgaySua?: string;
-}
-
 export interface Anh {
-  image?: string;
-  nameImage?: string;
+  base64?: string;
+  ten?: string;
+  size?: string;
+  type?: string;
 }
 
 export interface FormMau {
-  TenMau: string;
-  LoaiMau: string;
-  TieuChuan: string;
-  DichVu: string;
-  ThoiGianTieuChuan?: string;
-  NgayDuKienTraKetQua?: string;
-  SoLo: string;
-  DonViSanXuat: string;
-  NgaySanXuat: string;
-  HanSuDung: string;
-  SoLuong: string;
-  DonViTinh: string;
-  YeuCauKiemNghiem: string;
-  DieuKienBaoQuan: string;
-  LuuMau?: number;
-  XuatKetQua?: number;
-  TinhTrangMau: string;
-  GhiChu?: string;
-  Anh: Anh[];
+  tenMau: string;
+  tenTieuChuan: string;
+  tenLoaiDichVu: string;
+  thoiGianTieuChuan?: string;
+  ngayDuKienTraKetQua?: string;
+  soLo: string;
+  donViSanXuat: string;
+  ngaySanXuat: string;
+  hanSuDung: string;
+  soLuong: string;
+  donViTinh: string;
+  yeuCauKiemNghiem: string;
+  dieuKienBaoQuan: string;
+  luuMau?: boolean;
+  xuatKetQua?: boolean;
+  tinhTrangMau: string;
+  ghiChu?: string;
+  phieuDangKyMauHinhAnhs: Anh[];
+}
+
+export interface phieuDangKyMauHinhAnhs {
+  maId: string;
+  maMau: string;
+  ten: string;
+  dinhDang: string;
+  ghiChu: string;
+  loaiAnh: string;
+  trangThai: string;
+  nguoiTao: string;
+  nguoiSua: string;
+  ngayTao: string;
+  ngaySua: string;
+}
+
+export interface phieuDangKyMauHinhAnhs2 {
+  maId: string;
+  maMau: string;
+  ten: string;
+  dinhDang: string;
+  ghiChu: string;
+  loaiAnh: string;
+  trangThai: boolean | string;
+  nguoiTao: string;
+  nguoiSua: string | null;
+  ngayTao: string | null;
+  ngaySua: string | null;
+}
+
+export interface Maus {
+  maId: string;
+  maDmMau: string;
+  tenMau: string;
+  maTieuChuan: string;
+  maPhieuDangKy: string;
+  manvThucHien: string;
+  madv: string;
+  soLo: string;
+  donViSanXuat: string;
+  ngaySanXuat: string;
+  hanSuDung: string;
+  donViTinh?: string;
+  soLuong: number;
+  yeuCauKiemNghiem: string;
+  tinhTrangMau: string;
+  dieuKienBaoQuan: string;
+  luuMau: boolean;
+  xuatKetQua: boolean;
+  trangThaiNhanMau: string;
+  ghiChu: string;
+  nguoiTao: string;
+  nguoiSua: string | null;
+  ngayTao: string | null;
+  ngaySua: string | null;
+  thoiGianTieuChuan: string | null;
+  maPdkMau: string;
+  loaiDv: string;
+  phieuDangKyMauHinhAnhs: phieuDangKyMauHinhAnhs2[];
 }

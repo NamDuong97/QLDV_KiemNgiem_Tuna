@@ -55,7 +55,7 @@ const PopupHuyPhieu = (props: Props) => {
         </Box>
         <AnimatePresence mode="wait">
           <motion.div
-            key="signup"
+            key="PopupHuyPhieu"
             initial={{ y: 0, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             exit={{ y: 0, opacity: 0 }}

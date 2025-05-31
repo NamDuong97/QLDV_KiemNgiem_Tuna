@@ -1,8 +1,6 @@
 import { Box, Dialog } from "@mui/material";
 import { AnimatePresence, motion } from "framer-motion";
 import { IoMdClose } from "react-icons/io";
-import { useNavigate } from "react-router";
-import { APP_ROUTES } from "../../../../../constants/routers";
 
 interface Props {
   open: boolean;
@@ -12,12 +10,10 @@ interface Props {
 const PopupTuChoiPhongKHDT = (props: Props) => {
   const { open, handleClose } = props;
 
-  const navigate = useNavigate();
-
   return (
     <AnimatePresence mode="wait">
       <motion.div
-        key="PopupDuyetBo"
+        key="PopupTuChoiPhongKHDT"
         initial={{ y: 0, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         exit={{ y: 0, opacity: 0 }}

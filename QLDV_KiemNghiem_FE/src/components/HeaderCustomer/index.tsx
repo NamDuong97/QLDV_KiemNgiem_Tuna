@@ -147,38 +147,11 @@ export default function HeaderCustomer(props: HeaderProps) {
 
   return (
     <div className="w-full max-w-[1840px] 2xl:max-w-full sticky">
-      <div className="heightRef">
-        <div className="w-full py-2 px-6 bg-gradient-to-r from-sky-300 to-sky-500 block lg:hidden">
-          <div className="flex gap-2 sm:gap-4 items-center justify-center w-full">
-            <button className="cursor-pointer" onClick={handleRedirectHome}>
-              <img
-                src={image.imageLogo}
-                alt="imageLogo"
-                className="w-20 h-20 md:w-36 md:h-36"
-              />
-            </button>
-            <div className="text-center grid gap-2 sm:gap-1 md:gap-7">
-              <p className="text-lg/4 sm:text-xl/6 md:text-4xl/6 text-red-500 font-bold uppercase h-full">
-                Bộ y tế
-              </p>
-              <p className="text-lg/4 sm:text-xl/6 md:text-4xl/6 text-blue-800 font-bold uppercase">
-                Viện kiểm nghiệm Tuna
-              </p>
-            </div>
-          </div>
-        </div>
-        <div className="hidden lg:flex lg:justify-center">
-          <img
-            src={image.imageBanner}
-            alt="imageBanner"
-            className="max-w-[1840px] 2xl:max-w-full  w-full"
-          />
-        </div>
-      </div>
       <header
-        className={`flex justify-center px-[18px] py-2 w-full border border-solid border-gray-300 bg-[linear-gradient(#3881c5,#1366ae,#08569a)] text-white -top-full`}
+        id="heightRef"
+        className={`flex justify-center px-[18px] bg-white py-2 w-full border border-solid border-gray-300 heightRef -top-full`}
       >
-        <Box className="max-w-[1440px] flex justify-between w-full">
+        <Box className="max-w-[1440px] flex justify-between w-full px-6">
           <Box className="flex items-center gap-1">
             <button
               className="block lg:!hidden !p-[6px]"
@@ -186,6 +159,13 @@ export default function HeaderCustomer(props: HeaderProps) {
             >
               <CgMenuGridO className="text-gray-700 w-7 h-7" />
             </button>
+            <div className="">
+              <img
+                src={image.imageTunaLogo}
+                alt="imageBanner"
+                className="h-14 w-auto object-contain"
+              />
+            </div>
           </Box>
           <Box className="hidden lg:flex lg:items-center">
             <ul className="flex gap-12 text-xl h-full">
@@ -217,9 +197,7 @@ export default function HeaderCustomer(props: HeaderProps) {
                     <li
                       className="hover:text-blue-500 text-gray-800 cursor-pointer text-base/6"
                       onClick={() =>
-                        navigate(
-                          `${APP_ROUTES.TUNA_CUSTOMER.FORM_SIGN_UP_DVKN.to}?tuna=thong-tin-chung`
-                        )
+                        navigate(APP_ROUTES.TUNA_CUSTOMER.FORM_SIGN_UP_DVKN.to)
                       }
                     >
                       Đăng Ký Dịch Vụ Kiểm Nghiệm
@@ -394,7 +372,7 @@ export default function HeaderCustomer(props: HeaderProps) {
                         onClick={() => {
                           setOpenMenu(false);
                           navigate(
-                            `${APP_ROUTES.TUNA_CUSTOMER.FORM_SIGN_UP_DVKN.to}?tuna=thong-tin-chung`
+                            APP_ROUTES.TUNA_CUSTOMER.FORM_SIGN_UP_DVKN.to
                           );
                         }}
                       >

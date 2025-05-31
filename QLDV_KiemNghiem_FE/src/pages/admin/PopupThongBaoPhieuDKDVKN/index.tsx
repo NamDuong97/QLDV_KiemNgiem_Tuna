@@ -309,7 +309,7 @@ const PopupThongBaoPhieuDKDVKN = (props: Props) => {
     switch (isListData) {
       case false: {
         return (
-          <div className="grid gap-2 px-7 pt-6 overflow-y-auto whitespace-nowrap h-[500px] ">
+          <div className="grid gap-2 px-7 pt-6 overflow-y-auto whitespace-nowrap h-[500px]">
             {handleTag()}
             {handleShowByTag()}
           </div>
