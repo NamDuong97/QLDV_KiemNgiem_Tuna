@@ -23,7 +23,7 @@ const ListKhoa = [
 const PopupPhanCongPhongCM = (props: Props) => {
   const { open, handleClose } = props;
 
-  const [isPhanCong, setisPhanCong] = useState(false);
+  const [isPhanCong] = useState(false);
 
   let schema = useMemo(() => {
     return yup.object().shape({

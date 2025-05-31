@@ -1,7 +1,6 @@
 import { Box, Dialog } from "@mui/material";
 import { AnimatePresence, motion } from "framer-motion";
 import { IoMdClose } from "react-icons/io";
-import { useNavigate } from "react-router";
 
 interface Props {
   open: boolean;
@@ -10,8 +9,6 @@ interface Props {
 
 const PopupTuChoiPhongKHDT = (props: Props) => {
   const { open, handleClose } = props;
-
-  const navigate = useNavigate();
 
   return (
     <AnimatePresence mode="wait">

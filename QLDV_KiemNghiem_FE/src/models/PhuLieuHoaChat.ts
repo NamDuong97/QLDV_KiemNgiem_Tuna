@@ -13,7 +13,8 @@ export interface FormPhuLieuHoaChat {
   GhiChu?: string | undefined;
 }
 
-export interface FormPhuLieuHoaChat2 {
+export interface PhuLieuHoaChat {
+  maId: string;
   maPhieuDangKy: string;
   maPlhc: string;
   tenPlhc: string;
@@ -23,9 +24,12 @@ export interface FormPhuLieuHoaChat2 {
   ghiChu: string;
   ngayHetHan: string;
   tenNhaCungCap: string;
+  nongDo: string;
+  donViNongDo: string;
+  dieuKienBaoQuan: string;
   soLo: string;
   nguoiTao: string;
-  nguoiSua: string | null;
-  ngayTao: string;
+  nguoiSua: string;
+  ngayTao: string | null;
   ngaySua: string | null;
 }
