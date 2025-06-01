@@ -23,6 +23,7 @@ namespace QLDV_KiemNghiem_BE.Services
         }
         public async Task<PhieuDangKyMauHinhAnhDto?> FindPhieuDangKyMauHinhAnhAsync(string maPhieuDangKyMauHinhAnh)
         {
+            if (maPhieuDangKyMauHinhAnh == null || maPhieuDangKyMauHinhAnh == "") return null;
             var PhieuDangKyMauHinhAnhDomain = await _repositoryManager.PhieuDangKyMauHinhAnh.FindPhieuDangKyMauHinhAnhAsync(maPhieuDangKyMauHinhAnh);
             var result = _mapper.Map<PhieuDangKyMauHinhAnhDto>(PhieuDangKyMauHinhAnhDomain);
             return result;

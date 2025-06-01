@@ -24,6 +24,7 @@ namespace QLDV_KiemNghiem_BE.Services
         }
         public async Task<LoaiDichVuDto?> FindLoaiDichVuAsync(string maLoaiDichVu)
         {
+            if (maLoaiDichVu == null || maLoaiDichVu == "") return null; 
             var LoaiDichVuDomain = await _repositoryManager.LoaiDichVu.FindLoaiDichVuAsync(maLoaiDichVu);
             var result = _mapper.Map<LoaiDichVuDto>(LoaiDichVuDomain);
             return result;
@@ -31,6 +32,10 @@ namespace QLDV_KiemNghiem_BE.Services
         public async Task<bool> CreateLoaiDichVuAsync(LoaiDichVuDto LoaiDichVuDto)
         {
             var LoaiDichVuDomain = _mapper.Map<LoaiDichVu>(LoaiDichVuDto);
+            LoaiDichVuDomain.MaId = Guid.NewGuid().ToString();
+            LoaiDichVuDomain.NgayTao = DateTime.Now;
+            LoaiDichVuDomain.NguoiTao = "admin";
+
             _repositoryManager.LoaiDichVu.CreateLoaiDichVuAsync(LoaiDichVuDomain);
             bool check = await _repositoryManager.SaveChangesAsync();
             return check;

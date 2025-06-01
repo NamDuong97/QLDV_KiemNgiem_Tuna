@@ -24,6 +24,7 @@ namespace QLDV_KiemNghiem_BE.Services
         }
         public async Task<TrangThaiPhieuDkDto?> FindTrangThaiPhieuDkAsync(string maTrangThaiPhieuDk)
         {
+            if (maTrangThaiPhieuDk == null || maTrangThaiPhieuDk == "") return null;
             var TrangThaiPhieuDkDomain = await _repositoryManager.TrangThaiPhieuDk.FindTrangThaiPhieuDkAsync(maTrangThaiPhieuDk);
             var result = _mapper.Map<TrangThaiPhieuDkDto>(TrangThaiPhieuDkDomain);
             return result;
@@ -37,6 +38,10 @@ namespace QLDV_KiemNghiem_BE.Services
         public async Task<bool> CreateTrangThaiPhieuDkAsync(TrangThaiPhieuDkDto TrangThaiPhieuDkDto)
         {
             var TrangThaiPhieuDkDomain = _mapper.Map<TrangThaiPhieuDk>(TrangThaiPhieuDkDto);
+            TrangThaiPhieuDkDomain.MaId = Guid.NewGuid().ToString();
+            TrangThaiPhieuDkDomain.NgayTao = DateTime.Now;
+            TrangThaiPhieuDkDomain.NguoiTao = "admin";
+
             _repositoryManager.TrangThaiPhieuDk.CreateTrangThaiPhieuDkAsync(TrangThaiPhieuDkDomain);
             bool check = await _repositoryManager.SaveChangesAsync();
             return check;

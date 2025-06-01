@@ -22,6 +22,7 @@ namespace QLDV_KiemNghiem_BE.Services
         }
         public async Task<ChiTieuDto?> FindChiTieuAsync(string maChiTieu)
         {
+            if (maChiTieu == null || maChiTieu == "") return null;
             var chiTieuDomain = await _repositoryManager.ChiTieu.FindChiTieuAsync(maChiTieu);
             var result = _mapper.Map<ChiTieuDto>(chiTieuDomain);
             return result;

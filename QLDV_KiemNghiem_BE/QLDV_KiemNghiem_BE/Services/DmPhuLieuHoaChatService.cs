@@ -22,9 +22,10 @@ namespace QLDV_KiemNghiem_BE.Services
             var dmPhuLieuHoaChatDtos = _mapper.Map<List<DmPhuLieuHoaChatDto>>(dmPhuLieuHoaChatDomains);
             return dmPhuLieuHoaChatDtos;
         }
-        public async Task<DmPhuLieuHoaChatDto?> FindDmPhuLieuHoaChatAsync(string id)
+        public async Task<DmPhuLieuHoaChatDto?> FindDmPhuLieuHoaChatAsync(string maPhuLieuHoaChat)
         {
-            var dmPhuLieuHoaChatDomain = await _repositoryManager.DmPhuLieuHoaChat.FindDmPhuLieuHoaChatAsync(id);
+            if (maPhuLieuHoaChat == null || maPhuLieuHoaChat == "") return null;
+            var dmPhuLieuHoaChatDomain = await _repositoryManager.DmPhuLieuHoaChat.FindDmPhuLieuHoaChatAsync(maPhuLieuHoaChat);
             var dmPhuLieuHoaChatDto = _mapper.Map<DmPhuLieuHoaChatDto>(dmPhuLieuHoaChatDomain);
             return dmPhuLieuHoaChatDto;
         }
@@ -32,6 +33,11 @@ namespace QLDV_KiemNghiem_BE.Services
         public async Task<bool> CreateDmPhuLieuHoaChatAsync(DmPhuLieuHoaChatDto plhcDto)
         {
             var dmPhuLieuHoaChatDomain = _mapper.Map<DmPhuLieuHoaChat>(plhcDto);
+            dmPhuLieuHoaChatDomain.MaId = Guid.NewGuid().ToString();
+            dmPhuLieuHoaChatDomain.MaDmPlhc = plhcDto?.TenDmPlhc?.Trim().ToString() ?? "null";
+            dmPhuLieuHoaChatDomain.NgayTao = DateTime.Now;
+            dmPhuLieuHoaChatDomain.NguoiTao = "admin";
+
             _repositoryManager.DmPhuLieuHoaChat.CreateDmPhuLieuHoaChatAsync(dmPhuLieuHoaChatDomain);
             bool check = await _repositoryManager.SaveChangesAsync();
             return check;

@@ -7,8 +7,8 @@ namespace QLDV_KiemNghiem_BE.Interfaces
     {
         Task<IEnumerable<KhoaDto>> GetKhoasAllAsync();
         Task<KhoaDto?> FindKhoaAsync(string maKhoa);
-        Task<bool> CreateKhoaAsync(Khoa Khoa);
-        Task<bool> UpdateKhoaAsync(Khoa Khoa);
+        Task<bool> CreateKhoaAsync(KhoaDto Khoa);
+        Task<bool> UpdateKhoaAsync(KhoaDto Khoa);
         Task<bool> DeleteKhoaAsync(Khoa Khoa);
     }
 }

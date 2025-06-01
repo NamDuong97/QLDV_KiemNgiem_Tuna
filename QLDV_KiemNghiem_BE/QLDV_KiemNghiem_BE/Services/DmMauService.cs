@@ -24,6 +24,7 @@ namespace QLDV_KiemNghiem_BE.Services
         }
         public async Task<DmMauDto?> FindDmMauAsync(string maDmMau)
         {
+            if (maDmMau == null || maDmMau == "") return null;
             var DmMauDomain = await _repositoryManager.DmMau.FindDmMauAsync(maDmMau);
             var result = _mapper.Map<DmMauDto>(DmMauDomain);
             return result;

@@ -179,13 +179,16 @@ namespace QLDV_KiemNghiem_BE.Services
             return check;
         }
 
-        public async Task<PhieuDangKy?> CheckExistPhieuDangKyAsync(string id)
+        public async Task<PhieuDangKy?> CheckExistPhieuDangKyAsync(string maPhieuDangKy)
         {
-            return await _repositoryManager.PhieuDangKy.CheckExistPhieuDangKyAsync(id);
+            if (maPhieuDangKy == null || maPhieuDangKy == "") return null;
+            return await _repositoryManager.PhieuDangKy.CheckExistPhieuDangKyAsync(maPhieuDangKy);
         }
 
         public async Task<int> DuTinhThoiGianKiemNghiem(string maDmMau, string maTieuChuan)
         {
+            if (maDmMau == null || maDmMau == "") return 0;
+            if (maTieuChuan == null || maTieuChuan == "") return 0;
             var checkExistTieuChuan = await _repositoryManager.TieuChuan.FindTieuChuanAsync(maTieuChuan);
             if(checkExistTieuChuan == null)
             {
