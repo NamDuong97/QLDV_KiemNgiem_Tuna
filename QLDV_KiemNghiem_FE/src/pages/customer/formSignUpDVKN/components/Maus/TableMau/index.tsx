@@ -14,7 +14,10 @@ import IndeterminateCheckBoxIcon from "@mui/icons-material/IndeterminateCheckBox
 
 import { Align, TableHeader } from "../../../../../../models/Table";
 import { Dispatch, SetStateAction } from "react";
-import { useGetTieuChuanAll } from "../../../../../../hooks/customers/usePhieuDKyDVKN";
+import {
+  useGetLoaiDichVuAll,
+  useGetTieuChuanAll,
+} from "../../../../../../hooks/customers/usePhieuDKyDVKN";
 import { Maus } from "../../../../../../models/mau";
 
 interface TableMauProps {
@@ -41,6 +44,9 @@ const TableMau = (props: TableMauProps) => {
 
   const { data: dataTieuChuanAll } = useGetTieuChuanAll({
     queryKey: "TieuChuanByID",
+  });
+  const { data: dataLoaiDichVuAll } = useGetLoaiDichVuAll({
+    queryKey: "LoaiDichVuAll",
   });
 
   const handleCheckbox = (item: any) => {
@@ -149,7 +155,13 @@ const TableMau = (props: TableMauProps) => {
               </TableCell>
               <TableCell align="center">
                 <Box className="flex gap-2 items-center justify-center">
-                  <p className="text-base/4 font-medium">{item?.loaiDv}</p>
+                  <p className="text-base/4 font-medium">
+                    {
+                      dataLoaiDichVuAll?.find(
+                        (loaiDV: any) => loaiDV.maLoaiDv === item?.loaiDv
+                      ).tenDichVu
+                    }
+                  </p>
                 </Box>
               </TableCell>
               <TableCell align="center">

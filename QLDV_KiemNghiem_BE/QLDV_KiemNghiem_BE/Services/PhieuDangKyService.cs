@@ -138,8 +138,8 @@ namespace QLDV_KiemNghiem_BE.Services
             {
                 return false;
             }
-          
-            if(phieuDangKyDto.PhieuDangKyPhuLieuHoaChats.Count()> 0)
+
+            if (phieuDangKyDto.PhieuDangKyPhuLieuHoaChats.Count() > 0)
             {
                 // Them danh sach plhc vao CSDL
                 foreach (var plhc in phieuDangKyDto.PhieuDangKyPhuLieuHoaChats)
@@ -151,11 +151,12 @@ namespace QLDV_KiemNghiem_BE.Services
                     phieuDangKyPhuLieuHoaChatDomain.NgayTao = DateTime.Now;
                     _repositoryManager.PhieuDangKyPhuLieuHoaChat.CreatePhieuDangKyPhuLieuHoaChatAsync(phieuDangKyPhuLieuHoaChatDomain);
                 }
-            }else
+            }
+            else
             {
                 return false;
             }
-            
+
             _repositoryManager.PhieuDangKy.CreatePhieuDangKyAsync(phieuDangKyDomain);
             // Ghi vao CSDL
             bool check = await _repositoryManager.SaveChangesAsync();
