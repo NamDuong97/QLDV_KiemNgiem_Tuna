@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿
+using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using QLDV_KiemNghiem_BE.Data;
 using QLDV_KiemNghiem_BE.DTO;
@@ -63,10 +64,14 @@ namespace QLDV_KiemNghiem_BE.Repositories
             return result;
         }
 
-        public async Task<int> DuTinhThoiGianKiemNghiem(string maTieuChuan)
+        public async Task<int> DuTinhThoiGianKiemNghiem(string maDmMau, string maTieuChuan)
         {
-            var result = await _context.Database.ExecuteSqlRawAsync("exec ThoiGianDuTinhKiemNghiem @maTieuChuan = {0}", maTieuChuan);
-            return result;
+            var result = await _context
+            .Set<ThoiGianTieuChuan>()  // Không cần DbSet thực trong DbContext
+            .FromSqlRaw("SELECT dbo.Fn_ThoiGianDuTinhKiemNghiem({0}, {1}) AS ThoiGianTC", maDmMau, maTieuChuan)
+            .AsNoTracking()
+            .FirstOrDefaultAsync();
+            return result?.ThoiGianTC ?? 0;
         }
 
     }

@@ -6,39 +6,42 @@ using Microsoft.EntityFrameworkCore;
 
 namespace QLDV_KiemNghiem_BE.Models;
 
-[Table("ChiTieu")]
-public partial class ChiTieu
+[Table("Mau_TieuChuan_ChiTieu")]
+public partial class MauTieuChuanChiTieu
 {
     [Key]
     [Column("MaID")]
     [StringLength(50)]
     public string MaId { get; set; } = null!;
 
-    [StringLength(200)]
+    [StringLength(50)]
+    public string? MaMauTieuChuan { get; set; }
+
+    [StringLength(50)]
     public string? MaChiTieu { get; set; }
 
-    [StringLength(200)]
-    public string? TenChiTieu { get; set; }
+    public string? NoiDung { get; set; }
 
+    [StringLength(500)]
     public string? GhiChu { get; set; }
 
-    public bool? TrangThai { get; set; }
+    [StringLength(100)]
+    public string? NguoiTao { get; set; }
 
     [Column(TypeName = "datetime")]
     public DateTime? NgayTao { get; set; }
 
-    [StringLength(50)]
-    public string? NguoiTao { get; set; }
-
-    [StringLength(50)]
+    [StringLength(100)]
     public string? NguoiSua { get; set; }
 
     [Column(TypeName = "datetime")]
     public DateTime? NgaySua { get; set; }
 
-    [InverseProperty("MaChiTieuNavigation")]
-    public virtual ICollection<ChiTieuPhuongPhap> ChiTieuPhuongPhaps { get; set; } = new List<ChiTieuPhuongPhap>();
+    [ForeignKey("MaChiTieu")]
+    [InverseProperty("MauTieuChuanChiTieus")]
+    public virtual ChiTieu? MaChiTieuNavigation { get; set; }
 
-    [InverseProperty("MaChiTieuNavigation")]
-    public virtual ICollection<MauTieuChuanChiTieu> MauTieuChuanChiTieus { get; set; } = new List<MauTieuChuanChiTieu>();
+    [ForeignKey("MaMauTieuChuan")]
+    [InverseProperty("MauTieuChuanChiTieus")]
+    public virtual MauTieuChuan? MaMauTieuChuanNavigation { get; set; }
 }

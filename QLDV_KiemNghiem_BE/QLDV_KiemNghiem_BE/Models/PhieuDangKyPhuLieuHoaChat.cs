@@ -12,7 +12,7 @@ public partial class PhieuDangKyPhuLieuHoaChat
     [Key]
     [Column("MaID")]
     [StringLength(50)]
-    public string MaId { get; set; } = Guid.NewGuid().ToString();
+    public string MaId { get; set; } = null!;
 
     [StringLength(50)]
     public string? MaPhieuDangKy { get; set; }
