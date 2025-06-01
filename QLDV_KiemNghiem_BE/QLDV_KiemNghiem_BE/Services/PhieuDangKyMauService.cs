@@ -29,6 +29,7 @@ namespace QLDV_KiemNghiem_BE.Services
         }
         public async Task<PhieuDangKyMauDto?> GetPhieuDangKyMauAsync(string maPhieuDangKyMau)
         {
+            if (maPhieuDangKyMau == null || maPhieuDangKyMau == "") return null;
             var PhieuDangKyMauDomain = await _repositoryManager.PhieuDangKyMau.GetPhieuDangKyMauAsync(maPhieuDangKyMau);
             var result = _mapper.Map<PhieuDangKyMauDto>(PhieuDangKyMauDomain);
             result.PhieuDangKyMauHinhAnhs = _mapper.Map<List<PhieuDangKyMauHinhAnhDto>>(PhieuDangKyMauDomain?.PhieuDangKyMauHinhAnhs);

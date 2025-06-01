@@ -25,6 +25,7 @@ namespace QLDV_KiemNghiem_BE.Services
         }
         public async Task<PhuongPhapDto?> FindPhuongPhapAsync(string maPhuongPhap)
         {
+            if (maPhuongPhap == null || maPhuongPhap == "") return null;
             var phuongPhapDomain = await _repositoryManager.PhuongPhap.FindPhuongPhapAsync(maPhuongPhap);
             var result = _mapper.Map<PhuongPhapDto>(phuongPhapDomain);
             return result;
@@ -34,6 +35,8 @@ namespace QLDV_KiemNghiem_BE.Services
             var phuongPhapDomain = _mapper.Map<PhuongPhap>(phuongPhapDto);
             phuongPhapDomain.MaId = Guid.NewGuid().ToString();
             phuongPhapDomain.NgayTao = DateTime.Now;
+            phuongPhapDomain.NguoiTao = "admin";
+
             _repositoryManager.PhuongPhap.CreatePhuongPhapAsync(phuongPhapDomain);
             bool check = await _repositoryManager.SaveChangesAsync();
             return check;

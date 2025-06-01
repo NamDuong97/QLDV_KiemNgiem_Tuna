@@ -24,6 +24,7 @@ namespace QLDV_KiemNghiem_BE.Services
         }
         public async Task<TieuChuanDto?> FindTieuChuanAsync(string maTieuChuan)
         {
+            if (maTieuChuan == null || maTieuChuan == "") return null;
             var tieuChuanDomain = await _repositoryManager.TieuChuan.FindTieuChuanAsync(maTieuChuan);
             var result = _mapper.Map<TieuChuanDto>(tieuChuanDomain);
             return result;
@@ -39,6 +40,7 @@ namespace QLDV_KiemNghiem_BE.Services
             var tieuChuanDomain = _mapper.Map<TieuChuan>(tieuChuanDto);
             tieuChuanDomain.MaId = Guid.NewGuid().ToString();
             tieuChuanDomain.NgayTao = DateTime.Now;
+
             _repositoryManager.TieuChuan.CreateTieuChuanAsync(tieuChuanDomain);
             bool check = await _repositoryManager.SaveChangesAsync();
             return check;   

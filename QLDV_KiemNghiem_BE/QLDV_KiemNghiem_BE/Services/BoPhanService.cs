@@ -23,6 +23,7 @@ namespace QLDV_KiemNghiem_BE.Services
         }
         public async Task<BoPhanDto?> FindBoPhanAsync(string maBoPhan)
         {
+            if (maBoPhan == null || maBoPhan == "") return null;
             var BoPhanDomain = await _repositoryManager.BoPhan.FindBoPhanAsync(maBoPhan);
             var result = _mapper.Map<BoPhanDto>(BoPhanDomain);
             return result;
