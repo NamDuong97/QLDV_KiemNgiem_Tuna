@@ -42,5 +42,8 @@ public partial class DmMau
     public virtual LoaiMau? MaLoaiMauNavigation { get; set; }
 
     [InverseProperty("MaDmMauNavigation")]
+    public virtual ICollection<MauTieuChuan> MauTieuChuans { get; set; } = new List<MauTieuChuan>();
+
+    [InverseProperty("MaDmMauNavigation")]
     public virtual ICollection<PhieuDangKyMau> PhieuDangKyMaus { get; set; } = new List<PhieuDangKyMau>();
 }

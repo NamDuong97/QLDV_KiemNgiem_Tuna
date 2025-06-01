@@ -143,9 +143,9 @@ namespace QLDV_KiemNghiem_BE.Controllers
 
         [HttpGet]
         [Route("duTinhThoiGianKiemNghiem")]
-        public async Task<ActionResult> duTinhThoiGianKiemNghiem(string maTieuChuan)
+        public async Task<ActionResult> duTinhThoiGianKiemNghiem(string maDmMau, string maTieuChuan)
         {
-            int time = await _service.PhieuDangKy.DuTinhThoiGianKiemNghiem(maTieuChuan);
+            int time = await _service.PhieuDangKy.DuTinhThoiGianKiemNghiem(maDmMau, maTieuChuan);
             if (time != 0)
             {
                 _logger.LogDebug("Tra ket qua thoi gian du tinh kiem nghiem thanh cong");

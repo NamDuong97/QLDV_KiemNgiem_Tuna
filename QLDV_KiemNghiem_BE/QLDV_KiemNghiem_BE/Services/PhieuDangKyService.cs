@@ -111,7 +111,7 @@ namespace QLDV_KiemNghiem_BE.Services
                     mauDomain = _mapper.Map<PhieuDangKyMau>(mau);
                     mauDomain.MaId = Guid.NewGuid().ToString();
                     mauDomain.MaPhieuDangKy = phieuDangKyDomain.MaId;
-                    mauDomain.MaPdkMau = mauDomain.TenMau + "_" + mauDomain.Madv + "_" + PublicFunc.getTimeSystem() + "_" + mauDomain.ThoiGianTieuChuan.ToString();
+                    mauDomain.MaPdkMau = mauDomain.TenMau + "_" + mauDomain.LoaiDv + "_" + PublicFunc.getTimeSystem() + "_" + mauDomain.ThoiGianTieuChuan.ToString();
                     mauDomain.NgayTao = DateTime.Now;
                     // Thêm hình ảnh vào CSDL
                     Console.WriteLine("So luong hinh anh trong mau: " + mau.PhieuDangKyMauHinhAnhs.Count);
@@ -184,14 +184,19 @@ namespace QLDV_KiemNghiem_BE.Services
             return await _repositoryManager.PhieuDangKy.CheckExistPhieuDangKyAsync(id);
         }
 
-        public async Task<int> DuTinhThoiGianKiemNghiem(string maTieuChuan)
+        public async Task<int> DuTinhThoiGianKiemNghiem(string maDmMau, string maTieuChuan)
         {
             var checkExistTieuChuan = await _repositoryManager.TieuChuan.FindTieuChuanAsync(maTieuChuan);
             if(checkExistTieuChuan == null)
             {
                 return 0;
             }
-            return await _repositoryManager.PhieuDangKy.DuTinhThoiGianKiemNghiem(maTieuChuan);
+            var checkExistDmMau = await _repositoryManager.DmMau.FindDmMauAsync(maDmMau);
+            if (checkExistDmMau == null)
+            {
+                return 0;
+            }
+            return await _repositoryManager.PhieuDangKy.DuTinhThoiGianKiemNghiem( maDmMau,  maTieuChuan);
         }
 
     }

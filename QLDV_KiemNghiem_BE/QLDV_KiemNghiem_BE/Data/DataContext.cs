@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
+using QLDV_KiemNghiem_BE.DTO.Parameter;
 using QLDV_KiemNghiem_BE.Models;
 
 namespace QLDV_KiemNghiem_BE.Data;
@@ -15,6 +16,7 @@ public partial class DataContext : DbContext
         : base(options)
     {
     }
+    public DbSet<ThoiGianTieuChuan> ThoiGianResponses { get; set; }  // Không cần tạo bảng thực tế
 
     public virtual DbSet<BoPhan> BoPhans { get; set; }
 
@@ -35,8 +37,6 @@ public partial class DataContext : DbContext
     public virtual DbSet<ChiTieuPhuongPhap> ChiTieuPhuongPhaps { get; set; }
 
     public virtual DbSet<ChucVu> ChucVus { get; set; }
-
-    public virtual DbSet<DichVu> DichVus { get; set; }
 
     public virtual DbSet<DmMau> DmMaus { get; set; }
 
@@ -63,6 +63,10 @@ public partial class DataContext : DbContext
     public virtual DbSet<LoaiMau> LoaiMaus { get; set; }
 
     public virtual DbSet<LoaiTaiKhoan> LoaiTaiKhoans { get; set; }
+
+    public virtual DbSet<MauTieuChuan> MauTieuChuans { get; set; }
+
+    public virtual DbSet<MauTieuChuanChiTieu> MauTieuChuanChiTieus { get; set; }
 
     public virtual DbSet<NhaCungCap> NhaCungCaps { get; set; }
 
@@ -124,27 +128,23 @@ public partial class DataContext : DbContext
 
     public virtual DbSet<TieuChuan> TieuChuans { get; set; }
 
-    public virtual DbSet<TieuChuanChiTieu> TieuChuanChiTieus { get; set; }
-
     public virtual DbSet<TrangThaiPhieuDk> TrangThaiPhieuDks { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-    {
-        optionsBuilder.UseSqlServer("Name=DefaultConnection");
-        optionsBuilder.EnableSensitiveDataLogging();
-    }
-
+        => optionsBuilder.UseSqlServer("Name=DefaultConnection");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.Entity<ThoiGianTieuChuan>().HasNoKey();
+
         modelBuilder.Entity<BoPhan>(entity =>
         {
-            entity.HasKey(e => e.MaId).HasName("PK__BoPhan__2725BF4040D5D9CC");
+            entity.HasKey(e => e.MaId).HasName("PK__BoPhan__2725BF401698C8B8");
         });
 
         modelBuilder.Entity<ChiTietHoaDonThu>(entity =>
         {
-            entity.HasKey(e => e.MaId).HasName("PK__ChiTietH__2725BF40499CA688");
+            entity.HasKey(e => e.MaId).HasName("PK__ChiTietH__2725BF403C0212DB");
 
             entity.HasOne(d => d.MaHdNavigation).WithMany(p => p.ChiTietHoaDonThus).HasConstraintName("Fk_ChiTietHoaDonThu_HoaDonThu");
 
@@ -153,7 +153,7 @@ public partial class DataContext : DbContext
 
         modelBuilder.Entity<ChiTietHoaDonThuBoSung>(entity =>
         {
-            entity.HasKey(e => e.MaId).HasName("PK__ChiTietH__2725BF402D0E2650");
+            entity.HasKey(e => e.MaId).HasName("PK__ChiTietH__2725BF407D06AD9C");
 
             entity.HasOne(d => d.MaDmPlhcNavigation).WithMany(p => p.ChiTietHoaDonThuBoSungs).HasConstraintName("Fk_ChiTietHoaDonThuBoSung_Dm_PhuLieu_HoaChat");
 
@@ -162,7 +162,7 @@ public partial class DataContext : DbContext
 
         modelBuilder.Entity<ChiTietPhieuDeXuatMuaPlhc>(entity =>
         {
-            entity.HasKey(e => e.MaId).HasName("PK__ChiTietP__2725BF405F0E29C2");
+            entity.HasKey(e => e.MaId).HasName("PK__ChiTietP__2725BF40A60C641E");
 
             entity.HasOne(d => d.MaPhieuDeXuatMuaNavigation).WithMany(p => p.ChiTietPhieuDeXuatMuaPlhcs).HasConstraintName("Fk_PhieuDeXuatMuaPLHCChiTiet_PhieuDeXuatMuaPLHC");
 
@@ -180,7 +180,7 @@ public partial class DataContext : DbContext
 
         modelBuilder.Entity<ChiTietPhieuDuTru>(entity =>
         {
-            entity.HasKey(e => e.MaId).HasName("PK__ChiTietP__2725BF40BFAFE120");
+            entity.HasKey(e => e.MaId).HasName("PK__ChiTietP__2725BF405970F5E0");
 
             entity.HasOne(d => d.MaDmPlhcNavigation).WithMany(p => p.ChiTietPhieuDuTrus).HasConstraintName("Fk_ChiTietPhieuDuTru_Dm_PhuLieu_HoaChat");
 
@@ -189,7 +189,7 @@ public partial class DataContext : DbContext
 
         modelBuilder.Entity<ChiTietPhieuXuatKho>(entity =>
         {
-            entity.HasKey(e => e.MaId).HasName("PK__ChiTietP__2725BF4042BCFBB9");
+            entity.HasKey(e => e.MaId).HasName("PK__ChiTietP__2725BF40CC4BBA67");
 
             entity.HasOne(d => d.MaDmPlhcNavigation).WithMany(p => p.ChiTietPhieuXuatKhos).HasConstraintName("Fk_ChiTietPhieuXuatKho_Dm_PhuLieu_HoaChat");
 
@@ -198,12 +198,12 @@ public partial class DataContext : DbContext
 
         modelBuilder.Entity<ChiTieu>(entity =>
         {
-            entity.HasKey(e => e.MaId).HasName("PK__ChiTieu__2725BF40F9E5301E");
+            entity.HasKey(e => e.MaId).HasName("PK__ChiTieu__2725BF40CEF91B57");
         });
 
         modelBuilder.Entity<ChiTieuPhuongPhap>(entity =>
         {
-            entity.HasKey(e => e.MaId).HasName("PK__ChiTieu___2725BF403BB5621A");
+            entity.HasKey(e => e.MaId).HasName("PK__ChiTieu___2725BF40D3043CD3");
 
             entity.HasOne(d => d.MaChiTieuNavigation).WithMany(p => p.ChiTieuPhuongPhaps).HasConstraintName("Fk_ChiTieu_PhuongPhap_ChiTieu");
 
@@ -212,38 +212,31 @@ public partial class DataContext : DbContext
 
         modelBuilder.Entity<ChucVu>(entity =>
         {
-            entity.HasKey(e => e.MaId).HasName("PK__ChucVu__2725BF40013A9A2F");
-        });
-
-        modelBuilder.Entity<DichVu>(entity =>
-        {
-            entity.HasKey(e => e.MaId).HasName("PK__DichVu__2725BF40F416610A");
-
-            entity.HasOne(d => d.MaLoaidvNavigation).WithMany(p => p.DichVus).HasConstraintName("Fk_DichVu_LoaiDichVu");
+            entity.HasKey(e => e.MaId).HasName("PK__ChucVu__2725BF40139617D5");
         });
 
         modelBuilder.Entity<DmMau>(entity =>
         {
-            entity.HasKey(e => e.MaId).HasName("PK__Dm_Mau__2725BF40BCD87C30");
+            entity.HasKey(e => e.MaId).HasName("PK__Dm_Mau__2725BF4069596860");
 
             entity.HasOne(d => d.MaLoaiMauNavigation).WithMany(p => p.DmMaus).HasConstraintName("FK_Dm_Mau_LoaiMau");
         });
 
         modelBuilder.Entity<DmPhuLieuHoaChat>(entity =>
         {
-            entity.HasKey(e => e.MaId).HasName("PK__Dm_PhuLi__2725BF408A556418");
+            entity.HasKey(e => e.MaId).HasName("PK__Dm_PhuLi__2725BF40A1E51C2F");
         });
 
         modelBuilder.Entity<HoaDonMuaPlhc>(entity =>
         {
-            entity.HasKey(e => e.MaId).HasName("PK__HoaDonMu__2725BF40B407F1AF");
+            entity.HasKey(e => e.MaId).HasName("PK__HoaDonMu__2725BF4053B6456D");
 
             entity.HasOne(d => d.ManvLapNavigation).WithMany(p => p.HoaDonMuaPlhcs).HasConstraintName("Fk_HoaDonMuaPLHC_NhanVien_Lap");
         });
 
         modelBuilder.Entity<HoaDonMuaPlhcchiTiet>(entity =>
         {
-            entity.HasKey(e => e.MaId).HasName("PK__HoaDonMu__2725BF40F8C2F7B2");
+            entity.HasKey(e => e.MaId).HasName("PK__HoaDonMu__2725BF40CD167D98");
 
             entity.HasOne(d => d.MaDmPlhcNavigation).WithMany(p => p.HoaDonMuaPlhcchiTiets).HasConstraintName("FK_HoaDonMuaPLHCChiTiet_Dm_PhuLieu_HoaChat");
 
@@ -254,7 +247,7 @@ public partial class DataContext : DbContext
 
         modelBuilder.Entity<HoaDonThu>(entity =>
         {
-            entity.HasKey(e => e.MaId).HasName("PK__HoaDonTh__2725BF4028C51E43");
+            entity.HasKey(e => e.MaId).HasName("PK__HoaDonTh__2725BF40469A108D");
 
             entity.HasOne(d => d.MaPhieuDangKyNavigation).WithMany(p => p.HoaDonThus).HasConstraintName("Fk_HoaDonThu_PhieuDangKy");
 
@@ -263,7 +256,7 @@ public partial class DataContext : DbContext
 
         modelBuilder.Entity<HoaDonThuBoSung>(entity =>
         {
-            entity.HasKey(e => e.MaId).HasName("PK__HoaDonTh__2725BF4025898777");
+            entity.HasKey(e => e.MaId).HasName("PK__HoaDonTh__2725BF409479C392");
 
             entity.HasOne(d => d.MaHdNavigation).WithMany(p => p.HoaDonThuBoSungs).HasConstraintName("Fk_HoaDonThuBoSung_HoaDonThu");
 
@@ -272,17 +265,17 @@ public partial class DataContext : DbContext
 
         modelBuilder.Entity<KhachHang>(entity =>
         {
-            entity.HasKey(e => e.MaId).HasName("PK__KhachHan__2725BF40B6245351");
+            entity.HasKey(e => e.MaId).HasName("PK__KhachHan__2725BF4075DCE6B0");
         });
 
         modelBuilder.Entity<Khoa>(entity =>
         {
-            entity.HasKey(e => e.MaId).HasName("PK__Khoa__2725BF401BEE2C3B");
+            entity.HasKey(e => e.MaId).HasName("PK__Khoa__2725BF403BB96030");
         });
 
         modelBuilder.Entity<LichSuPhanCong>(entity =>
         {
-            entity.HasKey(e => e.MaId).HasName("PK__LichSuPh__2725BF40ADBE39DF");
+            entity.HasKey(e => e.MaId).HasName("PK__LichSuPh__2725BF4057ACB081");
 
             entity.HasOne(d => d.MaPhanCongNoiBoNavigation).WithMany(p => p.LichSuPhanCongs).HasConstraintName("Fk_LichSuPhanCong_PhanCongNoiBo");
 
@@ -295,7 +288,7 @@ public partial class DataContext : DbContext
 
         modelBuilder.Entity<Lkct>(entity =>
         {
-            entity.HasKey(e => e.MaId).HasName("PK__LKCT__2725BF40A652466F");
+            entity.HasKey(e => e.MaId).HasName("PK__LKCT__2725BF406F962C86");
 
             entity.HasOne(d => d.MaHdNavigation).WithMany(p => p.Lkcts).HasConstraintName("Fk_LKCT_HoaDonThu");
 
@@ -304,27 +297,45 @@ public partial class DataContext : DbContext
 
         modelBuilder.Entity<LoaiDichVu>(entity =>
         {
-            entity.HasKey(e => e.MaId).HasName("PK__LoaiDich__2725BF404D473FE0");
+            entity.HasKey(e => e.MaId).HasName("PK__LoaiDich__2725BF400125F677");
         });
 
         modelBuilder.Entity<LoaiMau>(entity =>
         {
-            entity.HasKey(e => e.MaId).HasName("PK__LoaiMau__2725BF4072C9A01D");
+            entity.HasKey(e => e.MaId).HasName("PK__LoaiMau__2725BF40985604EE");
         });
 
         modelBuilder.Entity<LoaiTaiKhoan>(entity =>
         {
-            entity.HasKey(e => e.MaId).HasName("PK__LoaiTaiK__2725BF407AC1DBBC");
+            entity.HasKey(e => e.MaId).HasName("PK__LoaiTaiK__2725BF405187EA9D");
+        });
+
+        modelBuilder.Entity<MauTieuChuan>(entity =>
+        {
+            entity.HasKey(e => e.MaId).HasName("PK__Mau_Tieu__2725BF40115B9B87");
+
+            entity.HasOne(d => d.MaDmMauNavigation).WithMany(p => p.MauTieuChuans).HasConstraintName("FK_Mau_TieuChuan_Dm_Mau");
+
+            entity.HasOne(d => d.MaTieuChuanNavigation).WithMany(p => p.MauTieuChuans).HasConstraintName("FK_Mau_TieuChuan_TieuChuan");
+        });
+
+        modelBuilder.Entity<MauTieuChuanChiTieu>(entity =>
+        {
+            entity.HasKey(e => e.MaId).HasName("PK__TieuChua__2725BF4005307FA0");
+
+            entity.HasOne(d => d.MaChiTieuNavigation).WithMany(p => p.MauTieuChuanChiTieus).HasConstraintName("FK_TieuChuan_ChiTieu_ChiTieu");
+
+            entity.HasOne(d => d.MaMauTieuChuanNavigation).WithMany(p => p.MauTieuChuanChiTieus).HasConstraintName("FK_TieuChuan_ChiTieu_Mau_TieuChuan");
         });
 
         modelBuilder.Entity<NhaCungCap>(entity =>
         {
-            entity.HasKey(e => e.MaId).HasName("PK__NhaCungC__2725BF40905D5543");
+            entity.HasKey(e => e.MaId).HasName("PK__NhaCungC__2725BF40603CBAB5");
         });
 
         modelBuilder.Entity<NhanVien>(entity =>
         {
-            entity.HasKey(e => e.MaId).HasName("PK__NhanVien__2725BF403924AFF5");
+            entity.HasKey(e => e.MaId).HasName("PK__NhanVien__2725BF4010F06494");
 
             entity.HasOne(d => d.MaBoPhanNavigation).WithMany(p => p.NhanViens).HasConstraintName("Fk_NhanVien_BoPhan");
 
@@ -335,7 +346,7 @@ public partial class DataContext : DbContext
 
         modelBuilder.Entity<PhanCongNoiBo>(entity =>
         {
-            entity.HasKey(e => e.MaId).HasName("PK__PhanCong__2725BF40F2C6DD2E");
+            entity.HasKey(e => e.MaId).HasName("PK__PhanCong__2725BF40BB1E4190");
 
             entity.HasOne(d => d.MaPdkMauNavigation).WithMany(p => p.PhanCongNoiBos).HasConstraintName("Fk_PhanCongNoiBo_PhieuDangKy_Mau");
 
@@ -346,7 +357,7 @@ public partial class DataContext : DbContext
 
         modelBuilder.Entity<PhieuChi>(entity =>
         {
-            entity.HasKey(e => e.MaId).HasName("PK__PhieuChi__2725BF40645F8839");
+            entity.HasKey(e => e.MaId).HasName("PK__PhieuChi__2725BF407B936004");
 
             entity.HasOne(d => d.MaHoaDonMuaPlhcNavigation).WithMany(p => p.PhieuChis).HasConstraintName("Fk_PhieuChi_HoaDonMuaPLHC");
 
@@ -355,7 +366,7 @@ public partial class DataContext : DbContext
 
         modelBuilder.Entity<PhieuDangKy>(entity =>
         {
-            entity.HasKey(e => e.MaId).HasName("PK__PhieuDan__2725BF409D94D71F");
+            entity.HasKey(e => e.MaId).HasName("PK__PhieuDan__2725BF40E6D07D67");
 
             entity.HasOne(d => d.MaKhNavigation).WithMany(p => p.PhieuDangKies).HasConstraintName("Fk_PhieuDangKy_KhachHang");
 
@@ -370,32 +381,32 @@ public partial class DataContext : DbContext
 
             entity.HasOne(d => d.MaDmMauNavigation).WithMany(p => p.PhieuDangKyMaus).HasConstraintName("FK_PhieuDangKy_Mau_Dm_Mau");
 
+            entity.HasOne(d => d.MaLoaiDvNavigation).WithMany(p => p.PhieuDangKyMaus).HasConstraintName("FK_PhieuDangKy_Mau_LoaiDichVu");
+
             entity.HasOne(d => d.MaPhieuDangKyNavigation).WithMany(p => p.PhieuDangKyMaus).HasConstraintName("Fk_PhieuDangKy_Mau_PhieuDangKy");
 
             entity.HasOne(d => d.MaTieuChuanNavigation).WithMany(p => p.PhieuDangKyMaus).HasConstraintName("FK_PhieuDangKy_Mau_TieuChuan");
-
-            entity.HasOne(d => d.MadvNavigation).WithMany(p => p.PhieuDangKyMaus).HasConstraintName("Fk_PhieuDangKy_Mau_LoaiDichVu");
 
             entity.HasOne(d => d.ManvThucHienNavigation).WithMany(p => p.PhieuDangKyMaus).HasConstraintName("Fk_PhieuDangKy_Mau_NhanVien_ThucHien");
         });
 
         modelBuilder.Entity<PhieuDangKyMauHinhAnh>(entity =>
         {
-            entity.HasKey(e => e.MaId).HasName("PK__Mau_Hinh__2725BF407CD4D10C");
+            entity.HasKey(e => e.MaId).HasName("PK__PhieuDan__2725BF40655E648D");
 
             entity.HasOne(d => d.MaMauNavigation).WithMany(p => p.PhieuDangKyMauHinhAnhs).HasConstraintName("Fk_Mau_HinhAnh_Mau");
         });
 
         modelBuilder.Entity<PhieuDangKyPhuLieuHoaChat>(entity =>
         {
-            entity.HasKey(e => e.MaId).HasName("PK__PhieuDan__2725BF40963C7A59");
+            entity.HasKey(e => e.MaId).HasName("PK__PhieuDan__2725BF40EA7B7BF4");
 
             entity.HasOne(d => d.MaPlhcNavigation).WithMany(p => p.PhieuDangKyPhuLieuHoaChats).HasConstraintName("FK_PhieuDangKy_PhuLieuHoaChat_Dm_PhuLieu_HoaChat");
         });
 
         modelBuilder.Entity<PhieuDeXuatMuaPlhc>(entity =>
         {
-            entity.HasKey(e => e.MaId).HasName("PK__PhieuDeX__2725BF40644F7948");
+            entity.HasKey(e => e.MaId).HasName("PK__PhieuDeX__2725BF402B722CB2");
 
             entity.HasOne(d => d.ManvDuyetNavigation).WithMany(p => p.PhieuDeXuatMuaPlhcManvDuyetNavigations).HasConstraintName("Fk_PhieuDeXuatMuaPLHC_NhanVien_TuChoi");
 
@@ -404,7 +415,7 @@ public partial class DataContext : DbContext
 
         modelBuilder.Entity<PhieuDeXuatPhongBan>(entity =>
         {
-            entity.HasKey(e => e.MaId).HasName("PK__PhieuDeX__2725BF404DD54693");
+            entity.HasKey(e => e.MaId).HasName("PK__PhieuDeX__2725BF4038EC5058");
 
             entity.HasOne(d => d.MaKhoaTiepNhanNavigation).WithMany(p => p.PhieuDeXuatPhongBans)
                 .OnDelete(DeleteBehavior.ClientSetNull)
@@ -421,7 +432,7 @@ public partial class DataContext : DbContext
 
         modelBuilder.Entity<PhieuDuTru>(entity =>
         {
-            entity.HasKey(e => e.MaId).HasName("PK__PhieuDuT__2725BF40B0B88AFB");
+            entity.HasKey(e => e.MaId).HasName("PK__PhieuDuT__2725BF40C5A4E3AD");
 
             entity.HasOne(d => d.MaKhoaNavigation).WithMany(p => p.PhieuDuTrus).HasConstraintName("Fk_PhieuDuTru_Khoa");
 
@@ -432,7 +443,7 @@ public partial class DataContext : DbContext
 
         modelBuilder.Entity<PhieuLuuMau>(entity =>
         {
-            entity.HasKey(e => e.MaId).HasName("PK__PhieuLuu__2725BF40FBB94E78");
+            entity.HasKey(e => e.MaId).HasName("PK__PhieuLuu__2725BF40CC5D3699");
 
             entity.HasOne(d => d.MaPdkMauNavigation).WithMany(p => p.PhieuLuuMaus).HasConstraintName("Fk_PhieuLuuMau_PhieuDanKy_Mau");
 
@@ -441,7 +452,7 @@ public partial class DataContext : DbContext
 
         modelBuilder.Entity<PhieuNhapKho>(entity =>
         {
-            entity.HasKey(e => e.MaId).HasName("PK__PhieuNha__2725BF402F84FC7D");
+            entity.HasKey(e => e.MaId).HasName("PK__PhieuNha__2725BF407C46849A");
 
             entity.HasOne(d => d.MaHoaDonMuaPlhcNavigation).WithMany(p => p.PhieuNhapKhos).HasConstraintName("Fk_PhieuNhapKho_HoaDonMuaPLHC");
 
@@ -452,7 +463,7 @@ public partial class DataContext : DbContext
 
         modelBuilder.Entity<PhieuNhapKhoChiTiet>(entity =>
         {
-            entity.HasKey(e => e.MaId).HasName("PK__PhieuNha__2725BF40C2EECF09");
+            entity.HasKey(e => e.MaId).HasName("PK__PhieuNha__2725BF4034F8180F");
 
             entity.HasOne(d => d.MaDmPlhcNavigation).WithMany(p => p.PhieuNhapKhoChiTiets).HasConstraintName("Fk_PhieuNhapKhoChiTiet_Dm_PhuLieu_HoaChat");
 
@@ -461,7 +472,7 @@ public partial class DataContext : DbContext
 
         modelBuilder.Entity<PhieuPhanTichKetQua>(entity =>
         {
-            entity.HasKey(e => e.MaId).HasName("PK__PhieuPha__2725BF40BC696A98");
+            entity.HasKey(e => e.MaId).HasName("PK__PhieuPha__2725BF40D3ACB92A");
 
             entity.HasOne(d => d.MaKhoaNavigation).WithMany(p => p.PhieuPhanTichKetQuas).HasConstraintName("Fk_PhieuPhanTichKetQua_Khoa");
 
@@ -481,7 +492,7 @@ public partial class DataContext : DbContext
 
         modelBuilder.Entity<PhieuThu>(entity =>
         {
-            entity.HasKey(e => e.MaId).HasName("PK__PhieuThu__2725BF40C9501F14");
+            entity.HasKey(e => e.MaId).HasName("PK__PhieuThu__2725BF40C8E34942");
 
             entity.HasOne(d => d.MaLienKetChungTuNavigation).WithMany(p => p.PhieuThus).HasConstraintName("Fk_PhieuThu_LKCT");
 
@@ -490,7 +501,7 @@ public partial class DataContext : DbContext
 
         modelBuilder.Entity<PhieuTienDoLamViec>(entity =>
         {
-            entity.HasKey(e => e.MaId).HasName("PK__PhieuTie__2725BF40AB32CB35");
+            entity.HasKey(e => e.MaId).HasName("PK__PhieuTie__2725BF40619E4D3B");
 
             entity.HasOne(d => d.MaPdkMauNavigation).WithMany(p => p.PhieuTienDoLamViecs).HasConstraintName("Fk_PhieuTienDoLamViec_PhieuDangKy_Mau");
 
@@ -501,7 +512,7 @@ public partial class DataContext : DbContext
 
         modelBuilder.Entity<PhieuXuatKho>(entity =>
         {
-            entity.HasKey(e => e.MaId).HasName("PK__PhieuXua__2725BF401F1BB8D3");
+            entity.HasKey(e => e.MaId).HasName("PK__PhieuXua__2725BF40BB97C370");
 
             entity.HasOne(d => d.MaPhieuDuTruNavigation).WithMany(p => p.PhieuXuatKhos).HasConstraintName("Fk_PhieuThu_NhanVien_PhieuDuTru");
 
@@ -514,7 +525,7 @@ public partial class DataContext : DbContext
 
         modelBuilder.Entity<PhuLieuHoaChatKho>(entity =>
         {
-            entity.HasKey(e => e.MaId).HasName("PK__PhuLieu___2725BF4020BC7A93");
+            entity.HasKey(e => e.MaId).HasName("PK__PhuLieu___2725BF403457E6F2");
 
             entity.HasOne(d => d.MaDmPlhcNavigation).WithMany(p => p.PhuLieuHoaChatKhos).HasConstraintName("Fk_PhuLieu_HoaChat_Kho_Dm_PhuLieu_HoaChat");
 
@@ -523,12 +534,12 @@ public partial class DataContext : DbContext
 
         modelBuilder.Entity<PhuongPhap>(entity =>
         {
-            entity.HasKey(e => e.MaId).HasName("PK__PhuongPh__2725BF4013F444E1");
+            entity.HasKey(e => e.MaId).HasName("PK__PhuongPh__2725BF406DEAB2AE");
         });
 
         modelBuilder.Entity<TaiKhoan>(entity =>
         {
-            entity.HasKey(e => e.MaId).HasName("PK__TaiKhoan__2725BF40927F9C0B");
+            entity.HasKey(e => e.MaId).HasName("PK__TaiKhoan__2725BF40EDE52947");
 
             entity.HasOne(d => d.MaBoPhanNavigation).WithMany(p => p.TaiKhoans).HasConstraintName("Fk_TaiKhoan_BoPhan");
 
@@ -543,7 +554,7 @@ public partial class DataContext : DbContext
 
         modelBuilder.Entity<ThongBaoChoKhachHang>(entity =>
         {
-            entity.HasKey(e => e.MaId).HasName("PK__ThongBao__2725BF4039BED28E");
+            entity.HasKey(e => e.MaId).HasName("PK__ThongBao__2725BF4016E7790A");
 
             entity.HasOne(d => d.MaKhNavigation).WithMany(p => p.ThongBaoChoKhachHangs).HasConstraintName("Fk_ThongBaoChoKhachHang_KhachHang");
 
@@ -552,14 +563,14 @@ public partial class DataContext : DbContext
 
         modelBuilder.Entity<ThongBaoChoTrungTam>(entity =>
         {
-            entity.HasKey(e => e.MaId).HasName("PK__ThongBao__2725BF40A285E519");
+            entity.HasKey(e => e.MaId).HasName("PK__ThongBao__2725BF40CDF48EFE");
 
             entity.HasOne(d => d.MaKhNavigation).WithMany(p => p.ThongBaoChoTrungTams).HasConstraintName("Fk_ThongBaoChoTrungTam_KhachHang");
         });
 
         modelBuilder.Entity<ThongBaoChoTrungTamNhan>(entity =>
         {
-            entity.HasKey(e => e.MaId).HasName("PK__ThongBao__2725BF408D1070C4");
+            entity.HasKey(e => e.MaId).HasName("PK__ThongBao__2725BF405D8DFB1A");
 
             entity.HasOne(d => d.NhanVien).WithMany(p => p.ThongBaoChoTrungTamNhans).HasConstraintName("Fk_ThongBaoChoTrungTam_Nhan_NhanVien");
 
@@ -568,21 +579,21 @@ public partial class DataContext : DbContext
 
         modelBuilder.Entity<ThongBaoChoTrungTamNhom>(entity =>
         {
-            entity.HasKey(e => e.MaId).HasName("PK__ThongBao__2725BF404AB06F7F");
+            entity.HasKey(e => e.MaId).HasName("PK__ThongBao__2725BF402A6B463E");
 
             entity.HasOne(d => d.ThongBao).WithMany(p => p.ThongBaoChoTrungTamNhoms).HasConstraintName("Fk_ThongBaoChoTrungTam_Nhom_ThongBaoChoTrungTam");
         });
 
         modelBuilder.Entity<ThongBaoNoiBo>(entity =>
         {
-            entity.HasKey(e => e.MaId).HasName("PK__ThongBao__2725BF40D02EB2F6");
+            entity.HasKey(e => e.MaId).HasName("PK__ThongBao__2725BF40F0C2CCDC");
 
             entity.HasOne(d => d.ManvGuiNavigation).WithMany(p => p.ThongBaoNoiBos).HasConstraintName("Fk_ThongBaoNoiBo_NhanVien_Gui");
         });
 
         modelBuilder.Entity<ThongBaoNoiBoNhan>(entity =>
         {
-            entity.HasKey(e => e.MaId).HasName("PK__ThongBao__2725BF40D8281C3E");
+            entity.HasKey(e => e.MaId).HasName("PK__ThongBao__2725BF401EBC2BF5");
 
             entity.HasOne(d => d.NhanVien).WithMany(p => p.ThongBaoNoiBoNhans).HasConstraintName("Fk_ThongBaoNoiBo_Nhan_NhanVien");
 
@@ -591,28 +602,19 @@ public partial class DataContext : DbContext
 
         modelBuilder.Entity<ThongBaoNoiBoNhom>(entity =>
         {
-            entity.HasKey(e => e.MaId).HasName("PK__ThongBao__2725BF404DBB7ABB");
+            entity.HasKey(e => e.MaId).HasName("PK__ThongBao__2725BF40266AF9A4");
 
             entity.HasOne(d => d.ThongBaoNoiBo).WithMany(p => p.ThongBaoNoiBoNhoms).HasConstraintName("Fk_ThongBao_Nhom_ThongBaoNoiBo");
         });
 
         modelBuilder.Entity<TieuChuan>(entity =>
         {
-            entity.HasKey(e => e.MaId).HasName("PK__TieuChua__2725BF4075504577");
-        });
-
-        modelBuilder.Entity<TieuChuanChiTieu>(entity =>
-        {
-            entity.HasKey(e => e.MaId).HasName("PK__TieuChua__2725BF400783A14F");
-
-            entity.HasOne(d => d.MaChiTieuNavigation).WithMany(p => p.TieuChuanChiTieus).HasConstraintName("FK_TieuChuan_ChiTieu_ChiTieu");
-
-            entity.HasOne(d => d.MaTieuChuanNavigation).WithMany(p => p.TieuChuanChiTieus).HasConstraintName("FK_TieuChuan_ChiTieu_TieuChuan");
+            entity.HasKey(e => e.MaId).HasName("PK__TieuChua__2725BF407866DA4B");
         });
 
         modelBuilder.Entity<TrangThaiPhieuDk>(entity =>
         {
-            entity.HasKey(e => e.MaId).HasName("PK__TrangTha__2725BF40BBFFC918");
+            entity.HasKey(e => e.MaId).HasName("PK__TrangTha__2725BF4048F83181");
         });
 
         OnModelCreatingPartial(modelBuilder);
