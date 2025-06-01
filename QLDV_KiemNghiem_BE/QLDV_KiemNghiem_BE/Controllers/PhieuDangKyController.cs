@@ -149,7 +149,7 @@ namespace QLDV_KiemNghiem_BE.Controllers
             if (time != 0)
             {
                 _logger.LogDebug("Tra ket qua thoi gian du tinh kiem nghiem thanh cong");
-                return Ok(time);
+                return Ok(new {data = time, message = "Khong co du lieu cua mau nay, hoac mau nhap vao chua hop le"});
             }
             else 
             {
