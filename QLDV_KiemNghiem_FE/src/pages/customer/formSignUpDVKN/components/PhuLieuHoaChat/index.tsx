@@ -164,16 +164,7 @@ const PhuLieuHoaChat = (props: PhuLieuHoaChatProps) => {
         .max(18, "Nồng độ nhập phải nhỏ hơn 18 số 9")
         .test("lớn hơn 0.01", "Nồng độ nhập phải lớn hơn 0.01", (value) => {
           return Number(value) >= 0.01;
-        })
-        .test(
-          "2 chữ số sau dấu thập phân",
-          "Nồng độ nhập phải lớn hơn 0.01",
-          (value) => {
-            if (typeof value !== "string") return false;
-            const parts = Number(value).toString().split(".");
-            return parts.length === 1 || parts[1].length <= 2;
-          }
-        ),
+        }),
       DonViNongDo: yup
         .string()
         .required("Yêu cầu nhập Đơn vị nồng độ")

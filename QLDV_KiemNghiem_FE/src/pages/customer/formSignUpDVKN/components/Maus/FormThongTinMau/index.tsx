@@ -1,7 +1,7 @@
 import { Box } from "@mui/material";
 import { Dispatch, useEffect, useMemo, useState } from "react";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
 import ListImage from "./ListImage";
 import yup from "../../../../../../configs/yup.custom";
 import { FormMau } from "../../../../../../models/mau";
@@ -14,6 +14,7 @@ import InputSelectDichVu from "./InputSelectDichVu";
 import {
   useGetDmMauAll,
   useGetLoaiDichVuAll,
+  useGetThoiGianTieuChuan,
   useGetTieuChuanAll,
 } from "../../../../../../hooks/customers/usePhieuDKyDVKN";
 
@@ -66,6 +67,7 @@ const FormThongTinMau = (props: FormThongTinMauProps) => {
   const { data: dataTieuChuanAll } = useGetTieuChuanAll({
     queryKey: "TieuChuanAll",
   });
+
   const { data: dataLoaiDichVuAll } = useGetLoaiDichVuAll({
     queryKey: "LoaiDichVuAll",
   });
@@ -81,14 +83,7 @@ const FormThongTinMau = (props: FormThongTinMauProps) => {
               item.tenMau === value && item.tenMau !== dataEditMaus?.tenMau
           );
           return !isTrungLap ? true : false;
-        })
-        .test(
-          "kiểm tra định dạng",
-          "Tên Mẫu nhập phải bằng kiểu chữ a-zA-z và cuối số không được phép để khoảng trắng",
-          (value) => {
-            return /^[\p{L}]+(?: [\p{L}]+)*$/u.test(value);
-          }
-        ),
+        }),
       tenTieuChuan: yup.string().required("Yêu cầu chọn Tiêu chuẩn"),
       tenLoaiDichVu: yup.string().required("Yêu cầu chọn Dịch vụ"),
       thoiGianTieuChuan: yup
@@ -134,19 +129,10 @@ const FormThongTinMau = (props: FormThongTinMauProps) => {
         .string()
         .typeError("Yêu cầu nhập Số lượng")
         .required("Yêu cầu nhập Số lượng")
-        .max(18, "Số lượng nhập phải nhỏ hơn 18 số 9")
+        .max(18, "Số lượng nhập phải nhỏ hơn 18 số 9 trước dấu thập phân")
         .test("lớn hơn 0.01", "Số lượng nhập phải lớn hơn 0.01", (value) => {
           return Number(value) >= 0.01;
-        })
-        .test(
-          "2 chữ số sau dấu thập phân",
-          "Số lượng nhập phải lớn hơn 0.01",
-          (value) => {
-            if (typeof value !== "string") return false;
-            const parts = Number(value).toString().split(".");
-            return parts.length === 1 || parts[1].length <= 2;
-          }
-        ),
+        }),
       donViTinh: yup
         .string()
         .required("Yêu cầu nhập Đơn vị tính")
@@ -187,11 +173,37 @@ const FormThongTinMau = (props: FormThongTinMauProps) => {
     mode: "onChange",
   });
 
-  // const TenMau = useWatch({ control, name: "tenMau" });
-  // const tenTieuChuan = useWatch({ control, name: "tenTieuChuan" });
-  // const tenLoaiDichVu = useWatch({ control, name: "tenLoaiDichVu" });
+  const TenMau = useWatch({ control, name: "tenMau" });
 
-  // console.log("maId", DichVu);
+  const tenTieuChuan = useWatch({ control, name: "tenTieuChuan" });
+
+  const tenLoaiDichVu = useWatch({ control, name: "tenLoaiDichVu" });
+  const MaDm_Mau_Id = useMemo(() => {
+    return dataDMMau?.find((item: any) => item.tenMau === TenMau)?.maId;
+  }, [dataDMMau, TenMau]);
+
+  const MaTieuChuan_Id = useMemo(() => {
+    return dataTieuChuanAll?.find(
+      (item: any) => item.tenTieuChuan === tenTieuChuan
+    )?.maId;
+  }, [dataTieuChuanAll, tenTieuChuan]);
+
+  const MaLoaiDV = useMemo(() => {
+    return dataLoaiDichVuAll?.find(
+      (item: any) => item.tenDichVu === tenLoaiDichVu
+    )?.maLoaiDv;
+  }, [dataLoaiDichVuAll, tenLoaiDichVu]);
+
+  const { data: dataThoiGianTieuChuan } = useGetThoiGianTieuChuan({
+    queryKey: "ThoiGianTieuChuan",
+    maDmMau: MaDm_Mau_Id,
+    maTieuChuan: MaTieuChuan_Id,
+  });
+  const dataNgayTraKQ = MaLoaiDV
+    ? MaLoaiDV.split("-")[1] === "Max"
+      ? "Linh Hoạt"
+      : (MaLoaiDV.split("-")[1] / 100) * dataThoiGianTieuChuan
+    : 0;
 
   const handleCreateMau = (data: FormMau) => {
     const MaDm_Mau = dataDMMau.find(
@@ -209,7 +221,7 @@ const FormThongTinMau = (props: FormThongTinMauProps) => {
     data.phieuDangKyMauHinhAnhs.map((item) =>
       dataImage.push({
         maId: "",
-        maMau: MaDm_Mau,
+        maMau: "",
         ten: item.ten,
         dinhDang: item.type,
         base64: item.base64,
@@ -250,7 +262,7 @@ const FormThongTinMau = (props: FormThongTinMauProps) => {
       ngaySua: "",
       thoiGianTieuChuan: "",
       maPdkMau: "",
-      loaiDv: "DVG02-80",
+      loaiDv: MaLoaiDV,
       phieuDangKyMauHinhAnhs: dataImage,
     };
 
@@ -258,7 +270,6 @@ const FormThongTinMau = (props: FormThongTinMauProps) => {
       ...dataPhieuDangky,
       Maus: [dataMau, ...(dataPhieuDangky?.Maus || [])],
     };
-    console.log("dataMau", PhieuDangKy, dataPhieuDangky);
 
     sessionStorage.setItem("PhieuDangKy", JSON.stringify(PhieuDangKy));
     setData(PhieuDangKy);
@@ -330,7 +341,7 @@ const FormThongTinMau = (props: FormThongTinMauProps) => {
       ngaySua: "",
       thoiGianTieuChuan: "",
       maPdkMau: "",
-      loaiDv: "DVG02-80",
+      loaiDv: MaLoaiDV,
       phieuDangKyMauHinhAnhs: dataImage,
     };
 
@@ -357,12 +368,15 @@ const FormThongTinMau = (props: FormThongTinMauProps) => {
       const tenTieuChuan = dataTieuChuanAll.find(
         (item: any) => item.maId === dataEditMaus.maTieuChuan
       ).tenTieuChuan;
+      const tenDichVu = dataLoaiDichVuAll.find(
+        (item: any) => item.maLoaiDv === dataEditMaus.loaiDv
+      ).tenDichVu;
       setListImage(dataEditMaus.phieuDangKyMauHinhAnhs);
 
       reset({
         tenMau: dataEditMaus?.tenMau || "",
         tenTieuChuan: tenTieuChuan || "",
-        tenLoaiDichVu: dataEditMaus?.loaiDv || "",
+        tenLoaiDichVu: tenDichVu || "",
         thoiGianTieuChuan: dataEditMaus?.thoiGianTieuChuan || "",
         ngayDuKienTraKetQua: dataEditMaus?.ngayDuKienTraKetQua || "",
         soLo: dataEditMaus?.soLo || "",
@@ -497,6 +511,11 @@ const FormThongTinMau = (props: FormThongTinMauProps) => {
                   name="thoiGianTieuChuan"
                   placeholder="Vui lòng Tiêu Chuẩn"
                   inputRef={register("thoiGianTieuChuan")}
+                  value={
+                    Number(dataThoiGianTieuChuan)
+                      ? Number(dataThoiGianTieuChuan)
+                      : ""
+                  }
                   errorMessage={errors.thoiGianTieuChuan?.message}
                   className="h-[42px]"
                   disabled
@@ -514,6 +533,7 @@ const FormThongTinMau = (props: FormThongTinMauProps) => {
                   placeholder="Vui lòng Tiêu Chuẩn và Dịch vụ"
                   inputRef={register("ngayDuKienTraKetQua")}
                   errorMessage={errors.ngayDuKienTraKetQua?.message}
+                  value={dataNgayTraKQ ? dataNgayTraKQ : 15}
                   className="h-[42px]"
                   disabled
                   sx={{

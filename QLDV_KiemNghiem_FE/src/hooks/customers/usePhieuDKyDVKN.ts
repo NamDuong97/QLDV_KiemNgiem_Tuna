@@ -1,5 +1,6 @@
 import { useMutation, useQueries, useQuery } from "@tanstack/react-query";
 import PhieuDKyDVKN_Services from "../../services/customers/PhieuDKyDVKN_Services";
+import { ThoiGianTieuChuanParams } from "../../models/PhieuDangKy";
 
 interface Props {
   queryKey?: string;
@@ -9,6 +10,8 @@ interface Props {
   trangThaiID?: string;
   maTrangThaiPhieuDangKy?: string;
   onSettled?: (response: any) => void;
+  maTieuChuan?: string;
+  maDmMau?: string;
 }
 
 export const useGetPhieuDangKyKiemNghiemByTrangThai = (props: Props) => {
@@ -111,12 +114,32 @@ export const useCreatePhieuDKyDVKN = (props: Props) => {
       const response = await PhieuDKyDVKN_Services.createPhieuDKyDVKN(
         paramsPhieuDangKyDVKN
       );
-      if (response === 200) return response;
-      return console.log("Lỗi Server");
+      if (response !== 200) return console.log("Lỗi Server");
+      return response;
     },
     onSuccess: (response: any) => {
       if (response !== 200) console.log("Lỗi Server");
     },
     onSettled: onSettled,
+  });
+};
+
+export const useGetThoiGianTieuChuan = (props: Props) => {
+  const { queryKey, maTieuChuan, maDmMau } = props;
+  return useQuery({
+    queryKey: [queryKey, maTieuChuan, maDmMau],
+    queryFn: async () => {
+      if (maDmMau && maTieuChuan) {
+        let params: ThoiGianTieuChuanParams = {
+          maDmMau: maDmMau,
+          maTieuChuan: maTieuChuan,
+        };
+        const response = await PhieuDKyDVKN_Services.getThoiGianTieuChuan(
+          params
+        );
+        return response;
+      }
+      return null;
+    },
   });
 };

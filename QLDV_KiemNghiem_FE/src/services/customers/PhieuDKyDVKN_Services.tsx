@@ -1,6 +1,9 @@
 import _APIInstance from "../../configs/configAPI";
 import { API } from "../../constants/commons";
-import { ParamsPhieuDangKyByTrangThai } from "../../models/PhieuDangKy";
+import {
+  ParamsPhieuDangKyByTrangThai,
+  ThoiGianTieuChuanParams,
+} from "../../models/PhieuDangKy";
 
 export default class PhieuDKyDVKN_Services {
   static async getPhieuDangKyKiemNghiemByTrangThai(
@@ -92,6 +95,17 @@ export default class PhieuDKyDVKN_Services {
     try {
       const response = await _APIInstance.get(
         API.CUSTOMER.PHIEU_DANG_KY_DICH_VU_KIEM_NGHIEM.GET_DANH_MUC_PLHC
+      );
+      return response?.data;
+    } catch (res) {
+      return res;
+    }
+  }
+
+  static async getThoiGianTieuChuan(params: ThoiGianTieuChuanParams) {
+    try {
+      const response = await _APIInstance.get(
+        `${API.CUSTOMER.PHIEU_DANG_KY_DICH_VU_KIEM_NGHIEM.GET_THOI_GIAN_TIEU_CHUAN}?maDmMau=${params.maDmMau}&maTieuChuan=${params.maTieuChuan}`
       );
       return response?.data;
     } catch (res) {

@@ -29,9 +29,9 @@ const PopupNofitication = (props: Props) => {
       onClose={handleCloseNofitication}
     >
       <Box className="!relative px-7 py-6 w-auto md:w-[785px]">
-        <Box className="!absolute top-2 right-5">
+        <Box className="!absolute top-3 right-4">
           <button
-            className="bg-gray-400 rounded-full p-[6px] hover:bg-gray-500 cursor-pointer"
+            className="bg-gray-400 rounded-full p-[4px] hover:bg-gray-500 cursor-pointer"
             onClick={handleCloseNofitication}
           >
             <IoMdClose className="w-6 h-6 text-gray-300" />
@@ -47,10 +47,10 @@ const PopupNofitication = (props: Props) => {
           >
             <Box className="grid gap-6">
               <Box className="py-2 text-center">
-                <h1 className="font-bold text-3xl">Thông Báo</h1>
+                <h1 className="font-bold text-3xl text-cyan-900">Thông Báo</h1>
               </Box>
               <Box className="grid gap-1">
-                <p className="text-base/6 font-medium text-center">
+                <p className="text-lg/6 font-medium text-center">
                   Yêu cầu kiểm nghiệm đã được gửi thành công. Bộ phận chuyên
                   trách sẽ tiếp nhận và phản hồi đến Quý khách trong thời gian
                   sớm nhất. Để theo dõi trạng thái phiếu đăng ký bạn theo dõi
@@ -59,16 +59,16 @@ const PopupNofitication = (props: Props) => {
               </Box>
               <Box className="grid sm:flex gap-6 sm:justify-center">
                 <button
-                  className="font-bold text-center text-white bg-[#00c9a7] px-4 py-1 lg:px-10 lg:py-2 rounded-md hover:bg-[#23ad96] cursor-pointer"
+                  className="font-bold text-center text-white bg-[#00c9a7] px-4 py-1 lg:px-16 lg:py-2 rounded-md hover:bg-[#23ad96] cursor-pointer"
                   onClick={() => navigate(APP_ROUTES.TUNA_CUSTOMER.HOME.to)}
                 >
-                  Trang Chủ
+                  Trang chủ
                 </button>
                 <button
                   className="font-bold text-center text-white bg-[#f8cf00] px-4 py-1 lg:px-6 lg:py-2 rounded-md hover:bg-[#cfb220] cursor-pointer"
                   onClick={handleRedirectManagerPhieuDKy}
                 >
-                  Quay về Trang Quản lý Đăng ký dịch vụ kiểm nghiệm
+                  Quản lý Đăng ký dịch vụ kiểm nghiệm
                 </button>
               </Box>
             </Box>

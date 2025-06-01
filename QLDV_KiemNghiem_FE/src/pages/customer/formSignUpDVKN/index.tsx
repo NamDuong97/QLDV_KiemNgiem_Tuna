@@ -185,7 +185,7 @@ const FormSignUpDVKN = () => {
         nguoiSua: "admin",
         ngayTao: "2025-04-18T00:00:00",
         ngaySua: "2025-04-18T00:00:00",
-        thoiGianTieuChuan: null,
+        thoiGianTieuChuan: Number(itemMau.thoiGianTieuChuan),
         maPdkMau: null,
         loaiDv: itemMau.loaiDv,
         phieuDangKyMauHinhAnhs: itemMau.phieuDangKyMauHinhAnhs
@@ -344,17 +344,14 @@ const FormSignUpDVKN = () => {
               type="button"
               onClick={handleSubmit(handleGui)}
               disabled={
-                data?.donViGuiMau &&
-                data?.Maus?.length >= 1 &&
-                data?.PLHC?.length >= 1
+                data?.Maus?.length >= 1 && data?.PLHC?.length >= 1
                   ? false
                   : true
               }
               className={clsx(
                 "hidden px-4 py-[5px] sm:px-6 sm:py-2 sm:flex items-center text-white  border-[2px] border-solid border-gray-300 rounded-[6px] shadow-[0_4px_4px_rgba(0,0,0,0.25)]",
-                data?.donViGuiMau &&
-                  data?.Maus?.length >= 1 &&
-                  data?.PLHC?.length >= 1
+
+                data?.Maus?.length >= 1 && data?.PLHC?.length >= 1
                   ? "cursor-pointer bg-indigo-600 hover:bg-indigo-700"
                   : "cursor-no-drop bg-indigo-400"
               )}
@@ -400,7 +397,7 @@ const FormSignUpDVKN = () => {
                   className="border border-gray-300 rounded-br-[6px] rounded-bl-[6px]"
                 >
                   <form className="p-5 grid grid-cols-12 gap-1 md:gap-[0px_24px]">
-                    <Box className="col-span-12 md:col-span-6">
+                    <Box className="col-span-12 md:col-span-6 lg:col-span-4">
                       <Inputs
                         title="Người gửi mẫu"
                         className="h-[42px]"
@@ -415,7 +412,7 @@ const FormSignUpDVKN = () => {
                         }}
                       />
                     </Box>
-                    <Box className="col-span-12 md:col-span-6">
+                    <Box className="col-span-12 md:col-span-6 lg:col-span-4">
                       <Inputs
                         title="Đơn vị gửi mẫu"
                         className="h-[42px]"
@@ -430,7 +427,7 @@ const FormSignUpDVKN = () => {
                         }}
                       />
                     </Box>
-                    <Box className="col-span-12 md:col-span-6">
+                    <Box className="col-span-12 md:col-span-6 lg:col-span-4">
                       <Inputs
                         title="Email"
                         type="email"
@@ -446,7 +443,7 @@ const FormSignUpDVKN = () => {
                         }}
                       />
                     </Box>
-                    <Box className="col-span-12 md:col-span-6">
+                    <Box className="col-span-12 md:col-span-6 lg:col-span-4">
                       <Inputs
                         title="Số điện thoại"
                         type="number"
@@ -470,7 +467,7 @@ const FormSignUpDVKN = () => {
                         }}
                       />
                     </Box>
-                    <Box className="col-span-12 md:col-span-6">
+                    <Box className="col-span-12 md:col-span-6 lg:col-span-4">
                       <InputSelect
                         title="Hình thức gửi mẫu"
                         name="HinhThucGuiMau"
@@ -483,7 +480,7 @@ const FormSignUpDVKN = () => {
                         errorMessage={(errors.HinhThucGuiMau as any)?.message}
                       />
                     </Box>
-                    <Box className="col-span-12 md:col-span-6">
+                    <Box className="col-span-12 md:col-span-6 lg:col-span-4">
                       <InputSelect
                         title="Hình thức trả kết quả"
                         name="HinhThucTraKQ"
@@ -629,7 +626,7 @@ const FormSignUpDVKN = () => {
           <Box className="sm:hidden">
             <button
               type="button"
-              onClick={handleSubmit(onSubmitPhieuDkyDV)}
+              onClick={handleSubmit(handleGui)}
               className="px-4 py-[6px] w-full flex items-center justify-center bg-indigo-600 text-white hover:bg-indigo-700 border-[2px] border-solid border-gray-300 rounded-[6px] shadow-[0_4px_4px_rgba(0,0,0,0.25)] cursor-pointer"
             >
               <span className="text-[14px]/6 font-bold text-amber-50">Gửi</span>

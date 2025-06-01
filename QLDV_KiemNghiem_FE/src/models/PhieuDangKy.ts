@@ -83,3 +83,8 @@ export interface ParamsPhieuDangKyByTrangThai {
   maTrangThaiPhieuDangKy?: string;
   maKH?: string;
 }
+
+export interface ThoiGianTieuChuanParams {
+  maDmMau?: string;
+  maTieuChuan?: string;
+}
