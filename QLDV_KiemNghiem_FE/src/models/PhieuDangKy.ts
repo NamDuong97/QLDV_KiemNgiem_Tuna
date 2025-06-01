@@ -13,8 +13,6 @@ export interface FormPhieuDangKy {
   DiaChiGiaoMau?: string;
   KetQuaTiengAnh?: boolean;
   NgayGiaoMau: string;
-  Maus: Maus[];
-  PLHC: PhuLieuHoaChat[];
 }
 
 export interface FormPhieuDangKyTemp {

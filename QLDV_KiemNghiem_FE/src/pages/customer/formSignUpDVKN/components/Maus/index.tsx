@@ -2,10 +2,12 @@ import { Box, Pagination } from "@mui/material";
 import { motion } from "motion/react";
 import TableMau from "./TableMau";
 import { Align } from "../../../../../models/Table";
-import { useState } from "react";
+import { Dispatch, useState } from "react";
 import FormThongTinMau from "./FormThongTinMau";
 
-interface MausProps {}
+interface MausProps {
+  setData: Dispatch<any>;
+}
 
 const tableHead = [
   {
@@ -41,7 +43,7 @@ const tableHead = [
 ];
 
 const Maus = (props: MausProps) => {
-  const {} = props;
+  const { setData } = props;
 
   const [tableBody, settableBody] = useState(() => {
     const data = sessionStorage.getItem("PhieuDangKy");
@@ -78,7 +80,7 @@ const Maus = (props: MausProps) => {
       ...dataPhieuDangky,
       Maus: data,
     };
-
+    setData(PhieuDangKy);
     sessionStorage.setItem("PhieuDangKy", JSON.stringify(PhieuDangKy));
     settableBody(data);
     setListCheckbox([]);
@@ -191,6 +193,7 @@ const Maus = (props: MausProps) => {
             setDataEditMaus={setDataEditMaus}
             tableBody={tableBody}
             handleRedirectTag2={() => setisTag(2)}
+            setData={setData}
           />
         );
     }

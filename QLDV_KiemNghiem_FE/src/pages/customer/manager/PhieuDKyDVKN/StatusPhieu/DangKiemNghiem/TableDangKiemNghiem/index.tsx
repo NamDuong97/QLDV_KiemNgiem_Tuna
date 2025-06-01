@@ -12,12 +12,12 @@ import { useNavigate } from "react-router";
 import { Align } from "../../../../../../../models/Table";
 import { APP_ROUTES } from "../../../../../../../constants/routers";
 
-interface TableChoXetDuyetProps {
+interface TableProps {
   tableBody: any[];
   tableHead: any[];
 }
 
-const TableDangKiemNghiem = (props: TableChoXetDuyetProps) => {
+const TableDangKiemNghiem = (props: TableProps) => {
   const { tableBody, tableHead } = props;
 
   const navigate = useNavigate();

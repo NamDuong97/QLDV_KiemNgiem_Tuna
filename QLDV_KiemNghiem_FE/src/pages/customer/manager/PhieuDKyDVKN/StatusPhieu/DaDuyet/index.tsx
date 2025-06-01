@@ -1,6 +1,6 @@
 import { Box } from "@mui/material";
-import TableChoXetDuyet from "./TableDaDuyet";
 import { Align } from "../../../../../../models/Table";
+import TableDaDuyet from "./TableDaDuyet";
 
 interface Props {}
 
@@ -54,7 +54,7 @@ const DaDuyet = (props: Props) => {
   return (
     <Box className="grid gap-4">
       <Box className="overflow-x-auto whitespace-nowrap border border-gray-300 rounded-md">
-        <TableChoXetDuyet tableHead={tableHead} tableBody={dataPhieuDKy} />
+        <TableDaDuyet tableHead={tableHead} tableBody={dataPhieuDKy} />
       </Box>
     </Box>
   );

@@ -2,7 +2,7 @@ import { Box, Pagination } from "@mui/material";
 import { motion } from "motion/react";
 import { Align } from "../../../../../models/Table";
 import TablePLHC from "./TablePLHC";
-import { useEffect, useMemo, useState } from "react";
+import { Dispatch, useEffect, useMemo, useState } from "react";
 import yup from "../../../../../configs/yup.custom";
 import { FormPhuLieuHoaChat } from "../../../../../models/PhuLieuHoaChat";
 import { useForm, useWatch } from "react-hook-form";
@@ -12,7 +12,9 @@ import { Inputs } from "../../../../../components/Inputs";
 import InputSelectDM_PLHC from "./InputSelectDM_PLHC";
 import { useGetDmPhuLieuHoaChatAll } from "../../../../../hooks/customers/usePhieuDKyDVKN";
 
-interface PhuLieuHoaChatProps {}
+interface PhuLieuHoaChatProps {
+  setData: Dispatch<any>;
+}
 
 const tableHead = [
   {
@@ -48,7 +50,7 @@ const tableHead = [
 ];
 
 const PhuLieuHoaChat = (props: PhuLieuHoaChatProps) => {
-  const {} = props;
+  const { setData } = props;
 
   const dataTest = sessionStorage.getItem("PhieuDangKy");
   const dataPhieuDangky = dataTest ? JSON.parse(dataTest) : null;
@@ -229,6 +231,7 @@ const PhuLieuHoaChat = (props: PhuLieuHoaChatProps) => {
       ...dataPhieuDangky,
       PLHC: [dataPLHC, ...(dataPhieuDangky?.PLHC || [])],
     };
+    setData(PhieuDangKy);
     settableBody(PhieuDangKy.PLHC);
     sessionStorage.setItem("PhieuDangKy", JSON.stringify(PhieuDangKy));
     setisTag(2);
@@ -276,7 +279,7 @@ const PhuLieuHoaChat = (props: PhuLieuHoaChatProps) => {
       ...dataPhieuDangky,
       PLHC: updatedPLHC,
     };
-
+    setData(updatedPhieuDangky);
     setDataEditPLHC(null);
     settableBody(updatedPhieuDangky.PLHC);
     sessionStorage.setItem("PhieuDangKy", JSON.stringify(updatedPhieuDangky));
@@ -301,7 +304,7 @@ const PhuLieuHoaChat = (props: PhuLieuHoaChatProps) => {
       ...dataPhieuDangky,
       PLHC: data,
     };
-
+    setData(PhieuDangKy);
     sessionStorage.setItem("PhieuDangKy", JSON.stringify(PhieuDangKy));
 
     settableBody(data);

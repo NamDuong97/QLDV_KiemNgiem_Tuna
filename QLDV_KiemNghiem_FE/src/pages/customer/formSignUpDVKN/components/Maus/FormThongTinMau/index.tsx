@@ -1,7 +1,7 @@
 import { Box } from "@mui/material";
 import { Dispatch, useEffect, useMemo, useState } from "react";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { useForm, useWatch } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import ListImage from "./ListImage";
 import yup from "../../../../../../configs/yup.custom";
 import { FormMau } from "../../../../../../models/mau";
@@ -32,6 +32,7 @@ interface FormThongTinMauProps {
   tableBody: any;
   handleRedirectTag2: () => void;
   setDataEditMaus: Dispatch<any>;
+  setData: Dispatch<any>;
 }
 
 const FormThongTinMau = (props: FormThongTinMauProps) => {
@@ -42,6 +43,7 @@ const FormThongTinMau = (props: FormThongTinMauProps) => {
     tableBody,
     setDataEditMaus,
     handleRedirectTag2,
+    setData,
   } = props;
 
   const dataTest = sessionStorage.getItem("PhieuDangKy");
@@ -187,7 +189,7 @@ const FormThongTinMau = (props: FormThongTinMauProps) => {
 
   // const TenMau = useWatch({ control, name: "tenMau" });
   // const tenTieuChuan = useWatch({ control, name: "tenTieuChuan" });
-  const tenLoaiDichVu = useWatch({ control, name: "tenLoaiDichVu" });
+  // const tenLoaiDichVu = useWatch({ control, name: "tenLoaiDichVu" });
 
   // console.log("maId", DichVu);
 
@@ -195,9 +197,9 @@ const FormThongTinMau = (props: FormThongTinMauProps) => {
     const MaDm_Mau = dataDMMau.find(
       (item: any) => item.tenMau === data.tenMau
     ).maId;
-    const madv = dataLoaiDichVuAll.find(
-      (item: any) => item.tenDichVu === data.tenLoaiDichVu
-    ).maId;
+    // const madv = dataLoaiDichVuAll.find(
+    //   (item: any) => item.tenDichVu === data.tenLoaiDichVu
+    // ).maId;
     const maTieuChuan = dataTieuChuanAll.find(
       (item: any) => item.tenTieuChuan === data.tenTieuChuan
     ).maId;
@@ -228,7 +230,7 @@ const FormThongTinMau = (props: FormThongTinMauProps) => {
       maTieuChuan: maTieuChuan,
       maPhieuDangKy: "",
       manvThucHien: "",
-      madv: madv,
+      madv: "DV001",
       soLo: data.soLo,
       donViSanXuat: data.donViSanXuat,
       ngaySanXuat: data.ngaySanXuat,
@@ -248,7 +250,7 @@ const FormThongTinMau = (props: FormThongTinMauProps) => {
       ngaySua: "",
       thoiGianTieuChuan: "",
       maPdkMau: "",
-      loaiDv: tenLoaiDichVu,
+      loaiDv: "DVG02-80",
       phieuDangKyMauHinhAnhs: dataImage,
     };
 
@@ -256,9 +258,10 @@ const FormThongTinMau = (props: FormThongTinMauProps) => {
       ...dataPhieuDangky,
       Maus: [dataMau, ...(dataPhieuDangky?.Maus || [])],
     };
-    console.log("dataMau", PhieuDangKy);
+    console.log("dataMau", PhieuDangKy, dataPhieuDangky);
 
     sessionStorage.setItem("PhieuDangKy", JSON.stringify(PhieuDangKy));
+    setData(PhieuDangKy);
     sessionStorage.removeItem("ImageTemp");
     settableBody(PhieuDangKy?.Maus || []);
     handleRedirectDanhSachMau?.();
@@ -273,9 +276,9 @@ const FormThongTinMau = (props: FormThongTinMauProps) => {
     const MaDm_Mau = dataDMMau.find(
       (item: any) => item.tenMau === data.tenMau
     ).maId;
-    const madv = dataLoaiDichVuAll.find(
-      (item: any) => item.tenDichVu === data.tenLoaiDichVu
-    ).maId;
+    // const madv = dataLoaiDichVuAll.find(
+    //   (item: any) => item.tenDichVu === data.tenLoaiDichVu
+    // ).maId;
 
     const maTieuChuan = dataTieuChuanAll.find(
       (item: any) => item.tenTieuChuan === data.tenTieuChuan
@@ -307,7 +310,7 @@ const FormThongTinMau = (props: FormThongTinMauProps) => {
       maTieuChuan: maTieuChuan,
       maPhieuDangKy: "",
       manvThucHien: "",
-      madv: madv,
+      madv: "DV001",
       soLo: data.soLo,
       donViSanXuat: data.donViSanXuat,
       ngaySanXuat: data.ngaySanXuat,
@@ -327,7 +330,7 @@ const FormThongTinMau = (props: FormThongTinMauProps) => {
       ngaySua: "",
       thoiGianTieuChuan: "",
       maPdkMau: "",
-      loaiDv: tenLoaiDichVu,
+      loaiDv: "DVG02-80",
       phieuDangKyMauHinhAnhs: dataImage,
     };
 
@@ -341,6 +344,7 @@ const FormThongTinMau = (props: FormThongTinMauProps) => {
       ...dataPhieuDangky,
       Maus: updatedMau,
     };
+    setData(updatedPhieuDangky);
     setDataEditMaus(null);
     settableBody(updatedPhieuDangky.Maus);
     sessionStorage.setItem("PhieuDangKy", JSON.stringify(updatedPhieuDangky));

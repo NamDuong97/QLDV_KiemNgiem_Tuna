@@ -18,6 +18,8 @@ import { MdDescription } from "react-icons/md";
 import { MdScience } from "react-icons/md";
 import { useCreatePhieuDKyDVKN } from "../../../hooks/customers/usePhieuDKyDVKN";
 import PopupThoatForm from "./components/PopupThoatForm";
+import clsx from "clsx";
+import { useQueryClient } from "@tanstack/react-query";
 
 const dataHinhThucGuiTra = [
   { value: "Trực tiếp", label: "Trực tiếp" },
@@ -26,6 +28,7 @@ const dataHinhThucGuiTra = [
 
 const dataKhachHang = {
   tenKH: "Công ty ABC",
+  tenNguoiDaiDien: "Nguyễn Nguyễn",
   email: "abc@gmail.com",
   soDienThoai: "0397426194",
   diaChi: "78 ABC, phường 2, Quận Cam, TPHCM",
@@ -35,13 +38,13 @@ const FormSignUpDVKN = () => {
   const [openPopupNofitication, setOpenPopupNofitication] = useState(false);
   const [openPopupThoatForm, setOpenPopupThoatForm] = useState(false);
 
-  // const navigate = useNavigate();
   const [isThongTinChung, setThongTinChung] = useState(true);
   const [isMaus, setIsMaus] = useState(false);
   const [isPLHCs, setIsPLHCs] = useState(false);
+  const queryClient = useQueryClient();
 
   const dataSession = sessionStorage.getItem("PhieuDangKy");
-  const [data, setData] = useState<FormPhieuDangKy>(
+  const [data, setData] = useState<any>(
     dataSession ? JSON.parse(dataSession) : {}
   );
 
@@ -85,22 +88,6 @@ const FormSignUpDVKN = () => {
       KetQuaTiengAnh: yup
         .boolean()
         .transform((_, item) => (item ? true : false)),
-      Maus: yup
-        .array()
-        .typeError("Yêu cầu cung cấp Mẫu")
-        .required("Yêu cầu cung cấp  Mẫu")
-        .test("Mẫu", "Yêu cầu cung cấp Mẫu", () => {
-          return data?.Maus && data?.Maus.length > 0;
-        })
-        .transform((_, item) => (item ? data?.Maus : [])),
-      PLHC: yup
-        .array()
-        .typeError("Yêu cầu cung cấp Phù liệu hóa chất")
-        .required("Yêu cầu cung cấp  Phù liệu hóa chất")
-        .test("Phù liệu hóa chất", "Yêu cầu cung cấp Phù liệu hóa chất", () => {
-          return data?.PLHC && data?.PLHC.length > 0;
-        })
-        .transform((_, item) => (item ? data?.PLHC : [])),
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -117,9 +104,9 @@ const FormSignUpDVKN = () => {
   });
 
   const HinhThucTraKQ = useWatch({ control, name: "HinhThucTraKQ" });
-  // const handleClickOpenPopupNofitication = () => {
-  //   setOpenPopupNofitication(true);
-  // };
+  const handleClickOpenPopupNofitication = () => {
+    setOpenPopupNofitication(true);
+  };
 
   const handleClosePopupNofitication = () => {
     setOpenPopupNofitication(false);
@@ -132,24 +119,55 @@ const FormSignUpDVKN = () => {
   const handleClosePopupThoatForm = () => {
     setOpenPopupThoatForm(false);
   };
-
+  const handleOnSettled = async () => {
+    await queryClient.invalidateQueries({
+      queryKey: ["CreatePhieuDKyDVKN"],
+    });
+  };
   const { mutate } = useCreatePhieuDKyDVKN({
     queryKey: "CreatePhieuDKyDVKN",
+    onSettled: handleOnSettled,
   });
 
-  const onSubmitPhieuDkyDV = (data: FormPhieuDangKy) => {
+  const onSubmitPhieuDkyDV = (dataForm: FormPhieuDangKy) => {
+    if (data.donViGuiMau !== dataForm.DonViGuiMau) {
+      const dataFinal = {
+        ...data,
+        maId: "",
+        maKh: "KH001",
+        manvNhanMau: "NV001",
+        nguoiNhanMau: "Nguyễn Văn A",
+        donViGuiMau: dataForm.DonViGuiMau,
+        nguoiGuiMau: dataForm.NguoiGuiMau,
+        soDienThoai: dataForm.SoDienThoai,
+        email: dataForm.Email,
+        diaChiLienHe: dataForm.DiaChiLienHe,
+        hinhThucGuiMau: dataForm.HinhThucGuiMau,
+        hinhThucTraKq: dataForm.HinhThucTraKQ,
+        diaChiGiaoMau: dataForm.DiaChiGiaoMau ? dataForm.DiaChiGiaoMau : "",
+        trangThaiId: "TT01",
+        ketQuaTiengAnh: dataForm.KetQuaTiengAnh ? true : false,
+        ngayGiaoMau: dataForm.NgayGiaoMau,
+        ngayThucHien: "2025-05-10T00:00:00",
+      };
+      setData(dataFinal);
+      sessionStorage.setItem("PhieuDangKy", JSON.stringify(dataFinal));
+    }
+  };
+
+  const handleGui = (dataForm: FormPhieuDangKy) => {
     const dataMaus: any = [];
     const dataPLHC: any = [];
 
-    data?.Maus.map((itemMau) => {
+    data?.Maus.map((itemMau: any) => {
       dataMaus.push({
-        maId: itemMau.maId, // Bỏ dấu '?' và loại kiểu
-        maDmMau: itemMau.maDmMau, // Giả sử itemMau cũng có thuộc tính này
+        maId: "",
+        maDmMau: itemMau.maDmMau,
         tenMau: itemMau.tenMau,
         maTieuChuan: itemMau.maTieuChuan,
         maPhieuDangKy: itemMau.maPhieuDangKy,
-        manvThucHien: itemMau.manvThucHien,
-        madv: itemMau.madv,
+        manvThucHien: "NV002",
+        maLoaiDV: "DV001",
         soLo: itemMau.soLo,
         donViSanXuat: itemMau.donViSanXuat,
         ngaySanXuat: itemMau.ngaySanXuat,
@@ -164,17 +182,17 @@ const FormSignUpDVKN = () => {
         trangThaiNhanMau: itemMau.trangThaiNhanMau,
         ghiChu: itemMau.ghiChu,
         nguoiTao: itemMau.nguoiTao,
-        nguoiSua: null,
-        ngayTao: null,
-        ngaySua: null,
+        nguoiSua: "admin",
+        ngayTao: "2025-04-18T00:00:00",
+        ngaySua: "2025-04-18T00:00:00",
         thoiGianTieuChuan: null,
-        maPdkMau: itemMau.maPdkMau,
+        maPdkMau: null,
         loaiDv: itemMau.loaiDv,
         phieuDangKyMauHinhAnhs: itemMau.phieuDangKyMauHinhAnhs
-          ? itemMau.phieuDangKyMauHinhAnhs.map((itemImage) => {
+          ? itemMau.phieuDangKyMauHinhAnhs.map((itemImage: any) => {
               return {
-                maId: itemImage.maId,
-                maMau: itemImage.maMau,
+                maId: "",
+                maMau: "",
                 ten: itemImage.ten,
                 dinhDang: itemImage.dinhDang ? itemImage.dinhDang : "",
                 ghiChu: itemImage.ghiChu,
@@ -190,55 +208,74 @@ const FormSignUpDVKN = () => {
       });
     });
 
-    data?.PLHC.map((itemPLHC) =>
+    data?.PLHC.map((itemPLHC: any) =>
       dataPLHC.push({
-        dieuKienBaoQuan: itemPLHC.dieuKienBaoQuan,
-        donViNongDo: itemPLHC.donViNongDo,
-        donViTinh: itemPLHC.donViTinh,
-        ghiChu: itemPLHC.ghiChu,
         maId: itemPLHC.maId,
         maPhieuDangKy: itemPLHC.maPhieuDangKy,
         maPlhc: itemPLHC.maPlhc,
-        ngayHetHan: itemPLHC.ngayHetHan,
-        ngaySua: null,
-        ngayTao: null,
-        nguoiSua: itemPLHC.nguoiSua,
-        nguoiTao: itemPLHC.nguoiTao,
-        nongDo: itemPLHC.nongDo,
-        soLo: itemPLHC.soLo,
-        soLuong: itemPLHC.soLuong,
-        tenHienThi: itemPLHC.tenHienThi,
-        tenNhaCungCap: itemPLHC.tenNhaCungCap,
         tenPlhc: itemPLHC.tenPlhc,
+        tenHienThi: itemPLHC.tenHienThi,
+        soLuong: itemPLHC.soLuong,
+        donViTinh: itemPLHC.donViTinh,
+        ghiChu: itemPLHC.ghiChu,
+        ngayHetHan: itemPLHC.ngayHetHan,
+        tenNhaCungCap: itemPLHC.tenNhaCungCap,
+        soLo: itemPLHC.soLo,
+        nguoiTao: itemPLHC.nguoiTao,
+        nguoiSua: itemPLHC.nguoiSua,
+        ngayTao: null,
+        ngaySua: null,
       })
     );
 
-    const dataPhieuDKY: any = {
-      maId: "",
-      maKh: "KH001",
-      manvNhanMau: "",
-      nguoiNhanMau: "",
-      donViGuiMau: data.DonViGuiMau,
-      nguoiGuiMau: data.NguoiGuiMau,
-      soDienThoai: data.SoDienThoai,
-      email: data.Email,
-      diaChiLienHe: data.DiaChiLienHe,
-      hinhThucGuiMau: data.HinhThucGuiMau,
-      hinhThucTraKq: data.HinhThucTraKQ,
-      diaChiGiaoMau: data.DiaChiGiaoMau ? data.DiaChiGiaoMau : "",
-      trangThaiId: "",
-      ketQuaTiengAnh: data.KetQuaTiengAnh ? true : false,
-      ngayGiaoMau: data.NgayGiaoMau,
-      ngayThucHien: null,
-      Maus: dataMaus,
-      PhieuDangKyPhuLieuHoaChats: dataPLHC,
-    };
-    console.log("dataPhieuDKY", dataPhieuDKY);
+    if (isThongTinChung) {
+      const dataPhieuDKY: any = {
+        maId: "",
+        maKh: "KH001",
+        manvNhanMau: "NV001",
+        nguoiNhanMau: "Nguyễn Văn A",
+        donViGuiMau: dataForm.DonViGuiMau,
+        nguoiGuiMau: dataForm.NguoiGuiMau,
+        soDienThoai: dataForm.SoDienThoai,
+        email: dataForm.Email,
+        diaChiLienHe: dataForm.DiaChiLienHe,
+        hinhThucGuiMau: dataForm.HinhThucGuiMau,
+        hinhThucTraKq: dataForm.HinhThucTraKQ,
+        diaChiGiaoMau: dataForm.DiaChiGiaoMau ? dataForm.DiaChiGiaoMau : "",
+        trangThaiId: "TT01",
+        ketQuaTiengAnh: dataForm.KetQuaTiengAnh ? true : false,
+        ngayGiaoMau: dataForm.NgayGiaoMau,
+        ngayThucHien: "2025-05-10T00:00:00",
+        Maus: dataMaus,
+        PhieuDangKyPhuLieuHoaChats: dataPLHC,
+      };
+      mutate(dataPhieuDKY);
+    } else {
+      const dataPhieuDKY: any = {
+        maId: "",
+        maKh: "KH001",
+        manvNhanMau: "NV001",
+        nguoiNhanMau: "Nguyễn Văn A",
+        donViGuiMau: data.donViGuiMau,
+        nguoiGuiMau: data.nguoiGuiMau,
+        soDienThoai: data.soDienThoai,
+        email: data.email,
+        diaChiLienHe: data.diaChiLienHe,
+        hinhThucGuiMau: data.hinhThucGuiMau,
+        hinhThucTraKq: data.hinhThucTraKq,
+        diaChiGiaoMau: data.diaChiGiaoMau ? data.diaChiGiaoMau : "",
+        trangThaiId: "TT01",
+        ketQuaTiengAnh: data.ketQuaTiengAnh ? true : false,
+        ngayGiaoMau: data.ngayGiaoMau,
+        ngayThucHien: "2025-05-10T00:00:00",
+        Maus: dataMaus,
+        PhieuDangKyPhuLieuHoaChats: dataPLHC,
+      };
+      mutate(dataPhieuDKY);
+    }
 
-    mutate(dataPhieuDKY);
-    // sessionStorage.setItem("PhieuDangKy", JSON.stringify(dataPhieuDKY));
-    // sessionStorage.removeItem("PhieuDangKy");
-    // handleClickOpenPopupNofitication?.();
+    sessionStorage.removeItem("PhieuDangKy");
+    handleClickOpenPopupNofitication();
   };
 
   useEffect(() => {
@@ -253,12 +290,24 @@ const FormSignUpDVKN = () => {
       DiaChiGiaoMau: "",
       KetQuaTiengAnh: false,
       NgayGiaoMau: "",
-      Maus: [],
-      PLHC: [],
     };
-    if (dataKhachHang) {
+    if (data && data?.nguoiGuiMau) {
+      reset({
+        DonViGuiMau: data.donViGuiMau,
+        NguoiGuiMau: data.nguoiGuiMau,
+        SoDienThoai: data.soDienThoai,
+        Email: data.email,
+        DiaChiLienHe: data.diaChiLienHe,
+        HinhThucGuiMau: data.hinhThucGuiMau,
+        HinhThucTraKQ: data.hinhThucTraKq,
+        DiaChiGiaoMau: data.diaChiGiaoMau,
+        KetQuaTiengAnh: data.ketQuaTiengAnh,
+        NgayGiaoMau: data.ngayGiaoMau,
+      });
+    } else if (dataKhachHang) {
       reset({
         ...defaultFormValues,
+        NguoiGuiMau: dataKhachHang.tenNguoiDaiDien,
         DonViGuiMau: dataKhachHang.tenKH,
         SoDienThoai: dataKhachHang.soDienThoai,
         Email: dataKhachHang.email,
@@ -267,12 +316,7 @@ const FormSignUpDVKN = () => {
     } else {
       reset(defaultFormValues);
     }
-  }, [reset, dataKhachHang]);
-  useEffect(() => {
-    if (dataSession) {
-      setData(JSON.parse(dataSession));
-    }
-  }, [dataSession]);
+  }, [reset, dataKhachHang, data]);
 
   return (
     <Box>
@@ -298,8 +342,22 @@ const FormSignUpDVKN = () => {
             </Box>
             <button
               type="button"
-              onClick={handleSubmit(onSubmitPhieuDkyDV)}
-              className="hidden px-4 py-[5px] sm:px-6 sm:py-2 sm:flex items-center bg-indigo-600 text-white hover:bg-indigo-700 border-[2px] border-solid border-gray-300 rounded-[6px] shadow-[0_4px_4px_rgba(0,0,0,0.25)] cursor-pointer"
+              onClick={handleSubmit(handleGui)}
+              disabled={
+                data?.donViGuiMau &&
+                data?.Maus?.length >= 1 &&
+                data?.PLHC?.length >= 1
+                  ? false
+                  : true
+              }
+              className={clsx(
+                "hidden px-4 py-[5px] sm:px-6 sm:py-2 sm:flex items-center text-white  border-[2px] border-solid border-gray-300 rounded-[6px] shadow-[0_4px_4px_rgba(0,0,0,0.25)]",
+                data?.donViGuiMau &&
+                  data?.Maus?.length >= 1 &&
+                  data?.PLHC?.length >= 1
+                  ? "cursor-pointer bg-indigo-600 hover:bg-indigo-700"
+                  : "cursor-no-drop bg-indigo-400"
+              )}
             >
               <span className="text-[10px] sm:text-lg/6 font-bold text-amber-50">
                 Gửi
@@ -311,6 +369,7 @@ const FormSignUpDVKN = () => {
             <Box>
               <button
                 onClick={() => {
+                  handleSubmit(onSubmitPhieuDkyDV)();
                   setThongTinChung(!isThongTinChung);
                   setIsMaus(false);
                   setIsPLHCs(false);
@@ -507,6 +566,7 @@ const FormSignUpDVKN = () => {
               <button
                 type="button"
                 onClick={() => {
+                  handleSubmit(onSubmitPhieuDkyDV)();
                   setIsMaus(!isMaus);
                   setThongTinChung(false);
                   setIsPLHCs(false);
@@ -527,16 +587,17 @@ const FormSignUpDVKN = () => {
                   }`}
                 />
               </button>
-              {isMaus && <Maus />}
-              {errors.Maus?.message && (
+              {isMaus && <Maus setData={setData} />}
+              {/* {errors.Maus?.message && (
                 <p className="text-red-800 text-sm mt-2">
                   {errors.Maus?.message}
                 </p>
-              )}
+              )} */}
             </Box>
             <Box className="overflow-x-auto whitespace-nowrap">
               <button
                 onClick={() => {
+                  handleSubmit(onSubmitPhieuDkyDV)();
                   setIsPLHCs(!isPLHCs);
                   setIsMaus(false);
                   setThongTinChung(false);
@@ -557,12 +618,12 @@ const FormSignUpDVKN = () => {
                   }`}
                 />
               </button>
-              {isPLHCs && <PhuLieuHoaChat />}
-              {errors.PLHC?.message && (
+              {isPLHCs && <PhuLieuHoaChat setData={setData} />}
+              {/* {errors.PLHC?.message && (
                 <p className="text-red-800 text-sm mt-2">
                   {errors.PLHC?.message}
                 </p>
-              )}
+              )} */}
             </Box>
           </Box>
           <Box className="sm:hidden">

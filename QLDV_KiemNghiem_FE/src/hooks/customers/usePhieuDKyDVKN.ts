@@ -8,6 +8,7 @@ interface Props {
   timeTo?: string;
   trangThaiID?: string;
   maTrangThaiPhieuDangKy?: string;
+  onSettled?: (response: any) => void;
 }
 
 export const useGetPhieuDangKyKiemNghiemByTrangThai = (props: Props) => {
@@ -103,14 +104,19 @@ export const useGetTrangThaiPhieuDkAll = (props: Props) => {
 };
 
 export const useCreatePhieuDKyDVKN = (props: Props) => {
-  const { queryKey } = props;
+  const { queryKey, onSettled } = props;
   return useMutation({
     mutationKey: [queryKey],
     mutationFn: async (paramsPhieuDangKyDVKN: FormData) => {
       const response = await PhieuDKyDVKN_Services.createPhieuDKyDVKN(
         paramsPhieuDangKyDVKN
       );
-      return response;
+      if (response === 200) return response;
+      return console.log("Lỗi Server");
     },
+    onSuccess: (response: any) => {
+      if (response !== 200) console.log("Lỗi Server");
+    },
+    onSettled: onSettled,
   });
 };

@@ -2,11 +2,11 @@ import { Box } from "@mui/material";
 import { APP_ROUTES } from "../../../../constants/routers";
 import { motion } from "motion/react";
 import { keyTag } from "../../../../models/Account-Customer";
-import ChoXuLy from "./statusPhieu/ChoXuLy";
 import { useState } from "react";
-import DaDuyet from "./statusPhieu/DaDuyet";
-import DangKiemNghiem from "./statusPhieu/DangKiemNghiem";
-import HoanThanh from "./statusPhieu/HoanThanh";
+import DaDuyet from "./StatusPhieu/DaDuyet";
+import DangKiemNghiem from "./StatusPhieu/DangKiemNghiem";
+import HoanThanh from "./StatusPhieu/HoanThanh";
+import ChoXuLy from "./StatusPhieu/ChoXuLy";
 
 const dataTag = [
   {

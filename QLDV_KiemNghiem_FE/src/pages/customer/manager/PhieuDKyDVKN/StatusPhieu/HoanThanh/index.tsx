@@ -1,6 +1,6 @@
 import { Box } from "@mui/material";
-import TableChoXetDuyet from "./TableHoanThanh";
 import { Align } from "../../../../../../models/Table";
+import TableHoanThanh from "./TableHoanThanh";
 
 interface Props {}
 
@@ -53,7 +53,7 @@ const HoanThanh = (props: Props) => {
 
   return (
     <Box className="overflow-x-auto whitespace-nowrap border border-gray-300 rounded-md">
-      <TableChoXetDuyet tableHead={tableHead} tableBody={dataPhieuDKy} />
+      <TableHoanThanh tableHead={tableHead} tableBody={dataPhieuDKy} />
     </Box>
   );
 };

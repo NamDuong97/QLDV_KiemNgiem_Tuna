@@ -15,9 +15,7 @@ const PopupNofitication = (props: Props) => {
   const navigate = useNavigate();
 
   const handleRedirectManagerPhieuDKy = () => {
-    navigate(
-      `${APP_ROUTES.TUNA_CUSTOMER.PHIEU_DKY_DVKN.to}?tuna=cho-xet-duyet`
-    );
+    navigate(APP_ROUTES.TUNA_CUSTOMER.PHIEU_DKY_DVKN.to);
   };
 
   const handleCloseNofitication = () => {
@@ -29,11 +27,9 @@ const PopupNofitication = (props: Props) => {
       open={openPopupNofitication}
       maxWidth="lg"
       onClose={handleCloseNofitication}
-      aria-labelledby="alert-dialog-title"
-      aria-describedby="alert-dialog-description"
     >
-      <Box className="relative px-7 py-6 w-auto md:w-[785px]">
-        <Box className="absolute top-2 right-5">
+      <Box className="!relative px-7 py-6 w-auto md:w-[785px]">
+        <Box className="!absolute top-2 right-5">
           <button
             className="bg-gray-400 rounded-full p-[6px] hover:bg-gray-500 cursor-pointer"
             onClick={handleCloseNofitication}
@@ -50,7 +46,7 @@ const PopupNofitication = (props: Props) => {
             transition={{ duration: 0.7 }}
           >
             <Box className="grid gap-6">
-              <Box className="py-2">
+              <Box className="py-2 text-center">
                 <h1 className="font-bold text-3xl">Thông Báo</h1>
               </Box>
               <Box className="grid gap-1">
