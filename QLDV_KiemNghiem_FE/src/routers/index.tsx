@@ -5,9 +5,9 @@ import { APP_ROUTES } from "../constants/routers";
 import LayoutAdmin from "../pages/admin/layout-admin";
 import LayoutCustomer from "../pages/customer/layout";
 import LayoutCustomerManager from "../pages/customer/manager/layout";
-import PhieuDKyDVKN from "../pages/customer/manager/phieuDKyDVKN";
-import QuanLyHoaDon from "../pages/customer/manager/quanLyHoaDon";
-import EditPhieuDKyDVKN from "../pages/customer/manager/phieuDKyDVKN/editPhieuDKyDVKN";
+import PhieuDKyDVKN from "../pages/customer/manager/PhieuDKyDVKN";
+import QuanLyHoaDon from "../pages/customer/manager/QuanLyHoaDon";
+import EditPhieuDKyDVKN from "../pages/customer/manager/PhieuDKyDVKN/editPhieuDKyDVKN";
 
 const Dashboard = lazy(() => import("../pages/admin/dashboard"));
 const LoginPage = lazy(() => import("../pages/admin/login"));
