@@ -31,9 +31,6 @@ public partial class PhieuDangKyMau
     public string? ManvThucHien { get; set; }
 
     [StringLength(50)]
-    public string? Madv { get; set; }
-
-    [StringLength(50)]
     public string? SoLo { get; set; }
 
     [StringLength(200)]
@@ -91,12 +88,20 @@ public partial class PhieuDangKyMau
     [StringLength(50)]
     public string? LoaiDv { get; set; }
 
+    [Column("MaLoaiDV")]
+    [StringLength(50)]
+    public string? MaLoaiDv { get; set; }
+
     [InverseProperty("MaMauNavigation")]
     public virtual ICollection<ChiTietHoaDonThu> ChiTietHoaDonThus { get; set; } = new List<ChiTietHoaDonThu>();
 
     [ForeignKey("MaDmMau")]
     [InverseProperty("PhieuDangKyMaus")]
     public virtual DmMau? MaDmMauNavigation { get; set; }
+
+    [ForeignKey("MaLoaiDv")]
+    [InverseProperty("PhieuDangKyMaus")]
+    public virtual LoaiDichVu? MaLoaiDvNavigation { get; set; }
 
     [ForeignKey("MaPhieuDangKy")]
     [InverseProperty("PhieuDangKyMaus")]
@@ -105,10 +110,6 @@ public partial class PhieuDangKyMau
     [ForeignKey("MaTieuChuan")]
     [InverseProperty("PhieuDangKyMaus")]
     public virtual TieuChuan? MaTieuChuanNavigation { get; set; }
-
-    [ForeignKey("Madv")]
-    [InverseProperty("PhieuDangKyMaus")]
-    public virtual DichVu? MadvNavigation { get; set; }
 
     [ForeignKey("ManvThucHien")]
     [InverseProperty("PhieuDangKyMaus")]

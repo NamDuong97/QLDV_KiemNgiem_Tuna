@@ -43,7 +43,7 @@ namespace QLDV_KiemNghiem_BE.Controllers
         [Route("createPhuongPhap")]
         public async Task<ActionResult> createPhuongPhap(PhuongPhapDto PhuongPhapDto)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
                 var errors = ModelState.Values
                 .SelectMany(v => v.Errors)
@@ -69,7 +69,7 @@ namespace QLDV_KiemNghiem_BE.Controllers
         [Route("updatePhuongPhap")]
         public async Task<ActionResult> updatePhuongPhap(PhuongPhapDto PhuongPhapDto)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
                 var errors = ModelState.Values
                 .SelectMany(v => v.Errors)

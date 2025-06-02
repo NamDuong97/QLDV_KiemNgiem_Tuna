@@ -20,22 +20,28 @@ namespace QLDV_KiemNghiem_BE.Services
         {
            return await _repositoryManager.PhieuDangKyPhuLieuHoaChat.GetPhieuDangKyPhuLieuHoaChatAllAsync();
         }
-        public async Task<List<PhieuDangKyPhuLieuHoaChatDto>> GetPhieuDangKyPhuLieuHoaChatByPhieuDangKyAsync(string maPhieuDangKy)
+        public async Task<List<PhieuDangKyPhuLieuHoaChatDto>?> GetPhieuDangKyPhuLieuHoaChatByPhieuDangKyAsync(string maPhieuDangKy)
         {
+            if (maPhieuDangKy == null || maPhieuDangKy == "") return null;
             var phieuDangKyPhuLieuHoaChats = await _repositoryManager.PhieuDangKyPhuLieuHoaChat.GetPhieuDangKyPhuLieuHoaChatByPhieuDangKyAsync(maPhieuDangKy);
             var result = _mapper.Map<List<PhieuDangKyPhuLieuHoaChatDto>>(phieuDangKyPhuLieuHoaChats);
             return result;
         }
-        public async Task<bool> CreatePhieuDangKyPhuLieuHoaChatAsync(PhieuDangKyPhuLieuHoaChat phieuDangKyPhuLieuHoaChat)
+        public async Task<bool> CreatePhieuDangKyPhuLieuHoaChatAsync(PhieuDangKyPhuLieuHoaChatDto phieuDangKyPhuLieuHoaChat)
         {
-            _repositoryManager.PhieuDangKyPhuLieuHoaChat.CreatePhieuDangKyPhuLieuHoaChatAsync(phieuDangKyPhuLieuHoaChat);
+            var phieuDangKyPhuLieuHoaChatDomain = _mapper.Map<PhieuDangKyPhuLieuHoaChat>(phieuDangKyPhuLieuHoaChat);
+            phieuDangKyPhuLieuHoaChatDomain.MaId = Guid.NewGuid().ToString();
+            phieuDangKyPhuLieuHoaChatDomain.NgayTao = DateTime.Now;
+            _repositoryManager.PhieuDangKyPhuLieuHoaChat.CreatePhieuDangKyPhuLieuHoaChatAsync(phieuDangKyPhuLieuHoaChatDomain);
             bool check = await _repositoryManager.SaveChangesAsync();
             return check;
         }
 
-        public async Task<bool> UpdatePhieuDangKyPhuLieuHoaChatAsync(PhieuDangKyPhuLieuHoaChat phieuDangKyPhuLieuHoaChat)
+        public async Task<bool> UpdatePhieuDangKyPhuLieuHoaChatAsync(PhieuDangKyPhuLieuHoaChatDto phieuDangKyPhuLieuHoaChat)
         {
-            _repositoryManager.PhieuDangKyPhuLieuHoaChat.UpdatePhieuDangKyPhuLieuHoaChatAsync(phieuDangKyPhuLieuHoaChat);
+            var phieuDangKyPhuLieuHoaChatDomain = _mapper.Map<PhieuDangKyPhuLieuHoaChat>(phieuDangKyPhuLieuHoaChat);
+            phieuDangKyPhuLieuHoaChatDomain.NgaySua = DateTime.Now;
+            _repositoryManager.PhieuDangKyPhuLieuHoaChat.UpdatePhieuDangKyPhuLieuHoaChatAsync(phieuDangKyPhuLieuHoaChatDomain);
             bool check = await _repositoryManager.SaveChangesAsync();
             return check;
         }

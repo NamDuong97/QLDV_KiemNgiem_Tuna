@@ -62,7 +62,7 @@ namespace QLDV_KiemNghiem_BE.Controllers
         [Route("createPhieuDangKy")]
         public async Task<ActionResult> createPhieuDangKy(PhieuDangKyDto phieuDangKyDto)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
                 var errors = ModelState.Values
                 .SelectMany(v => v.Errors)
@@ -93,7 +93,7 @@ namespace QLDV_KiemNghiem_BE.Controllers
         [Route("updatePhieuDangKy")]
         public async Task<ActionResult> updatePhieuDangKy(PhieuDangKyDto phieuDangKyDto)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
                 var errors = ModelState.Values
                 .SelectMany(v => v.Errors)
@@ -143,13 +143,13 @@ namespace QLDV_KiemNghiem_BE.Controllers
 
         [HttpGet]
         [Route("duTinhThoiGianKiemNghiem")]
-        public async Task<ActionResult> duTinhThoiGianKiemNghiem(string maTieuChuan)
+        public async Task<ActionResult> duTinhThoiGianKiemNghiem(string maDmMau, string maTieuChuan)
         {
-            int time = await _service.PhieuDangKy.DuTinhThoiGianKiemNghiem(maTieuChuan);
+            int time = await _service.PhieuDangKy.DuTinhThoiGianKiemNghiem(maDmMau, maTieuChuan);
             if (time != 0)
             {
                 _logger.LogDebug("Tra ket qua thoi gian du tinh kiem nghiem thanh cong");
-                return Ok(time);
+                return Ok(new {data = time, message = "Khong co du lieu cua mau nay, hoac mau nhap vao chua hop le"});
             }
             else 
             {

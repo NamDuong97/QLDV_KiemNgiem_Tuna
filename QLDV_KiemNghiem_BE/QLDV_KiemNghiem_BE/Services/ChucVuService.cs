@@ -23,12 +23,14 @@ namespace QLDV_KiemNghiem_BE.Services
         }
         public async Task<ChucVuDto?> FindChucVuAsync(string maChucVu)
         {
+            if (maChucVu == null || maChucVu == "") return null;
             var ChucVuDomain = await _repositoryManager.ChucVu.FindChucVuAsync(maChucVu);
             var result = _mapper.Map<ChucVuDto>(ChucVuDomain);
             return result;
         }
         public async Task<bool> CreateChucVuAsync(ChucVu ChucVu)
         {
+
             _repositoryManager.ChucVu.CreateChucVuAsync(ChucVu);
             bool check = await _repositoryManager.SaveChangesAsync();
             return check;

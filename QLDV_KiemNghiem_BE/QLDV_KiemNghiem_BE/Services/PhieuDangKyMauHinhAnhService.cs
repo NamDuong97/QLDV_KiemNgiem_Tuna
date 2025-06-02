@@ -6,11 +6,11 @@ using QLDV_KiemNghiem_BE.Models;
 
 namespace QLDV_KiemNghiem_BE.Services
 {
-    public class PhieuDangKyPhieuDangKyMauHinhAnhService : IPhieuDangKyMauHinhAnhService
+    public class PhieuDangKyMauHinhAnhService : IPhieuDangKyMauHinhAnhService
     {
         private readonly IRepositoryManager _repositoryManager;
         private readonly IMapper _mapper;
-        public PhieuDangKyPhieuDangKyMauHinhAnhService(IRepositoryManager repositoryManager, IMapper mapper)
+        public PhieuDangKyMauHinhAnhService(IRepositoryManager repositoryManager, IMapper mapper)
         {
             _repositoryManager = repositoryManager;
             _mapper = mapper;
@@ -23,6 +23,7 @@ namespace QLDV_KiemNghiem_BE.Services
         }
         public async Task<PhieuDangKyMauHinhAnhDto?> FindPhieuDangKyMauHinhAnhAsync(string maPhieuDangKyMauHinhAnh)
         {
+            if (maPhieuDangKyMauHinhAnh == null || maPhieuDangKyMauHinhAnh == "") return null;
             var PhieuDangKyMauHinhAnhDomain = await _repositoryManager.PhieuDangKyMauHinhAnh.FindPhieuDangKyMauHinhAnhAsync(maPhieuDangKyMauHinhAnh);
             var result = _mapper.Map<PhieuDangKyMauHinhAnhDto>(PhieuDangKyMauHinhAnhDomain);
             return result;
@@ -30,6 +31,7 @@ namespace QLDV_KiemNghiem_BE.Services
         public async Task<bool> CreatePhieuDangKyMauHinhAnhAsync(PhieuDangKyMauHinhAnhDto PhieuDangKyMauHinhAnh)
         {
             var PhieuDangKyMauHinhAnhDomain = _mapper.Map<PhieuDangKyMauHinhAnh>(PhieuDangKyMauHinhAnh);
+            PhieuDangKyMauHinhAnhDomain.MaId = Guid.NewGuid().ToString();
             _repositoryManager.PhieuDangKyMauHinhAnh.CreatePhieuDangKyMauHinhAnhAsync(PhieuDangKyMauHinhAnhDomain);
             bool check = await _repositoryManager.SaveChangesAsync();
             return check;

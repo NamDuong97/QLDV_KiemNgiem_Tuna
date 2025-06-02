@@ -41,6 +41,6 @@ public partial class LoaiDichVu
     [StringLength(50)]
     public string? ThoiGianMongMuonHoanThanh { get; set; }
 
-    [InverseProperty("MaLoaidvNavigation")]
-    public virtual ICollection<DichVu> DichVus { get; set; } = new List<DichVu>();
+    [InverseProperty("MaLoaiDvNavigation")]
+    public virtual ICollection<PhieuDangKyMau> PhieuDangKyMaus { get; set; } = new List<PhieuDangKyMau>();
 }

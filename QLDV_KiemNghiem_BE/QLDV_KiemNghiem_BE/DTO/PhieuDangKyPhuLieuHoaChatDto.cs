@@ -5,6 +5,8 @@ namespace QLDV_KiemNghiem_BE.DTO
 {
     public class PhieuDangKyPhuLieuHoaChatDto
     {
+        public string? MaId { get; set; }
+
         [StringLength(50, ErrorMessage = "Mã phiếu đăng ký tối đa 50 ký tự")]
         public string? MaPhieuDangKy { get; set; } = string.Empty;
 

@@ -4,19 +4,19 @@ import { ReactNode } from "react";
 
 const theme = createTheme({
   typography: {
-    fontFamily: `"Lora", sans-serif`,
+    fontFamily: `"IBM Plex Sans", sans-serif`,
   },
   components: {
     MuiCssBaseline: {
       styleOverrides: {
         "*": {
-          fontFamily: `"Lora", Lora Fallback`, // Áp dụng font cho tất cả thẻ
+          fontFamily: `"IBM Plex Sans",sans-serif`, // Áp dụng font cho tất cả thẻ
         },
         "html, body": {
-          fontFamily: `"Lora", Lora Fallback`, // Đảm bảo toàn bộ trang web có font
+          fontFamily: `"IBM Plex Sans",sans-serif`, // Đảm bảo toàn bộ trang web có font
         },
         a: {
-          fontFamily: `"Lora", Lora Fallback`,
+          fontFamily: `"IBM Plex Sans",sans-serif`,
           textDecoration: "none",
           color: "inherit",
         },

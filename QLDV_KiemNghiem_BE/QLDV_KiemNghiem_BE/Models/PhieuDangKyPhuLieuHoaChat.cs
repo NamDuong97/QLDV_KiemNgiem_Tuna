@@ -6,10 +6,14 @@ using Microsoft.EntityFrameworkCore;
 
 namespace QLDV_KiemNghiem_BE.Models;
 
-[Keyless]
 [Table("PhieuDangKy_PhuLieuHoaChat")]
 public partial class PhieuDangKyPhuLieuHoaChat
 {
+    [Key]
+    [Column("MaID")]
+    [StringLength(50)]
+    public string MaId { get; set; } = null!;
+
     [StringLength(50)]
     public string? MaPhieuDangKy { get; set; }
 
@@ -53,9 +57,7 @@ public partial class PhieuDangKyPhuLieuHoaChat
     [Column(TypeName = "datetime")]
     public DateTime? NgaySua { get; set; }
 
-    [ForeignKey("MaPhieuDangKy")]
-    public virtual PhieuDangKy? MaPhieuDangKyNavigation { get; set; }
-
     [ForeignKey("MaPlhc")]
+    [InverseProperty("PhieuDangKyPhuLieuHoaChats")]
     public virtual DmPhuLieuHoaChat? MaPlhcNavigation { get; set; }
 }

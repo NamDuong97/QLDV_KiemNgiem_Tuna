@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿
+using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using QLDV_KiemNghiem_BE.Data;
 using QLDV_KiemNghiem_BE.DTO;
@@ -29,17 +30,17 @@ namespace QLDV_KiemNghiem_BE.Repositories
 
             foreach (var item in result)
             {
-                await _context.Entry(item).Collection(p => p.Maus).Query().Include(m => m.MauHinhAnhs).LoadAsync();
+                await _context.Entry(item).Collection(p => p.PhieuDangKyMaus).Query().Include(m => m.PhieuDangKyMauHinhAnhs).LoadAsync();
             }
             return result;
         }
         public async Task<IEnumerable<PhieuDangKy>> GetPhieuDangKiesOfCustomerAsync(string maKH, string maTrangThaiPhieuDangKy)
         {
-            return await _context.PhieuDangKies.Where(item => item.MaKh == maKH && item.TrangThaiId == maTrangThaiPhieuDangKy).Include(item => item.Maus).ThenInclude(item => item.MauHinhAnhs).ToListAsync();
+            return await _context.PhieuDangKies.Where(item => item.MaKh == maKH && item.TrangThaiId == maTrangThaiPhieuDangKy).Include(item => item.PhieuDangKyMaus).ThenInclude(item => item.PhieuDangKyMauHinhAnhs).ToListAsync();
         }
         public async Task<PhieuDangKy?> FindPhieuDangKyAsync(string maPhieuDangKy)
         {
-            return await _context.PhieuDangKies.Include(p => p.Maus)
+            return await _context.PhieuDangKies.Include(p => p.PhieuDangKyMaus).ThenInclude(item => item.PhieuDangKyMauHinhAnhs)
             .FirstOrDefaultAsync(p => p.MaId == maPhieuDangKy);
         }
         public void CreatePhieuDangKyAsync(PhieuDangKy phieuDangKy)
@@ -63,10 +64,14 @@ namespace QLDV_KiemNghiem_BE.Repositories
             return result;
         }
 
-        public async Task<int> DuTinhThoiGianKiemNghiem(string maTieuChuan)
+        public async Task<int> DuTinhThoiGianKiemNghiem(string maDmMau, string maTieuChuan)
         {
-            var result = await _context.Database.ExecuteSqlRawAsync("exec ThoiGianDuTinhKiemNghiem @maTieuChuan = {0}", maTieuChuan);
-            return result;
+            var result = await _context
+            .Set<ThoiGianTieuChuan>()  // Không cần DbSet thực trong DbContext
+            .FromSqlRaw("SELECT dbo.Fn_ThoiGianDuTinhKiemNghiem({0}, {1}) AS ThoiGianTC", maDmMau, maTieuChuan)
+            .AsNoTracking()
+            .FirstOrDefaultAsync();
+            return result?.ThoiGianTC ?? 0;
         }
 
     }

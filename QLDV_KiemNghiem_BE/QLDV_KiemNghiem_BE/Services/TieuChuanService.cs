@@ -24,6 +24,7 @@ namespace QLDV_KiemNghiem_BE.Services
         }
         public async Task<TieuChuanDto?> FindTieuChuanAsync(string maTieuChuan)
         {
+            if (maTieuChuan == null || maTieuChuan == "") return null;
             var tieuChuanDomain = await _repositoryManager.TieuChuan.FindTieuChuanAsync(maTieuChuan);
             var result = _mapper.Map<TieuChuanDto>(tieuChuanDomain);
             return result;
@@ -37,32 +38,40 @@ namespace QLDV_KiemNghiem_BE.Services
         public async Task<bool> CreateTieuChuanAsync(TieuChuanDto tieuChuanDto)
         {
             var tieuChuanDomain = _mapper.Map<TieuChuan>(tieuChuanDto);
+            tieuChuanDomain.MaId = Guid.NewGuid().ToString();
+            tieuChuanDomain.NgayTao = DateTime.Now;
+
             _repositoryManager.TieuChuan.CreateTieuChuanAsync(tieuChuanDomain);
             bool check = await _repositoryManager.SaveChangesAsync();
             return check;   
         }
         public async Task<bool> UpdateTieuChuanAsync(TieuChuanDto tieuChuanDto)
         {
-            var tieuChuanDomain = _mapper.Map<TieuChuan>(tieuChuanDto);
             var tieuChuanCheck = await _repositoryManager.TieuChuan.FindTieuChuanAsync(tieuChuanDto.MaId);
             if (tieuChuanCheck == null)
             {
                 return false;
             }
+            var tieuChuanDomain = _mapper.Map<TieuChuan>(tieuChuanDto);
+            tieuChuanDomain.NgaySua = DateTime.Now;
             _repositoryManager.TieuChuan.UpdateTieuChuanAsync(tieuChuanDomain);
             bool check = await _repositoryManager.SaveChangesAsync();
             return check;
         }
         public async Task<bool> DeleteTieuChuanAsync(TieuChuan tieuChuan)
         {
-            var TieuChuanDomain = await _repositoryManager.TieuChuan.FindTieuChuanAsync(tieuChuan.MaId);
-            if (TieuChuanDomain == null)
+            if (tieuChuan == null) return false;
+            else
             {
-                return false;
+                var TieuChuanDomain = await _repositoryManager.TieuChuan.FindTieuChuanAsync(tieuChuan.MaId);
+                if (TieuChuanDomain == null)
+                {
+                    return false;
+                }
+                _repositoryManager.TieuChuan.DeleteTieuChuanAsync(TieuChuanDomain);
+                bool check = await _repositoryManager.SaveChangesAsync();
+                return check;
             }
-            _repositoryManager.TieuChuan.DeleteTieuChuanAsync(tieuChuan);
-            bool check = await _repositoryManager.SaveChangesAsync();
-            return check;
         }
     }
 }

@@ -23,24 +23,27 @@ namespace QLDV_KiemNghiem_BE.Services
         }
         public async Task<BoPhanDto?> FindBoPhanAsync(string maBoPhan)
         {
+            if (maBoPhan == null || maBoPhan == "") return null;
             var BoPhanDomain = await _repositoryManager.BoPhan.FindBoPhanAsync(maBoPhan);
             var result = _mapper.Map<BoPhanDto>(BoPhanDomain);
             return result;
         }
-        public async Task<bool> CreateBoPhanAsync(BoPhan BoPhan)
+        public async Task<bool> CreateBoPhanAsync(BoPhanDto BoPhan)
         {
-            _repositoryManager.BoPhan.CreateBoPhanAsync(BoPhan);
+            var boPhanDomain = _mapper.Map<BoPhan>(BoPhan);
+            _repositoryManager.BoPhan.CreateBoPhanAsync(boPhanDomain);
             bool check = await _repositoryManager.SaveChangesAsync();
             return check;
         }
-        public async Task<bool> UpdateBoPhanAsync(BoPhan BoPhan)
+        public async Task<bool> UpdateBoPhanAsync(BoPhanDto BoPhan)
         {
             var BoPhanDomain = await _repositoryManager.BoPhan.FindBoPhanAsync(BoPhan.MaId);
             if (BoPhanDomain == null)
             {
                 return false;
             }
-            _repositoryManager.BoPhan.UpdateBoPhanAsync(BoPhan);
+            var boPhanDomain = _mapper.Map<BoPhan>(BoPhan);
+            _repositoryManager.BoPhan.UpdateBoPhanAsync(boPhanDomain);
             bool check = await _repositoryManager.SaveChangesAsync();
             return check;
         }

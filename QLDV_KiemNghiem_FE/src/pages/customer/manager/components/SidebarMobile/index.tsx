@@ -19,7 +19,7 @@ const dataSideBar = [
   },
   {
     name: "Quản Lý Phiếu Đăng Ký Dịch Vụ Kiểm Nghiệm",
-    url: `${APP_ROUTES.TUNA_CUSTOMER.PHIEU_DKY_DVKN.to}?tuna=cho-xet-duyet`,
+    url: `${APP_ROUTES.TUNA_CUSTOMER.PHIEU_DKY_DVKN.to}`,
     icon: <FaVoteYea className="w-7 h-7 text-[#404dd2]" />,
     urlHienThi: APP_ROUTES.TUNA_CUSTOMER.PHIEU_DKY_DVKN.to.split("/")[1],
   },

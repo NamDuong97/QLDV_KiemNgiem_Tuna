@@ -49,8 +49,8 @@ public partial class TieuChuan
     public string? MaTieuChuan { get; set; }
 
     [InverseProperty("MaTieuChuanNavigation")]
-    public virtual ICollection<PhieuDangKyMau> PhieuDangKyMaus { get; set; } = new List<PhieuDangKyMau>();
+    public virtual ICollection<MauTieuChuan> MauTieuChuans { get; set; } = new List<MauTieuChuan>();
 
     [InverseProperty("MaTieuChuanNavigation")]
-    public virtual ICollection<TieuChuanChiTieu> TieuChuanChiTieus { get; set; } = new List<TieuChuanChiTieu>();
+    public virtual ICollection<PhieuDangKyMau> PhieuDangKyMaus { get; set; } = new List<PhieuDangKyMau>();
 }

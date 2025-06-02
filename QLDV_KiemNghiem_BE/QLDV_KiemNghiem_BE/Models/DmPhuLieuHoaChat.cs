@@ -60,6 +60,9 @@ public partial class DmPhuLieuHoaChat
     [InverseProperty("MaDmPlhcNavigation")]
     public virtual ICollection<HoaDonMuaPlhcchiTiet> HoaDonMuaPlhcchiTiets { get; set; } = new List<HoaDonMuaPlhcchiTiet>();
 
+    [InverseProperty("MaPlhcNavigation")]
+    public virtual ICollection<PhieuDangKyPhuLieuHoaChat> PhieuDangKyPhuLieuHoaChats { get; set; } = new List<PhieuDangKyPhuLieuHoaChat>();
+
     [InverseProperty("MaDmPlhcNavigation")]
     public virtual ICollection<PhieuNhapKhoChiTiet> PhieuNhapKhoChiTiets { get; set; } = new List<PhieuNhapKhoChiTiet>();
 

@@ -24,6 +24,7 @@ namespace QLDV_KiemNghiem_BE.Services
         }
         public async Task<LoaiMauDto?> FindLoaiMauAsync(string maLoaiMau)
         {
+            if (maLoaiMau == null || maLoaiMau == "") return null;
             var LoaiMauDomain = await _repositoryManager.LoaiMau.FindLoaiMauAsync(maLoaiMau);
             var result = _mapper.Map<LoaiMauDto>(LoaiMauDomain);
             return result;
@@ -31,6 +32,10 @@ namespace QLDV_KiemNghiem_BE.Services
         public async Task<bool> CreateLoaiMauAsync(LoaiMauDto LoaiMauDto)
         {
             var LoaiMauDomain = _mapper.Map<LoaiMau>(LoaiMauDto);
+            LoaiMauDomain.MaId = Guid.NewGuid().ToString();
+            LoaiMauDomain.NgayTao = DateTime.Now;
+            LoaiMauDomain.NguoiTao = "admin";
+
             _repositoryManager.LoaiMau.CreateLoaiMauAsync(LoaiMauDomain);
             bool check = await _repositoryManager.SaveChangesAsync();
             return check;

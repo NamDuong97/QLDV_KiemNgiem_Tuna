@@ -23,24 +23,31 @@ namespace QLDV_KiemNghiem_BE.Services
         }
         public async Task<KhoaDto?> FindKhoaAsync(string maKhoa)
         {
+            if (maKhoa == null || maKhoa == "") return null;
             var KhoaDomain = await _repositoryManager.Khoa.FindKhoaAsync(maKhoa);
             var result = _mapper.Map<KhoaDto>(KhoaDomain);
             return result;
         }
-        public async Task<bool> CreateKhoaAsync(Khoa Khoa)
+        public async Task<bool> CreateKhoaAsync(KhoaDto Khoa)
         {
-            _repositoryManager.Khoa.CreateKhoaAsync(Khoa);
+            var khoaDomain = _mapper.Map<Khoa>(Khoa);
+            khoaDomain.MaId = Guid.NewGuid().ToString();
+            khoaDomain.NgayTao = DateTime.Now;
+            khoaDomain.NguoiTao = "admin";
+
+            _repositoryManager.Khoa.CreateKhoaAsync(khoaDomain);
             bool check = await _repositoryManager.SaveChangesAsync();
             return check;
         }
-        public async Task<bool> UpdateKhoaAsync(Khoa Khoa)
+        public async Task<bool> UpdateKhoaAsync(KhoaDto Khoa)
         {
-            var KhoaDomain = await _repositoryManager.Khoa.FindKhoaAsync(Khoa.MaId);
-            if (KhoaDomain == null)
+            var KhoaCheckExists = await _repositoryManager.Khoa.FindKhoaAsync(Khoa.MaId);
+            if (KhoaCheckExists == null)
             {
                 return false;
             }
-            _repositoryManager.Khoa.UpdateKhoaAsync(Khoa);
+            var khoaDomain = _mapper.Map<Khoa>(Khoa);
+            _repositoryManager.Khoa.UpdateKhoaAsync(khoaDomain);
             bool check = await _repositoryManager.SaveChangesAsync();
             return check;
         }

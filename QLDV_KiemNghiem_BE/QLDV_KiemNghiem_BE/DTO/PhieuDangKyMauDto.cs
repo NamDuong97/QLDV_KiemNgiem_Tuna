@@ -6,7 +6,7 @@ namespace QLDV_KiemNghiem_BE.DTO
 {
     public class PhieuDangKyMauDto
     {
-        public string MaId { get; set; } = null!;
+        public string? MaId { get; set; }
 
         [Column("MaDm_Mau")]
         [StringLength(50)]
@@ -84,7 +84,6 @@ namespace QLDV_KiemNghiem_BE.DTO
         [Column("LoaiDV")]
         [StringLength(50)]
         public string? LoaiDv { get; set; }
-
         public ICollection<PhieuDangKyMauHinhAnhDto> PhieuDangKyMauHinhAnhs { get; set; } = new List<PhieuDangKyMauHinhAnhDto>();
     }
 }

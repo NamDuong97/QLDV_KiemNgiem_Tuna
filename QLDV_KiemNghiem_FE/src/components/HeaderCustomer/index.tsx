@@ -146,39 +146,12 @@ export default function HeaderCustomer(props: HeaderProps) {
   };
 
   return (
-    <div className="w-full max-w-[1840px] 2xl:max-w-full sticky">
-      <div className="heightRef">
-        <div className="w-full py-2 px-6 bg-gradient-to-r from-sky-300 to-sky-500 block lg:hidden">
-          <div className="flex gap-2 sm:gap-4 items-center justify-center w-full">
-            <button className="cursor-pointer" onClick={handleRedirectHome}>
-              <img
-                src={image.imageLogo}
-                alt="imageLogo"
-                className="w-20 h-20 md:w-36 md:h-36"
-              />
-            </button>
-            <div className="text-center grid gap-2 sm:gap-1 md:gap-7">
-              <p className="text-lg/4 sm:text-xl/6 md:text-4xl/6 text-red-500 font-bold uppercase h-full">
-                Bộ y tế
-              </p>
-              <p className="text-lg/4 sm:text-xl/6 md:text-4xl/6 text-blue-800 font-bold uppercase">
-                Viện kiểm nghiệm Tuna
-              </p>
-            </div>
-          </div>
-        </div>
-        <div className="hidden lg:flex lg:justify-center">
-          <img
-            src={image.imageBanner}
-            alt="imageBanner"
-            className="max-w-[1840px] 2xl:max-w-full  w-full"
-          />
-        </div>
-      </div>
+    <div className="w-full sticky">
       <header
-        className={`flex justify-center px-[18px] py-2 w-full border border-solid border-gray-300 bg-[linear-gradient(#3881c5,#1366ae,#08569a)] text-white -top-full`}
+        id="heightRef"
+        className={`flex justify-center px-[18px] bg-white text-slate-900 shadow py-2 w-full border border-solid border-gray-300 heightRef -top-full`}
       >
-        <Box className="max-w-[1440px] flex justify-between w-full">
+        <Box className="flex justify-between w-full">
           <Box className="flex items-center gap-1">
             <button
               className="block lg:!hidden !p-[6px]"
@@ -186,15 +159,16 @@ export default function HeaderCustomer(props: HeaderProps) {
             >
               <CgMenuGridO className="text-gray-700 w-7 h-7" />
             </button>
+            <div className="cursor-pointer" onClick={handleRedirectHome}>
+              <img
+                src={image.imageTunaLogo}
+                alt="imageBanner"
+                className="h-12 w-auto object-cover"
+              />
+            </div>
           </Box>
           <Box className="hidden lg:flex lg:items-center">
-            <ul className="flex gap-12 text-xl h-full">
-              <li
-                className="hover:text-gray-800 cursor-pointer h-full flex items-center"
-                onClick={handleRedirectHome}
-              >
-                Trang Chủ
-              </li>
+            <ul className="flex gap-12 text-lg h-full">
               <li className="hover:text-gray-800 cursor-pointer h-full flex items-center">
                 Giới Thiệu
               </li>
@@ -217,9 +191,7 @@ export default function HeaderCustomer(props: HeaderProps) {
                     <li
                       className="hover:text-blue-500 text-gray-800 cursor-pointer text-base/6"
                       onClick={() =>
-                        navigate(
-                          `${APP_ROUTES.TUNA_CUSTOMER.FORM_SIGN_UP_DVKN.to}?tuna=thong-tin-chung`
-                        )
+                        navigate(APP_ROUTES.TUNA_CUSTOMER.FORM_SIGN_UP_DVKN.to)
                       }
                     >
                       Đăng Ký Dịch Vụ Kiểm Nghiệm
@@ -258,14 +230,14 @@ export default function HeaderCustomer(props: HeaderProps) {
               >
                 <IconButton
                   onClick={handleClickNotifications}
-                  className="relative"
+                  className="bg-[#22c55e]"
                 >
                   <StyledBadge
                     overlap="circular"
                     anchorOrigin={{ vertical: "top", horizontal: "right" }}
                     variant="dot"
                   >
-                    <NotificationsActiveIcon className="text-white" />
+                    <NotificationsActiveIcon className="text-[#0f172a]" />
                   </StyledBadge>
                 </IconButton>
               </Tooltip>
@@ -306,7 +278,7 @@ export default function HeaderCustomer(props: HeaderProps) {
                     color="inherit"
                     className="relative !p-2"
                   >
-                    <AccountCircle className="text-white" />
+                    <AccountCircle className="text-[#1e3a8a]" />
                   </IconButton>
                 </Tooltip>
                 <AccountPopup
@@ -337,42 +309,26 @@ export default function HeaderCustomer(props: HeaderProps) {
             setOpenMenu(false);
             setIsDanhMuc(false);
           }}
+          anchor="bottom"
         >
-          <Box className="flex justify-center p-4 w-[300px] md:w-[350px]">
-            <Box className="grid gap-6 w-full">
-              <Box className="flex justify-between items-center">
-                <Box className="flex items-center gap-2">
-                  <img
-                    src={image.imageLogo}
-                    alt="imageLogo"
-                    className="w-9 h-9 sm:!w-12 sm:!h-12 text-black"
-                  />
-                </Box>
-                <Box
-                  onClick={() => {
-                    setOpenMenu(false);
-                    setIsDanhMuc(false);
-                  }}
-                >
-                  <IoIosCloseCircle className="w-8 h-8 text-gray-300" />
-                </Box>
-              </Box>
-              <Box className="grid gap-4">
-                <Box
-                  className="hover:text-blue-600 cursor-pointer flex items-center text-xl/6 sm:text-2xl/6 font-semibold"
-                  onClick={() => {
-                    setOpenMenu(false);
-                    handleRedirectHome();
-                  }}
-                >
-                  Trang Chủ
-                </Box>
-                <Box className="hover:text-blue-600 cursor-pointer flex items-center text-xl/6 sm:text-2xl/6 font-semibold">
+          <Box className="flex justify-center px-4 py-6 !relative">
+            <Box
+              className="!absolute top-2 right-2"
+              onClick={() => {
+                setOpenMenu(false);
+                setIsDanhMuc(false);
+              }}
+            >
+              <IoIosCloseCircle className="w-8 h-8 text-gray-300" />
+            </Box>
+            <Box className="flex justify-start items-center sm:justify-center w-full">
+              <Box className="grid gap-2">
+                <Box className="hover:text-blue-600 cursor-pointer flex items-center justify-start sm:justify-center text-[#525252] text-xl/6 font-medium whitespace-normal">
                   Giới Thiệu
                 </Box>
                 <Box className="relative group grid gap-4">
                   <span
-                    className="flex items-center justify-between w-full gap-2 hover:text-blue-600 cursor-pointer text-xl/6 sm:text-2xl/6 font-semibold"
+                    className="sm:ml-4 flex items-center justify-start sm:justify-center w-full gap-2 hover:text-blue-600 cursor-pointer text-[#525252] text-xl/6 font-medium whitespace-normal"
                     onClick={() => setIsDanhMuc(!isDanhMuc)}
                   >
                     Danh Mục <IoMdArrowDropdown />
@@ -390,11 +346,11 @@ export default function HeaderCustomer(props: HeaderProps) {
                       }`}
                     >
                       <li
-                        className="hover:text-blue-600 cursor-pointer text-base/6 sm:text-lg/6 font-semibold"
+                        className="hover:text-blue-600 cursor-pointer text-xl/6 sm:text-lg/6"
                         onClick={() => {
                           setOpenMenu(false);
                           navigate(
-                            `${APP_ROUTES.TUNA_CUSTOMER.FORM_SIGN_UP_DVKN.to}?tuna=thong-tin-chung`
+                            APP_ROUTES.TUNA_CUSTOMER.FORM_SIGN_UP_DVKN.to
                           );
                         }}
                       >
@@ -403,7 +359,7 @@ export default function HeaderCustomer(props: HeaderProps) {
                     </motion.ul>
                   </AnimatePresence>
                 </Box>
-                <Box className="hover:text-blue-600 cursor-pointer flex items-center text-xl/6 sm:text-2xl/6 font-semibold">
+                <Box className="hover:text-blue-600 cursor-pointer flex items-center justify-start sm:justify-center text-[#525252] text-xl/6 font-medium whitespace-normal">
                   Tin Tức
                 </Box>
               </Box>

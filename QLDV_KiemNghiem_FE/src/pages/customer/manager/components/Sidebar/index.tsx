@@ -6,7 +6,6 @@ import { IoPersonSharp } from "react-icons/io5";
 import { useLocation, useNavigate } from "react-router";
 import { motion } from "motion/react";
 
-
 const dataSideBar = [
   {
     name: "Trang Cá Nhân",
@@ -16,7 +15,7 @@ const dataSideBar = [
   },
   {
     name: "Quản Lý Phiếu Đăng Ký Dịch Vụ Kiểm Nghiệm",
-    url: `${APP_ROUTES.TUNA_CUSTOMER.PHIEU_DKY_DVKN.to}?tuna=cho-xet-duyet`,
+    url: `${APP_ROUTES.TUNA_CUSTOMER.PHIEU_DKY_DVKN.to}`,
     icon: <FaVoteYea className="w-[42px] h-[42px] text-[#404dd2]" />,
     urlHienThi: "quan-ly-phieu-dang-ky-dich-vu-kiem-nghiem",
   },
