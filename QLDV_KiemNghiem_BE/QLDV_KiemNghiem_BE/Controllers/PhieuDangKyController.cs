@@ -149,12 +149,12 @@ namespace QLDV_KiemNghiem_BE.Controllers
             if (time != 0)
             {
                 _logger.LogDebug("Tra ket qua thoi gian du tinh kiem nghiem thanh cong");
-                return Ok(new {data = time, message = "Khong co du lieu cua mau nay, hoac mau nhap vao chua hop le"});
+                return Ok(new {data = time, message = "Lấy dữ liệu thời gian tiêu chuẩn thành công"});
             }
             else 
             {
                 _logger.LogDebug("Ma tieu chuan chua ton tai trong CSDL");
-                return BadRequest(time);
+                return BadRequest(new { data = time, message = "Lấy dữ liệu không thành công" });
             }
         }
     }
