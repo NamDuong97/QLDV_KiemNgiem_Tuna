@@ -102,42 +102,51 @@ namespace QLDV_KiemNghiem_BE.Controllers
                 _logger.LogError("Loi validate tham so dau vao");
                 return BadRequest(new { Errors = errors });
             }
-            bool update = await _service.PhieuDangKy.UpdatePhieuDangKyAsync(phieuDangKyDto);
-            if (update)
+            var checkExists = await _service.PhieuDangKy.CheckExistPhieuDangKyAsync(phieuDangKyDto.MaId);
+            if(checkExists!= null)
             {
-                _logger.LogDebug("Cap nhat phieu dang ky thanh cong");
-                return Ok(phieuDangKyDto);
-            }
-            else
-            {
-                _logger.LogDebug("Cap nhat phieu dang ky that bai");
-                return BadRequest();
-            }
-        }
-
-        [HttpDelete]
-        [Route("deletePhieuDangKy")]
-        public async Task<ActionResult> deletePhieuDangKy(PhieuDangKy phieuDangKy)
-        {
-            var checkExists = await _service.PhieuDangKy.CheckExistPhieuDangKyAsync(phieuDangKy.MaId);
-            if (checkExists != null)
-            {
-                bool delete = await _service.PhieuDangKy.DeletePhieuDangKyAsync(phieuDangKy);
-                if (delete)
+                bool update = await _service.PhieuDangKy.UpdatePhieuDangKyAsync(phieuDangKyDto);
+                if (update)
                 {
-                    _logger.LogDebug("Cap nhat phieu dang ky thanh cong");
-                    return Ok(phieuDangKy);
+                    _logger.LogInformation("Cap nhat phieu dang ky thanh cong");
+                    return Ok(phieuDangKyDto);
                 }
                 else
                 {
-                    _logger.LogDebug("Cap nhat phieu dang ky that bai");
+                    _logger.LogInformation("Cap nhat phieu dang ky that bai");
                     return BadRequest();
                 }
             }
             else
             {
+                _logger.LogWarning("Phieu dang ky khong ton tai");
+                return BadRequest(new { message = "Phieu dang ky khong ton tai" });
+            }
+        }
+
+        [HttpDelete]
+        [Route("deletePhieuDangKy")]
+        public async Task<ActionResult> deletePhieuDangKy(string maPhieuDangKy)
+        {
+            var checkExists = await _service.PhieuDangKy.CheckExistPhieuDangKyAsync(maPhieuDangKy);
+            if (checkExists != null)
+            {
+                bool delete = await _service.PhieuDangKy.DeletePhieuDangKyAsync(checkExists);
+                if (delete)
+                {
+                    _logger.LogDebug("Huy phieu dang ky thanh cong");
+                    return Ok(new {message = "Huy phieu dang ky thanh cong" });
+                }
+                else
+                {
+                    _logger.LogDebug("Cap nhat phieu dang ky that bai");
+                    return BadRequest(new { message = "Huy phieu dang ky that bai, vui long thu lai" });
+                }
+            }
+            else
+            {
                 _logger.LogDebug("Phieu dang ky khong ton tai");
-                return BadRequest();
+                return BadRequest(new { message = "Phieu dang ky khong ton tai" });
             }
         }
 

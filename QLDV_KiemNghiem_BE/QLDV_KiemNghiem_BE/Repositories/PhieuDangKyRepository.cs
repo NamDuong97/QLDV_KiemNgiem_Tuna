@@ -60,7 +60,7 @@ namespace QLDV_KiemNghiem_BE.Repositories
 
         public async Task<PhieuDangKy?> CheckExistPhieuDangKyAsync(string id)
         {
-            var result = await _context.PhieuDangKies.FindAsync(id);
+            var result = await _context.PhieuDangKies.AsNoTracking().FirstOrDefaultAsync(x => x.MaId == id);
             return result;
         }
 

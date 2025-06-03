@@ -7,6 +7,7 @@ using QLDV_KiemNghiem_BE.DTO.Parameter;
 using QLDV_KiemNghiem_BE.Interfaces;
 using QLDV_KiemNghiem_BE.Interfaces.ManagerInterface;
 using QLDV_KiemNghiem_BE.Models;
+using QLDV_KiemNghiem_BE.Repositories;
 using System;
 
 namespace QLDV_KiemNghiem_BE.Services
@@ -16,8 +17,9 @@ namespace QLDV_KiemNghiem_BE.Services
         private readonly DataContext _context;
         private readonly IRepositoryManager _repositoryManager;
         private IMapper _mapper;
-        public PhieuDangKyService(IRepositoryManager repositoryManager, IMapper mapper)
+        public PhieuDangKyService(IRepositoryManager repositoryManager, IMapper mapper, DataContext dataContext)
         {
+            _context = dataContext;
             _repositoryManager = repositoryManager;
             _mapper = mapper;
         }
@@ -166,7 +168,74 @@ namespace QLDV_KiemNghiem_BE.Services
         public async Task<bool> UpdatePhieuDangKyAsync(PhieuDangKyDto phieuDangKyDto)
         {
             var phieuDangKyDomain = _mapper.Map<PhieuDangKy>(phieuDangKyDto);
-            _repositoryManager.PhieuDangKy.UpdatePhieuDangKyAsync(phieuDangKyDomain);
+            phieuDangKyDomain.NgaySua = DateTime.Now;
+            phieuDangKyDomain.NguoiSua = "admin";
+            foreach (var mau in phieuDangKyDto.Maus)
+            {
+                var mauDomain = _mapper.Map<PhieuDangKyMau>(mau);
+                var checkExistsMau =  await _repositoryManager.PhieuDangKyMau.CheckExistPhieuDangKyMauAsync(mau.MaId, phieuDangKyDto.MaId);
+                if(checkExistsMau != null) // nếu mẫu đã tồn tại thì update mẫu này
+                {
+                    mauDomain.NgaySua = DateTime.Now;
+                    mauDomain.NguoiSua = "admin";
+                    foreach (var img in mau.PhieuDangKyMauHinhAnhs)
+                    {
+                        var hinhAnhDomain = _mapper.Map<PhieuDangKyMauHinhAnh>(img);
+                        var checkExistsHinhAnh = await _repositoryManager.PhieuDangKyMauHinhAnh.CheckExistPhieuDangKyMauHinhAnhAsync(img.MaId);
+                        if (checkExistsHinhAnh == null) // nếu hình ảnh k có maid thì là thêm mới, ngược lại thì update
+                        {
+                            hinhAnhDomain.MaId = Guid.NewGuid().ToString();
+                            hinhAnhDomain.NgayTao = DateTime.Now;
+                            hinhAnhDomain.NguoiTao = "admin";
+                            _repositoryManager.PhieuDangKyMauHinhAnh.CreatePhieuDangKyMauHinhAnhAsync(hinhAnhDomain);
+                        }
+                        else
+                        {
+                            hinhAnhDomain.NgaySua = DateTime.Now;
+                            hinhAnhDomain.NguoiSua = "admin";
+                            _repositoryManager.PhieuDangKyMauHinhAnh.UpdatePhieuDangKyMauHinhAnhAsync(hinhAnhDomain);
+                        }
+                    }
+                    _repositoryManager.PhieuDangKyMau.UpdatePhieuDangKyMauAsync(mauDomain);
+                }
+                else // nếu mẫu không tồn tại thì create mẫu này, và thêm mới hình ảnh
+                {
+                    mauDomain.MaId = Guid.NewGuid().ToString();
+                    mauDomain.NgayTao = DateTime.Now;
+                    mauDomain.NguoiTao = "admin";
+                    foreach (var img in mau.PhieuDangKyMauHinhAnhs)
+                    {
+                        var hinhAnhDomain = _mapper.Map<PhieuDangKyMauHinhAnh>(img);
+                        hinhAnhDomain.MaId = Guid.NewGuid().ToString();
+                        hinhAnhDomain.NgayTao = DateTime.Now;
+                        hinhAnhDomain.NguoiTao = "admin";
+                        _repositoryManager.PhieuDangKyMauHinhAnh.CreatePhieuDangKyMauHinhAnhAsync(hinhAnhDomain);
+                    }
+                    _repositoryManager.PhieuDangKyMau.CreatePhieuDangKyMauAsync(mauDomain);
+                }
+            }
+
+            foreach (var plhc in phieuDangKyDto.PhieuDangKyPhuLieuHoaChats)
+            {
+                var plhcDomain = _mapper.Map<PhieuDangKyPhuLieuHoaChat>(plhc);
+                var checkExistsPlhc = _repositoryManager.PhieuDangKyPhuLieuHoaChat.CheckExistPhieuDangKyPhuLieuHoaChatAsync(plhc.MaId, phieuDangKyDto.MaId);
+                if(checkExistsPlhc!=null)
+                {
+                    plhcDomain.NgaySua = DateTime.Now;
+                    plhcDomain.NguoiSua = "admin";
+                    _repositoryManager.PhieuDangKyPhuLieuHoaChat.UpdatePhieuDangKyPhuLieuHoaChatAsync(plhcDomain);
+                }
+                else
+                {
+                    plhcDomain.MaId = Guid.NewGuid().ToString();    
+                    plhcDomain.NgaySua = DateTime.Now;
+                    plhcDomain.NguoiSua = "admin";
+                    _repositoryManager.PhieuDangKyPhuLieuHoaChat.CreatePhieuDangKyPhuLieuHoaChatAsync(plhcDomain);
+                }
+            }
+            //_context.Attach(phieuDangKyDomain); // Đảm bảo entity đã được attach
+            //_context.Entry(phieuDangKyDomain).State = EntityState.Modified;
+            //_repositoryManager.PhieuDangKy.UpdatePhieuDangKyAsync(phieuDangKyDomain);
             bool check = await _repositoryManager.SaveChangesAsync();
             return check;
         }
@@ -174,7 +243,8 @@ namespace QLDV_KiemNghiem_BE.Services
         public async Task<bool> DeletePhieuDangKyAsync(PhieuDangKy phieuDangKy)
         {
             // Xoa cac mau co lien quan den phieu dang ky bi xoa
-            _repositoryManager.PhieuDangKy.DeletePhieuDangKyAsync(phieuDangKy);
+            phieuDangKy.TrangThaiId = "TT10";
+            _repositoryManager.PhieuDangKy.UpdatePhieuDangKyAsync(phieuDangKy);
             bool check = await _repositoryManager.SaveChangesAsync();
             return check;
         }

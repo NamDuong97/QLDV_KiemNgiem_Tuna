@@ -29,14 +29,22 @@ namespace QLDV_KiemNghiem_BE.Services
             var result = _mapper.Map<TieuChuanDto>(tieuChuanDomain);
             return result;
         }
-        //public async Task<TieuChuanDto?> FindTieuChuanByNameAsync(string tenTieuChuan)
-        //{
-        //    var tieuChuanDomain = await _repositoryManager.TieuChuan.FindTieuChuanByNameAsync(tenTieuChuan);
-        //    var result = _mapper.Map<TieuChuanDto>(tieuChuanDomain);
-        //    return result;
-        //}
+        public async Task<List<TieuChuanDto>?> FindTieuChuanByNameAsync(string tenTieuChuan)
+        {
+            if (tenTieuChuan == null || tenTieuChuan == "") return null;
+            string data = PublicFunc.processString(tenTieuChuan);
+            var tieuChuanDomain = await _repositoryManager.TieuChuan.FindTieuChuanByNameAsync(data);
+            var result = _mapper.Map<List<TieuChuanDto>?>(tieuChuanDomain);
+            return result;
+        }
         public async Task<bool> CreateTieuChuanAsync(TieuChuanDto tieuChuanDto)
         {
+            if (tieuChuanDto == null) return false;
+            var checkExistsByID = await FindTieuChuanAsync(tieuChuanDto.MaId);
+            if(checkExistsByID != null) return false;
+            var checkExistsByName = await FindTieuChuanByNameAsync(tieuChuanDto.TenTieuChuan);
+            if ((checkExistsByName?.Count() ?? 0) > 0) return false;
+
             var tieuChuanDomain = _mapper.Map<TieuChuan>(tieuChuanDto);
             tieuChuanDomain.MaId = Guid.NewGuid().ToString();
             tieuChuanDomain.NgayTao = DateTime.Now;
@@ -47,6 +55,7 @@ namespace QLDV_KiemNghiem_BE.Services
         }
         public async Task<bool> UpdateTieuChuanAsync(TieuChuanDto tieuChuanDto)
         {
+            if (tieuChuanDto == null) return false;
             var tieuChuanCheck = await _repositoryManager.TieuChuan.FindTieuChuanAsync(tieuChuanDto.MaId);
             if (tieuChuanCheck == null)
             {

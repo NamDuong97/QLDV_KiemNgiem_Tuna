@@ -36,7 +36,11 @@ namespace QLDV_KiemNghiem_BE.Repositories
         {
             _context.PhieuDangKyMaus.Remove(PhieuDangKyMau);
         }
-
+        public async Task<PhieuDangKyMau?> CheckExistPhieuDangKyMauAsync(string phieuDangKyMau, string phieuDangKy)
+        {
+            var result = await _context.PhieuDangKyMaus.AsNoTracking().Where(item => item.MaPhieuDangKy == phieuDangKy && item.MaId == phieuDangKyMau).SingleOrDefaultAsync();
+            return result;
+        }
     }
 
 

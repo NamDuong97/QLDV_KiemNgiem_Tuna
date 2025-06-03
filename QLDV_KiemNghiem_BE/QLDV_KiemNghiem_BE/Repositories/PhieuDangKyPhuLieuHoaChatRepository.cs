@@ -36,6 +36,11 @@ namespace QLDV_KiemNghiem_BE.Repositories
         {
             _context.PhieuDangKyPhuLieuHoaChats.Remove(phieuDangKyPhuLieuHoaChat);
         }
-
+        public async Task<PhieuDangKyPhuLieuHoaChat?> CheckExistPhieuDangKyPhuLieuHoaChatAsync(string phieuDangKyPlhc, string phieuDangKy)
+        {
+            // k theo dõi đối tượng result vì đối tượng này k phải đối tượng chính
+            var result = await _context.PhieuDangKyPhuLieuHoaChats.AsNoTracking().Where(item => item.MaPhieuDangKy == phieuDangKy && item.MaId == phieuDangKyPlhc).SingleOrDefaultAsync();
+            return result;
+        }
     }
 }
