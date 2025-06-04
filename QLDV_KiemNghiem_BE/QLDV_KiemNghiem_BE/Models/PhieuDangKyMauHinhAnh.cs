@@ -47,6 +47,8 @@ public partial class PhieuDangKyMauHinhAnh
     [StringLength(500)]
     public string? PathImg { get; set; }
 
+    public bool? IsDel { get; set; }
+
     [ForeignKey("MaMau")]
     [InverseProperty("PhieuDangKyMauHinhAnhs")]
     public virtual PhieuDangKyMau? MaMauNavigation { get; set; }

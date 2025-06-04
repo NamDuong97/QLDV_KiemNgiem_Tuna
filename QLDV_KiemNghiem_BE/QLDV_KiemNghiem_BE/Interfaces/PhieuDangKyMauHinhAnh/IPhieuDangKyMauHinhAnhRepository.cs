@@ -5,10 +5,11 @@ namespace QLDV_KiemNghiem_BE.Interfaces
     public interface IPhieuDangKyMauHinhAnhRepository
     {
         Task<IEnumerable<PhieuDangKyMauHinhAnh>> GetPhieuDangKyMauHinhAnhsAllAsync();
+        Task<IEnumerable<PhieuDangKyMauHinhAnh>?> GetPhieuDangKyMauHinhAnhByMaMauAsync(string maMau, bool tracking);
         Task<PhieuDangKyMauHinhAnh?> FindPhieuDangKyMauHinhAnhAsync(string maPhieuDangKyMauHinhAnh);
-        void CreatePhieuDangKyMauHinhAnhAsync(PhieuDangKyMauHinhAnh PhieuDangKyMauHinhAnh);
-        void UpdatePhieuDangKyMauHinhAnhAsync(PhieuDangKyMauHinhAnh PhieuDangKyMauHinhAnh);
-        void DeletePhieuDangKyMauHinhAnhAsync(PhieuDangKyMauHinhAnh PhieuDangKyMauHinhAnh);
-        Task<PhieuDangKyMauHinhAnh?> CheckExistPhieuDangKyMauHinhAnhAsync(string id);
+        Task CreatePhieuDangKyMauHinhAnhAsync(PhieuDangKyMauHinhAnh PhieuDangKyMauHinhAnh);
+        void UpdatePhieuDangKyMauHinhAnh(PhieuDangKyMauHinhAnh PhieuDangKyMauHinhAnh);
+        void DeletePhieuDangKyMauHinhAnh(PhieuDangKyMauHinhAnh PhieuDangKyMauHinhAnh);
+        Task<PhieuDangKyMauHinhAnh?> CheckExistPhieuDangKyMauHinhAnhAsync(string id, bool tracking);
     }
 }

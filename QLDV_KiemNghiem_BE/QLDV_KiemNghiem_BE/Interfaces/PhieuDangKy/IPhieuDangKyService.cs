@@ -12,7 +12,7 @@ namespace QLDV_KiemNghiem_BE.Interfaces
         Task<bool> CreatePhieuDangKyAsync(PhieuDangKyDto phieuDangKyDto);
         Task<bool> UpdatePhieuDangKyAsync(PhieuDangKyDto phieuDangKyDto);
         Task<bool> DeletePhieuDangKyAsync(PhieuDangKy phieuDangKy);
-        Task<PhieuDangKy?> CheckExistPhieuDangKyAsync(string id);
+        Task<PhieuDangKy?> CheckExistPhieuDangKyAsync(string id, bool tracking);
         Task<int> DuTinhThoiGianKiemNghiem(string maDmMau, string maTieuChuan);
     }
 }

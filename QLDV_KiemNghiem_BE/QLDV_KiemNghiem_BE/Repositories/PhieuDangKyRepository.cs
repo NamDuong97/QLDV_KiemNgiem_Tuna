@@ -43,9 +43,9 @@ namespace QLDV_KiemNghiem_BE.Repositories
             return await _context.PhieuDangKies.Include(p => p.PhieuDangKyMaus).ThenInclude(item => item.PhieuDangKyMauHinhAnhs)
             .FirstOrDefaultAsync(p => p.MaId == maPhieuDangKy);
         }
-        public void CreatePhieuDangKyAsync(PhieuDangKy phieuDangKy)
+        public async Task CreatePhieuDangKyAsync(PhieuDangKy phieuDangKy)
         {
-           _context.PhieuDangKies.Add(phieuDangKy);
+          await _context.PhieuDangKies.AddAsync(phieuDangKy);
         }
 
         public void UpdatePhieuDangKyAsync(PhieuDangKy phieuDangKy)
@@ -58,9 +58,17 @@ namespace QLDV_KiemNghiem_BE.Repositories
             _context.PhieuDangKies.Remove(phieuDangKy);
         }
 
-        public async Task<PhieuDangKy?> CheckExistPhieuDangKyAsync(string id)
+        public async Task<PhieuDangKy?> CheckExistPhieuDangKyAsync(string id, bool tracking)
         {
-            var result = await _context.PhieuDangKies.AsNoTracking().FirstOrDefaultAsync(x => x.MaId == id);
+            var result = new PhieuDangKy();
+            if (tracking)
+            {
+                result = await _context.PhieuDangKies.AsNoTracking().FirstOrDefaultAsync(x => x.MaId == id);
+            }
+            else
+            {
+                result = await _context.PhieuDangKies.FirstOrDefaultAsync(x => x.MaId == id);
+            }
             return result;
         }
 
