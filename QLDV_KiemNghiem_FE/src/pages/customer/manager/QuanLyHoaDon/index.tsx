@@ -2,9 +2,9 @@ import { Box, Pagination } from "@mui/material";
 import { useState } from "react";
 // import { useLocation, useNavigate } from "react-router";
 import { Align } from "../../../../models/Table";
-import TableQuanLyHoaDon from "./Table";
 import { motion } from "motion/react";
-import PopupBoloc from "./popupBoloc";
+import TableQuanLyHoaDon from "./Table";
+import PopupBoloc from "./PopupBoloc";
 
 const tableHead = [
   {

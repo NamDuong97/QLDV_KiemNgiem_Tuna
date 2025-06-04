@@ -43,6 +43,10 @@ public partial class PhieuDangKyMauHinhAnh
     [Column(TypeName = "datetime")]
     public DateTime? NgaySua { get; set; }
 
+    [Column("Path_Img")]
+    [StringLength(500)]
+    public string? PathImg { get; set; }
+
     [ForeignKey("MaMau")]
     [InverseProperty("PhieuDangKyMauHinhAnhs")]
     public virtual PhieuDangKyMau? MaMauNavigation { get; set; }

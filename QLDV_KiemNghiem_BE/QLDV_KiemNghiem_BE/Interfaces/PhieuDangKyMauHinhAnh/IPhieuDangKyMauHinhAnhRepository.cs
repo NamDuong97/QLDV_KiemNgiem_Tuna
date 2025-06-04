@@ -9,5 +9,6 @@ namespace QLDV_KiemNghiem_BE.Interfaces
         void CreatePhieuDangKyMauHinhAnhAsync(PhieuDangKyMauHinhAnh PhieuDangKyMauHinhAnh);
         void UpdatePhieuDangKyMauHinhAnhAsync(PhieuDangKyMauHinhAnh PhieuDangKyMauHinhAnh);
         void DeletePhieuDangKyMauHinhAnhAsync(PhieuDangKyMauHinhAnh PhieuDangKyMauHinhAnh);
+        Task<PhieuDangKyMauHinhAnh?> CheckExistPhieuDangKyMauHinhAnhAsync(string id);
     }
 }

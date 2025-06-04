@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
-using QLDV_KiemNghiem_BE.DTO.Parameter;
 using QLDV_KiemNghiem_BE.Models;
 
 namespace QLDV_KiemNghiem_BE.Data;
@@ -16,7 +15,6 @@ public partial class DataContext : DbContext
         : base(options)
     {
     }
-    public DbSet<ThoiGianTieuChuan> ThoiGianResponses { get; set; }  // Không cần tạo bảng thực tế
 
     public virtual DbSet<BoPhan> BoPhans { get; set; }
 
@@ -135,8 +133,6 @@ public partial class DataContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<ThoiGianTieuChuan>().HasNoKey();
-
         modelBuilder.Entity<BoPhan>(entity =>
         {
             entity.HasKey(e => e.MaId).HasName("PK__BoPhan__2725BF401698C8B8");

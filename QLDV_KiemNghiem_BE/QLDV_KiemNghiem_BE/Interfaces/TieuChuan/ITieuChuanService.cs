@@ -7,7 +7,7 @@ namespace QLDV_KiemNghiem_BE.Interfaces
     {
         Task<IEnumerable<TieuChuanDto>> GetTieuChuansAllAsync();
         Task<TieuChuanDto?> FindTieuChuanAsync(string maTieuChuan);
-        //Task<TieuChuanDto?> FindTieuChuanByNameAsync(string tenTieuChuan);
+        Task<List<TieuChuanDto>?> FindTieuChuanByNameAsync(string tenTieuChuan);
         Task<bool> CreateTieuChuanAsync(TieuChuanDto tieuChuanDto);
         Task<bool> UpdateTieuChuanAsync(TieuChuanDto tieuChuanDto);
         Task<bool> DeleteTieuChuanAsync(TieuChuan tieuChuan);
