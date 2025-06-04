@@ -175,6 +175,7 @@ const EditPhieuDKyDVKN = () => {
         thoiGianTieuChuan: Number(itemMau.thoiGianTieuChuan),
         maPdkMau: itemMau.maPdkMau ? itemMau.maPdkMau : null,
         loaiDv: itemMau.loaiDv,
+        isDel: itemMau.isdel === true ? true : false,
         phieuDangKyMauHinhAnhs: itemMau.phieuDangKyMauHinhAnhs
           ? itemMau.phieuDangKyMauHinhAnhs.map((itemImage: any) => {
               return {
@@ -189,6 +190,7 @@ const EditPhieuDKyDVKN = () => {
                 nguoiSua: itemImage.nguoiSua ? itemImage.nguoiSua : null,
                 ngayTao: itemImage.ngayTao ? itemImage.ngayTao : null,
                 ngaySua: itemImage.ngaySua ? itemImage.ngaySua : null,
+                isDel: itemImage.isdel === true ? true : false,
               };
             })
           : [],
@@ -212,6 +214,7 @@ const EditPhieuDKyDVKN = () => {
         nguoiSua: itemPLHC.nguoiSua,
         ngayTao: itemPLHC.ngayTao ? itemPLHC.ngayTao : null,
         ngaySua: itemPLHC.ngaySua ? itemPLHC.ngaySua : null,
+        isDel: itemPLHC.isdel === true ? true : false,
       })
     );
 

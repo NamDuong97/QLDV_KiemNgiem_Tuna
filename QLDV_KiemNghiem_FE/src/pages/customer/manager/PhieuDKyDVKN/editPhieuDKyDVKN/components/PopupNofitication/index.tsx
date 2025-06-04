@@ -1,10 +1,10 @@
 import { Box, Dialog } from "@mui/material";
 import { AnimatePresence, motion } from "framer-motion";
-import { IoMdClose } from "react-icons/io";
 import { useNavigate } from "react-router";
 import { APP_ROUTES } from "../../../../../../../constants/routers";
 import { useQueryClient } from "@tanstack/react-query";
 import { useUpdatePhieuDangKy } from "../../../../../../../hooks/customers/usePhieuDKyDVKN";
+import { IoMdNotifications } from "react-icons/io";
 
 interface Props {
   openPopupNofitication: boolean;
@@ -57,9 +57,11 @@ const PopupNofitication = (props: Props) => {
   });
 
   const handleRedirectManagerPhieuDKy = () => {
+    console.log("adsa", data);
+
     mutate(data);
-    navigate(APP_ROUTES.TUNA_CUSTOMER.PHIEU_DKY_DVKN.to);
-    sessionStorage.removeItem("sua-phieuDky");
+    // navigate(APP_ROUTES.TUNA_CUSTOMER.PHIEU_DKY_DVKN.to);
+    // sessionStorage.removeItem("sua-phieuDky");
   };
   return (
     <Dialog
@@ -67,15 +69,7 @@ const PopupNofitication = (props: Props) => {
       maxWidth="lg"
       onClose={handleCloseNofitication}
     >
-      <Box className="!relative px-7 py-6 w-auto md:w-[785px]">
-        <Box className="!absolute top-3 right-4">
-          <button
-            className="bg-gray-400 rounded-full p-[4px] hover:bg-gray-500 cursor-pointer"
-            onClick={handleCloseNofitication}
-          >
-            <IoMdClose className="w-6 h-6 text-gray-300" />
-          </button>
-        </Box>
+      <Box className="px-7 py-6 w-auto md:w-[500px]">
         <AnimatePresence mode="wait">
           <motion.div
             key="signup"
@@ -85,7 +79,10 @@ const PopupNofitication = (props: Props) => {
             transition={{ duration: 0.7 }}
           >
             <Box className="grid gap-6">
-              <Box className="py-2 text-center">
+              <Box className="text-center grid gap-2">
+                <div className="flex justify-center">
+                  <IoMdNotifications className="w-16 h-16 text-yellow-300" />
+                </div>
                 <h1 className="font-bold text-3xl text-cyan-900">Thông Báo!</h1>
               </Box>
               <Box className="grid gap-1">

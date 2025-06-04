@@ -224,7 +224,6 @@ const PhuLieuHoaChat = (props: PhuLieuHoaChatProps) => {
         item.tenHienThi?.trim().toLowerCase() ===
         data.TenHienThi?.trim().toLowerCase()
     );
-    console.log("data.D", !datatest, data.TenHienThi?.trim().toLowerCase());
 
     if (!datatest) {
       mutate({
@@ -256,6 +255,7 @@ const PhuLieuHoaChat = (props: PhuLieuHoaChatProps) => {
       nguoiSua: "",
       ngayTao: "",
       ngaySua: "",
+      isdel: false,
     };
 
     const PhieuDangKy = {
@@ -301,6 +301,7 @@ const PhuLieuHoaChat = (props: PhuLieuHoaChatProps) => {
       nguoiSua: dataEditPLHC?.nguoiSua,
       ngayTao: dataEditPLHC?.ngayTao,
       ngaySua: dataEditPLHC?.ngaySua,
+      isdel: false,
     };
 
     if (index !== -1) {
