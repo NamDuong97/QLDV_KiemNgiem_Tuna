@@ -1,0 +1,154 @@
+import {
+  Box,
+  Paper,
+  Skeleton,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+} from "@mui/material";
+import { useNavigate } from "react-router";
+import { Align } from "../../../../../../../models/Table";
+import { APP_ROUTES } from "../../../../../../../constants/routers";
+
+interface TableProps {
+  tableBody: any;
+  tableHead: any[];
+}
+
+const TableDaHuy = (props: TableProps) => {
+  const { tableBody, tableHead } = props;
+
+  const navigate = useNavigate();
+
+  const handleAlign = (align: string) => {
+    switch (align) {
+      case Align.Center:
+        return "justify-center";
+      case Align.Left:
+        return "justify-start";
+      case Align.Right:
+        return "justify-end";
+    }
+  };
+
+  const handleRedirecEditPage = (item: any) => {
+    navigate(APP_ROUTES.TUNA_CUSTOMER.SHOW_PHIEU_DKY_DVKN.to);
+    sessionStorage.setItem("xem-phieuDky", JSON.stringify(item));
+  };
+
+  return (
+    <TableContainer component={Paper}>
+      <Table>
+        <TableHead className="bg-[#D9D9D9]">
+          <TableRow>
+            {tableHead.map((item) => (
+              <TableCell key={item.id} padding="normal">
+                <Box className={`flex items-center ${handleAlign(item.align)}`}>
+                  <p className="text-sm/4 sm:text-lg/4 font-bold">
+                    {item.label}
+                  </p>
+                </Box>
+              </TableCell>
+            ))}
+          </TableRow>
+        </TableHead>
+        <TableBody className="bg-white">
+          {tableBody.isLoading ? (
+            <TableRow
+              sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+              hover={true}
+              key={"isLoading"}
+              className="cursor-pointer"
+            >
+              <TableCell align="center">
+                <Skeleton variant="rounded" width={20} height={20} />
+              </TableCell>
+              <TableCell align="left">
+                <Box className="flex gap-2 items-center justify-start">
+                  <Skeleton variant="rounded" width={"100%"} height={40} />
+                </Box>
+              </TableCell>
+              <TableCell align="center">
+                <Box className="flex gap-2 items-center justify-center">
+                  <Skeleton variant="rounded" width={"100%"} height={40} />
+                </Box>
+              </TableCell>
+              <TableCell align="center">
+                <Box className="flex gap-2 items-center justify-center">
+                  <Skeleton variant="rounded" width={"100%"} height={40} />
+                </Box>
+              </TableCell>
+              <TableCell align="center">
+                <Box className="flex gap-2 items-center justify-center">
+                  <Skeleton variant="rounded" width={"100%"} height={40} />
+                </Box>
+              </TableCell>
+              <TableCell align="center">
+                <Box className="flex gap-2 items-center justify-center">
+                  <Skeleton variant="rounded" width={"100%"} height={40} />
+                </Box>
+              </TableCell>
+            </TableRow>
+          ) : tableBody?.data?.length > 0 ? (
+            tableBody?.data?.map((item: any, index: number) => (
+              <TableRow
+                key={index}
+                sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+                hover={true}
+                className="cursor-pointer"
+                onClick={() => handleRedirecEditPage(item)}
+              >
+                <TableCell align="left">
+                  <Box className="flex gap-2 items-center justify-start">
+                    <p className="text-sm/4 sm:text-base/4 font-medium">
+                      {item?.soDkpt}
+                    </p>
+                  </Box>
+                </TableCell>
+                <TableCell align="center">
+                  <Box className="flex gap-2 items-center justify-center">
+                    <p className="text-sm/4 sm:text-base/4 font-medium">
+                      {item?.nguoiGuiMau}
+                    </p>
+                  </Box>
+                </TableCell>
+                <TableCell align="center">
+                  <Box className="flex gap-2 items-center justify-center">
+                    <p className="text-sm/4 sm:text-base/4 font-medium">
+                      {item?.donViGuiMau}
+                    </p>
+                  </Box>
+                </TableCell>
+                <TableCell align="center">
+                  <Box className="flex gap-2 items-center justify-center">
+                    <p className="text-sm/4 sm:text-base/4 font-medium">
+                      {item?.ngayGiaoMau}
+                    </p>
+                  </Box>
+                </TableCell>
+                <TableCell align="center">
+                  <Box className="flex gap-2 items-center justify-center">
+                    <p className="text-sm/4 sm:text-base/4 font-medium">
+                      {item?.ngayTao}
+                    </p>
+                  </Box>
+                </TableCell>
+              </TableRow>
+            ))
+          ) : (
+            <TableRow>
+              <TableCell align="center" colSpan={5}>
+                Không có dữ liệu
+              </TableCell>
+            </TableRow>
+          )}
+        </TableBody>
+      </Table>
+    </TableContainer>
+  );
+};
+
+export default TableDaHuy;

@@ -26,9 +26,31 @@ export interface FormMau {
   phieuDangKyMauHinhAnhs: Anh[];
 }
 
+export interface FormMauEdit {
+  tenMau: string;
+  tenTieuChuan: string;
+  tenLoaiDichVu: string;
+  thoiGianTieuChuan?: string;
+  ngayDuKienTraKetQua?: string;
+  soLo: string;
+  donViSanXuat: string;
+  ngaySanXuat: string;
+  hanSuDung: string;
+  soLuong: string;
+  donViTinh: string;
+  yeuCauKiemNghiem: string;
+  dieuKienBaoQuan: string;
+  luuMau?: boolean;
+  xuatKetQua?: boolean;
+  tinhTrangMau: string;
+  ghiChu?: string;
+  phieuDangKyMauHinhAnhs: phieuDangKyMauHinhAnhs[];
+}
+
 export interface phieuDangKyMauHinhAnhs {
   maId: string;
   maMau: string;
+  base64?: string;
   ten: string;
   dinhDang: string;
   ghiChu: string;

@@ -8,6 +8,7 @@ export const keyTag = {
   Da_Duyet: "da-duyet",
   Dang_Kiem_Nghiem: "dang-kiem-nghiem",
   Hoan_Thanh: "hoan-thanh",
+  Da_Huy: "da-huy",
 };
 
 export interface FormAccountCustomerLogin {

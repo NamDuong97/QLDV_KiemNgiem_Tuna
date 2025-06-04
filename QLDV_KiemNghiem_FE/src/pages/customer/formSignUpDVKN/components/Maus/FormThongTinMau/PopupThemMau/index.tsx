@@ -2,47 +2,50 @@ import { Box, Dialog } from "@mui/material";
 import { IoMdClose } from "react-icons/io";
 import { FormThemMauVaoDanhMuc } from "../../../../../../../models/PhieuDangKy";
 import { useForm } from "react-hook-form";
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import yup from "../../../../../../../configs/yup.custom";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Inputs } from "../../../../../../../components/Inputs";
 import InputSelectLoaiMau from "./InputSelectLoaiMau";
+import {
+  useCreateDmMau,
+  useGetLoaiMauAll,
+} from "../../../../../../../hooks/customers/usePhieuDKyDVKN";
+import { useQueryClient } from "@tanstack/react-query";
+import { GiTestTubes } from "react-icons/gi";
+import HandleSnackbar from "../../../../../../../components/HandleSnackbar";
 
 interface Props {
   open: boolean;
   handleClose: () => void;
 }
 
-const dataLoaiMau = [
-  {
-    maID: "L001",
-    tenLoaiMau: "Loại 1",
-  },
-  {
-    maID: "L002",
-    tenLoaiMau: "Loại 2",
-  },
-  {
-    maID: "L003",
-    tenLoaiMau: "Loại 3",
-  },
-];
-
 const PopupThemMau = (props: Props) => {
   const { open, handleClose } = props;
+  const [isSuccess, setIsSuccess] = useState({
+    open: false,
+    message: "",
+    status: 0,
+  });
+  const queryClient = useQueryClient();
+  const dataDmMauAll: any = queryClient.getQueryData(["DmMauAll"]);
 
   let schema = useMemo(() => {
     return yup.object().shape({
       tenMau: yup
         .string()
         .required("Yêu cầu nhập Tên Mẫu")
-        .max(200, "Tên Mẫu nhập không quá 200 ký tự"),
-      // .test("Trùng tên mẫu", "Tên mẫu đã tồn tại", (value) => {
-      //   const isTrungLap = dataPhieuDangky?.Mau?.find(
-      //     (item: any) => item.TenMau === value
-      //   );
-      //   return !isTrungLap ? true : false;
-      // })
+        .max(200, "Tên Mẫu nhập không quá 200 ký tự")
+        .test("Trùng tên mẫu", "Tên mẫu đã tồn tại", (value) => {
+          if (!value) return true;
+          const trimmedValue = value.trim().toLowerCase();
+
+          const isTrungLap = dataDmMauAll.find(
+            (item: any) => item.tenMau?.trim().toLowerCase() === trimmedValue
+          );
+
+          return !isTrungLap;
+        }),
       maID: yup.string().required("Yêu cầu chọn Loại mẫu"),
     });
   }, []);
@@ -58,8 +61,58 @@ const PopupThemMau = (props: Props) => {
     mode: "onChange",
   });
 
-  const handleLoc = (data: FormThemMauVaoDanhMuc) => {
-    console.log("data", data);
+  const { data: LoaiMau } = useGetLoaiMauAll({
+    queryKey: "GetLoaiMauAll",
+    options: {
+      enabled: true,
+      staleTime: Infinity,
+      cacheTime: Infinity,
+    },
+  });
+  const dataLoaiMau = LoaiMau as Array<any>;
+
+  const handleOnSettled = async () => {
+    await queryClient.invalidateQueries({
+      queryKey: ["DmMauAll"],
+    });
+  };
+
+  const { mutate } = useCreateDmMau({
+    queryKey: "CreateDmMau",
+    onSuccess: (response) => {
+      console.log("response", response);
+      if (response.status === 200) {
+        setIsSuccess({ open: true, message: "Thêm thành công", status: 200 });
+        reset({
+          tenMau: "",
+          maID: "",
+        });
+      }
+    },
+    onError: (errors) => {
+      if (errors) {
+        setIsSuccess({ open: true, message: "Thêm thất bại", status: 400 });
+      }
+    },
+    onSettled: handleOnSettled,
+  });
+
+  const handleClosePopup = () => {
+    setIsSuccess({ open: false, message: "", status: 0 });
+    handleClose?.();
+    reset({
+      tenMau: "",
+      maID: "",
+    });
+  };
+
+  const handleThem = (data: FormThemMauVaoDanhMuc) => {
+    const dataFinal = {
+      tenMau: data.tenMau,
+      maLoaiMau: data.maID,
+      trangThai: true,
+    };
+    mutate(dataFinal);
   };
 
   useEffect(() => {
@@ -67,24 +120,35 @@ const PopupThemMau = (props: Props) => {
       tenMau: "",
       maID: "",
     });
-  }, []);
+  }, [reset]);
 
   return (
-    <Dialog open={open} maxWidth="lg" onClose={handleClose}>
-      <Box className="w-[500px]">
+    <Dialog
+      open={open}
+      maxWidth="lg"
+      onClose={handleClosePopup}
+      sx={{
+        ".MuiPaper-root": {
+          borderRadius: "10px",
+        },
+      }}
+    >
+      <Box className="lg:w-[400px]">
         <Box className="px-4 py-4 border-b border-solid border-gray-300 flex justify-between items-center">
           <Box className="text-center flex-1 pl-[34px]">
-            <p className="text-gray-80 font-bold text-2xl/6">Thêm Mẫu</p>
+            <p className="text-gray-80 font-bold text-2xl/6 flex gap-2 justify-center">
+              Thêm Mẫu <GiTestTubes className="w-6 h-6 text-cyan-700" />
+            </p>
           </Box>
           <button
-            onClick={handleClose}
+            onClick={handleClosePopup}
             className="p-1 rounded-full group hover:bg-blue-200"
           >
             <IoMdClose className="text-gray-500 group-hover:text-blue-800" />
           </button>
         </Box>
         <form
-          onSubmit={handleSubmit(handleLoc)}
+          onSubmit={handleSubmit(handleThem)}
           className="px-4 py-5 grid gap-6"
         >
           <Box className="grid gap-2">
@@ -117,6 +181,7 @@ const PopupThemMau = (props: Props) => {
           </Box>
         </form>
       </Box>
+      <HandleSnackbar isSuccess={isSuccess} setIsSuccess={setIsSuccess} />
     </Dialog>
   );
 };

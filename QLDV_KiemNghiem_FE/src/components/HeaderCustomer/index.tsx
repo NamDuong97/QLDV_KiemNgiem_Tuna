@@ -4,7 +4,7 @@ import IconButton from "@mui/material/IconButton";
 import AccountCircle from "@mui/icons-material/AccountCircle";
 import { Badge, Drawer, styled, Tooltip } from "@mui/material";
 import NotificationsActiveIcon from "@mui/icons-material/NotificationsActive";
-import { useNavigate } from "react-router";
+import { useLocation, useNavigate } from "react-router";
 import { FaSearch } from "react-icons/fa";
 import { IoMdArrowDropdown } from "react-icons/io";
 import { APP_ROUTES } from "../../constants/routers";
@@ -15,6 +15,9 @@ import { CgMenuGridO } from "react-icons/cg";
 import { AnimatePresence, motion } from "framer-motion";
 import { IoIosCloseCircle } from "react-icons/io";
 import NotificationsPopover from "../Popup/NotificationsPopover";
+import { FaRegNewspaper } from "react-icons/fa6";
+import { IoBookOutline } from "react-icons/io5";
+import { IoHome } from "react-icons/io5";
 
 interface HeaderProps {}
 
@@ -104,7 +107,6 @@ export default function HeaderCustomer(props: HeaderProps) {
   const handleCloseLoginCustomer = () => setOpenLoginCustomer(false);
   const [openMenu, setOpenMenu] = useState(false);
   const [isDanhMuc, setIsDanhMuc] = useState(false);
-  const [isDanhMucNotMobile, setIsDanhMucNotMobile] = useState(false);
   const [anchorElNotifications, setAnchorElNotifications] =
     useState<HTMLButtonElement | null>(null);
   const openNotifications = Boolean(anchorElNotifications);
@@ -112,6 +114,7 @@ export default function HeaderCustomer(props: HeaderProps) {
     useState<HTMLButtonElement | null>(null);
   const openAccountPopup = Boolean(anchorElAccountPopup);
   const navigate = useNavigate();
+  const pathName = useLocation().pathname;
 
   const handleClickNotifications = (
     event: React.MouseEvent<HTMLButtonElement>
@@ -149,9 +152,45 @@ export default function HeaderCustomer(props: HeaderProps) {
     <div className="w-full sticky">
       <header
         id="heightRef"
-        className={`flex justify-center px-[18px] bg-white text-slate-900 shadow py-2 w-full border border-solid border-gray-300 heightRef -top-full`}
+        className={`flex justify-center px-6 bg-white text-slate-900 shadow py-2 w-full border border-solid border-gray-300 heightRef -top-full`}
       >
-        <Box className="flex justify-between w-full">
+        <Box className="flex justify-between w-full  max-w-[1440px] ">
+          <Box className="hidden lg:flex lg:items-center">
+            <ul className="flex gap-12 text-lg h-full">
+              <li
+                className={`${
+                  pathName === APP_ROUTES.TUNA_CUSTOMER.HOME.to &&
+                  "text-blue-500"
+                } hover:text-blue-500 cursor-pointer flex items-center`}
+                onClick={handleRedirectHome}
+              >
+                <Tooltip title="Trang Chủ" disableInteractive>
+                  <IoHome className="w-7 h-7" />
+                </Tooltip>
+              </li>
+              <li className="flex items-center">
+                <Tooltip title="Đăng Ký Dịch Vụ Kiểm Nghiệm" disableInteractive>
+                  <div
+                    className={`${
+                      pathName ===
+                        APP_ROUTES.TUNA_CUSTOMER.FORM_SIGN_UP_DVKN.to &&
+                      "text-blue-500"
+                    } hover:text-blue-500 cursor-pointer`}
+                    onClick={() =>
+                      navigate(APP_ROUTES.TUNA_CUSTOMER.FORM_SIGN_UP_DVKN.to)
+                    }
+                  >
+                    <IoBookOutline className="w-7 h-7" />
+                  </div>
+                </Tooltip>
+              </li>
+              <li className="hover:text-blue-500 cursor-pointer text-center flex items-center">
+                <Tooltip title="Tin tức" disableInteractive>
+                  <FaRegNewspaper className="w-7 h-7" />
+                </Tooltip>
+              </li>
+            </ul>
+          </Box>
           <Box className="flex items-center gap-1">
             <button
               className="block lg:!hidden !p-[6px]"
@@ -163,46 +202,9 @@ export default function HeaderCustomer(props: HeaderProps) {
               <img
                 src={image.imageTunaLogo}
                 alt="imageBanner"
-                className="h-12 w-auto object-cover"
+                className="h-16 w-auto object-cover"
               />
             </div>
-          </Box>
-          <Box className="hidden lg:flex lg:items-center">
-            <ul className="flex gap-12 text-lg h-full">
-              <li className="hover:text-gray-800 cursor-pointer h-full flex items-center">
-                Giới Thiệu
-              </li>
-              <li className="!relative group h-full flex items-center">
-                <span
-                  className="flex items-center gap-2 hover:text-gray-800 cursor-pointer"
-                  onClick={() => setIsDanhMucNotMobile(!isDanhMucNotMobile)}
-                  onMouseOut={() => setIsDanhMucNotMobile(false)}
-                >
-                  Danh Mục <IoMdArrowDropdown />
-                </span>
-
-                <Box
-                  className={`group-hover:block ${
-                    isDanhMucNotMobile ? "block" : "hidden"
-                  } !absolute top-10 z-99 bg-white -left-24 w-72 p-2 rounded-md border border-solid border-gray-300 shadow-[3px_3px_2px_rgba(0,0,0,0.4)]`}
-                >
-                  <div className="!absolute -top-2 left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-10 border-r-10 border-b-8 border-l-transparent border-r-transparent border-b-white" />
-                  <ul>
-                    <li
-                      className="hover:text-blue-500 text-gray-800 cursor-pointer text-base/6"
-                      onClick={() =>
-                        navigate(APP_ROUTES.TUNA_CUSTOMER.FORM_SIGN_UP_DVKN.to)
-                      }
-                    >
-                      Đăng Ký Dịch Vụ Kiểm Nghiệm
-                    </li>
-                  </ul>
-                </Box>
-              </li>
-              <li className="hover:text-gray-800 cursor-pointer h-full flex items-center">
-                Tin Tức
-              </li>
-            </ul>
           </Box>
           <Box className="gap-4 flex items-center">
             <Box>

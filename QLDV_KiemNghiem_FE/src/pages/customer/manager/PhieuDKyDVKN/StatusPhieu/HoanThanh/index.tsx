@@ -1,6 +1,8 @@
-import { Box } from "@mui/material";
+import { Box, Pagination } from "@mui/material";
 import { Align } from "../../../../../../models/Table";
 import TableHoanThanh from "./TableHoanThanh";
+import { useGetPhieuDangKyKiemNghiemByTrangThaiArray } from "../../../../../../hooks/customers/usePhieuDKyDVKN";
+import { useState } from "react";
 
 interface Props {}
 
@@ -30,9 +32,9 @@ const tableHead = [
     align: Align.Center,
   },
   {
-    id: "KetQua",
+    id: "NgayTao",
     sort: false,
-    label: "Kết Quả",
+    label: "Ngày Tạo",
     align: Align.Center,
   },
 ];
@@ -40,20 +42,54 @@ const tableHead = [
 const HoanThanh = (props: Props) => {
   const {} = props;
 
-  const data = localStorage.getItem("DataPhieuDangKy");
-  const dataPhieuDKy = data ? JSON.parse(data) : [];
+  const dataHoanThanh = useGetPhieuDangKyKiemNghiemByTrangThaiArray({
+    queryKey: "dataHoanThanh",
+    maKH: "KH001",
+    trangThaiIDs: ["TT08", "TT09"],
+  });
 
-  // const { data: dataChoTiepNhanXuLy } = usePhieuDKyDVKNALL({
-  //   queryKey: "dataChoTiepNhanXuLy",
-  //   maKH: "KH001",
-  //   trangThaiID: maIDTrangThai,
-  // });
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage] = useState(5);
 
-  // console.log("dataChoTiepNhanXuLy", dataChoTiepNhanXuLy);
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = {
+    data: dataHoanThanh?.data?.slice(indexOfFirstItem, indexOfLastItem),
+    isLoading: dataHoanThanh.isLoading,
+  };
+
+  const totalPages = Math.ceil(
+    dataHoanThanh?.data && dataHoanThanh?.data?.length / itemsPerPage
+  );
+
+  const handlePageChange = (event: any, value: number) => {
+    console.log("event", event);
+    setCurrentPage(value);
+  };
 
   return (
     <Box className="overflow-x-auto whitespace-nowrap border border-gray-300 rounded-md">
-      <TableHoanThanh tableHead={tableHead} tableBody={dataPhieuDKy} />
+      <TableHoanThanh tableHead={tableHead} tableBody={currentItems} />
+      {dataHoanThanh?.data?.length > 0 && (
+        <Box className="px-4 py-2 flex justify-center">
+          <Pagination
+            count={totalPages}
+            page={currentPage}
+            onChange={handlePageChange}
+            variant="outlined"
+            shape="rounded"
+            color="primary"
+            sx={{
+              '[aria-label="Go to next page"],[aria-label="Go to previous page"]':
+                {
+                  backgroundColor: "#1976d21f",
+                  border: "1px solid #1976d280",
+                  color: "#1976d2",
+                },
+            }}
+          />
+        </Box>
+      )}
     </Box>
   );
 };
