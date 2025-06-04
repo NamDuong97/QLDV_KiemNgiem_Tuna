@@ -4,7 +4,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm, useWatch } from "react-hook-form";
 import ListImage from "./ListImage";
 import yup from "../../../../../../../../configs/yup.custom";
-import { FormMau, FormMauEdit } from "../../../../../../../../models/mau";
+import { FormMauEdit } from "../../../../../../../../models/mau";
 import { Inputs } from "../../../../../../../../components/Inputs";
 import { Textarea } from "../../../../../../../../components/Textarea";
 import InputSelectTenMau from "./InputSelectTenMau";

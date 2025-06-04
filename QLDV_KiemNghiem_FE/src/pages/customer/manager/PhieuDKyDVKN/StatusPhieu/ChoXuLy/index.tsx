@@ -7,6 +7,7 @@ import PopupHuyPhieu from "./PopupHuyPhieu";
 import { useGetPhieuDangKyKiemNghiemByTrangThaiArray } from "../../../../../../hooks/customers/usePhieuDKyDVKN";
 import PopupBoloc from "./PopupBoloc";
 import { MdOutlineFilterList } from "react-icons/md";
+import HandleSnackbar from "../../../../../../components/HandleSnackbar";
 
 const tableHead = [
   {
@@ -44,6 +45,12 @@ const tableHead = [
 const ChoXuLy = () => {
   const [listCheckbox, setListCheckbox] = useState<any>({});
   const [openPopupHuyPhieu, setOpenPopupHuyPhieu] = useState(false);
+
+  const [isSuccess, setIsSuccess] = useState({
+    open: false,
+    message: "",
+    status: 0,
+  });
 
   const handleHuyPhieu = () => {
     setOpenPopupHuyPhieu(true);
@@ -146,8 +153,10 @@ const ChoXuLy = () => {
         open={openPopupHuyPhieu}
         handleClose={() => setOpenPopupHuyPhieu(false)}
         listCheckbox={listCheckbox}
+        setIsSuccess={setIsSuccess}
       />
       <PopupBoloc open={openPopupBoloc} handleClose={handleClosePopupBoloc} />
+      <HandleSnackbar isSuccess={isSuccess} setIsSuccess={setIsSuccess} />
     </Box>
   );
 };

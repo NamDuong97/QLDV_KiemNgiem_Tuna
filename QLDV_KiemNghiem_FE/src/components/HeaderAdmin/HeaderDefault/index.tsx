@@ -138,32 +138,50 @@ export default function HeaderDefault(props: HeaderProps) {
   };
 
   return (
-    <div className="bg-white px-[18px] flex py-2 w-full border-b border-solid border-gray-300 fixed z-99">
-      <Box className="flex-1 flex items-center gap-1">
-        {isLaptop ? (
-          <Tooltip
-            title={isMenuDashBoard ? "Thu gọn" : "Mở rộng"}
-            placement="top"
-            slotProps={{
-              popper: {
-                modifiers: [
-                  {
-                    name: "offset",
-                    options: {
-                      offset: [0, -10],
+    <header className="w-full !fixed z-99">
+      <div
+        className="bg-white px-[18px] flex py-2 w-full border-b border-solid border-gray-300"
+      >
+        <Box className="flex-1 flex items-center gap-1">
+          {isLaptop ? (
+            <Tooltip
+              title={isMenuDashBoard ? "Thu gọn" : "Mở rộng"}
+              placement="top"
+              slotProps={{
+                popper: {
+                  modifiers: [
+                    {
+                      name: "offset",
+                      options: {
+                        offset: [0, -10],
+                      },
                     },
-                  },
-                ],
-              },
-            }}
-            disableInteractive
-          >
+                  ],
+                },
+              }}
+              disableInteractive
+            >
+              <IconButton
+                size="large"
+                edge="start"
+                color="inherit"
+                aria-label="menu"
+                onClick={handleMenuDashBoard}
+              >
+                {isMenuDashBoard ? (
+                  <SpaceDashboardIcon className="text-gray-700" />
+                ) : (
+                  <ViewComfyIcon className="text-gray-700" />
+                )}
+              </IconButton>
+            </Tooltip>
+          ) : (
             <IconButton
               size="large"
               edge="start"
               color="inherit"
               aria-label="menu"
-              onClick={handleMenuDashBoard}
+              onClick={handleToggleDrawer}
             >
               {isMenuDashBoard ? (
                 <SpaceDashboardIcon className="text-gray-700" />
@@ -171,102 +189,88 @@ export default function HeaderDefault(props: HeaderProps) {
                 <ViewComfyIcon className="text-gray-700" />
               )}
             </IconButton>
-          </Tooltip>
-        ) : (
-          <IconButton
-            size="large"
-            edge="start"
-            color="inherit"
-            aria-label="menu"
-            onClick={handleToggleDrawer}
-          >
-            {isMenuDashBoard ? (
-              <SpaceDashboardIcon className="text-gray-700" />
-            ) : (
-              <ViewComfyIcon className="text-gray-700" />
-            )}
-          </IconButton>
-        )}
-        <button className="cursor-pointer" onClick={handleRedirectDashboard}>
-          <Box className="flex items-center gap-2">
-            <img
-              src={image.imageLogo}
-              alt="imageLogo"
-              className="!w-12 !h-12"
+          )}
+          <button className="cursor-pointer" onClick={handleRedirectDashboard}>
+            <Box className="flex items-center gap-2">
+              <img
+                src={image.imageTunaLogo}
+                alt="imageTunaLogo"
+                className="!h-12"
+              />
+            </Box>
+          </button>
+        </Box>
+        <Box className="gap-4 flex items-center">
+          <Box>
+            <Tooltip
+              title="Thông Báo"
+              placement="top"
+              slotProps={{
+                popper: {
+                  modifiers: [
+                    {
+                      name: "offset",
+                      options: {
+                        offset: [0, -10],
+                      },
+                    },
+                  ],
+                },
+              }}
+              disableInteractive
+            >
+              <IconButton onClick={handleClickNotificationsPopover}>
+                <StyledBadge
+                  overlap="circular"
+                  anchorOrigin={{ vertical: "top", horizontal: "right" }}
+                  variant="dot"
+                >
+                  <NotificationsActiveIcon className="text-gray-700" />
+                </StyledBadge>
+              </IconButton>
+            </Tooltip>
+
+            <NotificationsPopover
+              dataMessages={dataMessages}
+              openNotifications={openNotificationsPopover}
+              handleCloseNotifications={handleCloseNotificationsPopover}
             />
           </Box>
-        </button>
-      </Box>
-      <Box className="gap-4 flex items-center">
-        <Box>
-          <Tooltip
-            title="Thông Báo"
-            placement="top"
-            slotProps={{
-              popper: {
-                modifiers: [
-                  {
-                    name: "offset",
-                    options: {
-                      offset: [0, -10],
+          <Box>
+            <Tooltip
+              title="Tài Khoản"
+              placement="top"
+              slotProps={{
+                popper: {
+                  modifiers: [
+                    {
+                      name: "offset",
+                      options: {
+                        offset: [0, -10],
+                      },
                     },
-                  },
-                ],
-              },
-            }}
-            disableInteractive
-          >
-            <IconButton onClick={handleClickNotificationsPopover}>
-              <StyledBadge
-                overlap="circular"
-                anchorOrigin={{ vertical: "top", horizontal: "right" }}
-                variant="dot"
-              >
-                <NotificationsActiveIcon className="text-gray-700" />
-              </StyledBadge>
-            </IconButton>
-          </Tooltip>
-
-          <NotificationsPopover
-            dataMessages={dataMessages}
-            openNotifications={openNotificationsPopover}
-            handleCloseNotifications={handleCloseNotificationsPopover}
-          />
-        </Box>
-        <Box>
-          <Tooltip
-            title="Tài Khoản"
-            placement="top"
-            slotProps={{
-              popper: {
-                modifiers: [
-                  {
-                    name: "offset",
-                    options: {
-                      offset: [0, -10],
-                    },
-                  },
-                ],
-              },
-            }}
-            disableInteractive
-          >
-            <IconButton
-              size="large"
-              onClick={handleClickPopoverAccountAdmin}
-              color="inherit"
-              className="relative !p-2"
+                  ],
+                },
+              }}
+              disableInteractive
             >
-              <AccountCircle className="text-gray-700" />
-            </IconButton>
-          </Tooltip>
-          <PopoverAccountAdmin
-            open={openPopoverAccountAdmin}
-            anchorEl={anchorElPopoverAccountAdmin}
-            handleClose={handleClosePopoverAccountAdmin}
-          />
+              <IconButton
+                size="large"
+                onClick={handleClickPopoverAccountAdmin}
+                color="inherit"
+                className="relative !p-2"
+              >
+                <AccountCircle className="text-gray-700" />
+              </IconButton>
+            </Tooltip>
+            <PopoverAccountAdmin
+              open={openPopoverAccountAdmin}
+              anchorEl={anchorElPopoverAccountAdmin}
+              handleClose={handleClosePopoverAccountAdmin}
+            />
+          </Box>
         </Box>
-      </Box>
-    </div>
+      </div>
+    </header>
   );
 }

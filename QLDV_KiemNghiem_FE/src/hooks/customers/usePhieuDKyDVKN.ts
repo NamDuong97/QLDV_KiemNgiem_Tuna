@@ -217,3 +217,34 @@ export const useUpdatePhieuDangKy = (props: Props) => {
     onSettled: onSettled,
   });
 };
+
+export const useHuyPhieuDangKy = (props: Props) => {
+  const { queryKey, onSettled, onSuccess, onError } = props;
+  return useMutation({
+    mutationKey: [queryKey],
+    mutationFn: async (params: any) => {
+      const response = await PhieuDKyDVKN_Services.HuyPhieuDangKy(params);
+      return response;
+    },
+    onSuccess: onSuccess,
+    onError: onError,
+    onSettled: onSettled,
+  });
+};
+
+export const useGetLocPhieuDky = (props: Props) => {
+  const { queryKey, maKH, trangThaiID, timeFrom, timeTo } = props;
+  return useQuery({
+    queryKey: [queryKey],
+    queryFn: async () => {
+      const params = {
+        maKH: maKH,
+        timeFrom: timeFrom,
+        timeTo: timeTo,
+        trangThaiID: trangThaiID,
+      };
+      const response = await PhieuDKyDVKN_Services.getLocPhieuDky(params);
+      return response;
+    },
+  });
+};

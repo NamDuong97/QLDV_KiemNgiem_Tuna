@@ -1,7 +1,7 @@
 import { Box } from "@mui/material";
 import { motion } from "motion/react";
 import { useState } from "react";
-import { useLocation } from "react-router";
+import { useLocation, useNavigate } from "react-router";
 import { Inputs } from "../../../../components/Inputs";
 import DetailMaus from "./Detail-Maus";
 import DetailPLHCs from "./Detail-PLHC";
@@ -9,20 +9,25 @@ import PopupHuyPhieu from "./PopupHuyPhieu";
 import PopupDuyetBo from "./PopupDuyetBo";
 import PopupTuChoiPhongKHDT from "./PopupTuChoiPhongKHDT";
 import PopupPhanCongPhongCM from "./PopupPhanCongPhongCM";
+import { APP_ROUTES } from "../../../../constants/routers";
+import { MdDoorBack } from "react-icons/md";
+import { MdAccountBox } from "react-icons/md";
+import { MdDescription } from "react-icons/md";
+import { MdScience } from "react-icons/md";
 
 const ChiTietPhieuDKyDVKN = () => {
   const NameID = useLocation().pathname.split("/")[3];
   const [isTag, setIsTag] = useState(1);
   const userName = "Phòng Kế Hoạch và Đầu Tư"; // "Phòng Kế Hoạch và Đầu Tư" || "Ban lãnh đạo"
-  const statusPhieuDKyDVKN = "Chờ BLĐ xét duyệt"; // "Chờ tiếp nhận xử lý" || "Chờ BLĐ xét duyệt"
+  const statusPhieuDKyDVKN = "Chờ tiếp nhận xử lý"; // "Chờ tiếp nhận xử lý" || "Chờ BLĐ xét duyệt"
 
-  const HinhThucTraKQ = "Bưu điện";
   const [openPopupHuyPhieu, setOpenPopupHuyPhieu] = useState(false);
   const [openPopupDuyetBo, setOpenPopupDuyetBo] = useState(false);
   const [openPopupTuChoiPhongKHDT, setOpenPopupTuChoiPhongKHDT] =
     useState(false);
   const [openPopupPhanCongPhongCM, setOpenPopupPhanCongPhongCM] =
     useState(false);
+  const navigate = useNavigate();
 
   const handleClickOpenPopupHuyPhieu = () => {
     setOpenPopupHuyPhieu(true);
@@ -63,9 +68,22 @@ const ChiTietPhieuDKyDVKN = () => {
           case "Chờ tiếp nhận xử lý":
             return (
               <div className="pt-6 flex justify-between items-center">
-                <div>
-                  <p className="text-2xl/6 font-bold text-gray-800">{NameID}</p>
-                </div>
+                <Box className="flex items-center gap-2 sm:gap-4">
+                  <button
+                    className="p-1 sm:p-2 rounded-full bg-gray-200 hover:bg-gray-300 transition-colors group cursor-pointer"
+                    onClick={() =>
+                      navigate(
+                        APP_ROUTES.TUNA_ADMIN
+                          .QUAN_LY_PHIEU_DANG_KY_DICH_VU_KIEM_NGHIEM.to
+                      )
+                    }
+                  >
+                    <MdDoorBack className="w-4 h-4 sm:w-7 sm:h-7 text-[#306fb2]" />
+                  </button>
+                  <h1 className="capitalize text-xl/4 sm:text-3xl/6 font-bold text-gray-700">
+                    Số ĐKPT:{NameID}
+                  </h1>
+                </Box>
                 <div className="flex gap-4">
                   <button
                     onClick={handleClickOpenPopupHuyPhieu}
@@ -85,9 +103,22 @@ const ChiTietPhieuDKyDVKN = () => {
           case "Chờ BLĐ xét duyệt":
             return (
               <div className="pt-6 flex justify-between items-center">
-                <div>
-                  <p className="text-2xl/6 font-bold text-gray-800">{NameID}</p>
-                </div>
+                <Box className="flex items-center gap-2 sm:gap-4">
+                  <button
+                    className="p-1 sm:p-2 rounded-full bg-gray-200 hover:bg-gray-300 transition-colors group cursor-pointer"
+                    onClick={() =>
+                      navigate(
+                        APP_ROUTES.TUNA_ADMIN
+                          .QUAN_LY_PHIEU_DANG_KY_DICH_VU_KIEM_NGHIEM.to
+                      )
+                    }
+                  >
+                    <MdDoorBack className="w-4 h-4 sm:w-7 sm:h-7 text-[#306fb2]" />
+                  </button>
+                  <h1 className="capitalize text-xl/4 sm:text-3xl/6 font-bold text-gray-700">
+                    Số ĐKPT: {NameID}
+                  </h1>
+                </Box>
                 <div className="flex gap-4">
                   <button
                     onClick={handleClickOpenPopupPhanCongPhongCM}
@@ -155,27 +186,33 @@ const ChiTietPhieuDKyDVKN = () => {
     switch (isTag) {
       case 2: {
         return (
-          <div className="px-3 py-2 bg-[#D1D5DC] flex gap-4 justify-between rounded-[8px] border border-solid border-[#999999]">
+          <div className="px-1 py-1 bg-[#e9ecf1] flex gap-4 justify-between rounded-[8px] ">
             <div
-              className="text-center py-2 border border-solid border-white rounded-[8px] w-full cursor-pointer group hover:bg-blue-600 hover:transition-all hover:ease-in-out hover:duration-200"
+              className="flex items-center justify-center py-2 border border-solid border-white rounded-[8px] w-full cursor-pointer group hover:transition-all hover:ease-in-out hover:duration-200"
               onClick={() => setIsTag(1)}
             >
-              <p className=" text-gray-600 group-hover:text-white group-hover:transition-all group-hover:ease-in-out group-hover:duration-200 text-xl/6 font-bold">
-                Thông tin Chung
+              <p className="text-base/6 sm:text-xl/6 text-gray-700 group-hover:text-blue-500 font-bold flex gap-2 items-center leading-6">
+                <MdAccountBox className="w-5 h-5 sm:w-7 sm:h-7 shrink-0 text-indigo-600" />{" "}
+                Thông Tin Chung
+              </p>
+            </div>
+
+            <div
+              className="flex items-center justify-center py-2 border border-solid border-gray-300 rounded-[8px] bg-white shadow-[0_4px_4px_rgba(0,0,0,0.25)] w-full cursor-pointer transition-all ease-in-out duration-200 hover:bg-gray-100 hover:transition-all hover:ease-in-out hover:duration-200"
+              onClick={() => setIsTag(2)}
+            >
+              <p className="text-base/6 sm:text-xl/6 text-gray-700 group-hover:text-blue-500 font-bold flex gap-2 items-center leading-6">
+                <MdDescription className="w-5 h-5 sm:w-7 sm:h-7 shrink-0 text-blue-500" />{" "}
+                Mẫu
               </p>
             </div>
             <div
-              className="text-center py-2 border border-solid border-white rounded-[8px] bg-blue-600 shadow-[0_4px_4px_rgba(0,0,0,0.25)] transition-all ease-in-out duration-200 w-full cursor-pointer hover:bg-blue-500 hover:transition-all hover:ease-in-out hover:duration-200"
-              onClick={() => setIsTag(2)}
-            >
-              <p className="text-white text-xl/6 font-bold">Mẫu</p>
-            </div>
-            <div
-              className="text-center py-2 border border-solid border-white rounded-[8px] w-full cursor-pointer group hover:bg-blue-600 hover:transition-all hover:ease-in-out hover:duration-200"
+              className="flex items-center justify-center py-2 border border-solid border-white rounded-[8px] w-full cursor-pointer group hover:transition-all hover:ease-in-out hover:duration-200"
               onClick={() => setIsTag(3)}
             >
-              <p className="text-gray-600 group-hover:text-white group-hover:transition-all group-hover:ease-in-out group-hover:duration-200 text-xl/6 font-bold">
-                Phù Liệu Hóa Chất
+              <p className="text-base/6 sm:text-xl/6 text-gray-700 font-bold flex gap-2 items-center leading-6">
+                <MdScience className="w-5 h-5 sm:w-7 sm:h-7 shrink-0 text-orange-300" />
+                Phụ Liệu Hóa Chất
               </p>
             </div>
           </div>
@@ -183,29 +220,33 @@ const ChiTietPhieuDKyDVKN = () => {
       }
       case 3: {
         return (
-          <div className="px-3 py-2 bg-[#D1D5DC] flex gap-4 justify-between rounded-[8px] border border-solid border-[#999999]">
+          <div className="px-1 py-1 bg-[#e9ecf1] flex gap-4 justify-between rounded-[8px] ">
             <div
-              className="text-center py-2 border border-solid border-white rounded-[8px] group hover:bg-blue-600 w-full cursor-pointer hover:transition-all hover:ease-in-out hover:duration-200"
+              className="flex items-center justify-center py-2 border border-solid border-white rounded-[8px] w-full cursor-pointer group hover:transition-all hover:ease-in-out hover:duration-200"
               onClick={() => setIsTag(1)}
             >
-              <p className="text-gray-600 group-hover:text-white group-hover:transition-all group-hover:ease-in-out group-hover:duration-200 text-xl/6 font-bold">
-                Thông tin Chung
+              <p className="text-base/6 sm:text-xl/6 text-gray-700 group-hover:text-blue-500 font-bold flex gap-2 items-center leading-6">
+                <MdAccountBox className="w-5 h-5 sm:w-7 sm:h-7 shrink-0 text-indigo-600" />{" "}
+                Thông Tin Chung
               </p>
             </div>
             <div
-              className="text-center py-2 border border-solid border-white rounded-[8px] w-full cursor-pointer group hover:bg-blue-600 hover:transition-all hover:ease-in-out hover:duration-200"
+              className="flex items-center justify-center py-2 border border-solid border-white rounded-[8px] w-full cursor-pointer group hover:transition-all hover:ease-in-out hover:duration-200"
               onClick={() => setIsTag(2)}
             >
-              <p className="text-gray-600 group-hover:text-white group-hover:transition-all group-hover:ease-in-out group-hover:duration-200 text-xl/6 font-bold">
+              <p className="text-base/6 sm:text-xl/6 text-gray-700 group-hover:text-blue-500 font-bold flex gap-2 items-center leading-6">
+                <MdDescription className="w-5 h-5 sm:w-7 sm:h-7 shrink-0 text-blue-500" />{" "}
                 Mẫu
               </p>
             </div>
+
             <div
-              className="text-center py-2 border border-solid border-white rounded-[8px] w-full cursor-pointer bg-blue-600 shadow-[0_4px_4px_rgba(0,0,0,0.25)] transition-all ease-in-out duration-200 hover:bg-blue-500 hover:transition-all hover:ease-in-out hover:duration-200"
+              className="flex items-center justify-center py-2 border border-solid border-gray-300 rounded-[8px] bg-white shadow-[0_4px_4px_rgba(0,0,0,0.25)] w-full cursor-pointer transition-all ease-in-out duration-200 hover:bg-gray-100 hover:transition-all hover:ease-in-out hover:duration-200"
               onClick={() => setIsTag(3)}
             >
-              <p className=" text-white  text-xl/6 font-bold">
-                Phù Liệu Hóa Chất
+              <p className="text-base/6 sm:text-xl/6 text-gray-700 font-bold flex gap-2 items-center leading-6">
+                <MdScience className="w-5 h-5 sm:w-7 sm:h-7 shrink-0 text-orange-300" />
+                Phụ Liệu Hóa Chất
               </p>
             </div>
           </div>
@@ -213,27 +254,32 @@ const ChiTietPhieuDKyDVKN = () => {
       }
       default: {
         return (
-          <div className="px-3 py-2 bg-[#D1D5DC] flex gap-4 justify-between rounded-[8px] border border-solid border-[#999999]">
+          <div className="px-1 py-1 bg-[#e9ecf1] flex gap-4 justify-between rounded-[8px] ">
             <div
-              className="text-center py-2 border border-solid border-white rounded-[8px] bg-blue-600 shadow-[0_4px_4px_rgba(0,0,0,0.25)] w-full cursor-pointer transition-all ease-in-out duration-200 hover:bg-blue-500 hover:transition-all hover:ease-in-out hover:duration-200"
+              className="flex items-center justify-center py-2 border border-solid border-gray-300 rounded-[8px] bg-white shadow-[0_4px_4px_rgba(0,0,0,0.25)] w-full cursor-pointer transition-all ease-in-out duration-200 hover:bg-gray-100 hover:transition-all hover:ease-in-out hover:duration-200"
               onClick={() => setIsTag(1)}
             >
-              <p className="text-white text-xl/6 font-bold">Thông tin Chung</p>
+              <p className="text-base/6 sm:text-xl/6 text-gray-700 font-bold flex gap-2 items-center leading-6">
+                <MdAccountBox className="w-5 h-5 sm:w-7 sm:h-7 shrink-0 text-indigo-600" />
+                Thông Tin Chung
+              </p>
             </div>
             <div
-              className="text-center py-2 border border-solid border-white rounded-[8px] w-full cursor-pointer group hover:bg-blue-600 hover:transition-all hover:ease-in-out hover:duration-200"
+              className="flex items-center justify-center py-2 border border-solid border-white rounded-[8px] w-full cursor-pointer group hover:transition-all hover:ease-in-out hover:duration-200"
               onClick={() => setIsTag(2)}
             >
-              <p className="text-gray-600 group-hover:text-white group-hover:transition-all group-hover:ease-in-out group-hover:duration-200 text-xl/6 font-bold">
+              <p className="text-base/6 sm:text-xl/6 text-gray-700 group-hover:text-blue-500 font-bold flex gap-2 items-center leading-6">
+                <MdDescription className="w-5 h-5 sm:w-7 sm:h-7 shrink-0 text-blue-500" />{" "}
                 Mẫu
               </p>
             </div>
             <div
-              className="text-center py-2 border border-solid border-white rounded-[8px] w-full cursor-pointer group hover:bg-blue-600 hover:transition-all hover:ease-in-out hover:duration-200"
+              className="flex items-center justify-center py-2 border border-solid border-white rounded-[8px] w-full cursor-pointer group hover:transition-all hover:ease-in-out hover:duration-200"
               onClick={() => setIsTag(3)}
             >
-              <p className="text-gray-600 group-hover:text-white group-hover:transition-all group-hover:ease-in-out group-hover:duration-200 text-xl/6 font-bold">
-                Phù Liệu Hóa Chất
+              <p className="text-base/6 sm:text-xl/6 text-gray-700 group-hover:text-blue-500 font-bold flex gap-2 items-center leading-6">
+                <MdScience className="w-5 h-5 sm:w-7 sm:h-7 shrink-0 text-orange-300" />{" "}
+                Phụ Liệu Hóa Chất
               </p>
             </div>
           </div>
@@ -253,135 +299,186 @@ const ChiTietPhieuDKyDVKN = () => {
       default: {
         return (
           <motion.div
-            key="tag1"
+            key="form-signup-thongtinchung"
             initial={{ x: 0, opacity: 0 }}
             animate={{ x: 0, opacity: 1 }}
             exit={{ x: 0, opacity: 0 }}
-            transition={{ duration: 0.7 }}
-            className="p-6 grid grid-cols-12 gap-1 md:gap-[0px_24px] border border-solid border-gray-300 rounded-[10px]"
+            transition={{ duration: 0.5 }}
+            className="border border-gray-300 rounded-xl"
           >
-            <Box className="col-span-12 md:col-span-6">
-              <Inputs
-                title="Người gửi mẫu"
-                className="h-[42px]"
-                name="NguoiGuiMau"
-                sx={{
-                  input: {
-                    padding: "9.5px 14px",
-                  },
-                }}
-                disabled
-              />
-            </Box>
-            <Box className="col-span-12 md:col-span-6">
-              <Inputs
-                title="Đơn vị gửi mẫu"
-                className="h-[42px]"
-                name="DonViGuiMau"
-                sx={{
-                  input: {
-                    padding: "9.5px 14px",
-                  },
-                }}
-                disabled
-              />
-            </Box>
-
-            <Box className="col-span-12 md:col-span-6">
-              <Inputs
-                title="Email"
-                type="email"
-                name="Email"
-                className="h-[42px]"
-                sx={{
-                  input: {
-                    padding: "9.5px 14px",
-                  },
-                }}
-                disabled
-              />
-            </Box>
-            <Box className="col-span-12 md:col-span-6">
-              <Inputs
-                title="Số Điện Thoại"
-                className="h-[42px]"
-                name="SoDienThoai"
-                disabled
-              />
-            </Box>
-
-            <Box className="col-span-12 md:col-span-6">
-              <Inputs
-                title="Hình thức gửi mẫu"
-                className="h-[42px]"
-                name="HinhThucGuiMau"
-                disabled
-              />
-            </Box>
-            <Box className="col-span-12 md:col-span-6">
-              <Inputs
-                title="Hình thức trả kết quả"
-                className="h-[42px]"
-                name="HinhThucTraKQ"
-                disabled
-              />
-            </Box>
-
-            {HinhThucTraKQ === "Bưu điện" && (
-              <Box className="col-span-6">
+            <Box className="p-5 grid grid-cols-12 gap-1 md:gap-[0px_24px]">
+              <Box className="col-span-12 md:col-span-6 lg:col-span-4">
                 <Inputs
-                  title="Địa chỉ giao mẫu"
-                  name="DiaChiGiaoMau"
+                  title="Người gửi mẫu"
+                  className="h-[42px]"
+                  name="NguoiGuiMau"
+                  sx={{
+                    input: {
+                      padding: "9.5px 14px",
+                    },
+                    "& .Mui-disabled": {
+                      WebkitTextFillColor: "black !important",
+                    },
+                  }}
+                  disabled
+                  // value={dataPhieu.nguoiGuiMau}
+                />
+              </Box>
+              <Box className="col-span-12 md:col-span-6 lg:col-span-4">
+                <Inputs
+                  title="Đơn vị gửi mẫu"
+                  className="h-[42px]"
+                  name="DonViGuiMau"
+                  sx={{
+                    input: {
+                      padding: "9.5px 14px",
+                    },
+                    "& .Mui-disabled": {
+                      WebkitTextFillColor: "black !important",
+                    },
+                  }}
+                  disabled
+                  // value={dataPhieu.donViGuiMau}
+                />
+              </Box>
+              <Box className="col-span-12 md:col-span-6 lg:col-span-4">
+                <Inputs
+                  title="Email"
+                  name="Email"
                   className="h-[42px]"
                   sx={{
                     input: {
                       padding: "9.5px 14px",
                     },
+                    "& .Mui-disabled": {
+                      WebkitTextFillColor: "black !important",
+                    },
                   }}
                   disabled
+                  // value={dataPhieu.email}
                 />
               </Box>
-            )}
-
-            <Box className="col-span-12 md:col-span-6">
-              <Inputs
-                title="Ngày giao mẫu"
-                name="NgayGiaoMau"
-                className="h-[42px]"
-                sx={{
-                  input: {
-                    padding: "9.5px 14px",
-                  },
-                }}
-                disabled
-              />
-            </Box>
-            <Box className="col-span-12 md:col-span-6">
-              <Inputs
-                title="Địa chỉ liên hệ"
-                name="DiaChiLienHe"
-                className="h-[42px]"
-                sx={{
-                  input: {
-                    padding: "9.5px 14px",
-                  },
-                }}
-                disabled
-              />
-            </Box>
-
-            <Box className="col-span-6 gap-2 grid">
-              <Inputs
-                title="Kết Quả"
-                name="KetQua"
-                className="h-[42px]"
-                sx={{
-                  input: {
-                    padding: "9.5px 14px",
-                  },
-                }}
-                disabled
-              />
+              <Box className="col-span-12 md:col-span-6 lg:col-span-4">
+                <Inputs
+                  title="Số điện thoại"
+                  className="h-[42px]"
+                  name="SoDienThoai"
+                  sx={{
+                    input: {
+                      padding: "9.5px 14px",
+                    },
+                    "& .Mui-disabled": {
+                      WebkitTextFillColor: "black !important",
+                    },
+                  }}
+                  disabled
+                  // value={dataPhieu.soDienThoai}
+                />
+              </Box>
+              <Box className="col-span-12 md:col-span-6 lg:col-span-4">
+                <Inputs
+                  title="Hình thức gửi mẫu"
+                  name="HinhThucGuiMau"
+                  className="h-[42px]"
+                  sx={{
+                    input: {
+                      padding: "9.5px 14px",
+                    },
+                    "& .Mui-disabled": {
+                      WebkitTextFillColor: "black !important",
+                    },
+                  }}
+                  disabled
+                  // value={dataPhieu.hinhThucGuiMau}
+                />
+              </Box>
+              <Box className="col-span-12 md:col-span-6 lg:col-span-4">
+                <Inputs
+                  title="Hình thức trả kết quả"
+                  name="HinhThucTraKQ"
+                  className="h-[42px]"
+                  sx={{
+                    input: {
+                      padding: "9.5px 14px",
+                    },
+                    "& .Mui-disabled": {
+                      WebkitTextFillColor: "black !important",
+                    },
+                  }}
+                  disabled
+                  // value={dataPhieu.hinhThucTraKq}
+                />
+              </Box>
+              {/* {dataPhieu.diaChiGiaoMau && (
+                <Box className="col-span-12">
+                  <Inputs
+                    title="Địa chỉ giao mẫu"
+                    name="DiaChiGiaoMau"
+                    className="h-[42px]"
+                    sx={{
+                      input: {
+                        padding: "9.5px 14px",
+                      },
+                      "& .Mui-disabled": {
+                        WebkitTextFillColor: "black !important",
+                      },
+                    }}
+                    disabled
+                    value={dataPhieu.diaChiGiaoMau}
+                  />
+                </Box>
+              )} */}
+              <Box className="col-span-12 md:col-span-6 lg:col-span-4">
+                <Inputs
+                  title="Ngày giao mẫu"
+                  name="NgayGiaoMau"
+                  className="h-[42px]"
+                  sx={{
+                    input: {
+                      padding: "9.5px 14px",
+                    },
+                    "& .Mui-disabled": {
+                      WebkitTextFillColor: "black !important",
+                    },
+                  }}
+                  disabled
+                  // value={dataPhieu.ngayGiaoMau.split("T")[0]}
+                />
+              </Box>
+              <Box className="col-span-12 md:col-span-6 lg:col-span-4">
+                <Inputs
+                  title="Địa chỉ liên hệ"
+                  name="DiaChiLienHe"
+                  className="h-[42px]"
+                  sx={{
+                    input: {
+                      padding: "9.5px 14px",
+                    },
+                    "& .Mui-disabled": {
+                      WebkitTextFillColor: "black !important",
+                    },
+                  }}
+                  disabled
+                  // value={dataPhieu.diaChiLienHe}
+                />
+              </Box>
+              <Box className="col-span-12 md:col-span-6 lg:col-span-4">
+                <Inputs
+                  title="Kết quả"
+                  name="ketQuaTiengAnh"
+                  className="h-[42px]"
+                  sx={{
+                    input: {
+                      padding: "9.5px 14px",
+                    },
+                    "& .Mui-disabled": {
+                      WebkitTextFillColor: "black !important",
+                    },
+                  }}
+                  disabled
+                  // value={dataPhieu.ketQuaTiengAnh ? "Tiếng Anh" : "Tiếng Việt"}
+                />
+              </Box>
             </Box>
           </motion.div>
         );
@@ -396,7 +493,7 @@ const ChiTietPhieuDKyDVKN = () => {
       animate={{ x: 0, opacity: 1 }}
       exit={{ x: 0, opacity: 0 }}
       transition={{ duration: 0.7 }}
-      className="p-6 grid gap-6"
+      className="p-6 grid gap-4"
     >
       {handleShowByUserName()}
       <hr className="text-gray-300" />

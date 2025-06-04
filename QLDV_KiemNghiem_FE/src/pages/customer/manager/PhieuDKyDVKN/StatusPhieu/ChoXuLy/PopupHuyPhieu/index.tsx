@@ -1,47 +1,56 @@
 import { Box, Dialog } from "@mui/material";
-import { AnimatePresence, motion } from "framer-motion";
-import { IoMdClose } from "react-icons/io";
-import { Textarea } from "../../../../../../../components/Textarea";
-import { useEffect, useMemo } from "react";
-import yup from "../../../../../../../configs/yup.custom";
-import { FormLyDoHuyPhieuDkyDVKN } from "../../../../../../../models/LydoHuy";
-import { yupResolver } from "@hookform/resolvers/yup";
-import { useForm } from "react-hook-form";
+import { useQueryClient } from "@tanstack/react-query";
+import { motion } from "framer-motion";
+import { useHuyPhieuDangKy } from "../../../../../../../hooks/customers/usePhieuDKyDVKN";
 
 interface Props {
   open: boolean;
   handleClose?: () => void;
   listCheckbox?: any;
+  setIsSuccess: React.Dispatch<
+    React.SetStateAction<{
+      open: boolean;
+      message: string;
+      status: number;
+    }>
+  >;
 }
 
 const PopupHuyPhieu = (props: Props) => {
-  const { open, handleClose, listCheckbox } = props;
+  const { open, handleClose, listCheckbox, setIsSuccess } = props;
 
-  let schema = useMemo(() => {
-    return yup.object().shape({
-      lydo: yup.string().required("Yêu cầu nhập lý do hủy"),
+  const queryClient = useQueryClient();
+  const handleOnSettled = async () => {
+    await queryClient.invalidateQueries({
+      queryKey: ["dataChoTiepNhanXuLy"],
     });
-  }, []);
-
-  const {
-    register,
-    handleSubmit,
-    reset,
-    formState: { errors },
-  } = useForm<FormLyDoHuyPhieuDkyDVKN>({
-    resolver: yupResolver(schema),
-    mode: "onChange",
+    await queryClient.invalidateQueries({
+      queryKey: ["dataDaHuy"],
+    });
+  };
+  const { mutate } = useHuyPhieuDangKy({
+    queryKey: "HuyPhieuDangKy",
+    onSettled: handleOnSettled,
+    onSuccess: (response) => {
+      if (response.status === 200) {
+        setIsSuccess({
+          open: true,
+          message: "Hủy thành công",
+          status: 200,
+        });
+      }
+    },
+    onError: (errors) => {
+      if (errors) {
+        setIsSuccess({ open: true, message: "Hủy thất bại", status: 400 });
+      }
+    },
   });
 
-  const handleHuyPhieu = (data: FormLyDoHuyPhieuDkyDVKN) => {
-    console.log("handleHuyPhieu", data);
+  const handleHuyPhieu = () => {
+    mutate(listCheckbox?.maId);
+    handleClose?.();
   };
-
-  useEffect(() => {
-    reset({
-      lydo: "",
-    });
-  }, []);
 
   return (
     <Dialog
@@ -61,45 +70,35 @@ const PopupHuyPhieu = (props: Props) => {
         exit={{ y: 0, opacity: 0 }}
         transition={{ duration: 0.7 }}
       >
-        <Box className="w-auto md:w-[600px]">
-          <form className="grid gap-2">
+        <Box className="w-auto md:w-[500px]">
+          <Box className="grid gap-6">
             <Box className="px-5 py-3 text-center border-b border-gray-300 flex justify-between">
-              <h1 className="ml-10 flex-1 font-bold text-2xl">Lý Do Hủy</h1>
-              <button
-                className="bg-gray-400 rounded-full p-[6px] hover:bg-gray-500 cursor-pointer"
-                onClick={handleClose}
-              >
-                <IoMdClose className="w-6 h-6 text-gray-300" />
-              </button>
+              <h1 className="ml-10 flex-1 font-bold text-2xl">Thông báo hủy</h1>
             </Box>
-            <Box className="px-5 pb-6">
-              <Textarea
-                title={`Lý do hủy phiếu(${listCheckbox?.soDkpt}):`}
-                placeholder="Nhập lý do hủy phiếu"
-                name="lydo"
-                inputRef={register("lydo")}
-                errorMessage={errors.lydo?.message}
-                className="max-h-[149px] min-h-[149px]"
-                height="h-[213px]"
-              />
+            <Box className="px-5 pb-6 gap-6 grid">
+              <Box className="text-center">
+                <p className="text-xl/6 font-medium">
+                  Bạn có chắc chắn hủy phiếu này không?
+                </p>
+              </Box>
               <Box className="grid sm:flex gap-6 sm:justify-center">
                 <button
                   type="button"
-                  className="font-bold text-center text-white bg-[#f8cf00] px-4 py-1 lg:px-6 lg:py-2 rounded-md hover:bg-yellow-500 cursor-pointer"
                   onClick={handleClose}
+                  className="font-bold text-center text-white bg-amber-500 px-4 py-1 lg:px-8 lg:py-2 rounded-md hover:bg-amber-400 cursor-pointer"
                 >
-                  Hủy Xóa
+                  Không
                 </button>
                 <button
                   type="button"
-                  onClick={handleSubmit(handleHuyPhieu)}
-                  className="font-bold text-center text-white bg-[#0099f8] px-4 py-1 lg:px-6 lg:py-2 rounded-md hover:bg-blue-500 cursor-pointer"
+                  onClick={() => handleHuyPhieu()}
+                  className="font-bold text-center text-white bg-cyan-700 px-4 py-1 lg:px-6 lg:py-2 rounded-md hover:bg-cyan-500 cursor-pointer"
                 >
                   Chắc chắn
                 </button>
               </Box>
             </Box>
-          </form>
+          </Box>
         </Box>
       </motion.div>
     </Dialog>

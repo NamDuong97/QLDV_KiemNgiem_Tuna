@@ -5,16 +5,22 @@ import { useNavigate } from "react-router";
 import { APP_ROUTES } from "../../../../../../../constants/routers";
 import { useQueryClient } from "@tanstack/react-query";
 import { useUpdatePhieuDangKy } from "../../../../../../../hooks/customers/usePhieuDKyDVKN";
-import { useState } from "react";
-import HandleSnackbar from "../../../../../../../components/HandleSnackbar";
 
 interface Props {
   openPopupNofitication: boolean;
   handleClosePopupNofitication?: () => void;
+  setIsSuccess: React.Dispatch<
+    React.SetStateAction<{
+      open: boolean;
+      message: string;
+      status: number;
+    }>
+  >;
 }
 
 const PopupNofitication = (props: Props) => {
-  const { openPopupNofitication, handleClosePopupNofitication } = props;
+  const { openPopupNofitication, handleClosePopupNofitication, setIsSuccess } =
+    props;
 
   const navigate = useNavigate();
 
@@ -24,11 +30,6 @@ const PopupNofitication = (props: Props) => {
 
   const dataSession = sessionStorage.getItem("sua-phieuDky");
   const data = dataSession ? JSON.parse(dataSession) : {};
-  const [isSuccess, setIsSuccess] = useState({
-    open: false,
-    message: "",
-    status: 0,
-  });
 
   const queryClient = useQueryClient();
   const handleOnSettled = async () => {
@@ -54,7 +55,6 @@ const PopupNofitication = (props: Props) => {
       }
     },
   });
-  console.log("datadata", data);
 
   const handleRedirectManagerPhieuDKy = () => {
     mutate(data);
@@ -111,7 +111,6 @@ const PopupNofitication = (props: Props) => {
           </motion.div>
         </AnimatePresence>
       </Box>
-      <HandleSnackbar isSuccess={isSuccess} setIsSuccess={setIsSuccess} />
     </Dialog>
   );
 };

@@ -8,18 +8,15 @@ import {
   TableHead,
   TableRow,
 } from "@mui/material";
-import { Align, TableHeader } from "../../../../../../../../models/Table";
+import { Align, TableHeader } from "../../../../../../../models/Table";
 
 interface TableProps {
   tableHead: TableHeader[];
-  handleSort?: (value: string) => void;
-  listImage: any;
+  dataImage?: any;
 }
 
-const Tables = (props: TableProps) => {
-  const { tableHead, listImage} =
-    props;
-
+const TableImages = (props: TableProps) => {
+  const { tableHead, dataImage } = props;
   const handleAlign = (align: string) => {
     switch (align) {
       case Align.Center:
@@ -46,18 +43,19 @@ const Tables = (props: TableProps) => {
           </TableRow>
         </TableHead>
         <TableBody className="bg-white !flex">
-          {listImage?.length > 0 ? (
-            listImage.map((item: any, index: any) => (
+          {dataImage?.length > 0 ? (
+            dataImage.map((item: any, index: any) => (
               <TableRow
                 key={index}
                 sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                 hover={true}
+                className={`cursor-pointer w-full !flex justify-center`}
               >
                 <TableCell align="center">
                   <Box className="flex gap-2 items-center justify-center w-[200px]">
                     <img
                       src={item.base64}
-                      alt={item.name}
+                      alt={item.ten}
                       className="object-contain"
                     />
                   </Box>
@@ -83,4 +81,4 @@ const Tables = (props: TableProps) => {
   );
 };
 
-export default Tables;
+export default TableImages;

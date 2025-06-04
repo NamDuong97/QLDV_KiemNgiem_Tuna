@@ -172,4 +172,30 @@ export default class PhieuDKyDVKN_Services {
       return res;
     }
   }
+  static async HuyPhieuDangKy(params: any) {
+    try {
+      const response = await _APIInstance.delete(
+        `${API.CUSTOMER.HUY_PHIEU_DANG_KY}?maPhieuDangKy=${params}`,
+        {
+          headers: { "Content-Type": "application/json" },
+        }
+      );
+      return response?.data;
+    } catch (res) {
+      return res;
+    }
+  }
+
+  static async getLocPhieuDky(params: any) {
+    try {
+      const response = await _APIInstance.get(
+        API.CUSTOMER.PHIEU_DANG_KY_DICH_VU_KIEM_NGHIEM
+          .GET_LOC_PHIEU_DANG_KY_BY_TRANG_THAI,
+        { params: params }
+      );
+      return response?.data;
+    } catch (res) {
+      return res;
+    }
+  }
 }

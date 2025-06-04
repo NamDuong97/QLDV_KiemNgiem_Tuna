@@ -15,7 +15,9 @@ export const API = {
       GET_LOAI_MAU_ALL: "/api/loaimau/getLoaiMauAll",
       GET_DANH_MUC_PLHC: "/api/dmphulieuhoachat/getDmPhuLieuHoaChatAll",
       GET_THOI_GIAN_TIEU_CHUAN: "/api/phieudangky/duTinhThoiGianKiemNghiem",
+      GET_LOC_PHIEU_DANG_KY_BY_TRANG_THAI: "/api/phieudangky/getPhieuDangKyAll",
     },
     UPDATE_PHIEU_DANG_KY: "/api/phieudangky/updatePhieuDangKy",
+    HUY_PHIEU_DANG_KY: "/api/phieudangky/deletePhieuDangKy",
   },
 };

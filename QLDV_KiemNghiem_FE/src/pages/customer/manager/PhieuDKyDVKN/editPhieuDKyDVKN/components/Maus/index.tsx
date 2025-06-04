@@ -87,10 +87,10 @@ const Maus = (props: MausProps) => {
       ...dataPhieuDangky,
       maus: data,
     };
-    // setData(PhieuDangKy);
-    // sessionStorage.setItem("sua-phieuDky", JSON.stringify(PhieuDangKy));
-    // settableBody(data);
-    // setListCheckbox([]);
+    setData(PhieuDangKy);
+    sessionStorage.setItem("sua-phieuDky", JSON.stringify(PhieuDangKy));
+    settableBody(data);
+    setListCheckbox([]);
   };
 
   const handleTagMau = () => {

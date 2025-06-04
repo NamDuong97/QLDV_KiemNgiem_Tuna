@@ -18,6 +18,7 @@ import { FormPhieuDangKy } from "../../../../../models/PhieuDangKy";
 
 import { Inputs } from "../../../../../components/Inputs";
 import InputSelect from "../../../../../components/InputSelect";
+import HandleSnackbar from "../../../../../components/HandleSnackbar";
 
 const dataHinhThucGuiTra = [
   { value: "Trực tiếp", label: "Trực tiếp" },
@@ -36,6 +37,12 @@ const EditPhieuDKyDVKN = () => {
   const [data, setData] = useState<any>(
     dataSession ? JSON.parse(dataSession) : {}
   );
+
+  const [isSuccess, setIsSuccess] = useState({
+    open: false,
+    message: "",
+    status: 0,
+  });
 
   let schema = useMemo(() => {
     return yup.object().shape({
@@ -604,11 +611,13 @@ const EditPhieuDKyDVKN = () => {
       <PopupNofitication
         openPopupNofitication={openPopupNofitication}
         handleClosePopupNofitication={handleClosePopupNofitication}
+        setIsSuccess={setIsSuccess}
       />
       <PopupThoatForm
         open={openPopupThoatForm}
         handleClose={handleClosePopupThoatForm}
       />
+      <HandleSnackbar isSuccess={isSuccess} setIsSuccess={setIsSuccess} />
     </Box>
   );
 };

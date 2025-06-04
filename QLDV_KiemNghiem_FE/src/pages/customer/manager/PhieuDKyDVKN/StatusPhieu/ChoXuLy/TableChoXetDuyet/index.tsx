@@ -32,11 +32,11 @@ const TableChoXetDuyet = (props: TableChoXetDuyetProps) => {
     const { name, checked } = item.target;
     if (checked) {
       const selectedItem = tableBody?.data?.find(
-        (item: any) => item.soDkpt === name
+        (item: any) => item.maId === name
       );
       setListCheckbox(selectedItem);
     } else {
-      setListCheckbox(listCheckbox.soDkpt !== name);
+      setListCheckbox(listCheckbox.maId !== name);
     }
   };
 
@@ -132,8 +132,8 @@ const TableChoXetDuyet = (props: TableChoXetDuyetProps) => {
                   <input
                     type="checkbox"
                     className="size-4 cursor-pointer"
-                    name={item.soDkpt}
-                    checked={listCheckbox.soDkpt === item?.soDkpt}
+                    name={item.maId}
+                    checked={listCheckbox.maId === item?.maId}
                     onChange={handleCheckbox}
                   />
                 </TableCell>

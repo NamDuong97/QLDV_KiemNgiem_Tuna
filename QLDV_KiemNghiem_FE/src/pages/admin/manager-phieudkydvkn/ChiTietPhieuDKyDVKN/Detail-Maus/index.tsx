@@ -1,6 +1,6 @@
 import { Box, Pagination } from "@mui/material";
 import { motion } from "motion/react";
-import FormMaus from "./form-mau";
+import Maus from "./Maus";
 
 const DetailMaus = () => {
   return (
@@ -12,7 +12,7 @@ const DetailMaus = () => {
       transition={{ duration: 0.5 }}
       className="border border-solid border-gray-300 rounded-[10px] grid gap-2"
     >
-      <FormMaus />
+      <Maus />
       <hr className="text-gray-300" />
       <Box className="px-4 pb-4 pt-2 flex justify-center">
         <Pagination
