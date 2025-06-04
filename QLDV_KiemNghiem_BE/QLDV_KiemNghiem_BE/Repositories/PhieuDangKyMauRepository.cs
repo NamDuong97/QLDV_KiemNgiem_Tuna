@@ -23,9 +23,9 @@ namespace QLDV_KiemNghiem_BE.Repositories
         {
             return await _context.PhieuDangKyMaus.Include(item => item.PhieuDangKyMauHinhAnhs).Where(item => item.MaId == maPhieuDangKyMau).SingleOrDefaultAsync();
         }
-        public void CreatePhieuDangKyMauAsync(PhieuDangKyMau PhieuDangKyMau)
+        public async Task CreatePhieuDangKyMauAsync(PhieuDangKyMau PhieuDangKyMau)
         {
-            _context.PhieuDangKyMaus.Add(PhieuDangKyMau);
+            await _context.PhieuDangKyMaus.AddAsync(PhieuDangKyMau);
         }
         public void UpdatePhieuDangKyMauAsync(PhieuDangKyMau PhieuDangKyMau)
         {
@@ -36,9 +36,19 @@ namespace QLDV_KiemNghiem_BE.Repositories
         {
             _context.PhieuDangKyMaus.Remove(PhieuDangKyMau);
         }
-        public async Task<PhieuDangKyMau?> CheckExistPhieuDangKyMauAsync(string phieuDangKyMau, string phieuDangKy)
+        public async Task<PhieuDangKyMau?> CheckExistPhieuDangKyMauAsync(string phieuDangKyMau, string phieuDangKy, bool checking)
         {
-            var result = await _context.PhieuDangKyMaus.AsNoTracking().Where(item => item.MaPhieuDangKy == phieuDangKy && item.MaId == phieuDangKyMau).SingleOrDefaultAsync();
+            var result = new PhieuDangKyMau();
+            if(checking)
+            {
+                result = await _context.PhieuDangKyMaus.AsNoTracking()
+                    .Where(item => item.MaPhieuDangKy == phieuDangKy && item.MaId == phieuDangKyMau).SingleOrDefaultAsync();
+            }
+            else
+            {
+                result = await _context.PhieuDangKyMaus
+                   .Where(item => item.MaPhieuDangKy == phieuDangKy && item.MaId == phieuDangKyMau).SingleOrDefaultAsync();
+            }
             return result;
         }
     }

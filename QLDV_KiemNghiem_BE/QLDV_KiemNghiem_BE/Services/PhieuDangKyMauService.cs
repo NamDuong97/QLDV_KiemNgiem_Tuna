@@ -70,7 +70,7 @@ namespace QLDV_KiemNghiem_BE.Services
                 // Them du lieu hinh anh cua PhieuDangKyMau vao bang PhieuDangKyMauHinhAnh
                 foreach (var PhieuDangKyMauHinhAnh in PhieuDangKyMauDomain.PhieuDangKyMauHinhAnhs)
                 {
-                    _repositoryManager.PhieuDangKyMauHinhAnh.UpdatePhieuDangKyMauHinhAnhAsync(PhieuDangKyMauHinhAnh);
+                    _repositoryManager.PhieuDangKyMauHinhAnh.UpdatePhieuDangKyMauHinhAnh(PhieuDangKyMauHinhAnh);
                 }
             }
             bool check = await _repositoryManager.SaveChangesAsync();

@@ -49,5 +49,7 @@ namespace QLDV_KiemNghiem_BE.DTO
         [DataType(DataType.DateTime, ErrorMessage = "Ngày sửa không hợp lệ")]
         public DateTime? NgaySua { get; set; }
 
+        public bool IsDel { get; set; }
+
     }
 }

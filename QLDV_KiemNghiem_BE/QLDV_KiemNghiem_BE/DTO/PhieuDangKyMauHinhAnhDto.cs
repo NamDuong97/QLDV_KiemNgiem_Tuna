@@ -25,5 +25,7 @@ namespace QLDV_KiemNghiem_BE.DTO
         public DateTime? NgayTao { get; set; }
 
         public DateTime? NgaySua { get; set; }
+
+        public bool IsDel { get; set; }
     }
 }

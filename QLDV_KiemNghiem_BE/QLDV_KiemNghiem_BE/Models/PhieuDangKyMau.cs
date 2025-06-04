@@ -92,6 +92,8 @@ public partial class PhieuDangKyMau
     [StringLength(50)]
     public string? MaLoaiDv { get; set; }
 
+    public bool? IsDel { get; set; }
+
     [InverseProperty("MaMauNavigation")]
     public virtual ICollection<ChiTietHoaDonThu> ChiTietHoaDonThus { get; set; } = new List<ChiTietHoaDonThu>();
 

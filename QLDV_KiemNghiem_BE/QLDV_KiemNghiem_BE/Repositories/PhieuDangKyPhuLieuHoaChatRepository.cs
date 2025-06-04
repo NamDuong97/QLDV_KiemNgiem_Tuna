@@ -24,9 +24,9 @@ namespace QLDV_KiemNghiem_BE.Repositories
         {
             return await _context.PhieuDangKyPhuLieuHoaChats.Where(item => item.MaPhieuDangKy == maPhieuDangKy).ToListAsync();
         }
-        public void CreatePhieuDangKyPhuLieuHoaChatAsync(PhieuDangKyPhuLieuHoaChat phieuDangKyPhuLieuHoaChat)
+        public async Task CreatePhieuDangKyPhuLieuHoaChatAsync(PhieuDangKyPhuLieuHoaChat phieuDangKyPhuLieuHoaChat)
         {
-            _context.PhieuDangKyPhuLieuHoaChats.Add(phieuDangKyPhuLieuHoaChat);
+            await _context.PhieuDangKyPhuLieuHoaChats.AddAsync(phieuDangKyPhuLieuHoaChat);
         }
         public void UpdatePhieuDangKyPhuLieuHoaChatAsync(PhieuDangKyPhuLieuHoaChat phieuDangKyPhuLieuHoaChat)
         {
@@ -36,10 +36,20 @@ namespace QLDV_KiemNghiem_BE.Repositories
         {
             _context.PhieuDangKyPhuLieuHoaChats.Remove(phieuDangKyPhuLieuHoaChat);
         }
-        public async Task<PhieuDangKyPhuLieuHoaChat?> CheckExistPhieuDangKyPhuLieuHoaChatAsync(string phieuDangKyPlhc, string phieuDangKy)
+        public async Task<PhieuDangKyPhuLieuHoaChat?> CheckExistPhieuDangKyPhuLieuHoaChatAsync(string phieuDangKyPlhc, string phieuDangKy, bool tracking)
         {
-            // k theo dõi đối tượng result vì đối tượng này k phải đối tượng chính
-            var result = await _context.PhieuDangKyPhuLieuHoaChats.AsNoTracking().Where(item => item.MaPhieuDangKy == phieuDangKy && item.MaId == phieuDangKyPlhc).SingleOrDefaultAsync();
+            var result = new PhieuDangKyPhuLieuHoaChat();
+            if(tracking)
+            {
+                // k theo dõi đối tượng result vì đối tượng này k phải đối tượng chính
+                result = await _context.PhieuDangKyPhuLieuHoaChats.
+                    Where(item => item.MaPhieuDangKy == phieuDangKy && item.MaId == phieuDangKyPlhc).SingleOrDefaultAsync();
+            }
+            else
+            {
+                result = await _context.PhieuDangKyPhuLieuHoaChats.AsNoTracking().
+                    Where(item => item.MaPhieuDangKy == phieuDangKy && item.MaId == phieuDangKyPlhc).SingleOrDefaultAsync();
+            }
             return result;
         }
     }

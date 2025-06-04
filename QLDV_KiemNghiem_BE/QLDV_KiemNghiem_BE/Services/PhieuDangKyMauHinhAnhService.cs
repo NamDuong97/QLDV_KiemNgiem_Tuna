@@ -44,7 +44,7 @@ namespace QLDV_KiemNghiem_BE.Services
                 return false;
             }
             var phieuDangKyPhieuDangKyMauHinhAnhDomain = _mapper.Map<PhieuDangKyMauHinhAnhDto>(PhieuDangKyMauHinhAnh);
-            _repositoryManager.PhieuDangKyMauHinhAnh.UpdatePhieuDangKyMauHinhAnhAsync(PhieuDangKyMauHinhAnhDomain);
+            _repositoryManager.PhieuDangKyMauHinhAnh.UpdatePhieuDangKyMauHinhAnh(PhieuDangKyMauHinhAnhDomain);
             bool check = await _repositoryManager.SaveChangesAsync();
             return check;
         }
@@ -55,7 +55,7 @@ namespace QLDV_KiemNghiem_BE.Services
             {
                 return false;
             }
-            _repositoryManager.PhieuDangKyMauHinhAnh.DeletePhieuDangKyMauHinhAnhAsync(PhieuDangKyMauHinhAnh);
+            _repositoryManager.PhieuDangKyMauHinhAnh.DeletePhieuDangKyMauHinhAnh(PhieuDangKyMauHinhAnh);
             bool check = await _repositoryManager.SaveChangesAsync();
             return check;
         }

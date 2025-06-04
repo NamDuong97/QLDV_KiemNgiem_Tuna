@@ -102,25 +102,17 @@ namespace QLDV_KiemNghiem_BE.Controllers
                 _logger.LogError("Loi validate tham so dau vao");
                 return BadRequest(new { Errors = errors });
             }
-            var checkExists = await _service.PhieuDangKy.CheckExistPhieuDangKyAsync(phieuDangKyDto.MaId);
-            if(checkExists!= null)
+            
+            bool update = await _service.PhieuDangKy.UpdatePhieuDangKyAsync(phieuDangKyDto);
+            if (update)
             {
-                bool update = await _service.PhieuDangKy.UpdatePhieuDangKyAsync(phieuDangKyDto);
-                if (update)
-                {
-                    _logger.LogInformation("Cap nhat phieu dang ky thanh cong");
-                    return Ok(phieuDangKyDto);
-                }
-                else
-                {
-                    _logger.LogInformation("Cap nhat phieu dang ky that bai");
-                    return BadRequest();
-                }
+                _logger.LogInformation("Cap nhat phieu dang ky thanh cong");
+                return Ok(phieuDangKyDto);
             }
             else
             {
-                _logger.LogWarning("Phieu dang ky khong ton tai");
-                return BadRequest(new { message = "Phieu dang ky khong ton tai" });
+                _logger.LogInformation("Cap nhat phieu dang ky that bai");
+                return BadRequest();
             }
         }
 
@@ -128,7 +120,7 @@ namespace QLDV_KiemNghiem_BE.Controllers
         [Route("deletePhieuDangKy")]
         public async Task<ActionResult> deletePhieuDangKy(string maPhieuDangKy)
         {
-            var checkExists = await _service.PhieuDangKy.CheckExistPhieuDangKyAsync(maPhieuDangKy);
+            var checkExists = await _service.PhieuDangKy.CheckExistPhieuDangKyAsync(maPhieuDangKy, false);
             if (checkExists != null)
             {
                 bool delete = await _service.PhieuDangKy.DeletePhieuDangKyAsync(checkExists);

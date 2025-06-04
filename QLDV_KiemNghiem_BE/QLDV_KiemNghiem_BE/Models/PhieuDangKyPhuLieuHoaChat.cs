@@ -57,6 +57,8 @@ public partial class PhieuDangKyPhuLieuHoaChat
     [Column(TypeName = "datetime")]
     public DateTime? NgaySua { get; set; }
 
+    public bool? IsDel { get; set; }
+
     [ForeignKey("MaPlhc")]
     [InverseProperty("PhieuDangKyPhuLieuHoaChats")]
     public virtual DmPhuLieuHoaChat? MaPlhcNavigation { get; set; }

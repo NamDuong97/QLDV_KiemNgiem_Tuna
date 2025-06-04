@@ -20,25 +20,45 @@ namespace QLDV_KiemNghiem_BE.Repositories
         {
             return await _context.PhieuDangKyMauHinhAnhs.ToListAsync();
         }
+        public async Task<IEnumerable<PhieuDangKyMauHinhAnh>?> GetPhieuDangKyMauHinhAnhByMaMauAsync(string maMau, bool tracking)
+        {
+            if(tracking)
+            {
+                return await _context.PhieuDangKyMauHinhAnhs.AsNoTracking().Where(item => item.MaMau == maMau).ToListAsync();
+            }
+            else
+            {
+                return await _context.PhieuDangKyMauHinhAnhs.Where(item => item.MaMau == maMau).ToListAsync();
+            }
+        }
         public async Task<PhieuDangKyMauHinhAnh?> FindPhieuDangKyMauHinhAnhAsync(string maPhieuDangKyMauHinhAnh)
         {
             return await _context.PhieuDangKyMauHinhAnhs.FindAsync(maPhieuDangKyMauHinhAnh);
         }
-        public void CreatePhieuDangKyMauHinhAnhAsync(PhieuDangKyMauHinhAnh PhieuDangKyMauHinhAnh)
+        public async Task CreatePhieuDangKyMauHinhAnhAsync(PhieuDangKyMauHinhAnh PhieuDangKyMauHinhAnh)
         {
-            _context.PhieuDangKyMauHinhAnhs.Add(PhieuDangKyMauHinhAnh);
+            await _context.PhieuDangKyMauHinhAnhs.AddAsync(PhieuDangKyMauHinhAnh);
         }
-        public void UpdatePhieuDangKyMauHinhAnhAsync(PhieuDangKyMauHinhAnh PhieuDangKyMauHinhAnh)
+        public void UpdatePhieuDangKyMauHinhAnh(PhieuDangKyMauHinhAnh PhieuDangKyMauHinhAnh)
         {
             _context.PhieuDangKyMauHinhAnhs.Update(PhieuDangKyMauHinhAnh);
         }
-        public void DeletePhieuDangKyMauHinhAnhAsync(PhieuDangKyMauHinhAnh PhieuDangKyMauHinhAnh)
+        public void DeletePhieuDangKyMauHinhAnh(PhieuDangKyMauHinhAnh PhieuDangKyMauHinhAnh)
         {
-            _context.PhieuDangKyMauHinhAnhs.Remove(PhieuDangKyMauHinhAnh);
+             _context.PhieuDangKyMauHinhAnhs.Remove(PhieuDangKyMauHinhAnh);
         }
-        public async Task<PhieuDangKyMauHinhAnh?> CheckExistPhieuDangKyMauHinhAnhAsync(string id)
+
+        public async Task<PhieuDangKyMauHinhAnh?> CheckExistPhieuDangKyMauHinhAnhAsync(string id, bool tracking)
         {
-            var result = await _context.PhieuDangKyMauHinhAnhs.FindAsync(id);
+            var result = new PhieuDangKyMauHinhAnh();
+            if(tracking)
+            {
+                result = await _context.PhieuDangKyMauHinhAnhs.AsNoTracking().SingleOrDefaultAsync(item => item.MaId == id);
+            }
+            else
+            {
+                result = await _context.PhieuDangKyMauHinhAnhs.SingleOrDefaultAsync(item => item.MaId == id);
+            }
             return result;
         }
     }
