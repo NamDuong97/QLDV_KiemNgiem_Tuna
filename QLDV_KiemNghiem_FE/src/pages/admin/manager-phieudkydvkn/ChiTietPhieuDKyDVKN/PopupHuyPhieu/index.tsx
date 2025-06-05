@@ -1,6 +1,5 @@
 import { Box, Dialog } from "@mui/material";
 import { AnimatePresence, motion } from "framer-motion";
-import { IoMdClose } from "react-icons/io";
 import { useEffect, useMemo } from "react";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
