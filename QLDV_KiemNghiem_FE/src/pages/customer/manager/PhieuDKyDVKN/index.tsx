@@ -7,6 +7,7 @@ import DaDuyet from "./StatusPhieu/DaDuyet";
 import DangKiemNghiem from "./StatusPhieu/DangKiemNghiem";
 import HoanThanh from "./StatusPhieu/HoanThanh";
 import ChoXuLy from "./StatusPhieu/ChoXuLy";
+import DaHuy from "./StatusPhieu/DaHuy";
 
 const dataTag = [
   {
@@ -33,6 +34,12 @@ const dataTag = [
     key: keyTag.Hoan_Thanh,
     maID: 4,
   },
+  {
+    name: "Đã Hủy",
+    urlTag: `${APP_ROUTES.TUNA_CUSTOMER.PHIEU_DKY_DVKN.to}`,
+    key: keyTag.Da_Huy,
+    maID: 5,
+  },
 ];
 
 const PhieuDKyDVKN = () => {
@@ -47,6 +54,8 @@ const PhieuDKyDVKN = () => {
         return <DangKiemNghiem />;
       case 4:
         return <HoanThanh />;
+      case 5:
+        return <DaHuy />;
       default:
         return <ChoXuLy />;
     }

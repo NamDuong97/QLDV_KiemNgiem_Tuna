@@ -14,11 +14,8 @@ import IndeterminateCheckBoxIcon from "@mui/icons-material/IndeterminateCheckBox
 
 import { Align, TableHeader } from "../../../../../../models/Table";
 import { Dispatch, SetStateAction } from "react";
-import {
-  useGetLoaiDichVuAll,
-  useGetTieuChuanAll,
-} from "../../../../../../hooks/customers/usePhieuDKyDVKN";
 import { Maus } from "../../../../../../models/mau";
+import { useQueryClient } from "@tanstack/react-query";
 
 interface TableMauProps {
   tableBody: Maus[];
@@ -42,12 +39,10 @@ const TableMau = (props: TableMauProps) => {
     handleRedirectTag1,
   } = props;
 
-  const { data: dataTieuChuanAll } = useGetTieuChuanAll({
-    queryKey: "TieuChuanByID",
-  });
-  const { data: dataLoaiDichVuAll } = useGetLoaiDichVuAll({
-    queryKey: "LoaiDichVuAll",
-  });
+  const queryClient = useQueryClient();
+
+  const dataTieuChuanAll: any = queryClient.getQueryData(["TieuChuanAll"]);
+  const dataLoaiDichVuAll: any = queryClient.getQueryData(["LoaiDichVuAll"]);
 
   const handleCheckbox = (item: any) => {
     const { name, checked } = item.target;

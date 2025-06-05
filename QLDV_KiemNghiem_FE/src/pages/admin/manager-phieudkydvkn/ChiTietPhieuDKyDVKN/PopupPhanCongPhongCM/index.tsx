@@ -75,7 +75,7 @@ const PopupPhanCongPhongCM = (props: Props) => {
         return (
           <form onSubmit={handleSubmit(handlePhanCong)}>
             <Box className="px-10 p-6 overflow-y-auto whitespace-nowrap h-[500px]">
-              <div className="grid grid-cols-2 gap-6">
+              <div className="grid grid-cols-2 gap-[0_20px]">
                 <div className="col-span-1">
                   <Inputs
                     title="Tên Khách Hàng"
@@ -200,7 +200,7 @@ const PopupPhanCongPhongCM = (props: Props) => {
                 className="bg-gray-400 rounded-full p-[6px] hover:bg-gray-500 cursor-pointer"
                 onClick={handleClose}
               >
-                <IoMdClose className="w-6 h-6 text-gray-300" />
+                <IoMdClose className="w-4 h-4 text-gray-300" />
               </button>
             </Box>
             {handleEnterPhanCong()}

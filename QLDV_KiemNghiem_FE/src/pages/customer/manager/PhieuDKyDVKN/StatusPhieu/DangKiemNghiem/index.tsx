@@ -1,6 +1,8 @@
-import { Box } from "@mui/material";
+import { Box, Pagination } from "@mui/material";
 import TableDangKiemNghiem from "./TableDangKiemNghiem";
 import { Align } from "../../../../../../models/Table";
+import { useState } from "react";
+import { useGetPhieuDangKyKiemNghiemByTrangThaiArray } from "../../../../../../hooks/customers/usePhieuDKyDVKN";
 
 interface Props {}
 
@@ -30,9 +32,9 @@ const tableHead = [
     align: Align.Center,
   },
   {
-    id: "KetQua",
+    id: "NgayTao",
     sort: false,
-    label: "Kết Quả",
+    label: "Ngày Tạo",
     align: Align.Center,
   },
 ];
@@ -40,22 +42,56 @@ const tableHead = [
 const DangKiemNghiem = (props: Props) => {
   const {} = props;
 
-  const data = localStorage.getItem("DataPhieuDangKy");
-  const dataPhieuDKy = data ? JSON.parse(data) : [];
+  const dataDangKiemNghiem = useGetPhieuDangKyKiemNghiemByTrangThaiArray({
+    queryKey: "dataDangKiemNghiem",
+    maKH: "KH001",
+    trangThaiIDs: ["TT07", "TT11"],
+  });
 
-  // const { data: dataChoTiepNhanXuLy } = usePhieuDKyDVKNALL({
-  //   queryKey: "dataChoTiepNhanXuLy",
-  //   maKH: "KH001",
-  //   trangThaiID: maIDTrangThai,
-  // });
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage] = useState(5);
 
-  // console.log("dataChoTiepNhanXuLy", dataChoTiepNhanXuLy);
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = {
+    data: dataDangKiemNghiem?.data?.slice(indexOfFirstItem, indexOfLastItem),
+    isLoading: dataDangKiemNghiem.isLoading,
+  };
+
+  const totalPages = Math.ceil(
+    dataDangKiemNghiem?.data && dataDangKiemNghiem?.data?.length / itemsPerPage
+  );
+
+  const handlePageChange = (event: any, value: number) => {
+    console.log("event", event);
+    setCurrentPage(value);
+  };
 
   return (
     <Box className="grid gap-4">
       <Box className="overflow-x-auto whitespace-nowrap border border-gray-300 rounded-md">
-        <TableDangKiemNghiem tableHead={tableHead} tableBody={dataPhieuDKy} />
+        <TableDangKiemNghiem tableHead={tableHead} tableBody={currentItems} />
       </Box>
+      {dataDangKiemNghiem?.data?.length > 0 && (
+        <Box className="px-4 py-2 flex justify-center">
+          <Pagination
+            count={totalPages}
+            page={currentPage}
+            onChange={handlePageChange}
+            variant="outlined"
+            shape="rounded"
+            color="primary"
+            sx={{
+              '[aria-label="Go to next page"],[aria-label="Go to previous page"]':
+                {
+                  backgroundColor: "#1976d21f",
+                  border: "1px solid #1976d280",
+                  color: "#1976d2",
+                },
+            }}
+          />
+        </Box>
+      )}
     </Box>
   );
 };

@@ -4,7 +4,7 @@ import { useState } from "react";
 import { Align } from "../../../../models/Table";
 import { motion } from "motion/react";
 import TableQuanLyHoaDon from "./Table";
-import PopupBoloc from "./PopupBoloc";
+import PopupBoloc from "./popupBoloc";
 
 const tableHead = [
   {

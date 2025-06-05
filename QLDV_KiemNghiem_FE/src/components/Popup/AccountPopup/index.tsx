@@ -33,7 +33,7 @@ const AccountPopup = (props: AccountPopupProps) => {
       }}
     >
       <Box className="bg-white border-[1px] border-gray-100 shadow-[0px_4px_4px_rgba(0, 0, 0, 0.25)] rounded-md px-2 py-3 w-[300px] grid gap-1">
-        <Box className="flex gap-2 items-center bg-[rgb(210,222,240)] shadow-[inset_0_0_6px_rgba(0,0,0,0.1)] hover:shadow-none cursor-pointer rounded p-1">
+        <Box className="flex gap-2 items-center cursor-pointer rounded p-1">
           <RxAvatar className="w-9 h-9" />
           <p className="text-gray-800 text-xl/6 font-bold">Nguyễn Văn A</p>
         </Box>

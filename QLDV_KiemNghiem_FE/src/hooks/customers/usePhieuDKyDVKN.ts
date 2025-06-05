@@ -12,13 +12,17 @@ interface Props {
   onSettled?: (response: any) => void;
   maTieuChuan?: string;
   maDmMau?: string;
+  onSuccess?: (response: any) => void;
+  onError?: (errors: any) => void;
+  options?: any;
+  trangThaiIDs?: any;
 }
 
-export const useGetPhieuDangKyKiemNghiemByTrangThai = (props: Props) => {
-  const { queryKey, maKH } = props;
-  const trangThaiIDs = ["TT01", "TT02", "TT03", "TT04", "TT05"];
+export const useGetPhieuDangKyKiemNghiemByTrangThaiArray = (props: Props) => {
+  const { queryKey, maKH, trangThaiIDs } = props;
+
   const results = useQueries({
-    queries: trangThaiIDs.map((id) => ({
+    queries: trangThaiIDs.map((id: any) => ({
       queryKey: [queryKey, id],
       queryFn: async () => {
         const params = {
@@ -32,12 +36,15 @@ export const useGetPhieuDangKyKiemNghiemByTrangThai = (props: Props) => {
           );
         return response;
       },
+      staleTime: Infinity,
+      cacheTime: Infinity,
     })),
   });
-  return {
-    data: results.flatMap((r) => r || []),
-    isLoading: results.some((r) => r.isLoading),
-  };
+  const allData = results.flatMap((result) => result.data ?? []);
+
+  const isLoading = results.some((r) => r.isLoading);
+
+  return { data: allData, isLoading };
 };
 
 export const useGetDmMauAll = (props: Props) => {
@@ -74,24 +81,31 @@ export const useGetLoaiDichVuAll = (props: Props) => {
 };
 
 export const useGetLoaiMauAll = (props: Props) => {
-  const { queryKey } = props;
+  const { queryKey, options } = props;
   return useQuery({
     queryKey: [queryKey],
     queryFn: async () => {
       const response = await PhieuDKyDVKN_Services.getLoaiMauAll();
       return response;
     },
+    ...options,
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
   });
 };
 
 export const useGetTieuChuanAll = (props: Props) => {
-  const { queryKey } = props;
+  const { queryKey, options } = props;
+
   return useQuery({
     queryKey: [queryKey],
     queryFn: async () => {
       const response = await PhieuDKyDVKN_Services.getTieuChuanAll();
       return response;
     },
+    ...options,
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
   });
 };
 
@@ -124,6 +138,51 @@ export const useCreatePhieuDKyDVKN = (props: Props) => {
   });
 };
 
+export const useCreateDmMau = (props: Props) => {
+  const { queryKey, onSettled, onSuccess, onError } = props;
+  return useMutation({
+    mutationKey: [queryKey],
+    mutationFn: async (params: any) => {
+      const response = await PhieuDKyDVKN_Services.createDmMau(params);
+      return response;
+    },
+    onSuccess: onSuccess,
+    onError: onError,
+    onSettled: onSettled,
+  });
+};
+
+export const useCreateTieuChuan = (props: Props) => {
+  const { queryKey, onSettled, onSuccess, onError } = props;
+  return useMutation({
+    mutationKey: [queryKey],
+    mutationFn: async (params: any) => {
+      const response = await PhieuDKyDVKN_Services.createTieuChuan(params);
+      return response;
+    },
+    onSuccess: onSuccess,
+    onError: onError,
+    onSettled: onSettled,
+  });
+};
+
+export const useCreateDmPhuLieuHoaChat = (props: Props) => {
+  const { queryKey, onSettled } = props;
+  return useMutation({
+    mutationKey: [queryKey],
+    mutationFn: async (params: any) => {
+      const response = await PhieuDKyDVKN_Services.createDmPhuLieuHoaChat(
+        params
+      );
+      return response;
+    },
+    onSuccess: (response: any) => {
+      if (response !== 200) console.log("Lỗi Server");
+    },
+    onSettled: onSettled,
+  });
+};
+
 export const useGetThoiGianTieuChuan = (props: Props) => {
   const { queryKey, maTieuChuan, maDmMau } = props;
   return useQuery({
@@ -137,9 +196,55 @@ export const useGetThoiGianTieuChuan = (props: Props) => {
         const response = await PhieuDKyDVKN_Services.getThoiGianTieuChuan(
           params
         );
+
         return response;
       }
       return null;
+    },
+  });
+};
+
+export const useUpdatePhieuDangKy = (props: Props) => {
+  const { queryKey, onSettled, onSuccess, onError } = props;
+  return useMutation({
+    mutationKey: [queryKey],
+    mutationFn: async (params: any) => {
+      const response = await PhieuDKyDVKN_Services.updatePhieuDangKy(params);
+      return response;
+    },
+    onSuccess: onSuccess,
+    onError: onError,
+    onSettled: onSettled,
+  });
+};
+
+export const useHuyPhieuDangKy = (props: Props) => {
+  const { queryKey, onSettled, onSuccess, onError } = props;
+  return useMutation({
+    mutationKey: [queryKey],
+    mutationFn: async (params: any) => {
+      const response = await PhieuDKyDVKN_Services.HuyPhieuDangKy(params);
+      return response;
+    },
+    onSuccess: onSuccess,
+    onError: onError,
+    onSettled: onSettled,
+  });
+};
+
+export const useGetLocPhieuDky = (props: Props) => {
+  const { queryKey, maKH, trangThaiID, timeFrom, timeTo } = props;
+  return useQuery({
+    queryKey: [queryKey],
+    queryFn: async () => {
+      const params = {
+        maKH: maKH,
+        timeFrom: timeFrom,
+        timeTo: timeTo,
+        trangThaiID: trangThaiID,
+      };
+      const response = await PhieuDKyDVKN_Services.getLocPhieuDky(params);
+      return response;
     },
   });
 };

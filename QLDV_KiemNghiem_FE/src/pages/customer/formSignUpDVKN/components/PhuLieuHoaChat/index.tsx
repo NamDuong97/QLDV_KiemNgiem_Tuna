@@ -10,7 +10,14 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { Textarea } from "../../../../../components/Textarea";
 import { Inputs } from "../../../../../components/Inputs";
 import InputSelectDM_PLHC from "./InputSelectDM_PLHC";
-import { useGetDmPhuLieuHoaChatAll } from "../../../../../hooks/customers/usePhieuDKyDVKN";
+import {
+  useCreateDmPhuLieuHoaChat,
+  useGetDmPhuLieuHoaChatAll,
+} from "../../../../../hooks/customers/usePhieuDKyDVKN";
+import InputSelectDonViTinhPLHC from "./InputSelectDonViTinhPLHC";
+import { DonViTinh } from "../Maus/FormThongTinMau";
+import InputSelectDonViNongDo from "./InputSelectDonViNongDo";
+import { useQueryClient } from "@tanstack/react-query";
 
 interface PhuLieuHoaChatProps {
   setData: Dispatch<any>;
@@ -63,13 +70,14 @@ const PhuLieuHoaChat = (props: PhuLieuHoaChatProps) => {
   const [listCheckbox, setListCheckbox] = useState<any[]>([]);
   const [dataEditPLHC, setDataEditPLHC] = useState<any>();
   const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage] = useState(5); //Số dòng hiển thị
+  const [itemsPerPage] = useState(5);
 
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentItems = tableBody?.slice(indexOfFirstItem, indexOfLastItem);
 
   const totalPages = Math.ceil(tableBody && tableBody.length / itemsPerPage);
+
   const { data: dataDM_PhuLieuHoaChat } = useGetDmPhuLieuHoaChatAll({
     queryKey: "DmPhuLieuHoaChatAll",
   });
@@ -191,11 +199,41 @@ const PhuLieuHoaChat = (props: PhuLieuHoaChatProps) => {
   });
 
   const TenDM_PLHC = useWatch({ control, name: "TenDM_PLHC" });
+  const nongDo = useWatch({ control, name: "NongDo" });
+  const donViNongDo = useWatch({ control, name: "DonViNongDo" });
+  const TenHienThi = `${TenDM_PLHC} ${nongDo + donViNongDo}`;
+  const queryClient = useQueryClient();
+
+  const handleOnSettled = async () => {
+    await queryClient.invalidateQueries({
+      queryKey: ["DmPhuLieuHoaChatAll"],
+    });
+  };
+
+  const { mutate } = useCreateDmPhuLieuHoaChat({
+    queryKey: "DmPhuLieuHoaChat",
+    onSettled: handleOnSettled,
+  });
 
   const createPLHC = (data: FormPhuLieuHoaChat) => {
     const maplhc = dataDM_PhuLieuHoaChat.find(
-      (item: any) => item.tenDmPlhc === data.TenDM_PLHC
+      (item: any) => item.maDmPlhc === data?.TenDM_PLHC
     ).maId;
+    const datatest = dataDM_PhuLieuHoaChat.some(
+      (item: any) =>
+        item.tenHienThi?.trim().toLowerCase() ===
+        data.TenHienThi?.trim().toLowerCase()
+    );
+    if (!datatest) {
+      mutate({
+        tenDmPlhc: data.TenDM_PLHC,
+        trangThai: true,
+        tenHienThi: data.TenHienThi,
+        nongDo: data.NongDo,
+        donViNongDo: data.DonViNongDo,
+        dieuKienBaoQuan: data.DieuKienBaoQuan,
+      });
+    }
 
     const dataPLHC = {
       maId: "",
@@ -450,6 +488,12 @@ const PhuLieuHoaChat = (props: PhuLieuHoaChatProps) => {
                     placeholder="Nhập Tên hiển thị"
                     name="TenHienThi"
                     inputRef={register("TenHienThi")}
+                    disabled
+                    sx={{
+                      "& .Mui-disabled": {
+                        WebkitTextFillColor: "black",
+                      },
+                    }}
                     errorMessage={errors.TenHienThi?.message}
                   />
                 </Box>
@@ -478,13 +522,13 @@ const PhuLieuHoaChat = (props: PhuLieuHoaChatProps) => {
                   />
                 </Box>
                 <Box className="col-span-12 md:col-span-6 lg:col-span-4">
-                  <Inputs
+                  <InputSelectDonViTinhPLHC
                     title="Đơn vị tính"
                     name="DonViTinh"
-                    inputRef={register("DonViTinh")}
+                    control={control}
+                    data={DonViTinh}
+                    placeholder="Nhập phù liệu hóa chất"
                     errorMessage={errors.DonViTinh?.message}
-                    className="h-[42px]"
-                    placeholder="Nhập Đơn Vị Tính"
                   />
                 </Box>
                 <Box className="col-span-12 md:col-span-6 lg:col-span-4">
@@ -532,12 +576,12 @@ const PhuLieuHoaChat = (props: PhuLieuHoaChatProps) => {
                   />
                 </Box>
                 <Box className="col-span-12 md:col-span-6 lg:col-span-4">
-                  <Inputs
+                  <InputSelectDonViNongDo
                     title="Đơn vị nồng độ"
                     name="DonViNongDo"
-                    inputRef={register("DonViNongDo")}
+                    control={control}
+                    data={DonViTinh}
                     errorMessage={errors.DonViNongDo?.message}
-                    className="h-[42px]"
                     placeholder="Nhập Đơn vị nồng độ"
                   />
                 </Box>
@@ -628,14 +672,21 @@ const PhuLieuHoaChat = (props: PhuLieuHoaChatProps) => {
         reset((prev) => ({
           ...prev,
           TenHienThi: matched.tenHienThi || "",
-          TenDM_PLHC: matched.tenDmPlhc || "",
+          TenDM_PLHC: matched.maDmPlhc || "",
+          TenPLHC: matched.tenDmPlhc || "",
           DonViNongDo: matched.donViNongDo || "",
           NongDo: matched.nongDo || "",
           DieuKienBaoQuan: matched.dieuKienBaoQuan || "",
         }));
       }
     }
-  }, [TenDM_PLHC, dataDM_PhuLieuHoaChat]);
+    if (TenHienThi) {
+      reset((prev) => ({
+        ...prev,
+        TenHienThi: TenHienThi || "",
+      }));
+    }
+  }, [TenDM_PLHC, dataDM_PhuLieuHoaChat, TenHienThi]);
 
   return (
     <motion.div

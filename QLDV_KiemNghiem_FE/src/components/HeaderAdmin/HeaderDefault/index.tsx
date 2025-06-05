@@ -11,6 +11,8 @@ import { APP_ROUTES } from "../../../constants/routers";
 import { useNavigate } from "react-router";
 import PopoverAccountAdmin from "./PopoverAccountAdmin";
 import NotificationsPopover from "../../Popup/NotificationsPopover/index";
+import PopupThongBaoPhieuDKDVKN from "../../../pages/admin/PopupThongBaoPhieuDKDVKN";
+import { MdMarkunreadMailbox } from "react-icons/md";
 
 interface HeaderProps {
   isMenuDashBoard: boolean;
@@ -106,6 +108,8 @@ export default function HeaderDefault(props: HeaderProps) {
   const openNotificationsPopover = Boolean(anchorElNotificationsPopover);
   const theme = useTheme();
   const isLaptop = useMediaQuery(theme.breakpoints.up("lg"));
+  const [openPopupThongBaoPhieuDKDVKN, setOpenPopupThongBaoPhieuDKDVKN] =
+    useState(false);
 
   const navigate = useNavigate();
 
@@ -137,33 +141,57 @@ export default function HeaderDefault(props: HeaderProps) {
     navigate(APP_ROUTES.TUNA_ADMIN.DASHBOARD.to);
   };
 
+  const handleOpenPopupThongBaoPhieuDKDVKN = () => {
+    setOpenPopupThongBaoPhieuDKDVKN(true);
+  };
+
+  const handleClosePopupThongBaoPhieuDKDVKN = () => {
+    setOpenPopupThongBaoPhieuDKDVKN(false);
+  };
+
   return (
-    <div className="bg-white px-[18px] flex py-2 w-full border-b border-solid border-gray-300 fixed z-99">
-      <Box className="flex-1 flex items-center gap-1">
-        {isLaptop ? (
-          <Tooltip
-            title={isMenuDashBoard ? "Thu gọn" : "Mở rộng"}
-            placement="top"
-            slotProps={{
-              popper: {
-                modifiers: [
-                  {
-                    name: "offset",
-                    options: {
-                      offset: [0, -10],
+    <header className="w-full !fixed z-99">
+      <div className="bg-white px-[18px] flex py-2 w-full border-b border-solid border-gray-300">
+        <Box className="flex-1 flex items-center gap-1">
+          {isLaptop ? (
+            <Tooltip
+              title={isMenuDashBoard ? "Thu gọn" : "Mở rộng"}
+              placement="top"
+              slotProps={{
+                popper: {
+                  modifiers: [
+                    {
+                      name: "offset",
+                      options: {
+                        offset: [0, -10],
+                      },
                     },
-                  },
-                ],
-              },
-            }}
-            disableInteractive
-          >
+                  ],
+                },
+              }}
+              disableInteractive
+            >
+              <IconButton
+                size="large"
+                edge="start"
+                color="inherit"
+                aria-label="menu"
+                onClick={handleMenuDashBoard}
+              >
+                {isMenuDashBoard ? (
+                  <SpaceDashboardIcon className="text-gray-700" />
+                ) : (
+                  <ViewComfyIcon className="text-gray-700" />
+                )}
+              </IconButton>
+            </Tooltip>
+          ) : (
             <IconButton
               size="large"
               edge="start"
               color="inherit"
               aria-label="menu"
-              onClick={handleMenuDashBoard}
+              onClick={handleToggleDrawer}
             >
               {isMenuDashBoard ? (
                 <SpaceDashboardIcon className="text-gray-700" />
@@ -171,102 +199,123 @@ export default function HeaderDefault(props: HeaderProps) {
                 <ViewComfyIcon className="text-gray-700" />
               )}
             </IconButton>
-          </Tooltip>
-        ) : (
-          <IconButton
-            size="large"
-            edge="start"
-            color="inherit"
-            aria-label="menu"
-            onClick={handleToggleDrawer}
-          >
-            {isMenuDashBoard ? (
-              <SpaceDashboardIcon className="text-gray-700" />
-            ) : (
-              <ViewComfyIcon className="text-gray-700" />
-            )}
-          </IconButton>
-        )}
-        <button className="cursor-pointer" onClick={handleRedirectDashboard}>
-          <Box className="flex items-center gap-2">
-            <img
-              src={image.imageLogo}
-              alt="imageLogo"
-              className="!w-12 !h-12"
+          )}
+          <button className="cursor-pointer" onClick={handleRedirectDashboard}>
+            <Box className="flex items-center gap-2">
+              <img
+                src={image.imageTunaLogo}
+                alt="imageTunaLogo"
+                className="!h-12"
+              />
+            </Box>
+          </button>
+        </Box>
+        <Box className="gap-4 flex items-center">
+          <Box>
+            <Tooltip
+              title="Thông Báo Phiếu Đăng Ký Kiểm Nghiệm"
+              placement="top"
+              slotProps={{
+                popper: {
+                  modifiers: [
+                    {
+                      name: "offset",
+                      options: {
+                        offset: [0, -10],
+                      },
+                    },
+                  ],
+                },
+              }}
+              disableInteractive
+            >
+              <Box>
+                <IconButton
+                  className="!relative"
+                  onClick={handleOpenPopupThongBaoPhieuDKDVKN}
+                >
+                  <MdMarkunreadMailbox className="text-gray-700" />
+                  <span className="text-xs text-red-500 !absolute right-[-2px] top-[2px]">10</span>
+                </IconButton>
+              </Box>
+            </Tooltip>
+          </Box>
+          <Box>
+            <Tooltip
+              title="Thông Báo"
+              placement="top"
+              slotProps={{
+                popper: {
+                  modifiers: [
+                    {
+                      name: "offset",
+                      options: {
+                        offset: [0, -10],
+                      },
+                    },
+                  ],
+                },
+              }}
+              disableInteractive
+            >
+              <Box>
+                <IconButton onClick={handleClickNotificationsPopover}>
+                  <StyledBadge
+                    overlap="circular"
+                    anchorOrigin={{ vertical: "top", horizontal: "right" }}
+                    variant="dot"
+                  >
+                    <NotificationsActiveIcon className="text-gray-700" />
+                  </StyledBadge>
+                </IconButton>
+              </Box>
+            </Tooltip>
+            <NotificationsPopover
+              dataMessages={dataMessages}
+              openNotifications={openNotificationsPopover}
+              handleCloseNotifications={handleCloseNotificationsPopover}
             />
           </Box>
-        </button>
-      </Box>
-      <Box className="gap-4 flex items-center">
-        <Box>
-          <Tooltip
-            title="Thông Báo"
-            placement="top"
-            slotProps={{
-              popper: {
-                modifiers: [
-                  {
-                    name: "offset",
-                    options: {
-                      offset: [0, -10],
+          <Box>
+            <Tooltip
+              title="Tài Khoản"
+              placement="top"
+              slotProps={{
+                popper: {
+                  modifiers: [
+                    {
+                      name: "offset",
+                      options: {
+                        offset: [0, -10],
+                      },
                     },
-                  },
-                ],
-              },
-            }}
-            disableInteractive
-          >
-            <IconButton onClick={handleClickNotificationsPopover}>
-              <StyledBadge
-                overlap="circular"
-                anchorOrigin={{ vertical: "top", horizontal: "right" }}
-                variant="dot"
-              >
-                <NotificationsActiveIcon className="text-gray-700" />
-              </StyledBadge>
-            </IconButton>
-          </Tooltip>
-
-          <NotificationsPopover
-            dataMessages={dataMessages}
-            openNotifications={openNotificationsPopover}
-            handleCloseNotifications={handleCloseNotificationsPopover}
-          />
-        </Box>
-        <Box>
-          <Tooltip
-            title="Tài Khoản"
-            placement="top"
-            slotProps={{
-              popper: {
-                modifiers: [
-                  {
-                    name: "offset",
-                    options: {
-                      offset: [0, -10],
-                    },
-                  },
-                ],
-              },
-            }}
-            disableInteractive
-          >
-            <IconButton
-              size="large"
-              onClick={handleClickPopoverAccountAdmin}
-              color="inherit"
-              className="relative !p-2"
+                  ],
+                },
+              }}
+              disableInteractive
             >
-              <AccountCircle className="text-gray-700" />
-            </IconButton>
-          </Tooltip>
-          <PopoverAccountAdmin
-            open={openPopoverAccountAdmin}
-            anchorEl={anchorElPopoverAccountAdmin}
-            handleClose={handleClosePopoverAccountAdmin}
-          />
+              <IconButton
+                size="large"
+                onClick={handleClickPopoverAccountAdmin}
+                color="inherit"
+                className="relative !p-2"
+              >
+                <AccountCircle className="text-gray-700" />
+              </IconButton>
+            </Tooltip>
+            <PopoverAccountAdmin
+              open={openPopoverAccountAdmin}
+              anchorEl={anchorElPopoverAccountAdmin}
+              handleClose={handleClosePopoverAccountAdmin}
+            />
+          </Box>
         </Box>
-      </Box>
-    </div>
+      </div>
+
+      <PopupThongBaoPhieuDKDVKN
+        open={openPopupThongBaoPhieuDKDVKN}
+        handleClose={handleClosePopupThongBaoPhieuDKDVKN}
+      />
+    </header>
   );
 }

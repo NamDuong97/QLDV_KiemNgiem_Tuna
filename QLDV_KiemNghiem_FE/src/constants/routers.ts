@@ -72,16 +72,12 @@ export const APP_ROUTES = {
       title: "Trang quản lý phiếu đăng ký dịch vụ kiểm nghiệm",
     },
     EDIT_PHIEU_DKY_DVKN: {
-      to: "/quan-ly-phieu-dang-ky-dich-vu-kiem-nghiem/:id",
+      to: "/quan-ly-phieu-dang-ky-dich-vu-kiem-nghiem/sua-phieu-dang-ky-kiem-nghiem",
       title: "Trang sửa phiếu đăng ký dịch vụ kiểm nghiệm",
-      CREATE_MAU: {
-        to: "/quan-ly-phieu-dang-ky-dich-vu-kiem-nghiem/:id/them-thong-tin-mau",
-        title: "Thêm Mẫu",
-      },
-      Edit_MAU: {
-        to: "/quan-ly-phieu-dang-ky-dich-vu-kiem-nghiem/:id/:id",
-        title: "Sửa Mẫu",
-      },
+    },
+    SHOW_PHIEU_DKY_DVKN: {
+      to: "/chi-tiet-phieu-dang-ky-dich-vu-kiem-nghiem",
+      title: "Trang sửa phiếu đăng ký dịch vụ kiểm nghiệm",
     },
     QUAN_LY_HOA_DON: {
       to: "/quan-ly-hoa-don",

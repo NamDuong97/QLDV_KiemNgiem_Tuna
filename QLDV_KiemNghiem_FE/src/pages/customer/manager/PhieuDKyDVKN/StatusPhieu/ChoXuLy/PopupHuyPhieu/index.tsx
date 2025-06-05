@@ -1,100 +1,108 @@
 import { Box, Dialog } from "@mui/material";
-import { AnimatePresence, motion } from "framer-motion";
-import { IoMdClose } from "react-icons/io";
-import { Textarea } from "../../../../../../../components/Textarea";
-import { useEffect, useMemo } from "react";
-import yup from "../../../../../../../configs/yup.custom";
-import { FormLyDoHuyPhieuDkyDVKN } from "../../../../../../../models/LydoHuy";
-import { yupResolver } from "@hookform/resolvers/yup";
-import { useForm } from "react-hook-form";
+import { useQueryClient } from "@tanstack/react-query";
+import { motion } from "framer-motion";
+import { useHuyPhieuDangKy } from "../../../../../../../hooks/customers/usePhieuDKyDVKN";
+import { IoMdNotifications } from "react-icons/io";
+import { Dispatch } from "react";
+import { useStoreNotification } from "../../../../../../../configs/stores/useStoreNotification";
 
 interface Props {
   open: boolean;
   handleClose?: () => void;
+  listCheckbox?: any;
+  setListCheckbox: Dispatch<any>;
 }
 
 const PopupHuyPhieu = (props: Props) => {
-  const { open, handleClose } = props;
-
-  let schema = useMemo(() => {
-    return yup.object().shape({
-      lydo: yup.string().required("Yêu cầu nhập lý do hủy"),
+  const { open, handleClose, listCheckbox, setListCheckbox } = props;
+  const showNotification = useStoreNotification(
+    (state) => state.showNotification
+  );
+  const queryClient = useQueryClient();
+  const handleOnSettled = async () => {
+    await queryClient.invalidateQueries({
+      queryKey: ["dataChoTiepNhanXuLy"],
     });
-  }, []);
-
-  const {
-    register,
-    handleSubmit,
-    reset,
-    formState: { errors },
-  } = useForm<FormLyDoHuyPhieuDkyDVKN>({
-    resolver: yupResolver(schema),
-    mode: "onChange",
+    await queryClient.invalidateQueries({
+      queryKey: ["dataDaHuy"],
+    });
+  };
+  const { mutate } = useHuyPhieuDangKy({
+    queryKey: "HuyPhieuDangKy",
+    onSettled: handleOnSettled,
+    onSuccess: (response) => {
+      if (response.status === 200) {
+        showNotification({
+          message: "Hủy thành công",
+          status: 200,
+        });
+      }
+    },
+    onError: (errors) => {
+      if (errors) {
+        showNotification({ message: "Hủy thất bại", status: 400 });
+      }
+    },
   });
 
-  const handleHuyPhieu = (data: FormLyDoHuyPhieuDkyDVKN) => {
-    console.log("handleHuyPhieu", data);
+  const handleHuyPhieu = () => {
+    mutate(listCheckbox?.maId);
+    setListCheckbox({});
+    handleClose?.();
   };
 
-  useEffect(() => {
-    reset({
-      lydo: "",
-    });
-  }, []);
-
   return (
-    <Dialog open={open} onClose={handleClose} maxWidth="lg">
-      <Box className="!relative px-7 py-6 w-auto md:w-[785px]">
-        <Box className="!absolute top-2 right-5">
-          <button
-            className="bg-gray-400 rounded-full p-[6px] hover:bg-gray-500 cursor-pointer"
-            onClick={handleClose}
-          >
-            <IoMdClose className="w-6 h-6 text-gray-300" />
-          </button>
-        </Box>
-        <AnimatePresence mode="wait">
-          <motion.div
-            key="signup"
-            initial={{ y: 0, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            exit={{ y: 0, opacity: 0 }}
-            transition={{ duration: 0.7 }}
-          >
-            <form
-              className="grid gap-6"
-              onSubmit={handleSubmit(handleHuyPhieu)}
-            >
-              <Box className="py-2 text-center">
-                <h1 className="font-bold text-3xl">Lý Do Hủy</h1>
-              </Box>
-              <Box>
-                <Textarea
-                  title="Lý do:"
-                  placeholder="Nhập lý do hủy phiếu"
-                  name="lydo"
-                  inputRef={register("lydo")}
-                  errorMessage={errors.lydo?.message}
-                  className="max-h-[149px] min-h-[149px]"
-                  height="h-[213px]"
-                />
+    <Dialog
+      open={open}
+      onClose={handleClose}
+      maxWidth="lg"
+      sx={{
+        ".MuiPaper-root": {
+          borderRadius: "10px",
+        },
+      }}
+    >
+      <motion.div
+        key="PopupHuyPhieu"
+        initial={{ y: 0, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        exit={{ y: 0, opacity: 0 }}
+        transition={{ duration: 0.7 }}
+      >
+        <Box className="w-auto md:w-[500px]">
+          <Box className="grid gap-4">
+            <Box className="px-5 pt-3 text-center grid gap-2">
+              <div className="flex justify-center">
+                <IoMdNotifications className="w-[70px] h-[70px] text-yellow-300" />
+              </div>
+              <h1 className="flex-1 font-bold text-3xl">Thông báo</h1>
+            </Box>
+            <Box className="px-5 pb-6 gap-6 grid">
+              <Box className="text-center">
+                <p className="text-xl/6 font-medium">
+                  Bạn có chắc chắn hủy phiếu này không?
+                </p>
               </Box>
               <Box className="grid sm:flex gap-6 sm:justify-center">
                 <button
                   type="button"
-                  className="font-bold text-center text-white bg-[#f8cf00] px-4 py-1 lg:px-6 lg:py-2 rounded-md hover:bg-yellow-500 cursor-pointer"
                   onClick={handleClose}
+                  className="font-bold text-center text-white bg-amber-500 px-4 py-1 lg:px-8 lg:py-2 rounded-md hover:bg-amber-400 cursor-pointer"
                 >
-                  Hủy Xóa
+                  Không
                 </button>
-                <button className="font-bold text-center text-white bg-[#0099f8] px-4 py-1 lg:px-6 lg:py-2 rounded-md hover:bg-blue-500 cursor-pointer">
+                <button
+                  type="button"
+                  onClick={() => handleHuyPhieu()}
+                  className="font-bold text-center text-white bg-cyan-700 px-4 py-1 lg:px-6 lg:py-2 rounded-md hover:bg-cyan-500 cursor-pointer"
+                >
                   Chắc chắn
                 </button>
               </Box>
-            </form>
-          </motion.div>
-        </AnimatePresence>
-      </Box>
+            </Box>
+          </Box>
+        </Box>
+      </motion.div>
     </Dialog>
   );
 };
