@@ -48,6 +48,9 @@ const Maus = (props: MausProps) => {
   const dataTieuChuan: any = dataTC;
   const dataLoaiDV: any = dataLDV;
 
+  console.log('dataLoaiDV',dataLoaiDV);
+  
+
   return (
     <motion.div
       key="form-signup-maus"
