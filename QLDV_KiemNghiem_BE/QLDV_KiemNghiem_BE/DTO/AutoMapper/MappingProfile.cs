@@ -22,8 +22,10 @@ namespace QLDV_KiemNghiem_BE.DTO.AutoMapper
             CreateMap<ChucVu, ChucVuDto>().ReverseMap().ForMember(dest => dest.MaId, opt => opt.Ignore());
             CreateMap<Khoa, KhoaDto>().ReverseMap().ForMember(dest => dest.MaId, opt => opt.Ignore());
             CreateMap<LoaiMau, LoaiMauDto>().ReverseMap().ForMember(dest => dest.MaId, opt => opt.Ignore());
-            CreateMap<HoaDonThu, HoaDonThuDto>().ReverseMap().ForMember(dest => dest.MaId, opt => opt.Ignore());
-            CreateMap<ChiTietHoaDonThuDto, ChiTietHoaDonThuDto>().ReverseMap().ForMember(dest => dest.MaId, opt => opt.Ignore());
+            CreateMap<HoaDonThu, HoaDonThuDto>().ReverseMap().ForMember(dest => dest.ChiTietHoaDonThus, opt => opt.Ignore()).
+                ForMember(dest => dest.HoaDonThuBoSungs, opt => opt.Ignore()).
+                ForMember(dest => dest.MaId, opt => opt.Ignore());
+            CreateMap<ChiTietHoaDonThu, ChiTietHoaDonThuDto>().ReverseMap().ForMember(dest => dest.MaId, opt => opt.Ignore());
             CreateMap<HoaDonThuBoSung, HoaDonThuBoSungDto>().ReverseMap().ForMember(dest => dest.MaId, opt => opt.Ignore());
             CreateMap<ChiTietHoaDonThuBoSung, ChiTietHoaDonThuBoSungDto>().ReverseMap().ForMember(dest => dest.MaId, opt => opt.Ignore());
         }
