@@ -17,6 +17,8 @@ import {
   useGetThoiGianTieuChuan,
   useGetTieuChuanAll,
 } from "../../../../../../hooks/customers/usePhieuDKyDVKN";
+import PopupThemTieuChuan from "./PopupThemTieuChuan";
+import InputSelectDonViTinhMau from "./InputSelectDonViTinhMau";
 
 const dataKhachHang = {
   maKH: "KH001",
@@ -35,6 +37,48 @@ interface FormThongTinMauProps {
   setDataEditMaus: Dispatch<any>;
   setData: Dispatch<any>;
 }
+
+export const DonViTinh = [
+  { value: "mg" },
+  { value: "g" },
+  { value: "kg" },
+  { value: "µg" },
+  { value: "mg/kg" },
+  { value: "µg/kg" },
+  { value: "% w/w" },
+  { value: "%" },
+  { value: "mL" },
+  { value: "L" },
+  { value: "µL" },
+  { value: "mg/L" },
+  { value: "µg/L" },
+  { value: "ppm" },
+  { value: "ppb" },
+  { value: "mol/L" },
+  { value: "mmol/L" },
+  { value: "µmol/L" },
+  { value: "% v/v" },
+  { value: "CFU/g" },
+  { value: "CFU/mL" },
+  { value: "MPN/g" },
+  { value: "MPN/mL" },
+  { value: "Log CFU/g" },
+  { value: "spores/g" },
+  { value: "yeast/mL" },
+  { value: "cells/mL" },
+  { value: "pH" },
+  { value: "NTU" },
+  { value: "Brix" },
+  { value: "IU" },
+  { value: "kcal" },
+  { value: "kJ" },
+  { value: "mẫu" },
+  { value: "gói" },
+  { value: "chai" },
+  { value: "ống" },
+  { value: "hộp" },
+  { value: "bình" },
+];
 
 const FormThongTinMau = (props: FormThongTinMauProps) => {
   const {
@@ -60,13 +104,22 @@ const FormThongTinMau = (props: FormThongTinMauProps) => {
   });
 
   const [openPopupThemMau, setOpenPopupThemMau] = useState(false);
+  const [openPopupThemTieuChuan, setOpenPopupThemTieuChuan] = useState(false);
   const handleOpenPopupThemMau = () => setOpenPopupThemMau(true);
+  const handleOpenPopupThemTieuChuan = () => setOpenPopupThemTieuChuan(true);
   const handleClosePopupThemMau = () => setOpenPopupThemMau(false);
+  const handleClosePopupThemTieuChuan = () => setOpenPopupThemTieuChuan(false);
 
   const { data: dataDMMau } = useGetDmMauAll({ queryKey: "DmMauAll" });
-  const { data: dataTieuChuanAll } = useGetTieuChuanAll({
+  const { data: TieuChuanAll } = useGetTieuChuanAll({
     queryKey: "TieuChuanAll",
+    options: {
+      enabled: true,
+      staleTime: Infinity,
+      cacheTime: Infinity,
+    },
   });
+  const dataTieuChuanAll = TieuChuanAll as Array<any>;
 
   const { data: dataLoaiDichVuAll } = useGetLoaiDichVuAll({
     queryKey: "LoaiDichVuAll",
@@ -91,7 +144,7 @@ const FormThongTinMau = (props: FormThongTinMauProps) => {
         .when("tenTieuChuan", ([tenTieuChuan], schema) => {
           return schema.test(
             "dữ liệu tiêu chuẩn phải có",
-            "Yêu cầu chọn Tiêu chuẩn",
+            "Yêu cầu chọn Tên Mẫu và Tiêu Chuẩn",
             () => {
               return tenTieuChuan;
             }
@@ -123,8 +176,56 @@ const FormThongTinMau = (props: FormThongTinMauProps) => {
         .string()
         .required("Yêu cầu nhập Đơn vị sản xuất")
         .max(200, "Đơn vị sản xuất nhập không quá 200 ký tự"),
-      ngaySanXuat: yup.string().required("Yêu cầu nhập Ngày sản xuất"),
-      hanSuDung: yup.string().required("Yêu cầu nhập Hạn sử dụng"),
+      ngaySanXuat: yup
+        .string()
+        .required("Yêu cầu nhập Ngày sản xuất")
+        .test(
+          "ngày sản xuất bắt đầu vào năm 2000",
+          "Ngày sản xuất được tính từ 01/01/2000 đến năm nay",
+          (value) => {
+            const namHienTai = new Date().getFullYear();
+            console.log("namHienTai", namHienTai);
+
+            return (
+              value >= "2000-01-01" && Number(value.split("-")[0]) <= namHienTai
+            );
+          }
+        ),
+      hanSuDung: yup
+        .string()
+        .required("Yêu cầu nhập Hạn sử dụng")
+        .when("ngaySanXuat", ([ngaySanXuat], schema) => {
+          return schema
+            .test(
+              "validation Hạn sử dụng",
+              "Yêu cầu chọn Hạn sử dụng",
+              (hanSuDung) => {
+                if (!ngaySanXuat || hanSuDung) {
+                  return true;
+                }
+              }
+            )
+            .test(
+              "lớn hơn và khác",
+              "Hạn sử dụng phải khác và lớn hơn Ngày sản xuất",
+              (hanSuDung) => {
+                if (ngaySanXuat && hanSuDung) {
+                  return hanSuDung > ngaySanXuat && hanSuDung !== ngaySanXuat;
+                }
+                return true;
+              }
+            )
+            .test(
+              "Hạn sử dụng tính sau 20 năm",
+              "Hạn sử dụng tính từ năm nay đến 20 năm sau",
+              (value) => {
+                const namHienTai = new Date().getFullYear();
+                console.log("namHienTai", namHienTai + 20);
+
+                return Number(value.split("-")[0]) <= namHienTai + 20;
+              }
+            );
+        }),
       soLuong: yup
         .string()
         .typeError("Yêu cầu nhập Số lượng")
@@ -174,6 +275,8 @@ const FormThongTinMau = (props: FormThongTinMauProps) => {
   });
 
   const TenMau = useWatch({ control, name: "tenMau" });
+  const ngaySanXuat = useWatch({ control, name: "ngaySanXuat" });
+  console.log("ngaySanXuat", ngaySanXuat);
 
   const tenTieuChuan = useWatch({ control, name: "tenTieuChuan" });
 
@@ -201,8 +304,11 @@ const FormThongTinMau = (props: FormThongTinMauProps) => {
   });
   const dataNgayTraKQ = MaLoaiDV
     ? MaLoaiDV.split("-")[1] === "Max"
-      ? "Linh Hoạt"
-      : (MaLoaiDV.split("-")[1] / 100) * dataThoiGianTieuChuan
+      ? "Bàn giao ngay sau khi kiểm nghiệm"
+      : Math.round(
+          (MaLoaiDV.split("-")[1] / 100) *
+            (dataThoiGianTieuChuan?.data > 0 ? dataThoiGianTieuChuan?.data : 0)
+        )
     : 0;
 
   const handleCreateMau = (data: FormMau) => {
@@ -463,6 +569,7 @@ const FormThongTinMau = (props: FormThongTinMauProps) => {
                   data={dataTieuChuanAll}
                   placeholder="Vui lòng chọn Tiêu Chuẩn"
                   errorMessage={(errors.tenTieuChuan as any)?.message}
+                  handleOpen={handleOpenPopupThemTieuChuan}
                 />
               </Box>
               <Box className="col-span-12 md:col-span-6 lg:col-span-4">
@@ -507,14 +614,16 @@ const FormThongTinMau = (props: FormThongTinMauProps) => {
               </Box>
               <Box className="col-span-12 md:col-span-6 lg:col-span-4">
                 <Inputs
-                  title="Thời gian tiêu chuẩn(Thời gian dự kiến)"
+                  title="Thời gian mong muốn hoàn thành(Thời gian dự kiến)"
                   name="thoiGianTieuChuan"
-                  placeholder="Vui lòng Tiêu Chuẩn"
+                  placeholder="Vui lòng chọn Tiêu Chuẩn và Tên Mẫu"
                   inputRef={register("thoiGianTieuChuan")}
                   value={
-                    Number(dataThoiGianTieuChuan)
-                      ? Number(dataThoiGianTieuChuan)
-                      : ""
+                    Number(dataThoiGianTieuChuan?.data)
+                      ? Number(dataThoiGianTieuChuan?.data) > 0
+                        ? Number(dataThoiGianTieuChuan?.data)
+                        : "Chờ phản hồi từ trung tâm"
+                      : "Vui lòng chọn Tiêu Chuẩn và Tên Mẫu"
                   }
                   errorMessage={errors.thoiGianTieuChuan?.message}
                   className="h-[42px]"
@@ -530,10 +639,16 @@ const FormThongTinMau = (props: FormThongTinMauProps) => {
                 <Inputs
                   title="Ngày dự kiến trả kết quả"
                   name="ngayDuKienTraKetQua"
-                  placeholder="Vui lòng Tiêu Chuẩn và Dịch vụ"
+                  placeholder="Vui lòng chọn Tiêu Chuẩn và Dịch vụ"
                   inputRef={register("ngayDuKienTraKetQua")}
                   errorMessage={errors.ngayDuKienTraKetQua?.message}
-                  value={dataNgayTraKQ ? dataNgayTraKQ : 15}
+                  value={
+                    dataNgayTraKQ
+                      ? Number(dataNgayTraKQ) > 0
+                        ? dataNgayTraKQ
+                        : "Bàn giao ngay sau khi kiểm nghiệm"
+                      : "Vui lòng chọn Tiêu Chuẩn và Dịch vụ"
+                  }
                   className="h-[42px]"
                   disabled
                   sx={{
@@ -551,6 +666,7 @@ const FormThongTinMau = (props: FormThongTinMauProps) => {
                   inputRef={register("hanSuDung")}
                   errorMessage={errors.hanSuDung?.message}
                   className="h-[42px]"
+                  placeholder="dd/mm/yyyy"
                   sx={{
                     input: {
                       padding: "9.5px 14px",
@@ -583,17 +699,13 @@ const FormThongTinMau = (props: FormThongTinMauProps) => {
                 />
               </Box>
               <Box className="col-span-12 md:col-span-6">
-                <Inputs
+                <InputSelectDonViTinhMau
                   title="Đơn vị tính"
                   placeholder="Nhập Đơn Vị Tính"
                   name="donViTinh"
-                  inputRef={register("donViTinh")}
                   errorMessage={errors.donViTinh?.message}
-                  sx={{
-                    input: {
-                      padding: "9.5px 14px",
-                    },
-                  }}
+                  control={control}
+                  data={DonViTinh}
                 />
               </Box>
               <Box className="col-span-12 md:col-span-6">
@@ -628,8 +740,8 @@ const FormThongTinMau = (props: FormThongTinMauProps) => {
               </Box>
               <Box className="col-span-12 md:col-span-6">
                 <Textarea
-                  title="Tình trạng mãu"
-                  placeholder="Nhập Tình Trạng Mãu"
+                  title="Tình trạng mẫu"
+                  placeholder="Nhập Tình Trạng Mẫu"
                   name="tinhTrangMau"
                   inputRef={register("tinhTrangMau")}
                   errorMessage={errors.tinhTrangMau?.message}
@@ -699,6 +811,10 @@ const FormThongTinMau = (props: FormThongTinMauProps) => {
       <PopupThemMau
         open={openPopupThemMau}
         handleClose={handleClosePopupThemMau}
+      />
+      <PopupThemTieuChuan
+        open={openPopupThemTieuChuan}
+        handleClose={handleClosePopupThemTieuChuan}
       />
     </Box>
   );

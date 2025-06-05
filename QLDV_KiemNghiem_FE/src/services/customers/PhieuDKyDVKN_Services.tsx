@@ -34,6 +34,51 @@ export default class PhieuDKyDVKN_Services {
     }
   }
 
+  static async createDmMau(params: any) {
+    try {
+      const response = await _APIInstance.post(
+        API.CUSTOMER.PHIEU_DANG_KY_DICH_VU_KIEM_NGHIEM.CREATE_DANH_MUC_MAU,
+        params,
+        {
+          headers: { "Content-Type": "application/json" },
+        }
+      );
+      return response;
+    } catch (res) {
+      return res;
+    }
+  }
+
+  static async createTieuChuan(params: any) {
+    try {
+      const response = await _APIInstance.post(
+        API.CUSTOMER.PHIEU_DANG_KY_DICH_VU_KIEM_NGHIEM.CREATE_TRANG_THAI,
+        params,
+        {
+          headers: { "Content-Type": "application/json" },
+        }
+      );
+      return response;
+    } catch (res) {
+      return res;
+    }
+  }
+
+  static async createDmPhuLieuHoaChat(params: any) {
+    try {
+      const response = await _APIInstance.post(
+        API.CUSTOMER.PHIEU_DANG_KY_DICH_VU_KIEM_NGHIEM.CREATE_DANH_MUC_PLHC,
+        params,
+        {
+          headers: { "Content-Type": "application/json" },
+        }
+      );
+      return response;
+    } catch (res) {
+      return res;
+    }
+  }
+
   static async getDmMauAll() {
     try {
       const response = await _APIInstance.get(
@@ -106,6 +151,47 @@ export default class PhieuDKyDVKN_Services {
     try {
       const response = await _APIInstance.get(
         `${API.CUSTOMER.PHIEU_DANG_KY_DICH_VU_KIEM_NGHIEM.GET_THOI_GIAN_TIEU_CHUAN}?maDmMau=${params.maDmMau}&maTieuChuan=${params.maTieuChuan}`
+      );
+      return response?.data;
+    } catch (res) {
+      return res;
+    }
+  }
+
+  static async updatePhieuDangKy(params: any) {
+    try {
+      const response = await _APIInstance.put(
+        API.CUSTOMER.UPDATE_PHIEU_DANG_KY,
+        params,
+        {
+          headers: { "Content-Type": "application/json" },
+        }
+      );
+      return response?.data;
+    } catch (res) {
+      return res;
+    }
+  }
+  static async HuyPhieuDangKy(params: any) {
+    try {
+      const response = await _APIInstance.delete(
+        `${API.CUSTOMER.HUY_PHIEU_DANG_KY}?maPhieuDangKy=${params}`,
+        {
+          headers: { "Content-Type": "application/json" },
+        }
+      );
+      return response?.data;
+    } catch (res) {
+      return res;
+    }
+  }
+
+  static async getLocPhieuDky(params: any) {
+    try {
+      const response = await _APIInstance.get(
+        API.CUSTOMER.PHIEU_DANG_KY_DICH_VU_KIEM_NGHIEM
+          .GET_LOC_PHIEU_DANG_KY_BY_TRANG_THAI,
+        { params: params }
       );
       return response?.data;
     } catch (res) {

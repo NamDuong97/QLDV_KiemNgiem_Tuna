@@ -1,6 +1,7 @@
 import {
   Box,
   Paper,
+  Skeleton,
   Table,
   TableBody,
   TableCell,
@@ -13,7 +14,7 @@ import { Align } from "../../../../../../../models/Table";
 import { APP_ROUTES } from "../../../../../../../constants/routers";
 
 interface TableProps {
-  tableBody: any[];
+  tableBody: any;
   tableHead: any[];
 }
 
@@ -33,8 +34,9 @@ const TableHoanThanh = (props: TableProps) => {
     }
   };
 
-  const changeUrlParam = (url: any, id: any) => {
-    return url.replace(/:id/, id);
+  const handleRedirecEditPage = (item: any) => {
+    navigate(APP_ROUTES.TUNA_CUSTOMER.SHOW_PHIEU_DKY_DVKN.to);
+    sessionStorage.setItem("xem-phieuDky", JSON.stringify(item));
   };
 
   return (
@@ -54,60 +56,95 @@ const TableHoanThanh = (props: TableProps) => {
           </TableRow>
         </TableHead>
         <TableBody className="bg-white">
-          {tableBody?.map((item, index) => (
+          {tableBody.isLoading ? (
             <TableRow
-              key={index}
               sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
               hover={true}
+              key={"isLoading"}
               className="cursor-pointer"
             >
+              <TableCell align="center">
+                <Skeleton variant="rounded" width={20} height={20} />
+              </TableCell>
               <TableCell align="left">
                 <Box className="flex gap-2 items-center justify-start">
-                  <p className="text-sm/4 sm:text-base/4 font-medium hover:underline cursor-pointer">
-                    {item?.SoDKPT}
-                  </p>
+                  <Skeleton variant="rounded" width={"100%"} height={40} />
                 </Box>
               </TableCell>
               <TableCell align="center">
                 <Box className="flex gap-2 items-center justify-center">
-                  <p
-                    onClick={() =>
-                      navigate(
-                        `${changeUrlParam(
-                          APP_ROUTES.TUNA_CUSTOMER.EDIT_PHIEU_DKY_DVKN.to,
-                          item.NguoiGuiMau
-                        )}?tuna=phieu-dang-ky`
-                      )
-                    }
-                    className="text-sm/4 sm:text-base/4 font-medium"
-                  >
-                    {item?.NguoiGuiMau}
-                  </p>
+                  <Skeleton variant="rounded" width={"100%"} height={40} />
                 </Box>
               </TableCell>
               <TableCell align="center">
                 <Box className="flex gap-2 items-center justify-center">
-                  <p className="text-sm/4 sm:text-base/4 font-medium">
-                    {item?.DonViGuiMau}
-                  </p>
+                  <Skeleton variant="rounded" width={"100%"} height={40} />
                 </Box>
               </TableCell>
               <TableCell align="center">
                 <Box className="flex gap-2 items-center justify-center">
-                  <p className="text-sm/4 sm:text-base/4 font-medium">
-                    {item?.NgayGiaoMau}
-                  </p>
+                  <Skeleton variant="rounded" width={"100%"} height={40} />
                 </Box>
               </TableCell>
               <TableCell align="center">
                 <Box className="flex gap-2 items-center justify-center">
-                  <p className="text-sm/4 sm:text-base/4 font-medium">
-                    {item?.KetQua === 1 ? " Tiếng Anh" : "Tiếng Việt"}
-                  </p>
+                  <Skeleton variant="rounded" width={"100%"} height={40} />
                 </Box>
               </TableCell>
             </TableRow>
-          ))}
+          ) : tableBody?.data?.length > 0 ? (
+            tableBody?.data?.map((item: any, index: number) => (
+              <TableRow
+                key={index}
+                sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+                hover={true}
+                className="cursor-pointer"
+                onClick={() => handleRedirecEditPage(item)}
+              >
+                <TableCell align="left">
+                  <Box className="flex gap-2 items-center justify-start">
+                    <p className="text-sm/4 sm:text-base/4 font-medium">
+                      {item?.soDkpt}
+                    </p>
+                  </Box>
+                </TableCell>
+                <TableCell align="center">
+                  <Box className="flex gap-2 items-center justify-center">
+                    <p className="text-sm/4 sm:text-base/4 font-medium">
+                      {item?.nguoiGuiMau}
+                    </p>
+                  </Box>
+                </TableCell>
+                <TableCell align="center">
+                  <Box className="flex gap-2 items-center justify-center">
+                    <p className="text-sm/4 sm:text-base/4 font-medium">
+                      {item?.donViGuiMau}
+                    </p>
+                  </Box>
+                </TableCell>
+                <TableCell align="center">
+                  <Box className="flex gap-2 items-center justify-center">
+                    <p className="text-sm/4 sm:text-base/4 font-medium">
+                      {item?.ngayGiaoMau}
+                    </p>
+                  </Box>
+                </TableCell>
+                <TableCell align="center">
+                  <Box className="flex gap-2 items-center justify-center">
+                    <p className="text-sm/4 sm:text-base/4 font-medium">
+                      {item?.ngayTao}
+                    </p>
+                  </Box>
+                </TableCell>
+              </TableRow>
+            ))
+          ) : (
+            <TableRow>
+              <TableCell align="center" colSpan={5}>
+                Không có dữ liệu
+              </TableCell>
+            </TableRow>
+          )}
         </TableBody>
       </Table>
     </TableContainer>

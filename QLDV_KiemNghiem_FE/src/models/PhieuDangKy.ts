@@ -65,6 +65,10 @@ export interface FormThemTieuChuanVaoDanhMuc {
   tenTieuChuan: string;
 }
 
+export interface FormThemTieuChuanVaoDanhMuc {
+  tenTieuChuan: string;
+}
+
 export interface FormBoLocQuanLyPhieuDKyDVHN {
   trangThai?: string;
   maKH?: string;
@@ -87,4 +91,13 @@ export interface ParamsPhieuDangKyByTrangThai {
 export interface ThoiGianTieuChuanParams {
   maDmMau?: string;
   maTieuChuan?: string;
+}
+
+export interface FormThemDanhMucPLHC {
+  maDmPlhc: string;
+  tenDmPlhc: string;
+  tenHienThi: string
+  nongDo: string;
+  donViNongDo: string;
+  dieuKienBaoQuan: string;
 }

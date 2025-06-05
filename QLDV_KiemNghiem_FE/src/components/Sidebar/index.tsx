@@ -260,7 +260,7 @@ const SideBar = (props: SideBarProps) => {
                     </div>
 
                     <p className="text-base !font-bold whitespace-normal text-start">
-                      Phiếu đăng ký dịch vụ kiểm nghiệm
+                      Phiếu đăng ký kiểm nghiệm
                     </p>
                   </button>
                 </Box>
@@ -653,7 +653,7 @@ const SideBar = (props: SideBarProps) => {
                 </div>
 
                 <p className="text-base !font-bold whitespace-normal text-start">
-                  Phiếu đăng ký dịch vụ kiểm nghiệm
+                  Phiếu đăng ký kiểm nghiệm
                 </p>
               </button>
             </Box>

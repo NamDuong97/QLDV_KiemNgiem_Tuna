@@ -1,1 +1,0 @@
-import{j as e}from"./index-TXe4bb3p.js";const i=()=>e.jsxDEV("div",{children:"Trang Dashboard"},void 0,!1,{fileName:"D:/DATN/QLDV_KiemNgiem_Tuna/QLDV_KiemNghiem_FE/src/pages/admin/dashboard/index.tsx",lineNumber:4,columnNumber:10},void 0);export{i as default};

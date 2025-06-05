@@ -1,11 +1,10 @@
-import { Box } from "@mui/material";
+import { Box, Pagination } from "@mui/material";
 import { useState } from "react";
 import TableChoXetDuyet from "./TableChoXetDuyet";
 import { Align } from "../../../../../../models/Table";
 import clsx from "clsx";
 import PopupHuyPhieu from "./PopupHuyPhieu";
-
-interface Props {}
+import { useGetPhieuDangKyKiemNghiemByTrangThaiArray } from "../../../../../../hooks/customers/usePhieuDKyDVKN";
 
 const tableHead = [
   {
@@ -33,60 +32,95 @@ const tableHead = [
     align: Align.Center,
   },
   {
-    id: "KetQua",
+    id: "NgayTao",
     sort: false,
-    label: "Kết Quả",
+    label: "Ngày Tạo",
     align: Align.Center,
   },
 ];
 
-const ChoXuLy = (props: Props) => {
-  const {} = props;
-
-  const data = localStorage.getItem("DataPhieuDangKy");
-  const dataPhieuDKy = data ? JSON.parse(data) : [];
-  const [listCheckbox, setListCheckbox] = useState<any[]>([]);
+const ChoXuLy = () => {
+  const [listCheckbox, setListCheckbox] = useState<any>({});
   const [openPopupHuyPhieu, setOpenPopupHuyPhieu] = useState(false);
 
   const handleHuyPhieu = () => {
     setOpenPopupHuyPhieu(true);
   };
 
-  // const { data: dataChoTiepNhanXuLy } = usePhieuDKyDVKNALL({
-  //   queryKey: "dataChoTiepNhanXuLy",
-  //   maKH: "KH001",
-  //   trangThaiID: maIDTrangThai,
-  // });
+  const dataChoTiepNhanXuLy = useGetPhieuDangKyKiemNghiemByTrangThaiArray({
+    queryKey: "dataChoTiepNhanXuLy",
+    maKH: "KH001",
+    trangThaiIDs: ["TT01", "TT02", "TT03", "TT04", "TT05"],
+  });
 
-  // console.log("dataChoTiepNhanXuLy", dataChoTiepNhanXuLy);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage] = useState(5);
+
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = {
+    data: dataChoTiepNhanXuLy?.data?.slice(indexOfFirstItem, indexOfLastItem),
+    isLoading: dataChoTiepNhanXuLy.isLoading,
+  };
+
+  const totalPages = Math.ceil(
+    dataChoTiepNhanXuLy?.data &&
+      dataChoTiepNhanXuLy?.data?.length / itemsPerPage
+  );
+
+  const handlePageChange = (_: any, value: number) => {
+    setCurrentPage(value);
+  };
 
   return (
     <Box className="grid gap-4">
-      <Box className="flex justify-end">
+      <Box className="flex justify-end items-center">
         <button
           onClick={handleHuyPhieu}
-          disabled={listCheckbox?.length === 0 ? true : false}
+          disabled={Object.values(listCheckbox).length > 0 ? false : true}
           className={clsx(
-            "border-[2px] border-solid bg-[#f7341e] text-white border-gray-300 rounded-md px-4 py-2 font-medium text-base/6 flex items-center gap-2 shadow-[0_4px_4px_rgba(0,0,0,0.2)] hover:shadow-none",
-            listCheckbox?.length === 0
-              ? "cursor-no-drop !bg-[#bc3628]"
-              : "cursor-pointer"
+            "border-[2px] border-solid bg-[#f7341e] text-white border-gray-300 rounded-md px-4 py-2 font-medium text-base/6 flex items-center gap-2  hover:shadow-[0_4px_4px_rgba(0,0,0,0.2)]",
+            Object.values(listCheckbox).length > 0
+              ? "cursor-pointer"
+              : "cursor-no-drop !bg-[#bc3628]"
           )}
         >
-          Hủy {listCheckbox?.length} phiếu
+          Hủy phiếu
         </button>
       </Box>
       <Box className="overflow-x-auto whitespace-nowrap border border-gray-300 rounded-md">
         <TableChoXetDuyet
           tableHead={tableHead}
-          tableBody={dataPhieuDKy}
+          tableBody={currentItems}
           setListCheckbox={setListCheckbox}
           listCheckbox={listCheckbox}
         />
       </Box>
+      {dataChoTiepNhanXuLy?.data?.length > 0 && (
+        <Box className="px-4 py-2 flex justify-center">
+          <Pagination
+            count={totalPages}
+            page={currentPage}
+            onChange={handlePageChange}
+            variant="outlined"
+            shape="rounded"
+            color="primary"
+            sx={{
+              '[aria-label="Go to next page"],[aria-label="Go to previous page"]':
+                {
+                  backgroundColor: "#1976d21f",
+                  border: "1px solid #1976d280",
+                  color: "#1976d2",
+                },
+            }}
+          />
+        </Box>
+      )}
       <PopupHuyPhieu
         open={openPopupHuyPhieu}
         handleClose={() => setOpenPopupHuyPhieu(false)}
+        listCheckbox={listCheckbox}
+        setListCheckbox={setListCheckbox}
       />
     </Box>
   );

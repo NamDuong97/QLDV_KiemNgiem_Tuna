@@ -1,8 +1,8 @@
 import { Box, Dialog } from "@mui/material";
 import { AnimatePresence, motion } from "framer-motion";
-import { IoMdClose } from "react-icons/io";
 import { useNavigate } from "react-router";
 import { APP_ROUTES } from "../../../../../constants/routers";
+import { IoMdNotifications } from "react-icons/io";
 
 interface Props {
   open: boolean;
@@ -32,38 +32,42 @@ const PopupDuyetBo = (props: Props) => {
         exit={{ y: 0, opacity: 0 }}
         transition={{ duration: 0.7 }}
       >
-        <Dialog open={open} onClose={handleClose} maxWidth="lg">
-          <Box className="!relative px-7 py-6 w-auto md:w-[785px]">
-            <Box className="!absolute top-2 right-5">
-              <button
-                className="bg-gray-400 rounded-full p-[6px] hover:bg-gray-500 cursor-pointer"
-                onClick={handleClose}
-              >
-                <IoMdClose className="w-6 h-6 text-gray-300" />
-              </button>
+        <Dialog
+          open={open}
+          onClose={handleClose}
+          maxWidth="lg"
+          sx={{
+            ".MuiPaper-root": {
+              borderRadius: 4,
+            },
+          }}
+        >
+          <Box className="grid gap-6 w-auto md:w-[550px]">
+            <Box className="py-4 pt-6 text-center">
+              <Box className="grid gap-2">
+                <div className="flex justify-center">
+                  <IoMdNotifications className="w-[70px] h-[70px]  text-yellow-400" />
+                </div>
+                <p className="text-gray-80 font-bold text-3xl/6">Thông báo</p>
+              </Box>
             </Box>
-            <Box className="grid gap-6">
-              <Box className="py-2 text-center">
-                <h1 className="font-bold text-3xl">Thông báo</h1>
-              </Box>
-              <Box className="text-center">
-                <p className="text-xl/6 font-medium text-gray-800">
-                  {handleContentByName()}
-                </p>
-              </Box>
-              <Box className="">
-                <button
-                  onClick={() =>
-                    navigate(
-                      APP_ROUTES.TUNA_ADMIN
-                        .QUAN_LY_PHIEU_DANG_KY_DICH_VU_KIEM_NGHIEM.to
-                    )
-                  }
-                  className="font-bold text-center text-white bg-[#0099f8] border-[2px] border-solid border-gray-300 px-4 py-1 lg:px-6 lg:py-2 rounded-md hover:bg-blue-500 cursor-pointer shadow-[0_4px_4px_rgba(0,0,0,0.25)] w-full"
-                >
-                  Quay lại danh sách phiếu đăng ký dịch vụ kiểm nghiệm
-                </button>
-              </Box>
+            <Box className="text-center">
+              <p className="text-xl/6 font-medium text-gray-800">
+                {handleContentByName()}
+              </p>
+            </Box>
+            <Box className="flex justify-center pb-6">
+              <button
+                onClick={() =>
+                  navigate(
+                    APP_ROUTES.TUNA_ADMIN
+                      .QUAN_LY_PHIEU_DANG_KY_DICH_VU_KIEM_NGHIEM.to
+                  )
+                }
+                className="font-bold text-center text-white bg-[#0099f8] border-[2px] border-solid border-gray-300 px-4 py-1 lg:px-6 lg:py-2 rounded-md hover:bg-blue-500 cursor-pointer hover:shadow-[0_4px_4px_rgba(0,0,0,0.25)]"
+              >
+                Quay lại danh sách phiếu đăng ký kiểm nghiệm
+              </button>
             </Box>
           </Box>
         </Dialog>
