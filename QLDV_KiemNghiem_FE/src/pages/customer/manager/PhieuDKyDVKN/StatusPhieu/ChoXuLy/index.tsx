@@ -1,13 +1,10 @@
 import { Box, Pagination } from "@mui/material";
-import { MouseEvent, useState } from "react";
+import { useState } from "react";
 import TableChoXetDuyet from "./TableChoXetDuyet";
 import { Align } from "../../../../../../models/Table";
 import clsx from "clsx";
 import PopupHuyPhieu from "./PopupHuyPhieu";
 import { useGetPhieuDangKyKiemNghiemByTrangThaiArray } from "../../../../../../hooks/customers/usePhieuDKyDVKN";
-import PopupBoloc from "./PopupBoloc";
-import { MdOutlineFilterList } from "react-icons/md";
-import HandleSnackbar from "../../../../../../components/HandleSnackbar";
 
 const tableHead = [
   {
@@ -46,27 +43,9 @@ const ChoXuLy = () => {
   const [listCheckbox, setListCheckbox] = useState<any>({});
   const [openPopupHuyPhieu, setOpenPopupHuyPhieu] = useState(false);
 
-  const [isSuccess, setIsSuccess] = useState({
-    open: false,
-    message: "",
-    status: 0,
-  });
-
   const handleHuyPhieu = () => {
     setOpenPopupHuyPhieu(true);
   };
-  const [anchorElPopupBoloc, setAnchorElPopupBoloc] =
-    useState<HTMLButtonElement | null>(null);
-
-  const handleClickPopupBoloc = (event: MouseEvent<HTMLButtonElement>) => {
-    setAnchorElPopupBoloc(event.currentTarget);
-  };
-
-  const handleClosePopupBoloc = () => {
-    setAnchorElPopupBoloc(null);
-  };
-
-  const openPopupBoloc = Boolean(anchorElPopupBoloc);
 
   const dataChoTiepNhanXuLy = useGetPhieuDangKyKiemNghiemByTrangThaiArray({
     queryKey: "dataChoTiepNhanXuLy",
@@ -95,19 +74,7 @@ const ChoXuLy = () => {
 
   return (
     <Box className="grid gap-4">
-      <Box className="flex justify-between items-center">
-        <div>
-          <button
-            onClick={handleClickPopupBoloc}
-            className="border-2 border-solid border-gray-300 rounded-md px-3 py-[6px] text-gray-700 group hover:text-sky-600 font-semibold text-xs/4 sm:text-sm/6 flex items-center gap-2 cursor-pointer  hover:shadow-[0_4px_4px_rgba(0,0,0,0.2)]"
-          >
-            <MdOutlineFilterList />
-            Bộ Lọc
-            <span className="sm:px-[4px] sm:py-[3px] w-6 h-6 text-gray-800 bg-gray-200 group-hover:text-sky-600 rounded-full text-xs/4 flex items-center justify-center">
-              0
-            </span>
-          </button>
-        </div>
+      <Box className="flex justify-end items-center">
         <button
           onClick={handleHuyPhieu}
           disabled={Object.values(listCheckbox).length > 0 ? false : true}
@@ -153,10 +120,8 @@ const ChoXuLy = () => {
         open={openPopupHuyPhieu}
         handleClose={() => setOpenPopupHuyPhieu(false)}
         listCheckbox={listCheckbox}
-        setIsSuccess={setIsSuccess}
+        setListCheckbox={setListCheckbox}
       />
-      <PopupBoloc open={openPopupBoloc} handleClose={handleClosePopupBoloc} />
-      <HandleSnackbar isSuccess={isSuccess} setIsSuccess={setIsSuccess} />
     </Box>
   );
 };

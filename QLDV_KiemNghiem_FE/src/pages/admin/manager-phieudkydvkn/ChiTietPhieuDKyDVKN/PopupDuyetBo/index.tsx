@@ -1,8 +1,8 @@
 import { Box, Dialog } from "@mui/material";
 import { AnimatePresence, motion } from "framer-motion";
-import { IoMdClose } from "react-icons/io";
 import { useNavigate } from "react-router";
 import { APP_ROUTES } from "../../../../../constants/routers";
+import { IoMdNotifications } from "react-icons/io";
 
 interface Props {
   open: boolean;
@@ -32,18 +32,24 @@ const PopupDuyetBo = (props: Props) => {
         exit={{ y: 0, opacity: 0 }}
         transition={{ duration: 0.7 }}
       >
-        <Dialog open={open} onClose={handleClose} maxWidth="lg">
-          <Box className="grid gap-10 w-auto md:w-[600px]">
-            <Box className="py-4 px-6 flex items-center border-b border-gray-300">
-              <div className="flex-1 ml-10 text-center">
-                <h1 className="font-bold text-3xl/6">Thông báo</h1>
-              </div>
-              <button
-                className="bg-gray-400 rounded-full p-[6px] hover:bg-gray-500 cursor-pointer"
-                onClick={handleClose}
-              >
-                <IoMdClose className="w-5 h-5 text-gray-300" />
-              </button>
+        <Dialog
+          open={open}
+          onClose={handleClose}
+          maxWidth="lg"
+          sx={{
+            ".MuiPaper-root": {
+              borderRadius: 4,
+            },
+          }}
+        >
+          <Box className="grid gap-6 w-auto md:w-[550px]">
+            <Box className="py-4 pt-6 text-center">
+              <Box className="grid gap-2">
+                <div className="flex justify-center">
+                  <IoMdNotifications className="w-[70px] h-[70px]  text-yellow-400" />
+                </div>
+                <p className="text-gray-80 font-bold text-3xl/6">Thông báo</p>
+              </Box>
             </Box>
             <Box className="text-center">
               <p className="text-xl/6 font-medium text-gray-800">

@@ -2,7 +2,7 @@ import { Box, Dialog } from "@mui/material";
 import { IoMdClose } from "react-icons/io";
 import { FormThemMauVaoDanhMuc } from "../../../../../../../../../models/PhieuDangKy";
 import { useForm } from "react-hook-form";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo } from "react";
 import yup from "../../../../../../../../../configs/yup.custom";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Inputs } from "../../../../../../../../../components/Inputs";
@@ -13,7 +13,7 @@ import {
 } from "../../../../../../../../../hooks/customers/usePhieuDKyDVKN";
 import { useQueryClient } from "@tanstack/react-query";
 import { GiTestTubes } from "react-icons/gi";
-import HandleSnackbar from "../../../../../../../../../components/HandleSnackbar";
+import { useStoreNotification } from "../../../../../../../../../configs/stores/useStoreNotification";
 
 interface Props {
   open: boolean;
@@ -22,11 +22,9 @@ interface Props {
 
 const PopupThemMau = (props: Props) => {
   const { open, handleClose } = props;
-  const [isSuccess, setIsSuccess] = useState({
-    open: false,
-    message: "",
-    status: 0,
-  });
+  const showNotification = useStoreNotification(
+    (state) => state.showNotification
+  );
   const queryClient = useQueryClient();
   const dataDmMauAll: any = queryClient.getQueryData(["DmMauAll"]);
 
@@ -81,7 +79,7 @@ const PopupThemMau = (props: Props) => {
     queryKey: "CreateDmMau",
     onSuccess: (response) => {
       if (response.status === 200) {
-        setIsSuccess({ open: true, message: "Thêm thành công", status: 200 });
+        showNotification({ message: "Thêm thành công", status: 200 });
         reset({
           tenMau: "",
           maID: "",
@@ -90,14 +88,13 @@ const PopupThemMau = (props: Props) => {
     },
     onError: (errors) => {
       if (errors) {
-        setIsSuccess({ open: true, message: "Thêm thất bại", status: 400 });
+        showNotification({ message: "Thêm thất bại", status: 400 });
       }
     },
     onSettled: handleOnSettled,
   });
 
   const handleClosePopup = () => {
-    setIsSuccess({ open: false, message: "", status: 0 });
     handleClose?.();
     reset({
       tenMau: "",
@@ -180,7 +177,6 @@ const PopupThemMau = (props: Props) => {
           </Box>
         </form>
       </Box>
-      <HandleSnackbar isSuccess={isSuccess} setIsSuccess={setIsSuccess} />
     </Dialog>
   );
 };

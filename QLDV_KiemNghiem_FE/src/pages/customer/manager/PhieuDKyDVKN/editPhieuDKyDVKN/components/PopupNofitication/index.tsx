@@ -1,28 +1,22 @@
 import { Box, Dialog } from "@mui/material";
 import { AnimatePresence, motion } from "framer-motion";
-import { useNavigate } from "react-router";
-import { APP_ROUTES } from "../../../../../../../constants/routers";
 import { useQueryClient } from "@tanstack/react-query";
 import { useUpdatePhieuDangKy } from "../../../../../../../hooks/customers/usePhieuDKyDVKN";
 import { IoMdNotifications } from "react-icons/io";
+import { useStoreNotification } from "../../../../../../../configs/stores/useStoreNotification";
 
 interface Props {
   openPopupNofitication: boolean;
   handleClosePopupNofitication?: () => void;
-  setIsSuccess: React.Dispatch<
-    React.SetStateAction<{
-      open: boolean;
-      message: string;
-      status: number;
-    }>
-  >;
 }
 
 const PopupNofitication = (props: Props) => {
-  const { openPopupNofitication, handleClosePopupNofitication, setIsSuccess } =
-    props;
+  const { openPopupNofitication, handleClosePopupNofitication } = props;
 
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
+  const showNotification = useStoreNotification(
+    (state) => state.showNotification
+  );
 
   const handleCloseNofitication = () => {
     handleClosePopupNofitication?.();
@@ -42,8 +36,7 @@ const PopupNofitication = (props: Props) => {
     onSettled: handleOnSettled,
     onSuccess: (response) => {
       if (response.status === 200) {
-        setIsSuccess({
-          open: true,
+        showNotification({
           message: "Cập nhật thành công",
           status: 200,
         });
@@ -51,7 +44,7 @@ const PopupNofitication = (props: Props) => {
     },
     onError: (errors) => {
       if (errors) {
-        setIsSuccess({ open: true, message: "Cập nhật thất bại", status: 400 });
+        showNotification({ message: "Cập nhật thất bại", status: 400 });
       }
     },
   });

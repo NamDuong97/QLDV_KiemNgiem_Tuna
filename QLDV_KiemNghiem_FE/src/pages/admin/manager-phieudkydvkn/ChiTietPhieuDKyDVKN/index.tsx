@@ -19,7 +19,7 @@ const ChiTietPhieuDKyDVKN = () => {
   const NameID = useLocation().pathname.split("/")[3];
   const [isTag, setIsTag] = useState(1);
   const userName = "Phòng Kế Hoạch và Đầu Tư"; // "Phòng Kế Hoạch và Đầu Tư" || "Ban lãnh đạo"
-  const statusPhieuDKyDVKN = "Chờ tiếp nhận xử lý"; // "Chờ tiếp nhận xử lý" || "Chờ BLĐ xét duyệt"
+  const statusPhieuDKyDVKN = "Chờ BLĐ xét duyệt"; // "Chờ tiếp nhận xử lý" || "Chờ BLĐ xét duyệt"
 
   const [openPopupHuyPhieu, setOpenPopupHuyPhieu] = useState(false);
   const [openPopupDuyetBo, setOpenPopupDuyetBo] = useState(false);

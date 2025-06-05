@@ -1,8 +1,7 @@
 import { Box, Dialog } from "@mui/material";
-import { IoMdClose } from "react-icons/io";
 import { FormThemMauVaoDanhMuc } from "../../../../../../../models/PhieuDangKy";
 import { useForm } from "react-hook-form";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo } from "react";
 import yup from "../../../../../../../configs/yup.custom";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Inputs } from "../../../../../../../components/Inputs";
@@ -13,7 +12,7 @@ import {
 } from "../../../../../../../hooks/customers/usePhieuDKyDVKN";
 import { useQueryClient } from "@tanstack/react-query";
 import { GiTestTubes } from "react-icons/gi";
-import HandleSnackbar from "../../../../../../../components/HandleSnackbar";
+import { useStoreNotification } from "../../../../../../../configs/stores/useStoreNotification";
 
 interface Props {
   open: boolean;
@@ -22,11 +21,9 @@ interface Props {
 
 const PopupThemMau = (props: Props) => {
   const { open, handleClose } = props;
-  const [isSuccess, setIsSuccess] = useState({
-    open: false,
-    message: "",
-    status: 0,
-  });
+  const showNotification = useStoreNotification(
+    (state) => state.showNotification
+  );
   const queryClient = useQueryClient();
   const dataDmMauAll: any = queryClient.getQueryData(["DmMauAll"]);
 
@@ -40,7 +37,7 @@ const PopupThemMau = (props: Props) => {
           if (!value) return true;
           const trimmedValue = value.trim().toLowerCase();
 
-          const isTrungLap = dataDmMauAll.find(
+          const isTrungLap = dataDmMauAll?.find(
             (item: any) => item.tenMau?.trim().toLowerCase() === trimmedValue
           );
 
@@ -80,9 +77,8 @@ const PopupThemMau = (props: Props) => {
   const { mutate } = useCreateDmMau({
     queryKey: "CreateDmMau",
     onSuccess: (response) => {
-      console.log("response", response);
       if (response.status === 200) {
-        setIsSuccess({ open: true, message: "Thêm thành công", status: 200 });
+        showNotification({ message: "Thêm thành công", status: 200 });
         reset({
           tenMau: "",
           maID: "",
@@ -91,14 +87,13 @@ const PopupThemMau = (props: Props) => {
     },
     onError: (errors) => {
       if (errors) {
-        setIsSuccess({ open: true, message: "Thêm thất bại", status: 400 });
+        showNotification({ message: "Thêm thất bại", status: 400 });
       }
     },
     onSettled: handleOnSettled,
   });
 
   const handleClosePopup = () => {
-    setIsSuccess({ open: false, message: "", status: 0 });
     handleClose?.();
     reset({
       tenMau: "",
@@ -133,19 +128,17 @@ const PopupThemMau = (props: Props) => {
         },
       }}
     >
-      <Box className="lg:w-[400px]">
-        <Box className="px-4 py-4 border-b border-solid border-gray-300 flex justify-between items-center">
-          <Box className="text-center flex-1 pl-[34px]">
-            <p className="text-gray-80 font-bold text-2xl/6 flex gap-2 justify-center">
-              Thêm Mẫu <GiTestTubes className="w-6 h-6 text-cyan-700" />
+      <Box className="w-auto sm:w-[600px]">
+        <Box className="px-4 pt-8 text-center">
+          <Box className="grid gap-2">
+            <Box className="flex justify-center">
+              <GiTestTubes className="w-10 h-10 sm:w-[70px] sm:h-[70px] text-cyan-700" />
+            </Box>
+
+            <p className="text-gray-80 font-bold text-xl/4 sm:text-[28px]/6">
+              Thêm Mẫu
             </p>
           </Box>
-          <button
-            onClick={handleClosePopup}
-            className="p-1 rounded-full group hover:bg-blue-200"
-          >
-            <IoMdClose className="text-gray-500 group-hover:text-blue-800" />
-          </button>
         </Box>
         <form
           onSubmit={handleSubmit(handleThem)}
@@ -174,14 +167,20 @@ const PopupThemMau = (props: Props) => {
               placeholder="Yêu cầu chọn Loại Mẫu"
             />
           </Box>
-          <Box>
-            <button className="w-full flex justify-center border border-solid border-blue-500 rounded-md px-3 py-[6px] text-blue-500 font-bold text-base/6 gap-2 cursor-pointer hover:bg-blue-500 hover:text-white">
+          <Box className="flex gap-6 justify-center">
+            <button
+              type="button"
+              onClick={handleClosePopup}
+              className="flex justify-center border border-solid border-indigo-600 rounded-md px-12 py-[6px] text-indigo-600 font-bold text-base/6 gap-2 cursor-pointer hover:bg-indigo-600 hover:text-white"
+            >
+              Tắt
+            </button>
+            <button className="flex justify-center border border-solid border-cyan-700 rounded-md px-10 py-[6px] text-cyan-700 font-bold text-base/6 gap-2 cursor-pointer hover:bg-cyan-700 hover:text-white">
               Thêm
             </button>
           </Box>
         </form>
       </Box>
-      <HandleSnackbar isSuccess={isSuccess} setIsSuccess={setIsSuccess} />
     </Dialog>
   );
 };

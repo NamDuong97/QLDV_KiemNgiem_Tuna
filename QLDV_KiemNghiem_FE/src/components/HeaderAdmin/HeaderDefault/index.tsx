@@ -11,6 +11,8 @@ import { APP_ROUTES } from "../../../constants/routers";
 import { useNavigate } from "react-router";
 import PopoverAccountAdmin from "./PopoverAccountAdmin";
 import NotificationsPopover from "../../Popup/NotificationsPopover/index";
+import PopupThongBaoPhieuDKDVKN from "../../../pages/admin/PopupThongBaoPhieuDKDVKN";
+import { MdMarkunreadMailbox } from "react-icons/md";
 
 interface HeaderProps {
   isMenuDashBoard: boolean;
@@ -106,6 +108,8 @@ export default function HeaderDefault(props: HeaderProps) {
   const openNotificationsPopover = Boolean(anchorElNotificationsPopover);
   const theme = useTheme();
   const isLaptop = useMediaQuery(theme.breakpoints.up("lg"));
+  const [openPopupThongBaoPhieuDKDVKN, setOpenPopupThongBaoPhieuDKDVKN] =
+    useState(false);
 
   const navigate = useNavigate();
 
@@ -137,11 +141,17 @@ export default function HeaderDefault(props: HeaderProps) {
     navigate(APP_ROUTES.TUNA_ADMIN.DASHBOARD.to);
   };
 
+  const handleOpenPopupThongBaoPhieuDKDVKN = () => {
+    setOpenPopupThongBaoPhieuDKDVKN(true);
+  };
+
+  const handleClosePopupThongBaoPhieuDKDVKN = () => {
+    setOpenPopupThongBaoPhieuDKDVKN(false);
+  };
+
   return (
     <header className="w-full !fixed z-99">
-      <div
-        className="bg-white px-[18px] flex py-2 w-full border-b border-solid border-gray-300"
-      >
+      <div className="bg-white px-[18px] flex py-2 w-full border-b border-solid border-gray-300">
         <Box className="flex-1 flex items-center gap-1">
           {isLaptop ? (
             <Tooltip
@@ -203,6 +213,35 @@ export default function HeaderDefault(props: HeaderProps) {
         <Box className="gap-4 flex items-center">
           <Box>
             <Tooltip
+              title="Thông Báo Phiếu Đăng Ký Kiểm Nghiệm"
+              placement="top"
+              slotProps={{
+                popper: {
+                  modifiers: [
+                    {
+                      name: "offset",
+                      options: {
+                        offset: [0, -10],
+                      },
+                    },
+                  ],
+                },
+              }}
+              disableInteractive
+            >
+              <Box>
+                <IconButton
+                  className="!relative"
+                  onClick={handleOpenPopupThongBaoPhieuDKDVKN}
+                >
+                  <MdMarkunreadMailbox className="text-gray-700" />
+                  <span className="text-xs text-red-500 !absolute right-[-2px] top-[2px]">10</span>
+                </IconButton>
+              </Box>
+            </Tooltip>
+          </Box>
+          <Box>
+            <Tooltip
               title="Thông Báo"
               placement="top"
               slotProps={{
@@ -219,17 +258,18 @@ export default function HeaderDefault(props: HeaderProps) {
               }}
               disableInteractive
             >
-              <IconButton onClick={handleClickNotificationsPopover}>
-                <StyledBadge
-                  overlap="circular"
-                  anchorOrigin={{ vertical: "top", horizontal: "right" }}
-                  variant="dot"
-                >
-                  <NotificationsActiveIcon className="text-gray-700" />
-                </StyledBadge>
-              </IconButton>
+              <Box>
+                <IconButton onClick={handleClickNotificationsPopover}>
+                  <StyledBadge
+                    overlap="circular"
+                    anchorOrigin={{ vertical: "top", horizontal: "right" }}
+                    variant="dot"
+                  >
+                    <NotificationsActiveIcon className="text-gray-700" />
+                  </StyledBadge>
+                </IconButton>
+              </Box>
             </Tooltip>
-
             <NotificationsPopover
               dataMessages={dataMessages}
               openNotifications={openNotificationsPopover}
@@ -271,6 +311,11 @@ export default function HeaderDefault(props: HeaderProps) {
           </Box>
         </Box>
       </div>
+
+      <PopupThongBaoPhieuDKDVKN
+        open={openPopupThongBaoPhieuDKDVKN}
+        handleClose={handleClosePopupThongBaoPhieuDKDVKN}
+      />
     </header>
   );
 }

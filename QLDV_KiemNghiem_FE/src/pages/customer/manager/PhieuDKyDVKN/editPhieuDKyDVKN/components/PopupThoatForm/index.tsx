@@ -1,6 +1,5 @@
 import { Box, Dialog } from "@mui/material";
 import { AnimatePresence, motion } from "framer-motion";
-import { IoMdClose } from "react-icons/io";
 import { useNavigate } from "react-router";
 import { IoWarningOutline } from "react-icons/io5";
 import { APP_ROUTES } from "../../../../../../../constants/routers";
@@ -27,16 +26,13 @@ const PopupThoatForm = (props: Props) => {
       onClose={handleClose}
       aria-labelledby="alert-dialog-title"
       aria-describedby="alert-dialog-description"
+      sx={{
+        ".MuiPaper-root": {
+          borderRadius: 3,
+        },
+      }}
     >
-      <Box className="!relative px-7 py-6 w-auto md:w-[785px] bg-[#F2F2F2]">
-        <Box className="!absolute top-2 right-5">
-          <button
-            className="bg-[#9E9E9E] rounded-full p-[6px] hover:bg-[#616161] cursor-pointer"
-            onClick={handleClose}
-          >
-            <IoMdClose className="w-5 h-5 text-gray-300" />
-          </button>
-        </Box>
+      <Box className="px-7 py-6 w-auto md:w-[500px] bg-[#F2F2F2]">
         <AnimatePresence mode="wait">
           <motion.div
             key="signup"
@@ -47,7 +43,7 @@ const PopupThoatForm = (props: Props) => {
           >
             <Box className="grid gap-6">
               <Box className="py-2 flex justify-center">
-                <IoWarningOutline className="w-12 h-12 text-[#FFAB40]" />
+                <IoWarningOutline className="w-16 h-16 text-[#FFAB40]" />
               </Box>
               <Box className="grid gap-1">
                 <p className="text-lg/6 font-medium text-center text-[#424242]">

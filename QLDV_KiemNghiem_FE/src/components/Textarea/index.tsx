@@ -62,7 +62,7 @@ export const Textarea = (props: InputsProps) => {
         value={value}
         className={clsx(
           className,
-          "border border-solid border-gray-300 rounded text-lg/6 px-[14px] py-[9.5px]"
+          "border border-solid border-gray-300 rounded text-lg/6 px-[14px] py-[9.5px] focus-within:outline-1  focus-within:border  focus-within:border-blue-300"
         )}
         {...inputRef}
         readOnly={readOnly}

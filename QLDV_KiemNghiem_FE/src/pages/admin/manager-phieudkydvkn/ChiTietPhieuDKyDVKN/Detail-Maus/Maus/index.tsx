@@ -2,7 +2,7 @@ import { Box, Pagination } from "@mui/material";
 import { motion } from "motion/react";
 import { useState } from "react";
 import TableImages from "./TableImages";
-import { useGetLoaiDichVuAll, useGetTieuChuanAll } from "../../../../../../hooks/customers/usePhieuDKyDVKN";
+// import { useGetLoaiDichVuAll, useGetTieuChuanAll } from "../../../../../../hooks/customers/usePhieuDKyDVKN";
 import { Inputs } from "../../../../../../components/Inputs";
 import { Align } from "../../../../../../models/Table";
 import { Textarea } from "../../../../../../components/Textarea";
@@ -26,8 +26,8 @@ const Maus = (props: MausProps) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(1);
 
-  const indexOfLastItem = currentPage * itemsPerPage;
-  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  // const indexOfLastItem = currentPage * itemsPerPage;
+  // const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   // const currentItems = dataMau.slice(indexOfFirstItem, indexOfLastItem);
 
   const totalPages = Math.ceil(dataMau && dataMau.length / itemsPerPage);
@@ -36,14 +36,14 @@ const Maus = (props: MausProps) => {
     setCurrentPage(value);
   };
 
-  const { data: dataTC } = useGetTieuChuanAll({
-    queryKey: "GetTieuChuanAll",
-  });
-  const { data: dataLDV } = useGetLoaiDichVuAll({
-    queryKey: "GetLoaiDichVuAll",
-  });
-  const dataTieuChuan: any = dataTC;
-  const dataLoaiDV: any = dataLDV;
+  // const { data: dataTC } = useGetTieuChuanAll({
+  //   queryKey: "GetTieuChuanAll",
+  // });
+  // const { data: dataLDV } = useGetLoaiDichVuAll({
+  //   queryKey: "GetLoaiDichVuAll",
+  // });
+  // const dataTieuChuan: any = dataTC;
+  // const dataLoaiDV: any = dataLDV;
 
   return (
     <motion.div
@@ -52,7 +52,7 @@ const Maus = (props: MausProps) => {
       animate={{ x: 0, opacity: 1 }}
       exit={{ x: 0, opacity: 0 }}
       transition={{ duration: 0.7 }}
-      className="border border-gray-300 rounded-br-[6px] rounded-bl-[6px] p-4 sm:p-10 grid gap-4"
+      className="p-4 sm:p-10 grid gap-4"
     >
       {/* {currentItems.map((item: any) => ( */}
         <Box 
@@ -155,7 +155,7 @@ const Maus = (props: MausProps) => {
             </Box>
             <Box className="col-span-12 md:col-span-6 lg:col-span-4">
               <Inputs
-                title="Thời gian mong muốn hoàn thành(Thời gian dự kiến)"
+                title="Thời gian hoàn thành"
                 name="thoiGianTieuChuan"
                 className="h-[42px]"
                 sx={{

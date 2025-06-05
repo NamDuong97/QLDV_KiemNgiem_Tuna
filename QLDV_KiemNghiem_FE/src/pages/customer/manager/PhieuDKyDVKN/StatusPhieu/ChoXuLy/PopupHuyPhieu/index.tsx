@@ -2,23 +2,22 @@ import { Box, Dialog } from "@mui/material";
 import { useQueryClient } from "@tanstack/react-query";
 import { motion } from "framer-motion";
 import { useHuyPhieuDangKy } from "../../../../../../../hooks/customers/usePhieuDKyDVKN";
+import { IoMdNotifications } from "react-icons/io";
+import { Dispatch } from "react";
+import { useStoreNotification } from "../../../../../../../configs/stores/useStoreNotification";
 
 interface Props {
   open: boolean;
   handleClose?: () => void;
   listCheckbox?: any;
-  setIsSuccess: React.Dispatch<
-    React.SetStateAction<{
-      open: boolean;
-      message: string;
-      status: number;
-    }>
-  >;
+  setListCheckbox: Dispatch<any>;
 }
 
 const PopupHuyPhieu = (props: Props) => {
-  const { open, handleClose, listCheckbox, setIsSuccess } = props;
-
+  const { open, handleClose, listCheckbox, setListCheckbox } = props;
+  const showNotification = useStoreNotification(
+    (state) => state.showNotification
+  );
   const queryClient = useQueryClient();
   const handleOnSettled = async () => {
     await queryClient.invalidateQueries({
@@ -33,8 +32,7 @@ const PopupHuyPhieu = (props: Props) => {
     onSettled: handleOnSettled,
     onSuccess: (response) => {
       if (response.status === 200) {
-        setIsSuccess({
-          open: true,
+        showNotification({
           message: "Hủy thành công",
           status: 200,
         });
@@ -42,13 +40,14 @@ const PopupHuyPhieu = (props: Props) => {
     },
     onError: (errors) => {
       if (errors) {
-        setIsSuccess({ open: true, message: "Hủy thất bại", status: 400 });
+        showNotification({ message: "Hủy thất bại", status: 400 });
       }
     },
   });
 
   const handleHuyPhieu = () => {
     mutate(listCheckbox?.maId);
+    setListCheckbox({});
     handleClose?.();
   };
 
@@ -71,9 +70,12 @@ const PopupHuyPhieu = (props: Props) => {
         transition={{ duration: 0.7 }}
       >
         <Box className="w-auto md:w-[500px]">
-          <Box className="grid gap-6">
-            <Box className="px-5 py-3 text-center border-b border-gray-300 flex justify-between">
-              <h1 className="ml-10 flex-1 font-bold text-2xl">Thông báo hủy</h1>
+          <Box className="grid gap-4">
+            <Box className="px-5 pt-3 text-center grid gap-2">
+              <div className="flex justify-center">
+                <IoMdNotifications className="w-[70px] h-[70px] text-yellow-300" />
+              </div>
+              <h1 className="flex-1 font-bold text-3xl">Thông báo</h1>
             </Box>
             <Box className="px-5 pb-6 gap-6 grid">
               <Box className="text-center">

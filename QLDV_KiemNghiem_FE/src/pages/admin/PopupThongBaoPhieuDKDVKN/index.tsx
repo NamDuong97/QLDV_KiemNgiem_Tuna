@@ -1,4 +1,4 @@
-import { Box, Dialog } from "@mui/material";
+import { Box, Dialog, Pagination } from "@mui/material";
 import { AnimatePresence, motion } from "framer-motion";
 import { IoMdClose } from "react-icons/io";
 import { useNavigate } from "react-router";
@@ -9,6 +9,7 @@ import DetailMaus from "../manager-phieudkydvkn/ChiTietPhieuDKyDVKN/Detail-Maus"
 import DetailPLHCs from "../manager-phieudkydvkn/ChiTietPhieuDKyDVKN/Detail-PLHC";
 import { Align } from "../../../models/Table";
 import TablePhieuDKDVKN from "./TablePhieuDKDVKN";
+import { IoMdNotifications } from "react-icons/io";
 
 interface Props {
   open: boolean;
@@ -56,6 +57,55 @@ const tableBody = [
     NgayGiaoMau: "25/04/2025",
     KetQua: 1,
   },
+  {
+    SoDKPT: "KD02546",
+    NguoiGuiMau: "Nguyễn Văn A",
+    DonViGuiMau: "Công ty ABC",
+    NgayGiaoMau: "25/04/2025",
+    KetQua: 1,
+  },
+  {
+    SoDKPT: "KD02546",
+    NguoiGuiMau: "Nguyễn Văn A",
+    DonViGuiMau: "Công ty ABC",
+    NgayGiaoMau: "25/04/2025",
+    KetQua: 1,
+  },
+  {
+    SoDKPT: "KD02546",
+    NguoiGuiMau: "Nguyễn Văn A",
+    DonViGuiMau: "Công ty ABC",
+    NgayGiaoMau: "25/04/2025",
+    KetQua: 1,
+  },
+  {
+    SoDKPT: "KD02546",
+    NguoiGuiMau: "Nguyễn Văn A",
+    DonViGuiMau: "Công ty ABC",
+    NgayGiaoMau: "25/04/2025",
+    KetQua: 1,
+  },
+  {
+    SoDKPT: "KD02546",
+    NguoiGuiMau: "Nguyễn Văn A",
+    DonViGuiMau: "Công ty ABC",
+    NgayGiaoMau: "25/04/2025",
+    KetQua: 1,
+  },
+  {
+    SoDKPT: "KD02546",
+    NguoiGuiMau: "Nguyễn Văn A",
+    DonViGuiMau: "Công ty ABC",
+    NgayGiaoMau: "25/04/2025",
+    KetQua: 1,
+  },
+  {
+    SoDKPT: "KD02546",
+    NguoiGuiMau: "Nguyễn Văn A",
+    DonViGuiMau: "Công ty ABC",
+    NgayGiaoMau: "25/04/2025",
+    KetQua: 1,
+  },
 ];
 
 const PopupThongBaoPhieuDKDVKN = (props: Props) => {
@@ -66,6 +116,22 @@ const PopupThongBaoPhieuDKDVKN = (props: Props) => {
   const [isTag, setIsTag] = useState(1);
   const [isListData, setIsListData] = useState(false);
   const data: number = 5;
+
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage] = useState(3);
+
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = {
+    data: tableBody?.slice(indexOfFirstItem, indexOfLastItem),
+    isLoading: true,
+  };
+
+  const totalPages = Math.ceil(tableBody && tableBody?.length / itemsPerPage);
+
+  const handlePageChange = (_: any, value: number) => {
+    setCurrentPage(value);
+  };
 
   const handleTag = () => {
     switch (isTag) {
@@ -309,16 +375,43 @@ const PopupThongBaoPhieuDKDVKN = (props: Props) => {
     switch (isListData) {
       case false: {
         return (
-          <div className="grid gap-2 px-7 pt-6 overflow-y-auto whitespace-nowrap h-[500px]">
-            {handleTag()}
-            {handleShowByTag()}
+          <div className="grid gap-2">
+            <div className="shadow-[0_4px_4px_rgba(0,0,0,0.25)] px-7 pb-2">
+              {handleTag()}
+            </div>
+            <div className=" overflow-y-auto whitespace-nowrap h-[500px] px-7 py-4">
+              {handleShowByTag()}
+            </div>
           </div>
         );
       }
       case true: {
         return (
-          <div className="grid gap-2 px-7 py-7">
-            <TablePhieuDKDVKN tableBody={tableBody} tableHead={tableHead} />
+          <div className="grid gap-2 px-7 pt-7">
+            <TablePhieuDKDVKN
+              tableBody={currentItems?.data}
+              tableHead={tableHead}
+            />
+            {tableBody?.length > 0 && (
+              <Box className="px-4 py-2 flex justify-center">
+                <Pagination
+                  count={totalPages}
+                  page={currentPage}
+                  onChange={handlePageChange}
+                  variant="outlined"
+                  shape="rounded"
+                  color="primary"
+                  sx={{
+                    '[aria-label="Go to next page"],[aria-label="Go to previous page"]':
+                      {
+                        backgroundColor: "#1976d21f",
+                        border: "1px solid #1976d280",
+                        color: "#1976d2",
+                      },
+                  }}
+                />
+              </Box>
+            )}
           </div>
         );
       }
@@ -341,18 +434,25 @@ const PopupThongBaoPhieuDKDVKN = (props: Props) => {
         transition={{ duration: 0.7 }}
       >
         <Dialog open={open} onClose={handleClose} maxWidth="lg">
-          <Box className="w-auto md:w-[1024px]">
-            <Box className="py-3 text-center flex border-b border-solid border-gray-300 px-7">
-              <h1 className="ml-12 font-bold text-3xl flex-1">Thông báo</h1>
-              <button
-                className="bg-gray-400 rounded-full p-[6px] hover:bg-gray-500 cursor-pointer"
-                onClick={handleClose}
-              >
-                <IoMdClose className="w-6 h-6 text-gray-300" />
-              </button>
+          <Box className="w-auto md:w-[1200px] !relative">
+            <button
+              onClick={handleClose}
+              className="flex justify-center !absolute top-2 right-2 p-1 bg-gray-300 rounded-full group hover:bg-gray-500 cursor-pointer"
+            >
+              <IoMdClose className="w-6 h-6 text-gray-800 group-hover:text-white" />
+            </button>
+            <Box className="px-5 pt-3 text-center grid gap-2">
+              <div className="flex justify-center">
+                <IoMdNotifications className="w-[70px] h-[70px] text-yellow-300" />
+              </div>
+              <h1 className="flex-1 font-bold text-3xl">Thông báo</h1>
             </Box>
             {handleData()}
-            <Box className="px-7 py-6 flex justify-center gap-6 shadow-[0_0_4px_rgba(0,0,0,0.25)]">
+            <Box
+              className={`px-7 pb-6 pt-4 flex justify-center gap-6 ${
+                !isListData && "shadow-[0_0_4px_rgba(0,0,0,0.25)]"
+              } `}
+            >
               <button
                 onClick={() => {
                   handleClose?.();

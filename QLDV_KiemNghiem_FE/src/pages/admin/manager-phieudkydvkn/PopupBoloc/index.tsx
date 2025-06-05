@@ -1,5 +1,4 @@
 import { Box, Dialog } from "@mui/material";
-import { IoMdClose } from "react-icons/io";
 // import { FormBoLocPhieuDangKyChoXetDuyet } from "../../../../../../../models/PhieuDangKy";
 // import { useForm } from "react-hook-form";
 // import { useEffect, useMemo } from "react";
@@ -12,6 +11,7 @@ import { FormBoLocQuanLyPhieuDKyDVHN } from "../../../../models/PhieuDangKy";
 import { Inputs } from "../../../../components/Inputs";
 import InputSelectTrangThai from "./InputSelectTrangThai";
 import InputSelectMaKH from "./InputSelectMaKH";
+import { IoColorFilterSharp } from "react-icons/io5";
 
 interface Props {
   open: boolean;
@@ -100,23 +100,26 @@ const PopupBoloc = (props: Props) => {
   }, []);
 
   return (
-    <Dialog open={open} maxWidth="lg" onClose={handleClose}>
-      <Box className="w-[800px]">
-        <Box className="px-4 py-2 border-b border-solid border-gray-300 flex justify-between items-center">
-          <Box className="text-center flex-1 pl-[34px]">
+    <Dialog
+      open={open}
+      maxWidth="lg"
+      onClose={handleClose}
+      sx={{
+        ".MuiPaper-root": {
+          borderRadius: 4,
+        },
+      }}
+    >
+      <Box className="w-[650px]">
+        <Box className="px-4 pb-2 pt-6 text-center">
+          <Box className="grid gap-2">
+            <div className="flex justify-center">
+              <IoColorFilterSharp className="w-[70px] h-[70px]  text-sky-500" />
+            </div>
             <p className="text-gray-80 font-bold text-2xl/6">Bộ Lọc</p>
           </Box>
-          <button
-            onClick={handleClose}
-            className="p-1 rounded-full group hover:bg-blue-200"
-          >
-            <IoMdClose className="text-gray-500 group-hover:text-blue-800" />
-          </button>
         </Box>
-        <form
-          onSubmit={handleSubmit(handleLoc)}
-          className="px-4 py-5 grid gap-6"
-        >
+        <form onSubmit={handleSubmit(handleLoc)} className="px-8 py-5">
           <Box className="grid gap-6 grid-cols-12">
             <Box className="col-span-6">
               <InputSelectTrangThai
@@ -164,8 +167,15 @@ const PopupBoloc = (props: Props) => {
               />
             </Box>
           </Box>
-          <Box>
-            <button className="w-full flex justify-center border-[2px] border-solid border-gray-300 bg-blue-500 rounded-md px-3 py-[6px] text-white font-bold text-base/6 gap-2 cursor-pointer shadow-[0_4px_4px_rgba(0,0,0,0.25)] hover:bg-blue-600 hover:shadow-none">
+          <Box className="flex justify-center gap-6">
+            <button
+              type="button"
+              onClick={handleClose}
+              className="flex justify-center border-[2px] border-solid border-gray-300 bg-yellow-500 rounded-md px-12 py-[6px] text-white font-bold text-base/6 gap-2 cursor-pointer hover:shadow-[0_4px_4px_rgba(0,0,0,0.25)] hover:bg-yellow-400"
+            >
+              Tắt
+            </button>
+            <button className="flex justify-center border-[2px] border-solid border-gray-300 bg-cyan-700 rounded-md px-12 py-[6px] text-white font-bold text-base/6 gap-2 cursor-pointer  hover:shadow-[0_4px_4px_rgba(0,0,0,0.25)] hover:bg-cyan-600">
               Lọc
             </button>
           </Box>

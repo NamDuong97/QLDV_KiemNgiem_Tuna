@@ -15,9 +15,7 @@ import { CgMenuGridO } from "react-icons/cg";
 import { AnimatePresence, motion } from "framer-motion";
 import { IoIosCloseCircle } from "react-icons/io";
 import NotificationsPopover from "../Popup/NotificationsPopover";
-import { FaRegNewspaper } from "react-icons/fa6";
-import { IoBookOutline } from "react-icons/io5";
-import { IoHome } from "react-icons/io5";
+import clsx from "clsx";
 
 interface HeaderProps {}
 
@@ -155,7 +153,22 @@ export default function HeaderCustomer(props: HeaderProps) {
         className={`flex justify-center px-6 bg-white text-slate-900 shadow py-2 w-full border border-solid border-gray-300 heightRef -top-full`}
       >
         <Box className="flex justify-between w-full  max-w-[1440px] ">
-          <Box className="hidden lg:flex lg:items-center">
+          <Box className="flex items-center gap-1">
+            <button
+              className="block lg:!hidden !p-[6px]"
+              onClick={toggleDrawerMenu(true)}
+            >
+              <CgMenuGridO className="text-gray-700 w-7 h-7" />
+            </button>
+            <div className="cursor-pointer" onClick={handleRedirectHome}>
+              <img
+                src={image.imageTunaLogo}
+                alt="imageBanner"
+                className="h-16 w-auto object-cover"
+              />
+            </div>
+          </Box>
+          {/* <Box className="hidden lg:flex lg:items-center">
             <ul className="flex gap-12 text-lg h-full">
               <li
                 className={`${
@@ -190,23 +203,45 @@ export default function HeaderCustomer(props: HeaderProps) {
                 </Tooltip>
               </li>
             </ul>
-          </Box>
-          <Box className="flex items-center gap-1">
-            <button
-              className="block lg:!hidden !p-[6px]"
-              onClick={toggleDrawerMenu(true)}
-            >
-              <CgMenuGridO className="text-gray-700 w-7 h-7" />
-            </button>
-            <div className="cursor-pointer" onClick={handleRedirectHome}>
-              <img
-                src={image.imageTunaLogo}
-                alt="imageBanner"
-                className="h-16 w-auto object-cover"
-              />
-            </div>
-          </Box>
-          <Box className="gap-4 flex items-center">
+          </Box> */}
+
+          <Box className="gap-6 flex items-center">
+            <Box className="gap-8 flex">
+              <p
+                className={clsx(
+                  "text-lg/6 font-medium hover:text-blue-600 cursor-pointer capitalize",
+                  {
+                    "text-blue-500":
+                      pathName === APP_ROUTES.TUNA_CUSTOMER.HOME.to,
+                  }
+                )}
+                onClick={handleRedirectHome}
+              >
+                Trang Chủ
+              </p>
+              <p
+                className={clsx(
+                  "text-lg/6 font-medium hover:text-blue-600 cursor-pointer capitalize",
+                  {
+                    "text-blue-500":
+                      pathName ===
+                      APP_ROUTES.TUNA_CUSTOMER.FORM_SIGN_UP_DVKN.to,
+                  }
+                )}
+                onClick={() =>
+                  navigate(APP_ROUTES.TUNA_CUSTOMER.FORM_SIGN_UP_DVKN.to)
+                }
+              >
+                Đăng ký Dịch vụ
+              </p>
+              <p
+                className={clsx(
+                  "text-lg/6 font-medium hover:text-blue-600 cursor-pointer capitalize"
+                )}
+              >
+                Tin tức
+              </p>
+            </Box>
             <Box>
               <button className="hidden sm:flex items-center justify-between p-2 rounded-full bg-slate-300 cursor-pointer hover:bg-blue-300">
                 <FaSearch className="text-gray-600" />
