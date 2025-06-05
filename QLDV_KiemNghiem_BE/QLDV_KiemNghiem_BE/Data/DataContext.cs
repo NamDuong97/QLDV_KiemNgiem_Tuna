@@ -17,6 +17,7 @@ public partial class DataContext : DbContext
     {
     }
     public virtual DbSet<ThanhTienTungMau> ThanhTienTungMaus { get; set; }
+    public virtual DbSet<ThoiGianTieuChuan> ThoiGianTieuChuans { get; set; }
     public virtual DbSet<BoPhan> BoPhans { get; set; }
 
     public virtual DbSet<ChiTietHoaDonThu> ChiTietHoaDonThus { get; set; }
@@ -135,6 +136,11 @@ public partial class DataContext : DbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<ThanhTienTungMau>(entity =>
+        {
+            entity.HasNoKey();
+        });
+
+        modelBuilder.Entity<ThoiGianTieuChuan>(entity =>
         {
             entity.HasNoKey();
         });

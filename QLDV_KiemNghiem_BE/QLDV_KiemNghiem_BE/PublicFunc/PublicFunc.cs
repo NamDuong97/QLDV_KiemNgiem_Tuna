@@ -11,15 +11,23 @@ namespace QLDV_KiemNghiem_BE
            return DateTime.Now.Year.ToString() + DateTime.Now.Month.ToString() + DateTime.Now.Day.ToString() + DateTime.Now.Hour.ToString() + DateTime.Now.Minute.ToString() + DateTime.Now.Second.ToString() + DateTime.Now.Millisecond.ToString();  
         }
 
-        public static string processString(string data)
+        public static string processString(string input)
         {
-            string result = "";
-            result = data.ToLower().Trim();
-            // Normalize: tách ký tự + dấu
-            result = data.Normalize(NormalizationForm.FormD);
-            // Regex: xóa các dấu (ký tự không phải chữ cái)
-            Regex regex = new Regex("\\p{IsCombiningDiacriticalMarks}+");
-            result = regex.Replace(result, "").Replace('đ', 'd');               
+            if (string.IsNullOrWhiteSpace(input))
+                return string.Empty;
+            // Chuẩn hóa chuỗi, chuyển về dạng decomposed (ký tự + dấu)
+            string normalized = input.Normalize(NormalizationForm.FormD);
+            // Loại bỏ các dấu (chỉ giữ lại ký tự base)
+            StringBuilder sb = new StringBuilder();
+            foreach (char c in normalized)
+            {
+                if (CharUnicodeInfo.GetUnicodeCategory(c) != UnicodeCategory.NonSpacingMark)
+                    sb.Append(c);
+            }
+            // Chuyển về dạng thường, loại bỏ khoảng trắng và ký tự đặc biệt nếu cần
+            string result = sb.ToString().Normalize(NormalizationForm.FormC).ToLowerInvariant();
+            // Loại bỏ khoảng trắng và ký tự không phải chữ cái/số nếu muốn "sạch"
+            result = Regex.Replace(result, @"[^a-z0-9]", "");
             return result;
         }
     }

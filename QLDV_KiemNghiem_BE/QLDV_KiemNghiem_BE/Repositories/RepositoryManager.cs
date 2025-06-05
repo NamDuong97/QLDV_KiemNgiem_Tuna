@@ -27,8 +27,6 @@ namespace QLDV_KiemNghiem_BE.Repositories
         private readonly Lazy<IHoaDonThuRepository> _hoaDonThu;
         private readonly Lazy<IChiTietHoaDonThuRepository> _chiTietHoaDonThu;
 
-        private readonly IMapper _mapper;
-
         public RepositoryManager(DataContext dataContext, IMapper mapper)
         {
             _context = dataContext;
