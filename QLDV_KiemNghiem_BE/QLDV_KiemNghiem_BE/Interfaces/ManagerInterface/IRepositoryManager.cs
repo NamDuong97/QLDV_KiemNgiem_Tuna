@@ -19,6 +19,7 @@ namespace QLDV_KiemNghiem_BE.Interfaces.ManagerInterface
         ILoaiDichVuRepository LoaiDichVu { get; }
         IDmMauRepository DmMau { get; }
         ITrangThaiPhieuDkRepository TrangThaiPhieuDk { get; }
+        IHoaDonThuRepository HoaDonThu { get; }
         Task<bool> SaveChangesAsync();
     }
 }
