@@ -19,5 +19,6 @@ namespace QLDV_KiemNghiem_BE.Interfaces.ManagerInterface
         ILoaiDichVuService LoaiDichVu { get; }
         IDmMauService DmMau { get; }
         ITrangThaiPhieuDkService TrangThaiPhieuDk { get; }
+        IHoaDonThuService HoaDonThu { get; }
     }
 }
