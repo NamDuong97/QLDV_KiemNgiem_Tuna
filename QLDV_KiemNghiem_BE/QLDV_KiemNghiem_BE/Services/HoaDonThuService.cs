@@ -1,6 +1,8 @@
 ﻿using System;
 using AutoMapper;
+using Microsoft.AspNetCore.Http.HttpResults;
 using QLDV_KiemNghiem_BE.DTO;
+using QLDV_KiemNghiem_BE.DTO.Parameter;
 using QLDV_KiemNghiem_BE.Interfaces;
 using QLDV_KiemNghiem_BE.Interfaces.ManagerInterface;
 using QLDV_KiemNghiem_BE.Models;
@@ -16,7 +18,6 @@ namespace QLDV_KiemNghiem_BE.Services
             _repositoryManager = repositoryManager;
             _mapper = mapper;
         }
-
         public async Task<IEnumerable<HoaDonThuDto>> GetHoaDonThusAllAsync()
         {
             var HoaDonThuDomains = await _repositoryManager.HoaDonThu.GetHoaDonThusAllAsync();
@@ -74,17 +75,54 @@ namespace QLDV_KiemNghiem_BE.Services
             var result = _mapper.Map<HoaDonThuDto>(HoaDonThuDomain);
             return result;
         }
-        public async Task<bool> CreateHoaDonThuAsync(HoaDonThuDto HoaDonThuDto)
+        public async Task<ResponseModel1<HoaDonThuDto>> CreateHoaDonThuAsync(PhieuDangKyDto phieuDangKy)
         {
-            if (HoaDonThuDto == null) return false;
-           
-            var HoaDonThuDomain = _mapper.Map<HoaDonThu>(HoaDonThuDto);
-            HoaDonThuDomain.MaId = Guid.NewGuid().ToString();
-            HoaDonThuDomain.NgayTao = DateTime.Now;
-
-            await _repositoryManager.HoaDonThu.CreateHoaDonThuAsync(HoaDonThuDomain);
+            decimal tongTien = 0;
+            List<ChiTietHoaDonThuDto> chiTietHoaDonThuDtos = new List<ChiTietHoaDonThuDto>();
+            HoaDonThu hoaDonThu = new HoaDonThu()
+            {
+                MaId = Guid.NewGuid().ToString(),
+                MaHd = "HD" + PublicFunc.getTimeSystem() + "_" + phieuDangKy.SoDkpt,
+                MaPhieuDangKy = phieuDangKy.MaId,
+                TongTien = tongTien,
+                NgayLap = DateTime.Now,
+                GhiChu = "Tao hoa don thanh toan cho phieu dang ky" + phieuDangKy.SoDkpt,
+                TrangThai = true,
+                NgayTao = DateTime.Now,
+                NguoiTao = "admin",
+                SoDkpt = phieuDangKy.SoDkpt
+            };
+            // Them chi tiet hoa don thu cho hoa don moi tao
+            foreach (var mau in phieuDangKy.Maus)
+            {
+                ChiTietHoaDonThu chiTietHoaDonThu = new ChiTietHoaDonThu()
+                {
+                    MaId = Guid.NewGuid().ToString(),
+                    MaMau = mau.MaId,
+                    MaHd = hoaDonThu.MaId,
+                    ThanhTien = await _repositoryManager.HoaDonThu.GetToTalMoneyOfMau(mau.MaDmMau, mau.MaTieuChuan, mau.MaLoaiDv),
+                    GhiChu = "Hoa don cho mau" + mau.MaId,
+                    TrangThai = true,
+                    NgayTao = DateTime.Now,
+                    NguoiTao = "admin"
+                };
+                tongTien += (decimal)chiTietHoaDonThu.ThanhTien;
+                await _repositoryManager.ChiTietHoaDonThu.CreateChiTietHoaDonThuAsync(chiTietHoaDonThu);
+                var chiTietHoaDonThuDto = _mapper.Map<ChiTietHoaDonThuDto>(chiTietHoaDonThu);
+                chiTietHoaDonThuDtos.Add(chiTietHoaDonThuDto);
+            }
+            hoaDonThu.TongTien = tongTien;
+            await _repositoryManager.HoaDonThu.CreateHoaDonThuAsync(hoaDonThu);
             bool check = await _repositoryManager.SaveChangesAsync();
-            return check;
+            var hoaDonThuDto = _mapper.Map<HoaDonThuDto>(hoaDonThu);
+            hoaDonThuDto.ChiTietHoaDonThus = chiTietHoaDonThuDtos;
+
+            return new ResponseModel1<HoaDonThuDto>
+            {
+                KetQua = check,
+                Message = "Tao hoa don thanh cong",
+                Data = hoaDonThuDto
+            };
         }
         public async Task<bool> UpdateHoaDonThuAsync(HoaDonThuDto HoaDonThuDto)
         {

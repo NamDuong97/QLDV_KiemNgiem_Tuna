@@ -25,7 +25,8 @@ namespace QLDV_KiemNghiem_BE.Services
         private readonly Lazy<ILoaiDichVuService> _loaiDichVuService;
         private readonly Lazy<IDmMauService> _dmMauService;
         private readonly Lazy<ITrangThaiPhieuDkService> _trangThaiPhieuDkService;
-        private readonly Lazy<IHoaDonThuService> _hoaDonThu;
+        private readonly Lazy<IHoaDonThuService> _hoaDonThuService;
+        private readonly Lazy<IChiTietHoaDonThuService> _chiTietHoaDonThuService;
 
         public ServiceManager(IRepositoryManager repositoryManager, IMapper mapper, DataContext dataContext)
         {
@@ -46,7 +47,8 @@ namespace QLDV_KiemNghiem_BE.Services
             _loaiDichVuService = new Lazy<ILoaiDichVuService>(() => new LoaiDichVuService(repositoryManager, mapper));
             _dmMauService = new Lazy<IDmMauService>(() => new DmMauService(repositoryManager, mapper));
             _trangThaiPhieuDkService = new Lazy<ITrangThaiPhieuDkService>(() => new TrangThaiPhieuDkService(repositoryManager, mapper));
-            _hoaDonThu = new Lazy<IHoaDonThuService>(() => new HoaDonThuService(repositoryManager, mapper));
+            _hoaDonThuService = new Lazy<IHoaDonThuService>(() => new HoaDonThuService(repositoryManager, mapper));
+            _chiTietHoaDonThuService = new Lazy<IChiTietHoaDonThuService>(() => new ChiTietHoaDonThuService(repositoryManager, mapper));
         }
 
         public IPhieuDangKyService PhieuDangKy => _phieuDangKyService.Value;
@@ -64,6 +66,7 @@ namespace QLDV_KiemNghiem_BE.Services
         public ILoaiDichVuService LoaiDichVu => _loaiDichVuService.Value;
         public IDmMauService DmMau => _dmMauService.Value;
         public ITrangThaiPhieuDkService TrangThaiPhieuDk => _trangThaiPhieuDkService.Value;
-        public IHoaDonThuService HoaDonThu => _hoaDonThu.Value;
+        public IHoaDonThuService HoaDonThu => _hoaDonThuService.Value;
+        public IChiTietHoaDonThuService ChiTietHoaDonThu => _chiTietHoaDonThuService.Value;
     }
 }

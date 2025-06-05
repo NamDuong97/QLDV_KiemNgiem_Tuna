@@ -7,6 +7,7 @@ namespace QLDV_KiemNghiem_BE.Interfaces
     {
         Task<IEnumerable<HoaDonThu>> GetHoaDonThusAllAsync();
         Task<IEnumerable<HoaDonThu>> GetPhieuDangKiesOfCustomer(string maKH);
+        Task<decimal> GetToTalMoneyOfMau(string dmMau, string maTieuChuan, string maLoaiDichVu);
         Task<HoaDonThu?> FindHoaDonThuAsync(string maHoaDonThu);
         Task CreateHoaDonThuAsync(HoaDonThu HoaDonThu);
         void UpdateHoaDonThuAsync(HoaDonThu HoaDonThu);

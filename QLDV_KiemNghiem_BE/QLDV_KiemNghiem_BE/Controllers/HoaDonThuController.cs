@@ -49,31 +49,31 @@ namespace QLDV_KiemNghiem_BE.Controllers
             return Ok(result);
         }
 
-        [HttpPost]
-        [Route("createHoaDonThu")]
-        public async Task<ActionResult> createHoaDonThu(HoaDonThuDto HoaDonThuDto)
-        {
-            if (!ModelState.IsValid)
-            {
-                var errors = ModelState.Values
-                .SelectMany(v => v.Errors)
-                .Select(e => e.ErrorMessage)
-                .ToList();
-                _logger.LogError("Loi validate tham so dau vao");
-                return BadRequest(new { Errors = errors });
-            }
-            bool create = await _service.HoaDonThu.CreateHoaDonThuAsync(HoaDonThuDto);
-            if (create)
-            {
-                _logger.LogDebug("Tao hoa don thu thanh cong");
-                return Ok(HoaDonThuDto);
-            }
-            else
-            {
-                _logger.LogDebug("Tao hoa don thu that bai");
-                return BadRequest();
-            }
-        }
+        //[HttpPost]
+        //[Route("createHoaDonThu")]
+        //public async Task<ActionResult> createHoaDonThu(HoaDonThuDto HoaDonThuDto)
+        //{
+        //    if (!ModelState.IsValid)
+        //    {
+        //        var errors = ModelState.Values
+        //        .SelectMany(v => v.Errors)
+        //        .Select(e => e.ErrorMessage)
+        //        .ToList();
+        //        _logger.LogError("Loi validate tham so dau vao");
+        //        return BadRequest(new { Errors = errors });
+        //    }
+        //    bool create = await _service.HoaDonThu.CreateHoaDonThuAsync(HoaDonThuDto);
+        //    if (create)
+        //    {
+        //        _logger.LogDebug("Tao hoa don thu thanh cong");
+        //        return Ok(HoaDonThuDto);
+        //    }
+        //    else
+        //    {
+        //        _logger.LogDebug("Tao hoa don thu that bai");
+        //        return BadRequest();
+        //    }
+        //}
 
         [HttpPut]
         [Route("updateHoaDonThu")]

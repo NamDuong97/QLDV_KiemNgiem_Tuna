@@ -25,9 +25,6 @@ namespace QLDV_KiemNghiem_BE.DTO
         public string? ManvThucHien { get; set; }
 
         [StringLength(50)]
-        public string? Madv { get; set; }
-
-        [StringLength(50)]
         public string? SoLo { get; set; }
 
         [StringLength(200)]
@@ -85,7 +82,11 @@ namespace QLDV_KiemNghiem_BE.DTO
         [StringLength(50)]
         public string? LoaiDv { get; set; }
 
-        public bool IsDel { get; set; }
+        [Column("MaLoaiDV")]
+        [StringLength(50)]
+        public string? MaLoaiDv { get; set; }
+
+        public bool IsDel { get; set; } = false;
         public ICollection<PhieuDangKyMauHinhAnhDto> PhieuDangKyMauHinhAnhs { get; set; } = new List<PhieuDangKyMauHinhAnhDto>();
     }
 }
