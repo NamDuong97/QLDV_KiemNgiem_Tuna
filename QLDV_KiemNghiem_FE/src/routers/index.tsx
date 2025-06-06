@@ -5,11 +5,29 @@ import { APP_ROUTES } from "../constants/routers";
 import LayoutAdmin from "../pages/admin/layout-admin";
 import LayoutCustomer from "../pages/customer/layout";
 import LayoutCustomerManager from "../pages/customer/manager/layout";
-import PhieuDKyDVKN from "../pages/customer/manager/phieuDKyDVKN";
-import QuanLyHoaDon from "../pages/customer/manager/quanLyHoaDon";
-import EditPhieuDKyDVKN from "../pages/customer/manager/phieuDKyDVKN/editPhieuDKyDVKN";
+const PhieuDKyDVKN = lazy(
+  () => import("../pages/customer/manager/phieuDKyDVKN")
+);
+const QuanLyHoaDon = lazy(
+  () => import("../pages/customer/manager/quanLyHoaDon")
+);
+const EditPhieuDKyDVKN = lazy(
+  () => import("../pages/customer/manager/phieuDKyDVKN/editPhieuDKyDVKN")
+);
 import Redirect from "./redirect";
-import ShowPhieuDKyDVKN from "../pages/customer/manager/phieuDKyDVKN/showPhieuDKyDVKN";
+const ShowPhieuDKyDVKN = lazy(
+  () => import("../pages/customer/manager/phieuDKyDVKN/showPhieuDKyDVKN")
+);
+const XemChiTiet = lazy(
+  () =>
+    import("../pages/customer/manager/quanLyHoaDon/chiTietHoaDon/XemChiTiet")
+);
+const ThanhToanHoaDon = lazy(
+  () =>
+    import(
+      "../pages/customer/manager/quanLyHoaDon/chiTietHoaDon/ThanhToanHoaDon"
+    )
+);
 
 const Dashboard = lazy(() => import("../pages/admin/dashboard"));
 const LoginPage = lazy(() => import("../pages/admin/login"));
@@ -135,6 +153,25 @@ const Routers = () => {
               <Redirect path={APP_ROUTES.TUNA_CUSTOMER.PHIEU_DKY_DVKN.to}>
                 <ShowPhieuDKyDVKN />
               </Redirect>
+            }
+          />
+          <Route
+            path={
+              APP_ROUTES.TUNA_CUSTOMER.QUAN_LY_HOA_DON.SHOW_THANH_TOAN_HOA_DON
+                .to
+            }
+            element={
+              // <Redirect path={APP_ROUTES.TUNA_CUSTOMER.QUAN_LY_HOA_DON.to}>
+                <ThanhToanHoaDon />
+              // </Redirect>
+            }
+          />
+          <Route
+            path={APP_ROUTES.TUNA_CUSTOMER.QUAN_LY_HOA_DON.SHOW_HOA_DON.to}
+            element={
+              // <Redirect path={APP_ROUTES.TUNA_CUSTOMER.QUAN_LY_HOA_DON.to}>
+              <XemChiTiet />
+              // </Redirect>
             }
           />
         </Route>

@@ -32,12 +32,12 @@ export default function LayoutCustomerManager() {
         <Box className="flex gap-4 items-center">
           <IconButton onClick={handleIsOpenSidebarMobile(true)}>
             {isMenu ? (
-              <AiOutlineMenuUnfold className="w-6 h-6 sm:w-[26px] sm:h-[26px]" />
+              <AiOutlineMenuUnfold className="w-6 h-6 sm:w-[26px] sm:h-[26px] text-cyan-800" />
             ) : (
-              <FiMenu className="w-6 h-6 sm:w-[26px] sm:h-[26px]" />
+              <FiMenu className="w-6 h-6 sm:w-[26px] sm:h-[26px] text-cyan-800" />
             )}
           </IconButton>
-          <p className="text-sm/6 sm:text-[22px]/6 lg:text-[26px]/6 font-bold text-gray-800">
+          <p className="text-sm/6 sm:text-[22px]/6 lg:text-[26px]/6 font-bold text-cyan-800">
             Quản Lý Phiếu Đăng Ký Dịch Vụ Kiểm Nghiệm
           </p>
         </Box>

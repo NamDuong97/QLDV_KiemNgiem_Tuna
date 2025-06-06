@@ -82,7 +82,14 @@ export const APP_ROUTES = {
     QUAN_LY_HOA_DON: {
       to: "/quan-ly-hoa-don",
       title: "Trang quản lý hóa đơn",
-      id: "/quan-ly-hoa-don/:id",
+      SHOW_HOA_DON: {
+        to: "/chi-tiet-hoa-don",
+        title: "Trang chi chi tiết hóa đơn",
+      },
+      SHOW_THANH_TOAN_HOA_DON: {
+        to: "/thanh-toan-hoa-don",
+        title: "Trang thanh toán hóa đơn",
+      },
     },
   },
 };
