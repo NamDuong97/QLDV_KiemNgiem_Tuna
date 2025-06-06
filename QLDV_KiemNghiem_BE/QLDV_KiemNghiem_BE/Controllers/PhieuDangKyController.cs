@@ -76,11 +76,13 @@ namespace QLDV_KiemNghiem_BE.Controllers
                 _logger.LogDebug("Phiếu đăng ký cung cấp thiếu mẫu hoặc phụ liệu hoá chất");
                 return BadRequest("Phiếu đăng ký không thể thiếu mẫu và phụ liệu hoá chất, vui lòng cung cấp đầy đủ");
             }
-            bool create = await _service.PhieuDangKy.CreatePhieuDangKyAsync(phieuDangKyDto);
-            if (create)
+            ResponseModel1<PhieuDangKyDto> phieuDangKy = await _service.PhieuDangKy.CreatePhieuDangKyAsync(phieuDangKyDto);
+            if (phieuDangKy.KetQua)
             {
+                // Them hoa don sau khi them phieu dang ky
+                ResponseModel1<HoaDonThuDto> hoaDonThu =  await _service.HoaDonThu.CreateHoaDonThuAsync(phieuDangKy?.Data);
                 _logger.LogDebug("Tao phieu dang ky thanh cong");
-                return Ok(phieuDangKyDto);
+                return Ok(new { phieuDangKy = phieuDangKy.Data, hoaDon = hoaDonThu.Data});
             }
             else
             {

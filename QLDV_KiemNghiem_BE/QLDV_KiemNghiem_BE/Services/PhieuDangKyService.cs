@@ -96,12 +96,18 @@ namespace QLDV_KiemNghiem_BE.Services
             // Tra ket qua
             return result;
         }
-        public async Task<bool> CreatePhieuDangKyAsync(PhieuDangKyDto phieuDangKyDto)
+        public async Task<ResponseModel1<PhieuDangKyDto>> CreatePhieuDangKyAsync(PhieuDangKyDto phieuDangKyDto)
         {
             PhieuDangKy phieuDangKyDomain = new PhieuDangKy();
+            List<PhieuDangKyMau> phieuDangKyMauDomains = new List<PhieuDangKyMau>();
+            List<PhieuDangKyPhuLieuHoaChat> phieuDangKyPhuLieuHoaChatDomains = new List<PhieuDangKyPhuLieuHoaChat>();
+            List<PhieuDangKyMauHinhAnh> phieuDangKyMauHinhAnhDomains = new List<PhieuDangKyMauHinhAnh>();
+           
+
             phieuDangKyDomain = _mapper.Map<PhieuDangKy>(phieuDangKyDto);
             phieuDangKyDomain.MaId = Guid.NewGuid().ToString();
             phieuDangKyDomain.TrangThaiId = "TT01";
+            phieuDangKyDomain.SoDkpt = "SDKPT" + PublicFunc.getTimeSystem();
             phieuDangKyDomain.NgayTao = DateTime.Now;
             if (phieuDangKyDto?.Maus?.Count() > 0)
             {
@@ -130,14 +136,22 @@ namespace QLDV_KiemNghiem_BE.Services
                             NguoiTao = img.NguoiTao,
                             NgayTao = DateTime.Now
                         };
+                        phieuDangKyMauHinhAnhDomains.Add(hinhAnh); // Them vao de tra ve cho ng dung
                         await _repositoryManager.PhieuDangKyMauHinhAnh.CreatePhieuDangKyMauHinhAnhAsync(hinhAnh);
                     }
+                    mauDomain.PhieuDangKyMauHinhAnhs = phieuDangKyMauHinhAnhDomains;
+                    phieuDangKyMauDomains.Add(mauDomain);
                     await _repositoryManager.PhieuDangKyMau.CreatePhieuDangKyMauAsync(mauDomain);
+                    phieuDangKyMauHinhAnhDomains = new List<PhieuDangKyMauHinhAnh>(); // sau khi them anh xong thi xoa mang anh di, them tiep
                 }
             }
             else
             {
-                return false;
+                return new ResponseModel1<PhieuDangKyDto> { 
+                    KetQua = false,
+                    Message = "Danh sach mau khong co du lieu, vui long gui lai phieu dang ky!",
+                    Data = null
+                };
             }
 
             if (phieuDangKyDto.PhieuDangKyPhuLieuHoaChats.Count() > 0)
@@ -150,18 +164,34 @@ namespace QLDV_KiemNghiem_BE.Services
                     phieuDangKyPhuLieuHoaChatDomain.MaId = Guid.NewGuid().ToString();
                     phieuDangKyPhuLieuHoaChatDomain.MaPhieuDangKy = phieuDangKyDomain.MaId;
                     phieuDangKyPhuLieuHoaChatDomain.NgayTao = DateTime.Now;
+                    phieuDangKyPhuLieuHoaChatDomains.Add(phieuDangKyPhuLieuHoaChatDomain);
                     await _repositoryManager.PhieuDangKyPhuLieuHoaChat.CreatePhieuDangKyPhuLieuHoaChatAsync(phieuDangKyPhuLieuHoaChatDomain);
                 }
             }
             else
             {
-                return false;
+                return new ResponseModel1<PhieuDangKyDto>
+                {
+                    KetQua = false,
+                    Message = "Danh sach phu lieu hoa chat khong co du lieu, vui long gui lai phieu dang ky!",
+                    Data = null
+                };
             }
 
             await _repositoryManager.PhieuDangKy.CreatePhieuDangKyAsync(phieuDangKyDomain);
             // Ghi vao CSDL
             bool check = await _repositoryManager.SaveChangesAsync();
-            return check;
+            // Tra ket qua ve cho nguoi dung
+            var phieuDangKyReturnDto = _mapper.Map<PhieuDangKyDto>(phieuDangKyDomain);
+            phieuDangKyReturnDto.Maus = _mapper.Map<List<PhieuDangKyMauDto>>(phieuDangKyMauDomains);
+            phieuDangKyReturnDto.PhieuDangKyPhuLieuHoaChats = _mapper.Map<List<PhieuDangKyPhuLieuHoaChatDto>>(phieuDangKyPhuLieuHoaChatDomains);
+
+            return new ResponseModel1<PhieuDangKyDto>
+            {
+                KetQua = check,
+                Message = check ? "Tao phieu dang ky thanh cong" : "Tao phieu dang ky that bai",
+                Data = phieuDangKyReturnDto
+            }; 
         }
         public async Task<bool> UpdatePhieuDangKyAsync(PhieuDangKyDto phieuDangKyDto)
         {

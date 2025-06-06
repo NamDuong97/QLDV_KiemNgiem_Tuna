@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using QLDV_KiemNghiem_BE.Data;
 using QLDV_KiemNghiem_BE.Interfaces;
 using QLDV_KiemNghiem_BE.Models;
+using static Microsoft.Extensions.Logging.EventSource.LoggingEventSource;
 
 namespace QLDV_KiemNghiem_BE.Repositories
 {
@@ -26,7 +27,9 @@ namespace QLDV_KiemNghiem_BE.Repositories
 
         public async Task<List<TieuChuan>?> FindTieuChuanByNameAsync(string tenTieuChuan)
         {
-            return await _context.TieuChuans.Where(item => PublicFunc.processString(item.TenTieuChuan).Contains(tenTieuChuan)).AsNoTracking().ToListAsync();
+            return  _context.TieuChuans.AsNoTracking()
+            .AsEnumerable() // Chuyển về xử lý phía client
+            .Where(item => PublicFunc.processString(item.TenTieuChuan).Contains(tenTieuChuan)).ToList();
         }
 
         public void CreateTieuChuanAsync(TieuChuan tieuChuan)

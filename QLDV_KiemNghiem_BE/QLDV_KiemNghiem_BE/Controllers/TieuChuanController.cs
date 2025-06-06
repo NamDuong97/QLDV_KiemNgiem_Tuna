@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using QLDV_KiemNghiem_BE.DTO;
+using QLDV_KiemNghiem_BE.DTO.Parameter;
 using QLDV_KiemNghiem_BE.Interfaces.ManagerInterface;
 using QLDV_KiemNghiem_BE.Models;
 
@@ -61,16 +62,16 @@ namespace QLDV_KiemNghiem_BE.Controllers
                 _logger.LogError("Loi validate tham so dau vao");
                 return BadRequest(new { Errors = errors });
             }
-            bool create = await _service.TieuChuan.CreateTieuChuanAsync(tieuChuanDto);
-            if (create)
+            ResponseModel1<TieuChuanDto> create = await _service.TieuChuan.CreateTieuChuanAsync(tieuChuanDto);
+            if (create.KetQua)
             {
-                _logger.LogDebug("Tao tieu chuan thanh cong");
-                return Ok(tieuChuanDto);
+                _logger.LogDebug(create.Message);
+                return Ok(create.Data);
             }
             else
             {
-                _logger.LogDebug("Tao tieu chuan that bai");
-                return BadRequest();
+                _logger.LogDebug(create.Message);
+                return BadRequest(create.Message);
             }
         }
 

@@ -25,8 +25,7 @@ namespace QLDV_KiemNghiem_BE.Repositories
         private readonly Lazy<IDmMauRepository> _dmMau;
         private readonly Lazy<ITrangThaiPhieuDkRepository> _trangThaiPhieuDk;
         private readonly Lazy<IHoaDonThuRepository> _hoaDonThu;
-
-        private readonly IMapper _mapper;
+        private readonly Lazy<IChiTietHoaDonThuRepository> _chiTietHoaDonThu;
 
         public RepositoryManager(DataContext dataContext, IMapper mapper)
         {
@@ -48,6 +47,7 @@ namespace QLDV_KiemNghiem_BE.Repositories
             _dmMau = new Lazy<IDmMauRepository>(() => new DmMauRepository(dataContext, mapper));
             _trangThaiPhieuDk = new Lazy<ITrangThaiPhieuDkRepository>(() => new TrangThaiPhieuDkRepository(dataContext, mapper));
             _hoaDonThu = new Lazy<IHoaDonThuRepository>(() => new HoaDonThuRepository(dataContext, mapper));
+            _chiTietHoaDonThu = new Lazy<IChiTietHoaDonThuRepository>(() => new ChiTietHoaDonThuRepository(dataContext, mapper));
         }
 
         public IPhieuDangKyRepository PhieuDangKy => _phieuDangKy.Value;
@@ -66,6 +66,7 @@ namespace QLDV_KiemNghiem_BE.Repositories
         public IDmMauRepository DmMau => _dmMau.Value;
         public ITrangThaiPhieuDkRepository TrangThaiPhieuDk => _trangThaiPhieuDk.Value;
         public IHoaDonThuRepository HoaDonThu => _hoaDonThu.Value;
+        public IChiTietHoaDonThuRepository ChiTietHoaDonThu => _chiTietHoaDonThu.Value;
         public async Task<bool> SaveChangesAsync() => await _context.SaveChangesAsync() > 0;
     }
 }

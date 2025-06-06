@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using QLDV_KiemNghiem_BE.Data;
+using QLDV_KiemNghiem_BE.DTO.Parameter;
 using QLDV_KiemNghiem_BE.Interfaces;
 using QLDV_KiemNghiem_BE.Models;
 
@@ -31,6 +32,17 @@ namespace QLDV_KiemNghiem_BE.Repositories
             }
             return hoaDonThus;
         }
+
+        public async Task<decimal> GetToTalMoneyOfMau(string dmMau, string maTieuChuan, string maLoaiDichVu)
+        {
+            var result = await _context
+            .Set<ThanhTienTungMau>()  // Không cần DbSet thực trong DbContext
+            .FromSqlRaw("SELECT dbo.fn_ThanhTienTungMauKiemNghiem({0}, {1}, {2}) AS ThanhTien", dmMau, maTieuChuan, maLoaiDichVu)
+            .AsNoTracking()
+            .FirstOrDefaultAsync();
+            return result?.ThanhTien ?? 0;
+        }
+
         public async Task<HoaDonThu?> FindHoaDonThuAsync(string maHoaDonThu)
         {
             return await _context.HoaDonThus.FindAsync(maHoaDonThu);

@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using QLDV_KiemNghiem_BE.DTO;
+using QLDV_KiemNghiem_BE.DTO.Parameter;
 using QLDV_KiemNghiem_BE.Interfaces;
 using QLDV_KiemNghiem_BE.Interfaces.ManagerInterface;
 using QLDV_KiemNghiem_BE.Models;
@@ -15,7 +16,6 @@ namespace QLDV_KiemNghiem_BE.Services
             _repositoryManager = repositoryManager;
             _mapper = mapper;
         }
-
         public async Task<IEnumerable<TieuChuanDto>> GetTieuChuansAllAsync()
         {
             var tieuChuanDomains = await _repositoryManager.TieuChuan.GetTieuChuansAllAsync();
@@ -29,21 +29,31 @@ namespace QLDV_KiemNghiem_BE.Services
             var result = _mapper.Map<TieuChuanDto>(tieuChuanDomain);
             return result;
         }
-        public async Task<List<TieuChuanDto>?> FindTieuChuanByNameAsync(string tenTieuChuan)
+        public async Task<ResponseModel1<TieuChuanDto>> CreateTieuChuanAsync(TieuChuanDto tieuChuanDto)
         {
-            if (tenTieuChuan == null || tenTieuChuan == "") return null;
-            string data = PublicFunc.processString(tenTieuChuan);
-            var tieuChuanDomain = await _repositoryManager.TieuChuan.FindTieuChuanByNameAsync(data);
-            var result = _mapper.Map<List<TieuChuanDto>?>(tieuChuanDomain);
-            return result;
-        }
-        public async Task<bool> CreateTieuChuanAsync(TieuChuanDto tieuChuanDto)
-        {
-            if (tieuChuanDto == null) return false;
-            var checkExistsByID = await FindTieuChuanAsync(tieuChuanDto.MaId);
-            if(checkExistsByID != null) return false;
-            var checkExistsByName = await FindTieuChuanByNameAsync(tieuChuanDto.TenTieuChuan);
-            if ((checkExistsByName?.Count() ?? 0) > 0) return false;
+            if (tieuChuanDto == null || tieuChuanDto.TenTieuChuan == "") return new ResponseModel1<TieuChuanDto>
+            {
+                KetQua = false,
+                Message = "Tham so gui len null vui long kiem tra lai!",
+                Data = null
+            };
+
+            var checkExistsByID = await _repositoryManager.TieuChuan.FindTieuChuanAsync(tieuChuanDto.MaId);
+            if(checkExistsByID != null) return new ResponseModel1<TieuChuanDto>
+            {
+                KetQua = false,
+                Message = "Tieu chuan them vo da ton tai, vui long them tieu chuan khac!",
+                Data = null
+            };
+
+            var nameTieuChuan = PublicFunc.processString(tieuChuanDto.TenTieuChuan);
+            var checkExistsByName = await _repositoryManager.TieuChuan.FindTieuChuanByNameAsync(nameTieuChuan);
+            if ((checkExistsByName?.Count() ?? 0) > 0) return new ResponseModel1<TieuChuanDto>
+            {
+                KetQua = false,
+                Message = "Ten tieu chuan them vo da ton tai, vui long thu lai voi ten khac!",
+                Data = null
+            };
 
             var tieuChuanDomain = _mapper.Map<TieuChuan>(tieuChuanDto);
             tieuChuanDomain.MaId = Guid.NewGuid().ToString();
@@ -51,7 +61,14 @@ namespace QLDV_KiemNghiem_BE.Services
 
             _repositoryManager.TieuChuan.CreateTieuChuanAsync(tieuChuanDomain);
             bool check = await _repositoryManager.SaveChangesAsync();
-            return check;   
+            var tieuChuanReturnDto = _mapper.Map<TieuChuanDto>(tieuChuanDomain);
+
+            return  new ResponseModel1<TieuChuanDto>
+            {
+                KetQua = check,
+                Message = check ? "Them tieu chuan thanh cong!" : "Them tieu chuan that bai, vui long thu lai!",
+                Data = tieuChuanReturnDto
+            };  
         }
         public async Task<bool> UpdateTieuChuanAsync(TieuChuanDto tieuChuanDto)
         {

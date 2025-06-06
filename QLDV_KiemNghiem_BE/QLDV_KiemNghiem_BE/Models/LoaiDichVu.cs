@@ -39,7 +39,7 @@ public partial class LoaiDichVu
     public DateTime? NgaySua { get; set; }
 
     [StringLength(50)]
-    public string? ThoiGianMongMuonHoanThanh { get; set; }
+    public decimal? ThoiGianMongMuonHoanThanh { get; set; }
 
     [InverseProperty("MaLoaiDvNavigation")]
     public virtual ICollection<PhieuDangKyMau> PhieuDangKyMaus { get; set; } = new List<PhieuDangKyMau>();
