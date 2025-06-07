@@ -118,15 +118,15 @@ const FormSignUpDVKN = () => {
   const handleClosePopupThoatForm = () => {
     setOpenPopupThoatForm(false);
   };
-  const handleOnSettled = async (response: any) => {
+  const handleOnSettled = async () => {
     await queryClient.invalidateQueries({
       queryKey: ["CreatePhieuDKyDVKN"],
     });
-    console.log("response", response);
   };
   const { mutate } = useCreatePhieuDKyDVKN({
     queryKey: "CreatePhieuDKyDVKN",
     onSettled: handleOnSettled,
+    handleClickOpenPopupNofitication: handleClickOpenPopupNofitication,
   });
 
   const onSubmitPhieuDkyDV = (dataForm: FormPhieuDangKy) => {
@@ -167,7 +167,8 @@ const FormSignUpDVKN = () => {
         maTieuChuan: itemMau.maTieuChuan,
         maPhieuDangKy: itemMau.maPhieuDangKy,
         manvThucHien: "NV002",
-        maLoaiDV: "DV001",
+        maLoaiDV: itemMau.maLoaiDV,
+        madv: "DV001",
         soLo: itemMau.soLo,
         donViSanXuat: itemMau.donViSanXuat,
         ngaySanXuat: itemMau.ngaySanXuat,
@@ -249,8 +250,6 @@ const FormSignUpDVKN = () => {
         Maus: dataMaus,
         PhieuDangKyPhuLieuHoaChats: dataPLHC,
       };
-      console.log("dataPhieuDKY", dataPhieuDKY);
-
       mutate(dataPhieuDKY);
     } else {
       const dataPhieuDKY: any = {
@@ -273,7 +272,6 @@ const FormSignUpDVKN = () => {
         Maus: dataMaus,
         PhieuDangKyPhuLieuHoaChats: dataPLHC,
       };
-      console.log("dataPhieuDKY", dataPhieuDKY);
       mutate(dataPhieuDKY);
     }
 

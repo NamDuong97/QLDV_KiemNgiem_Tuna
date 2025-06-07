@@ -8,10 +8,12 @@ import {
   TableContainer,
   TableHead,
   TableRow,
+  Tooltip,
 } from "@mui/material";
 import { useNavigate } from "react-router";
 import { Align } from "../../../../../../../models/Table";
 import { APP_ROUTES } from "../../../../../../../constants/routers";
+import { FaEye } from "react-icons/fa";
 
 interface TableProps {
   tableBody: any;
@@ -98,7 +100,6 @@ const TableDaDuyet = (props: TableProps) => {
                 sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                 hover={true}
                 className="cursor-pointer"
-                onClick={() => handleRedirecEditPage(item)}
               >
                 <TableCell align="left">
                   <Box className="flex gap-2 items-center justify-start">
@@ -134,6 +135,32 @@ const TableDaDuyet = (props: TableProps) => {
                       {item?.ngayTao}
                     </p>
                   </Box>
+                </TableCell>
+                <TableCell align="center">
+                  <Tooltip
+                    title="Xem chi tiết"
+                    slotProps={{
+                      popper: {
+                        modifiers: [
+                          {
+                            name: "offset",
+                            options: {
+                              offset: [0, -10],
+                            },
+                          },
+                        ],
+                      },
+                    }}
+                  >
+                    <button
+                      onClick={() => handleRedirecEditPage(item)}
+                      className="px-2 py-1 rounded cursor-pointer border border-solid border-yellow-500 group hover:bg-yellow-500"
+                    >
+                      <span className="text-base/4 lg:text-lg/6 font-bold text-yellow-500 group-hover:text-white">
+                        <FaEye />
+                      </span>
+                    </button>
+                  </Tooltip>
                 </TableCell>
               </TableRow>
             ))

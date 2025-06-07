@@ -17,6 +17,7 @@ import { useNavigate } from "react-router";
 import { Dispatch, SetStateAction } from "react";
 import { Align } from "../../../../../../../models/Table";
 import { APP_ROUTES } from "../../../../../../../constants/routers";
+import { CiEdit } from "react-icons/ci";
 
 interface TableChoXetDuyetProps {
   tableBody: any;
@@ -139,14 +140,9 @@ const TableChoXetDuyet = (props: TableChoXetDuyetProps) => {
                 </TableCell>
                 <TableCell align="left">
                   <Box className="flex gap-2 items-center justify-start">
-                    <Tooltip title={`Sửa phiếu số đkpt: ${item?.soDkpt}`} arrow>
-                      <p
-                        className="text-sm/4 sm:text-base/4 font-medium hover:underline"
-                        onClick={() => handleRedirecEditPage(item)}
-                      >
-                        {item?.soDkpt}
-                      </p>
-                    </Tooltip>
+                    <p className="text-sm/4 sm:text-base/4 font-medium">
+                      {item?.soDkpt}
+                    </p>
                   </Box>
                 </TableCell>
                 <TableCell align="center">
@@ -179,6 +175,32 @@ const TableChoXetDuyet = (props: TableChoXetDuyetProps) => {
                       {item?.ngayTao}
                     </p>
                   </Box>
+                </TableCell>
+                <TableCell align="center">
+                  <Tooltip
+                    title="Sửa"
+                    slotProps={{
+                      popper: {
+                        modifiers: [
+                          {
+                            name: "offset",
+                            options: {
+                              offset: [0, -10],
+                            },
+                          },
+                        ],
+                      },
+                    }}
+                  >
+                    <button
+                      onClick={() => handleRedirecEditPage(item)}
+                      className="px-2 py-1 rounded cursor-pointer border border-solid border-yellow-500 group hover:bg-yellow-500"
+                    >
+                      <span className="text-base/4 lg:text-lg/6 font-bold text-yellow-500 group-hover:text-white">
+                        <CiEdit />
+                      </span>
+                    </button>
+                  </Tooltip>
                 </TableCell>
               </TableRow>
             ))

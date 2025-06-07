@@ -160,7 +160,8 @@ const PhuLieuHoaChat = (props: PhuLieuHoaChatProps) => {
         .number()
         .typeError("Yêu cầu nhập Số lượng")
         .required("Yêu cầu nhập Số lượng")
-        .min(1, "Số lượng nhập phải lớn hơn 0"),
+        .max(100, "Số lượng nhập phải nhỏ hơn hoặc bằng 100")
+        .min(0, "Yêu cầu nhập số nguyên lớn hơn 0"),
       DonViTinh: yup
         .string()
         .required("Yêu cầu nhập Đơn vị tính")
@@ -418,6 +419,8 @@ const PhuLieuHoaChat = (props: PhuLieuHoaChatProps) => {
                 tableBody={currentItems}
                 setDataEditPLHC={setDataEditPLHC}
                 dataEditPLHC={dataEditPLHC}
+                setDataCopyPLHC={setDataCopyPLHC}
+                dataCopyPLHC={dataCopyPLHC}
                 handleRedirectTag1={() => setisTag(1)}
               />
             </Box>
@@ -644,17 +647,19 @@ const PhuLieuHoaChat = (props: PhuLieuHoaChatProps) => {
       ).tenDmPlhc;
       reset({
         TenDM_PLHC: tenDmPlhc,
-        TenPLHC: dataEditPLHC?.tenPlhc || dataEditPLHC?.tenPlhc,
-        TenHienThi: dataEditPLHC?.tenHienThi || dataEditPLHC?.tenHienThi,
-        SoLuong: dataEditPLHC?.soLuong || dataEditPLHC?.soLuong,
-        DonViTinh: dataEditPLHC?.donViTinh || dataEditPLHC?.donViTinh,
-        SoLo: dataEditPLHC?.soLo || dataEditPLHC?.soLo,
-        TenNhaCungCap: dataEditPLHC?.tenNhaCungCap,
-        NongDo: dataEditPLHC?.nongDo,
-        DonViNongDo: dataEditPLHC?.donViNongDo,
-        NgayHetHan: dataEditPLHC?.ngayHetHan,
-        DieuKienBaoQuan: dataEditPLHC?.dieuKienBaoQuan,
-        GhiChu: dataEditPLHC?.ghiChu,
+        TenPLHC: dataEditPLHC?.tenPlhc || dataCopyPLHC?.tenPlhc,
+        TenHienThi: dataEditPLHC?.tenHienThi || dataCopyPLHC?.tenHienThi,
+        SoLuong: dataEditPLHC?.soLuong || dataCopyPLHC?.soLuong,
+        DonViTinh: dataEditPLHC?.donViTinh || dataCopyPLHC?.donViTinh,
+        SoLo: dataEditPLHC?.soLo || dataCopyPLHC?.soLo,
+        TenNhaCungCap:
+          dataEditPLHC?.tenNhaCungCap || dataCopyPLHC?.tenNhaCungCap,
+        NongDo: dataEditPLHC?.nongDo || dataCopyPLHC?.nongDo,
+        DonViNongDo: dataEditPLHC?.donViNongDo || dataCopyPLHC?.donViNongDo,
+        NgayHetHan: dataEditPLHC?.ngayHetHan || dataCopyPLHC?.ngayHetHan,
+        DieuKienBaoQuan:
+          dataEditPLHC?.dieuKienBaoQuan || dataCopyPLHC?.dieuKienBaoQuan,
+        GhiChu: dataEditPLHC?.ghiChu || dataCopyPLHC?.ghiChu,
       });
     } else
       reset({
