@@ -174,7 +174,7 @@ export default function HeaderCustomer(props: HeaderProps) {
                 className={clsx(
                   "text-base/6 font-semibold hover:text-orange-500 cursor-pointer uppercase",
                   {
-                    "text-blue-500":
+                    "text-orange-500":
                       pathName === APP_ROUTES.TUNA_CUSTOMER.HOME.to,
                   }
                 )}
@@ -186,7 +186,7 @@ export default function HeaderCustomer(props: HeaderProps) {
                 className={clsx(
                   "text-base/6 font-semibold hover:text-orange-500 cursor-pointer uppercase",
                   {
-                    "text-blue-500":
+                    "text-orange-500":
                       pathName ===
                       APP_ROUTES.TUNA_CUSTOMER.FORM_SIGN_UP_DVKN.to,
                   }

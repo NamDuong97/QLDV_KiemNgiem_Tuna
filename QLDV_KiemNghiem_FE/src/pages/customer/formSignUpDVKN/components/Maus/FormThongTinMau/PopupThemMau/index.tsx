@@ -31,21 +31,22 @@ const PopupThemMau = (props: Props) => {
     return yup.object().shape({
       tenMau: yup
         .string()
-        .required("Yêu cầu nhập Tên Mẫu")
-        .max(200, "Tên Mẫu nhập không quá 200 ký tự")
-        .test("Trùng tên mẫu", "Tên mẫu đã tồn tại", (value) => {
-          if (!value) return true;
-          const trimmedValue = value.trim().toLowerCase();
+        .test("Trùng tên mẫu", "Tên mẫu đã tồn tại", (value: any) => {
+          if (!value) return true; // tránh lỗi khi value null
+          console.log("dataDmMauAll dataDmMauAll", dataDmMauAll);
 
           const isTrungLap = dataDmMauAll?.find(
-            (item: any) => item.tenMau?.trim().toLowerCase() === trimmedValue
+            (item: any) =>
+              item.tenMau?.trim().toLowerCase() === value.trim().toLowerCase()
           );
 
           return !isTrungLap;
-        }),
+        })
+        .required("Yêu cầu nhập Tên Mẫu")
+        .max(200, "Tên Mẫu nhập không quá 200 ký tự"),
       maID: yup.string().required("Yêu cầu chọn Loại mẫu"),
     });
-  }, []);
+  }, [dataDmMauAll]);
 
   const {
     register,

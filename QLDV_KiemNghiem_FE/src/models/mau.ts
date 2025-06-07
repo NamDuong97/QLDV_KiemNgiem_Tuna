@@ -15,7 +15,7 @@ export interface FormMau {
   donViSanXuat: string;
   ngaySanXuat: string;
   hanSuDung: string;
-  soLuong: string;
+  soLuong: number;
   donViTinh: string;
   yeuCauKiemNghiem: string;
   dieuKienBaoQuan: string;
@@ -104,5 +104,6 @@ export interface Maus {
   thoiGianTieuChuan: string | null;
   maPdkMau: string;
   loaiDv: string;
+  maLoaiDV: string;
   phieuDangKyMauHinhAnhs: phieuDangKyMauHinhAnhs2[];
 }

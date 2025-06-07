@@ -41,7 +41,7 @@ const PopupThemTieuChuan = (props: Props) => {
           return !isTrungLap;
         }),
     });
-  }, []);
+  }, [dataTieuChuanAll]);
 
   const {
     register,

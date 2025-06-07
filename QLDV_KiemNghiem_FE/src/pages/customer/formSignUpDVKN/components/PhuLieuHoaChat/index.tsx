@@ -54,6 +54,12 @@ const tableHead = [
     label: "Điều kiện bảo quản",
     align: Align.Center,
   },
+  {
+    id: "chucNang",
+    sort: false,
+    label: "Chức Năng",
+    align: Align.Center,
+  },
 ];
 
 const PhuLieuHoaChat = (props: PhuLieuHoaChatProps) => {
@@ -69,6 +75,7 @@ const PhuLieuHoaChat = (props: PhuLieuHoaChatProps) => {
 
   const [listCheckbox, setListCheckbox] = useState<any[]>([]);
   const [dataEditPLHC, setDataEditPLHC] = useState<any>();
+  const [dataCopyPLHC, setDataCopyPLHC] = useState<any>();
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(5);
 
@@ -262,6 +269,7 @@ const PhuLieuHoaChat = (props: PhuLieuHoaChatProps) => {
     };
     setData(PhieuDangKy);
     settableBody(PhieuDangKy.PLHC);
+    setDataCopyPLHC(null);
     sessionStorage.setItem("PhieuDangKy", JSON.stringify(PhieuDangKy));
     setisTag(2);
   };
@@ -628,17 +636,19 @@ const PhuLieuHoaChat = (props: PhuLieuHoaChatProps) => {
   };
 
   useEffect(() => {
-    if (dataEditPLHC) {
+    if (dataEditPLHC || dataCopyPLHC) {
       const tenDmPlhc = dataDM_PhuLieuHoaChat.find(
-        (item: any) => item.maId === dataEditPLHC.maPlhc
+        (item: any) =>
+          item.maId === dataEditPLHC?.maPlhc ||
+          item.maId === dataCopyPLHC?.maPlhc
       ).tenDmPlhc;
       reset({
         TenDM_PLHC: tenDmPlhc,
-        TenPLHC: dataEditPLHC?.tenPlhc,
-        TenHienThi: dataEditPLHC?.tenHienThi,
-        SoLuong: dataEditPLHC?.soLuong,
-        DonViTinh: dataEditPLHC?.donViTinh,
-        SoLo: dataEditPLHC?.soLo,
+        TenPLHC: dataEditPLHC?.tenPlhc || dataEditPLHC?.tenPlhc,
+        TenHienThi: dataEditPLHC?.tenHienThi || dataEditPLHC?.tenHienThi,
+        SoLuong: dataEditPLHC?.soLuong || dataEditPLHC?.soLuong,
+        DonViTinh: dataEditPLHC?.donViTinh || dataEditPLHC?.donViTinh,
+        SoLo: dataEditPLHC?.soLo || dataEditPLHC?.soLo,
         TenNhaCungCap: dataEditPLHC?.tenNhaCungCap,
         NongDo: dataEditPLHC?.nongDo,
         DonViNongDo: dataEditPLHC?.donViNongDo,
@@ -661,7 +671,7 @@ const PhuLieuHoaChat = (props: PhuLieuHoaChatProps) => {
         DieuKienBaoQuan: "",
         GhiChu: "",
       });
-  }, [tableBody, dataEditPLHC]);
+  }, [tableBody, dataEditPLHC, dataCopyPLHC]);
 
   useEffect(() => {
     if (TenDM_PLHC) {

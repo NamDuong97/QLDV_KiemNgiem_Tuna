@@ -55,6 +55,7 @@ export const useGetDmMauAll = (props: Props) => {
       const response = await PhieuDKyDVKN_Services.getDmMauAll();
       return response;
     },
+    staleTime: Infinity,
   });
 };
 
@@ -121,7 +122,7 @@ export const useGetTrangThaiPhieuDkAll = (props: Props) => {
 };
 
 export const useCreatePhieuDKyDVKN = (props: Props) => {
-  const { queryKey, onSettled } = props;
+  const { queryKey, onSettled,  } = props;
   return useMutation({
     mutationKey: [queryKey],
     mutationFn: async (paramsPhieuDangKyDVKN: FormData) => {
@@ -129,6 +130,7 @@ export const useCreatePhieuDKyDVKN = (props: Props) => {
         paramsPhieuDangKyDVKN
       );
       if (response !== 200) return console.log("Lỗi Server");
+
       return response;
     },
     onSuccess: (response: any) => {
