@@ -1,6 +1,5 @@
 import {
   Box,
-  // IconButton,
   Paper,
   Table,
   TableBody,
@@ -9,12 +8,9 @@ import {
   TableHead,
   TableRow,
 } from "@mui/material";
-// import SquareIcon from "@mui/icons-material/Square";
-// import IndeterminateCheckBoxIcon from "@mui/icons-material/IndeterminateCheckBox";
-// import { useNavigate } from "react-router";
-// import { Dispatch, SetStateAction } from "react";
-import { Align } from "../../../../../models/Table";
-// import { APP_ROUTES } from "../../../../../constants/routers";
+import { Align } from "../../../../../../../models/Table";
+import { useNavigate } from "react-router";
+import { APP_ROUTES } from "../../../../../../../constants/routers";
 
 interface TableProps {
   tableBody: any[];
@@ -22,10 +18,8 @@ interface TableProps {
   handleSort?: (value: string) => void;
 }
 
-const TableQuanLyHoaDon = (props: TableProps) => {
+const TableChoXuLy = (props: TableProps) => {
   const { tableBody, tableHead } = props;
-
-  // const navigate = useNavigate();
 
   const handleAlign = (align: string) => {
     switch (align) {
@@ -38,9 +32,11 @@ const TableQuanLyHoaDon = (props: TableProps) => {
     }
   };
 
-  // const changeUrlParam = (url: any, id: any) => {
-  //   return url.replace(/:id/, id);
-  // };
+  const navigate = useNavigate();
+
+  const handleRedirect = () => {
+    navigate(APP_ROUTES.TUNA_CUSTOMER.QUAN_LY_HOA_DON.SHOW_HOA_DON.to);
+  };
 
   return (
     <TableContainer component={Paper}>
@@ -66,11 +62,12 @@ const TableQuanLyHoaDon = (props: TableProps) => {
               hover={true}
               className="cursor-pointer"
             >
-              <TableCell align="left">
-                <Box className="flex gap-2 items-center justify-start">
-                  <p
-                    className="text-sm/4 sm:text-base/4 font-medium"
-                  >
+              <TableCell align="center">
+                <Box
+                  className="flex gap-2 items-center justify-center group"
+                  onClick={handleRedirect}
+                >
+                  <p className="text-sm/4 sm:text-base/4 font-medium group-hover:underline">
                     {item?.MaHD}
                   </p>
                 </Box>
@@ -85,7 +82,7 @@ const TableQuanLyHoaDon = (props: TableProps) => {
               <TableCell align="center">
                 <Box className="flex gap-2 items-center justify-center">
                   <p className="text-sm/4 sm:text-base/4 font-medium">
-                    {item?.TongTien ? item?.TongTien : "Đang cập nhật..."}
+                    {item?.TongTien}
                   </p>
                 </Box>
               </TableCell>
@@ -93,20 +90,6 @@ const TableQuanLyHoaDon = (props: TableProps) => {
                 <Box className="flex gap-2 items-center justify-center">
                   <p className="text-sm/4 sm:text-base/4 font-medium">
                     {item?.NgayLap}
-                  </p>
-                </Box>
-              </TableCell>
-              <TableCell align="center">
-                <Box className="flex gap-2 items-center justify-center">
-                  <p className="text-sm/4 sm:text-base/4 font-medium">
-                    {item?.GhiChu}
-                  </p>
-                </Box>
-              </TableCell>
-              <TableCell align="center">
-                <Box className="flex gap-2 items-center justify-center">
-                  <p className="text-sm/4 sm:text-base/4 font-medium">
-                    {item?.TrangThai}
                   </p>
                 </Box>
               </TableCell>
@@ -118,4 +101,4 @@ const TableQuanLyHoaDon = (props: TableProps) => {
   );
 };
 
-export default TableQuanLyHoaDon;
+export default TableChoXuLy;

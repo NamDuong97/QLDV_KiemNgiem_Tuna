@@ -53,8 +53,8 @@ const SidebarMobile = (props: SidebarProps) => {
                 {item.icon}
 
                 <p
-                  className={`text-[#525252] text-base/6 font-medium whitespace-normal ${
-                    urlPage === item.urlHienThi && "!text-blue-600"
+                  className={`text-cyan-800 text-base/6 font-medium whitespace-normal ${
+                    urlPage === item.urlHienThi && "text-orange-500"
                   }`}
                 >
                   {item.name}

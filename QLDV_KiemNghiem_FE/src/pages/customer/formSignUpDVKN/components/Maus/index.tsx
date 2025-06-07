@@ -40,6 +40,12 @@ const tableHead = [
     label: "Số Lượng",
     align: Align.Center,
   },
+  {
+    id: "chucNang",
+    sort: false,
+    label: "Chức Năng",
+    align: Align.Center,
+  },
 ];
 
 const Maus = (props: MausProps) => {
@@ -51,6 +57,7 @@ const Maus = (props: MausProps) => {
   });
 
   const [dataEditMaus, setDataEditMaus] = useState<any>();
+  const [dataCopyMaus, setDataCopyMaus] = useState<any>();
   const [listCheckbox, setListCheckbox] = useState<any[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(3);
@@ -158,6 +165,8 @@ const Maus = (props: MausProps) => {
                 tableBody={currentItems}
                 setDataEditMaus={setDataEditMaus}
                 dataEditMaus={dataEditMaus}
+                dataCopyMaus={dataCopyMaus}
+                setDataCopyMaus={setDataCopyMaus}
                 handleRedirectTag1={() => setisTag(1)}
               />
             </Box>
@@ -191,6 +200,8 @@ const Maus = (props: MausProps) => {
             settableBody={settableBody}
             dataEditMaus={dataEditMaus}
             setDataEditMaus={setDataEditMaus}
+            dataCopyMaus={dataCopyMaus}
+            setDataCopyMaus={setDataCopyMaus}
             tableBody={tableBody}
             handleRedirectTag2={() => setisTag(2)}
             setData={setData}

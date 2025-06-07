@@ -36,6 +36,8 @@ interface FormThongTinMauProps {
   handleRedirectTag2: () => void;
   setDataEditMaus: Dispatch<any>;
   setData: Dispatch<any>;
+  dataCopyMaus?: any;
+  setDataCopyMaus: Dispatch<any>;
 }
 
 export const DonViTinh = [
@@ -89,6 +91,8 @@ const FormThongTinMau = (props: FormThongTinMauProps) => {
     setDataEditMaus,
     handleRedirectTag2,
     setData,
+    dataCopyMaus,
+    setDataCopyMaus,
   } = props;
 
   const dataTest = sessionStorage.getItem("PhieuDangKy");
@@ -184,8 +188,6 @@ const FormThongTinMau = (props: FormThongTinMauProps) => {
           "Ngày sản xuất được tính từ 01/01/2000 đến năm nay",
           (value) => {
             const namHienTai = new Date().getFullYear();
-            console.log("namHienTai", namHienTai);
-
             return (
               value >= "2000-01-01" && Number(value.split("-")[0]) <= namHienTai
             );
@@ -217,23 +219,19 @@ const FormThongTinMau = (props: FormThongTinMauProps) => {
             )
             .test(
               "Hạn sử dụng tính sau 20 năm",
-              "Hạn sử dụng tính từ năm nay đến 20 năm sau",
+              "Hạn sử dụng không được vượt mức từ năm nay đến 20 năm sau",
               (value) => {
                 const namHienTai = new Date().getFullYear();
-                console.log("namHienTai", namHienTai + 20);
-
                 return Number(value.split("-")[0]) <= namHienTai + 20;
               }
             );
         }),
       soLuong: yup
-        .string()
+        .number()
         .typeError("Yêu cầu nhập Số lượng")
         .required("Yêu cầu nhập Số lượng")
-        .max(18, "Số lượng nhập phải nhỏ hơn 18 số 9 trước dấu thập phân")
-        .test("lớn hơn 0.01", "Số lượng nhập phải lớn hơn 0.01", (value) => {
-          return Number(value) >= 0.01;
-        }),
+        .max(100, "Số lượng nhập phải nhỏ hơn hoặc bằng 100")
+        .min(0, "Yêu cầu nhập số nguyên lớn hơn 0"),
       donViTinh: yup
         .string()
         .required("Yêu cầu nhập Đơn vị tính")
@@ -275,12 +273,9 @@ const FormThongTinMau = (props: FormThongTinMauProps) => {
   });
 
   const TenMau = useWatch({ control, name: "tenMau" });
-  const ngaySanXuat = useWatch({ control, name: "ngaySanXuat" });
-  console.log("ngaySanXuat", ngaySanXuat);
-
   const tenTieuChuan = useWatch({ control, name: "tenTieuChuan" });
-
   const tenLoaiDichVu = useWatch({ control, name: "tenLoaiDichVu" });
+
   const MaDm_Mau_Id = useMemo(() => {
     return dataDMMau?.find((item: any) => item.tenMau === TenMau)?.maId;
   }, [dataDMMau, TenMau]);
@@ -315,11 +310,11 @@ const FormThongTinMau = (props: FormThongTinMauProps) => {
     const MaDm_Mau = dataDMMau.find(
       (item: any) => item.tenMau === data.tenMau
     ).maId;
-    // const madv = dataLoaiDichVuAll.find(
-    //   (item: any) => item.tenDichVu === data.tenLoaiDichVu
-    // ).maId;
     const maTieuChuan = dataTieuChuanAll.find(
       (item: any) => item.tenTieuChuan === data.tenTieuChuan
+    ).maId;
+    const maLoaidv = dataLoaiDichVuAll.find(
+      (item: any) => item.tenDichVu === data.tenLoaiDichVu
     ).maId;
     const dataImage: any[] = [];
 
@@ -367,8 +362,9 @@ const FormThongTinMau = (props: FormThongTinMauProps) => {
       ngayTao: "",
       ngaySua: "",
       thoiGianTieuChuan: "",
-      maPdkMau: "",
+      maPdkMau: null,
       loaiDv: MaLoaiDV,
+      maLoaiDV: maLoaidv,
       phieuDangKyMauHinhAnhs: dataImage,
     };
 
@@ -379,6 +375,7 @@ const FormThongTinMau = (props: FormThongTinMauProps) => {
 
     sessionStorage.setItem("PhieuDangKy", JSON.stringify(PhieuDangKy));
     setData(PhieuDangKy);
+    setDataCopyMaus(null);
     sessionStorage.removeItem("ImageTemp");
     settableBody(PhieuDangKy?.Maus || []);
     handleRedirectDanhSachMau?.();
@@ -393,9 +390,9 @@ const FormThongTinMau = (props: FormThongTinMauProps) => {
     const MaDm_Mau = dataDMMau.find(
       (item: any) => item.tenMau === data.tenMau
     ).maId;
-    // const madv = dataLoaiDichVuAll.find(
-    //   (item: any) => item.tenDichVu === data.tenLoaiDichVu
-    // ).maId;
+    const maLoaidv = dataLoaiDichVuAll.find(
+      (item: any) => item.tenDichVu === data.tenLoaiDichVu
+    ).maId;
 
     const maTieuChuan = dataTieuChuanAll.find(
       (item: any) => item.tenTieuChuan === data.tenTieuChuan
@@ -446,8 +443,9 @@ const FormThongTinMau = (props: FormThongTinMauProps) => {
       ngayTao: "",
       ngaySua: "",
       thoiGianTieuChuan: "",
-      maPdkMau: "",
+      maPdkMau: null,
       loaiDv: MaLoaiDV,
+      maLoaiDV: maLoaidv,
       phieuDangKyMauHinhAnhs: dataImage,
     };
 
@@ -470,34 +468,57 @@ const FormThongTinMau = (props: FormThongTinMauProps) => {
   };
 
   useEffect(() => {
-    if (dataEditMaus) {
+    if (dataEditMaus || dataCopyMaus) {
       const tenTieuChuan = dataTieuChuanAll.find(
-        (item: any) => item.maId === dataEditMaus.maTieuChuan
+        (item: any) =>
+          item.maId === dataEditMaus?.maTieuChuan ||
+          item.maId === dataCopyMaus?.maTieuChuan
       ).tenTieuChuan;
       const tenDichVu = dataLoaiDichVuAll.find(
-        (item: any) => item.maLoaiDv === dataEditMaus.loaiDv
+        (item: any) =>
+          item.maLoaiDv === dataEditMaus?.loaiDv ||
+          item.maLoaiDv === dataCopyMaus?.loaiDv
       ).tenDichVu;
-      setListImage(dataEditMaus.phieuDangKyMauHinhAnhs);
+      setListImage(
+        dataCopyMaus?.phieuDangKyMauHinhAnhs ||
+          dataEditMaus?.phieuDangKyMauHinhAnhs
+      );
 
       reset({
-        tenMau: dataEditMaus?.tenMau || "",
+        tenMau: dataEditMaus?.tenMau || dataCopyMaus?.tenMau || "",
         tenTieuChuan: tenTieuChuan || "",
         tenLoaiDichVu: tenDichVu || "",
-        thoiGianTieuChuan: dataEditMaus?.thoiGianTieuChuan || "",
-        ngayDuKienTraKetQua: dataEditMaus?.ngayDuKienTraKetQua || "",
-        soLo: dataEditMaus?.soLo || "",
-        donViSanXuat: dataEditMaus?.donViSanXuat || "",
-        ngaySanXuat: dataEditMaus?.ngaySanXuat || "",
-        hanSuDung: dataEditMaus?.hanSuDung || "",
-        soLuong: dataEditMaus?.soLuong || "",
-        donViTinh: dataEditMaus?.donViTinh || "",
-        yeuCauKiemNghiem: dataEditMaus?.yeuCauKiemNghiem || "",
-        dieuKienBaoQuan: dataEditMaus?.dieuKienBaoQuan || "",
-        luuMau: dataEditMaus.luuMau || false,
-        xuatKetQua: dataEditMaus.xuatKetQua || false,
-        tinhTrangMau: dataEditMaus?.tinhTrangMau || "",
-        ghiChu: dataEditMaus?.ghiChu || "",
-        phieuDangKyMauHinhAnhs: dataEditMaus?.phieuDangKyMauHinhAnhs || [],
+        thoiGianTieuChuan:
+          dataEditMaus?.thoiGianTieuChuan ||
+          dataCopyMaus?.thoiGianTieuChuan ||
+          "",
+        ngayDuKienTraKetQua:
+          dataEditMaus?.ngayDuKienTraKetQua ||
+          dataCopyMaus?.ngayDuKienTraKetQua ||
+          "",
+        soLo: dataEditMaus?.soLo || dataCopyMaus?.soLo || "",
+        donViSanXuat: dataEditMaus?.donViSanXuat || dataCopyMaus?.soLo || "",
+        ngaySanXuat:
+          dataEditMaus?.ngaySanXuat || dataCopyMaus?.ngaySanXuat || "",
+        hanSuDung: dataEditMaus?.hanSuDung || dataCopyMaus?.hanSuDung || "",
+        soLuong: dataEditMaus?.soLuong || dataCopyMaus?.soLuong || "",
+        donViTinh: dataEditMaus?.donViTinh || dataCopyMaus?.donViTinh || "",
+        yeuCauKiemNghiem:
+          dataEditMaus?.yeuCauKiemNghiem ||
+          dataCopyMaus?.yeuCauKiemNghiem ||
+          "",
+        dieuKienBaoQuan:
+          dataEditMaus?.dieuKienBaoQuan || dataCopyMaus?.dieuKienBaoQuan || "",
+        luuMau: dataEditMaus?.luuMau || dataCopyMaus?.luuMau || false,
+        xuatKetQua:
+          dataEditMaus?.xuatKetQua || dataCopyMaus?.xuatKetQua || false,
+        tinhTrangMau:
+          dataEditMaus?.tinhTrangMau || dataCopyMaus?.tinhTrangMau || "",
+        ghiChu: dataEditMaus?.ghiChu || dataCopyMaus?.ghiChu || "",
+        phieuDangKyMauHinhAnhs:
+          dataEditMaus?.phieuDangKyMauHinhAnhs ||
+          dataCopyMaus?.phieuDangKyMauHinhAnhs ||
+          [],
       });
     } else
       reset({
@@ -510,7 +531,7 @@ const FormThongTinMau = (props: FormThongTinMauProps) => {
         donViSanXuat: "",
         ngaySanXuat: "",
         hanSuDung: "",
-        soLuong: "",
+        soLuong: 0,
         donViTinh: "",
         yeuCauKiemNghiem: "",
         dieuKienBaoQuan: "",
@@ -520,7 +541,7 @@ const FormThongTinMau = (props: FormThongTinMauProps) => {
         ghiChu: "",
         phieuDangKyMauHinhAnhs: [],
       });
-  }, [tableBody, dataEditMaus]);
+  }, [tableBody, dataEditMaus, dataCopyMaus]);
 
   useEffect(() => {
     setValue("phieuDangKyMauHinhAnhs", listImage);

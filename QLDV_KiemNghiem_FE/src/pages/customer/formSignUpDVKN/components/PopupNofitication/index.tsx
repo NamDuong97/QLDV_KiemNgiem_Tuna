@@ -50,7 +50,7 @@ const PopupNofitication = (props: Props) => {
                 <h1 className="font-bold text-3xl text-cyan-900">Thông Báo</h1>
               </Box>
               <Box className="grid gap-1">
-                <p className="text-lg/6 font-medium text-center">
+                <p className="text-lg/6 font-medium text-center text-cyan-900">
                   Yêu cầu kiểm nghiệm đã được gửi thành công. Bộ phận chuyên
                   trách sẽ tiếp nhận và phản hồi đến Quý khách trong thời gian
                   sớm nhất. Để theo dõi trạng thái phiếu đăng ký bạn theo dõi

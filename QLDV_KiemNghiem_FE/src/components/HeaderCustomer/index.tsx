@@ -150,9 +150,9 @@ export default function HeaderCustomer(props: HeaderProps) {
     <div className="w-full sticky">
       <header
         id="heightRef"
-        className={`flex justify-center px-6 bg-white text-slate-900 shadow py-2 w-full border border-solid border-gray-300 heightRef -top-full`}
+        className={`flex justify-center px-6 border-b-[2px] bg-white text-slate-900 shadow py-2 w-full border border-solid border-gray-300 heightRef -top-full`}
       >
-        <Box className="flex justify-between w-full  max-w-[1440px] ">
+        <Box className="flex justify-between w-full max-w-[1240px] ">
           <Box className="flex items-center gap-1">
             <button
               className="block lg:!hidden !p-[6px]"
@@ -168,50 +168,13 @@ export default function HeaderCustomer(props: HeaderProps) {
               />
             </div>
           </Box>
-          {/* <Box className="hidden lg:flex lg:items-center">
-            <ul className="flex gap-12 text-lg h-full">
-              <li
-                className={`${
-                  pathName === APP_ROUTES.TUNA_CUSTOMER.HOME.to &&
-                  "text-blue-500"
-                } hover:text-blue-500 cursor-pointer flex items-center`}
-                onClick={handleRedirectHome}
-              >
-                <Tooltip title="Trang Chủ" disableInteractive>
-                  <IoHome className="w-7 h-7" />
-                </Tooltip>
-              </li>
-              <li className="flex items-center">
-                <Tooltip title="Đăng Ký Dịch Vụ Kiểm Nghiệm" disableInteractive>
-                  <div
-                    className={`${
-                      pathName ===
-                        APP_ROUTES.TUNA_CUSTOMER.FORM_SIGN_UP_DVKN.to &&
-                      "text-blue-500"
-                    } hover:text-blue-500 cursor-pointer`}
-                    onClick={() =>
-                      navigate(APP_ROUTES.TUNA_CUSTOMER.FORM_SIGN_UP_DVKN.to)
-                    }
-                  >
-                    <IoBookOutline className="w-7 h-7" />
-                  </div>
-                </Tooltip>
-              </li>
-              <li className="hover:text-blue-500 cursor-pointer text-center flex items-center">
-                <Tooltip title="Tin tức" disableInteractive>
-                  <FaRegNewspaper className="w-7 h-7" />
-                </Tooltip>
-              </li>
-            </ul>
-          </Box> */}
-
-          <Box className="gap-6 flex items-center">
-            <Box className="gap-8 flex">
+          <Box className="hidden lg:flex lg:items-center">
+            <Box className="gap-8 flex text-cyan-800">
               <p
                 className={clsx(
-                  "text-lg/6 font-medium hover:text-blue-600 cursor-pointer capitalize",
+                  "text-base/6 font-semibold hover:text-orange-500 cursor-pointer uppercase",
                   {
-                    "text-blue-500":
+                    "text-orange-500":
                       pathName === APP_ROUTES.TUNA_CUSTOMER.HOME.to,
                   }
                 )}
@@ -221,9 +184,9 @@ export default function HeaderCustomer(props: HeaderProps) {
               </p>
               <p
                 className={clsx(
-                  "text-lg/6 font-medium hover:text-blue-600 cursor-pointer capitalize",
+                  "text-base/6 font-semibold hover:text-orange-500 cursor-pointer uppercase",
                   {
-                    "text-blue-500":
+                    "text-orange-500":
                       pathName ===
                       APP_ROUTES.TUNA_CUSTOMER.FORM_SIGN_UP_DVKN.to,
                   }
@@ -236,12 +199,15 @@ export default function HeaderCustomer(props: HeaderProps) {
               </p>
               <p
                 className={clsx(
-                  "text-lg/6 font-medium hover:text-blue-600 cursor-pointer capitalize"
+                  "text-base/6 font-semibold hover:text-orange-500 cursor-pointer uppercase"
                 )}
               >
                 Tin tức
               </p>
             </Box>
+          </Box>
+
+          <Box className="gap-6 flex items-center">
             <Box>
               <button className="hidden sm:flex items-center justify-between p-2 rounded-full bg-slate-300 cursor-pointer hover:bg-blue-300">
                 <FaSearch className="text-gray-600" />
@@ -315,7 +281,7 @@ export default function HeaderCustomer(props: HeaderProps) {
                     color="inherit"
                     className="relative !p-2"
                   >
-                    <AccountCircle className="text-[#1e3a8a]" />
+                    <AccountCircle className="text-cyan-800" />
                   </IconButton>
                 </Tooltip>
                 <AccountPopup

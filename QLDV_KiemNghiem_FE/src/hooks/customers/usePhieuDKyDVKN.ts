@@ -16,6 +16,7 @@ interface Props {
   onError?: (errors: any) => void;
   options?: any;
   trangThaiIDs?: any;
+  handleClickOpenPopupNofitication?: () => void;
 }
 
 export const useGetPhieuDangKyKiemNghiemByTrangThaiArray = (props: Props) => {
@@ -55,6 +56,7 @@ export const useGetDmMauAll = (props: Props) => {
       const response = await PhieuDKyDVKN_Services.getDmMauAll();
       return response;
     },
+    staleTime: Infinity,
   });
 };
 
@@ -121,18 +123,19 @@ export const useGetTrangThaiPhieuDkAll = (props: Props) => {
 };
 
 export const useCreatePhieuDKyDVKN = (props: Props) => {
-  const { queryKey, onSettled } = props;
+  const { queryKey, onSettled, handleClickOpenPopupNofitication } = props;
   return useMutation({
     mutationKey: [queryKey],
     mutationFn: async (paramsPhieuDangKyDVKN: FormData) => {
       const response = await PhieuDKyDVKN_Services.createPhieuDKyDVKN(
         paramsPhieuDangKyDVKN
       );
-      if (response !== 200) return console.log("Lỗi Server");
+
       return response;
     },
     onSuccess: (response: any) => {
-      if (response !== 200) console.log("Lỗi Server");
+      if (response.status !== 200) console.log("Lỗi", response.statusText);
+      handleClickOpenPopupNofitication?.();
     },
     onSettled: onSettled,
   });

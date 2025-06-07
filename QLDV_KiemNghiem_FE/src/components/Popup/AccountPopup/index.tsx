@@ -35,7 +35,7 @@ const AccountPopup = (props: AccountPopupProps) => {
       <Box className="bg-white border-[1px] border-gray-100 shadow-[0px_4px_4px_rgba(0, 0, 0, 0.25)] rounded-md px-2 py-3 w-[300px] grid gap-1">
         <Box className="flex gap-2 items-center cursor-pointer rounded p-1">
           <RxAvatar className="w-9 h-9" />
-          <p className="text-gray-800 text-xl/6 font-bold">Nguyễn Văn A</p>
+          <p className="text-cyan-950 text-xl/6 font-bold">Nguyễn Văn A</p>
         </Box>
         <hr className="text-gray-300" />
         <Box
@@ -46,7 +46,7 @@ const AccountPopup = (props: AccountPopupProps) => {
           }}
         >
           <FaVoteYea className="w-6 h-6 text-[#404dd2]" />
-          <p className="text-gray-800 text-base/6 font-medium">
+          <p className="text-cyan-950 text-base/6 font-medium">
             Quản lý phiếu DKDVKN
           </p>
         </Box>
@@ -58,7 +58,7 @@ const AccountPopup = (props: AccountPopupProps) => {
           }}
         >
           <RiBillLine className="w-6 h-6 text-[#2b89d1]" />
-          <p className="text-gray-800 text-base/6 font-medium">
+          <p className="text-cyan-950 text-base/6 font-medium">
             Quản lý hóa đơn
           </p>
         </Box>

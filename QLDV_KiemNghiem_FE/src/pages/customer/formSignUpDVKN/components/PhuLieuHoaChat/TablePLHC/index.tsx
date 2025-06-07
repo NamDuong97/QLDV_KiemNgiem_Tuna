@@ -8,11 +8,14 @@ import {
   TableContainer,
   TableHead,
   TableRow,
+  Tooltip,
 } from "@mui/material";
 import SquareIcon from "@mui/icons-material/Square";
 import IndeterminateCheckBoxIcon from "@mui/icons-material/IndeterminateCheckBox";
 import { Dispatch, SetStateAction } from "react";
 import { Align, TableHeader } from "../../../../../../models/Table";
+import { CiEdit } from "react-icons/ci";
+import { MdContentCopy } from "react-icons/md";
 
 interface TableProps {
   tableBody: any[];
@@ -23,6 +26,8 @@ interface TableProps {
   setDataEditPLHC: Dispatch<any>;
   dataEditPLHC?: any;
   handleRedirectTag1: () => void;
+  setDataCopyPLHC: Dispatch<any>;
+  dataCopyPLHC: any;
 }
 
 const TablePLHC = (props: TableProps) => {
@@ -34,6 +39,8 @@ const TablePLHC = (props: TableProps) => {
     setDataEditPLHC,
     dataEditPLHC,
     handleRedirectTag1,
+    dataCopyPLHC,
+    setDataCopyPLHC,
   } = props;
 
   const handleCheckbox = (item: any) => {
@@ -71,6 +78,22 @@ const TablePLHC = (props: TableProps) => {
       );
       setListCheckbox([...removeListCheckboxByTenPLHC]);
       setDataEditPLHC(selectedItem);
+      handleRedirectTag1?.();
+    }
+  };
+
+  const handleCopyListPLHC = (tenPlhc: string) => {
+    const selectedItem = tableBody.find(
+      (item: any) => item.tenPlhc === tenPlhc
+    );
+    if (dataCopyPLHC && dataCopyPLHC?.tenPlhc === selectedItem?.tenPlhc)
+      setDataCopyPLHC(null);
+    else {
+      const removeListCheckboxByTenPLHC = listCheckbox.filter(
+        (item) => item.tenPlhc !== tenPlhc
+      );
+      setListCheckbox([...removeListCheckboxByTenPLHC]);
+      setDataCopyPLHC(selectedItem);
       handleRedirectTag1?.();
     }
   };
@@ -135,12 +158,7 @@ const TablePLHC = (props: TableProps) => {
               </TableCell>
               <TableCell align="left">
                 <Box className="flex gap-2 items-center justify-start">
-                  <p
-                    onClick={() => handleThemListPLHCEdit(item.tenPlhc)}
-                    className="text-base/4 font-medium hover:underline cursor-pointer"
-                  >
-                    {item.tenPlhc}
-                  </p>
+                  <p className="text-base/4 font-medium">{item.tenPlhc}</p>
                 </Box>
               </TableCell>
               <TableCell align="center">
@@ -163,6 +181,58 @@ const TablePLHC = (props: TableProps) => {
                   <p className="text-base/4 font-medium truncate w-[167px]">
                     {item.dieuKienBaoQuan}
                   </p>
+                </Box>
+              </TableCell>
+              <TableCell align="center" className="!py-2">
+                <Box className="flex gap-2 items-center justify-center">
+                  <Tooltip
+                    title="Sửa"
+                    slotProps={{
+                      popper: {
+                        modifiers: [
+                          {
+                            name: "offset",
+                            options: {
+                              offset: [0, -10],
+                            },
+                          },
+                        ],
+                      },
+                    }}
+                  >
+                    <button
+                      onClick={() => handleThemListPLHCEdit(item.tenPlhc)}
+                      className="px-2 py-1 rounded cursor-pointer border border-solid border-yellow-500 group hover:bg-yellow-500"
+                    >
+                      <span className="text-base/4 lg:text-lg/6 font-bold text-yellow-500 group-hover:text-white">
+                        <CiEdit />
+                      </span>
+                    </button>
+                  </Tooltip>
+                  <Tooltip
+                    title="Sao chép"
+                    slotProps={{
+                      popper: {
+                        modifiers: [
+                          {
+                            name: "offset",
+                            options: {
+                              offset: [0, -10],
+                            },
+                          },
+                        ],
+                      },
+                    }}
+                  >
+                    <button
+                      onClick={() => handleCopyListPLHC(item.tenPlhc)}
+                      className="px-2 py-1 rounded cursor-pointer border border-solid border-gray-500 text-red-500 group hover:bg-gray-500"
+                    >
+                      <span className="text-base/4 lg:text-lg/6 font-bold text-gray-500 group-hover:text-white">
+                        <MdContentCopy />
+                      </span>
+                    </button>
+                  </Tooltip>
                 </Box>
               </TableCell>
             </TableRow>

@@ -126,6 +126,7 @@ const FormSignUpDVKN = () => {
   const { mutate } = useCreatePhieuDKyDVKN({
     queryKey: "CreatePhieuDKyDVKN",
     onSettled: handleOnSettled,
+    handleClickOpenPopupNofitication: handleClickOpenPopupNofitication,
   });
 
   const onSubmitPhieuDkyDV = (dataForm: FormPhieuDangKy) => {
@@ -166,7 +167,8 @@ const FormSignUpDVKN = () => {
         maTieuChuan: itemMau.maTieuChuan,
         maPhieuDangKy: itemMau.maPhieuDangKy,
         manvThucHien: "NV002",
-        maLoaiDV: "DV001",
+        maLoaiDV: itemMau.maLoaiDV,
+        madv: "DV001",
         soLo: itemMau.soLo,
         donViSanXuat: itemMau.donViSanXuat,
         ngaySanXuat: itemMau.ngaySanXuat,
@@ -273,8 +275,7 @@ const FormSignUpDVKN = () => {
       mutate(dataPhieuDKY);
     }
 
-    sessionStorage.removeItem("PhieuDangKy");
-    handleClickOpenPopupNofitication();
+    // sessionStorage.removeItem("PhieuDangKy");
   };
 
   useEffect(() => {
@@ -335,7 +336,7 @@ const FormSignUpDVKN = () => {
               >
                 <MdDoorBack className="w-4 h-4 sm:w-7 sm:h-7 text-[#306fb2]" />
               </button>
-              <h1 className="capitalize text-xl/4 sm:text-3xl/6 font-bold text-gray-700">
+              <h1 className="capitalize text-xl/4 sm:text-3xl/6 font-bold text-cyan-800">
                 Đăng Ký Dịch Vụ Kiểm Nghiệm
               </h1>
             </Box>
@@ -376,7 +377,7 @@ const FormSignUpDVKN = () => {
                     : "rounded-[6px] border"
                 } p-2 sm:p-4 flex items-center justify-between w-full cursor-pointer hover:bg-gray-100 transition-colors`}
               >
-                <p className="text-base/6 sm:text-xl/6 text-gray-700 font-bold flex gap-2 items-center leading-6">
+                <p className="text-base/6 sm:text-xl/6 text-cyan-900 font-bold flex gap-2 items-center leading-6">
                   <MdAccountBox className="w-5 h-5 sm:w-7 sm:h-7 shrink-0 text-indigo-600" />{" "}
                   Thông Tin Chung
                 </p>
@@ -573,7 +574,7 @@ const FormSignUpDVKN = () => {
                     : "rounded-[6px] border"
                 } p-2 sm:p-4 flex items-center justify-between w-full cursor-pointer hover:bg-gray-100 transition-colors`}
               >
-                <p className="text-base/6 sm:text-xl/6 text-gray-700 font-bold flex gap-2 items-center leading-6">
+                <p className="text-base/6 sm:text-xl/6 text-cyan-900 font-bold flex gap-2 items-center leading-6">
                   <MdDescription className="w-5 h-5 sm:w-7 sm:h-7 shrink-0 text-blue-500" />{" "}
                   Mẫu
                 </p>
@@ -604,7 +605,7 @@ const FormSignUpDVKN = () => {
                     : "rounded-[6px] border"
                 }   p-2 sm:p-4 flex items-center justify-between w-full cursor-pointer hover:bg-gray-100 transition-colors`}
               >
-                <p className="text-base/6 sm:text-xl/6 text-gray-700 font-bold flex gap-2 items-center leading-6">
+                <p className="text-base/6 sm:text-xl/6 text-cyan-900 font-bold flex gap-2 items-center leading-6">
                   <MdScience className="w-5 h-5 sm:w-7 sm:h-7 shrink-0 text-orange-300" />{" "}
                   Phụ Liệu Hóa Chất
                 </p>

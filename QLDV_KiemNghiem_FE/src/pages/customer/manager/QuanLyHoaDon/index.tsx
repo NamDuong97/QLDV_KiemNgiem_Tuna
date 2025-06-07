@@ -1,74 +1,47 @@
-import { Box, Pagination } from "@mui/material";
+import { Box } from "@mui/material";
 import { useState } from "react";
-// import { useLocation, useNavigate } from "react-router";
-import { Align } from "../../../../models/Table";
 import { motion } from "motion/react";
-import TableQuanLyHoaDon from "./Table";
-import PopupBoloc from "./popupBoloc";
+import ChoXuLy from "./statusHoaDon/ChoXuLy";
+import ThanhToan from "./statusHoaDon/ThanhToan";
+import HoanThanh from "./statusHoaDon/HoanThanh";
+import DaHuy from "./statusHoaDon/DaHuy";
 
-const tableHead = [
+const dataTag = [
   {
-    id: "MaHD",
-    sort: false,
-    label: "Mã hoá đơn",
-    align: Align.Center,
+    name: "Chờ Xử Lý",
+    maID: 1,
   },
   {
-    id: "SoDKPT",
-    sort: false,
-    label: "Số đăng ký phân tích",
-    align: Align.Left,
-  },
-
-  {
-    id: "TongTien",
-    sort: false,
-    label: "Tổng tiền",
-    align: Align.Center,
+    name: "Thanh Toán",
+    maID: 2,
   },
   {
-    id: "NgayLap",
-    sort: false,
-    label: "Ngày lập",
-    align: Align.Center,
+    name: "Hoàn Thành",
+    maID: 3,
   },
   {
-    id: "GhiChu",
-    sort: false,
-    label: "Ghi chú",
-    align: Align.Center,
-  },
-  {
-    id: "TrangThai",
-    sort: false,
-    label: "Trạng thái",
-    align: Align.Center,
-  },
-];
-
-const tableBody = [
-  {
-    MaHD: "HD001",
-    SoDKPT: "KD02546",
-    TongTien: "",
-    NgayLap: "25/04/2025",
-    GhiChu: "25/04/2025",
-    TrangThai: "Đang chờ xử lý",
+    name: "Đã hủy",
+    maID: 4,
   },
 ];
 
 const QuanLyHoaDon = () => {
-  // const navigate = useNavigate();
-  // const url = useLocation();
+  const [isTag, setisTag] = useState(1);
 
-  const [openPopupBoloc, setOpenPopupBoloc] = useState(false);
+  const handleTagStatus = () => {
+    switch (isTag as number) {
+      case 2:
+        return <ThanhToan />;
+      case 3:
+        return <HoanThanh />;
+      case 4:
+        return <DaHuy />;
+      default:
+        return <ChoXuLy />;
+    }
+  };
 
-  // const handleClickMenu = () => {
-  //   return isSidebarMobile
-  //     ? handleIsOpenSidebarMobile(true)
-  //     : setIsMenu(!isMenu);
-  // };
-
+  
   return (
     <motion.div
       key="QuanLyHoaDon"
@@ -78,49 +51,27 @@ const QuanLyHoaDon = () => {
       transition={{ duration: 0.7 }}
       className="border border-solid border-gray-300 rounded-[10px] p-2 sm:px-6 sm:py-5 w-full grid gap-6"
     >
-      <Box className="grid gap-4">
-        <Box className="flex justify-between">
-          <Box>
-            <button
-              onClick={() => setOpenPopupBoloc(true)}
-              className="border border-solid border-gray-300 rounded-md px-3 py-[6px] text-[#677788] font-medium text-xs/4 sm:text-sm/6 flex items-center gap-2 cursor-pointer shadow-[inset_0_0_3px_rgba(0,0,0,0.2)] hover:shadow-none"
+      <Box className="border-b border-solid border-gray-300 flex justify-between overflow-x-auto whitespace-nowrap">
+        {dataTag.map((item) => (
+          <Box
+            key={item.maID}
+            onClick={() => setisTag(item.maID)}
+            className={`px-3 py-2 sm:px-6 sm:py-4 w-full text-center hover:bg-gray-100 hover:rounded-tl-md hover:rounded-tr-md cursor-pointer ${
+              isTag === item.maID &&
+              "bg-[rgb(230,236,246)] border-b border-solid border-[rgb(39,114,255)] rounded-tl-md rounded-tr-md"
+            }`}
+          >
+            <p
+              className={`text-sm/6 sm:text-lg/6 font-semibold text-cyan-900 ${
+                isTag === item.maID && "!text-[rgb(39,114,255)]"
+              }`}
             >
-              Bộ Lọc
-              <span className="sm:px-[4px] sm:py-[3px] w-6 h-6 text-gray-800 bg-gray-200 rounded-full text-xs/4 flex items-center justify-center">
-                0
-              </span>
-            </button>
+              {item.name}
+            </p>
           </Box>
-        </Box>
-        <Box className="overflow-x-auto whitespace-nowrap">
-          <TableQuanLyHoaDon tableHead={tableHead} tableBody={tableBody} />
-        </Box>
-        <Box className="px-4 py-2 flex justify-center">
-          <Pagination
-            count={10}
-            // page={currentPage}
-            // onChange={handlePageChange}
-            variant="outlined"
-            shape="rounded"
-            color="primary"
-            sx={{
-              '[aria-label="Go to next page"],[aria-label="Go to previous page"]':
-                {
-                  backgroundColor: "#1976d21f",
-                  border: "1px solid #1976d280",
-                  color: "#1976d2",
-                },
-              ".MuiPagination-ul": {
-                justifyContent: "center",
-              },
-            }}
-          />
-        </Box>
+        ))}
       </Box>
-      <PopupBoloc
-        open={openPopupBoloc}
-        handleClose={() => setOpenPopupBoloc(false)}
-      />
+      {handleTagStatus()}
     </motion.div>
   );
 };
