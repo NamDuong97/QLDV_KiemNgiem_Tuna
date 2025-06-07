@@ -1,7 +1,6 @@
 import { AnimatePresence, motion } from "motion/react";
 import { Align } from "../../../../../../models/Table";
 import TableHoanThanh from "./Table";
-import { useState } from "react";
 
 const tableHead = [
   {
