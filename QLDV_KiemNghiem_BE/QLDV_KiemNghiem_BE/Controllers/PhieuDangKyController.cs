@@ -39,6 +39,24 @@ namespace QLDV_KiemNghiem_BE.Controllers
             return Ok(phieuDangKys);
         }
 
+        [HttpPut]
+        [Route("reviewPhieuDangKyByKHDT")]
+        public async Task<ActionResult> reviewPhieuDangKyByKHDT( RequestReviewPhieuDangKy duyetPhieu)
+        {
+            var phieuDangKys = await _service.PhieuDangKy.ReviewPhieuDangKyByKHDT(duyetPhieu);
+            _logger.LogDebug(phieuDangKys.Message);
+            return Ok(phieuDangKys);
+        }
+
+        [HttpPut]
+        [Route("reviewPhieuDangKyByBLD")]
+        public async Task<ActionResult> reviewPhieuDangKyByBLD(RequestReviewPhieuDangKy duyetPhieu)
+        {
+            var phieuDangKys = await _service.PhieuDangKy.ReviewPhieuDangKyByBLD(duyetPhieu);
+            _logger.LogDebug(phieuDangKys.Message);
+            return Ok(phieuDangKys);
+        }
+
         // action này dùng để hiển thị phiếu đăng ký cho khách hàng cụ thể
         [HttpGet]
         [Route("getPhieuDangKiesOfCustomer")]
@@ -71,11 +89,6 @@ namespace QLDV_KiemNghiem_BE.Controllers
                 _logger.LogError("Loi validate tham so dau vao");
                 return BadRequest(new { Errors = errors });
             }
-            if(phieuDangKyDto?.Maus?.Count() == 0 || phieuDangKyDto?.PhieuDangKyPhuLieuHoaChats?.Count() == 0)
-            {
-                _logger.LogDebug("Phiếu đăng ký cung cấp thiếu mẫu hoặc phụ liệu hoá chất");
-                return BadRequest("Phiếu đăng ký không thể thiếu mẫu và phụ liệu hoá chất, vui lòng cung cấp đầy đủ");
-            }
             ResponseModel1<PhieuDangKyDto> phieuDangKy = await _service.PhieuDangKy.CreatePhieuDangKyAsync(phieuDangKyDto);
             if (phieuDangKy.KetQua)
             {
@@ -104,16 +117,18 @@ namespace QLDV_KiemNghiem_BE.Controllers
                 _logger.LogError("Loi validate tham so dau vao");
                 return BadRequest(new { Errors = errors });
             }
-            
-            bool update = await _service.PhieuDangKy.UpdatePhieuDangKyAsync(phieuDangKyDto);
-            if (update)
+
+            ResponseModel1<PhieuDangKyDto> phieuDangKy = await _service.PhieuDangKy.UpdatePhieuDangKyAsync(phieuDangKyDto);
+            if (phieuDangKy.KetQua)
             {
-                _logger.LogInformation("Cap nhat phieu dang ky thanh cong");
-                return Ok(phieuDangKyDto);
+                // Cap nhat hoa don sau khi them phieu dang ky
+                ResponseModel1<HoaDonThuDto> hoaDonThu = await _service.HoaDonThu.UpdateHoaDonThuByMaPhieuDangKyAsync(phieuDangKy.Data.MaId);
+                _logger.LogDebug("Cap nhat phieu dang ky thanh cong");
+                return Ok(new { phieuDangKy = phieuDangKy.Data, hoaDon = hoaDonThu.Data });
             }
             else
             {
-                _logger.LogInformation("Cap nhat phieu dang ky that bai");
+                _logger.LogDebug("Cap nhat phieu dang ky that bai");
                 return BadRequest();
             }
         }

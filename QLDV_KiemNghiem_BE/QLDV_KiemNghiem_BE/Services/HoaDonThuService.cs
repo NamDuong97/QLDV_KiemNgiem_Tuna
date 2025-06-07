@@ -43,9 +43,9 @@ namespace QLDV_KiemNghiem_BE.Services
             }
             return hoaDonThuDtos;
         }
-        public async Task<IEnumerable<HoaDonThuDto>>  GetPhieuDangKiesOfCustomer(string maKH)
+        public async Task<IEnumerable<HoaDonThuDto>>  GetHoaDonThuOfCustomer(string maKH)
         {
-            var HoaDonThuDomains = await _repositoryManager.HoaDonThu.GetPhieuDangKiesOfCustomer(maKH);
+            var HoaDonThuDomains = await _repositoryManager.HoaDonThu.GetHoaDonThuOfCustomer(maKH);
             List<HoaDonThuDto> hoaDonThuDtos = new List<HoaDonThuDto>();
             foreach (var hoaDon in HoaDonThuDomains)
             {
@@ -124,19 +124,39 @@ namespace QLDV_KiemNghiem_BE.Services
                 Data = hoaDonThuDto
             };
         }
-        public async Task<bool> UpdateHoaDonThuAsync(HoaDonThuDto HoaDonThuDto)
+        public async Task<ResponseModel1<HoaDonThuDto>> UpdateHoaDonThuAsync(HoaDonThuDto hoaDonThuDto)
         {
-            if (HoaDonThuDto == null) return false;
-            var HoaDonThuCheck = await _repositoryManager.HoaDonThu.FindHoaDonThuAsync(HoaDonThuDto.MaId);
-            if (HoaDonThuCheck == null)
+            if (hoaDonThuDto == null)
             {
-                return false;
+                return new ResponseModel1<HoaDonThuDto>
+                {
+                    KetQua = false,
+                    Message = "Thieu du lieu dau vao",
+                    Data = null
+                };
             }
-            var HoaDonThuDomain = _mapper.Map<HoaDonThu>(HoaDonThuDto);
-            HoaDonThuDomain.NgaySua = DateTime.Now;
-            _repositoryManager.HoaDonThu.UpdateHoaDonThuAsync(HoaDonThuDomain);
+            var hoaDonThuDomain = _mapper.Map<HoaDonThu>(hoaDonThuDto);
+            _repositoryManager.HoaDonThu.UpdateHoaDonThuAsync(hoaDonThuDomain);
             bool check = await _repositoryManager.SaveChangesAsync();
-            return check;
+            var hoaDonThuReturn = _mapper.Map<HoaDonThuDto>(hoaDonThuDomain);
+            return new ResponseModel1<HoaDonThuDto>
+            {
+                KetQua = check,
+                Message = check ? "Cap nhat hoa don thu thanh cong" : "Cạp nhat hoa don thu that bai",
+                Data = hoaDonThuReturn
+            };
+        }
+        public async Task<ResponseModel1<HoaDonThuDto>> UpdateHoaDonThuByMaPhieuDangKyAsync(string maPhieuDangKy)
+        {
+            var result = _repositoryManager.HoaDonThu.UpdateHoaDonThuByMaPhieuDangKyAsync(maPhieuDangKy);
+            bool check = await _repositoryManager.SaveChangesAsync();
+            var hoaDonThuReturn = _mapper.Map<HoaDonThuDto>(result);
+            return new ResponseModel1<HoaDonThuDto>
+            {
+                KetQua = check,
+                Message = check ? "Cap nhat hoa don thu thanh cong" : "Cap nhat hoa don thu that bai",
+                Data = hoaDonThuReturn
+            };
         }
         public async Task<bool> DeleteHoaDonThuAsync(HoaDonThu HoaDonThu)
         {

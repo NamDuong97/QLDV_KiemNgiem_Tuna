@@ -21,7 +21,7 @@ namespace QLDV_KiemNghiem_BE.Repositories
             return await _context.HoaDonThus.Include(item => item.ChiTietHoaDonThus).Include(item => item.HoaDonThuBoSungs).
                 ThenInclude(item => item.ChiTietHoaDonThuBoSungs).ToListAsync();
         }
-        public async Task<IEnumerable<HoaDonThu>> GetPhieuDangKiesOfCustomer(string maKH)
+        public async Task<IEnumerable<HoaDonThu>> GetHoaDonThuOfCustomer(string maKH)
         {
             var hoaDonThus = await _context.HoaDonThus.FromSqlRaw("exec sp_GetAllHoaDonOfCustomer @maKh = {0}", maKH).ToListAsync();
 
@@ -56,6 +56,23 @@ namespace QLDV_KiemNghiem_BE.Repositories
         {
             _context.HoaDonThus.Update(HoaDonThu);
         }
+        public async Task<HoaDonThu> UpdateHoaDonThuByMaPhieuDangKyAsync(string maPhieuDangKy)
+        {
+            // 1. Gọi stored procedure và lấy ra 1 bản ghi cụ thể
+            var hoaDonThu = await _context.HoaDonThus
+                .FromSqlRaw("exec sp_UpdateHoaDonThuByMaPhieuDangKy @maphieu = {0}", maPhieuDangKy)
+                .AsNoTracking().FirstOrDefaultAsync();
+            if (hoaDonThu == null)
+                return new HoaDonThu();
+            // 2. Attach vào context để load các navigation properties
+            _context.Attach(hoaDonThu);
+            // 3. Load collection: ChiTietHoaDonThus vào hoaDonThu
+            await _context.Entry(hoaDonThu).Collection(p => p.ChiTietHoaDonThus).LoadAsync();
+            // 4. Load collection: HoaDonThuBoSungs vào hoaDonThu
+            await _context.Entry(hoaDonThu).Collection(p => p.HoaDonThuBoSungs).Query().Include(t => t.ChiTietHoaDonThuBoSungs).LoadAsync();
+            return hoaDonThu;
+        }
+
         public void DeleteHoaDonThuAsync(HoaDonThu HoaDonThu)
         {
             _context.HoaDonThus.Remove(HoaDonThu);
