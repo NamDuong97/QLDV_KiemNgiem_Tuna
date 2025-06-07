@@ -102,80 +102,76 @@ namespace QLDV_KiemNghiem_BE.Services
             List<PhieuDangKyMau> phieuDangKyMauDomains = new List<PhieuDangKyMau>();
             List<PhieuDangKyPhuLieuHoaChat> phieuDangKyPhuLieuHoaChatDomains = new List<PhieuDangKyPhuLieuHoaChat>();
             List<PhieuDangKyMauHinhAnh> phieuDangKyMauHinhAnhDomains = new List<PhieuDangKyMauHinhAnh>();
-           
+
+            if (phieuDangKyDto == null )
+            {
+                return new ResponseModel1<PhieuDangKyDto>
+                {
+                    Message = "Thieu du lieu dau vao!",
+                    KetQua = false,
+                };
+            }
+
+            if (phieuDangKyDto.Maus == null || phieuDangKyDto.PhieuDangKyPhuLieuHoaChats == null || phieuDangKyDto.Maus.Count() <= 0 ||
+                phieuDangKyDto.MaId == "" || phieuDangKyDto.PhieuDangKyPhuLieuHoaChats.Count() <= 0)
+            {
+                return new ResponseModel1<PhieuDangKyDto>
+                {
+                    Message = "Thieu du lieu dau vao mau hoac phu lieu hoa chat, vui long kiem tra lai!",
+                    KetQua = false,
+                };
+            }
 
             phieuDangKyDomain = _mapper.Map<PhieuDangKy>(phieuDangKyDto);
             phieuDangKyDomain.MaId = Guid.NewGuid().ToString();
             phieuDangKyDomain.TrangThaiId = "TT01";
             phieuDangKyDomain.SoDkpt = "SDKPT" + PublicFunc.getTimeSystem();
             phieuDangKyDomain.NgayTao = DateTime.Now;
-            if (phieuDangKyDto?.Maus?.Count() > 0)
+            
+            // Them danh sach mau vao CSDL
+            foreach (var mau in phieuDangKyDto.Maus)
             {
-                // Them danh sach mau vao CSDL
-                foreach (var mau in phieuDangKyDto.Maus)
+                PhieuDangKyMau mauDomain = new PhieuDangKyMau();
+                mauDomain = _mapper.Map<PhieuDangKyMau>(mau);
+                mauDomain.MaId = Guid.NewGuid().ToString();
+                mauDomain.MaPhieuDangKy = phieuDangKyDomain.MaId;
+                mauDomain.MaPdkMau = mauDomain.TenMau + "_" + mauDomain.LoaiDv + "_" + PublicFunc.getTimeSystem() + "_" + mauDomain.ThoiGianTieuChuan.ToString();
+                mauDomain.NgayTao = DateTime.Now;
+                // Thêm hình ảnh vào CSDL
+                Console.WriteLine("So luong hinh anh trong mau: " + mau.PhieuDangKyMauHinhAnhs.Count);
+                foreach (var img in mau.PhieuDangKyMauHinhAnhs)
                 {
-                    PhieuDangKyMau mauDomain = new PhieuDangKyMau();
-                    mauDomain = _mapper.Map<PhieuDangKyMau>(mau);
-                    mauDomain.MaId = Guid.NewGuid().ToString();
-                    mauDomain.MaPhieuDangKy = phieuDangKyDomain.MaId;
-                    mauDomain.MaPdkMau = mauDomain.TenMau + "_" + mauDomain.LoaiDv + "_" + PublicFunc.getTimeSystem() + "_" + mauDomain.ThoiGianTieuChuan.ToString();
-                    mauDomain.NgayTao = DateTime.Now;
-                    // Thêm hình ảnh vào CSDL
-                    Console.WriteLine("So luong hinh anh trong mau: " + mau.PhieuDangKyMauHinhAnhs.Count);
-                    foreach (var img in mau.PhieuDangKyMauHinhAnhs)
+                    var hinhAnh = new PhieuDangKyMauHinhAnh
                     {
-                        var hinhAnh = new PhieuDangKyMauHinhAnh
-                        {
-                            MaId = Guid.NewGuid().ToString(),
-                            MaMau = mauDomain.MaId,
-                            Ten = img.Ten,
-                            DinhDang = img.DinhDang,
-                            GhiChu = img.GhiChu,
-                            LoaiAnh = img.LoaiAnh,
-                            TrangThai = img.TrangThai,
-                            NguoiTao = img.NguoiTao,
-                            NgayTao = DateTime.Now
-                        };
-                        phieuDangKyMauHinhAnhDomains.Add(hinhAnh); // Them vao de tra ve cho ng dung
-                        await _repositoryManager.PhieuDangKyMauHinhAnh.CreatePhieuDangKyMauHinhAnhAsync(hinhAnh);
-                    }
-                    mauDomain.PhieuDangKyMauHinhAnhs = phieuDangKyMauHinhAnhDomains;
-                    phieuDangKyMauDomains.Add(mauDomain);
-                    await _repositoryManager.PhieuDangKyMau.CreatePhieuDangKyMauAsync(mauDomain);
-                    phieuDangKyMauHinhAnhDomains = new List<PhieuDangKyMauHinhAnh>(); // sau khi them anh xong thi xoa mang anh di, them tiep
+                        MaId = Guid.NewGuid().ToString(),
+                        MaMau = mauDomain.MaId,
+                        Ten = img.Ten,
+                        DinhDang = img.DinhDang,
+                        GhiChu = img.GhiChu,
+                        LoaiAnh = img.LoaiAnh,
+                        TrangThai = img.TrangThai,
+                        NguoiTao = img.NguoiTao,
+                        NgayTao = DateTime.Now
+                    };
+                    phieuDangKyMauHinhAnhDomains.Add(hinhAnh); // Them vao de tra ve cho ng dung
+                    await _repositoryManager.PhieuDangKyMauHinhAnh.CreatePhieuDangKyMauHinhAnhAsync(hinhAnh);
                 }
+                mauDomain.PhieuDangKyMauHinhAnhs = phieuDangKyMauHinhAnhDomains;
+                phieuDangKyMauDomains.Add(mauDomain);
+                await _repositoryManager.PhieuDangKyMau.CreatePhieuDangKyMauAsync(mauDomain);
+                phieuDangKyMauHinhAnhDomains = new List<PhieuDangKyMauHinhAnh>(); // sau khi them anh xong thi xoa mang anh di, them tiep
             }
-            else
+           
+            // Them danh sach plhc vao CSDL
+            foreach (var plhc in phieuDangKyDto.PhieuDangKyPhuLieuHoaChats)
             {
-                return new ResponseModel1<PhieuDangKyDto> { 
-                    KetQua = false,
-                    Message = "Danh sach mau khong co du lieu, vui long gui lai phieu dang ky!",
-                    Data = null
-                };
-            }
-
-            if (phieuDangKyDto.PhieuDangKyPhuLieuHoaChats.Count() > 0)
-            {
-                // Them danh sach plhc vao CSDL
-                foreach (var plhc in phieuDangKyDto.PhieuDangKyPhuLieuHoaChats)
-                {
-                    PhieuDangKyPhuLieuHoaChat phieuDangKyPhuLieuHoaChatDomain = new PhieuDangKyPhuLieuHoaChat();
-                    phieuDangKyPhuLieuHoaChatDomain = _mapper.Map<PhieuDangKyPhuLieuHoaChat>(plhc);
-                    phieuDangKyPhuLieuHoaChatDomain.MaId = Guid.NewGuid().ToString();
-                    phieuDangKyPhuLieuHoaChatDomain.MaPhieuDangKy = phieuDangKyDomain.MaId;
-                    phieuDangKyPhuLieuHoaChatDomain.NgayTao = DateTime.Now;
-                    phieuDangKyPhuLieuHoaChatDomains.Add(phieuDangKyPhuLieuHoaChatDomain);
-                    await _repositoryManager.PhieuDangKyPhuLieuHoaChat.CreatePhieuDangKyPhuLieuHoaChatAsync(phieuDangKyPhuLieuHoaChatDomain);
-                }
-            }
-            else
-            {
-                return new ResponseModel1<PhieuDangKyDto>
-                {
-                    KetQua = false,
-                    Message = "Danh sach phu lieu hoa chat khong co du lieu, vui long gui lai phieu dang ky!",
-                    Data = null
-                };
+                PhieuDangKyPhuLieuHoaChat phieuDangKyPhuLieuHoaChatDomain = new PhieuDangKyPhuLieuHoaChat();
+                phieuDangKyPhuLieuHoaChatDomain = _mapper.Map<PhieuDangKyPhuLieuHoaChat>(plhc);
+                phieuDangKyPhuLieuHoaChatDomain.MaId = Guid.NewGuid().ToString();
+                phieuDangKyPhuLieuHoaChatDomain.MaPhieuDangKy = phieuDangKyDomain.MaId;
+                phieuDangKyPhuLieuHoaChatDomain.NgayTao = DateTime.Now;
+                phieuDangKyPhuLieuHoaChatDomains.Add(phieuDangKyPhuLieuHoaChatDomain);
+                await _repositoryManager.PhieuDangKyPhuLieuHoaChat.CreatePhieuDangKyPhuLieuHoaChatAsync(phieuDangKyPhuLieuHoaChatDomain);
             }
 
             await _repositoryManager.PhieuDangKy.CreatePhieuDangKyAsync(phieuDangKyDomain);
@@ -193,13 +189,42 @@ namespace QLDV_KiemNghiem_BE.Services
                 Data = phieuDangKyReturnDto
             }; 
         }
-        public async Task<bool> UpdatePhieuDangKyAsync(PhieuDangKyDto phieuDangKyDto)
+        public async Task<ResponseModel1<PhieuDangKyDto>> UpdatePhieuDangKyAsync(PhieuDangKyDto phieuDangKyDto)
         {
+            // Khai bao du lieu tra ve cho client
+            List<PhieuDangKyMau> phieuDangKyMaus1 = new List<PhieuDangKyMau>();
+            List<PhieuDangKyPhuLieuHoaChat> phieuDangKyPhuLieuHoaChats1 = new List<PhieuDangKyPhuLieuHoaChat>();
+            List<PhieuDangKyMauHinhAnh> phieuDangKyMauHinhAnhs1 = new List<PhieuDangKyMauHinhAnh>();
+
+            if (phieuDangKyDto == null || phieuDangKyDto.MaId == null || phieuDangKyDto.MaId == "")
+            {
+                return new ResponseModel1<PhieuDangKyDto>
+                {
+                    Message = "Thieu du lieu dau vao!",
+                    KetQua = false,
+                };
+            }
+
+            if (phieuDangKyDto.Maus == null || phieuDangKyDto.PhieuDangKyPhuLieuHoaChats == null || phieuDangKyDto.Maus.Count() <= 0 || 
+                phieuDangKyDto.MaId == "" || phieuDangKyDto.PhieuDangKyPhuLieuHoaChats.Count() <= 0)
+            {
+                return new ResponseModel1<PhieuDangKyDto>
+                {
+                    Message = "Thieu du lieu dau vao mau hoac phu lieu hoa chat, vui long kiem tra lai!",
+                    KetQua = false,
+                };
+            }
+
             var checkExists = await _repositoryManager.PhieuDangKy.CheckExistPhieuDangKyAsync(phieuDangKyDto.MaId, true);
             if (checkExists == null)
             {
-                throw new Exception("Phieu Dang Ky Khong Ton Tai");
+                return new ResponseModel1<PhieuDangKyDto>
+                {
+                    Message = "Phieu dang ky khong ton tai, vui long kiem tra lai!",
+                    KetQua = false,
+                };
             }
+
             phieuDangKyDto.NgaySua = DateTime.Now;
             phieuDangKyDto.NguoiSua = "admin";
             // Update or Delete Mau
@@ -246,6 +271,7 @@ namespace QLDV_KiemNghiem_BE.Services
                                     img.NguoiSua = "admin";
                                     _mapper.Map(img, checkExistsHinhAnh);
                                     _repositoryManager.PhieuDangKyMauHinhAnh.UpdatePhieuDangKyMauHinhAnh(checkExistsHinhAnh);
+                                    phieuDangKyMauHinhAnhs1.Add(checkExistsHinhAnh);
                                 }
                             }
                             // Them moi hinh anh, khi maid cua no null hoac "", nguoc lai k them moi
@@ -258,10 +284,16 @@ namespace QLDV_KiemNghiem_BE.Services
                                 hinhAnhDomain.NguoiTao = "admin";
                                 _mapper.Map(img, hinhAnhDomain);
                                 await _repositoryManager.PhieuDangKyMauHinhAnh.CreatePhieuDangKyMauHinhAnhAsync(hinhAnhDomain);
+                                phieuDangKyMauHinhAnhs1.Add(hinhAnhDomain);
                             }
                         }
+                        // mapping dữ liệu sang domain để cập nhật
                         _mapper.Map(mau, checkExistsMau);
                         _repositoryManager.PhieuDangKyMau.UpdatePhieuDangKyMauAsync(checkExistsMau);
+                        // thêm danh sách ảnh vào mẫu hiện tại để trả cho client
+                        checkExistsMau.PhieuDangKyMauHinhAnhs = phieuDangKyMauHinhAnhs1;
+                        phieuDangKyMaus1.Add(checkExistsMau);
+                        phieuDangKyMauHinhAnhs1 = new List<PhieuDangKyMauHinhAnh>();
                     }
                 }
                 // nếu mẫu không tồn tại thì create mẫu này, và thêm mới hình ảnh
@@ -281,9 +313,13 @@ namespace QLDV_KiemNghiem_BE.Services
                         img.NguoiTao = "admin";
                         _mapper.Map(img, hinhAnhDomain);
                         await _repositoryManager.PhieuDangKyMauHinhAnh.CreatePhieuDangKyMauHinhAnhAsync(hinhAnhDomain);
+                        phieuDangKyMauHinhAnhs1.Add(hinhAnhDomain);
                     }
                     _mapper.Map(mau, mauDoMain);
                     await _repositoryManager.PhieuDangKyMau.CreatePhieuDangKyMauAsync(mauDoMain);
+                    mauDoMain.PhieuDangKyMauHinhAnhs = phieuDangKyMauHinhAnhs1;
+                    phieuDangKyMaus1.Add(mauDoMain);
+                    phieuDangKyMauHinhAnhs1 = new List<PhieuDangKyMauHinhAnh>();
                 }
             }
             // Update Or Delete Plhc
@@ -305,6 +341,7 @@ namespace QLDV_KiemNghiem_BE.Services
                         plhc.NguoiSua = "admin";
                         _mapper.Map(plhc, checkExistsPlhc);
                         _repositoryManager.PhieuDangKyPhuLieuHoaChat.UpdatePhieuDangKyPhuLieuHoaChatAsync(checkExistsPlhc);
+                        phieuDangKyPhuLieuHoaChats1.Add(checkExistsPlhc);
                     }
                 }
                 // Them moi phu lieu hoa chat
@@ -317,6 +354,7 @@ namespace QLDV_KiemNghiem_BE.Services
                     plhc.NguoiTao = "admin";
                     _mapper.Map(plhc, plhcDomain);
                     await _repositoryManager.PhieuDangKyPhuLieuHoaChat.CreatePhieuDangKyPhuLieuHoaChatAsync(plhcDomain);
+                    phieuDangKyPhuLieuHoaChats1.Add(plhcDomain);
                 }
             }
             _mapper.Map(phieuDangKyDto, checkExists);
@@ -325,7 +363,15 @@ namespace QLDV_KiemNghiem_BE.Services
             _context.ChangeTracker.DetectChanges();
             Console.WriteLine(_context.ChangeTracker.DebugView.LongView);
             bool check = await _repositoryManager.SaveChangesAsync();
-            return check;
+            var phieuDangKyReturnDto = _mapper.Map<PhieuDangKyDto>(checkExists);
+            phieuDangKyReturnDto.Maus = _mapper.Map<List<PhieuDangKyMauDto>>(phieuDangKyMaus1);
+            phieuDangKyReturnDto.PhieuDangKyPhuLieuHoaChats = _mapper.Map<List<PhieuDangKyPhuLieuHoaChatDto>>(phieuDangKyPhuLieuHoaChats1);
+            return new ResponseModel1<PhieuDangKyDto>
+            {
+                KetQua = check,
+                Message = check ? "Tao phieu dang ky thanh cong" : "Tao phieu dang ky that bai",
+                Data = phieuDangKyReturnDto
+            };
         }
         public async Task<bool> DeletePhieuDangKyAsync(PhieuDangKy phieuDangKy)
         {
@@ -354,6 +400,87 @@ namespace QLDV_KiemNghiem_BE.Services
                 return 0;
             }
             return await _repositoryManager.PhieuDangKy.DuTinhThoiGianKiemNghiem( maDmMau,  maTieuChuan);
+        }
+        public async Task<ResponReviewPhieuDangKy> ReviewPhieuDangKyByKHDT(RequestReviewPhieuDangKy duyetPhieu)
+        {
+            if (duyetPhieu == null || duyetPhieu.MaPhieuDangKy == "")
+            {
+                return new ResponReviewPhieuDangKy
+                {
+                    KetQua = false,
+                    Message = "Danh sach mau khong co du lieu dau vao!",
+                    MaPhieuDangKy = string.Empty,
+                };
+            }
+
+            var checkExistsPhieuDangKy = await _repositoryManager.PhieuDangKy.CheckExistPhieuDangKyAsync(duyetPhieu.MaPhieuDangKy, true);
+            if (checkExistsPhieuDangKy != null)
+            {
+                if (duyetPhieu.Action)
+                    // neu action = 1 thi tiep theo se la cho BLD duyet
+                    checkExistsPhieuDangKy.TrangThaiId = "TT02";
+                else // nguoc lai thi trang thai la bi phong KHDT tu choi duyet, thi cho BLD quyet dinh
+                    checkExistsPhieuDangKy.TrangThaiId = "TT03";
+                checkExistsPhieuDangKy.NgaySua = DateTime.Now;
+                checkExistsPhieuDangKy.NguoiSua = "admin";
+                _repositoryManager.PhieuDangKy.UpdatePhieuDangKyAsync(checkExistsPhieuDangKy);
+                bool check = await _repositoryManager.SaveChangesAsync();
+                return new ResponReviewPhieuDangKy
+                {
+                    MaPhieuDangKy = duyetPhieu.MaPhieuDangKy,
+                    Message = check ? "Xu ly duyet phieu dang ky thanh cong!" : "Xu ly duyet phieu dang ky that bai vui long thu lai!",
+                    KetQua = check
+                };
+            }
+            else
+            {
+                return new ResponReviewPhieuDangKy
+                {
+                    KetQua = false,
+                    Message = "Phieu dang ky khong ton tai",
+                    MaPhieuDangKy = duyetPhieu.MaPhieuDangKy,
+                };
+            }
+        }
+        public async Task<ResponReviewPhieuDangKy> ReviewPhieuDangKyByBLD(RequestReviewPhieuDangKy duyetPhieu)
+        {
+            if (duyetPhieu == null || duyetPhieu.MaPhieuDangKy == "")
+            {
+                return new ResponReviewPhieuDangKy
+                {
+                    KetQua = false,
+                    Message = "Danh sach mau khong co du lieu dau vao!",
+                    MaPhieuDangKy = string.Empty,
+                };
+            }
+
+            var checkExistsPhieuDangKy = await _repositoryManager.PhieuDangKy.CheckExistPhieuDangKyAsync(duyetPhieu.MaPhieuDangKy, true);
+            if (checkExistsPhieuDangKy != null)
+            {
+                if (duyetPhieu.Action)
+                    checkExistsPhieuDangKy.TrangThaiId = "TT05";
+                else 
+                    checkExistsPhieuDangKy.TrangThaiId = "TT04";
+                checkExistsPhieuDangKy.NgaySua = DateTime.Now;
+                checkExistsPhieuDangKy.NguoiSua = "admin";
+                _repositoryManager.PhieuDangKy.UpdatePhieuDangKyAsync(checkExistsPhieuDangKy);
+                bool check = await _repositoryManager.SaveChangesAsync();
+                return new ResponReviewPhieuDangKy
+                {
+                    MaPhieuDangKy = duyetPhieu.MaPhieuDangKy,
+                    Message = check ? "Xu ly duyet phieu dang ky thanh cong!" : "Xu ly duyet phieu dang ky that bai, vui long thu lai!",
+                    KetQua = check
+                };
+            }
+            else
+            {
+                return new ResponReviewPhieuDangKy
+                {
+                    KetQua = false,
+                    Message = "Phieu dang ky khong ton tai",
+                    MaPhieuDangKy = duyetPhieu.MaPhieuDangKy,
+                };
+            }
         }
     }
 }

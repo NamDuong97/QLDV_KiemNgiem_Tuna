@@ -47,17 +47,14 @@ namespace QLDV_KiemNghiem_BE.Repositories
         {
           await _context.PhieuDangKies.AddAsync(phieuDangKy);
         }
-
         public void UpdatePhieuDangKyAsync(PhieuDangKy phieuDangKy)
         {
             _context.PhieuDangKies.Update(phieuDangKy);
         }
-
         public void DeletePhieuDangKyAsync(PhieuDangKy phieuDangKy)
         {
             _context.PhieuDangKies.Remove(phieuDangKy);
         }
-
         public async Task<PhieuDangKy?> CheckExistPhieuDangKyAsync(string id, bool tracking)
         {
             var result = new PhieuDangKy();
@@ -71,7 +68,6 @@ namespace QLDV_KiemNghiem_BE.Repositories
             }
             return result;
         }
-
         public async Task<int> DuTinhThoiGianKiemNghiem(string maDmMau, string maTieuChuan)
         {
             var result = await _context

@@ -35,7 +35,7 @@ namespace QLDV_KiemNghiem_BE.Controllers
         [Route("getHoaDonThuOfCustomer")]
         public async Task<ActionResult> getPhieuDangKiesOfCustomer(string maKH)
         {
-            var hoaDonThus = await _service.HoaDonThu.GetPhieuDangKiesOfCustomer(maKH);
+            var hoaDonThus = await _service.HoaDonThu.GetHoaDonThuOfCustomer(maKH);
             _logger.LogDebug("lay toan bo hoa don thu cua khach hang: " + maKH);
             return Ok(hoaDonThus);
         }
@@ -88,8 +88,8 @@ namespace QLDV_KiemNghiem_BE.Controllers
                 _logger.LogError("Loi validate tham so dau vao");
                 return BadRequest(new { Errors = errors });
             }
-            bool update = await _service.HoaDonThu.UpdateHoaDonThuAsync(HoaDonThuDto);
-            if (update)
+            var update = await _service.HoaDonThu.UpdateHoaDonThuAsync(HoaDonThuDto);
+            if (update.KetQua)
             {
                 _logger.LogDebug("Cap nhat hoa don thu thanh cong");
                 return Ok(HoaDonThuDto);
