@@ -101,19 +101,15 @@ export default function HeaderCustomer(props: HeaderProps) {
   const handleOpenLoginCustomer = () => setOpenLoginCustomer(true);
   const handleCloseLoginCustomer = () => setOpenLoginCustomer(false);
   const [openMenu, setOpenMenu] = useState(false);
-  const [anchorElNotifications, setAnchorElNotifications] =
-    useState<HTMLButtonElement | null>(null);
-  const openNotifications = Boolean(anchorElNotifications);
+  const [openNotifications, setOpenNotifications] = useState(false);
   const [anchorElAccountPopup, setAnchorElAccountPopup] =
     useState<HTMLButtonElement | null>(null);
   const openAccountPopup = Boolean(anchorElAccountPopup);
   const navigate = useNavigate();
   const pathName = useLocation().pathname;
 
-  const handleClickNotifications = (
-    event: React.MouseEvent<HTMLButtonElement>
-  ) => {
-    setAnchorElNotifications(event.currentTarget);
+  const handleClickNotifications = () => {
+    setOpenNotifications(true);
   };
 
   const handleClickAccountPopup = (
@@ -123,7 +119,7 @@ export default function HeaderCustomer(props: HeaderProps) {
   };
 
   const handleCloseNotifications = () => {
-    setAnchorElNotifications(null);
+    setOpenNotifications(false);
   };
 
   const handleCloseAccountPopup = () => {
@@ -268,7 +264,6 @@ export default function HeaderCustomer(props: HeaderProps) {
           <NotificationsPopover
             dataMessages={dataMessages}
             openNotifications={openNotifications}
-            anchorElNotifications={anchorElNotifications}
             handleCloseNotifications={handleCloseNotifications}
             handleOpenLoginCustomer={handleOpenLoginCustomer}
           />
