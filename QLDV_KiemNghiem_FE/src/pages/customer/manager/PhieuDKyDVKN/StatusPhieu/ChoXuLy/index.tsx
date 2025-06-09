@@ -56,7 +56,7 @@ const ChoXuLy = () => {
   const dataChoTiepNhanXuLy = useGetPhieuDangKyKiemNghiemByTrangThaiArray({
     queryKey: "dataChoTiepNhanXuLy",
     maKH: "KH001",
-    trangThaiIDs: ["TT01", "TT02", "TT03", "TT04", "TT05"],
+    trangThaiIDs: ["TT01", "TT02", "TT03", "TT04"],
   });
 
   const [currentPage, setCurrentPage] = useState(1);

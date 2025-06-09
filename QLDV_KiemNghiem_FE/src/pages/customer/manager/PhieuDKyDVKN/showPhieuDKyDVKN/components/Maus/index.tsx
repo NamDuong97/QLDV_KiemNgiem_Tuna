@@ -59,7 +59,7 @@ const Maus = (props: MausProps) => {
     >
       {dataMau?.length > 0 ? (
         currentItems.map((item: any) => (
-          <Box key={item?.maId}>
+          <Box key={item?.maId} className="overflow-x-auto whitespace-nowrap">
             <Box className="grid grid-cols-12 gap-[1px_24px]">
               <Box className="col-span-12 md:col-span-6 lg:col-span-4">
                 <Inputs
@@ -368,10 +368,12 @@ const Maus = (props: MausProps) => {
                 />
               </Box>
             </Box>
-            <TableImages
-              tableHead={tableHeadImages}
-              dataImage={item?.phieuDangKyMauHinhAnhs}
-            />
+            <Box className="">
+              <TableImages
+                tableHead={tableHeadImages}
+                dataImage={item?.phieuDangKyMauHinhAnhs}
+              />
+            </Box>
           </Box>
         ))
       ) : (

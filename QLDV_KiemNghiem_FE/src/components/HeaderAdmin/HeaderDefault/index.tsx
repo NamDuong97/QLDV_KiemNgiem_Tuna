@@ -2,23 +2,14 @@ import { useState } from "react";
 import Box from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
 import AccountCircle from "@mui/icons-material/AccountCircle";
-import { Badge, styled, Tooltip, useMediaQuery, useTheme } from "@mui/material";
-import { image } from "../../../constants/image";
+import { Badge, styled, Tooltip } from "@mui/material";
 import NotificationsActiveIcon from "@mui/icons-material/NotificationsActive";
-import SpaceDashboardIcon from "@mui/icons-material/SpaceDashboard";
-import ViewComfyIcon from "@mui/icons-material/ViewComfy";
-import { APP_ROUTES } from "../../../constants/routers";
-import { useNavigate } from "react-router";
 import PopoverAccountAdmin from "./PopoverAccountAdmin";
 import NotificationsPopover from "../../Popup/NotificationsPopover/index";
 import PopupThongBaoPhieuDKDVKN from "../../../pages/admin/PopupThongBaoPhieuDKDVKN";
 import { MdMarkunreadMailbox } from "react-icons/md";
 
-interface HeaderProps {
-  isMenuDashBoard: boolean;
-  handleMenuDashBoard: () => void;
-  handleToggleDrawer: () => void;
-}
+interface HeaderProps {}
 
 const dataMessages = [
   {
@@ -98,7 +89,7 @@ const StyledBadge = styled(Badge)(({ theme }) => ({
 }));
 
 export default function HeaderDefault(props: HeaderProps) {
-  const { handleMenuDashBoard, isMenuDashBoard, handleToggleDrawer } = props;
+  const {} = props;
 
   const [anchorElPopoverAccountAdmin, setAnchorElPopoverAccountAdmin] =
     useState<HTMLButtonElement | null>(null);
@@ -106,12 +97,8 @@ export default function HeaderDefault(props: HeaderProps) {
     useState<HTMLButtonElement | null>(null);
   const openPopoverAccountAdmin = Boolean(anchorElPopoverAccountAdmin);
   const openNotificationsPopover = Boolean(anchorElNotificationsPopover);
-  const theme = useTheme();
-  const isLaptop = useMediaQuery(theme.breakpoints.up("lg"));
   const [openPopupThongBaoPhieuDKDVKN, setOpenPopupThongBaoPhieuDKDVKN] =
     useState(false);
-
-  const navigate = useNavigate();
 
   const handleClickPopoverAccountAdmin = (
     event: React.MouseEvent<HTMLButtonElement>
@@ -133,14 +120,6 @@ export default function HeaderDefault(props: HeaderProps) {
     setAnchorElNotificationsPopover(null);
   };
 
-  // const handleRedirectLogout = () => {
-  //   navigate(APP_ROUTES.ADMIN.LOGIN.to);
-  // };
-
-  const handleRedirectDashboard = () => {
-    navigate(APP_ROUTES.TUNA_ADMIN.DASHBOARD.to);
-  };
-
   const handleOpenPopupThongBaoPhieuDKDVKN = () => {
     setOpenPopupThongBaoPhieuDKDVKN(true);
   };
@@ -150,168 +129,111 @@ export default function HeaderDefault(props: HeaderProps) {
   };
 
   return (
-    <header className="w-full !fixed z-99">
-      <div className="bg-white px-[18px] flex py-2 w-full border-b border-solid border-gray-300">
-        <Box className="flex-1 flex items-center gap-1">
-          {isLaptop ? (
-            <Tooltip
-              title={isMenuDashBoard ? "Thu gọn" : "Mở rộng"}
-              placement="top"
-              slotProps={{
-                popper: {
-                  modifiers: [
-                    {
-                      name: "offset",
-                      options: {
-                        offset: [0, -10],
-                      },
+    <header className="w-full fixed z-99 px-[18px] flex justify-center">
+      <Box className="gap-10 flex items-center border-[2px] rounded-bl-full rounded-br-full border-solid bg-cyan-800 border-gray-300 py-2 px-14 shadow-[0_4px_4px_rgba(0,0,0,0.25)]">
+        <Box>
+          <Tooltip
+            title="Thông Báo Phiếu Đăng Ký Kiểm Nghiệm"
+            placement="top"
+            slotProps={{
+              popper: {
+                modifiers: [
+                  {
+                    name: "offset",
+                    options: {
+                      offset: [0, -10],
                     },
-                  ],
-                },
-              }}
-              disableInteractive
-            >
+                  },
+                ],
+              },
+            }}
+            disableInteractive
+          >
+            <Box>
               <IconButton
-                size="large"
-                edge="start"
-                color="inherit"
-                aria-label="menu"
-                onClick={handleMenuDashBoard}
+                className="!relative"
+                onClick={handleOpenPopupThongBaoPhieuDKDVKN}
               >
-                {isMenuDashBoard ? (
-                  <SpaceDashboardIcon className="text-gray-700" />
-                ) : (
-                  <ViewComfyIcon className="text-gray-700" />
-                )}
+                <MdMarkunreadMailbox className="text-white" />
+                <span className="text-xs text-yellow-300 !absolute right-[-2px] top-[2px]">
+                  10
+                </span>
               </IconButton>
-            </Tooltip>
-          ) : (
+            </Box>
+          </Tooltip>
+        </Box>
+        <Box>
+          <Tooltip
+            title="Thông Báo"
+            placement="top"
+            slotProps={{
+              popper: {
+                modifiers: [
+                  {
+                    name: "offset",
+                    options: {
+                      offset: [0, -10],
+                    },
+                  },
+                ],
+              },
+            }}
+            disableInteractive
+          >
+            <IconButton
+              onClick={handleClickNotificationsPopover}
+              className="bg-[#22c55e]"
+            >
+              <StyledBadge
+                overlap="circular"
+                anchorOrigin={{ vertical: "top", horizontal: "right" }}
+                variant="dot"
+              >
+                <NotificationsActiveIcon className="text-white" />
+              </StyledBadge>
+            </IconButton>
+          </Tooltip>
+          <NotificationsPopover
+            dataMessages={dataMessages}
+            openNotifications={openNotificationsPopover}
+            anchorElNotifications={anchorElNotificationsPopover}
+            handleCloseNotifications={handleCloseNotificationsPopover}
+          />
+        </Box>
+        <Box>
+          <Tooltip
+            title="Tài Khoản"
+            placement="top"
+            slotProps={{
+              popper: {
+                modifiers: [
+                  {
+                    name: "offset",
+                    options: {
+                      offset: [0, -10],
+                    },
+                  },
+                ],
+              },
+            }}
+            disableInteractive
+          >
             <IconButton
               size="large"
-              edge="start"
+              onClick={handleClickPopoverAccountAdmin}
               color="inherit"
-              aria-label="menu"
-              onClick={handleToggleDrawer}
+              className="relative !p-2"
             >
-              {isMenuDashBoard ? (
-                <SpaceDashboardIcon className="text-gray-700" />
-              ) : (
-                <ViewComfyIcon className="text-gray-700" />
-              )}
+              <AccountCircle className="text-white" />
             </IconButton>
-          )}
-          <button className="cursor-pointer" onClick={handleRedirectDashboard}>
-            <Box className="flex items-center gap-2">
-              <img
-                src={image.imageTunaLogo}
-                alt="imageTunaLogo"
-                className="!h-12"
-              />
-            </Box>
-          </button>
+          </Tooltip>
+          <PopoverAccountAdmin
+            open={openPopoverAccountAdmin}
+            anchorEl={anchorElPopoverAccountAdmin}
+            handleClose={handleClosePopoverAccountAdmin}
+          />
         </Box>
-        <Box className="gap-4 flex items-center">
-          <Box>
-            <Tooltip
-              title="Thông Báo Phiếu Đăng Ký Kiểm Nghiệm"
-              placement="top"
-              slotProps={{
-                popper: {
-                  modifiers: [
-                    {
-                      name: "offset",
-                      options: {
-                        offset: [0, -10],
-                      },
-                    },
-                  ],
-                },
-              }}
-              disableInteractive
-            >
-              <Box>
-                <IconButton
-                  className="!relative"
-                  onClick={handleOpenPopupThongBaoPhieuDKDVKN}
-                >
-                  <MdMarkunreadMailbox className="text-gray-700" />
-                  <span className="text-xs text-red-500 !absolute right-[-2px] top-[2px]">10</span>
-                </IconButton>
-              </Box>
-            </Tooltip>
-          </Box>
-          <Box>
-            <Tooltip
-              title="Thông Báo"
-              placement="top"
-              slotProps={{
-                popper: {
-                  modifiers: [
-                    {
-                      name: "offset",
-                      options: {
-                        offset: [0, -10],
-                      },
-                    },
-                  ],
-                },
-              }}
-              disableInteractive
-            >
-              <Box>
-                <IconButton onClick={handleClickNotificationsPopover}>
-                  <StyledBadge
-                    overlap="circular"
-                    anchorOrigin={{ vertical: "top", horizontal: "right" }}
-                    variant="dot"
-                  >
-                    <NotificationsActiveIcon className="text-gray-700" />
-                  </StyledBadge>
-                </IconButton>
-              </Box>
-            </Tooltip>
-            <NotificationsPopover
-              dataMessages={dataMessages}
-              openNotifications={openNotificationsPopover}
-              handleCloseNotifications={handleCloseNotificationsPopover}
-            />
-          </Box>
-          <Box>
-            <Tooltip
-              title="Tài Khoản"
-              placement="top"
-              slotProps={{
-                popper: {
-                  modifiers: [
-                    {
-                      name: "offset",
-                      options: {
-                        offset: [0, -10],
-                      },
-                    },
-                  ],
-                },
-              }}
-              disableInteractive
-            >
-              <IconButton
-                size="large"
-                onClick={handleClickPopoverAccountAdmin}
-                color="inherit"
-                className="relative !p-2"
-              >
-                <AccountCircle className="text-gray-700" />
-              </IconButton>
-            </Tooltip>
-            <PopoverAccountAdmin
-              open={openPopoverAccountAdmin}
-              anchorEl={anchorElPopoverAccountAdmin}
-              handleClose={handleClosePopoverAccountAdmin}
-            />
-          </Box>
-        </Box>
-      </div>
-
+      </Box>
       <PopupThongBaoPhieuDKDVKN
         open={openPopupThongBaoPhieuDKDVKN}
         handleClose={handleClosePopupThongBaoPhieuDKDVKN}

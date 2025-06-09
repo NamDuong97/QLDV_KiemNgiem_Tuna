@@ -36,7 +36,7 @@ const PopupTuChoiPhongKHDT = (props: Props) => {
               className="!absolute top-3 right-3 cursor-pointer"
             >
               <p className="hover:underline">
-                <IoCloseCircleOutline className="w-8 h-8 hover:text-sky-500" />
+                <IoCloseCircleOutline className="w-8 h-8 text-cyan-800 hover:text-orange-500" />
               </p>
             </Box>
             <Box className="grid gap-6">
@@ -45,11 +45,13 @@ const PopupTuChoiPhongKHDT = (props: Props) => {
                   <div className="flex justify-center">
                     <IoMdNotifications className="w-[70px] h-[70px]  text-yellow-400" />
                   </div>
-                  <p className="text-gray-80 font-bold text-3xl/6">Thông báo</p>
+                  <p className="text-cyan-900 font-bold text-3xl/6">
+                    Thông báo
+                  </p>
                 </Box>
               </Box>
               <Box className="text-center">
-                <p className="text-xl/6 font-medium text-gray-800">
+                <p className="text-xl/6 font-medium text-cyan-950">
                   Lorem ipsum is a dummy text used to replace text in some areas
                   just for the purpose of an example.
                 </p>

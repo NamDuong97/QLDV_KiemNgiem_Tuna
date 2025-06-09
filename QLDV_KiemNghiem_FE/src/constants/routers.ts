@@ -49,6 +49,20 @@ export const APP_ROUTES = {
       title: "Quản Lý Phiếu đăng ký dịch vụ kiểm nghiệm",
       id: "/tuna/quan-ly-phieu-dang-ky-dich-vu-kiem-nghiem/:id",
     },
+    LIST_PHAN_CONG_PHONG_CHUYEN_MON: {
+      to: "/tuna/danh-sach-phan-cong-phong-chuyen-mon",
+      id_cho_xet_duyet:
+        "/tuna/danh-sach-phan-cong-phong-chuyen-mon/cho-xet-duyet",
+      id_xem_chi_tiet:
+        "/tuna/danh-sach-phan-cong-phong-chuyen-mon/xem-chi-tiet",
+    },
+    QUAN_LY_PHAN_CONG_KHOA_CHUYEN_MON: {
+      to: "/tuna/quan-ly-phan-cong-khoa-chuyen-mon",
+      id_xem_chi_tiet: "/tuna/quan-ly-phan-cong-khoa-chuyen-mon/xem-chi-tiet",
+    },
+    PHAN_CONG_PHONG_CHUYEN_MON: {
+      to: "/tuna/phan-cong-phong-chuyen-mon",
+    },
   },
   TUNA_CUSTOMER: {
     HOME: {
@@ -69,7 +83,7 @@ export const APP_ROUTES = {
     },
     PHIEU_DKY_DVKN: {
       to: "/quan-ly-phieu-dang-ky-dich-vu-kiem-nghiem",
-      title: "Trang quản lý phiếu đăng ký dịch vụ kiểm nghiệm",
+      title: "Quản lý phiếu đăng ký dịch vụ kiểm nghiệm",
     },
     EDIT_PHIEU_DKY_DVKN: {
       to: "/quan-ly-phieu-dang-ky-dich-vu-kiem-nghiem/sua-phieu-dang-ky-kiem-nghiem",
@@ -81,7 +95,7 @@ export const APP_ROUTES = {
     },
     QUAN_LY_HOA_DON: {
       to: "/quan-ly-hoa-don",
-      title: "Trang quản lý hóa đơn",
+      title: "Quản lý hóa đơn",
       SHOW_HOA_DON: {
         to: "/chi-tiet-hoa-don",
         title: "Trang chi chi tiết hóa đơn",

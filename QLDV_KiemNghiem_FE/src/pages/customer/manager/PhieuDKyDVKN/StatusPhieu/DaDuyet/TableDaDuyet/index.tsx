@@ -99,7 +99,6 @@ const TableDaDuyet = (props: TableProps) => {
                 key={index}
                 sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                 hover={true}
-                className="cursor-pointer"
               >
                 <TableCell align="left">
                   <Box className="flex gap-2 items-center justify-start">
@@ -166,7 +165,7 @@ const TableDaDuyet = (props: TableProps) => {
             ))
           ) : (
             <TableRow>
-              <TableCell align="center" colSpan={5}>
+              <TableCell align="center" colSpan={6}>
                 Không có dữ liệu
               </TableCell>
             </TableRow>

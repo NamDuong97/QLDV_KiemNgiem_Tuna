@@ -1,7 +1,6 @@
 import { AnimatePresence, motion } from "motion/react";
 import { Align } from "../../../../../../models/Table";
 import TableHoanThanh from "./Table";
-import { useState } from "react";
 
 const tableHead = [
   {
@@ -27,6 +26,12 @@ const tableHead = [
     id: "NgayLap",
     sort: false,
     label: "Ngày lập",
+    align: Align.Center,
+  },
+  {
+    id: "lienKetNhanh",
+    sort: false,
+    label: "Liên Kết Nhanh",
     align: Align.Center,
   },
 ];

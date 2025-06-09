@@ -557,21 +557,9 @@ const FormThongTinMau = (props: FormThongTinMauProps) => {
         }
       >
         <Box className="grid gap-4 py-4">
-          <Box className="gap-5 sm:gap-0 flex flex-wrap-reverse sm:flex-nowrap justify-end items-center">
-            {dataEditMaus ? (
-              <button className="text-lg/6 font-bold text-center border border-solid border-yellow-500 text-yellow-500 px-4 py-1 lg:px-10 lg:py-2 hover:text-white rounded-md hover:bg-yellow-500 cursor-pointer">
-                Sửa Mẫu
-              </button>
-            ) : (
-              <button className="text-base/6  sm:text-lg/6 font-bold text-center border border-solid border-blue-500 text-blue-500 px-4 py-1 lg:py-2 hover:text-white rounded-md hover:bg-blue-500 cursor-pointer">
-                Thêm Mẫu
-              </button>
-            )}
-          </Box>
-          <hr className="text-gray-300" />
           <Box>
             <Box className="grid grid-cols-12 gap-[1px_24px]">
-              <Box className="col-span-12 md:col-span-6 lg:col-span-4">
+              <Box className="col-span-12 lg:col-span-6 xl:col-span-4">
                 <InputSelectTenMau
                   title="Tên mẫu"
                   name="tenMau"
@@ -582,7 +570,7 @@ const FormThongTinMau = (props: FormThongTinMauProps) => {
                   handleOpenPopupThemMau={handleOpenPopupThemMau}
                 />
               </Box>
-              <Box className="col-span-12 md:col-span-6 lg:col-span-4">
+              <Box className="col-span-12 lg:col-span-6 xl:col-span-4">
                 <InputSelectTieuChuan
                   title="Tiêu chuẩn"
                   name="tenTieuChuan"
@@ -593,7 +581,7 @@ const FormThongTinMau = (props: FormThongTinMauProps) => {
                   handleOpen={handleOpenPopupThemTieuChuan}
                 />
               </Box>
-              <Box className="col-span-12 md:col-span-6 lg:col-span-4">
+              <Box className="col-span-12 lg:col-span-6 xl:col-span-4">
                 <InputSelectDichVu
                   title="Dịch vụ"
                   name="tenLoaiDichVu"
@@ -603,7 +591,7 @@ const FormThongTinMau = (props: FormThongTinMauProps) => {
                   errorMessage={(errors.tenLoaiDichVu as any)?.message}
                 />
               </Box>
-              <Box className="col-span-12 md:col-span-6 lg:col-span-4">
+              <Box className="col-span-12 lg:col-span-6 xl:col-span-4">
                 <Inputs
                   title="Số lô"
                   placeholder="Nhập Số Lô"
@@ -618,7 +606,7 @@ const FormThongTinMau = (props: FormThongTinMauProps) => {
                   }}
                 />
               </Box>
-              <Box className="col-span-12 md:col-span-6 lg:col-span-4">
+              <Box className="col-span-12 lg:col-span-6 xl:col-span-4">
                 <Inputs
                   title="Ngày sản xuất"
                   type="date"
@@ -633,9 +621,9 @@ const FormThongTinMau = (props: FormThongTinMauProps) => {
                   }}
                 />
               </Box>
-              <Box className="col-span-12 md:col-span-6 lg:col-span-4">
+              <Box className="col-span-12 lg:col-span-6 xl:col-span-4">
                 <Inputs
-                  title="Thời gian mong muốn hoàn thành(Thời gian dự kiến)"
+                  title="Thời gian dự kiến hoàn thành (Ngày)"
                   name="thoiGianTieuChuan"
                   placeholder="Vui lòng chọn Tiêu Chuẩn và Tên Mẫu"
                   inputRef={register("thoiGianTieuChuan")}
@@ -656,7 +644,7 @@ const FormThongTinMau = (props: FormThongTinMauProps) => {
                   }}
                 />
               </Box>
-              <Box className="col-span-12 md:col-span-6">
+              <Box className="col-span-12 lg:col-span-6 xl:col-span-4">
                 <Inputs
                   title="Ngày dự kiến trả kết quả"
                   name="ngayDuKienTraKetQua"
@@ -679,7 +667,7 @@ const FormThongTinMau = (props: FormThongTinMauProps) => {
                   }}
                 />
               </Box>
-              <Box className="col-span-12 md:col-span-6">
+              <Box className="col-span-12 lg:col-span-6 xl:col-span-4">
                 <Inputs
                   title="Hạn sử dụng"
                   type="date"
@@ -695,7 +683,7 @@ const FormThongTinMau = (props: FormThongTinMauProps) => {
                   }}
                 />
               </Box>
-              <Box className="col-span-12 md:col-span-6">
+              <Box className="col-span-12 lg:col-span-6 xl:col-span-4">
                 <Inputs
                   title="Số lượng"
                   placeholder="Nhập Số Lượng"
@@ -719,7 +707,7 @@ const FormThongTinMau = (props: FormThongTinMauProps) => {
                   }}
                 />
               </Box>
-              <Box className="col-span-12 md:col-span-6">
+              <Box className="col-span-12 lg:col-span-6 xl:col-span-4">
                 <InputSelectDonViTinhMau
                   title="Đơn vị tính"
                   placeholder="Nhập Đơn Vị Tính"
@@ -729,7 +717,7 @@ const FormThongTinMau = (props: FormThongTinMauProps) => {
                   data={DonViTinh}
                 />
               </Box>
-              <Box className="col-span-12 md:col-span-6">
+              <Box className="col-span-12 lg:col-span-6 xl:col-span-4">
                 <Inputs
                   title="Điều kiện bảo quản"
                   placeholder="Điều Kiện Bảo Quản"
@@ -744,7 +732,7 @@ const FormThongTinMau = (props: FormThongTinMauProps) => {
                   }}
                 />
               </Box>
-              <Box className="col-span-12 md:col-span-6">
+              <Box className="col-span-12 lg:col-span-6 xl:col-span-4">
                 <Inputs
                   title="Đơn vị sản xuất"
                   placeholder="Nhập Đơn Vị Sản Xuất"
@@ -759,7 +747,7 @@ const FormThongTinMau = (props: FormThongTinMauProps) => {
                   }}
                 />
               </Box>
-              <Box className="col-span-12 md:col-span-6">
+              <Box className="col-span-12 lg:col-span-6">
                 <Textarea
                   title="Tình trạng mẫu"
                   placeholder="Nhập Tình Trạng Mẫu"
@@ -770,7 +758,7 @@ const FormThongTinMau = (props: FormThongTinMauProps) => {
                   height="h-[213px]"
                 />
               </Box>
-              <Box className="col-span-12 md:col-span-6">
+              <Box className="col-span-12 lg:col-span-6">
                 <Textarea
                   title="Yêu cầu kiểm nghiệm"
                   name="yeuCauKiemNghiem"
@@ -782,33 +770,23 @@ const FormThongTinMau = (props: FormThongTinMauProps) => {
                 />
               </Box>
               <Box className="col-span-12 md:col-span-6 pb-6">
-                <p className="!font-semibold text-base/6 text-gray_80 mb-2">
-                  Lưu mẫu
-                </p>
                 <Box className="gap-2 flex items-center border border-solid border-gray-300 rounded py-[10px] px-4 w-full">
                   <input
                     type="checkbox"
                     className="w-5 h-5"
                     {...register("luuMau")}
                   />
-                  <span className="text-base/6 font-medium">
-                    (Nếu có vui lòng tích chọn)
-                  </span>
+                  <span className="text-base/6 font-medium">Lưu mẫu</span>
                 </Box>
               </Box>
               <Box className="col-span-12 md:col-span-6 gap-2 pb-6">
-                <p className="!font-semibold text-base/6 text-gray_80 mb-2">
-                  Xuất kết quả
-                </p>
-                <Box className="gap-2 flex items-center border border-solid border-gray-300 rounded py-[10px] px-4 w-full h-[42px]">
+                <Box className="gap-2 flex items-center border border-solid border-gray-300 rounded py-[10px] px-4 w-full">
                   <input
                     type="checkbox"
                     className="w-5 h-5"
                     {...register("xuatKetQua")}
                   />
-                  <span className="text-base/6 font-medium">
-                    (Nếu có vui lòng tích chọn)
-                  </span>
+                  <span className="text-base/6 font-medium">Xuất kết quả</span>
                 </Box>
               </Box>
               <Box className="col-span-12">
@@ -826,6 +804,18 @@ const FormThongTinMau = (props: FormThongTinMauProps) => {
               setListImage={setListImage}
               listImage={listImage}
             />
+          </Box>
+          <hr className="text-gray-300" />
+          <Box className="gap-5 sm:gap-0 flex flex-wrap-reverse sm:flex-nowrap justify-end items-center">
+            {dataEditMaus ? (
+              <button className="w-full text-lg/6 font-bold text-center bg-yellow-500 text-white border-[2px] border-solid border-gray-300 px-10 py-2 rounded-md hover:bg-yellow-600 cursor-pointer shadow-[0_4px_4px_rgba(0,0,0,0.25)]">
+                Sửa Mẫu
+              </button>
+            ) : (
+              <button className="w-full text-base/6 sm:text-lg/6 font-bold bg-cyan-800 text-white text-center border-[2px] border-solid border-gray-300 px-10 py-2 rounded-md hover:bg-cyan-700 cursor-pointer shadow-[0_4px_4px_rgba(0,0,0,0.25)]">
+                Thêm Mẫu
+              </button>
+            )}
           </Box>
         </Box>
       </form>

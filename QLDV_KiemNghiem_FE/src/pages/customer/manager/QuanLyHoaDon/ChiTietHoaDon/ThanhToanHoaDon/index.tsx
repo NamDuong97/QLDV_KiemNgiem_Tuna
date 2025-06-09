@@ -1,7 +1,6 @@
 import { Box, Pagination } from "@mui/material";
 import { APP_ROUTES } from "../../../../../../constants/routers";
 import { useNavigate } from "react-router";
-import { MdDoorBack } from "react-icons/md";
 import { motion } from "motion/react";
 import { FaAddressCard } from "react-icons/fa";
 import { FaUser } from "react-icons/fa";
@@ -17,6 +16,8 @@ import { FaHourglassHalf } from "react-icons/fa";
 import { SlNote } from "react-icons/sl";
 import { useState } from "react";
 import TableHDBoSung from "./TableHDBoSung";
+import { LuDoorOpen } from "react-icons/lu";
+import { image } from "../../../../../../constants/image";
 
 const data = {
   thongtinchung: {
@@ -285,7 +286,27 @@ const ThanhToanHoaDon = () => {
                   Chi tiết hóa đơn
                 </p>
               </div>
-              <TableCTHoaDonThu tableHead={tableHead} tableBody={tableBody} />
+              <Box className="grid lg:hidden px-4 gap-4 py-4 border-t border-gray-300">
+                {tableBody.map((item, index) => (
+                  <Box
+                    key={index}
+                    className={`grid gap-2 text-cyan-800 ${
+                      tableBody.length > index + 1 &&
+                      "border-b pb-4 border-gray-300"
+                    } `}
+                  >
+                    <p className="text-lg/6 font-semibold">{item.tenMau}</p>
+                    <p className="text-lg/6 font-medium flex justify-between">
+                      <span>{`${item.soLuong} 
+                  ${item.donViTinh}`}</span>
+                      <span className="text-orange-500">{item.thanhTien}</span>
+                    </p>
+                  </Box>
+                ))}
+              </Box>
+              <Box className="hidden lg:block">
+                <TableCTHoaDonThu tableHead={tableHead} tableBody={tableBody} />
+              </Box>
             </Box>
             <Box className="flex justify-end">
               <Box className="grid gap-4">
@@ -327,27 +348,40 @@ const ThanhToanHoaDon = () => {
         initial={{ x: 0, opacity: 0 }}
         animate={{ x: 0, opacity: 1 }}
         exit={{ x: 0, opacity: 0 }}
-        transition={{ duration: 0.7 }}
-        className="grid gap-4 px-20 py-6 sm:py-8"
+        transition={{ duration: 0.3 }}
       >
-        <Box className="flex items-center justify-between">
-          <Box className="flex items-center gap-2 sm:gap-4">
-            <button
-              className="p-1 sm:p-2 rounded-full bg-gray-200 hover:bg-gray-300 transition-colors group cursor-pointer"
-              onClick={() =>
-                navigate(APP_ROUTES.TUNA_CUSTOMER.QUAN_LY_HOA_DON.to)
-              }
-            >
-              <MdDoorBack className="w-4 h-4 sm:w-7 sm:h-7 text-sky-600" />
-            </button>
-            <h1 className="capitalize text-xl/4 sm:text-3xl/6 font-bold text-cyan-900">
-              Hóa Đơn:
-            </h1>
+        <Box className="relative w-full h-[200px]">
+          <Box
+            sx={{
+              position: "absolute",
+              inset: 0,
+              backgroundImage: `url(${image.imageBannerPage})`,
+              backgroundSize: "cover",
+              backgroundPosition: "center",
+              backgroundRepeat: "no-repeat",
+              filter: "brightness(50%)",
+              zIndex: 0,
+            }}
+          />
+          <Box className="!absolute py-6 px-6 2xl:px-20 sm:py-8 bottom-0 w-full flex items-center justify-between">
+            <Box className="flex items-center gap-2 sm:gap-4">
+              <button
+                className="p-1 sm:p-2 rounded-full bg-gray-200 hover:bg-gray-300 transition-colors group cursor-pointer"
+                onClick={() =>
+                  navigate(APP_ROUTES.TUNA_CUSTOMER.QUAN_LY_HOA_DON.to)
+                }
+              >
+                <LuDoorOpen className="w-4 h-4 sm:w-7 sm:h-7 text-sky-600" />
+              </button>
+              <h1 className="capitalize text-xl/4 sm:text-3xl/6 font-bold text-white">
+                Hóa Đơn:
+              </h1>
+            </Box>
           </Box>
         </Box>
-        <Box className="grid gap-6">
-          <Box className="p-4 border border-gray-300 rounded-md grid grid-cols-3 gap-10">
-            <Box className="col-span-1 text-cyan-900 grid gap-2">
+        <Box className="grid gap-6 py-6 px-6 2xl:px-20 sm:py-8">
+          <Box className="p-4 border border-gray-300 rounded-md grid grid-cols-6 gap-10">
+            <Box className="col-span-6 lg:col-span-3 2xl:col-span-2 text-cyan-900 grid gap-2">
               <div className="text-lg/6 flex justify-between gap-2 items-center">
                 <span className="font-semibold flex items-center gap-2">
                   <RiBillLine className="text-sky-500 w-6 h-6" />
@@ -380,7 +414,7 @@ const ThanhToanHoaDon = () => {
                 </span>
               </div>
             </Box>
-            <Box className="col-span-1 grid gap-2 pl-4 border-l border-gray-300">
+            <Box className="col-span-6 lg:col-span-3 2xl:col-span-2 grid gap-2 border-t pt-4 lg:pl-4 lg:border-l lg:border-t-0 lg:pt-0 border-gray-300">
               <div className="font-semibold text-lg/6 flex gap-2 items-center">
                 <MdOutlineHomeWork className="text-cyan-700 w-6 h-6" />
                 <span className="text-cyan-900">
@@ -412,7 +446,7 @@ const ThanhToanHoaDon = () => {
                 </span>
               </div>
             </Box>
-            <Box className="col-span-1 grid gap-2 pl-4 border-l border-gray-300">
+            <Box className="col-span-6 2xl:col-span-2 grid gap-2 border-t pt-4 2xl:pl-4 2xl:border-l 2xl:border-t-0 2xl:pt-0 border-gray-300">
               <div className="text-lg/6 grid gap-2 text-cyan-900">
                 <span className="font-semibold flex items-center gap-2">
                   <SlNote className="text-blue-500 w-5 h-5" />

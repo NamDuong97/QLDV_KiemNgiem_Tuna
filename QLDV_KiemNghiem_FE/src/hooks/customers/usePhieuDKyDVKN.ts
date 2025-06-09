@@ -1,6 +1,7 @@
 import { useMutation, useQueries, useQuery } from "@tanstack/react-query";
 import PhieuDKyDVKN_Services from "../../services/customers/PhieuDKyDVKN_Services";
 import { ThoiGianTieuChuanParams } from "../../models/PhieuDangKy";
+import { useStoreNotification } from "../../configs/stores/useStoreNotification";
 
 interface Props {
   queryKey?: string;
@@ -124,18 +125,21 @@ export const useGetTrangThaiPhieuDkAll = (props: Props) => {
 
 export const useCreatePhieuDKyDVKN = (props: Props) => {
   const { queryKey, onSettled, handleClickOpenPopupNofitication } = props;
+  const showNotification = useStoreNotification(
+    (state) => state.showNotification
+  );
   return useMutation({
     mutationKey: [queryKey],
     mutationFn: async (paramsPhieuDangKyDVKN: FormData) => {
       const response = await PhieuDKyDVKN_Services.createPhieuDKyDVKN(
         paramsPhieuDangKyDVKN
       );
-
       return response;
     },
     onSuccess: (response: any) => {
-      if (response.status !== 200) console.log("Lỗi", response.statusText);
-      handleClickOpenPopupNofitication?.();
+      if (response.status !== 200)
+        showNotification({ message: "Lỗi Server", status: 400 });
+      else handleClickOpenPopupNofitication?.();
     },
     onSettled: onSettled,
   });

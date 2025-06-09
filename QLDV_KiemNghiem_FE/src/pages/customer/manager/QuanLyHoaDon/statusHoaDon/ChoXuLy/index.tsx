@@ -30,6 +30,12 @@ const tableHead = [
     label: "Ngày lập",
     align: Align.Center,
   },
+  {
+    id: "lienKetNhanh",
+    sort: false,
+    label: "Liên Kết Nhanh",
+    align: Align.Center,
+  },
 ];
 
 const tableBody = [

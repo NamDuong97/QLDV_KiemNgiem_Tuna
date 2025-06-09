@@ -6,26 +6,26 @@ import LayoutAdmin from "../pages/admin/layout-admin";
 import LayoutCustomer from "../pages/customer/layout";
 import LayoutCustomerManager from "../pages/customer/manager/layout";
 const PhieuDKyDVKN = lazy(
-  () => import("../pages/customer/manager/phieuDKyDVKN")
+  () => import("../pages/customer/manager/PhieuDKyDVKN")
 );
 const QuanLyHoaDon = lazy(
-  () => import("../pages/customer/manager/quanLyHoaDon")
+  () => import("../pages/customer/manager/QuanLyHoaDon")
 );
 const EditPhieuDKyDVKN = lazy(
-  () => import("../pages/customer/manager/phieuDKyDVKN/editPhieuDKyDVKN")
+  () => import("../pages/customer/manager/PhieuDKyDVKN/editPhieuDKyDVKN")
 );
 import Redirect from "./redirect";
 const ShowPhieuDKyDVKN = lazy(
-  () => import("../pages/customer/manager/phieuDKyDVKN/showPhieuDKyDVKN")
+  () => import("../pages/customer/manager/PhieuDKyDVKN/showPhieuDKyDVKN")
 );
 const XemChiTiet = lazy(
   () =>
-    import("../pages/customer/manager/quanLyHoaDon/chiTietHoaDon/XemChiTiet")
+    import("../pages/customer/manager/QuanLyHoaDon/ChiTietHoaDon/XemChiTiet")
 );
 const ThanhToanHoaDon = lazy(
   () =>
     import(
-      "../pages/customer/manager/quanLyHoaDon/chiTietHoaDon/ThanhToanHoaDon"
+      "../pages/customer/manager/QuanLyHoaDon/ChiTietHoaDon/ThanhToanHoaDon"
     )
 );
 
@@ -53,6 +53,26 @@ const QuanLyPhieuDKyDVHN = lazy(
 );
 const ChiTietPhieuDKyDVKN = lazy(
   () => import("../pages/admin/manager-phieudkydvkn/ChiTietPhieuDKyDVKN")
+);
+
+const PhanCongPhongCM = lazy(() => import("../pages/admin/PhanCongPhongCM"));
+
+const DanhSachPhanCong = lazy(() => import("../pages/admin/DanhSachPhanCong"));
+
+const ChoXetDuyet = lazy(
+  () => import("../pages/admin/DanhSachPhanCong/ChiTiePhanCong/ChoXetDuyet")
+);
+
+const XemChiTietPhanCong = lazy(
+  () => import("../pages/admin/DanhSachPhanCong/ChiTiePhanCong/XemChiTiet")
+);
+
+const QuanLyPhanCongKhoaChuyenMon = lazy(
+  () => import("../pages/admin/managerPhanCongKhoa")
+);
+
+const XemChiTietPhanCongKhoa = lazy(
+  () => import("../pages/admin/managerPhanCongKhoa/XemChiTietPhanCongKhoa")
 );
 
 const Routers = () => {
@@ -105,7 +125,6 @@ const Routers = () => {
             path={APP_ROUTES.TUNA_ADMIN.FORGOTPASSWORD.to}
             element={<ForGotPasswordPage />}
           />
-
           <Route
             path={
               APP_ROUTES.TUNA_ADMIN.QUAN_LY_PHIEU_DANG_KY_DICH_VU_KIEM_NGHIEM.to
@@ -118,9 +137,42 @@ const Routers = () => {
             }
             element={<ChiTietPhieuDKyDVKN />}
           />
+          <Route
+            path={APP_ROUTES.TUNA_ADMIN.PHAN_CONG_PHONG_CHUYEN_MON.to}
+            element={<PhanCongPhongCM />}
+          />
+          <Route
+            path={APP_ROUTES.TUNA_ADMIN.LIST_PHAN_CONG_PHONG_CHUYEN_MON.to}
+            element={<DanhSachPhanCong />}
+          />
+          <Route
+            path={
+              APP_ROUTES.TUNA_ADMIN.LIST_PHAN_CONG_PHONG_CHUYEN_MON
+                .id_cho_xet_duyet
+            }
+            element={<ChoXetDuyet />}
+          />
+          <Route
+            path={
+              APP_ROUTES.TUNA_ADMIN.LIST_PHAN_CONG_PHONG_CHUYEN_MON
+                .id_xem_chi_tiet
+            }
+            element={<XemChiTietPhanCong />}
+          />
+          <Route
+            path={APP_ROUTES.TUNA_ADMIN.QUAN_LY_PHAN_CONG_KHOA_CHUYEN_MON.to}
+            element={<QuanLyPhanCongKhoaChuyenMon />}
+          />
+          <Route
+            path={
+              APP_ROUTES.TUNA_ADMIN.QUAN_LY_PHAN_CONG_KHOA_CHUYEN_MON
+                .id_xem_chi_tiet
+            }
+            element={<XemChiTietPhanCongKhoa />}
+          />
         </Route>
 
-        {/* Customer Routes */}
+        {/* ==== Customer Routes ====*/}
         <Route element={<LayoutCustomer />}>
           <Route path={APP_ROUTES.TUNA_CUSTOMER.HOME.to} element={<Home />} />
           <Route
@@ -162,7 +214,7 @@ const Routers = () => {
             }
             element={
               // <Redirect path={APP_ROUTES.TUNA_CUSTOMER.QUAN_LY_HOA_DON.to}>
-                <ThanhToanHoaDon />
+              <ThanhToanHoaDon />
               // </Redirect>
             }
           />

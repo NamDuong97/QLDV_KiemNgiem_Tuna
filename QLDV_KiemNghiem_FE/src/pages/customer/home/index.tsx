@@ -1,7 +1,11 @@
+import { image } from "../../../constants/image";
+
 const Home = () => {
-  return <div>
-    <h1 className="text-3xl/6 font-bold text-center mt-2">Trang Home của Viện</h1>
-  </div>;
+  return (
+    <div>
+      <img src={image.imageBanner} alt="imageBanner" />
+    </div>
+  );
 };
 
 export default Home;

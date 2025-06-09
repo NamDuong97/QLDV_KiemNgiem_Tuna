@@ -21,13 +21,13 @@ const dataSideBar = [
     name: "Quản Lý Phiếu Đăng Ký Dịch Vụ Kiểm Nghiệm",
     url: `${APP_ROUTES.TUNA_CUSTOMER.PHIEU_DKY_DVKN.to}`,
     icon: <FaVoteYea className="w-7 h-7 text-[#404dd2]" />,
-    urlHienThi: APP_ROUTES.TUNA_CUSTOMER.PHIEU_DKY_DVKN.to.split("/")[1],
+    urlHienThi: "quan-ly-phieu-dang-ky-dich-vu-kiem-nghiem",
   },
   {
     name: "Quản Lý Hóa Đơn",
-    url: "#",
+    url: APP_ROUTES.TUNA_CUSTOMER.QUAN_LY_HOA_DON.to,
     icon: <RiBillLine className="w-7 h-7 text-[#2b89d1]" />,
-    urlHienThi: "",
+    urlHienThi: "quan-ly-hoa-don",
   },
 ];
 
