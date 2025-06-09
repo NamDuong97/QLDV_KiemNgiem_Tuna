@@ -6,7 +6,6 @@ import TableQuanLyPhieuDKyDVHN from "./Table";
 import { Pagination } from "@mui/material";
 import { Align } from "../../../models/Table";
 
-
 const tableHead = [
   {
     id: "SoDKPT",
@@ -36,6 +35,12 @@ const tableHead = [
     id: "KetQua",
     sort: false,
     label: "Kết Quả",
+    align: Align.Center,
+  },
+  {
+    id: "lienKetNhanh",
+    sort: false,
+    label: "Liên kết nhanh",
     align: Align.Center,
   },
 ];
@@ -71,15 +76,14 @@ const QuanLyPhieuDKyDVHN = () => {
       animate={{ x: 0, opacity: 1 }}
       exit={{ x: 0, opacity: 0 }}
       transition={{ duration: 0.7 }}
-      className="p-6 grid gap-6"
+      className="px-10 py-20 grid gap-6"
     >
-      <div className="pt-6">
-        <p className="text-2xl/6 font-bold text-gray-800">
+      <div className="bg-cyan-800 text-center px-6 py-6 rounded-full border-[2px] border-gray-300 shadow-[0_4px_4px_rgba(0,0,0,0.25)]">
+        <p className="text-3xl/6 uppercase font-bold text-white">
           Quản Lý Phiếu Đăng Ký Dịch Vụ Kiểm Nghiệm
         </p>
       </div>
-      <hr className="text-gray-300" />
-      <div className="border border-solid border-gray-300 rounded-[10px] shadow-[0px_4px_6px_rgba(0,0,0,0.25)] grid gap-2">
+      <div className="border-[2px] border-solid border-gray-300 rounded-[10px] shadow-[0px_4px_4px_rgba(0,0,0,0.25)] grid gap-2">
         <div className="px-6 pt-4 flex justify-between">
           <div className="flex gap-4">
             <Inputs
@@ -116,7 +120,7 @@ const QuanLyPhieuDKyDVHN = () => {
           <div>
             <button
               onClick={handleClickPopupBoloc}
-              className="border border-solid border-gray-300 rounded-md px-3 py-[6px] text-[#677788] font-medium text-xs/4 sm:text-sm/6 flex items-center gap-2 cursor-pointer shadow-[inset_0_0_3px_rgba(0,0,0,0.2)] hover:shadow-none"
+              className="flex items-center gap-2 px-3 py-[6px] text-base/4 font-medium bg-teal-600 text-white hover:bg-teal-700 border-[2px] border-solid border-gray-300 rounded-[6px] shadow-[0_4px_4px_rgba(0,0,0,0.25)] cursor-pointer"
             >
               Bộ Lọc
               <span className="sm:px-[4px] sm:py-[3px] w-6 h-6 text-gray-800 bg-gray-200 rounded-full text-xs/4 flex items-center justify-center">

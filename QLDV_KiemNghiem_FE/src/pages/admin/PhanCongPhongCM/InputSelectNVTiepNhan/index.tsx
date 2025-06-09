@@ -1,0 +1,75 @@
+import { Autocomplete, TextField, Typography } from "@mui/material";
+import { Controller } from "react-hook-form";
+
+interface InputSelectTrangThaiProps {
+  control: any;
+  name: string;
+  label?: string;
+  errorMessage?: string | null;
+  data: any[];
+  placeholder?: string;
+  title?: string;
+}
+
+export default function InputSelectNVTiepNhan({
+  control,
+  name,
+  label,
+  errorMessage,
+  data,
+  placeholder,
+  title,
+}: InputSelectTrangThaiProps) {
+  return (
+    <div className="grid gap-2">
+      {title && (
+        <p className="!font-semibold text-base/6 text-gray_80">{title}</p>
+      )}
+      <Controller
+        name={name}
+        control={control}
+        render={({ field }) => (
+          <Autocomplete
+            freeSolo
+            options={data}
+            getOptionLabel={(option) =>
+              typeof option === "string" ? option : option.tenNV
+            }
+            value={
+              data.find((item) => item.maNV === field.value) ||
+              field.value ||
+              ""
+            }
+            onChange={(_, newValue) => {
+              if (typeof newValue === "string") {
+                field.onChange(newValue);
+              } else if (newValue && typeof newValue === "object") {
+                field.onChange(newValue.maNV);
+              } else {
+                field.onChange("");
+              }
+            }}
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                label={label}
+                error={!!errorMessage}
+                placeholder={placeholder}
+                sx={{
+                  "& .MuiInputBase-root": {
+                    height: 42, // hoặc 48, tuỳ nhu cầu
+                  },
+                }}
+              />
+            )}
+          />
+        )}
+      />
+      {errorMessage && (
+        <Typography color="error" variant="body2">
+          {errorMessage}
+        </Typography>
+      )}
+    </div>
+  );
+}

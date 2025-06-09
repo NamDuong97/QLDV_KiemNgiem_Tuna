@@ -8,7 +8,6 @@ import DetailPLHCs from "./Detail-PLHC";
 import PopupHuyPhieu from "./PopupHuyPhieu";
 import PopupDuyetBo from "./PopupDuyetBo";
 import PopupTuChoiPhongKHDT from "./PopupTuChoiPhongKHDT";
-import PopupPhanCongPhongCM from "./PopupPhanCongPhongCM";
 import { APP_ROUTES } from "../../../../constants/routers";
 import { MdDoorBack } from "react-icons/md";
 import { MdAccountBox } from "react-icons/md";
@@ -25,8 +24,6 @@ const ChiTietPhieuDKyDVKN = () => {
   const [openPopupDuyetBo, setOpenPopupDuyetBo] = useState(false);
   const [openPopupTuChoiPhongKHDT, setOpenPopupTuChoiPhongKHDT] =
     useState(false);
-  const [openPopupPhanCongPhongCM, setOpenPopupPhanCongPhongCM] =
-    useState(false);
   const navigate = useNavigate();
 
   const handleClickOpenPopupHuyPhieu = () => {
@@ -41,10 +38,6 @@ const ChiTietPhieuDKyDVKN = () => {
     setOpenPopupTuChoiPhongKHDT(true);
   };
 
-  const handleClickOpenPopupPhanCongPhongCM = () => {
-    setOpenPopupPhanCongPhongCM(true);
-  };
-
   const handleClosePopupDuyetBo = () => {
     setOpenPopupDuyetBo(false);
   };
@@ -57,17 +50,13 @@ const ChiTietPhieuDKyDVKN = () => {
     setOpenPopupTuChoiPhongKHDT(false);
   };
 
-  const handleClosePopupPhanCongPhongCM = () => {
-    setOpenPopupPhanCongPhongCM(false);
-  };
-
   const handleShowByUserName = () => {
     switch (userName as string) {
       case "Phòng Kế Hoạch và Đầu Tư": {
         switch (statusPhieuDKyDVKN as string) {
           case "Chờ tiếp nhận xử lý":
             return (
-              <div className="pt-6 flex justify-between items-center">
+              <div className="flex justify-between items-center">
                 <Box className="flex items-center gap-2 sm:gap-4">
                   <button
                     className="p-1 sm:p-2 rounded-full bg-gray-200 hover:bg-gray-300 transition-colors group cursor-pointer"
@@ -80,7 +69,7 @@ const ChiTietPhieuDKyDVKN = () => {
                   >
                     <MdDoorBack className="w-4 h-4 sm:w-7 sm:h-7 text-[#306fb2]" />
                   </button>
-                  <h1 className="capitalize text-xl/4 sm:text-3xl/6 font-bold text-gray-700">
+                  <h1 className="capitalize text-xl/4 sm:text-3xl/6 font-bold text-white">
                     Số ĐKPT:{NameID}
                   </h1>
                 </Box>
@@ -102,7 +91,7 @@ const ChiTietPhieuDKyDVKN = () => {
             );
           case "Chờ BLĐ xét duyệt":
             return (
-              <div className="pt-6 flex justify-between items-center">
+              <div className="flex justify-between items-center">
                 <Box className="flex items-center gap-2 sm:gap-4">
                   <button
                     className="p-1 sm:p-2 rounded-full bg-gray-200 hover:bg-gray-300 transition-colors group cursor-pointer"
@@ -115,13 +104,21 @@ const ChiTietPhieuDKyDVKN = () => {
                   >
                     <MdDoorBack className="w-4 h-4 sm:w-7 sm:h-7 text-[#306fb2]" />
                   </button>
-                  <h1 className="capitalize text-xl/4 sm:text-3xl/6 font-bold text-gray-700">
+                  <h1 className="capitalize text-xl/4 sm:text-3xl/6 font-bold text-white">
                     Số ĐKPT: {NameID}
                   </h1>
                 </Box>
                 <div className="flex gap-4">
                   <button
-                    onClick={handleClickOpenPopupPhanCongPhongCM}
+                    onClick={() =>
+                      navigate(
+                        APP_ROUTES.TUNA_ADMIN.PHAN_CONG_PHONG_CHUYEN_MON.to,
+                        {
+                          state:
+                            APP_ROUTES.TUNA_ADMIN.PHAN_CONG_PHONG_CHUYEN_MON.to,
+                        }
+                      )
+                    }
                     className="px-6 py-3 text-base/4 font-medium bg-teal-600 text-white hover:bg-teal-700 border-[2px] border-solid border-gray-300 rounded-[6px] shadow-[0_4px_4px_rgba(0,0,0,0.25)] cursor-pointer"
                   >
                     Phân Công Phòng Chuyên Môn
@@ -131,9 +128,9 @@ const ChiTietPhieuDKyDVKN = () => {
             );
           default:
             return (
-              <div className="pt-6 flex justify-between items-center">
+              <div className="flex justify-between items-center">
                 <div>
-                  <p className="text-2xl/6 font-bold text-gray-800">{NameID}</p>
+                  <p className="text-2xl/6 font-bold text-white">{NameID}</p>
                 </div>
               </div>
             );
@@ -143,9 +140,9 @@ const ChiTietPhieuDKyDVKN = () => {
         switch (statusPhieuDKyDVKN as string) {
           case "Chờ BLĐ xét duyệt":
             return (
-              <div className="pt-6 flex justify-between items-center">
+              <div className="flex justify-between items-center">
                 <div>
-                  <p className="text-2xl/6 font-bold text-gray-800">{NameID}</p>
+                  <p className="text-2xl/6 font-bold text-white">{NameID}</p>
                 </div>
                 <div className="flex gap-4">
                   <button
@@ -171,9 +168,9 @@ const ChiTietPhieuDKyDVKN = () => {
             );
           default:
             return (
-              <div className="pt-6 flex justify-between items-center">
+              <div className="flex justify-between items-center">
                 <div>
-                  <p className="text-2xl/6 font-bold text-gray-800">{NameID}</p>
+                  <p className="text-2xl/6 font-bold text-white">{NameID}</p>
                 </div>
               </div>
             );
@@ -191,7 +188,7 @@ const ChiTietPhieuDKyDVKN = () => {
               className="flex items-center justify-center py-2 border border-solid border-white rounded-[8px] w-full cursor-pointer group hover:transition-all hover:ease-in-out hover:duration-200"
               onClick={() => setIsTag(1)}
             >
-              <p className="text-base/6 sm:text-xl/6 text-gray-700 group-hover:text-blue-500 font-bold flex gap-2 items-center leading-6">
+              <p className="text-base/6 sm:text-xl/6 text-cyan-800 group-hover:text-blue-500 font-bold flex gap-2 items-center leading-6">
                 <MdAccountBox className="w-5 h-5 sm:w-7 sm:h-7 shrink-0 text-indigo-600" />{" "}
                 Thông Tin Chung
               </p>
@@ -201,7 +198,7 @@ const ChiTietPhieuDKyDVKN = () => {
               className="flex items-center justify-center py-2 border border-solid border-gray-300 rounded-[8px] bg-white shadow-[0_4px_4px_rgba(0,0,0,0.25)] w-full cursor-pointer transition-all ease-in-out duration-200 hover:bg-gray-100 hover:transition-all hover:ease-in-out hover:duration-200"
               onClick={() => setIsTag(2)}
             >
-              <p className="text-base/6 sm:text-xl/6 text-gray-700 group-hover:text-blue-500 font-bold flex gap-2 items-center leading-6">
+              <p className="text-base/6 sm:text-xl/6 text-cyan-800 group-hover:text-blue-500 font-bold flex gap-2 items-center leading-6">
                 <MdDescription className="w-5 h-5 sm:w-7 sm:h-7 shrink-0 text-blue-500" />{" "}
                 Mẫu
               </p>
@@ -210,7 +207,7 @@ const ChiTietPhieuDKyDVKN = () => {
               className="flex items-center justify-center py-2 border border-solid border-white rounded-[8px] w-full cursor-pointer group hover:transition-all hover:ease-in-out hover:duration-200"
               onClick={() => setIsTag(3)}
             >
-              <p className="text-base/6 sm:text-xl/6 text-gray-700 font-bold flex gap-2 items-center leading-6">
+              <p className="text-base/6 sm:text-xl/6 text-cyan-800 group-hover:text-blue-500 font-bold flex gap-2 items-center leading-6">
                 <MdScience className="w-5 h-5 sm:w-7 sm:h-7 shrink-0 text-orange-300" />
                 Phụ Liệu Hóa Chất
               </p>
@@ -225,7 +222,7 @@ const ChiTietPhieuDKyDVKN = () => {
               className="flex items-center justify-center py-2 border border-solid border-white rounded-[8px] w-full cursor-pointer group hover:transition-all hover:ease-in-out hover:duration-200"
               onClick={() => setIsTag(1)}
             >
-              <p className="text-base/6 sm:text-xl/6 text-gray-700 group-hover:text-blue-500 font-bold flex gap-2 items-center leading-6">
+              <p className="text-base/6 sm:text-xl/6 text-cyan-800 group-hover:text-blue-500 font-bold flex gap-2 items-center leading-6">
                 <MdAccountBox className="w-5 h-5 sm:w-7 sm:h-7 shrink-0 text-indigo-600" />{" "}
                 Thông Tin Chung
               </p>
@@ -234,7 +231,7 @@ const ChiTietPhieuDKyDVKN = () => {
               className="flex items-center justify-center py-2 border border-solid border-white rounded-[8px] w-full cursor-pointer group hover:transition-all hover:ease-in-out hover:duration-200"
               onClick={() => setIsTag(2)}
             >
-              <p className="text-base/6 sm:text-xl/6 text-gray-700 group-hover:text-blue-500 font-bold flex gap-2 items-center leading-6">
+              <p className="text-base/6 sm:text-xl/6 text-cyan-800 group-hover:text-blue-500 font-bold flex gap-2 items-center leading-6">
                 <MdDescription className="w-5 h-5 sm:w-7 sm:h-7 shrink-0 text-blue-500" />{" "}
                 Mẫu
               </p>
@@ -244,7 +241,7 @@ const ChiTietPhieuDKyDVKN = () => {
               className="flex items-center justify-center py-2 border border-solid border-gray-300 rounded-[8px] bg-white shadow-[0_4px_4px_rgba(0,0,0,0.25)] w-full cursor-pointer transition-all ease-in-out duration-200 hover:bg-gray-100 hover:transition-all hover:ease-in-out hover:duration-200"
               onClick={() => setIsTag(3)}
             >
-              <p className="text-base/6 sm:text-xl/6 text-gray-700 font-bold flex gap-2 items-center leading-6">
+              <p className="text-base/6 sm:text-xl/6 text-cyan-800 font-bold flex gap-2 items-center leading-6">
                 <MdScience className="w-5 h-5 sm:w-7 sm:h-7 shrink-0 text-orange-300" />
                 Phụ Liệu Hóa Chất
               </p>
@@ -259,7 +256,7 @@ const ChiTietPhieuDKyDVKN = () => {
               className="flex items-center justify-center py-2 border border-solid border-gray-300 rounded-[8px] bg-white shadow-[0_4px_4px_rgba(0,0,0,0.25)] w-full cursor-pointer transition-all ease-in-out duration-200 hover:bg-gray-100 hover:transition-all hover:ease-in-out hover:duration-200"
               onClick={() => setIsTag(1)}
             >
-              <p className="text-base/6 sm:text-xl/6 text-gray-700 font-bold flex gap-2 items-center leading-6">
+              <p className="text-base/6 sm:text-xl/6 text-cyan-800 font-bold flex gap-2 items-center leading-6">
                 <MdAccountBox className="w-5 h-5 sm:w-7 sm:h-7 shrink-0 text-indigo-600" />
                 Thông Tin Chung
               </p>
@@ -268,7 +265,7 @@ const ChiTietPhieuDKyDVKN = () => {
               className="flex items-center justify-center py-2 border border-solid border-white rounded-[8px] w-full cursor-pointer group hover:transition-all hover:ease-in-out hover:duration-200"
               onClick={() => setIsTag(2)}
             >
-              <p className="text-base/6 sm:text-xl/6 text-gray-700 group-hover:text-blue-500 font-bold flex gap-2 items-center leading-6">
+              <p className="text-base/6 sm:text-xl/6 text-cyan-800 group-hover:text-blue-500 font-bold flex gap-2 items-center leading-6">
                 <MdDescription className="w-5 h-5 sm:w-7 sm:h-7 shrink-0 text-blue-500" />{" "}
                 Mẫu
               </p>
@@ -277,7 +274,7 @@ const ChiTietPhieuDKyDVKN = () => {
               className="flex items-center justify-center py-2 border border-solid border-white rounded-[8px] w-full cursor-pointer group hover:transition-all hover:ease-in-out hover:duration-200"
               onClick={() => setIsTag(3)}
             >
-              <p className="text-base/6 sm:text-xl/6 text-gray-700 group-hover:text-blue-500 font-bold flex gap-2 items-center leading-6">
+              <p className="text-base/6 sm:text-xl/6 text-cyan-800 group-hover:text-blue-500 font-bold flex gap-2 items-center leading-6">
                 <MdScience className="w-5 h-5 sm:w-7 sm:h-7 shrink-0 text-orange-300" />{" "}
                 Phụ Liệu Hóa Chất
               </p>
@@ -493,11 +490,12 @@ const ChiTietPhieuDKyDVKN = () => {
       animate={{ x: 0, opacity: 1 }}
       exit={{ x: 0, opacity: 0 }}
       transition={{ duration: 0.7 }}
-      className="p-6 grid gap-4"
+      className="px-10 py-20 grid gap-4"
     >
-      {handleShowByUserName()}
-      <hr className="text-gray-300" />
-      <div className="grid gap-2">
+      <Box className="bg-cyan-800 px-6 py-3 rounded-full border-[2px] border-gray-300 shadow-[0_4px_4px_rgba(0,0,0,0.25)]">
+        {handleShowByUserName()}
+      </Box>
+      <div className="grid gap-2 p-6 rounded-2xl border-[2px] border-cyan-600 shadow-[0_4px_4px_rgba(0,0,0,0.25)]">
         {handleTag()}
         {handleShowByTag()}
       </div>
@@ -512,10 +510,6 @@ const ChiTietPhieuDKyDVKN = () => {
       <PopupTuChoiPhongKHDT
         open={openPopupTuChoiPhongKHDT}
         handleClose={handleClosePopupTuChoiPhongKHDT}
-      />
-      <PopupPhanCongPhongCM
-        open={openPopupPhanCongPhongCM}
-        handleClose={handleClosePopupPhanCongPhongCM}
       />
     </motion.div>
   );

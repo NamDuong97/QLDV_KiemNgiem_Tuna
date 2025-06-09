@@ -12,17 +12,15 @@ import { MdScience } from "react-icons/md";
 import { Inputs } from "../../../../../components/Inputs";
 import { useNavigate } from "react-router";
 import { APP_ROUTES } from "../../../../../constants/routers";
+import { image } from "../../../../../constants/image";
 
 const ShowPhieuDKyDVKN = () => {
   const [isThongTinChung, setThongTinChung] = useState(true);
   const [isMaus, setIsMaus] = useState(false);
   const [isPLHCs, setIsPLHCs] = useState(false);
-
   const navigate = useNavigate();
-
   const dataSession = sessionStorage.getItem("xem-phieuDky");
   const dataPhieu = dataSession ? JSON.parse(dataSession) : {};
-  console.log("dataPhieu", dataPhieu);
 
   return (
     <motion.div
@@ -32,30 +30,41 @@ const ShowPhieuDKyDVKN = () => {
       exit={{ x: 0, opacity: 0 }}
       transition={{ duration: 0.7 }}
     >
-      <div className="grid gap-4 px-6 py-6 sm:py-8">
+      <div className="grid gap-4">
         <Box className="flex items-center justify-between">
-          <Box className="flex items-center gap-2 sm:gap-4">
-            <button
-              className="p-1 sm:p-2 rounded-full bg-gray-200 hover:bg-gray-300 transition-colors group cursor-pointer"
-              onClick={() =>
-                navigate(APP_ROUTES.TUNA_CUSTOMER.PHIEU_DKY_DVKN.to)
-              }
-            >
-              <MdDoorBack className="w-4 h-4 sm:w-7 sm:h-7 text-[#306fb2]" />
-            </button>
-            <h1 className="capitalize text-xl/4 sm:text-3xl/6 font-bold text-gray-700">
-              Số ĐKPT: {dataPhieu?.soDkpt}
-            </h1>
+          <Box className="relative w-full h-[200px]">
+            <Box
+              sx={{
+                position: "absolute",
+                inset: 0,
+                backgroundImage: `url(${image.imageBannerPage})`,
+                backgroundSize: "cover",
+                backgroundPosition: "center",
+                backgroundRepeat: "no-repeat",
+                filter: "brightness(50%)",
+                zIndex: 0,
+              }}
+            />
+            <Box className="!absolute bottom-0 flex items-center gap-2 sm:gap-4 px-6 py-6">
+              <button
+                className="p-1 sm:p-2 rounded-full bg-gray-200 hover:bg-gray-300 transition-colors group cursor-pointer"
+                onClick={() =>
+                  navigate(APP_ROUTES.TUNA_CUSTOMER.PHIEU_DKY_DVKN.to)
+                }
+              >
+                <MdDoorBack className="w-4 h-4 sm:w-7 sm:h-7 text-[#306fb2]" />
+              </button>
+              <h1 className="capitalize text-xl/4 sm:text-3xl/6 font-bold text-white">
+                Số ĐKPT: {dataPhieu?.soDkpt}
+              </h1>
+            </Box>{" "}
           </Box>
         </Box>
-        <hr className="text-gray-300" />
-        <Box className="overflow-x-auto whitespace-nowrap grid gap-6">
+        <Box className="overflow-x-auto whitespace-nowrap grid gap-6 px-6 py-6 sm:py-8">
           <Box>
             <button
               onClick={() => {
                 setThongTinChung(!isThongTinChung);
-                setIsMaus(false);
-                setIsPLHCs(false);
               }}
               className={`border-gray-300 ${
                 isThongTinChung
@@ -266,8 +275,6 @@ const ShowPhieuDKyDVKN = () => {
               type="button"
               onClick={() => {
                 setIsMaus(!isMaus);
-                setThongTinChung(false);
-                setIsPLHCs(false);
               }}
               className={`border-gray-300 ${
                 isMaus
@@ -291,8 +298,6 @@ const ShowPhieuDKyDVKN = () => {
             <button
               onClick={() => {
                 setIsPLHCs(!isPLHCs);
-                setIsMaus(false);
-                setThongTinChung(false);
               }}
               className={`border-gray-300 ${
                 isPLHCs

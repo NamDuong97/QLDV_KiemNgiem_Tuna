@@ -449,28 +449,8 @@ const PhuLieuHoaChat = (props: PhuLieuHoaChatProps) => {
 
       default:
         return (
-          <Box className="py-4">
+          <Box className="pt-4">
             <form autoComplete="off" className="grid gap-4">
-              <Box className="gap-5 sm:gap-0 flex flex-wrap-reverse sm:flex-nowrap justify-end items-center">
-                {dataEditPLHC ? (
-                  <button
-                    type="button"
-                    onClick={handleSubmit(editPLHC)}
-                    className="text-lg/6 font-bold text-center border border-solid border-yellow-500 text-yellow-500 px-4 py-1 lg:px-10 lg:py-2 hover:text-white rounded-md hover:bg-yellow-500 cursor-pointer"
-                  >
-                    Sửa
-                  </button>
-                ) : (
-                  <button
-                    type="button"
-                    onClick={handleSubmit(createPLHC)}
-                    className="text-lg/6 font-bold text-center border border-solid border-blue-500 text-blue-500 px-4 py-1 lg:px-10 lg:py-2 hover:text-white rounded-md hover:bg-blue-500 cursor-pointer"
-                  >
-                    Thêm
-                  </button>
-                )}
-              </Box>
-              <hr className="text-gray-300" />
               <Box className="grid grid-cols-12 gap-1 lg:gap-[0px_24px]">
                 <Box className="col-span-12 md:col-span-6 lg:col-span-4">
                   <InputSelectDM_PLHC
@@ -632,6 +612,26 @@ const PhuLieuHoaChat = (props: PhuLieuHoaChatProps) => {
                   />
                 </Box>
               </Box>
+              <hr className="text-gray-300" />
+              <Box className="gap-5 sm:gap-0 flex flex-wrap-reverse sm:flex-nowrap justify-end items-center">
+                {dataEditPLHC ? (
+                  <button
+                    type="button"
+                    onClick={handleSubmit(editPLHC)}
+                    className="w-full text-lg/6 font-bold text-center bg-yellow-500 text-white border-[2px] border-solid border-gray-300 px-10 py-2 rounded-md hover:bg-yellow-600 cursor-pointer shadow-[0_4px_4px_rgba(0,0,0,0.25)]"
+                  >
+                    Sửa
+                  </button>
+                ) : (
+                  <button
+                    type="button"
+                    onClick={handleSubmit(createPLHC)}
+                    className="w-full text-lg/6 font-bold text-center bg-cyan-800 text-white border-[2px] border-solid border-gray-300 px-10 py-2 rounded-md hover:bg-cyan-700 cursor-pointer shadow-[0_4px_4px_rgba(0,0,0,0.25)]"
+                  >
+                    Thêm
+                  </button>
+                )}
+              </Box>
             </form>
           </Box>
         );
@@ -709,7 +709,7 @@ const PhuLieuHoaChat = (props: PhuLieuHoaChatProps) => {
       initial={{ x: 0, opacity: 0 }}
       animate={{ x: 0, opacity: 1 }}
       exit={{ x: 0, opacity: 0 }}
-      transition={{ duration: 0.7 }}
+      transition={{ duration: 0.3 }}
       className="border border-gray-300 rounded-br-[6px] rounded-bl-[6px] py-4 px-4 sm:px-12"
     >
       {handleTagPLHC()}

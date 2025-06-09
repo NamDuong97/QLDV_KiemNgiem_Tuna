@@ -114,9 +114,9 @@ const PopupBoloc = (props: Props) => {
         <Box className="px-4 pb-2 pt-6 text-center">
           <Box className="grid gap-2">
             <div className="flex justify-center">
-              <IoColorFilterSharp className="w-[70px] h-[70px]  text-sky-500" />
+              <IoColorFilterSharp className="w-[70px] h-[70px] text-cyan-700" />
             </div>
-            <p className="text-gray-80 font-bold text-2xl/6">Bộ Lọc</p>
+            <p className="text-cyan-900 font-bold text-2xl/6">Bộ Lọc</p>
           </Box>
         </Box>
         <form onSubmit={handleSubmit(handleLoc)} className="px-8 py-5">
@@ -171,11 +171,11 @@ const PopupBoloc = (props: Props) => {
             <button
               type="button"
               onClick={handleClose}
-              className="flex justify-center border-[2px] border-solid border-gray-300 bg-yellow-500 rounded-md px-12 py-[6px] text-white font-bold text-base/6 gap-2 cursor-pointer hover:shadow-[0_4px_4px_rgba(0,0,0,0.25)] hover:bg-yellow-400"
+              className="flex justify-center border-[2px] border-solid border-gray-300 bg-yellow-500 rounded-md px-16 py-[6px] text-white font-bold text-base/6 gap-2 cursor-pointer hover:shadow-[0_4px_4px_rgba(0,0,0,0.25)] hover:bg-yellow-400"
             >
               Tắt
             </button>
-            <button className="flex justify-center border-[2px] border-solid border-gray-300 bg-cyan-700 rounded-md px-12 py-[6px] text-white font-bold text-base/6 gap-2 cursor-pointer  hover:shadow-[0_4px_4px_rgba(0,0,0,0.25)] hover:bg-cyan-600">
+            <button className="flex justify-center border-[2px] border-solid border-gray-300 bg-cyan-700 rounded-md px-16 py-[6px] text-white font-bold text-base/6 gap-2 cursor-pointer  hover:shadow-[0_4px_4px_rgba(0,0,0,0.25)] hover:bg-cyan-600">
               Lọc
             </button>
           </Box>

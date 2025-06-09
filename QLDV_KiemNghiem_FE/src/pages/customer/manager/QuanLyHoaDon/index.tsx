@@ -1,10 +1,10 @@
 import { Box } from "@mui/material";
 import { useState } from "react";
 import { motion } from "motion/react";
-import ChoXuLy from "./statusHoaDon/ChoXuLy";
 import ThanhToan from "./statusHoaDon/ThanhToan";
 import HoanThanh from "./statusHoaDon/HoanThanh";
 import DaHuy from "./statusHoaDon/DaHuy";
+import ChoXuLy from "./statusHoaDon/ChoXuLy";
 
 const dataTag = [
   {
@@ -41,7 +41,6 @@ const QuanLyHoaDon = () => {
     }
   };
 
-  
   return (
     <motion.div
       key="QuanLyHoaDon"

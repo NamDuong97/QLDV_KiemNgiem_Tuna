@@ -75,9 +75,10 @@ const TableMau = (props: TableMauProps) => {
 
   const handleEditMaus = (tenMau: string | undefined) => {
     const selectedItem = tableBody.find((item: any) => item.tenMau === tenMau);
-    if (dataEditMaus && dataEditMaus.tenMau === selectedItem?.tenMau)
+    if (dataEditMaus && dataEditMaus.tenMau === selectedItem?.tenMau) {
       setDataEditMaus(null);
-    else {
+      sessionStorage.removeItem("ImageTemp");
+    } else {
       const removeListCheckboxByTenPLHC = listCheckbox.filter(
         (item) => item.tenMau !== tenMau
       );
@@ -89,9 +90,10 @@ const TableMau = (props: TableMauProps) => {
 
   const handleCopyMaus = (tenMau: string | undefined) => {
     const selectedItem = tableBody.find((item: any) => item.tenMau === tenMau);
-    if (dataCopyMaus && dataCopyMaus.tenMau === selectedItem?.tenMau)
+    if (dataCopyMaus && dataCopyMaus.tenMau === selectedItem?.tenMau) {
       setDataCopyMaus(null);
-    else {
+      sessionStorage.removeItem("ImageTemp");
+    } else {
       const removeListCheckboxByTenPLHC = listCheckbox.filter(
         (item) => item.tenMau !== tenMau
       );

@@ -19,6 +19,7 @@ import { useCreatePhieuDKyDVKN } from "../../../hooks/customers/usePhieuDKyDVKN"
 import PopupThoatForm from "./components/PopupThoatForm";
 import clsx from "clsx";
 import { useQueryClient } from "@tanstack/react-query";
+import { image } from "../../../constants/image";
 
 const dataHinhThucGuiTra = [
   { value: "Trực tiếp", label: "Trực tiếp" },
@@ -102,6 +103,8 @@ const FormSignUpDVKN = () => {
     mode: "onChange",
   });
 
+  console.log("errors", errors);
+
   const HinhThucTraKQ = useWatch({ control, name: "HinhThucTraKQ" });
   const handleClickOpenPopupNofitication = () => {
     setOpenPopupNofitication(true);
@@ -158,7 +161,6 @@ const FormSignUpDVKN = () => {
   const handleGui = (dataForm: FormPhieuDangKy) => {
     const dataMaus: any = [];
     const dataPLHC: any = [];
-
     data?.Maus.map((itemMau: any) => {
       dataMaus.push({
         maId: "",
@@ -325,44 +327,59 @@ const FormSignUpDVKN = () => {
         initial={{ x: 0, opacity: 0 }}
         animate={{ x: 0, opacity: 1 }}
         exit={{ x: 0, opacity: 0 }}
-        transition={{ duration: 0.7 }}
+        transition={{ duration: 0.3 }}
       >
-        <div className="grid gap-4 px-6 py-6 sm:py-8">
-          <Box className="flex items-center justify-between">
-            <Box className="flex items-center gap-2 sm:gap-4">
+        <div className="grid gap-4 pb-10">
+          <Box className="relative w-full h-[200px]">
+            <Box
+              sx={{
+                position: "absolute",
+                inset: 0,
+                backgroundImage: `url(${image.imageBannerPage})`,
+                backgroundSize: "cover",
+                backgroundPosition: "center",
+                backgroundRepeat: "no-repeat",
+                filter: "brightness(50%)",
+                zIndex: 0,
+              }}
+            />
+            <Box className="!absolute bottom-0 w-full flex items-center justify-between px-6 py-6 sm:py-8 z-10">
+              <Box className="flex items-center gap-2 sm:gap-4">
+                <button
+                  className="p-1 sm:p-2 rounded-full bg-gray-200 hover:bg-gray-300 transition-colors group cursor-pointer"
+                  onClick={handleClickOpenPopupThoatForm}
+                >
+                  <MdDoorBack className="w-4 h-4 sm:w-7 sm:h-7 text-[#306fb2]" />
+                </button>
+                <h1 className="capitalize text-xl/4 sm:text-3xl/6 font-bold text-white">
+                  Đăng Ký Dịch Vụ Kiểm Nghiệm
+                </h1>
+              </Box>
               <button
-                className="p-1 sm:p-2 rounded-full bg-gray-200 hover:bg-gray-300 transition-colors group cursor-pointer"
-                onClick={handleClickOpenPopupThoatForm}
+                type="button"
+                onClick={handleSubmit(handleGui, () => {
+                  errors && setThongTinChung(true);
+                })}
+                disabled={
+                  data?.Maus?.length >= 1 && data?.PLHC?.length >= 1
+                    ? false
+                    : true
+                }
+                className={clsx(
+                  "hidden px-4 py-[5px] sm:px-6 sm:py-2 sm:flex items-center text-white  border-[2px] border-solid border-gray-300 rounded-[6px] shadow-[0_4px_4px_rgba(0,0,0,0.25)]",
+                  data?.Maus?.length >= 1 && data?.PLHC?.length >= 1
+                    ? "cursor-pointer bg-indigo-600 hover:bg-indigo-700"
+                    : "cursor-no-drop bg-indigo-400"
+                )}
               >
-                <MdDoorBack className="w-4 h-4 sm:w-7 sm:h-7 text-[#306fb2]" />
+                <span className="text-[10px] sm:text-lg/6 font-bold text-amber-50">
+                  Gửi
+                </span>
               </button>
-              <h1 className="capitalize text-xl/4 sm:text-3xl/6 font-bold text-cyan-800">
-                Đăng Ký Dịch Vụ Kiểm Nghiệm
-              </h1>
             </Box>
-            <button
-              type="button"
-              onClick={handleSubmit(handleGui)}
-              disabled={
-                data?.Maus?.length >= 1 && data?.PLHC?.length >= 1
-                  ? false
-                  : true
-              }
-              className={clsx(
-                "hidden px-4 py-[5px] sm:px-6 sm:py-2 sm:flex items-center text-white  border-[2px] border-solid border-gray-300 rounded-[6px] shadow-[0_4px_4px_rgba(0,0,0,0.25)]",
-
-                data?.Maus?.length >= 1 && data?.PLHC?.length >= 1
-                  ? "cursor-pointer bg-indigo-600 hover:bg-indigo-700"
-                  : "cursor-no-drop bg-indigo-400"
-              )}
-            >
-              <span className="text-[10px] sm:text-lg/6 font-bold text-amber-50">
-                Gửi
-              </span>
-            </button>
           </Box>
-          <hr className="text-gray-300" />
-          <Box className="overflow-x-auto whitespace-nowrap grid gap-6">
+
+          <Box className="overflow-x-auto whitespace-nowrap grid gap-6 px-6 py-6 sm:py-8">
             <Box>
               <button
                 onClick={() => {
@@ -393,7 +410,7 @@ const FormSignUpDVKN = () => {
                   initial={{ x: 0, opacity: 0 }}
                   animate={{ x: 0, opacity: 1 }}
                   exit={{ x: 0, opacity: 0 }}
-                  transition={{ duration: 0.5 }}
+                  transition={{ duration: 0.3 }}
                   className="border border-gray-300 rounded-br-[6px] rounded-bl-[6px]"
                 >
                   <form className="p-5 grid grid-cols-12 gap-1 md:gap-[0px_24px]">
@@ -623,7 +640,7 @@ const FormSignUpDVKN = () => {
               )} */}
             </Box>
           </Box>
-          <Box className="sm:hidden">
+          <Box className="sm:hidden px-6">
             <button
               type="button"
               onClick={handleSubmit(handleGui)}

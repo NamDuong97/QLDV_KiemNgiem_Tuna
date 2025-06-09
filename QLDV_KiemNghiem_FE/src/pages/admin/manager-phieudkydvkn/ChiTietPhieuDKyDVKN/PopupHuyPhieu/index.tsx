@@ -58,11 +58,11 @@ const PopupHuyPhieu = (props: Props) => {
           className="px-7 py-6 w-auto md:w-[785px]"
         >
           <form onSubmit={handleSubmit(handleHuyPhieu)}>
-            <Box className="text-center">
+            <Box className="text-center ">
               <div className="flex justify-center">
-                <MdOutlineFolderDelete className="w-[70px] h-[70px] text-yellow-300" />
+                <MdOutlineFolderDelete className="w-[70px] h-[70px] text-cyan-800" />
               </div>
-              <h1 className="font-bold text-3xl">Lý Do Hủy</h1>
+              <h1 className="font-bold text-3xl text-cyan-900">Lý Do Hủy</h1>
             </Box>
             <Box>
               <Textarea

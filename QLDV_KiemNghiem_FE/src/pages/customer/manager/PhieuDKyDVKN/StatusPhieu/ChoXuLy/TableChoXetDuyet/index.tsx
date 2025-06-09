@@ -147,10 +147,7 @@ const TableChoXetDuyet = (props: TableChoXetDuyetProps) => {
                 </TableCell>
                 <TableCell align="center">
                   <Box className="flex gap-2 items-center justify-center">
-                    <p
-                      className="text-sm/4 sm:text-base/4 font-medium"
-                      onClick={() => handleRedirecEditPage(item)}
-                    >
+                    <p className="text-sm/4 sm:text-base/4 font-medium">
                       {item?.nguoiGuiMau}
                     </p>
                   </Box>
@@ -206,7 +203,7 @@ const TableChoXetDuyet = (props: TableChoXetDuyetProps) => {
             ))
           ) : (
             <TableRow>
-              <TableCell align="center" colSpan={5}>
+              <TableCell align="center" colSpan={6}>
                 Không có dữ liệu
               </TableCell>
             </TableRow>
