@@ -7,7 +7,6 @@ import { IoCloseCircle } from "react-icons/io5";
 interface NotificationsPopoverProps {
   dataMessages: DataMessenger[];
   openNotifications: boolean;
-  anchorElNotifications?: HTMLButtonElement | null;
   handleCloseNotifications?: () => void;
   handleOpenLoginCustomer?: () => void;
 }
@@ -17,7 +16,10 @@ const NotificationsPopover = (props: NotificationsPopoverProps) => {
     dataMessages,
     openNotifications,
     handleCloseNotifications,
+<<<<<<< HEAD
     // anchorElNotifications,
+=======
+>>>>>>> 6d72c3716ae543b5d4fde44664beb5062f4e8eac
     handleOpenLoginCustomer,
   } = props;
 
@@ -225,16 +227,7 @@ const NotificationsPopover = (props: NotificationsPopoverProps) => {
   return (
     <Dialog
       open={openNotifications}
-      // anchorEl={anchorElNotifications}
       onClose={handleCloseNotifications}
-      // anchorOrigin={{
-      //   vertical: "bottom",
-      //   horizontal: "center",
-      // }}
-      // transformOrigin={{
-      //   vertical: "top",
-      //   horizontal: "center",
-      // }}
       sx={{
         ".MuiPaper-root": {
           borderRadius: 4,
