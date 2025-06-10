@@ -16,10 +16,6 @@ const NotificationsPopover = (props: NotificationsPopoverProps) => {
     dataMessages,
     openNotifications,
     handleCloseNotifications,
-<<<<<<< HEAD
-    // anchorElNotifications,
-=======
->>>>>>> 6d72c3716ae543b5d4fde44664beb5062f4e8eac
     handleOpenLoginCustomer,
   } = props;
 

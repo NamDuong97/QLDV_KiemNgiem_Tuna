@@ -1,10 +1,4 @@
-import {
-  FormControl,
-  // OutlinedInput,
-  SxProps,
-  Theme,
-  Typography,
-} from "@mui/material";
+import { FormControl, SxProps, Theme, Typography } from "@mui/material";
 import clsx from "clsx";
 
 interface InputsProps {
@@ -31,14 +25,11 @@ export const Textarea = (props: InputsProps) => {
     title,
     placeholder,
     name,
-    // type,
     value,
     defaultValue,
     inputRef,
     errorMessage,
-    // isShowError,
     readOnly,
-    // autocomplete,
     onFocus,
     disabled,
     className,

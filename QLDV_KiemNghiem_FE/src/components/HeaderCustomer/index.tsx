@@ -264,10 +264,6 @@ export default function HeaderCustomer(props: HeaderProps) {
           <NotificationsPopover
             dataMessages={dataMessages}
             openNotifications={openNotifications}
-<<<<<<< HEAD
-            anchorElNotifications={anchorElNotifications}
-=======
->>>>>>> 6d72c3716ae543b5d4fde44664beb5062f4e8eac
             handleCloseNotifications={handleCloseNotifications}
             handleOpenLoginCustomer={handleOpenLoginCustomer}
           />
