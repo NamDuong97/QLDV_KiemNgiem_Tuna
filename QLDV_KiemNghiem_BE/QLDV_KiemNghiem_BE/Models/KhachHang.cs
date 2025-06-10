@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 namespace QLDV_KiemNghiem_BE.Models;
 
 [Table("KhachHang")]
+[Index("Email", Name = "uni_email", IsUnique = true)]
 public partial class KhachHang
 {
     [Key]
@@ -50,9 +51,6 @@ public partial class KhachHang
     [Column(TypeName = "datetime")]
     public DateTime? NgaySua { get; set; }
 
-    [StringLength(100)]
-    public string? TenTaiKhoan { get; set; }
-
     [StringLength(200)]
     public string? MatKhau { get; set; }
 
@@ -61,6 +59,11 @@ public partial class KhachHang
 
     [Column(TypeName = "datetime")]
     public DateTime? NgayHetHanMatKhau { get; set; }
+
+    public bool IsEmailVerify { get; set; } = false;
+
+    [StringLength(200)]
+    public string? TockenXacMinh { get; set; }
 
     [InverseProperty("MaKhNavigation")]
     public virtual ICollection<PhieuDangKy> PhieuDangKies { get; set; } = new List<PhieuDangKy>();

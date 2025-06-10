@@ -83,6 +83,22 @@ public partial class NhanVien
     [Column(TypeName = "datetime")]
     public DateTime? NgaySua { get; set; }
 
+    [StringLength(200)]
+    public string? TenTaiKhoan { get; set; }
+
+    [StringLength(200)]
+    public string? MatKhau { get; set; }
+
+    [Column("MaLoaiTK")]
+    [StringLength(50)]
+    public string? MaLoaiTk { get; set; }
+
+    [Column(TypeName = "datetime")]
+    public DateTime? NgaySuaMatKhau { get; set; }
+
+    [Column(TypeName = "datetime")]
+    public DateTime? NgayHetHanMatKhau { get; set; }
+
     [InverseProperty("ManvLapNavigation")]
     public virtual ICollection<HoaDonMuaPlhc> HoaDonMuaPlhcs { get; set; } = new List<HoaDonMuaPlhc>();
 
@@ -115,6 +131,10 @@ public partial class NhanVien
     [ForeignKey("MaKhoa")]
     [InverseProperty("NhanViens")]
     public virtual Khoa? MaKhoaNavigation { get; set; }
+
+    [ForeignKey("MaLoaiTk")]
+    [InverseProperty("NhanViens")]
+    public virtual LoaiTaiKhoan? MaLoaiTkNavigation { get; set; }
 
     [InverseProperty("ManvPhanCongNavigation")]
     public virtual ICollection<PhanCongNoiBo> PhanCongNoiBoManvPhanCongNavigations { get; set; } = new List<PhanCongNoiBo>();
@@ -178,9 +198,6 @@ public partial class NhanVien
 
     [InverseProperty("ManvNhanVatTuNavigation")]
     public virtual ICollection<PhieuXuatKho> PhieuXuatKhoManvNhanVatTuNavigations { get; set; } = new List<PhieuXuatKho>();
-
-    [InverseProperty("ManvNavigation")]
-    public virtual ICollection<TaiKhoan> TaiKhoans { get; set; } = new List<TaiKhoan>();
 
     [InverseProperty("ManvGuiNavigation")]
     public virtual ICollection<ThongBaoChoKhachHang> ThongBaoChoKhachHangs { get; set; } = new List<ThongBaoChoKhachHang>();

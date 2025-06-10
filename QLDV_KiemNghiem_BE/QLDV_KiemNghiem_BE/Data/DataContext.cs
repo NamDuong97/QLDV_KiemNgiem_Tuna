@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
-using QLDV_KiemNghiem_BE.DTO.Parameter;
 using QLDV_KiemNghiem_BE.Models;
 
 namespace QLDV_KiemNghiem_BE.Data;
@@ -16,8 +15,7 @@ public partial class DataContext : DbContext
         : base(options)
     {
     }
-    public virtual DbSet<ThanhTienTungMau> ThanhTienTungMaus { get; set; }
-    public virtual DbSet<ThoiGianTieuChuan> ThoiGianTieuChuans { get; set; }
+
     public virtual DbSet<BoPhan> BoPhans { get; set; }
 
     public virtual DbSet<ChiTietHoaDonThu> ChiTietHoaDonThus { get; set; }
@@ -110,8 +108,6 @@ public partial class DataContext : DbContext
 
     public virtual DbSet<PhuongPhap> PhuongPhaps { get; set; }
 
-    public virtual DbSet<TaiKhoan> TaiKhoans { get; set; }
-
     public virtual DbSet<ThongBaoChoKhachHang> ThongBaoChoKhachHangs { get; set; }
 
     public virtual DbSet<ThongBaoChoTrungTam> ThongBaoChoTrungTams { get; set; }
@@ -135,16 +131,6 @@ public partial class DataContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<ThanhTienTungMau>(entity =>
-        {
-            entity.HasNoKey();
-        });
-
-        modelBuilder.Entity<ThoiGianTieuChuan>(entity =>
-        {
-            entity.HasNoKey();
-        });
-
         modelBuilder.Entity<BoPhan>(entity =>
         {
             entity.HasKey(e => e.MaId).HasName("PK__BoPhan__2725BF401698C8B8");
@@ -156,7 +142,7 @@ public partial class DataContext : DbContext
 
             entity.HasOne(d => d.MaHdNavigation).WithMany(p => p.ChiTietHoaDonThus).HasConstraintName("Fk_ChiTietHoaDonThu_HoaDonThu");
 
-            entity.HasOne(d => d.MaMauNavigation).WithMany(p => p.ChiTietHoaDonThus).HasConstraintName("Fk_ChiTietHoaDonThu_Mau");
+            entity.HasOne(d => d.MaMauNavigation).WithMany(p => p.ChiTietHoaDonThus).HasConstraintName("Fk_ChiTietHoaDonThu_PhieuDangKy_Mau");
         });
 
         modelBuilder.Entity<ChiTietHoaDonThuBoSung>(entity =>
@@ -274,6 +260,8 @@ public partial class DataContext : DbContext
         modelBuilder.Entity<KhachHang>(entity =>
         {
             entity.HasKey(e => e.MaId).HasName("PK__KhachHan__2725BF4075DCE6B0");
+
+            entity.Property(e => e.TrangThai).HasDefaultValue(true);
         });
 
         modelBuilder.Entity<Khoa>(entity =>
@@ -350,6 +338,8 @@ public partial class DataContext : DbContext
             entity.HasOne(d => d.MaChucVuNavigation).WithMany(p => p.NhanViens).HasConstraintName("Fk_NhanVien_ChucVu");
 
             entity.HasOne(d => d.MaKhoaNavigation).WithMany(p => p.NhanViens).HasConstraintName("Fk_NhanVien_Khoa");
+
+            entity.HasOne(d => d.MaLoaiTkNavigation).WithMany(p => p.NhanViens).HasConstraintName("FK_NhanVien_LoaiTaiKhoan");
         });
 
         modelBuilder.Entity<PhanCongNoiBo>(entity =>
@@ -543,21 +533,6 @@ public partial class DataContext : DbContext
         modelBuilder.Entity<PhuongPhap>(entity =>
         {
             entity.HasKey(e => e.MaId).HasName("PK__PhuongPh__2725BF406DEAB2AE");
-        });
-
-        modelBuilder.Entity<TaiKhoan>(entity =>
-        {
-            entity.HasKey(e => e.MaId).HasName("PK__TaiKhoan__2725BF40EDE52947");
-
-            entity.HasOne(d => d.MaBoPhanNavigation).WithMany(p => p.TaiKhoans).HasConstraintName("Fk_TaiKhoan_BoPhan");
-
-            entity.HasOne(d => d.MaChucVuNavigation).WithMany(p => p.TaiKhoans).HasConstraintName("Fk_TaiKhoan_ChucVu");
-
-            entity.HasOne(d => d.MaKhoaNavigation).WithMany(p => p.TaiKhoans).HasConstraintName("Fk_TaiKhoan_Khoa");
-
-            entity.HasOne(d => d.MaLoaiTkNavigation).WithMany(p => p.TaiKhoans).HasConstraintName("Fk_TaiKhoan_LoaiTaiKhoan");
-
-            entity.HasOne(d => d.ManvNavigation).WithMany(p => p.TaiKhoans).HasConstraintName("Fk_TaiKhoan_NhanVien");
         });
 
         modelBuilder.Entity<ThongBaoChoKhachHang>(entity =>

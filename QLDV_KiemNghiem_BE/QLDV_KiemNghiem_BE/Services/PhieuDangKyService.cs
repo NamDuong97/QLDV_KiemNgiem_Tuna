@@ -225,17 +225,20 @@ namespace QLDV_KiemNghiem_BE.Services
                 };
             }
 
+            var hoaDonThu = await _repositoryManager.HoaDonThu.CheckExistHoaDonThuByPhieuDangKyAsync(checkExists.MaId, true);
             phieuDangKyDto.NgaySua = DateTime.Now;
             phieuDangKyDto.NguoiSua = "admin";
             // Update or Delete Mau
             foreach (var mau in phieuDangKyDto.Maus)
             {
+                if (mau == null || mau.MaId == null || mau.MaId == "") continue;
                 var checkExistsMau =  await _repositoryManager.PhieuDangKyMau.CheckExistPhieuDangKyMauAsync(mau.MaId, phieuDangKyDto.MaId, true);
-                // nếu mẫu đã tồn tại thì update mẫu này
+                // nếu mẫu đã tồn tại thì update hoac delete mẫu này
                 if (checkExistsMau != null) 
                 {
+                    var cchdt = await _repositoryManager.ChiTietHoaDonThu.CheckExistChiTietHoaDonThuByMaMauAsync(mau.MaId, hoaDonThu.MaId, true);
                     // Xoa mau va hinh anh lien quan
-                    if(mau.IsDel)
+                    if (mau.IsDel)
                     {
                         var phieuDangKyMauHinhAnhs = await _repositoryManager.PhieuDangKyMauHinhAnh.GetPhieuDangKyMauHinhAnhByMaMauAsync(mau.MaId, false);
                         if(phieuDangKyMauHinhAnhs !=null && phieuDangKyMauHinhAnhs.Count() > 0)
@@ -244,6 +247,10 @@ namespace QLDV_KiemNghiem_BE.Services
                             {
                                  _repositoryManager.PhieuDangKyMauHinhAnh.DeletePhieuDangKyMauHinhAnh(img);
                             }
+                        }
+                        if (hoaDonThu != null && hoaDonThu.MaId != null && hoaDonThu.MaId != "")
+                        {
+                            if (cchdt != null) _repositoryManager.ChiTietHoaDonThu.DeleteChiTietHoaDonThuAsync(cchdt);
                         }
                         _repositoryManager.PhieuDangKyMau.DeletePhieuDangKyMauAsync(checkExistsMau);
                     }
@@ -259,7 +266,7 @@ namespace QLDV_KiemNghiem_BE.Services
                             // nếu hình ảnh k có maid thì là thêm mới, ngược lại thì update
                             if (checkExistsHinhAnh != null) 
                             {
-                                // Xoa hinh anh
+                                // Xoa hinh anh 
                                 if(img.IsDel)
                                 {
                                     _repositoryManager.PhieuDangKyMauHinhAnh.DeletePhieuDangKyMauHinhAnh(checkExistsHinhAnh);
@@ -270,8 +277,8 @@ namespace QLDV_KiemNghiem_BE.Services
                                     img.NgaySua = DateTime.Now;
                                     img.NguoiSua = "admin";
                                     _mapper.Map(img, checkExistsHinhAnh);
-                                    _repositoryManager.PhieuDangKyMauHinhAnh.UpdatePhieuDangKyMauHinhAnh(checkExistsHinhAnh);
                                     phieuDangKyMauHinhAnhs1.Add(checkExistsHinhAnh);
+                                    _repositoryManager.PhieuDangKyMauHinhAnh.UpdatePhieuDangKyMauHinhAnh(checkExistsHinhAnh);
                                 }
                             }
                             // Them moi hinh anh, khi maid cua no null hoac "", nguoc lai k them moi
@@ -283,12 +290,24 @@ namespace QLDV_KiemNghiem_BE.Services
                                 hinhAnhDomain.NgayTao = DateTime.Now;
                                 hinhAnhDomain.NguoiTao = "admin";
                                 _mapper.Map(img, hinhAnhDomain);
-                                await _repositoryManager.PhieuDangKyMauHinhAnh.CreatePhieuDangKyMauHinhAnhAsync(hinhAnhDomain);
                                 phieuDangKyMauHinhAnhs1.Add(hinhAnhDomain);
+                                await _repositoryManager.PhieuDangKyMauHinhAnh.CreatePhieuDangKyMauHinhAnhAsync(hinhAnhDomain);
                             }
                         }
                         // mapping dữ liệu sang domain để cập nhật
                         _mapper.Map(mau, checkExistsMau);
+                        // cap nhat chi tiet hoa don thu
+                        if(hoaDonThu!= null && hoaDonThu.MaId !=null && hoaDonThu.MaId!= "")
+                        {
+                            if (cchdt != null)
+                            {
+                                cchdt.NgaySua = DateTime.Now;
+                                cchdt.ThanhTien = await _repositoryManager.HoaDonThu.GetToTalMoneyOfMau(mau.MaDmMau, mau.MaTieuChuan, mau.MaLoaiDv);
+                                cchdt.NguoiSua = "admin";
+                                _repositoryManager.ChiTietHoaDonThu.UpdateChiTietHoaDonThuAsync(cchdt);
+                            }
+                        }
+                        // cap nhat mau
                         _repositoryManager.PhieuDangKyMau.UpdatePhieuDangKyMauAsync(checkExistsMau);
                         // thêm danh sách ảnh vào mẫu hiện tại để trả cho client
                         checkExistsMau.PhieuDangKyMauHinhAnhs = phieuDangKyMauHinhAnhs1;
@@ -316,7 +335,21 @@ namespace QLDV_KiemNghiem_BE.Services
                         phieuDangKyMauHinhAnhs1.Add(hinhAnhDomain);
                     }
                     _mapper.Map(mau, mauDoMain);
+                    // Them chi tiet hoa don thu
+                    if (hoaDonThu != null && hoaDonThu.MaId != null && hoaDonThu.MaId != "")
+                    {
+                        ChiTietHoaDonThu cchdt = new ChiTietHoaDonThu();
+                        cchdt.MaId = Guid.NewGuid().ToString();
+                        cchdt.MaMau = mauDoMain.MaId;
+                        cchdt.MaHd = hoaDonThu.MaId;
+                        cchdt.NgayTao = DateTime.Now;
+                        cchdt.ThanhTien = await _repositoryManager.HoaDonThu.GetToTalMoneyOfMau(mauDoMain.MaDmMau, mauDoMain.MaTieuChuan, mauDoMain.MaLoaiDv);
+                        cchdt.NguoiTao = "admin";
+                        await _repositoryManager.ChiTietHoaDonThu.CreateChiTietHoaDonThuAsync(cchdt);
+                    }
+                    // Them mau
                     await _repositoryManager.PhieuDangKyMau.CreatePhieuDangKyMauAsync(mauDoMain);
+                    // Tra du lieu mau cho client
                     mauDoMain.PhieuDangKyMauHinhAnhs = phieuDangKyMauHinhAnhs1;
                     phieuDangKyMaus1.Add(mauDoMain);
                     phieuDangKyMauHinhAnhs1 = new List<PhieuDangKyMauHinhAnh>();
@@ -359,10 +392,12 @@ namespace QLDV_KiemNghiem_BE.Services
             }
             _mapper.Map(phieuDangKyDto, checkExists);
             _repositoryManager.PhieuDangKy.UpdatePhieuDangKyAsync(checkExists);
+
             // Xac nhan da thay doi va in ra cac doi tuong ma dang dc EF theo doi
             _context.ChangeTracker.DetectChanges();
             Console.WriteLine(_context.ChangeTracker.DebugView.LongView);
             bool check = await _repositoryManager.SaveChangesAsync();
+            // Tra du lieu sau update cho client
             var phieuDangKyReturnDto = _mapper.Map<PhieuDangKyDto>(checkExists);
             phieuDangKyReturnDto.Maus = _mapper.Map<List<PhieuDangKyMauDto>>(phieuDangKyMaus1);
             phieuDangKyReturnDto.PhieuDangKyPhuLieuHoaChats = _mapper.Map<List<PhieuDangKyPhuLieuHoaChatDto>>(phieuDangKyPhuLieuHoaChats1);

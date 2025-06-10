@@ -2,6 +2,7 @@
 using QLDV_KiemNghiem_BE.Data;
 using QLDV_KiemNghiem_BE.Interfaces;
 using QLDV_KiemNghiem_BE.Interfaces.ManagerInterface;
+using QLDV_KiemNghiem_BE.Services;
 
 namespace QLDV_KiemNghiem_BE.Repositories
 {
@@ -9,7 +10,6 @@ namespace QLDV_KiemNghiem_BE.Repositories
     {
         private readonly DataContext _context;
         private readonly Lazy<IPhieuDangKyRepository> _phieuDangKy;
-
         private readonly Lazy<IPhieuDangKyMauRepository> _phieuDangKyMau;
         private readonly Lazy<IPhieuDangKyPhuLieuHoaChatRepository> _phieuDangKyPhuLieuHoaChat;
         private readonly Lazy<IDmPhuLieuHoaChatRepository> _dmPhuLieuHoaChat;
@@ -26,7 +26,18 @@ namespace QLDV_KiemNghiem_BE.Repositories
         private readonly Lazy<ITrangThaiPhieuDkRepository> _trangThaiPhieuDk;
         private readonly Lazy<IHoaDonThuRepository> _hoaDonThu;
         private readonly Lazy<IChiTietHoaDonThuRepository> _chiTietHoaDonThu;
-
+        private readonly Lazy<IPhieuDeXuatPhongBanRepository> _phieuDeXuatPhongBan;
+        private readonly Lazy<IPhanCongNoiBoRepository> _phanCongNoiBo;
+        private readonly Lazy<IPhieuDuTruRepository> _phieuDuTru;
+        private readonly Lazy<IPhieuLuuMauRepository> _phieuLuuMau;
+        private readonly Lazy<IPhieuTienDoLamViecRepository> _phieuTienDoLamViec;
+        private readonly Lazy<IPhieuPhanTichKetQuaRepository> _phieuPhanTichKetQua;
+        private readonly Lazy<IKhachHangRepository> _khachHang;
+        private readonly Lazy<INhanVienRepository> _nhanVien;
+        private readonly Lazy<IPhieuChiRepository> _phieuChi;
+        private readonly Lazy<IPhieuPhanTichKetQuaChiTietRepository> _phieuPhanTichKetQuaChiTiet;
+        private readonly Lazy<IPhieuThuRepository> _phieuThu;
+        private readonly Lazy<IChiTietPhieuDeXuatPhongBanRepository> _chiTietPhieuDeXuatPhongBan;
         public RepositoryManager(DataContext dataContext, IMapper mapper)
         {
             _context = dataContext;
@@ -48,6 +59,18 @@ namespace QLDV_KiemNghiem_BE.Repositories
             _trangThaiPhieuDk = new Lazy<ITrangThaiPhieuDkRepository>(() => new TrangThaiPhieuDkRepository(dataContext, mapper));
             _hoaDonThu = new Lazy<IHoaDonThuRepository>(() => new HoaDonThuRepository(dataContext, mapper));
             _chiTietHoaDonThu = new Lazy<IChiTietHoaDonThuRepository>(() => new ChiTietHoaDonThuRepository(dataContext, mapper));
+            _phieuDeXuatPhongBan = new Lazy<IPhieuDeXuatPhongBanRepository>(() => new PhieuDeXuatPhongBanRepository(dataContext, mapper));
+            _phanCongNoiBo = new Lazy<IPhanCongNoiBoRepository>(() => new PhanCongNoiBoRepository(dataContext, mapper));
+            _phieuDuTru = new Lazy<IPhieuDuTruRepository>(() => new PhieuDuTruRepository(dataContext, mapper));
+            _phieuLuuMau = new Lazy<IPhieuLuuMauRepository>(() => new PhieuLuuMauRepository(dataContext, mapper));
+            _phieuTienDoLamViec =  new Lazy<IPhieuTienDoLamViecRepository>(() => new PhieuTienDoLamViecRepository(dataContext, mapper));
+            _phieuPhanTichKetQua = new Lazy<IPhieuPhanTichKetQuaRepository>(() => new PhieuPhanTichKetQuaRepository(dataContext, mapper));
+            _khachHang = new Lazy<IKhachHangRepository>(() => new KhachHangRepository(dataContext, mapper));
+            _nhanVien = new Lazy<INhanVienRepository>(() => new NhanVienRepository(dataContext, mapper));
+            _phieuChi = new Lazy<IPhieuChiRepository>(() => new PhieuChiRepository(dataContext, mapper));
+            _phieuPhanTichKetQuaChiTiet = new Lazy<IPhieuPhanTichKetQuaChiTietRepository>(() => new PhieuPhanTichKetQuaChiTietRepository(dataContext, mapper));
+            _phieuThu = new Lazy<IPhieuThuRepository>(() => new PhieuThuRepository(dataContext, mapper));
+            _chiTietPhieuDeXuatPhongBan = new Lazy<IChiTietPhieuDeXuatPhongBanRepository>(() => new ChiTietPhieuDeXuatPhongBanRepository(dataContext, mapper));
         }
 
         public IPhieuDangKyRepository PhieuDangKy => _phieuDangKy.Value;
@@ -67,6 +90,18 @@ namespace QLDV_KiemNghiem_BE.Repositories
         public ITrangThaiPhieuDkRepository TrangThaiPhieuDk => _trangThaiPhieuDk.Value;
         public IHoaDonThuRepository HoaDonThu => _hoaDonThu.Value;
         public IChiTietHoaDonThuRepository ChiTietHoaDonThu => _chiTietHoaDonThu.Value;
+        public IPhieuDeXuatPhongBanRepository PhieuDeXuatPhongBan => _phieuDeXuatPhongBan.Value;
+        public IPhanCongNoiBoRepository PhanCongNoiBo => _phanCongNoiBo.Value;
+        public IPhieuDuTruRepository PhieuDuTru => _phieuDuTru.Value;
+        public IPhieuLuuMauRepository PhieuLuuMau => _phieuLuuMau.Value;
+        public IPhieuTienDoLamViecRepository PhieuTienDoLamViec => _phieuTienDoLamViec.Value;
+        public IPhieuPhanTichKetQuaRepository PhieuPhanTichKetQua => _phieuPhanTichKetQua.Value;
+        public IKhachHangRepository KhachHang => _khachHang.Value;
+        public INhanVienRepository NhanVien => _nhanVien.Value;
+        public IPhieuChiRepository PhieuChi  => _phieuChi.Value;
+        public IPhieuPhanTichKetQuaChiTietRepository PhieuPhanTichKetQuaChiTiet => _phieuPhanTichKetQuaChiTiet.Value;
+        public IPhieuThuRepository PhieuThu => _phieuThu.Value;
+        public IChiTietPhieuDeXuatPhongBanRepository ChiTietPhieuDeXuatPhongBan => _chiTietPhieuDeXuatPhongBan.Value;
         public async Task<bool> SaveChangesAsync() => await _context.SaveChangesAsync() > 0;
     }
 }

@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using QLDV_KiemNghiem_BE.DTO;
 using QLDV_KiemNghiem_BE.DTO.Parameter;
@@ -40,15 +41,6 @@ namespace QLDV_KiemNghiem_BE.Controllers
             return Ok(result);
         }
 
-        //[HttpGet]
-        //[Route("getTieuChuanByName")]
-        //public async Task<ActionResult> getTieuChuanByName(string tenTieuChuan)
-        //{
-        //    var result = await _service.TieuChuan.FindTieuChuanByNameAsync(tenTieuChuan);
-        //    _logger.LogDebug("lay tieu chuan can tim: " + tenTieuChuan);
-        //    return Ok(result);
-        //}
-
         [HttpPost]
         [Route("createTieuChuan")]
         public async Task<ActionResult> createTieuChuan(TieuChuanDto tieuChuanDto)
@@ -88,16 +80,16 @@ namespace QLDV_KiemNghiem_BE.Controllers
                 _logger.LogError("Loi validate tham so dau vao");
                 return BadRequest(new { Errors = errors });
             }
-            bool update = await _service.TieuChuan.UpdateTieuChuanAsync(tieuChuanDto);
-            if (update)
+            ResponseModel1<TieuChuanDto> update = await _service.TieuChuan.UpdateTieuChuanAsync(tieuChuanDto);
+            if (update.KetQua)
             {
-                _logger.LogDebug("Cap nhat tieu chuan thanh cong");
-                return Ok(tieuChuanDto);
+                _logger.LogDebug(update.Message);
+                return Ok(update.Data);
             }
             else
             {
-                _logger.LogDebug("Cap nhat tieu chuan that bai");
-                return BadRequest();
+                _logger.LogDebug(update.Message);
+                return BadRequest(update.Message);
             }
         }
 

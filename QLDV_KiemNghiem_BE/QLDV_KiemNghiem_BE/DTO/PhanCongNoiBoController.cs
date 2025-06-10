@@ -1,11 +1,11 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
-namespace QLDV_KiemNghiem_BE.Controllers
+namespace QLDV_KiemNghiem_BE.DTO
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class AuthKhachHangController : ControllerBase
+    public class PhanCongNoiBoController : ControllerBase
     {
     }
 }

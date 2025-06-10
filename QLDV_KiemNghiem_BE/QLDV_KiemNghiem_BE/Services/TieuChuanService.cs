@@ -31,7 +31,9 @@ namespace QLDV_KiemNghiem_BE.Services
         }
         public async Task<ResponseModel1<TieuChuanDto>> CreateTieuChuanAsync(TieuChuanDto tieuChuanDto)
         {
-            if (tieuChuanDto == null || tieuChuanDto.TenTieuChuan == "") return new ResponseModel1<TieuChuanDto>
+            if (tieuChuanDto == null ||  tieuChuanDto.MaId == null || tieuChuanDto.MaId == "" ||
+                tieuChuanDto.TenTieuChuan == null || tieuChuanDto.TenTieuChuan == "") 
+            return new ResponseModel1<TieuChuanDto>
             {
                 KetQua = false,
                 Message = "Tham so gui len null vui long kiem tra lai!",
@@ -42,7 +44,7 @@ namespace QLDV_KiemNghiem_BE.Services
             if(checkExistsByID != null) return new ResponseModel1<TieuChuanDto>
             {
                 KetQua = false,
-                Message = "Tieu chuan them vo da ton tai, vui long them tieu chuan khac!",
+                Message = "Du lieu them vo da ton tai, vui long kiem tra lai!",
                 Data = null
             };
 
@@ -70,19 +72,37 @@ namespace QLDV_KiemNghiem_BE.Services
                 Data = tieuChuanReturnDto
             };  
         }
-        public async Task<bool> UpdateTieuChuanAsync(TieuChuanDto tieuChuanDto)
+        public async Task<ResponseModel1<TieuChuanDto>> UpdateTieuChuanAsync(TieuChuanDto tieuChuanDto)
         {
-            if (tieuChuanDto == null) return false;
+            if (tieuChuanDto == null || tieuChuanDto.MaId == null || tieuChuanDto.MaId == "") return new ResponseModel1<TieuChuanDto>
+            {
+                KetQua = false,
+                Message = "Du lieu tham so dau vao null hoac khong hop le, vui long kiem tra lai!",
+                Data = null
+            }; 
+
             var tieuChuanCheck = await _repositoryManager.TieuChuan.FindTieuChuanAsync(tieuChuanDto.MaId);
             if (tieuChuanCheck == null)
             {
-                return false;
+                return new ResponseModel1<TieuChuanDto>
+                {
+                    KetQua = false,
+                    Message = "Du lieu muon cap nhat khong ton tai, vui long kiem tra lai",
+                    Data = null
+                };
             }
             var tieuChuanDomain = _mapper.Map<TieuChuan>(tieuChuanDto);
             tieuChuanDomain.NgaySua = DateTime.Now;
+            tieuChuanDomain.NguoiSua = "admin";
             _repositoryManager.TieuChuan.UpdateTieuChuanAsync(tieuChuanDomain);
             bool check = await _repositoryManager.SaveChangesAsync();
-            return check;
+            var resultReturn = _mapper.Map<TieuChuanDto>(tieuChuanDomain);
+            return new ResponseModel1<TieuChuanDto>
+            {
+                KetQua = check,
+                Message = check ? "Cap nhat thanh cong!" : "Cap nhat that bai",
+                Data = resultReturn
+            };
         }
         public async Task<bool> DeleteTieuChuanAsync(TieuChuan tieuChuan)
         {

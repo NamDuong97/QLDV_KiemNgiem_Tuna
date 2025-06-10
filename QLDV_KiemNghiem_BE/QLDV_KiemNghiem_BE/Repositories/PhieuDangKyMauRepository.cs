@@ -41,12 +41,12 @@ namespace QLDV_KiemNghiem_BE.Repositories
             var result = new PhieuDangKyMau();
             if(checking)
             {
-                result = await _context.PhieuDangKyMaus.AsNoTracking()
+                result = await _context.PhieuDangKyMaus
                     .Where(item => item.MaPhieuDangKy == phieuDangKy && item.MaId == phieuDangKyMau).SingleOrDefaultAsync();
             }
             else
             {
-                result = await _context.PhieuDangKyMaus
+                result = await _context.PhieuDangKyMaus.AsNoTracking()
                    .Where(item => item.MaPhieuDangKy == phieuDangKy && item.MaId == phieuDangKyMau).SingleOrDefaultAsync();
             }
             return result;

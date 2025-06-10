@@ -43,11 +43,28 @@ namespace QLDV_KiemNghiem_BE.Repositories
             return result?.ThanhTien ?? 0;
         }
 
-        public async Task<HoaDonThu?> FindHoaDonThuAsync(string maHoaDonThu)
+        public async Task<HoaDonThu?> FindHoaDonThuAsync(string maHoaDonThu, bool tracking)
         {
-            return await _context.HoaDonThus.FindAsync(maHoaDonThu);
+            var result =  await _context.HoaDonThus.FindAsync(maHoaDonThu);
+            if(result!= null && tracking)
+            {
+                _context.Attach(result);
+            }
+            return result;
         }
-
+        public async Task<HoaDonThu?> CheckExistHoaDonThuByPhieuDangKyAsync(string maPhieuDangKy, bool tracking)
+        {
+            if (tracking)
+            {
+                var result = await _context.HoaDonThus.Where(item => item.MaPhieuDangKy == maPhieuDangKy).SingleOrDefaultAsync();
+                return result;
+            }
+            else
+            {
+                var result = await _context.HoaDonThus.AsNoTracking().Where(item => item.MaPhieuDangKy == maPhieuDangKy).SingleOrDefaultAsync();
+                return result;
+            }
+        }
         public async Task CreateHoaDonThuAsync(HoaDonThu HoaDonThu)
         {
             await _context.HoaDonThus.AddAsync(HoaDonThu);
@@ -60,12 +77,12 @@ namespace QLDV_KiemNghiem_BE.Repositories
         {
             // 1. Gọi stored procedure và lấy ra 1 bản ghi cụ thể
             var hoaDonThu = await _context.HoaDonThus
-                .FromSqlRaw("exec sp_UpdateHoaDonThuByMaPhieuDangKy @maphieu = {0}", maPhieuDangKy)
-                .AsNoTracking().FirstOrDefaultAsync();
+                .FromSqlRaw("exec sp_UpdateHoaDonThuByMaPhieuDangKy @maphieu = {0}", maPhieuDangKy).FirstOrDefaultAsync();
+
             if (hoaDonThu == null)
                 return new HoaDonThu();
             // 2. Attach vào context để load các navigation properties
-            _context.Attach(hoaDonThu);
+            //_context.Attach(hoaDonThu);
             // 3. Load collection: ChiTietHoaDonThus vào hoaDonThu
             await _context.Entry(hoaDonThu).Collection(p => p.ChiTietHoaDonThus).LoadAsync();
             // 4. Load collection: HoaDonThuBoSungs vào hoaDonThu

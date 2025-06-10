@@ -93,7 +93,7 @@ namespace QLDV_KiemNghiem_BE.Controllers
             if (phieuDangKy.KetQua)
             {
                 // Them hoa don sau khi them phieu dang ky
-                ResponseModel1<HoaDonThuDto> hoaDonThu =  await _service.HoaDonThu.CreateHoaDonThuAsync(phieuDangKy?.Data);
+                ResponseModel1<HoaDonThuDto> hoaDonThu =  await _service.HoaDonThu.CreateHoaDonThuByPhieuDangKyAsync(phieuDangKy?.Data);
                 _logger.LogDebug("Tao phieu dang ky thanh cong");
                 return Ok(new { phieuDangKy = phieuDangKy.Data, hoaDon = hoaDonThu.Data});
             }

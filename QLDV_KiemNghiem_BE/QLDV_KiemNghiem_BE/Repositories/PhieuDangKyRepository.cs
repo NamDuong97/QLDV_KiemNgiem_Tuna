@@ -60,11 +60,12 @@ namespace QLDV_KiemNghiem_BE.Repositories
             var result = new PhieuDangKy();
             if (tracking)
             {
-                result = await _context.PhieuDangKies.AsNoTracking().FirstOrDefaultAsync(x => x.MaId == id);
+                result = await _context.PhieuDangKies.FirstOrDefaultAsync(x => x.MaId == id);
             }
             else
             {
-                result = await _context.PhieuDangKies.FirstOrDefaultAsync(x => x.MaId == id);
+                result = await _context.PhieuDangKies.AsNoTracking().
+                    FirstOrDefaultAsync(x => x.MaId == id);
             }
             return result;
         }
