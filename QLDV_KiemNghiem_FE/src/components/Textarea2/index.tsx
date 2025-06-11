@@ -1,4 +1,4 @@
-import { FormControl, SxProps, Theme, Typography } from "@mui/material";
+import { Box, SxProps, Theme } from "@mui/material";
 import clsx from "clsx";
 
 interface InputsProps {
@@ -10,17 +10,15 @@ interface InputsProps {
   defaultValue?: string;
   inputRef?: any;
   errorMessage?: string | null;
-  isShowError?: boolean;
   className?: string;
   readOnly?: any;
   onFocus?: (e: any) => void;
-  autocomplete?: any;
   disabled?: boolean;
   sx?: SxProps<Theme>;
   height?: string;
 }
 
-export const Textarea = (props: InputsProps) => {
+export const Textarea2 = (props: InputsProps) => {
   const {
     title,
     placeholder,
@@ -38,13 +36,12 @@ export const Textarea = (props: InputsProps) => {
   } = props;
 
   return (
-    <FormControl
-      fullWidth
-      className={`gap-2 grid ${height ? height : "h-[106px]"}`}
+    <Box
+      className={`flex gap-2 text-cyan-950 bg-white w-full px-4 py-2 rounded-lg border-[2px] border-gray-300 shadow-[0_4px_4px_rgba(0,0,0,0.25)] ${
+        height || "h-[106px]"
+      }`}
     >
-      {title && (
-        <p className="!font-semibold text-base/6 text-gray_80">{title}</p>
-      )}
+      <p className="font-bold text-lg/6 capitalize">{title}</p>
       <textarea
         autoComplete="off"
         placeholder={placeholder}
@@ -52,8 +49,8 @@ export const Textarea = (props: InputsProps) => {
         defaultValue={defaultValue}
         value={value}
         className={clsx(
-          className,
-          "border border-solid border-gray-300 rounded text-lg/6 px-[14px] py-[9.5px] focus-within:outline-1  focus-within:border  focus-within:border-blue-300"
+          "flex-grow bg-transparent focus:outline-none text-lg/6 capitalize",
+          className
         )}
         {...inputRef}
         readOnly={readOnly}
@@ -62,10 +59,10 @@ export const Textarea = (props: InputsProps) => {
         disabled={disabled}
       />
       {errorMessage && (
-        <Typography className="text-[#af1c10] font-medium text-xs/[140%]">
+        <p className="text-[#af1c10] !font-medium !text-sm/[140%]">
           {errorMessage}
-        </Typography>
+        </p>
       )}
-    </FormControl>
+    </Box>
   );
 };

@@ -63,6 +63,42 @@ export const APP_ROUTES = {
     PHAN_CONG_PHONG_CHUYEN_MON: {
       to: "/tuna/phan-cong-phong-chuyen-mon",
     },
+    QUAN_LY_NHAN_VIEN: {
+      to: "/tuna/quan-ly-nhan-vien",
+      create_nhan_vien: "/tuna/quan-ly-nhan-vien/them-thong-tin-nhan-vien",
+      edit_nhan_vien: "/tuna/quan-ly-nhan-vien/cap-nhat-thong-tin-nhan-vien",
+      xem_chi_tiet: "/tuna/quan-ly-nhan-vien/xem-chi-tiet",
+    },
+    QUAN_LY_PHIEU_LUU_MAU: {
+      to: "/tuna/quan-ly-luu-mau",
+      create_mau_luu: "/tuna/quan-ly-luu-mau/them-thong-tin-luu-mau",
+      edit_mau_luu: "/tuna/quan-ly-luu-mau/cap-nhat-thong-tin-luu-mau",
+      xem_chi_tiet: "/tuna/quan-ly-luu-mau/xem-chi-tiet",
+    },
+    QUAN_LY_PHAN_CONG_NOI_BO: {
+      to: "/tuna/quan-ly-phan-cong-noi-bo",
+      create_phan_cong_noi_bo:
+        "/tuna/quan-ly-phan-cong-noi-bo/them-thong-tin-phan-cong-noi-bo",
+      edit_phan_cong_noi_bo:
+        "/tuna/quan-ly-phan-cong-noi-bo/cap-nhat-thong-tin-phan-cong-noi-bo",
+      xem_chi_tiet: "/tuna/quan-ly-phan-cong-noi-bo/xem-chi-tiet",
+    },
+    LIST_PHAN_CONG_NOI_BO: {
+      to: "/tuna/danh-sach-phan-cong-noi-bo",
+      xem_chi_tiet: "/tuna/danh-sach-phan-cong-noi-bo/xem-chi-tiet",
+    },
+    QUAN_LY_PHIEU_DU_TRU: {
+      to: "/tuna/quan-ly-phieu-du-tru",
+      create_phieu_du_tru:
+        "/tuna/quan-ly-phieu-du-tru/them-thong-tin-phieu-du-tru",
+      edit_phieu_du_tru:
+        "/tuna/quan-ly-phieu-du-tru/cap-nhat-thong-tin-phieu-du-tru",
+      xem_chi_tiet: "/tuna/quan-ly-phieu-du-tru/xem-chi-tiet",
+    },
+    LIST_PHIEU_DU_TRU: {
+      to: "/tuna/danh-sach-phieu-du-tru",
+      xem_chi_tiet: "/tuna/danh-sach-phieu-du-tru/xem-chi-tiet",
+    },
   },
   TUNA_CUSTOMER: {
     HOME: {

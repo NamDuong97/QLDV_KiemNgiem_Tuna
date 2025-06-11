@@ -8,6 +8,7 @@ import PopoverAccountAdmin from "./PopoverAccountAdmin";
 import NotificationsPopover from "../../Popup/NotificationsPopover/index";
 import PopupThongBaoPhieuDKDVKN from "../../../pages/admin/PopupThongBaoPhieuDKDVKN";
 import { MdMarkunreadMailbox } from "react-icons/md";
+import { motion } from "motion/react";
 
 interface HeaderProps {}
 
@@ -129,7 +130,14 @@ export default function HeaderDefault(props: HeaderProps) {
   };
 
   return (
-    <header className="w-full fixed z-99 px-[18px] flex justify-center">
+    <motion.header
+      key="HeaderDefault"
+      initial={{ y: -10, opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
+      exit={{ y: -10, opacity: 0 }}
+      transition={{ duration: 0.5 }}
+      className="w-full fixed z-99 px-[18px] flex justify-center"
+    >
       <Box className="gap-10 flex items-center border-[2px] rounded-bl-full rounded-br-full border-solid bg-cyan-800 border-gray-300 py-2 px-14 shadow-[0_4px_4px_rgba(0,0,0,0.25)]">
         <Box>
           <Tooltip
@@ -196,7 +204,6 @@ export default function HeaderDefault(props: HeaderProps) {
           <NotificationsPopover
             dataMessages={dataMessages}
             openNotifications={openNotificationsPopover}
-            anchorElNotifications={anchorElNotificationsPopover}
             handleCloseNotifications={handleCloseNotificationsPopover}
           />
         </Box>
@@ -238,6 +245,6 @@ export default function HeaderDefault(props: HeaderProps) {
         open={openPopupThongBaoPhieuDKDVKN}
         handleClose={handleClosePopupThongBaoPhieuDKDVKN}
       />
-    </header>
+    </motion.header>
   );
 }
