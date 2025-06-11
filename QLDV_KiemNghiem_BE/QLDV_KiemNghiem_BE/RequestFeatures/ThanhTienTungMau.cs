@@ -1,4 +1,4 @@
-﻿namespace QLDV_KiemNghiem_BE.DTO.Parameter
+﻿namespace QLDV_KiemNghiem_BE.RequestFeatures
 {
     public class ThanhTienTungMau
     {

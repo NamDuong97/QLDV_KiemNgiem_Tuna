@@ -1,9 +1,9 @@
 ﻿using AutoMapper;
 using QLDV_KiemNghiem_BE.DTO;
-using QLDV_KiemNghiem_BE.DTO.Parameter;
 using QLDV_KiemNghiem_BE.Interfaces;
 using QLDV_KiemNghiem_BE.Interfaces.ManagerInterface;
 using QLDV_KiemNghiem_BE.Models;
+using QLDV_KiemNghiem_BE.RequestFeatures;
 
 namespace QLDV_KiemNghiem_BE.Services
 {
@@ -48,7 +48,7 @@ namespace QLDV_KiemNghiem_BE.Services
                 Data = null
             };
 
-            var nameTieuChuan = PublicFunc.processString(tieuChuanDto.TenTieuChuan);
+            var nameTieuChuan = PublicFunction.processString(tieuChuanDto.TenTieuChuan);
             var checkExistsByName = await _repositoryManager.TieuChuan.FindTieuChuanByNameAsync(nameTieuChuan);
             if ((checkExistsByName?.Count() ?? 0) > 0) return new ResponseModel1<TieuChuanDto>
             {

@@ -1,9 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
-namespace QLDV_KiemNghiem_BE.DTO.Parameter
+namespace QLDV_KiemNghiem_BE.RequestFeatures
 {
     public class LoginDto
     {
-        [Required(ErrorMessage ="Email is required")]
+        [Required(ErrorMessage = "Email is required")]
         public string Email { get; set; } = string.Empty;
 
         [Required(ErrorMessage = "Password is required")]

@@ -1,10 +1,12 @@
 ﻿using AutoMapper;
-using QLDV_KiemNghiem_BE.DTO.Parameter;
 using QLDV_KiemNghiem_BE.DTO;
 using QLDV_KiemNghiem_BE.Interfaces.ManagerInterface;
 using QLDV_KiemNghiem_BE.Models;
 using QLDV_KiemNghiem_BE.Interfaces;
 using QLDV_KiemNghiem_BE.Interfaces.EmailService;
+using QLDV_KiemNghiem_BE.RequestFeatures;
+using QLDV_KiemNghiem_BE.RequestFeatures.PagingRequest;
+using QLDV_KiemNghiem_BE.PublicFunc;
 
 namespace QLDV_KiemNghiem_BE.Services
 {
@@ -19,11 +21,12 @@ namespace QLDV_KiemNghiem_BE.Services
             _mapper = mapper;
             _emailService = emailService;
         }
-        public async Task<IEnumerable<NhanVienDto>> GetNhanViensAllAsync()
+        public async Task<(IEnumerable<NhanVienDto> employees, Pagination pagi)> GetNhanViensAllAsync(NhanVienParam nhanVienParam, bool tracking)
         {
-            var NhanVienDomains = await _repositoryManager.NhanVien.GetNhanViensAllAsync();
+            var NhanVienDomains = await _repositoryManager.NhanVien.GetNhanViensAllAsync(nhanVienParam, tracking);
             var result = _mapper.Map<IEnumerable<NhanVienDto>>(NhanVienDomains);
-            return result;
+
+            return (employees: result, pagi: NhanVienDomains.Pagination);
         }
         public async Task<NhanVienDto?> FindNhanVienAsync(string maNhanVien)
         {

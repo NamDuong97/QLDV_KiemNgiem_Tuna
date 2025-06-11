@@ -3,9 +3,9 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using QLDV_KiemNghiem_BE.DTO;
-using QLDV_KiemNghiem_BE.DTO.Parameter;
 using QLDV_KiemNghiem_BE.Interfaces.ManagerInterface;
 using QLDV_KiemNghiem_BE.Models;
+using QLDV_KiemNghiem_BE.RequestFeatures;
 
 namespace QLDV_KiemNghiem_BE.Controllers
 {

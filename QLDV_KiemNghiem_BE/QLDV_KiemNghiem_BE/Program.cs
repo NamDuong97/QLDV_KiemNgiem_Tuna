@@ -92,6 +92,15 @@ builder.Services.AddSwaggerGen(c =>
     });
 });
 
+builder.Services.AddAuthorization(option =>
+{
+    option.AddPolicy("AdminOnly", policy =>
+    {
+        policy.RequireAuthenticatedUser();
+        policy.RequireClaim("Role", "Admin");
+    }); 
+});
+
 var app = builder.Build();
 
 app.UseCors("AllowFrontend");

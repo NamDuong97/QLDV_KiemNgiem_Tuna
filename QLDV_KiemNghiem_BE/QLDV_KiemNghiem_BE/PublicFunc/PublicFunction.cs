@@ -4,7 +4,7 @@ using System.Text.RegularExpressions;
 
 namespace QLDV_KiemNghiem_BE
 {
-    public static class PublicFunc
+    public static class PublicFunction
     {
         public static string getTimeSystem()
         {

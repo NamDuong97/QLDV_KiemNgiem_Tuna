@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using QLDV_KiemNghiem_BE.DTO.Parameter;
 using QLDV_KiemNghiem_BE.DTO;
 using QLDV_KiemNghiem_BE.Interfaces.ManagerInterface;
 using QLDV_KiemNghiem_BE.Models;
@@ -10,6 +9,7 @@ using System.Text;
 using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
 using System.IdentityModel.Tokens.Jwt;
+using QLDV_KiemNghiem_BE.RequestFeatures;
 
 namespace QLDV_KiemNghiem_BE.Services
 {
@@ -162,7 +162,7 @@ namespace QLDV_KiemNghiem_BE.Services
 
             var KhachHangDomain = _mapper.Map<KhachHang>(khachHangDto);
             KhachHangDomain.MaId = Guid.NewGuid().ToString();
-            KhachHangDomain.MaKh = "KH_" + PublicFunc.getTimeSystem();
+            KhachHangDomain.MaKh = "KH_" + PublicFunction.getTimeSystem();
             KhachHangDomain.NgayTao = DateTime.Now;
             KhachHangDomain.ThanThien = 0; // tài khoản mới tạo sẽ có thân thiện = 0
             KhachHangDomain.NgayHetHanMatKhau = DateTime.Now.AddMonths(3); // thời hạn của mật khẩu là 3 tháng

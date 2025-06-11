@@ -77,9 +77,6 @@ namespace QLDV_KiemNghiem_BE.DTO
         public DateTime? NgaySua { get; set; }
 
         [StringLength(200)]
-        public string? TenTaiKhoan { get; set; }
-
-        [StringLength(200)]
         public string? MatKhau { get; set; }
 
         [Column("MaLoaiTK")]

@@ -84,9 +84,6 @@ public partial class NhanVien
     public DateTime? NgaySua { get; set; }
 
     [StringLength(200)]
-    public string? TenTaiKhoan { get; set; }
-
-    [StringLength(200)]
     public string? MatKhau { get; set; }
 
     [Column("MaLoaiTK")]

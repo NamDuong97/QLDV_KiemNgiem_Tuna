@@ -1,10 +1,13 @@
-﻿using AutoMapper;
+﻿using System.Text.Json;
+using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using QLDV_KiemNghiem_BE.DTO.Parameter;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 using QLDV_KiemNghiem_BE.DTO;
 using QLDV_KiemNghiem_BE.Interfaces.ManagerInterface;
 using QLDV_KiemNghiem_BE.Models;
+using QLDV_KiemNghiem_BE.RequestFeatures;
+using QLDV_KiemNghiem_BE.RequestFeatures.PagingRequest;
 
 namespace QLDV_KiemNghiem_BE.Controllers
 {
@@ -24,11 +27,12 @@ namespace QLDV_KiemNghiem_BE.Controllers
 
         [HttpGet]
         [Route("getNhanVienAll")]
-        public async Task<ActionResult> getNhanVienAll()
+        public async Task<ActionResult> getNhanVienAll(NhanVienParam nhanVienParam)
         {
-            var result = await _service.NhanVien.GetNhanViensAllAsync();
+            var result = await _service.NhanVien.GetNhanViensAllAsync(nhanVienParam, false);
+            Response.Headers.Add("X-Pagination", JsonSerializer.Serialize(result.pagi));
             _logger.LogDebug("get toan bo nhan vien");
-            return Ok(result);
+            return Ok(result.employees);
         }
 
         [HttpGet]

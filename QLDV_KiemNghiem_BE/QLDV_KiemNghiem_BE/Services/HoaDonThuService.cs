@@ -3,10 +3,10 @@ using AutoMapper;
 using Microsoft.AspNetCore.Http.HttpResults;
 using QLDV_KiemNghiem_BE.Data;
 using QLDV_KiemNghiem_BE.DTO;
-using QLDV_KiemNghiem_BE.DTO.Parameter;
 using QLDV_KiemNghiem_BE.Interfaces;
 using QLDV_KiemNghiem_BE.Interfaces.ManagerInterface;
 using QLDV_KiemNghiem_BE.Models;
+using QLDV_KiemNghiem_BE.RequestFeatures;
 
 namespace QLDV_KiemNghiem_BE.Services
 {
@@ -105,7 +105,7 @@ namespace QLDV_KiemNghiem_BE.Services
             HoaDonThu hoaDonThu = new HoaDonThu()
             {
                 MaId = Guid.NewGuid().ToString(),
-                MaHd = "HD" + PublicFunc.getTimeSystem() + "_" + phieuDangKy.SoDkpt,
+                MaHd = "HD" + PublicFunction.getTimeSystem() + "_" + phieuDangKy.SoDkpt,
                 MaPhieuDangKy = phieuDangKy.MaId,
                 TongTien = tongTien,
                 NgayLap = DateTime.Now,
