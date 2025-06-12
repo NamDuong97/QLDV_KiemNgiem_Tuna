@@ -1,4 +1,4 @@
-﻿namespace QLDV_KiemNghiem_BE.Interfaces.EmailService
+﻿namespace QLDV_KiemNghiem_BE.Interfaces
 {
     public interface IEmailService
     {

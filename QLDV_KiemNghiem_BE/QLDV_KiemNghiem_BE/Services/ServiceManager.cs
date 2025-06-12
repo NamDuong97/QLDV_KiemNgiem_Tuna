@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using QLDV_KiemNghiem_BE.Data;
 using QLDV_KiemNghiem_BE.Interfaces;
-using QLDV_KiemNghiem_BE.Interfaces.EmailService;
 using QLDV_KiemNghiem_BE.Interfaces.ManagerInterface;
 using QLDV_KiemNghiem_BE.Models;
 
@@ -11,6 +10,9 @@ namespace QLDV_KiemNghiem_BE.Services
     {
         private readonly IRepositoryManager _repositoryManager;
         private readonly IMapper _mapper;
+        private readonly IConfiguration _configuration;
+        //private readonly Lazy<ITokenService> _token;
+        //private readonly Lazy<IEmailService> _email;
         private readonly Lazy<IPhieuDangKyService> _phieuDangKyService;
         private readonly Lazy<IPhieuDangKyMauService> _phieuDangKyMauService;
         private readonly Lazy<IDmPhuLieuHoaChatService> _dmPhuLieuHoaChatService;
@@ -40,11 +42,15 @@ namespace QLDV_KiemNghiem_BE.Services
         private readonly Lazy<IPhieuPhanTichKetQuaChiTietService> _phieuPhanTichKetQuaChiTietService;
         private readonly Lazy<IPhieuThuService> _phieuThuService;
         private readonly Lazy<IChiTietPhieuDeXuatPhongBanService> _chiTietPhieuDeXuatPhongBanService;
+       
 
-        public ServiceManager(IRepositoryManager repositoryManager, IMapper mapper, DataContext dataContext, IEmailService emailService, IConfiguration configuration)
+        public ServiceManager(IRepositoryManager repositoryManager, IMapper mapper, DataContext dataContext, IEmailService emailService, ITokenService tokenService, IConfiguration configuration)
         {
             _repositoryManager = repositoryManager;
             _mapper = mapper;
+            _configuration = configuration;
+            //_email = new Lazy<IEmailService>(() => new EmailService(configuration));
+            //_token = new Lazy<ITokenService>(() => new TokenService(configuration));
             _phieuDangKyService = new Lazy<IPhieuDangKyService>(() => new PhieuDangKyService(repositoryManager, mapper, dataContext));
             _phieuDangKyMauService = new Lazy<IPhieuDangKyMauService>(() => new PhieuDangKyMauService(repositoryManager, mapper));
             _dmPhuLieuHoaChatService = new Lazy<IDmPhuLieuHoaChatService>(() => new DmPhuLieuHoaChatService(repositoryManager, mapper));
@@ -68,14 +74,16 @@ namespace QLDV_KiemNghiem_BE.Services
             _phieuLuuMauService = new Lazy<IPhieuLuuMauService>(() => new PhieuLuuMauService(repositoryManager, mapper));
             _phieuTienDoLamViecService = new Lazy<IPhieuTienDoLamViecService>(() => new PhieuTienDoLamViecService(repositoryManager, mapper));
             _phieuPhanTichKetQuaService = new Lazy<IPhieuPhanTichKetQuaService>(() => new PhieuPhanTichKetQuaService(repositoryManager, mapper));
-            _khachHangService = new Lazy<IKhachHangService>(() => new KhachHangService(repositoryManager, mapper, emailService, configuration));
-            _nhanVienService = new Lazy<INhanVienService>(() => new NhanVienService(repositoryManager, mapper, emailService));
+            _khachHangService = new Lazy<IKhachHangService>(() => new KhachHangService(repositoryManager, mapper, emailService, tokenService, configuration));
+            _nhanVienService = new Lazy<INhanVienService>(() => new NhanVienService(repositoryManager, mapper, tokenService));
             _phieuChiService = new Lazy<IPhieuChiService>(() => new PhieuChiService(repositoryManager, mapper));
             _phieuPhanTichKetQuaChiTietService = new Lazy<IPhieuPhanTichKetQuaChiTietService>(() => new PhieuPhanTichKetQuaChiTietService(repositoryManager, mapper));
             _phieuThuService = new Lazy<IPhieuThuService>(() => new PhieuThuService(repositoryManager, mapper));
             _chiTietPhieuDeXuatPhongBanService = new Lazy<IChiTietPhieuDeXuatPhongBanService>(() => new ChiTietPhieuDeXuatPhongBanService(repositoryManager, mapper));
         }
 
+        //public IEmailService Email => _email.Value;
+        //public ITokenService Token => _token.Value; // k thể gọi I
         public IPhieuDangKyService PhieuDangKy => _phieuDangKyService.Value;
         public IPhieuDangKyMauService PhieuDangKyMau => _phieuDangKyMauService.Value;
         public IDmPhuLieuHoaChatService DmPhuLieuHoaChat => _dmPhuLieuHoaChatService.Value;
@@ -105,5 +113,6 @@ namespace QLDV_KiemNghiem_BE.Services
         public IPhieuPhanTichKetQuaChiTietService PhieuPhanTichKetQuaChiTiet => _phieuPhanTichKetQuaChiTietService.Value;
         public IPhieuThuService PhieuThu => _phieuThuService.Value;
         public IChiTietPhieuDeXuatPhongBanService ChiTietPhieuDeXuatPhongBan => _chiTietPhieuDeXuatPhongBanService.Value;
+        
     }
 }

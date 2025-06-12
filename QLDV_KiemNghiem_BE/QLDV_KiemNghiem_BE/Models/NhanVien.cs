@@ -60,16 +60,13 @@ public partial class NhanVien
     [StringLength(50)]
     public string? SoDienThoai { get; set; }
 
-    [StringLength(50)]
-    public string? TrangThai { get; set; }
-
     [Column(TypeName = "datetime")]
     public DateTime? NgayLamViec { get; set; }
 
     [Column(TypeName = "datetime")]
     public DateTime? NgayThoiViec { get; set; }
 
-    public bool? LamViec { get; set; }
+    public bool? TrangThai { get; set; }
 
     [StringLength(50)]
     public string? NguoiTao { get; set; }

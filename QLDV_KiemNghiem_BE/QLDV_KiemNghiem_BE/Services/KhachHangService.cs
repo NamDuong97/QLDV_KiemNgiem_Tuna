@@ -3,13 +3,14 @@ using QLDV_KiemNghiem_BE.DTO;
 using QLDV_KiemNghiem_BE.Interfaces.ManagerInterface;
 using QLDV_KiemNghiem_BE.Models;
 using QLDV_KiemNghiem_BE.Interfaces;
-using QLDV_KiemNghiem_BE.Interfaces.EmailService;
 using Org.BouncyCastle.Crypto.Engines;
 using System.Text;
 using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
 using System.IdentityModel.Tokens.Jwt;
 using QLDV_KiemNghiem_BE.RequestFeatures;
+using QLDV_KiemNghiem_BE.Shared;
+using QLDV_KiemNghiem_BE.RequestFeatures.PagingRequest;
 
 namespace QLDV_KiemNghiem_BE.Services
 {
@@ -17,49 +18,26 @@ namespace QLDV_KiemNghiem_BE.Services
     {
         private readonly IRepositoryManager _repositoryManager;
         private readonly IEmailService _emailService;
+        private readonly ITokenService _tokenService;
         private readonly IMapper _mapper;
         private readonly IConfiguration _configuration;
 
-        public KhachHangService(IRepositoryManager repositoryManager, IMapper mapper, IEmailService emailService, IConfiguration configuration)
+        public KhachHangService(IRepositoryManager repositoryManager, IMapper mapper, IEmailService emailService, ITokenService tokenService, IConfiguration configuration)
         {
             _repositoryManager = repositoryManager;
             _mapper = mapper;
             _emailService = emailService;
-            _configuration = configuration;
+            _tokenService = tokenService;
+            _configuration = configuration; 
         }
-        private string GenerateJwtToken(KhachHang khachHang)
+        
+        public async Task<(IEnumerable<KhachHangReturnDto> datas, Pagination pagi)> GetKhachHangsAllAsync(KhachHangParam param, bool tracking)
         {
-            // Lấy key tạo token từ appsetting.json
-            var securityKey = _configuration["Jwt:Key"];
-            Console.WriteLine($"JWT Key: {securityKey}"); // Kiểm tra trong output
-            var formatKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(securityKey));
-            // Tạo khoá không trùng
-            var creadentials = new SigningCredentials(formatKey, SecurityAlgorithms.HmacSha256);
-
-            // Tạo claims lưu những thông tin cơ bản của user để backend xác thực
-            var claims = new[]
-            {
-                new Claim(JwtRegisteredClaimNames.Sub, khachHang.MaId.ToString()),
-                new Claim(JwtRegisteredClaimNames.Email, khachHang.Email.ToString()),
-            };
-
-            // Tạo token
-            var token = new JwtSecurityToken(
-                issuer: _configuration["Jwt:Issuer"],
-                claims: claims, // Thong tin cua nguoi dung
-                expires: DateTime.UtcNow.AddHours(1), // Thoi gian song cua token la 1 tieng
-                signingCredentials: creadentials,
-                audience: _configuration["Jwt:Audience"]
-            );
-            return new JwtSecurityTokenHandler().WriteToken(token);
-        }
-        public async Task<IEnumerable<KhachHangReturnDto>> GetKhachHangsAllAsync()
-        {
-            var KhachHangDomains = await _repositoryManager.KhachHang.GetKhachHangsAllAsync();
+            var KhachHangDomains = await _repositoryManager.KhachHang.GetKhachHangsAllAsync(param, tracking);
             var result = _mapper.Map<IEnumerable<KhachHangReturnDto>>(KhachHangDomains);
-            return result;
+            return (datas: result, pagi: KhachHangDomains.Pagination);
         }
-        public async Task<ResponseModel1<string>> LoginAsync(LoginDto login)
+        public async Task<ResponseModel1<string>> LoginKhachHangAsync(LoginDto login)
         {
             // Kiểm tra email tồn tại
             var khachHang = await _repositoryManager.KhachHang.GetKhacHangByEmailAsync(login.Email, false);
@@ -92,7 +70,12 @@ namespace QLDV_KiemNghiem_BE.Services
                     Data = null
                 };
             }
-            string token = GenerateJwtToken(khachHang);
+            TokenParam param = new TokenParam()
+            {
+                ID = khachHang.MaId,
+                Email = khachHang.Email
+            };
+            string token = _tokenService.GenerateJwtToken(param);
             return new ResponseModel1<string>
             {
                 KetQua = true,
@@ -176,7 +159,7 @@ namespace QLDV_KiemNghiem_BE.Services
                 <p> Ban da tao tai khoan thanh cong </p>
                 <p> Your username is: {KhachHangDomain.Email} </p>
                 <a href='{verifyUrl}'>Verify your email</a>";
-            await _emailService.SendEmailAsync(khachHangDto.Email, "Dang Ky Thanh Cong, Vui Long Xac Minh Email", emailBody);
+                await _emailService.SendEmailAsync(khachHangDto.Email, "Dang Ky Thanh Cong, Vui Long Xac Minh Email", emailBody);
 
             // Luu thông tin khách hàng vào CSDL
             bool check = await _repositoryManager.SaveChangesAsync();

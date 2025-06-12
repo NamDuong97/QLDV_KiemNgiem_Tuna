@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
+using QLDV_KiemNghiem_BE.DTO;
 using QLDV_KiemNghiem_BE.Models;
 
 namespace QLDV_KiemNghiem_BE.Data;

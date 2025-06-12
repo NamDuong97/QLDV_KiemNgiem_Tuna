@@ -1,6 +1,10 @@
 ﻿using System.Globalization;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 using System.Text;
 using System.Text.RegularExpressions;
+using Microsoft.IdentityModel.Tokens;
+using QLDV_KiemNghiem_BE.Models;
 
 namespace QLDV_KiemNghiem_BE
 {
@@ -32,3 +36,4 @@ namespace QLDV_KiemNghiem_BE
         }
     }
 }
+// Chứa các hàm thường được sử dụng

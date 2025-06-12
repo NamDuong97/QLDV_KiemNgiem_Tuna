@@ -6,6 +6,8 @@ using QLDV_KiemNghiem_BE.Interfaces.ManagerInterface;
 using QLDV_KiemNghiem_BE.Models;
 using Microsoft.AspNetCore.Authorization;
 using QLDV_KiemNghiem_BE.RequestFeatures;
+using System.Text.Json;
+using QLDV_KiemNghiem_BE.RequestFeatures.PagingRequest;
 
 namespace QLDV_KiemNghiem_BE.Controllers
 {
@@ -23,16 +25,18 @@ namespace QLDV_KiemNghiem_BE.Controllers
             _mapper = mapper;
         }
 
-        [Authorize]
+        [Authorize(Roles = "BLD,KYT,KHTH")]
         [HttpGet]
         [Route("getKhachHangAll")]
-        public async Task<ActionResult> getKhachHangAll()
+        public async Task<ActionResult> getKhachHangAll(KhachHangParam param)
         {
-            var result = await _service.KhachHang.GetKhachHangsAllAsync();
+            var result = await _service.KhachHang.GetKhachHangsAllAsync(param, false);
+            Response.Headers.Append("X-Pagination", JsonSerializer.Serialize(result.pagi));
             _logger.LogDebug("get toan bo khach hang");
-            return Ok(result);
+            return Ok(result.datas);
         }
 
+        [Authorize(Roles = "BLD,KYT,KHTH")]
         [HttpGet]
         [Route("getKhachHangByID")]
         public async Task<ActionResult> getKhachHangByID(string maKhachHang)
@@ -64,7 +68,6 @@ namespace QLDV_KiemNghiem_BE.Controllers
             }
         }
 
-        [Authorize]
         [HttpPost]
         [Route("createKhachHang")]
         public async Task<ActionResult> createKhachHang(KhachHangDto KhachHangDto)
@@ -104,7 +107,7 @@ namespace QLDV_KiemNghiem_BE.Controllers
                 _logger.LogError("Loi validate tham so dau vao");
                 return BadRequest(new { Errors = errors });
             }
-            ResponseModel1<string> checkLogin = await _service.KhachHang.LoginAsync(login);
+            ResponseModel1<string> checkLogin = await _service.KhachHang.LoginKhachHangAsync(login);
             if (checkLogin.KetQua)
             {
                 _logger.LogDebug(checkLogin.Message);
@@ -117,6 +120,7 @@ namespace QLDV_KiemNghiem_BE.Controllers
             }
         }
 
+        [Authorize(Roles = "BLD,KYT,KHTH")]
         [HttpPut]
         [Route("updateKhachHang")]
         public async Task<ActionResult> updateKhachHang(KhachHangDto KhachHangDto)
@@ -143,6 +147,7 @@ namespace QLDV_KiemNghiem_BE.Controllers
             }
         }
 
+        [Authorize(Roles = "BLD,KYT,KHTH")]
         [HttpDelete]
         [Route("deleteKhachHang")]
         public async Task<ActionResult> deleteKhachHang(KhachHang KhachHang)

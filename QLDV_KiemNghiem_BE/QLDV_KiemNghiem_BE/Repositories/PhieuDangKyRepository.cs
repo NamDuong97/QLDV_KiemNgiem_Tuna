@@ -71,8 +71,7 @@ namespace QLDV_KiemNghiem_BE.Repositories
         }
         public async Task<int> DuTinhThoiGianKiemNghiem(string maDmMau, string maTieuChuan)
         {
-            var result = await _context
-            .Set<ThoiGianTieuChuan>()  // Không cần DbSet thực trong DbContext
+            var result = await _context.ThoiGianTieuChuans
             .FromSqlRaw("SELECT dbo.Fn_ThoiGianDuTinhKiemNghiem({0}, {1}) AS ThoiGianTC", maDmMau, maTieuChuan)
             .AsNoTracking()
             .FirstOrDefaultAsync();

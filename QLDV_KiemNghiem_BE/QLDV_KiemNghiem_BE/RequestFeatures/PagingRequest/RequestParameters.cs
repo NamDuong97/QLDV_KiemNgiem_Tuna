@@ -18,3 +18,5 @@
         }
     }
 }
+
+// Chứa các thuộc tính phân trang để class khác kế thừa và mở rộng

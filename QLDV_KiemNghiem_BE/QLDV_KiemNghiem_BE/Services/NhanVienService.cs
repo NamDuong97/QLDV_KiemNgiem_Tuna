@@ -3,30 +3,67 @@ using QLDV_KiemNghiem_BE.DTO;
 using QLDV_KiemNghiem_BE.Interfaces.ManagerInterface;
 using QLDV_KiemNghiem_BE.Models;
 using QLDV_KiemNghiem_BE.Interfaces;
-using QLDV_KiemNghiem_BE.Interfaces.EmailService;
 using QLDV_KiemNghiem_BE.RequestFeatures;
 using QLDV_KiemNghiem_BE.RequestFeatures.PagingRequest;
-using QLDV_KiemNghiem_BE.PublicFunc;
+using QLDV_KiemNghiem_BE.Shared;
 
 namespace QLDV_KiemNghiem_BE.Services
 {
     public class NhanVienService : INhanVienService
     {
         private readonly IRepositoryManager _repositoryManager;
-        private readonly IEmailService _emailService;
+        private readonly ITokenService _tokenService;
         private readonly IMapper _mapper;
-        public NhanVienService(IRepositoryManager repositoryManager, IMapper mapper, IEmailService emailService)
+        public NhanVienService(IRepositoryManager repositoryManager, IMapper mapper, ITokenService tokenService)
         {
             _repositoryManager = repositoryManager;
             _mapper = mapper;
-            _emailService = emailService;
+            _tokenService = tokenService;
         }
-        public async Task<(IEnumerable<NhanVienDto> employees, Pagination pagi)> GetNhanViensAllAsync(NhanVienParam nhanVienParam, bool tracking)
+        public async Task<(IEnumerable<NhanVienDto> datas, Pagination pagi)> GetNhanViensAllAsync(NhanVienParam nhanVienParam, bool tracking)
         {
             var NhanVienDomains = await _repositoryManager.NhanVien.GetNhanViensAllAsync(nhanVienParam, tracking);
             var result = _mapper.Map<IEnumerable<NhanVienDto>>(NhanVienDomains);
 
-            return (employees: result, pagi: NhanVienDomains.Pagination);
+            return (datas: result, pagi: NhanVienDomains.Pagination);
+        }
+        public async Task<ResponseModel1<string>> LoginNhanVienAsync(LoginDto login)
+        {
+            // Kiểm tra email tồn tại
+            var nhanVien = await _repositoryManager.NhanVien.GetNhanVienByEmailAsync(login.Email, false);
+            if (nhanVien == null)
+            {
+                return new ResponseModel1<string>
+                {
+                    KetQua = false,
+                    Message = "Email không tồn tại, vui lòng kiểm tra lại!",
+                    Data = null
+                };
+            }
+            // Kiểm tra pasword, tham số 1 là pass từ client gửi lên, tham số 2 là từ csdl lấy
+            if (!BCrypt.Net.BCrypt.Verify(login.Password, nhanVien.MatKhau))
+            {
+                return new ResponseModel1<string>
+                {
+                    KetQua = false,
+                    Message = "Mật khẩu không đúng, vui lòng kiểm tra lại!",
+                    Data = null
+                };
+            }
+            TokenParam param = new TokenParam()
+            {
+                ID = nhanVien.MaId,
+                Email = nhanVien.EmailCaNhan,
+                Role = nhanVien.MaLoaiTk,
+                IsCustomer = false
+            };
+            string token = _tokenService.GenerateJwtToken(param);
+            return new ResponseModel1<string>
+            {
+                KetQua = true,
+                Message = "Đăng nhập thành công",
+                Data = token
+            };
         }
         public async Task<NhanVienDto?> FindNhanVienAsync(string maNhanVien)
         {
@@ -55,14 +92,8 @@ namespace QLDV_KiemNghiem_BE.Services
             var NhanVienDomain = _mapper.Map<NhanVien>(NhanVienDto);
             NhanVienDomain.MaId = Guid.NewGuid().ToString();
             NhanVienDomain.NgayTao = DateTime.Now;
+            NhanVienDomain.NgayHetHanMatKhau = DateTime.Now.AddMonths(3); // thời hạn của mật khẩu là 3 tháng
             _repositoryManager.NhanVien.CreateNhanVienAsync(NhanVienDomain);
-
-            // Send mail for user
-            var emailBody = $@"
-                <h1> Welcome to your website </h1>
-                <p> Ban da tao tai khoan thanh cong </p>
-            ";
-            await _emailService.SendEmailAsync(NhanVienDto.EmailCaNhan, "Dang Ky Thanh Cong", emailBody);
 
             bool check = await _repositoryManager.SaveChangesAsync();
             var NhanVienReturnDto = _mapper.Map<NhanVienDto>(NhanVienDomain);

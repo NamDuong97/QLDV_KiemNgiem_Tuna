@@ -35,8 +35,7 @@ namespace QLDV_KiemNghiem_BE.Repositories
 
         public async Task<decimal> GetToTalMoneyOfMau(string dmMau, string maTieuChuan, string maLoaiDichVu)
         {
-            var result = await _context
-            .Set<ThanhTienTungMau>()  // Không cần DbSet thực trong DbContext
+            var result = await _context.ThanhTienTungMaus
             .FromSqlRaw("SELECT dbo.fn_ThanhTienTungMauKiemNghiem({0}, {1}, {2}) AS ThanhTien", dmMau, maTieuChuan, maLoaiDichVu)
             .AsNoTracking()
             .FirstOrDefaultAsync();

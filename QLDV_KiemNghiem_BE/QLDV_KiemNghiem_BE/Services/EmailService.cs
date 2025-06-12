@@ -1,7 +1,7 @@
 ﻿using MailKit.Net.Smtp;
 using MailKit.Security;
 using MimeKit;
-using QLDV_KiemNghiem_BE.Interfaces.EmailService;
+using QLDV_KiemNghiem_BE.Interfaces;
 
 namespace QLDV_KiemNghiem_BE.Services
 {

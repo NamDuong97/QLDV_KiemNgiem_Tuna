@@ -1,4 +1,5 @@
-﻿using System.Text.Json;
+﻿using System.Security.Claims;
+using System.Text.Json;
 using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -25,14 +26,40 @@ namespace QLDV_KiemNghiem_BE.Controllers
             _mapper = mapper;
         }
 
+        [HttpPost]
+        [Route("loginNhanVien")]
+        public async Task<ActionResult> loginNhanVien(LoginDto login)
+        {
+            if (!ModelState.IsValid)
+            {
+                var errors = ModelState.Values
+                .SelectMany(v => v.Errors)
+                .Select(e => e.ErrorMessage)
+                .ToList();
+                _logger.LogError("Loi validate tham so dau vao");
+                return BadRequest(new { Errors = errors });
+            }
+            ResponseModel1<string> checkLogin = await _service.NhanVien.LoginNhanVienAsync(login);
+            if (checkLogin.KetQua)
+            {
+                _logger.LogDebug(checkLogin.Message);
+                return Ok(checkLogin);
+            }
+            else
+            {
+                _logger.LogDebug(checkLogin.Message);
+                return BadRequest(checkLogin);
+            }
+        }
+
         [HttpGet]
         [Route("getNhanVienAll")]
         public async Task<ActionResult> getNhanVienAll(NhanVienParam nhanVienParam)
         {
             var result = await _service.NhanVien.GetNhanViensAllAsync(nhanVienParam, false);
-            Response.Headers.Add("X-Pagination", JsonSerializer.Serialize(result.pagi));
+            Response.Headers.Append("X-Pagination", JsonSerializer.Serialize(result.pagi));
             _logger.LogDebug("get toan bo nhan vien");
-            return Ok(result.employees);
+            return Ok(result.datas);
         }
 
         [HttpGet]

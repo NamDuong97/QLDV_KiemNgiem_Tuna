@@ -5,6 +5,8 @@ using Microsoft.VisualBasic;
 using QLDV_KiemNghiem_BE.Data;
 using QLDV_KiemNghiem_BE.Interfaces;
 using QLDV_KiemNghiem_BE.Models;
+using QLDV_KiemNghiem_BE.Shared;
+using QLDV_KiemNghiem_BE.RequestFeatures.PagingRequest;
 
 namespace QLDV_KiemNghiem_BE.Repositories
 {
@@ -17,9 +19,18 @@ namespace QLDV_KiemNghiem_BE.Repositories
             _context = context;
             _mapper = mapper;
         }
-        public async Task<IEnumerable<KhachHang>> GetKhachHangsAllAsync()
+        public async Task<PagedList<KhachHang>> GetKhachHangsAllAsync(KhachHangParam param, bool tracking)
         {
-            return await _context.KhachHangs.ToListAsync();
+            if (tracking)
+            {
+                var result =  await _context.KhachHangs.ToListAsync();
+                return PagedList<KhachHang>.ToPagedList(result, param.PageNumber, param.PageSize);
+            }
+            else
+            {
+                var result =  await _context.KhachHangs.AsNoTracking().ToListAsync();
+                return PagedList<KhachHang>.ToPagedList(result, param.PageNumber, param.PageSize);
+            }
         }
         public async Task<KhachHang?> GetKhacHangByEmailAsync(string email, bool tracking)
         {
