@@ -8,6 +8,7 @@ import {
   TableContainer,
   TableHead,
   TableRow,
+  Tooltip,
 } from "@mui/material";
 import SquareIcon from "@mui/icons-material/Square";
 import IndeterminateCheckBoxIcon from "@mui/icons-material/IndeterminateCheckBox";
@@ -16,6 +17,8 @@ import { Align, TableHeader } from "../../../../../../models/Table";
 import { Dispatch, SetStateAction } from "react";
 import { Maus } from "../../../../../../models/mau";
 import { useQueryClient } from "@tanstack/react-query";
+import { CiEdit } from "react-icons/ci";
+import { MdContentCopy } from "react-icons/md";
 
 interface TableMauProps {
   tableBody: Maus[];
@@ -26,6 +29,8 @@ interface TableMauProps {
   setDataEditMaus: Dispatch<SetStateAction<any>>;
   dataEditMaus?: any;
   handleRedirectTag1?: () => void;
+  dataCopyMaus?: any;
+  setDataCopyMaus: Dispatch<any>;
 }
 
 const TableMau = (props: TableMauProps) => {
@@ -37,6 +42,8 @@ const TableMau = (props: TableMauProps) => {
     setDataEditMaus,
     dataEditMaus,
     handleRedirectTag1,
+    dataCopyMaus,
+    setDataCopyMaus,
   } = props;
 
   const queryClient = useQueryClient();
@@ -68,14 +75,30 @@ const TableMau = (props: TableMauProps) => {
 
   const handleEditMaus = (tenMau: string | undefined) => {
     const selectedItem = tableBody.find((item: any) => item.tenMau === tenMau);
-    if (dataEditMaus && dataEditMaus.tenMau === selectedItem?.tenMau)
+    if (dataEditMaus && dataEditMaus.tenMau === selectedItem?.tenMau) {
       setDataEditMaus(null);
-    else {
+      sessionStorage.removeItem("ImageTemp");
+    } else {
       const removeListCheckboxByTenPLHC = listCheckbox.filter(
         (item) => item.tenMau !== tenMau
       );
       setListCheckbox([...removeListCheckboxByTenPLHC]);
       setDataEditMaus(selectedItem);
+      handleRedirectTag1?.();
+    }
+  };
+
+  const handleCopyMaus = (tenMau: string | undefined) => {
+    const selectedItem = tableBody.find((item: any) => item.tenMau === tenMau);
+    if (dataCopyMaus && dataCopyMaus.tenMau === selectedItem?.tenMau) {
+      setDataCopyMaus(null);
+      sessionStorage.removeItem("ImageTemp");
+    } else {
+      const removeListCheckboxByTenPLHC = listCheckbox.filter(
+        (item) => item.tenMau !== tenMau
+      );
+      setListCheckbox([...removeListCheckboxByTenPLHC]);
+      setDataCopyMaus(selectedItem);
       handleRedirectTag1?.();
     }
   };
@@ -140,12 +163,7 @@ const TableMau = (props: TableMauProps) => {
               </TableCell>
               <TableCell align="left">
                 <Box className="flex gap-2 items-center justify-start">
-                  <p
-                    className="text-base/4 font-medium hover:underline cursor-pointer"
-                    onClick={() => handleEditMaus(item?.tenMau)}
-                  >
-                    {item?.tenMau}
-                  </p>
+                  <p className="text-base/4 font-medium">{item?.tenMau}</p>
                 </Box>
               </TableCell>
               <TableCell align="center">
@@ -178,6 +196,58 @@ const TableMau = (props: TableMauProps) => {
               <TableCell align="center">
                 <Box className="flex gap-2 items-center justify-center">
                   <p className="text-base/4 font-medium">{item?.soLuong}</p>
+                </Box>
+              </TableCell>
+              <TableCell align="center" className="!py-2">
+                <Box className="flex gap-2 items-center justify-center">
+                  <Tooltip
+                    title="Sửa"
+                    slotProps={{
+                      popper: {
+                        modifiers: [
+                          {
+                            name: "offset",
+                            options: {
+                              offset: [0, -10],
+                            },
+                          },
+                        ],
+                      },
+                    }}
+                  >
+                    <button
+                      onClick={() => handleEditMaus(item?.tenMau)}
+                      className="px-2 py-1 rounded cursor-pointer border border-solid border-yellow-500 group hover:bg-yellow-500"
+                    >
+                      <span className="text-base/4 lg:text-lg/6 font-bold text-yellow-500 group-hover:text-white">
+                        <CiEdit />
+                      </span>
+                    </button>
+                  </Tooltip>
+                  <Tooltip
+                    title="Sao chép"
+                    slotProps={{
+                      popper: {
+                        modifiers: [
+                          {
+                            name: "offset",
+                            options: {
+                              offset: [0, -10],
+                            },
+                          },
+                        ],
+                      },
+                    }}
+                  >
+                    <button
+                      onClick={() => handleCopyMaus(item?.tenMau)}
+                      className="px-2 py-1 rounded cursor-pointer border border-solid border-gray-500 text-red-500 group hover:bg-gray-500"
+                    >
+                      <span className="text-base/4 lg:text-lg/6 font-bold text-gray-500 group-hover:text-white">
+                        <MdContentCopy />
+                      </span>
+                    </button>
+                  </Tooltip>
                 </Box>
               </TableCell>
             </TableRow>

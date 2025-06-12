@@ -22,7 +22,7 @@ export default function LayoutCustomer() {
         <HeaderCustomer />
       </Box>
       <Box className="flex justify-center min-h-screen">
-        <Box className={`w-full Outlet`}>
+        <Box className={`w-full`}>
           <Outlet />
         </Box>
       </Box>

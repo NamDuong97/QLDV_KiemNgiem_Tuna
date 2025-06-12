@@ -18,6 +18,7 @@ import { FormPhieuDangKy } from "../../../../../models/PhieuDangKy";
 
 import { Inputs } from "../../../../../components/Inputs";
 import InputSelect from "../../../../../components/InputSelect";
+import { image } from "../../../../../constants/image";
 
 const dataHinhThucGuiTra = [
   { value: "Trực tiếp", label: "Trực tiếp" },
@@ -299,48 +300,61 @@ const EditPhieuDKyDVKN = () => {
         exit={{ x: 0, opacity: 0 }}
         transition={{ duration: 0.7 }}
       >
-        <div className="grid gap-4 px-6 py-6 sm:py-8">
-          <Box className="flex items-center justify-between">
-            <Box className="flex items-center gap-2 sm:gap-4">
+        <div className="grid gap-4">
+          <Box className="relative w-full h-[200px]">
+            <Box
+              sx={{
+                position: "absolute",
+                inset: 0,
+                backgroundImage: `url(${image.imageBannerPage})`,
+                backgroundSize: "cover",
+                backgroundPosition: "center",
+                backgroundRepeat: "no-repeat",
+                filter: "brightness(50%)",
+                zIndex: 0,
+              }}
+            />
+            <Box className="!absolute bottom-0 w-full flex items-center justify-between px-6 py-6">
+              <Box className="flex items-center gap-2 sm:gap-4">
+                <button
+                  className="p-1 sm:p-2 rounded-full bg-gray-200 hover:bg-gray-300 transition-colors group cursor-pointer"
+                  onClick={handleClickOpenPopupThoatForm}
+                >
+                  <MdDoorBack className="w-4 h-4 sm:w-7 sm:h-7 text-[#306fb2]" />
+                </button>
+                <h1 className="capitalize text-xl/4 sm:text-3xl/6 font-bold text-white">
+                  Số ĐKPT: {data?.soDkpt}
+                </h1>
+              </Box>
               <button
-                className="p-1 sm:p-2 rounded-full bg-gray-200 hover:bg-gray-300 transition-colors group cursor-pointer"
-                onClick={handleClickOpenPopupThoatForm}
-              >
-                <MdDoorBack className="w-4 h-4 sm:w-7 sm:h-7 text-[#306fb2]" />
-              </button>
-              <h1 className="capitalize text-xl/4 sm:text-3xl/6 font-bold text-gray-700">
-                Số ĐKPT: {data?.soDkpt}
-              </h1>
-            </Box>
-            <button
-              type="button"
-              onClick={handleSubmit(handleGui)}
-              disabled={
-                (data?.maus?.length >= 1 &&
-                  data?.phieuDangKyPhuLieuHoaChats?.length >= 1) ||
-                (data?.Maus?.length >= 1 &&
-                  data?.PhieuDangKyPhuLieuHoaChats?.length >= 1)
-                  ? false
-                  : true
-              }
-              className={clsx(
-                "hidden px-4 py-[5px] sm:px-6 sm:py-2 sm:flex items-center text-white  border-[2px] border-solid border-gray-300 rounded-[6px] shadow-[0_4px_4px_rgba(0,0,0,0.25)]",
-
-                (data?.maus?.length >= 1 &&
-                  data?.phieuDangKyPhuLieuHoaChats?.length >= 1) ||
+                type="button"
+                onClick={handleSubmit(handleGui)}
+                disabled={
+                  (data?.maus?.length >= 1 &&
+                    data?.phieuDangKyPhuLieuHoaChats?.length >= 1) ||
                   (data?.Maus?.length >= 1 &&
                     data?.PhieuDangKyPhuLieuHoaChats?.length >= 1)
-                  ? "cursor-pointer bg-indigo-600 hover:bg-indigo-700"
-                  : "cursor-no-drop bg-indigo-400"
-              )}
-            >
-              <span className="text-[10px] sm:text-lg/6 font-bold text-amber-50">
-                Lưu
-              </span>
-            </button>
+                    ? false
+                    : true
+                }
+                className={clsx(
+                  "hidden px-4 py-[5px] sm:px-6 sm:py-2 sm:flex items-center text-white  border-[2px] border-solid border-gray-300 rounded-[6px] shadow-[0_4px_4px_rgba(0,0,0,0.25)]",
+
+                  (data?.maus?.length >= 1 &&
+                    data?.phieuDangKyPhuLieuHoaChats?.length >= 1) ||
+                    (data?.Maus?.length >= 1 &&
+                      data?.PhieuDangKyPhuLieuHoaChats?.length >= 1)
+                    ? "cursor-pointer bg-indigo-600 hover:bg-indigo-700"
+                    : "cursor-no-drop bg-indigo-400"
+                )}
+              >
+                <span className="text-[10px] sm:text-lg/6 font-bold text-amber-50">
+                  Lưu
+                </span>
+              </button>
+            </Box>
           </Box>
-          <hr className="text-gray-300" />
-          <Box className="overflow-x-auto whitespace-nowrap grid gap-6">
+          <Box className="overflow-x-auto whitespace-nowrap grid gap-6 px-6 py-6 sm:py-8">
             <Box>
               <button
                 onClick={() => {

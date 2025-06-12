@@ -7,38 +7,28 @@ import HeaderAdmin from "../../components/HeaderAdmin";
 
 export default function LayoutAdmin() {
   const [isMenuDashBoard, setIsMenuDashBoard] = useState(false);
-  const [isToggleDrawer, setIsToggleDrawer] = useState(false);
-  const drawerWidth = isMenuDashBoard ? 270 : 60;
+  const drawerWidth = isMenuDashBoard ? 290 : 80;
   const path = useLocation();
 
   const isLoginForgot = ["/tuna/login", "/tuna/forgot-password"].includes(
     path.pathname
   );
-  const handleMenuDashBoard = () => setIsMenuDashBoard(!isMenuDashBoard);
-  const toggleDrawer = (newOpen: boolean) => () => {
-    setIsToggleDrawer(newOpen);
-  };
 
   return (
     <ThemeRegistry>
       <Box>
-        <HeaderAdmin
-          handleMenuDashBoard={handleMenuDashBoard}
-          handleToggleDrawer={() => setIsToggleDrawer(true)}
-          isMenuDashBoard={isMenuDashBoard}
-        />
+        <HeaderAdmin />
         <Box className="flex">
           <Box>
             {!isLoginForgot && (
               <SideBar
                 drawerWidth={drawerWidth}
                 isMenuDashBoard={isMenuDashBoard}
-                isToggleDrawer={isToggleDrawer}
-                toggleDrawer={toggleDrawer(false)}
+                handleMenuDashBoard={setIsMenuDashBoard}
               />
             )}
           </Box>
-          <Box className="w-full mt-10">
+          <Box className="w-full">
             <Outlet />
           </Box>
         </Box>

@@ -49,7 +49,7 @@ export const Inputs = (props: InputsProps) => {
       className={`gap-2 grid  ${height ? height : "h-[106px]"}`}
     >
       {title && (
-        <p className="!font-semibold text-base/6 text-gray_80">{title}</p>
+        <p className="!font-semibold text-base/6 text-gray_80 whitespace-normal">{title}</p>
       )}
       <OutlinedInput
         type={type || "text"}

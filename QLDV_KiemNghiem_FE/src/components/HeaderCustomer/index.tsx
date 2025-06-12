@@ -5,16 +5,13 @@ import AccountCircle from "@mui/icons-material/AccountCircle";
 import { Badge, Drawer, styled, Tooltip } from "@mui/material";
 import NotificationsActiveIcon from "@mui/icons-material/NotificationsActive";
 import { useLocation, useNavigate } from "react-router";
-import { FaSearch } from "react-icons/fa";
-import { IoMdArrowDropdown } from "react-icons/io";
+import { FaRegNewspaper } from "react-icons/fa";
 import { APP_ROUTES } from "../../constants/routers";
-import { image } from "../../constants/image";
 import AccountPopup from "../Popup/AccountPopup";
 import LoginCustomer from "../Login/Customer";
-import { CgMenuGridO } from "react-icons/cg";
-import { AnimatePresence, motion } from "framer-motion";
-import { IoIosCloseCircle } from "react-icons/io";
 import NotificationsPopover from "../Popup/NotificationsPopover";
+import { IoHome } from "react-icons/io5";
+import { FaFileCirclePlus } from "react-icons/fa6";
 import clsx from "clsx";
 
 interface HeaderProps {}
@@ -104,20 +101,15 @@ export default function HeaderCustomer(props: HeaderProps) {
   const handleOpenLoginCustomer = () => setOpenLoginCustomer(true);
   const handleCloseLoginCustomer = () => setOpenLoginCustomer(false);
   const [openMenu, setOpenMenu] = useState(false);
-  const [isDanhMuc, setIsDanhMuc] = useState(false);
-  const [anchorElNotifications, setAnchorElNotifications] =
-    useState<HTMLButtonElement | null>(null);
-  const openNotifications = Boolean(anchorElNotifications);
+  const [openNotifications, setOpenNotifications] = useState(false);
   const [anchorElAccountPopup, setAnchorElAccountPopup] =
     useState<HTMLButtonElement | null>(null);
   const openAccountPopup = Boolean(anchorElAccountPopup);
   const navigate = useNavigate();
   const pathName = useLocation().pathname;
 
-  const handleClickNotifications = (
-    event: React.MouseEvent<HTMLButtonElement>
-  ) => {
-    setAnchorElNotifications(event.currentTarget);
+  const handleClickNotifications = () => {
+    setOpenNotifications(true);
   };
 
   const handleClickAccountPopup = (
@@ -127,283 +119,255 @@ export default function HeaderCustomer(props: HeaderProps) {
   };
 
   const handleCloseNotifications = () => {
-    setAnchorElNotifications(null);
+    setOpenNotifications(false);
   };
 
   const handleCloseAccountPopup = () => {
     setAnchorElAccountPopup(null);
   };
 
-  const toggleDrawerMenu = (newOpen: boolean) => () => {
-    setOpenMenu(newOpen);
-  };
-
-  // const handleRedirectLogout = () => {
-  //   navigate(APP_ROUTES.ADMIN.LOGIN.to);
-  // };
-
   const handleRedirectHome = () => {
     navigate(APP_ROUTES.TUNA_CUSTOMER.HOME.to);
   };
 
   return (
-    <div className="w-full sticky">
-      <header
-        id="heightRef"
-        className={`flex justify-center px-6 bg-white text-slate-900 shadow py-2 w-full border border-solid border-gray-300 heightRef -top-full`}
-      >
-        <Box className="flex justify-between w-full  max-w-[1440px] ">
-          <Box className="flex items-center gap-1">
-            <button
-              className="block lg:!hidden !p-[6px]"
-              onClick={toggleDrawerMenu(true)}
-            >
-              <CgMenuGridO className="text-gray-700 w-7 h-7" />
-            </button>
-            <div className="cursor-pointer" onClick={handleRedirectHome}>
-              <img
-                src={image.imageTunaLogo}
-                alt="imageBanner"
-                className="h-16 w-auto object-cover"
-              />
-            </div>
-          </Box>
-          {/* <Box className="hidden lg:flex lg:items-center">
-            <ul className="flex gap-12 text-lg h-full">
-              <li
-                className={`${
-                  pathName === APP_ROUTES.TUNA_CUSTOMER.HOME.to &&
-                  "text-blue-500"
-                } hover:text-blue-500 cursor-pointer flex items-center`}
-                onClick={handleRedirectHome}
-              >
-                <Tooltip title="Trang Chủ" disableInteractive>
-                  <IoHome className="w-7 h-7" />
-                </Tooltip>
-              </li>
-              <li className="flex items-center">
-                <Tooltip title="Đăng Ký Dịch Vụ Kiểm Nghiệm" disableInteractive>
-                  <div
-                    className={`${
-                      pathName ===
-                        APP_ROUTES.TUNA_CUSTOMER.FORM_SIGN_UP_DVKN.to &&
-                      "text-blue-500"
-                    } hover:text-blue-500 cursor-pointer`}
-                    onClick={() =>
-                      navigate(APP_ROUTES.TUNA_CUSTOMER.FORM_SIGN_UP_DVKN.to)
-                    }
-                  >
-                    <IoBookOutline className="w-7 h-7" />
-                  </div>
-                </Tooltip>
-              </li>
-              <li className="hover:text-blue-500 cursor-pointer text-center flex items-center">
-                <Tooltip title="Tin tức" disableInteractive>
-                  <FaRegNewspaper className="w-7 h-7" />
-                </Tooltip>
-              </li>
-            </ul>
-          </Box> */}
-
-          <Box className="gap-6 flex items-center">
-            <Box className="gap-8 flex">
-              <p
-                className={clsx(
-                  "text-lg/6 font-medium hover:text-blue-600 cursor-pointer capitalize",
+    <header className={`flex justify-center w-full fixed z-99 pt-2 sm:pt-5`}>
+      <Box className="gap-6 sm:gap-10 border-[2px] border-gray-300 shadow-[0_4px_4px_rgba(0,0,0,0.25)] flex items-center bg-cyan-800 px-4 py-1 sm:px-10 sm:py-2 rounded-full">
+        <Box>
+          <Tooltip
+            title="Trang Chủ"
+            placement="top"
+            slotProps={{
+              popper: {
+                modifiers: [
                   {
-                    "text-blue-500":
+                    name: "offset",
+                    options: {
+                      offset: [0, -10],
+                    },
+                  },
+                ],
+              },
+            }}
+            disableInteractive
+          >
+            <IconButton onClick={handleRedirectHome} className="group">
+              <span
+                className={clsx(
+                  "text-base/6 font-semibold text-white group-hover:!text-orange-400 cursor-pointer uppercase",
+                  {
+                    "!text-orange-400":
                       pathName === APP_ROUTES.TUNA_CUSTOMER.HOME.to,
                   }
                 )}
-                onClick={handleRedirectHome}
               >
-                Trang Chủ
-              </p>
-              <p
-                className={clsx(
-                  "text-lg/6 font-medium hover:text-blue-600 cursor-pointer capitalize",
+                <IoHome className="w-6 h-6" />
+              </span>
+            </IconButton>
+          </Tooltip>
+        </Box>
+        <Box>
+          <Tooltip
+            title="Đăng Ký Kiểm Nghiệm"
+            placement="top"
+            slotProps={{
+              popper: {
+                modifiers: [
                   {
-                    "text-blue-500":
+                    name: "offset",
+                    options: {
+                      offset: [0, -10],
+                    },
+                  },
+                ],
+              },
+            }}
+            disableInteractive
+          >
+            <IconButton
+              onClick={() =>
+                navigate(APP_ROUTES.TUNA_CUSTOMER.FORM_SIGN_UP_DVKN.to)
+              }
+              className="group"
+            >
+              <span
+                className={clsx(
+                  "text-base/6 font-semibold text-white group-hover:!text-orange-400 cursor-pointer uppercase",
+                  {
+                    "!text-orange-400":
                       pathName ===
                       APP_ROUTES.TUNA_CUSTOMER.FORM_SIGN_UP_DVKN.to,
                   }
                 )}
-                onClick={() =>
-                  navigate(APP_ROUTES.TUNA_CUSTOMER.FORM_SIGN_UP_DVKN.to)
-                }
               >
-                Đăng ký Dịch vụ
-              </p>
-              <p
+                <FaFileCirclePlus className="w-6 h-6" />
+              </span>
+            </IconButton>
+          </Tooltip>
+        </Box>
+
+        <Box>
+          <Tooltip
+            title="Tin Tức"
+            placement="top"
+            slotProps={{
+              popper: {
+                modifiers: [
+                  {
+                    name: "offset",
+                    options: {
+                      offset: [0, -10],
+                    },
+                  },
+                ],
+              },
+            }}
+            disableInteractive
+          >
+            <IconButton
+              className={clsx(
+                "text-base/6 font-semibold !text-white hover:!text-orange-400 cursor-pointer uppercase"
+              )}
+            >
+              <FaRegNewspaper className="w-6 h-6" />
+            </IconButton>
+          </Tooltip>
+        </Box>
+        <Box>
+          <Tooltip
+            title="Thông Báo"
+            placement="top"
+            slotProps={{
+              popper: {
+                modifiers: [
+                  {
+                    name: "offset",
+                    options: {
+                      offset: [0, -10],
+                    },
+                  },
+                ],
+              },
+            }}
+            disableInteractive
+          >
+            <IconButton onClick={handleClickNotifications} className="group">
+              <StyledBadge
+                overlap="circular"
+                anchorOrigin={{ vertical: "top", horizontal: "right" }}
+                variant="dot"
+              >
+                <NotificationsActiveIcon className="text-white group-hover:!text-orange-400" />
+              </StyledBadge>
+            </IconButton>
+          </Tooltip>
+          <NotificationsPopover
+            dataMessages={dataMessages}
+            openNotifications={openNotifications}
+            handleCloseNotifications={handleCloseNotifications}
+            handleOpenLoginCustomer={handleOpenLoginCustomer}
+          />
+        </Box>
+        {isLogin ? (
+          <Box>
+            <Tooltip
+              title="Tài Khoản"
+              placement="top"
+              slotProps={{
+                popper: {
+                  modifiers: [
+                    {
+                      name: "offset",
+                      options: {
+                        offset: [0, -10],
+                      },
+                    },
+                  ],
+                },
+              }}
+              disableInteractive
+            >
+              <IconButton
+                size="large"
+                aria-label="account of current user"
+                aria-controls="menu-appbar"
+                aria-haspopup="true"
+                onClick={handleClickAccountPopup}
+                color="inherit"
+                className="!p-2 group"
+              >
+                <AccountCircle className="text-white group-hover:!text-orange-400" />
+              </IconButton>
+            </Tooltip>
+            <AccountPopup
+              openAccountPopup={openAccountPopup}
+              anchorElAccountPopup={anchorElAccountPopup}
+              handleCloseAccountPopup={handleCloseAccountPopup}
+            />
+          </Box>
+        ) : (
+          <button
+            className="bg-blue-500 px-3 py-1 rounded cursor-pointer hover:bg-blue-600 shadow-[3px_3px_2px_rgba(0,0,0,0.4)]"
+            onClick={handleOpenLoginCustomer}
+          >
+            <span className="text-sm/4 font-bold text-amber-50">Đăng nhập</span>
+          </button>
+        )}
+      </Box>
+      <LoginCustomer
+        openLoginCustomer={openLoginCustomer}
+        handleCloseLoginCustomer={handleCloseLoginCustomer}
+      />
+      <Drawer
+        open={openMenu}
+        onClose={() => {
+          setOpenMenu(false);
+        }}
+        anchor="bottom"
+      >
+        <Box className="flex justify-center px-4 py-6">
+          <Box className="flex justify-center items-center w-full">
+            <Box className="grid gap-2">
+              <Box
+                onClick={() => {
+                  setOpenMenu(false);
+                  handleRedirectHome();
+                }}
                 className={clsx(
-                  "text-lg/6 font-medium hover:text-blue-600 cursor-pointer capitalize"
+                  "flex items-center justify-center text-cyan-800 text-xl/6 font-semibold whitespace-normal",
+                  {
+                    "text-orange-500":
+                      pathName === APP_ROUTES.TUNA_CUSTOMER.HOME.to,
+                  }
                 )}
               >
-                Tin tức
-              </p>
-            </Box>
-            <Box>
-              <button className="hidden sm:flex items-center justify-between p-2 rounded-full bg-slate-300 cursor-pointer hover:bg-blue-300">
-                <FaSearch className="text-gray-600" />
-              </button>
-            </Box>
-            <Box>
-              <Tooltip
-                title="Thông Báo"
-                placement="top"
-                slotProps={{
-                  popper: {
-                    modifiers: [
-                      {
-                        name: "offset",
-                        options: {
-                          offset: [0, -10],
-                        },
-                      },
-                    ],
-                  },
-                }}
-                disableInteractive
-              >
-                <IconButton
-                  onClick={handleClickNotifications}
-                  className="bg-[#22c55e]"
-                >
-                  <StyledBadge
-                    overlap="circular"
-                    anchorOrigin={{ vertical: "top", horizontal: "right" }}
-                    variant="dot"
-                  >
-                    <NotificationsActiveIcon className="text-[#0f172a]" />
-                  </StyledBadge>
-                </IconButton>
-              </Tooltip>
-
-              <NotificationsPopover
-                dataMessages={dataMessages}
-                openNotifications={openNotifications}
-                anchorElNotifications={anchorElNotifications}
-                handleCloseNotifications={handleCloseNotifications}
-                handleOpenLoginCustomer={handleOpenLoginCustomer}
-              />
-            </Box>
-            {isLogin ? (
-              <Box>
-                <Tooltip
-                  title="Tài Khoản"
-                  placement="top"
-                  slotProps={{
-                    popper: {
-                      modifiers: [
-                        {
-                          name: "offset",
-                          options: {
-                            offset: [0, -10],
-                          },
-                        },
-                      ],
-                    },
-                  }}
-                  disableInteractive
-                >
-                  <IconButton
-                    size="large"
-                    aria-label="account of current user"
-                    aria-controls="menu-appbar"
-                    aria-haspopup="true"
-                    onClick={handleClickAccountPopup}
-                    color="inherit"
-                    className="relative !p-2"
-                  >
-                    <AccountCircle className="text-[#1e3a8a]" />
-                  </IconButton>
-                </Tooltip>
-                <AccountPopup
-                  openAccountPopup={openAccountPopup}
-                  anchorElAccountPopup={anchorElAccountPopup}
-                  handleCloseAccountPopup={handleCloseAccountPopup}
-                />
+                Trang Chủ
               </Box>
-            ) : (
-              <button
-                className="bg-blue-500 px-3 py-1 rounded cursor-pointer hover:bg-blue-600 shadow-[3px_3px_2px_rgba(0,0,0,0.4)]"
-                onClick={handleOpenLoginCustomer}
-              >
-                <span className="text-sm/4 font-bold text-amber-50">
-                  Đăng nhập
+              <Box className="relative group grid gap-4">
+                <span
+                  className={clsx(
+                    "sm:ml-4 flex items-center justify-center w-full gap-2 hover:text-blue-600 cursor-pointer text-cyan-800 text-xl/6 font-semibold whitespace-normal",
+                    {
+                      "text-orange-500":
+                        pathName ===
+                        APP_ROUTES.TUNA_CUSTOMER.FORM_SIGN_UP_DVKN.to,
+                    }
+                  )}
+                  onClick={() => {
+                    setOpenMenu(false);
+                    navigate(APP_ROUTES.TUNA_CUSTOMER.FORM_SIGN_UP_DVKN.to);
+                  }}
+                >
+                  Đăng ký Dịch vụ
                 </span>
-              </button>
-            )}
+              </Box>
+              <Box className="hover:text-blue-600 cursor-pointer flex items-center justify-center text-cyan-800 text-xl/6 font-semibold whitespace-normal">
+                Tin Tức
+              </Box>
+            </Box>
           </Box>
         </Box>
-        <LoginCustomer
-          openLoginCustomer={openLoginCustomer}
-          handleCloseLoginCustomer={handleCloseLoginCustomer}
-        />
-        <Drawer
-          open={openMenu}
-          onClose={() => {
-            setOpenMenu(false);
-            setIsDanhMuc(false);
-          }}
-          anchor="bottom"
-        >
-          <Box className="flex justify-center px-4 py-6 !relative">
-            <Box
-              className="!absolute top-2 right-2"
-              onClick={() => {
-                setOpenMenu(false);
-                setIsDanhMuc(false);
-              }}
-            >
-              <IoIosCloseCircle className="w-8 h-8 text-gray-300" />
-            </Box>
-            <Box className="flex justify-start items-center sm:justify-center w-full">
-              <Box className="grid gap-2">
-                <Box className="hover:text-blue-600 cursor-pointer flex items-center justify-start sm:justify-center text-[#525252] text-xl/6 font-medium whitespace-normal">
-                  Giới Thiệu
-                </Box>
-                <Box className="relative group grid gap-4">
-                  <span
-                    className="sm:ml-4 flex items-center justify-start sm:justify-center w-full gap-2 hover:text-blue-600 cursor-pointer text-[#525252] text-xl/6 font-medium whitespace-normal"
-                    onClick={() => setIsDanhMuc(!isDanhMuc)}
-                  >
-                    Danh Mục <IoMdArrowDropdown />
-                  </span>
-                  <AnimatePresence mode="popLayout">
-                    <motion.ul
-                      key="subItemDanhMuc"
-                      initial={{ x: -5, opacity: 0 }}
-                      animate={{ x: 0, opacity: 1 }}
-                      exit={{ x: -5, opacity: 0 }}
-                      transition={{ duration: 0.5 }}
-                      className={`pl-2 ${
-                        isDanhMuc === false &&
-                        "hidden transition-all ease-in-out duration-500"
-                      }`}
-                    >
-                      <li
-                        className="hover:text-blue-600 cursor-pointer text-xl/6 sm:text-lg/6"
-                        onClick={() => {
-                          setOpenMenu(false);
-                          navigate(
-                            APP_ROUTES.TUNA_CUSTOMER.FORM_SIGN_UP_DVKN.to
-                          );
-                        }}
-                      >
-                        Đăng Ký Dịch Vụ Kiểm Nghiệm
-                      </li>
-                    </motion.ul>
-                  </AnimatePresence>
-                </Box>
-                <Box className="hover:text-blue-600 cursor-pointer flex items-center justify-start sm:justify-center text-[#525252] text-xl/6 font-medium whitespace-normal">
-                  Tin Tức
-                </Box>
-              </Box>
-            </Box>
-          </Box>
-        </Drawer>
-      </header>
-    </div>
+      </Drawer>
+    </header>
   );
 }

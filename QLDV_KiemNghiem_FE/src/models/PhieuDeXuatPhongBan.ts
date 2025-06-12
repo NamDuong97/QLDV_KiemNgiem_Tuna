@@ -8,6 +8,5 @@ export interface FormPhieuDeXuatPhongBan {
   manvDeXuat: string;
   manvTiepNhan: string;
   thoiGianGiaoMau: string;
-  thoiGianThucHien: string;
   maus: FormMauPhanCong[];
 }

@@ -1,25 +1,9 @@
-export const EmployeeManager = "employeeList";
-
-export const PositionManager = "positionManager";
-
-export const CustomerManager = "customerManager";
-
-export const CustomerProfileManager = "customerProfileManager";
-export const DepartmentManager = "departmentManager";
-export const AccountTypeManager = "accountTypeManager";
-export const AccountManager = "accountManager";
-export const DivisionManager = "divisionManager";
 export const PhieuDKyDVKNManager = "phieuDKyDVKNManager";
-
-// export enum SidebarTab {
-//   setting = "setting",
-//   employeeManager = "employeeManager",
-//   positionManager = "positionManager",
-//   customerManager = "customerManager",
-//   customerProfileManager = "customerProfileManager",
-//   departmentManager = "departmentManager",
-//   accountTypeManager = "accountTypeManager",
-//   accountManager = "accountManager",
-//   divisionManager = "divisionManager",
-//   phieuDKyDVKNManager = "phieuDKyDVKNManager",
-// }
+export const danhSachPhanCong = "danhSachPhanCong";
+export const quanLyPhanCongKhoaChuyenMon = "quanLyPhanCongKhoaChuyenMon";
+export const quanLyNhanVien = "quanLyNhanVien";
+export const quanLyLuuMau = "quanLyLuuMau";
+export const quanLyPhanCongNoiBo = "quanLyPhanCongNoiBo";
+export const danhSachPhanCongNoiBo = "danhSachPhanCongNoiBo";
+export const quanLyPhieuDuTru = "quanLyPhieuDuTru";
+export const danhSachPhieuDuTru = "danhSachPhieuDuTru";

@@ -37,6 +37,12 @@ const tableHead = [
     label: "Ngày Tạo",
     align: Align.Center,
   },
+  {
+    id: "chucNang",
+    sort: false,
+    label: "Chức năng",
+    align: Align.Center,
+  },
 ];
 
 const DangKiemNghiem = (props: Props) => {

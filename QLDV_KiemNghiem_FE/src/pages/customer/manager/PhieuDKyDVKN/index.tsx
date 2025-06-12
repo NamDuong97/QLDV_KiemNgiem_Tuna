@@ -6,8 +6,8 @@ import { useState } from "react";
 import DaDuyet from "./StatusPhieu/DaDuyet";
 import DangKiemNghiem from "./StatusPhieu/DangKiemNghiem";
 import HoanThanh from "./StatusPhieu/HoanThanh";
-import ChoXuLy from "./StatusPhieu/ChoXuLy";
 import DaHuy from "./StatusPhieu/DaHuy";
+import ChoXuLy from "./StatusPhieu/ChoXuLy";
 
 const dataTag = [
   {

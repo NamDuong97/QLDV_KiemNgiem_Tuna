@@ -57,322 +57,330 @@ const Maus = (props: MausProps) => {
       transition={{ duration: 0.7 }}
       className="border border-gray-300 rounded-br-[6px] rounded-bl-[6px] p-4 sm:p-10 grid gap-4"
     >
-      {currentItems.map((item: any) => (
-        <Box key={item?.maId}>
-          <Box className="grid grid-cols-12 gap-[1px_24px]">
-            <Box className="col-span-12 md:col-span-6 lg:col-span-4">
-              <Inputs
-                title="Tên mẫu"
-                name="tenMau"
-                className="h-[42px]"
-                sx={{
-                  input: {
-                    padding: "9.5px 14px",
-                  },
-                  "& .Mui-disabled": {
-                    WebkitTextFillColor: "black !important",
-                  },
-                }}
-                disabled
-                value={item.tenMau}
-              />
+      {dataMau?.length > 0 ? (
+        currentItems.map((item: any) => (
+          <Box key={item?.maId} className="overflow-x-auto whitespace-nowrap">
+            <Box className="grid grid-cols-12 gap-[1px_24px]">
+              <Box className="col-span-12 md:col-span-6 lg:col-span-4">
+                <Inputs
+                  title="Tên mẫu"
+                  name="tenMau"
+                  className="h-[42px]"
+                  sx={{
+                    input: {
+                      padding: "9.5px 14px",
+                    },
+                    "& .Mui-disabled": {
+                      WebkitTextFillColor: "black !important",
+                    },
+                  }}
+                  disabled
+                  value={item.tenMau}
+                />
+              </Box>
+              <Box className="col-span-12 md:col-span-6 lg:col-span-4">
+                <Inputs
+                  title="Tiêu chuẩn"
+                  name="tenTieuChuan"
+                  className="h-[42px]"
+                  sx={{
+                    input: {
+                      padding: "9.5px 14px",
+                    },
+                    "& .Mui-disabled": {
+                      WebkitTextFillColor: "black !important",
+                    },
+                  }}
+                  disabled
+                  value={
+                    dataTieuChuan?.find(
+                      (itemTieuChuan: any) =>
+                        itemTieuChuan.maId === item.maTieuChuan
+                    ).tenTieuChuan
+                  }
+                />
+              </Box>
+              <Box className="col-span-12 md:col-span-6 lg:col-span-4">
+                <Inputs
+                  title="Dịch vụ"
+                  name="tenLoaiDichVu"
+                  className="h-[42px]"
+                  sx={{
+                    input: {
+                      padding: "9.5px 14px",
+                    },
+                    "& .Mui-disabled": {
+                      WebkitTextFillColor: "black !important",
+                    },
+                  }}
+                  disabled
+                  value={
+                    dataLoaiDV?.find(
+                      (itemLoaiDV: any) => itemLoaiDV.maLoaiDv === item.loaiDv
+                    ).tenDichVu
+                  }
+                />
+              </Box>
+              <Box className="col-span-12 md:col-span-6 lg:col-span-4">
+                <Inputs
+                  title="Số lô"
+                  name="soLo"
+                  className="h-[42px]"
+                  sx={{
+                    input: {
+                      padding: "9.5px 14px",
+                    },
+                    "& .Mui-disabled": {
+                      WebkitTextFillColor: "black !important",
+                    },
+                  }}
+                  disabled
+                  value={item.soLo}
+                />
+              </Box>
+              <Box className="col-span-12 md:col-span-6 lg:col-span-4">
+                <Inputs
+                  title="Ngày sản xuất"
+                  name="ngaySanXuat"
+                  className="h-[42px]"
+                  sx={{
+                    input: {
+                      padding: "9.5px 14px",
+                    },
+                    "& .Mui-disabled": {
+                      WebkitTextFillColor: "black !important",
+                    },
+                  }}
+                  disabled
+                  value={item.ngaySanXuat}
+                />
+              </Box>
+              <Box className="col-span-12 md:col-span-6 lg:col-span-4">
+                <Inputs
+                  title="Thời gian mong muốn hoàn thành(Thời gian dự kiến)"
+                  name="thoiGianTieuChuan"
+                  className="h-[42px]"
+                  sx={{
+                    input: {
+                      padding: "9.5px 14px",
+                    },
+                    "& .Mui-disabled": {
+                      WebkitTextFillColor: "black !important",
+                    },
+                  }}
+                  disabled
+                  value={item.thoiGianTieuChuan}
+                />
+              </Box>
+              <Box className="col-span-12 md:col-span-6 lg:col-span-4">
+                <Inputs
+                  title="Ngày dự kiến trả kết quả"
+                  name="ngayDuKienTraKetQua"
+                  className="h-[42px]"
+                  sx={{
+                    input: {
+                      padding: "9.5px 14px",
+                    },
+                    "& .Mui-disabled": {
+                      WebkitTextFillColor: "black !important",
+                    },
+                  }}
+                  disabled
+                  value={
+                    item.thoiGianTieuChuan * item?.loaiDv?.split("-")[1] > 0
+                      ? item.thoiGianTieuChuan * item?.loaiDv?.split("-")[1]
+                      : "Bàn giao ngay sau khi kiểm nghiệm"
+                  }
+                />
+              </Box>
+              <Box className="col-span-12 md:col-span-6 lg:col-span-4">
+                <Inputs
+                  title="Hạn sử dụng"
+                  name="hanSuDung"
+                  className="h-[42px]"
+                  sx={{
+                    input: {
+                      padding: "9.5px 14px",
+                    },
+                    "& .Mui-disabled": {
+                      WebkitTextFillColor: "black !important",
+                    },
+                  }}
+                  disabled
+                  value={item.hanSuDung}
+                />
+              </Box>
+              <Box className="col-span-12 md:col-span-6 lg:col-span-4">
+                <Inputs
+                  title="Số lượng"
+                  name="soLuong"
+                  className="h-[42px]"
+                  sx={{
+                    input: {
+                      padding: "9.5px 14px",
+                    },
+                    "& .Mui-disabled": {
+                      WebkitTextFillColor: "black !important",
+                    },
+                  }}
+                  disabled
+                  value={item.soLuong}
+                />
+              </Box>
+              <Box className="col-span-12 md:col-span-6 lg:col-span-4">
+                <Inputs
+                  title="Đơn vị tính"
+                  className="h-[42px]"
+                  name="donViTinh"
+                  sx={{
+                    input: {
+                      padding: "9.5px 14px",
+                    },
+                    "& .Mui-disabled": {
+                      WebkitTextFillColor: "black !important",
+                    },
+                  }}
+                  disabled
+                  value={item.donViTinh}
+                />
+              </Box>
+              <Box className="col-span-12 md:col-span-6 lg:col-span-4">
+                <Inputs
+                  title="Điều kiện bảo quản"
+                  name="dieuKienBaoQuan"
+                  className="h-[42px]"
+                  sx={{
+                    input: {
+                      padding: "9.5px 14px",
+                    },
+                    "& .Mui-disabled": {
+                      WebkitTextFillColor: "black !important",
+                    },
+                  }}
+                  disabled
+                  value={item.dieuKienBaoQuan}
+                />
+              </Box>
+              <Box className="col-span-12 md:col-span-6 lg:col-span-4">
+                <Inputs
+                  title="Đơn vị sản xuất"
+                  name="donViSanXuat"
+                  className="h-[42px]"
+                  sx={{
+                    input: {
+                      padding: "9.5px 14px",
+                    },
+                    "& .Mui-disabled": {
+                      WebkitTextFillColor: "black !important",
+                    },
+                  }}
+                  disabled
+                  value={item.donViSanXuat}
+                />
+              </Box>
+              <Box className="col-span-12 md:col-span-6 lg:col-span-4">
+                <Textarea
+                  title="Tình trạng mẫu"
+                  name="tinhTrangMau"
+                  className="max-h-[149px] min-h-[149px]"
+                  height="h-[213px]"
+                  sx={{
+                    input: {
+                      padding: "9.5px 14px",
+                    },
+                    "& .Mui-disabled": {
+                      WebkitTextFillColor: "black !important",
+                    },
+                  }}
+                  disabled
+                  value={item.tinhTrangMau}
+                />
+              </Box>
+              <Box className="col-span-12 md:col-span-6 lg:col-span-4">
+                <Textarea
+                  title="Yêu cầu kiểm nghiệm"
+                  name="yeuCauKiemNghiem"
+                  className="max-h-[149px] min-h-[149px]"
+                  height="h-[213px]"
+                  sx={{
+                    input: {
+                      padding: "9.5px 14px",
+                    },
+                    "& .Mui-disabled": {
+                      WebkitTextFillColor: "black !important",
+                    },
+                  }}
+                  disabled
+                  value={item.yeuCauKiemNghiem}
+                />
+              </Box>
+              <Box className="col-span-12 lg:col-span-4 pb-6 lg:pb-0">
+                <Textarea
+                  title="Ghi chú"
+                  className="max-h-[149px] min-h-[149px]"
+                  height="h-auto"
+                  sx={{
+                    input: {
+                      padding: "9.5px 14px",
+                    },
+                    "& .Mui-disabled": {
+                      WebkitTextFillColor: "black !important",
+                    },
+                  }}
+                  disabled
+                  value={item.ghiChu}
+                />
+              </Box>
+              <Box className="col-span-12 md:col-span-6">
+                <Inputs
+                  title="Lưu mẫu"
+                  name="luuMau"
+                  className="h-[42px]"
+                  sx={{
+                    input: {
+                      padding: "9.5px 14px",
+                    },
+                    "& .Mui-disabled": {
+                      WebkitTextFillColor: "black !important",
+                    },
+                  }}
+                  disabled
+                  value={item.luuMau ? "Có lưu mẫu" : "Không lưu mẫu"}
+                />
+              </Box>
+              <Box className="col-span-12 md:col-span-6 gap-2">
+                <Inputs
+                  title="Xuất kết quả"
+                  name="donViSanXuat"
+                  className="h-[42px]"
+                  sx={{
+                    input: {
+                      padding: "9.5px 14px",
+                    },
+                    "& .Mui-disabled": {
+                      WebkitTextFillColor: "black !important",
+                    },
+                  }}
+                  disabled
+                  value={
+                    item.xuatKetQua ? "Có xuất kết quả" : "Không xuất kết quả"
+                  }
+                />
+              </Box>
             </Box>
-            <Box className="col-span-12 md:col-span-6 lg:col-span-4">
-              <Inputs
-                title="Tiêu chuẩn"
-                name="tenTieuChuan"
-                className="h-[42px]"
-                sx={{
-                  input: {
-                    padding: "9.5px 14px",
-                  },
-                  "& .Mui-disabled": {
-                    WebkitTextFillColor: "black !important",
-                  },
-                }}
-                disabled
-                value={
-                  dataTieuChuan?.find(
-                    (itemTieuChuan: any) =>
-                      itemTieuChuan.maId === item.maTieuChuan
-                  ).tenTieuChuan
-                }
-              />
-            </Box>
-            <Box className="col-span-12 md:col-span-6 lg:col-span-4">
-              <Inputs
-                title="Dịch vụ"
-                name="tenLoaiDichVu"
-                className="h-[42px]"
-                sx={{
-                  input: {
-                    padding: "9.5px 14px",
-                  },
-                  "& .Mui-disabled": {
-                    WebkitTextFillColor: "black !important",
-                  },
-                }}
-                disabled
-                value={
-                  dataLoaiDV?.find(
-                    (itemLoaiDV: any) => itemLoaiDV.maLoaiDv === item.loaiDv
-                  ).tenDichVu
-                }
-              />
-            </Box>
-            <Box className="col-span-12 md:col-span-6 lg:col-span-4">
-              <Inputs
-                title="Số lô"
-                name="soLo"
-                className="h-[42px]"
-                sx={{
-                  input: {
-                    padding: "9.5px 14px",
-                  },
-                  "& .Mui-disabled": {
-                    WebkitTextFillColor: "black !important",
-                  },
-                }}
-                disabled
-                value={item.soLo}
-              />
-            </Box>
-            <Box className="col-span-12 md:col-span-6 lg:col-span-4">
-              <Inputs
-                title="Ngày sản xuất"
-                name="ngaySanXuat"
-                className="h-[42px]"
-                sx={{
-                  input: {
-                    padding: "9.5px 14px",
-                  },
-                  "& .Mui-disabled": {
-                    WebkitTextFillColor: "black !important",
-                  },
-                }}
-                disabled
-                value={item.ngaySanXuat}
-              />
-            </Box>
-            <Box className="col-span-12 md:col-span-6 lg:col-span-4">
-              <Inputs
-                title="Thời gian mong muốn hoàn thành(Thời gian dự kiến)"
-                name="thoiGianTieuChuan"
-                className="h-[42px]"
-                sx={{
-                  input: {
-                    padding: "9.5px 14px",
-                  },
-                  "& .Mui-disabled": {
-                    WebkitTextFillColor: "black !important",
-                  },
-                }}
-                disabled
-                value={item.thoiGianTieuChuan}
-              />
-            </Box>
-            <Box className="col-span-12 md:col-span-6 lg:col-span-4">
-              <Inputs
-                title="Ngày dự kiến trả kết quả"
-                name="ngayDuKienTraKetQua"
-                className="h-[42px]"
-                sx={{
-                  input: {
-                    padding: "9.5px 14px",
-                  },
-                  "& .Mui-disabled": {
-                    WebkitTextFillColor: "black !important",
-                  },
-                }}
-                disabled
-                value={
-                  item.thoiGianTieuChuan * item?.loaiDv?.split("-")[1] > 0
-                    ? item.thoiGianTieuChuan * item?.loaiDv?.split("-")[1]
-                    : "Bàn giao ngay sau khi kiểm nghiệm"
-                }
-              />
-            </Box>
-            <Box className="col-span-12 md:col-span-6 lg:col-span-4">
-              <Inputs
-                title="Hạn sử dụng"
-                name="hanSuDung"
-                className="h-[42px]"
-                sx={{
-                  input: {
-                    padding: "9.5px 14px",
-                  },
-                  "& .Mui-disabled": {
-                    WebkitTextFillColor: "black !important",
-                  },
-                }}
-                disabled
-                value={item.hanSuDung}
-              />
-            </Box>
-            <Box className="col-span-12 md:col-span-6 lg:col-span-4">
-              <Inputs
-                title="Số lượng"
-                name="soLuong"
-                className="h-[42px]"
-                sx={{
-                  input: {
-                    padding: "9.5px 14px",
-                  },
-                  "& .Mui-disabled": {
-                    WebkitTextFillColor: "black !important",
-                  },
-                }}
-                disabled
-                value={item.soLuong}
-              />
-            </Box>
-            <Box className="col-span-12 md:col-span-6 lg:col-span-4">
-              <Inputs
-                title="Đơn vị tính"
-                className="h-[42px]"
-                name="donViTinh"
-                sx={{
-                  input: {
-                    padding: "9.5px 14px",
-                  },
-                  "& .Mui-disabled": {
-                    WebkitTextFillColor: "black !important",
-                  },
-                }}
-                disabled
-                value={item.donViTinh}
-              />
-            </Box>
-            <Box className="col-span-12 md:col-span-6 lg:col-span-4">
-              <Inputs
-                title="Điều kiện bảo quản"
-                name="dieuKienBaoQuan"
-                className="h-[42px]"
-                sx={{
-                  input: {
-                    padding: "9.5px 14px",
-                  },
-                  "& .Mui-disabled": {
-                    WebkitTextFillColor: "black !important",
-                  },
-                }}
-                disabled
-                value={item.dieuKienBaoQuan}
-              />
-            </Box>
-            <Box className="col-span-12 md:col-span-6 lg:col-span-4">
-              <Inputs
-                title="Đơn vị sản xuất"
-                name="donViSanXuat"
-                className="h-[42px]"
-                sx={{
-                  input: {
-                    padding: "9.5px 14px",
-                  },
-                  "& .Mui-disabled": {
-                    WebkitTextFillColor: "black !important",
-                  },
-                }}
-                disabled
-                value={item.donViSanXuat}
-              />
-            </Box>
-            <Box className="col-span-12 md:col-span-6 lg:col-span-4">
-              <Textarea
-                title="Tình trạng mẫu"
-                name="tinhTrangMau"
-                className="max-h-[149px] min-h-[149px]"
-                height="h-[213px]"
-                sx={{
-                  input: {
-                    padding: "9.5px 14px",
-                  },
-                  "& .Mui-disabled": {
-                    WebkitTextFillColor: "black !important",
-                  },
-                }}
-                disabled
-                value={item.tinhTrangMau}
-              />
-            </Box>
-            <Box className="col-span-12 md:col-span-6 lg:col-span-4">
-              <Textarea
-                title="Yêu cầu kiểm nghiệm"
-                name="yeuCauKiemNghiem"
-                className="max-h-[149px] min-h-[149px]"
-                height="h-[213px]"
-                sx={{
-                  input: {
-                    padding: "9.5px 14px",
-                  },
-                  "& .Mui-disabled": {
-                    WebkitTextFillColor: "black !important",
-                  },
-                }}
-                disabled
-                value={item.yeuCauKiemNghiem}
-              />
-            </Box>
-            <Box className="col-span-12 lg:col-span-4 pb-6 lg:pb-0">
-              <Textarea
-                title="Ghi chú"
-                className="max-h-[149px] min-h-[149px]"
-                height="h-auto"
-                sx={{
-                  input: {
-                    padding: "9.5px 14px",
-                  },
-                  "& .Mui-disabled": {
-                    WebkitTextFillColor: "black !important",
-                  },
-                }}
-                disabled
-                value={item.ghiChu}
-              />
-            </Box>
-            <Box className="col-span-12 md:col-span-6">
-              <Inputs
-                title="Lưu mẫu"
-                name="luuMau"
-                className="h-[42px]"
-                sx={{
-                  input: {
-                    padding: "9.5px 14px",
-                  },
-                  "& .Mui-disabled": {
-                    WebkitTextFillColor: "black !important",
-                  },
-                }}
-                disabled
-                value={item.luuMau ? "Có lưu mẫu" : "Không lưu mẫu"}
-              />
-            </Box>
-            <Box className="col-span-12 md:col-span-6 gap-2">
-              <Inputs
-                title="Xuất kết quả"
-                name="donViSanXuat"
-                className="h-[42px]"
-                sx={{
-                  input: {
-                    padding: "9.5px 14px",
-                  },
-                  "& .Mui-disabled": {
-                    WebkitTextFillColor: "black !important",
-                  },
-                }}
-                disabled
-                value={
-                  item.xuatKetQua ? "Có xuất kết quả" : "Không xuất kết quả"
-                }
+            <Box className="">
+              <TableImages
+                tableHead={tableHeadImages}
+                dataImage={item?.phieuDangKyMauHinhAnhs}
               />
             </Box>
           </Box>
-          <TableImages
-            tableHead={tableHeadImages}
-            dataImage={item?.phieuDangKyMauHinhAnhs}
-          />
+        ))
+      ) : (
+        <Box className="text-center">
+          <p>Không có dữ liệu</p>
         </Box>
-      ))}
+      )}
 
       {dataMau?.length > 0 && (
         <Box className="px-4 py-2 flex justify-center">

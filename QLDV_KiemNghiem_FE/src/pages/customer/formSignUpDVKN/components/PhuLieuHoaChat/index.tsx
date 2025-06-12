@@ -54,6 +54,12 @@ const tableHead = [
     label: "Điều kiện bảo quản",
     align: Align.Center,
   },
+  {
+    id: "chucNang",
+    sort: false,
+    label: "Chức Năng",
+    align: Align.Center,
+  },
 ];
 
 const PhuLieuHoaChat = (props: PhuLieuHoaChatProps) => {
@@ -69,6 +75,7 @@ const PhuLieuHoaChat = (props: PhuLieuHoaChatProps) => {
 
   const [listCheckbox, setListCheckbox] = useState<any[]>([]);
   const [dataEditPLHC, setDataEditPLHC] = useState<any>();
+  const [dataCopyPLHC, setDataCopyPLHC] = useState<any>();
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(5);
 
@@ -153,7 +160,8 @@ const PhuLieuHoaChat = (props: PhuLieuHoaChatProps) => {
         .number()
         .typeError("Yêu cầu nhập Số lượng")
         .required("Yêu cầu nhập Số lượng")
-        .min(1, "Số lượng nhập phải lớn hơn 0"),
+        .max(100, "Số lượng nhập phải nhỏ hơn hoặc bằng 100")
+        .min(0, "Yêu cầu nhập số nguyên lớn hơn 0"),
       DonViTinh: yup
         .string()
         .required("Yêu cầu nhập Đơn vị tính")
@@ -262,6 +270,7 @@ const PhuLieuHoaChat = (props: PhuLieuHoaChatProps) => {
     };
     setData(PhieuDangKy);
     settableBody(PhieuDangKy.PLHC);
+    setDataCopyPLHC(null);
     sessionStorage.setItem("PhieuDangKy", JSON.stringify(PhieuDangKy));
     setisTag(2);
   };
@@ -410,6 +419,8 @@ const PhuLieuHoaChat = (props: PhuLieuHoaChatProps) => {
                 tableBody={currentItems}
                 setDataEditPLHC={setDataEditPLHC}
                 dataEditPLHC={dataEditPLHC}
+                setDataCopyPLHC={setDataCopyPLHC}
+                dataCopyPLHC={dataCopyPLHC}
                 handleRedirectTag1={() => setisTag(1)}
               />
             </Box>
@@ -438,28 +449,8 @@ const PhuLieuHoaChat = (props: PhuLieuHoaChatProps) => {
 
       default:
         return (
-          <Box className="py-4">
+          <Box className="pt-4">
             <form autoComplete="off" className="grid gap-4">
-              <Box className="gap-5 sm:gap-0 flex flex-wrap-reverse sm:flex-nowrap justify-end items-center">
-                {dataEditPLHC ? (
-                  <button
-                    type="button"
-                    onClick={handleSubmit(editPLHC)}
-                    className="text-lg/6 font-bold text-center border border-solid border-yellow-500 text-yellow-500 px-4 py-1 lg:px-10 lg:py-2 hover:text-white rounded-md hover:bg-yellow-500 cursor-pointer"
-                  >
-                    Sửa
-                  </button>
-                ) : (
-                  <button
-                    type="button"
-                    onClick={handleSubmit(createPLHC)}
-                    className="text-lg/6 font-bold text-center border border-solid border-blue-500 text-blue-500 px-4 py-1 lg:px-10 lg:py-2 hover:text-white rounded-md hover:bg-blue-500 cursor-pointer"
-                  >
-                    Thêm
-                  </button>
-                )}
-              </Box>
-              <hr className="text-gray-300" />
               <Box className="grid grid-cols-12 gap-1 lg:gap-[0px_24px]">
                 <Box className="col-span-12 md:col-span-6 lg:col-span-4">
                   <InputSelectDM_PLHC
@@ -621,6 +612,26 @@ const PhuLieuHoaChat = (props: PhuLieuHoaChatProps) => {
                   />
                 </Box>
               </Box>
+              <hr className="text-gray-300" />
+              <Box className="gap-5 sm:gap-0 flex flex-wrap-reverse sm:flex-nowrap justify-end items-center">
+                {dataEditPLHC ? (
+                  <button
+                    type="button"
+                    onClick={handleSubmit(editPLHC)}
+                    className="w-full text-lg/6 font-bold text-center bg-yellow-500 text-white border-[2px] border-solid border-gray-300 px-10 py-2 rounded-md hover:bg-yellow-600 cursor-pointer shadow-[0_4px_4px_rgba(0,0,0,0.25)]"
+                  >
+                    Sửa
+                  </button>
+                ) : (
+                  <button
+                    type="button"
+                    onClick={handleSubmit(createPLHC)}
+                    className="w-full text-lg/6 font-bold text-center bg-cyan-800 text-white border-[2px] border-solid border-gray-300 px-10 py-2 rounded-md hover:bg-cyan-700 cursor-pointer shadow-[0_4px_4px_rgba(0,0,0,0.25)]"
+                  >
+                    Thêm
+                  </button>
+                )}
+              </Box>
             </form>
           </Box>
         );
@@ -628,23 +639,27 @@ const PhuLieuHoaChat = (props: PhuLieuHoaChatProps) => {
   };
 
   useEffect(() => {
-    if (dataEditPLHC) {
+    if (dataEditPLHC || dataCopyPLHC) {
       const tenDmPlhc = dataDM_PhuLieuHoaChat.find(
-        (item: any) => item.maId === dataEditPLHC.maPlhc
+        (item: any) =>
+          item.maId === dataEditPLHC?.maPlhc ||
+          item.maId === dataCopyPLHC?.maPlhc
       ).tenDmPlhc;
       reset({
         TenDM_PLHC: tenDmPlhc,
-        TenPLHC: dataEditPLHC?.tenPlhc,
-        TenHienThi: dataEditPLHC?.tenHienThi,
-        SoLuong: dataEditPLHC?.soLuong,
-        DonViTinh: dataEditPLHC?.donViTinh,
-        SoLo: dataEditPLHC?.soLo,
-        TenNhaCungCap: dataEditPLHC?.tenNhaCungCap,
-        NongDo: dataEditPLHC?.nongDo,
-        DonViNongDo: dataEditPLHC?.donViNongDo,
-        NgayHetHan: dataEditPLHC?.ngayHetHan,
-        DieuKienBaoQuan: dataEditPLHC?.dieuKienBaoQuan,
-        GhiChu: dataEditPLHC?.ghiChu,
+        TenPLHC: dataEditPLHC?.tenPlhc || dataCopyPLHC?.tenPlhc,
+        TenHienThi: dataEditPLHC?.tenHienThi || dataCopyPLHC?.tenHienThi,
+        SoLuong: dataEditPLHC?.soLuong || dataCopyPLHC?.soLuong,
+        DonViTinh: dataEditPLHC?.donViTinh || dataCopyPLHC?.donViTinh,
+        SoLo: dataEditPLHC?.soLo || dataCopyPLHC?.soLo,
+        TenNhaCungCap:
+          dataEditPLHC?.tenNhaCungCap || dataCopyPLHC?.tenNhaCungCap,
+        NongDo: dataEditPLHC?.nongDo || dataCopyPLHC?.nongDo,
+        DonViNongDo: dataEditPLHC?.donViNongDo || dataCopyPLHC?.donViNongDo,
+        NgayHetHan: dataEditPLHC?.ngayHetHan || dataCopyPLHC?.ngayHetHan,
+        DieuKienBaoQuan:
+          dataEditPLHC?.dieuKienBaoQuan || dataCopyPLHC?.dieuKienBaoQuan,
+        GhiChu: dataEditPLHC?.ghiChu || dataCopyPLHC?.ghiChu,
       });
     } else
       reset({
@@ -661,7 +676,7 @@ const PhuLieuHoaChat = (props: PhuLieuHoaChatProps) => {
         DieuKienBaoQuan: "",
         GhiChu: "",
       });
-  }, [tableBody, dataEditPLHC]);
+  }, [tableBody, dataEditPLHC, dataCopyPLHC]);
 
   useEffect(() => {
     if (TenDM_PLHC) {
@@ -694,7 +709,7 @@ const PhuLieuHoaChat = (props: PhuLieuHoaChatProps) => {
       initial={{ x: 0, opacity: 0 }}
       animate={{ x: 0, opacity: 1 }}
       exit={{ x: 0, opacity: 0 }}
-      transition={{ duration: 0.7 }}
+      transition={{ duration: 0.3 }}
       className="border border-gray-300 rounded-br-[6px] rounded-bl-[6px] py-4 px-4 sm:px-12"
     >
       {handleTagPLHC()}

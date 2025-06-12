@@ -15,23 +15,5 @@
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-    <script>
-      $(document).ready(function () {
-        $(window).scroll(() => {
-          if ($(this).scrollTop() > $("#heightRef").height()) {
-            $("header").addClass("fixed-header");
-            $(".Outlet").css({
-              paddingTop: "58px",
-            });
-          } else {
-            $("header").removeClass("fixed-header");
-            $(".Outlet").css({
-              paddingTop: "0",
-            });
-          }
-        });
-      });
-    </script>
   </body>
 </html>

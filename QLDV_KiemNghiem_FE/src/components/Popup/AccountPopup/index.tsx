@@ -25,17 +25,24 @@ const AccountPopup = (props: AccountPopupProps) => {
       onClose={handleCloseAccountPopup}
       anchorOrigin={{
         vertical: "bottom",
-        horizontal: "right",
+        horizontal: "center",
       }}
       transformOrigin={{
         vertical: "top",
-        horizontal: "right",
+        horizontal: "center",
+      }}
+      sx={{
+        ".MuiPaper-root": {
+          borderRadius: 4,
+        },
       }}
     >
-      <Box className="bg-white border-[1px] border-gray-100 shadow-[0px_4px_4px_rgba(0, 0, 0, 0.25)] rounded-md px-2 py-3 w-[300px] grid gap-1">
+      <Box className="bg-white border-[1px] border-gray-100 shadow-[0px_4px_4px_rgba(0, 0, 0, 0.25)] rounded-lg px-2 py-3 w-[200px] sm:w-[300px] grid gap-1">
         <Box className="flex gap-2 items-center cursor-pointer rounded p-1">
-          <RxAvatar className="w-9 h-9" />
-          <p className="text-gray-800 text-xl/6 font-bold">Nguyễn Văn A</p>
+          <RxAvatar className="w-6 h-6 sm:w-9 sm:h-9" />
+          <p className="text-cyan-950 text-base/6 sm:text-xl/6 font-bold">
+            Nguyễn Văn A
+          </p>
         </Box>
         <hr className="text-gray-300" />
         <Box
@@ -45,8 +52,8 @@ const AccountPopup = (props: AccountPopupProps) => {
             handleCloseAccountPopup?.();
           }}
         >
-          <FaVoteYea className="w-6 h-6 text-[#404dd2]" />
-          <p className="text-gray-800 text-base/6 font-medium">
+          <FaVoteYea className="w-5 h-5 sm:w-6 sm:h-6 text-[#404dd2]" />
+          <p className="text-cyan-950 text-xs/6 sm:text-base/6 font-medium">
             Quản lý phiếu DKDVKN
           </p>
         </Box>
@@ -57,14 +64,16 @@ const AccountPopup = (props: AccountPopupProps) => {
             handleCloseAccountPopup?.();
           }}
         >
-          <RiBillLine className="w-6 h-6 text-[#2b89d1]" />
-          <p className="text-gray-800 text-base/6 font-medium">
+          <RiBillLine className="w-5 h-5 sm:w-6 sm:h-6 text-[#2b89d1]" />
+          <p className="text-cyan-950 text-xs/6 sm:text-base/6 font-medium">
             Quản lý hóa đơn
           </p>
         </Box>
         <Box className="flex gap-2 items-center hover:bg-[rgb(230,236,246)] cursor-pointer rounded p-1">
-          <FaDoorOpen className="w-6 h-6 text-[#d2405d]" />
-          <p className="text-[#d71a40] text-base/6 font-medium">Đăng Xuất</p>
+          <FaDoorOpen className="w-5 h-5 sm:w-6 sm:h-6 text-[#d2405d]" />
+          <p className="text-[#d71a40] text-xs/6 sm:text-base/6 font-medium">
+            Đăng Xuất
+          </p>
         </Box>
       </Box>
     </Popover>

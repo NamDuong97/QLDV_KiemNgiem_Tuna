@@ -1,12 +1,12 @@
-import { Avatar, Box, Popover } from "@mui/material";
+import { Avatar, Box, Dialog } from "@mui/material";
 import { DataMessenger } from "../../../models/dataMessenger";
 import { ImHappy } from "react-icons/im";
 import { GoDotFill } from "react-icons/go";
+import { IoCloseCircle } from "react-icons/io5";
 
 interface NotificationsPopoverProps {
   dataMessages: DataMessenger[];
   openNotifications: boolean;
-  anchorElNotifications?: HTMLButtonElement | null;
   handleCloseNotifications?: () => void;
   handleOpenLoginCustomer?: () => void;
 }
@@ -16,7 +16,6 @@ const NotificationsPopover = (props: NotificationsPopoverProps) => {
     dataMessages,
     openNotifications,
     handleCloseNotifications,
-    anchorElNotifications,
     handleOpenLoginCustomer,
   } = props;
 
@@ -127,12 +126,16 @@ const NotificationsPopover = (props: NotificationsPopoverProps) => {
       default: {
         return (
           <>
-            <Box className="px-3 pt-2 pb-2 border-gray-300 w-[305px]">
-              <p className="text-2xl/8 font-semibold text-gray-700">
-                Thông Báo
-              </p>
+            <Box className="px-3 py-3 relative text-center border-gray-300 sm:w-[550px] bg-cyan-800">
+              <p className="text-2xl/8 font-semibold text-white">Thông Báo</p>
+              <button
+                className="absolute top-3 right-2 group cursor-pointer"
+                onClick={handleCloseNotifications}
+              >
+                <IoCloseCircle className="w-8 h-8 text-white group-hover:text-yellow-300" />
+              </button>
             </Box>
-            <Box className="h-[310px] overflow-auto">
+            <Box className="h-[410px] overflow-auto">
               <p className="px-2 text-lg/6 font-semibold text-gray-800">
                 Chưa xem
               </p>
@@ -218,17 +221,13 @@ const NotificationsPopover = (props: NotificationsPopoverProps) => {
   };
 
   return (
-    <Popover
+    <Dialog
       open={openNotifications}
-      anchorEl={anchorElNotifications}
       onClose={handleCloseNotifications}
-      anchorOrigin={{
-        vertical: "bottom",
-        horizontal: "right",
-      }}
-      transformOrigin={{
-        vertical: "top",
-        horizontal: "right",
+      sx={{
+        ".MuiPaper-root": {
+          borderRadius: 4,
+        },
       }}
     >
       <Box>
@@ -262,7 +261,7 @@ const NotificationsPopover = (props: NotificationsPopoverProps) => {
           </Box>
         )}
       </Box>
-    </Popover>
+    </Dialog>
   );
 };
 

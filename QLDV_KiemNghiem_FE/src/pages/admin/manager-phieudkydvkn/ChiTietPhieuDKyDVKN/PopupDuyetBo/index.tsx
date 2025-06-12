@@ -48,11 +48,11 @@ const PopupDuyetBo = (props: Props) => {
                 <div className="flex justify-center">
                   <IoMdNotifications className="w-[70px] h-[70px]  text-yellow-400" />
                 </div>
-                <p className="text-gray-80 font-bold text-3xl/6">Thông báo</p>
+                <p className="text-gray-80 font-bold text-3xl/6 text-cyan-900">Thông báo</p>
               </Box>
             </Box>
             <Box className="text-center">
-              <p className="text-xl/6 font-medium text-gray-800">
+              <p className="text-xl/6 font-medium text-cyan-950">
                 {handleContentByName()}
               </p>
             </Box>

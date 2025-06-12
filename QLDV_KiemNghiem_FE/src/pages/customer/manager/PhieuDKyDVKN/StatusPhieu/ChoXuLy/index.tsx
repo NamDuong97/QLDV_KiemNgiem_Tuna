@@ -37,6 +37,12 @@ const tableHead = [
     label: "Ngày Tạo",
     align: Align.Center,
   },
+  {
+    id: "chucNang",
+    sort: false,
+    label: "Chức năng",
+    align: Align.Center,
+  },
 ];
 
 const ChoXuLy = () => {
@@ -50,7 +56,7 @@ const ChoXuLy = () => {
   const dataChoTiepNhanXuLy = useGetPhieuDangKyKiemNghiemByTrangThaiArray({
     queryKey: "dataChoTiepNhanXuLy",
     maKH: "KH001",
-    trangThaiIDs: ["TT01", "TT02", "TT03", "TT04", "TT05"],
+    trangThaiIDs: ["TT01", "TT02", "TT03", "TT04"],
   });
 
   const [currentPage, setCurrentPage] = useState(1);

@@ -16,7 +16,7 @@ const dataSideBar = [
   {
     name: "Quản Lý Phiếu Đăng Ký Dịch Vụ Kiểm Nghiệm",
     url: `${APP_ROUTES.TUNA_CUSTOMER.PHIEU_DKY_DVKN.to}`,
-    icon: <FaVoteYea className="w-[42px] h-[42px] text-[#404dd2]" />,
+    icon: <FaVoteYea className="w-7 h-7 text-[#404dd2]" />,
     urlHienThi: "quan-ly-phieu-dang-ky-dich-vu-kiem-nghiem",
   },
   {
@@ -39,20 +39,20 @@ const Sidebar = () => {
       animate={{ x: 0, opacity: 1 }}
       exit={{ x: 0, opacity: 0 }}
       transition={{ duration: 0.7 }}
-      className="border border-solid border-gray-300 rounded-[10px] px-4 py-2 w-[300px] grid gap-1"
+      className="border border-solid border-gray-300 rounded-[10px] px-4 py-2 w-[450px] grid gap-1"
     >
       {dataSideBar.map((item, index) => (
         <Box
           key={index}
-          className="flex gap-2 items-start hover:bg-[rgb(230,236,246)] cursor-pointer rounded p-1"
+          className="flex gap-2 items-center group cursor-pointer rounded p-1"
           onClick={() => {
             navigate(item.url);
           }}
         >
           {item.icon}
           <p
-            className={`text-[#525252] text-base/6 font-medium ${
-              urlPage === item.urlHienThi && "!text-blue-600"
+            className={`text-cyan-800 text-base/6 group-hover:text-orange-500  font-medium ${
+              urlPage === item.urlHienThi && "text-orange-500"
             }`}
           >
             {item.name}
