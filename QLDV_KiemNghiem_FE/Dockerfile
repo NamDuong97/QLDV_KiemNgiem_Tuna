@@ -12,7 +12,7 @@ COPY package*.json ./
 COPY . .
 
 #Tạo lại cấu trúc thư mục dựa trên tên csproj để restore đúng
-RUN npm install /
+RUN npm install 
 
 RUN npm run build
 
