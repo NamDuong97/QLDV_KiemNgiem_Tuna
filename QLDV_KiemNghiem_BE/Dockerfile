@@ -1,5 +1,5 @@
 #Giai đoạn 1: Runtime image nhẹ chỉ để chạy ứng dụng
-FROM mcr.microsoft.com/dotnet/sdk:9.0-preview AS build
+FROM mcr.microsoft.com/dotnet/aspnet:9.0-preview AS base
 WORKDIR /app
 # Thiết lập thư mục làm việc trong container
 EXPOSE 80
