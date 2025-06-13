@@ -82,6 +82,21 @@ const DanhSachPhieuDuTru = () => {
 
   const openPopupBoloc = Boolean(anchorElPopupBoloc);
 
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage] = useState(3);
+
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = {
+    data: tableBody?.slice(indexOfFirstItem, indexOfLastItem),
+    // isLoading: phieuDuTruData.isLoading,
+  };
+
+  const totalPages = Math.ceil(tableBody && tableBody?.length / itemsPerPage);
+  const handlePageChange = (_: any, value: number) => {
+    setCurrentPage(value);
+  };
+
   return (
     <motion.div
       key="DanhSachPhieuDuTru"
@@ -115,14 +130,14 @@ const DanhSachPhieuDuTru = () => {
           <div>
             <TableDanhSachPhieuDuTru
               tableHead={tableHead}
-              tableBody={tableBody}
+              tableBody={currentItems.data}
             />
           </div>
           <div className="px-4 py-2 flex justify-center">
             <Pagination
-              count={10}
-              // page={currentPage}
-              // onChange={handlePageChange}
+              count={totalPages}
+              page={currentPage}
+              onChange={handlePageChange}
               variant="outlined"
               shape="rounded"
               color="primary"
@@ -133,8 +148,8 @@ const DanhSachPhieuDuTru = () => {
                     border: "1px solid #1976d280",
                     color: "#1976d2",
                   },
-                ".MuiPagination-ul": {
-                  justifyContent: "center",
+                button: {
+                  boxShadow: "0 4px 4px rgba(0,0,0,0.25)",
                 },
               }}
             />

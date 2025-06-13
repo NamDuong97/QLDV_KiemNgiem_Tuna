@@ -13,6 +13,7 @@ import NotificationsPopover from "../Popup/NotificationsPopover";
 import { IoHome } from "react-icons/io5";
 import { FaFileCirclePlus } from "react-icons/fa6";
 import clsx from "clsx";
+import { motion } from "motion/react";
 
 interface HeaderProps {}
 
@@ -131,7 +132,13 @@ export default function HeaderCustomer(props: HeaderProps) {
   };
 
   return (
-    <header className={`flex justify-center w-full fixed z-99 pt-2 sm:pt-5`}>
+    <motion.header
+      initial={{ y: -10, opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
+      exit={{ y: 10, opacity: 0 }}
+      transition={{ duration: 0.5 }}
+      className={`flex justify-center w-full fixed z-99 pt-2 sm:pt-5`}
+    >
       <Box className="gap-6 sm:gap-10 border-[2px] border-gray-300 shadow-[0_4px_4px_rgba(0,0,0,0.25)] flex items-center bg-cyan-800 px-4 py-1 sm:px-10 sm:py-2 rounded-full">
         <Box>
           <Tooltip
@@ -368,6 +375,6 @@ export default function HeaderCustomer(props: HeaderProps) {
           </Box>
         </Box>
       </Drawer>
-    </header>
+    </motion.header>
   );
 }

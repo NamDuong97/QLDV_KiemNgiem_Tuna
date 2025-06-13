@@ -99,6 +99,58 @@ export const APP_ROUTES = {
       to: "/tuna/danh-sach-phieu-du-tru",
       xem_chi_tiet: "/tuna/danh-sach-phieu-du-tru/xem-chi-tiet",
     },
+    QUAN_LY_PHIEU_XUAT_KHO: {
+      to: "/tuna/quan-ly-phieu-xuat-kho",
+      create_phieu_xuat_kho:
+        "/tuna/quan-ly-phieu-xuat-kho/them-thong-tin-phieu-xuat-kho",
+      edit_phieu_xuat_kho:
+        "/tuna/quan-ly-phieu-xuat-kho/cap-nhat-thong-tin-phieu-xuat-kho",
+      xem_chi_tiet: "/tuna/quan-ly-phieu-xuat-kho/xem-chi-tiet",
+    },
+    QUAN_LY_PHIEU_MUA_VAT_TU: {
+      to: "/tuna/quan-ly-phieu-mua-vat-tu",
+      create_phieu_mua_vat_tu:
+        "/tuna/quan-ly-phieu-mua-vat-tu/them-thong-tin-phieu-mua-vat-tu",
+      edit_phieu_mua_vat_tu:
+        "/tuna/quan-ly-phieu-mua-vat-tu/cap-nhat-thong-tin-phieu-mua-vat-tu",
+      xem_chi_tiet: "/tuna/quan-ly-phieu-mua-vat-tu/xem-chi-tiet",
+    },
+    LIST_PHIEU_MUA_VAT_TU: {
+      to: "/tuna/danh-sach-phieu-mua-vat-tu",
+      xem_chi_tiet: "/tuna/danh-sach-phieu-mua-vat-tu/xem-chi-tiet",
+    },
+    QUAN_LY_HOA_DON: {
+      to: "/tuna/quan-ly-hoa-don",
+      create_hoa_don: "/tuna/quan-ly-hoa-don/them-thong-tin-hoa-don",
+      edit_hoa_don: "/tuna/quan-ly-hoa-don/cap-nhat-thong-tin-hoa-don",
+      xem_chi_tiet: "/tuna/quan-ly-hoa-don/xem-chi-tiet",
+    },
+    LIST_HOA_DON: {
+      to: "/tuna/danh-sach-hoa-don",
+      xem_chi_tiet: "/tuna/danh-sach-hoa-don/xem-chi-tiet",
+    },
+    QUAN_LY_TIEN_DO: {
+      to: "/tuna/quan-ly-tien-do",
+      create_tien_do: "/tuna/quan-ly-tien-do/them-thong-tin-tien-do",
+      edit_tien_do: "/tuna/quan-ly-tien-do/cap-nhat-thong-tin-tien-do",
+      xem_chi_tiet: "/tuna/quan-ly-tien-do/xem-chi-tiet",
+    },
+    QUAN_LY_PHAN_TICH_KET_QUA: {
+      to: "/tuna/quan-ly-phan-tich-ket-qua",
+      create_phan_tich_ket_qua:
+        "/tuna/quan-ly-phan-tich-ket-qua/them-thong-tin-phan-tich-ket-qua",
+      edit_phan_tich_ket_qua:
+        "/tuna/quan-ly-phan-tich-ket-qua/cap-nhat-thong-tin-phan-tich-ket-qua",
+      xem_chi_tiet: "/tuna/quan-ly-phan-tich-ket-qua/xem-chi-tiet",
+    },
+    QUAN_LY_PHIEU_THU: {
+      to: "/tuna/quan-ly-phieu-thu",
+      create_phieu_thu:
+        "/tuna/quan-ly-phieu-thu/them-thong-tin-phieu-thu",
+      edit_phieu_thu:
+        "/tuna/quan-ly-phieu-thu/cap-nhat-thong-tin-phieu-thu",
+      xem_chi_tiet: "/tuna/quan-ly-phieu-thu/xem-chi-tiet",
+    },
   },
   TUNA_CUSTOMER: {
     HOME: {

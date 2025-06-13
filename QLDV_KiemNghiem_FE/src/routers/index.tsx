@@ -126,6 +126,111 @@ const XemChiTietDuTru = lazy(
   () => import("../pages/admin/listPhieuDuTru/XemChiTietPhieuDuTru")
 );
 
+const QuanLyPhieuXuatKho = lazy(
+  () => import("../pages/admin/managerPhieuXuatKho")
+);
+
+const ThemPhieuXuatKho = lazy(
+  () => import("../pages/admin/managerPhieuXuatKho/ThemPhieuXuatKho")
+);
+
+const SuaPhieuXuatKho = lazy(
+  () => import("../pages/admin/managerPhieuXuatKho/SuaPhieuXuatKho")
+);
+
+const XemChiTietPhieuXuatKho = lazy(
+  () => import("../pages/admin/managerPhieuXuatKho/XemChiTietPhieuXuatKho")
+);
+
+const DanhSachHoaDon = lazy(() => import("../pages/admin/listHoaDon"));
+
+const XemChiTietHoaDonTuDanhSach = lazy(
+  () => import("../pages/admin/listHoaDon/XemChiTietHoaDon")
+);
+
+const DanhSachPhieuMuaVatTu = lazy(
+  () => import("../pages/admin/listPhieuMuaVatTu")
+);
+
+const XemChiTietPhieuMuaVatTuTuDanhSach = lazy(
+  () => import("../pages/admin/listPhieuMuaVatTu/XemChiTietPhieuMuaVatTu")
+);
+
+const QuanLyHoaDonTrangAdmin = lazy(
+  () => import("../pages/admin/managerHoaDon")
+);
+
+const SuaHoaDon = lazy(() => import("../pages/admin/managerHoaDon/SuaHoaDon"));
+
+const XemChiTietHoaDon = lazy(
+  () => import("../pages/admin/managerHoaDon/XemChiTietHoaDon")
+);
+
+const QuanLyPhieuMuaVatTu = lazy(
+  () => import("../pages/admin/managerPhieuMuaVatTu")
+);
+
+const ThemPhieuMuaVatTu = lazy(
+  () => import("../pages/admin/managerPhieuMuaVatTu/ThemPhieuMuaVatTu")
+);
+
+const SuaPhieuMuaVatTu = lazy(
+  () => import("../pages/admin/managerPhieuMuaVatTu/SuaPhieuMuaVatTu")
+);
+
+const XemChiTietPhieuMuaVatTu = lazy(
+  () => import("../pages/admin/managerPhieuMuaVatTu/XemChiTietPhieuMuaVatTu")
+);
+
+const QuanLyPhieuPhanTichKetQua = lazy(
+  () => import("../pages/admin/managerPhieuPhanTichKetQua")
+);
+
+const ThemPhieuPhanTichKetQua = lazy(
+  () =>
+    import("../pages/admin/managerPhieuPhanTichKetQua/ThemPhieuPhanTichKetQua")
+);
+
+const SuaPhieuPhanTichKetQua = lazy(
+  () =>
+    import("../pages/admin/managerPhieuPhanTichKetQua/SuaPhieuPhanTichKetQua")
+);
+
+const XemChiTietPhieuPhanTichKetQua = lazy(
+  () =>
+    import(
+      "../pages/admin/managerPhieuPhanTichKetQua/XemChiTietPhieuPhanTichKetQua"
+    )
+);
+
+const QuanLyPhieuTienDo = lazy(() => import("../pages/admin/managerTienDo"));
+
+const ThemPhieuTienDo = lazy(
+  () => import("../pages/admin/managerTienDo/ThemPhieuTienDo")
+);
+
+const SuaPhieuTienDo = lazy(
+  () => import("../pages/admin/managerTienDo/SuaPhieuTienDo")
+);
+
+const XemChiTietPhieuTienDo = lazy(
+  () => import("../pages/admin/managerTienDo/XemChiTietPhieuTienDo")
+);
+
+const QuanLyPhieuThu = lazy(() => import("../pages/admin/managePhieuThu"));
+
+const ThemPhieuThu = lazy(
+  () => import("../pages/admin/managePhieuThu/ThemPhieuThu")
+);
+
+const SuaPhieuThu = lazy(
+  () => import("../pages/admin/managePhieuThu/SuaPhieuThu")
+);
+
+const XemChiTietPhieuThu = lazy(
+  () => import("../pages/admin/managePhieuThu/XemChiTietPhieuThu")
+);
+
 const Routers = () => {
   return (
     <Suspense>
@@ -268,6 +373,130 @@ const Routers = () => {
           <Route
             path={APP_ROUTES.TUNA_ADMIN.LIST_PHIEU_DU_TRU.xem_chi_tiet}
             element={<XemChiTietDuTru />}
+          />
+          <Route
+            path={APP_ROUTES.TUNA_ADMIN.QUAN_LY_PHIEU_XUAT_KHO.to}
+            element={<QuanLyPhieuXuatKho />}
+          />
+          <Route
+            path={
+              APP_ROUTES.TUNA_ADMIN.QUAN_LY_PHIEU_XUAT_KHO.create_phieu_xuat_kho
+            }
+            element={<ThemPhieuXuatKho />}
+          />
+          <Route
+            path={
+              APP_ROUTES.TUNA_ADMIN.QUAN_LY_PHIEU_XUAT_KHO.edit_phieu_xuat_kho
+            }
+            element={<SuaPhieuXuatKho />}
+          />
+          <Route
+            path={APP_ROUTES.TUNA_ADMIN.QUAN_LY_PHIEU_XUAT_KHO.xem_chi_tiet}
+            element={<XemChiTietPhieuXuatKho />}
+          />
+          <Route
+            path={APP_ROUTES.TUNA_ADMIN.QUAN_LY_PHIEU_MUA_VAT_TU.to}
+            element={<QuanLyPhieuMuaVatTu />}
+          />
+          <Route
+            path={
+              APP_ROUTES.TUNA_ADMIN.QUAN_LY_PHIEU_MUA_VAT_TU
+                .create_phieu_mua_vat_tu
+            }
+            element={<ThemPhieuMuaVatTu />}
+          />
+          <Route
+            path={
+              APP_ROUTES.TUNA_ADMIN.QUAN_LY_PHIEU_MUA_VAT_TU
+                .edit_phieu_mua_vat_tu
+            }
+            element={<SuaPhieuMuaVatTu />}
+          />
+          <Route
+            path={APP_ROUTES.TUNA_ADMIN.QUAN_LY_PHIEU_MUA_VAT_TU.xem_chi_tiet}
+            element={<XemChiTietPhieuMuaVatTu />}
+          />
+          <Route
+            path={APP_ROUTES.TUNA_ADMIN.LIST_PHIEU_MUA_VAT_TU.to}
+            element={<DanhSachPhieuMuaVatTu />}
+          />
+          <Route
+            path={APP_ROUTES.TUNA_ADMIN.LIST_PHIEU_MUA_VAT_TU.xem_chi_tiet}
+            element={<XemChiTietPhieuMuaVatTuTuDanhSach />}
+          />
+          <Route
+            path={APP_ROUTES.TUNA_ADMIN.QUAN_LY_HOA_DON.to}
+            element={<QuanLyHoaDonTrangAdmin />}
+          />
+          <Route
+            path={APP_ROUTES.TUNA_ADMIN.QUAN_LY_HOA_DON.edit_hoa_don}
+            element={<SuaHoaDon />}
+          />
+          <Route
+            path={APP_ROUTES.TUNA_ADMIN.QUAN_LY_HOA_DON.xem_chi_tiet}
+            element={<XemChiTietHoaDon />}
+          />
+          <Route
+            path={APP_ROUTES.TUNA_ADMIN.LIST_HOA_DON.to}
+            element={<DanhSachHoaDon />}
+          />
+          <Route
+            path={APP_ROUTES.TUNA_ADMIN.LIST_HOA_DON.xem_chi_tiet}
+            element={<XemChiTietHoaDonTuDanhSach />}
+          />
+          <Route
+            path={APP_ROUTES.TUNA_ADMIN.QUAN_LY_TIEN_DO.to}
+            element={<QuanLyPhieuTienDo />}
+          />
+          <Route
+            path={APP_ROUTES.TUNA_ADMIN.QUAN_LY_TIEN_DO.create_tien_do}
+            element={<ThemPhieuTienDo />}
+          />
+          <Route
+            path={APP_ROUTES.TUNA_ADMIN.QUAN_LY_TIEN_DO.edit_tien_do}
+            element={<SuaPhieuTienDo />}
+          />
+          <Route
+            path={APP_ROUTES.TUNA_ADMIN.QUAN_LY_TIEN_DO.xem_chi_tiet}
+            element={<XemChiTietPhieuTienDo />}
+          />
+          <Route
+            path={APP_ROUTES.TUNA_ADMIN.QUAN_LY_PHAN_TICH_KET_QUA.to}
+            element={<QuanLyPhieuPhanTichKetQua />}
+          />
+          <Route
+            path={
+              APP_ROUTES.TUNA_ADMIN.QUAN_LY_PHAN_TICH_KET_QUA
+                .create_phan_tich_ket_qua
+            }
+            element={<ThemPhieuPhanTichKetQua />}
+          />
+          <Route
+            path={
+              APP_ROUTES.TUNA_ADMIN.QUAN_LY_PHAN_TICH_KET_QUA
+                .edit_phan_tich_ket_qua
+            }
+            element={<SuaPhieuPhanTichKetQua />}
+          />
+          <Route
+            path={APP_ROUTES.TUNA_ADMIN.QUAN_LY_PHAN_TICH_KET_QUA.xem_chi_tiet}
+            element={<XemChiTietPhieuPhanTichKetQua />}
+          />
+          <Route
+            path={APP_ROUTES.TUNA_ADMIN.QUAN_LY_PHIEU_THU.to}
+            element={<QuanLyPhieuThu />}
+          />
+          <Route
+            path={APP_ROUTES.TUNA_ADMIN.QUAN_LY_PHIEU_THU.create_phieu_thu}
+            element={<ThemPhieuThu />}
+          />
+          <Route
+            path={APP_ROUTES.TUNA_ADMIN.QUAN_LY_PHIEU_THU.edit_phieu_thu}
+            element={<SuaPhieuThu />}
+          />
+          <Route
+            path={APP_ROUTES.TUNA_ADMIN.QUAN_LY_PHIEU_THU.xem_chi_tiet}
+            element={<XemChiTietPhieuThu />}
           />
         </Route>
 

@@ -204,7 +204,7 @@ const XemChiTietPhieuDuTru = () => {
                 </Box>
               ))}
             </Box>
-            <div className="px-4 py-2 flex justify-center">
+            <div className="px-4 py-2 flex justify-center ">
               <Pagination
                 count={totalPages}
                 page={currentPage}
@@ -216,11 +216,29 @@ const XemChiTietPhieuDuTru = () => {
                   '[aria-label="Go to next page"],[aria-label="Go to previous page"]':
                     {
                       backgroundColor: "#1976d21f",
-                      border: "1px solid #1976d280",
-                      color: "#1976d2",
+                      border: "2px solid white",
+                      color: "white",
                     },
-                  ".MuiPagination-ul": {
-                    justifyContent: "center",
+                  "&.MuiPagination-root": {
+                    backgroundColor: "#005f78",
+                    padding: "12px 32px",
+                    borderRadius: "6px",
+                    border: "2px solid #d1d5dc",
+                    boxShadow: "0 4px 4px rgba(0,0,0,0.25)",
+                  },
+                  button: {
+                    color: "white",
+                    border: "2px solid white",
+                    boxShadow: "0 4px 4px rgba(0,0,0,0.25)",
+                  },
+                  "& .Mui-selected": {
+                    border: "1px solid white",
+                    backgroundColor: "white",
+                    color: "#005f78",
+                  },
+                  "& .Mui-selected:hover": {
+                    backgroundColor: "#d1d5dc",
+                    color: "#005f78",
                   },
                 }}
               />
