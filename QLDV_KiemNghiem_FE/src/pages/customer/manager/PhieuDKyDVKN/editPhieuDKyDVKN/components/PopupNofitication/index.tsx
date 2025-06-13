@@ -15,7 +15,7 @@ const PopupNofitication = (props: Props) => {
 
   // const navigate = useNavigate();
   const showNotification = useStoreNotification(
-    (state) => state.showNotification
+    (state: any) => state.showNotification
   );
 
   const handleCloseNofitication = () => {

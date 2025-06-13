@@ -126,7 +126,7 @@ export const useGetTrangThaiPhieuDkAll = (props: Props) => {
 export const useCreatePhieuDKyDVKN = (props: Props) => {
   const { queryKey, onSettled, handleClickOpenPopupNofitication } = props;
   const showNotification = useStoreNotification(
-    (state) => state.showNotification
+    (state: any) => state.showNotification
   );
   return useMutation({
     mutationKey: [queryKey],

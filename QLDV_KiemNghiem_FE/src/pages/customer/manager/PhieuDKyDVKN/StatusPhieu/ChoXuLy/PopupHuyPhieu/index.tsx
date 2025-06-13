@@ -16,7 +16,7 @@ interface Props {
 const PopupHuyPhieu = (props: Props) => {
   const { open, handleClose, listCheckbox, setListCheckbox } = props;
   const showNotification = useStoreNotification(
-    (state) => state.showNotification
+    (state: any) => state.showNotification
   );
   const queryClient = useQueryClient();
   const handleOnSettled = async () => {

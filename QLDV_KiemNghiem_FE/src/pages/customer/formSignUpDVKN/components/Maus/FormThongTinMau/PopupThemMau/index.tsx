@@ -22,7 +22,7 @@ interface Props {
 const PopupThemMau = (props: Props) => {
   const { open, handleClose } = props;
   const showNotification = useStoreNotification(
-    (state) => state.showNotification
+    (state: any) => state.showNotification
   );
   const queryClient = useQueryClient();
   const dataDmMauAll: any = queryClient.getQueryData(["DmMauAll"]);

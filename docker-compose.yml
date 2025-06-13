@@ -1,0 +1,46 @@
+version: '3.8'
+services:
+  backend:
+    build:
+      context: ./QLDV_KiemNghiem_BE
+      dockerfile: Dockerfile
+    container_name: qldv_kiemnghiem_be
+    ports:
+      - "8080:80"
+    restart: always
+    volumes:
+      - ~/DATN/Images:/app/uploads
+    networks:
+      - mynet
+
+  frontend:
+    build:
+      context: ./QLDV_KiemNghiem_FE
+      dockerfile: Dockerfile
+    container_name: qldv_kiemnghiem_fe
+    ports:
+      - "5175:5175"
+    restart: always
+    networks:
+      - mynet
+
+  database:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: tuannam125
+    ports:
+      - "1433:1433"
+    restart: always
+    networks:
+      - mynet
+    volumes:
+      - mydata:/app/data
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=Namtuan2022@123  
+
+networks:
+  mynet:
+    driver: bridge
+
+volumes:
+  mydata:

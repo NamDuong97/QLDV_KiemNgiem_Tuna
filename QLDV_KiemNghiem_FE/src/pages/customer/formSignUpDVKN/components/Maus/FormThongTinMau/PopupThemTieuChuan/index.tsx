@@ -18,7 +18,7 @@ interface Props {
 const PopupThemTieuChuan = (props: Props) => {
   const { open, handleClose } = props;
   const showNotification = useStoreNotification(
-    (state) => state.showNotification
+    (state: any) => state.showNotification
   );
   const queryClient = useQueryClient();
   const dataTieuChuanAll: any = queryClient.getQueryData(["TieuChuanAll"]);
