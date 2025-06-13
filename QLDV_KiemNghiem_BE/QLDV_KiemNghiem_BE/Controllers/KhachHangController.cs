@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Authorization;
 using QLDV_KiemNghiem_BE.RequestFeatures;
 using System.Text.Json;
 using QLDV_KiemNghiem_BE.RequestFeatures.PagingRequest;
+using System.Security.Claims;
 
 namespace QLDV_KiemNghiem_BE.Controllers
 {
@@ -41,9 +42,33 @@ namespace QLDV_KiemNghiem_BE.Controllers
         [Route("getKhachHangByID")]
         public async Task<ActionResult> getKhachHangByID(string maKhachHang)
         {
-            var result = await _service.KhachHang.FindKhachHangAsync(maKhachHang);
+            var result = await _service.KhachHang.FindKhachHangByNhanVienAsync(maKhachHang);
             _logger.LogDebug("lay khach hang can tim: " + maKhachHang);
             return Ok(result);
+        }
+
+        [Authorize(Roles = "KH")]
+        [HttpGet] 
+        [Route("getInfoKhachHang")]
+        public async Task<ActionResult> getInfoKhachHang()
+        {
+            try
+            {
+                var userID = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+                var khachhang = await _service.KhachHang.FindKhachHangBySeflAsync(userID);
+                if (khachhang != null)
+                {
+                    return Ok(khachhang);
+                }
+                else
+                {
+                    return BadRequest(khachhang);
+                }
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         // Action này để sau khi người dùng tạo tk thành công, hệ thống sẽ gửi email để khách hàng bấm vào đường link và xác thực => gọi action này
@@ -63,6 +88,28 @@ namespace QLDV_KiemNghiem_BE.Controllers
                     return BadRequest("Xac minh khong thanh cong, vui long kiem tra lai");
                 }
             }catch(Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpPost]
+        [Route("forgetPassword")]
+        public async Task<ActionResult> forgetPassword(string email)
+        {
+            try
+            {
+                ResponseModel1<string> result = await _service.KhachHang.ForgetPasswordAsync(email);
+                if (result.KetQua)
+                {
+                    return Ok(result);
+                }
+                else
+                {
+                    return BadRequest(result);
+                }
+            }
+            catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }
@@ -107,7 +154,7 @@ namespace QLDV_KiemNghiem_BE.Controllers
                 _logger.LogError("Loi validate tham so dau vao");
                 return BadRequest(new { Errors = errors });
             }
-            ResponseModel1<string> checkLogin = await _service.KhachHang.LoginKhachHangAsync(login);
+            LoginResponse<KhachHangReturnClientDto> checkLogin = await _service.KhachHang.LoginKhachHangAsync(login);
             if (checkLogin.KetQua)
             {
                 _logger.LogDebug(checkLogin.Message);
@@ -152,7 +199,7 @@ namespace QLDV_KiemNghiem_BE.Controllers
         [Route("deleteKhachHang")]
         public async Task<ActionResult> deleteKhachHang(KhachHang KhachHang)
         {
-            var checkExists = await _service.KhachHang.FindKhachHangAsync(KhachHang.MaId);
+            var checkExists = await _service.KhachHang.FindKhachHangByNhanVienAsync(KhachHang.MaId);
             if (checkExists != null)
             {
                 bool delete = await _service.KhachHang.DeleteKhachHangAsync(KhachHang);

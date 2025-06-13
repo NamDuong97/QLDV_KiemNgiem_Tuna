@@ -29,6 +29,7 @@ namespace QLDV_KiemNghiem_BE.DTO.AutoMapper
             CreateMap<HoaDonThuBoSung, HoaDonThuBoSungDto>().ReverseMap().ForMember(dest => dest.MaId, opt => opt.Ignore());
             CreateMap<ChiTietHoaDonThuBoSung, ChiTietHoaDonThuBoSungDto>().ReverseMap().ForMember(dest => dest.MaId, opt => opt.Ignore());
             CreateMap<KhachHang, KhachHangDto>().ReverseMap().ForMember(dest => dest.MaId, opt => opt.Ignore());
+            CreateMap<KhachHang, KhachHangReturnClientDto>().ReverseMap().ForMember(dest => dest.MaId, opt => opt.Ignore());
             CreateMap<KhachHang, KhachHangReturnDto>().ReverseMap().ForMember(dest => dest.MaId, opt => opt.Ignore());
             CreateMap<NhanVien, NhanVienDto>().ReverseMap().ForMember(dest => dest.MaId, opt => opt.Ignore());
             CreateMap<PhieuChi, PhieuChiDto>().ReverseMap().ForMember(dest => dest.MaId, opt => opt.Ignore());

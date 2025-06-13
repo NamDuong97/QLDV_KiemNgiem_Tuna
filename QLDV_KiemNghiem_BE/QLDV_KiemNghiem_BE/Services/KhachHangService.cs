@@ -30,44 +30,40 @@ namespace QLDV_KiemNghiem_BE.Services
             _tokenService = tokenService;
             _configuration = configuration; 
         }
-        
         public async Task<(IEnumerable<KhachHangReturnDto> datas, Pagination pagi)> GetKhachHangsAllAsync(KhachHangParam param, bool tracking)
         {
             var KhachHangDomains = await _repositoryManager.KhachHang.GetKhachHangsAllAsync(param, tracking);
             var result = _mapper.Map<IEnumerable<KhachHangReturnDto>>(KhachHangDomains);
             return (datas: result, pagi: KhachHangDomains.Pagination);
         }
-        public async Task<ResponseModel1<string>> LoginKhachHangAsync(LoginDto login)
+        public async Task<LoginResponse<KhachHangReturnClientDto>> LoginKhachHangAsync(LoginDto login)
         {
             // Kiểm tra email tồn tại
             var khachHang = await _repositoryManager.KhachHang.GetKhacHangByEmailAsync(login.Email, false);
             if (khachHang == null)
             {
-                return new ResponseModel1<string>
+                return new LoginResponse<KhachHangReturnClientDto>
                 {
                     KetQua = false,
                     Message = "Email không tồn tại, vui lòng kiểm tra lại!",
-                    Data = null
                 };
             } 
             // Kiểm tra pasword, tham số 1 là pass từ client gửi lên, tham số 2 là từ csdl lấy
             if(!BCrypt.Net.BCrypt.Verify(login.Password, khachHang.MatKhau))
             {
-                return new ResponseModel1<string>
+                return new LoginResponse<KhachHangReturnClientDto>
                 {
                     KetQua = false,
                     Message = "Mật khẩu không đúng, vui lòng kiểm tra lại!",
-                    Data = null
                 };
             }
             // Kiểm tra tài khoản - email đã được verify xác minh chưa
             if (!khachHang.IsEmailVerify)
             {
-                return new ResponseModel1<string>
+                return new LoginResponse<KhachHangReturnClientDto>
                 {
                     KetQua = false,
                     Message = "Tài khoản chưa được xác minh email, vui lòng kiểm tra hộp thư email và xác minh",
-                    Data = null
                 };
             }
             TokenParam param = new TokenParam()
@@ -76,19 +72,38 @@ namespace QLDV_KiemNghiem_BE.Services
                 Email = khachHang.Email
             };
             string token = _tokenService.GenerateJwtToken(param);
-            return new ResponseModel1<string>
+            return new LoginResponse<KhachHangReturnClientDto>
             {
                 KetQua = true,
                 Message = "Đăng nhập thành công",
-                Data = token
+                Data = _mapper.Map<KhachHangReturnClientDto>(khachHang),
+                Token = token
             }; 
         }
-        public async Task<KhachHangDto?> FindKhachHangAsync(string maKhachHang)
+        public async Task<KhachHangDto?> FindKhachHangByNhanVienAsync(string maKhachHang)
         {
             if (maKhachHang == null || maKhachHang == "") return null;
             var KhachHangDomain = await _repositoryManager.KhachHang.FindKhachHangAsync(maKhachHang);
             var result = _mapper.Map<KhachHangDto>(KhachHangDomain);
             return result;
+        }
+        public async Task<ResponseModel1<KhachHangReturnClientDto?>> FindKhachHangBySeflAsync(string maKhachHang)
+        {
+            if (maKhachHang == null || maKhachHang == "") return new ResponseModel1<KhachHangReturnClientDto?>
+            {
+                KetQua = false,
+                Message = "Ma khach hang trong hoac null, vui long kiem tra lai!",
+                Data = null
+            }; 
+            var KhachHangDomain = await _repositoryManager.KhachHang.FindKhachHangAsync(maKhachHang);
+            var result = _mapper.Map<KhachHangReturnClientDto>(KhachHangDomain);
+            bool kq = KhachHangDomain != null ? true : false;
+            return new ResponseModel1<KhachHangReturnClientDto?>
+            {
+                KetQua = kq,
+                Message = kq ? "Lay thong tin khach hang thanh cong!": "Lay thong tin khach hang that bai, vui long thu lai!",
+                Data = result
+            }; 
         }
         // Sau khi tạo tài khoản => hệ thống gửi email => kh vào email xác thực => gọi action trong controller => controller gọi action này
         public async Task<KhachHangDto?> VerifyKhachHangByTokenAsync(string token)
@@ -107,6 +122,51 @@ namespace QLDV_KiemNghiem_BE.Services
             return ketqua ;
         }
         // action này tương đương với đăng ký tài khoản khách hàng
+        public async Task<ResponseModel1<string>> ForgetPasswordAsync(string email)
+        {
+            var khachHang = await _repositoryManager.KhachHang.GetKhacHangByEmailAsync(email, true);
+            if(khachHang == null)
+            {
+                return new ResponseModel1<string>
+                {
+                    KetQua = false,
+                    Message = "Email not exists, please check again",
+                    Data = "Email dang nhap khong ton tai, vui long kiem tra lai",
+                };
+            }
+            
+            var tokenResetPassoword = PublicFunction.GenerateResetPassword();
+            // Mã hoá pasword
+            khachHang.MatKhau = BCrypt.Net.BCrypt.HashPassword(tokenResetPassoword);
+            khachHang.NgaySuaMatKhau = DateTime.Now;
+            khachHang.NgayHetHanMatKhau = DateTime.Now.AddDays(3);
+            await _repositoryManager.SaveChangesAsync();
+
+            var body = $@"
+            <div style='font-family:Arial,sans-serif; font-size:16px; color:#333;'>
+                <p>Xin chào,</p>
+                <p>
+                    Đây là mật khẩu đăng nhập mới của bạn: 
+                    <strong style='color:#d9534f;'>{tokenResetPassoword}</strong>
+                </p>
+                <p>
+                    Mật khẩu này sẽ <strong>hết hạn trong 3 ngày</strong>. Vui lòng đăng nhập và thay đổi mật khẩu trong giao diện quản lý tài khoản để bảo mật thông tin của bạn.
+                </p>
+                <p>
+                    Truy cập: 
+                    <a href='http://localhost:5175/' style='color:#0275d8;'>Trang Chủ</a>
+                </p>
+                <p>Trân trọng,<br>Hệ thống QLDV Kiểm nghiệm</p>
+            </div>";
+
+            await _emailService.SendEmailAsync(email, "Reset Password", body);
+            return new ResponseModel1<string>
+            {
+                KetQua = true,
+                Message = "Sucessfully",
+                Data = "Mat khau moi da duoc gui vao email cua ban, vui long kiem tra email",
+            };
+        }
         public async Task<ResponseModel1<KhachHangDto>> CreateKhachHangAsync(KhachHangDto khachHangDto)
         {
             if (khachHangDto == null || khachHangDto.Email == null || khachHangDto.Email == "") return new ResponseModel1<KhachHangDto>
@@ -155,11 +215,29 @@ namespace QLDV_KiemNghiem_BE.Services
 
             // Tiến hành gửi email cho khách hàng thông báo đã tạo tài khoản thành công
             var emailBody = $@"
-                <h1> Welcome to your website </h1>
-                <p> Ban da tao tai khoan thanh cong </p>
-                <p> Your username is: {KhachHangDomain.Email} </p>
-                <a href='{verifyUrl}'>Verify your email</a>";
-                await _emailService.SendEmailAsync(khachHangDto.Email, "Dang Ky Thanh Cong, Vui Long Xac Minh Email", emailBody);
+            <div style='font-family:Arial,sans-serif; font-size:16px; color:#333; line-height:1.6;'>
+                <h2 style='color:#2c3e50;'>Chào mừng bạn đến với hệ thống Kiểm nghiệm Tuna!</h2>
+    
+                <p>Xin chúc mừng, bạn đã tạo tài khoản thành công.</p>
+    
+                <p>
+                    <strong>Email đăng nhập:</strong> {KhachHangDomain.Email}<br />
+                    Để hoàn tất quá trình đăng ký, vui lòng xác minh địa chỉ email của bạn bằng cách nhấn vào liên kết bên dưới:
+                </p>
+
+                <p style='margin:20px 0;'>
+                    <a href='{verifyUrl}' style='background-color:#28a745; color:white; padding:12px 24px; text-decoration:none; border-radius:5px; font-weight:bold;'>
+                        Xác minh email ngay
+                    </a>
+                </p>
+
+                <p style='color:#999; font-size:14px;'>
+                    Nếu bạn không đăng ký tài khoản tại hệ thống của chúng tôi, vui lòng bỏ qua email này.
+                </p>
+
+                <p>Trân trọng,<br>Đội ngũ hỗ trợ QLDV Kiểm nghiệm</p>
+            </div>";
+            await _emailService.SendEmailAsync(khachHangDto.Email, "Dang Ky Thanh Cong, Vui Long Xac Minh Email", emailBody);
 
             // Luu thông tin khách hàng vào CSDL
             bool check = await _repositoryManager.SaveChangesAsync();
