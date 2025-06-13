@@ -1,5 +1,4 @@
-﻿using QLDV_KiemNghiem_BE.Models;
-
+﻿
 namespace QLDV_KiemNghiem_BE.Interfaces.ManagerInterface
 {
     public interface IRepositoryManager
@@ -21,6 +20,18 @@ namespace QLDV_KiemNghiem_BE.Interfaces.ManagerInterface
         ITrangThaiPhieuDkRepository TrangThaiPhieuDk { get; }
         IHoaDonThuRepository HoaDonThu { get; }
         IChiTietHoaDonThuRepository ChiTietHoaDonThu { get; }
+        IPhieuDeXuatPhongBanRepository PhieuDeXuatPhongBan { get; }
+        IPhanCongNoiBoRepository PhanCongNoiBo { get; }
+        IPhieuDuTruRepository PhieuDuTru { get; }
+        IPhieuLuuMauRepository PhieuLuuMau { get; }
+        IPhieuTienDoLamViecRepository PhieuTienDoLamViec { get; }
+        IPhieuPhanTichKetQuaRepository PhieuPhanTichKetQua { get; }
+        IKhachHangRepository KhachHang { get; }
+        INhanVienRepository NhanVien { get; }
+        IPhieuChiRepository PhieuChi { get; }
+        IPhieuPhanTichKetQuaChiTietRepository PhieuPhanTichKetQuaChiTiet { get; }
+        IPhieuThuRepository PhieuThu { get; }
+        IChiTietPhieuDeXuatPhongBanRepository ChiTietPhieuDeXuatPhongBan { get; }
         Task<bool> SaveChangesAsync();
     }
 }

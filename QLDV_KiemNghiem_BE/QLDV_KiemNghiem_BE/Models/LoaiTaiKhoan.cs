@@ -37,5 +37,5 @@ public partial class LoaiTaiKhoan
     public DateTime? NgaySua { get; set; }
 
     [InverseProperty("MaLoaiTkNavigation")]
-    public virtual ICollection<TaiKhoan> TaiKhoans { get; set; } = new List<TaiKhoan>();
+    public virtual ICollection<NhanVien> NhanViens { get; set; } = new List<NhanVien>();
 }

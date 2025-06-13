@@ -48,7 +48,4 @@ public partial class Khoa
 
     [InverseProperty("MaKhoaNavigation")]
     public virtual ICollection<PhieuPhanTichKetQua> PhieuPhanTichKetQuas { get; set; } = new List<PhieuPhanTichKetQua>();
-
-    [InverseProperty("MaKhoaNavigation")]
-    public virtual ICollection<TaiKhoan> TaiKhoans { get; set; } = new List<TaiKhoan>();
 }

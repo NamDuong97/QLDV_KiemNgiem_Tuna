@@ -36,7 +36,4 @@ public partial class BoPhan
 
     [InverseProperty("MaBoPhanNavigation")]
     public virtual ICollection<NhanVien> NhanViens { get; set; } = new List<NhanVien>();
-
-    [InverseProperty("MaBoPhanNavigation")]
-    public virtual ICollection<TaiKhoan> TaiKhoans { get; set; } = new List<TaiKhoan>();
 }

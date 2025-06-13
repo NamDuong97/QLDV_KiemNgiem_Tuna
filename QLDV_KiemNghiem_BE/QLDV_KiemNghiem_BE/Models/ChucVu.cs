@@ -36,7 +36,4 @@ public partial class ChucVu
 
     [InverseProperty("MaChucVuNavigation")]
     public virtual ICollection<NhanVien> NhanViens { get; set; } = new List<NhanVien>();
-
-    [InverseProperty("MaChucVuNavigation")]
-    public virtual ICollection<TaiKhoan> TaiKhoans { get; set; } = new List<TaiKhoan>();
 }

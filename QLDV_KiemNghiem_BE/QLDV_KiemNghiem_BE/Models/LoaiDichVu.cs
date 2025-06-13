@@ -38,7 +38,7 @@ public partial class LoaiDichVu
     [Column(TypeName = "datetime")]
     public DateTime? NgaySua { get; set; }
 
-    [StringLength(50)]
+    [Column(TypeName = "decimal(18, 2)")]
     public decimal? ThoiGianMongMuonHoanThanh { get; set; }
 
     [InverseProperty("MaLoaiDvNavigation")]

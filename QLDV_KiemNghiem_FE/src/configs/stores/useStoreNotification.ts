@@ -13,7 +13,7 @@ type NotificationStore = {
   hideNotification: () => void;
 };
 
-export const useStoreNotification = create<NotificationStore>((set) => ({
+export const useStoreNotification = create<NotificationStore>((set: any) => ({
   message: "",
   status: 0,
   open: false,

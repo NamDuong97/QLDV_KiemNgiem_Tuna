@@ -3,9 +3,9 @@ using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using QLDV_KiemNghiem_BE.Data;
 using QLDV_KiemNghiem_BE.DTO;
-using QLDV_KiemNghiem_BE.DTO.Parameter;
 using QLDV_KiemNghiem_BE.Interfaces;
 using QLDV_KiemNghiem_BE.Models;
+using QLDV_KiemNghiem_BE.RequestFeatures;
 using System;
 using System.Linq;
 using static System.Runtime.InteropServices.JavaScript.JSType;
@@ -60,18 +60,18 @@ namespace QLDV_KiemNghiem_BE.Repositories
             var result = new PhieuDangKy();
             if (tracking)
             {
-                result = await _context.PhieuDangKies.AsNoTracking().FirstOrDefaultAsync(x => x.MaId == id);
+                result = await _context.PhieuDangKies.FirstOrDefaultAsync(x => x.MaId == id);
             }
             else
             {
-                result = await _context.PhieuDangKies.FirstOrDefaultAsync(x => x.MaId == id);
+                result = await _context.PhieuDangKies.AsNoTracking().
+                    FirstOrDefaultAsync(x => x.MaId == id);
             }
             return result;
         }
         public async Task<int> DuTinhThoiGianKiemNghiem(string maDmMau, string maTieuChuan)
         {
-            var result = await _context
-            .Set<ThoiGianTieuChuan>()  // Không cần DbSet thực trong DbContext
+            var result = await _context.ThoiGianTieuChuans
             .FromSqlRaw("SELECT dbo.Fn_ThoiGianDuTinhKiemNghiem({0}, {1}) AS ThoiGianTC", maDmMau, maTieuChuan)
             .AsNoTracking()
             .FirstOrDefaultAsync();

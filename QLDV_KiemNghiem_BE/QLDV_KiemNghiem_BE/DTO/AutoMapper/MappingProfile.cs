@@ -28,6 +28,19 @@ namespace QLDV_KiemNghiem_BE.DTO.AutoMapper
             CreateMap<ChiTietHoaDonThu, ChiTietHoaDonThuDto>().ReverseMap().ForMember(dest => dest.MaId, opt => opt.Ignore());
             CreateMap<HoaDonThuBoSung, HoaDonThuBoSungDto>().ReverseMap().ForMember(dest => dest.MaId, opt => opt.Ignore());
             CreateMap<ChiTietHoaDonThuBoSung, ChiTietHoaDonThuBoSungDto>().ReverseMap().ForMember(dest => dest.MaId, opt => opt.Ignore());
+            CreateMap<KhachHang, KhachHangDto>().ReverseMap().ForMember(dest => dest.MaId, opt => opt.Ignore());
+            CreateMap<KhachHang, KhachHangReturnDto>().ReverseMap().ForMember(dest => dest.MaId, opt => opt.Ignore());
+            CreateMap<NhanVien, NhanVienDto>().ReverseMap().ForMember(dest => dest.MaId, opt => opt.Ignore());
+            CreateMap<PhieuChi, PhieuChiDto>().ReverseMap().ForMember(dest => dest.MaId, opt => opt.Ignore());
+            CreateMap<PhieuThu, PhieuThuDto>().ReverseMap().ForMember(dest => dest.MaId, opt => opt.Ignore());
+            CreateMap<PhieuPhanTichKetQua, PhieuPhanTichKetQuaDto>().ReverseMap().ForMember(dest => dest.MaId, opt => opt.Ignore());
+            CreateMap<PhieuPhanTichKetQuaChiTiet, PhieuPhanTichKetQuaChiTietDto>().ReverseMap().ForMember(dest => dest.MaId, opt => opt.Ignore());
+            CreateMap<PhanCongNoiBo, PhanCongNoiBoDto>().ReverseMap().ForMember(dest => dest.MaId, opt => opt.Ignore());
+            CreateMap<PhieuDuTru, PhieuDuTruDto>().ReverseMap().ForMember(dest => dest.MaId, opt => opt.Ignore());
+            CreateMap<PhieuLuuMau, PhieuLuuMauDto>().ReverseMap().ForMember(dest => dest.MaId, opt => opt.Ignore());
+            CreateMap<PhieuDeXuatPhongBan, PhieuDeXuatPhongBanDto>().ReverseMap().ForMember(dest => dest.MaId, opt => opt.Ignore());
+            CreateMap<ChiTietPhieuDeXuatPhongBan, ChiTietPhieuDeXuatPhongBanDto>().ReverseMap().ForMember(dest => dest.MaId, opt => opt.Ignore());
+            CreateMap<PhieuTienDoLamViec, PhieuTienDoLamViecDto>().ReverseMap().ForMember(dest => dest.MaId, opt => opt.Ignore());
         }
     }
 }

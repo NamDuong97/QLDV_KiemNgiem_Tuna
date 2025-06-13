@@ -48,6 +48,8 @@ public partial class ChiTietPhieuDeXuatPhongBan
     [Column(TypeName = "datetime")]
     public DateTime? NgayThucHienKiemNghiem { get; set; }
 
+    public int? TrangThai { get; set; }
+
     [ForeignKey("MaPdkMau")]
     public virtual PhieuDangKyMau? MaPdkMauNavigation { get; set; }
 
