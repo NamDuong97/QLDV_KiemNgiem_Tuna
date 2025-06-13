@@ -97,7 +97,7 @@ const StyledBadge = styled(Badge)(({ theme }) => ({
 export default function HeaderCustomer(props: HeaderProps) {
   const {} = props;
 
-  const isLogin = true;
+  const isLogin = false;
   const [openLoginCustomer, setOpenLoginCustomer] = useState(false);
   const handleOpenLoginCustomer = () => setOpenLoginCustomer(true);
   const handleCloseLoginCustomer = () => setOpenLoginCustomer(false);
@@ -314,7 +314,7 @@ export default function HeaderCustomer(props: HeaderProps) {
           </Box>
         ) : (
           <button
-            className="bg-blue-500 px-3 py-1 rounded cursor-pointer hover:bg-blue-600 shadow-[3px_3px_2px_rgba(0,0,0,0.4)]"
+            className="bg-cyan-800 border-[2px] border-gray-300 px-3 py-1 rounded cursor-pointer hover:bg-cyan-700 shadow-[3px_3px_2px_rgba(0,0,0,0.4)]"
             onClick={handleOpenLoginCustomer}
           >
             <span className="text-sm/4 font-bold text-amber-50">Đăng nhập</span>

@@ -19,5 +19,15 @@ export const API = {
     },
     UPDATE_PHIEU_DANG_KY: "/api/phieudangky/updatePhieuDangKy",
     HUY_PHIEU_DANG_KY: "/api/phieudangky/deletePhieuDangKy",
+    DANG_NHAP: "/api/KhachHang/loginKhachHang",
+    DANG_KY: "/api/KhachHang/createKhachHang",
   },
 };
+
+export const ACCESS_TOKEN = "ACCESS_TOKEN_APP";
+export const REFRESH_TOKEN = "REFRESH_TOKEN_APP";
+
+export enum EKey {
+  TOKEN = "token",
+  TOKEN_GUEST = "token_guest",
+}
