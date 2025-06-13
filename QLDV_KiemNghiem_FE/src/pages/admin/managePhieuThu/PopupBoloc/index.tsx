@@ -8,10 +8,9 @@ import { useForm } from "react-hook-form";
 import { useEffect, useMemo } from "react";
 import yup from "../../../../configs/yup.custom";
 import { FormBoLocQuanLyPhieuDKyDVHN } from "../../../../models/PhieuDangKy";
-import { IoClose, IoColorFilterSharp } from "react-icons/io5";
+import { IoColorFilterSharp } from "react-icons/io5";
 import InputSelectKhoa from "./InputSelectKhoa";
 import InputSelectPhieuLuuMau from "./InputSelectPhieuLuuMau";
-import InputSelectTenMau from "./InputSelectTenMau";
 
 interface Props {
   open: boolean;

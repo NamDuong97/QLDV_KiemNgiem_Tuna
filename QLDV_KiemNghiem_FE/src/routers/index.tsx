@@ -15,6 +15,7 @@ const EditPhieuDKyDVKN = lazy(
   () => import("../pages/customer/manager/PhieuDKyDVKN/editPhieuDKyDVKN")
 );
 import Redirect from "./redirect";
+import XacMinhEmail from "../pages/xacminhEmail";
 const ShowPhieuDKyDVKN = lazy(
   () => import("../pages/customer/manager/PhieuDKyDVKN/showPhieuDKyDVKN")
 );
@@ -499,6 +500,11 @@ const Routers = () => {
             element={<XemChiTietPhieuThu />}
           />
         </Route>
+
+        <Route
+          path={APP_ROUTES.TUNA_XAC_MINH_EMAIL}
+          element={<XacMinhEmail />}
+        />
 
         {/* ==== Customer Routes ====*/}
         <Route element={<LayoutCustomer />}>

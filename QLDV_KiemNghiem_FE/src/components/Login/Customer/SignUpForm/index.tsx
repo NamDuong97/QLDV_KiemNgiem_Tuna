@@ -6,7 +6,6 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { InputTextField } from "../../../InputTextField";
 import yup from "../../../../configs/yup.custom";
-import { Inputs } from "../../../Inputs";
 import { useDangKyKhachHang } from "../../../../hooks/access/useAccess";
 import { queryClient } from "../../../../lib/reactQuery";
 import VerifyYourEmail from "./Verify_Your_Email";
@@ -78,7 +77,7 @@ const SignUpForm = (props: Props) => {
       queryKey: ["dangKyKhachHang"],
     });
     if (response.status === 200) {
-      btnLogin?.();
+      setisSignIn(true);
       reset({
         tenKh: "",
         email: "",
@@ -159,34 +158,35 @@ const SignUpForm = (props: Props) => {
                   inputRef={register("tenNguoiDaiDien")}
                   errorMessage={errors.tenNguoiDaiDien?.message}
                 />
+
                 <InputTextField
-                  title="Email"
+                  title="Số điện thoại"
+                  type="number"
                   variant="standard"
-                  type="email"
                   className="w-full"
-                  inputRef={register("email")}
-                  errorMessage={errors.email?.message}
+                  name="soDienThoai"
+                  inputRef={register("soDienThoai")}
+                  errorMessage={errors.soDienThoai?.message}
+                  placeholder="VD: 03976*****"
+                  sx={{
+                    'input[type="number"]': {
+                      MozAppearance: "textfield",
+                    },
+                    'input[type="number"]::-webkit-outer-spin-button, input[type="number"]::-webkit-inner-spin-button':
+                      {
+                        WebkitAppearance: "none",
+                        margin: 0,
+                      },
+                  }}
                 />
               </Box>
               <InputTextField
-                title="Số điện thoại"
-                type="number"
+                title="Email"
                 variant="standard"
+                type="email"
                 className="w-full"
-                name="soDienThoai"
-                inputRef={register("soDienThoai")}
-                errorMessage={errors.soDienThoai?.message}
-                placeholder="VD: 03976*****"
-                sx={{
-                  'input[type="number"]': {
-                    MozAppearance: "textfield",
-                  },
-                  'input[type="number"]::-webkit-outer-spin-button, input[type="number"]::-webkit-inner-spin-button':
-                    {
-                      WebkitAppearance: "none",
-                      margin: 0,
-                    },
-                }}
+                inputRef={register("email")}
+                errorMessage={errors.email?.message}
               />
               <InputTextField
                 title="Tên Đơn vị"

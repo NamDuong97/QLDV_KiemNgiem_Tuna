@@ -26,6 +26,7 @@ const LoginCustomer = (props: LoginCustomerProps) => {
           <LoginForm
             btnSignUp={() => setIsSignUpLoginRepassword("signup")}
             btnRepassword={() => setIsSignUpLoginRepassword("repassword")}
+            handleCloseLoginCustomer={handleCloseLoginCustomer}
           />
         );
       case "repassword":

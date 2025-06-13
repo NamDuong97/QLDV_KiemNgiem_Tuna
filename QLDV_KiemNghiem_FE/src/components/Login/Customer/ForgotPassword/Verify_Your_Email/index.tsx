@@ -1,18 +1,15 @@
 "use client";
 
-import { Box, Button, Container, Typography } from "@mui/material";
-import Card from "@mui/material/Card";
-import CardContent from "@mui/material/CardContent";
+import { Box, Typography } from "@mui/material";
 import { image } from "../../../../../constants/image";
 
 interface VerifyYourEmailProps {
   tabPage: boolean;
-  dataEmail: any;
-  handleRedirectLogin: () => void;
 }
 
 const VerifyYourEmail = (props: VerifyYourEmailProps) => {
-  const { tabPage, dataEmail, handleRedirectLogin } = props;
+  const { tabPage } = props;
+
   return (
     <Box>
       <Box className="flex gap-10 mb-10 px-6">
@@ -40,11 +37,8 @@ const VerifyYourEmail = (props: VerifyYourEmailProps) => {
         <Box className="text-center gap-2 grid">
           <h1 className="text-3xl font-bold">Thông báo</h1>
           <Typography className="text-base/6 font-medium text-gray-400">
-            Chúng tôi đã gửi mật khẩu mới đến địa chỉ email của bạn:
-          </Typography>
-          <p className="text-base/6 font-bold text-black">{dataEmail.email}</p>
-          <Typography className="text-base/6 font-medium text-gray-400">
-            Vui lòng truy cập vào email của bạn để lấy mật khẩu
+            Chúng tôi đã gửi mật khẩu mới đến địa chỉ email của bạn, Vui lòng
+            truy cập vào email của bạn để lấy mật khẩu!
           </Typography>
         </Box>
       </Box>

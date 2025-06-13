@@ -6,6 +6,8 @@ import ExitToAppIcon from "@mui/icons-material/ExitToApp";
 import VerifyYourEmail from "./Verify_Your_Email";
 import yup from "../../../../configs/yup.custom";
 import { InputTextField } from "../../../InputTextField";
+import { useQuenMatKhau } from "../../../../hooks/access/useAccess";
+import { queryClient } from "../../../../lib/reactQuery";
 
 interface LoginForm {
   email: string;
@@ -20,6 +22,21 @@ const ForgotPassword = (props: Props) => {
   const [tabPage, setTabPage] = useState(true);
   const [isSentEmail, setIsSentEmail] = useState(false);
   const [dataEmail, setDataEmail] = useState({});
+  console.log("dataEmail", dataEmail);
+  const handleOnSettled = async (response: any) => {
+    await queryClient.invalidateQueries({
+      queryKey: ["QuenMatKhau"],
+    });
+    if (response.status === 200) {
+      setIsSentEmail(true);
+      setTabPage(!tabPage);
+      reset({ email: "" });
+    }
+  };
+  const { mutate } = useQuenMatKhau({
+    queryKey: "QuenMatKhau",
+    onSettled: handleOnSettled,
+  });
 
   let schema = useMemo(() => {
     return yup.object().shape({
@@ -39,11 +56,8 @@ const ForgotPassword = (props: Props) => {
   } = useForm<LoginForm>({ resolver: yupResolver(schema), mode: "onChange" });
 
   const onSubmit = (data: LoginForm) => {
-    // const form = new FormData();
-    // form.append("email", data.email)
     setDataEmail(data);
-    setIsSentEmail(true);
-    setTabPage(!tabPage);
+    mutate(data.email);
   };
 
   useEffect(() => {
@@ -112,11 +126,7 @@ const ForgotPassword = (props: Props) => {
           </Box>
         </Box>
       ) : (
-        <VerifyYourEmail
-          tabPage={tabPage}
-          dataEmail={dataEmail}
-          handleRedirectLogin={btnLogin}
-        />
+        <VerifyYourEmail tabPage={tabPage} />
       )}
     </>
   );

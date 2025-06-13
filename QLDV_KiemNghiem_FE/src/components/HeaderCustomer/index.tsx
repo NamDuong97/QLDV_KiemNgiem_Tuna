@@ -14,8 +14,7 @@ import { IoHome } from "react-icons/io5";
 import { FaFileCirclePlus } from "react-icons/fa6";
 import clsx from "clsx";
 import { motion } from "motion/react";
-
-interface HeaderProps {}
+import { useAuth } from "../../configs/stores/auth";
 
 const dataMessages = [
   {
@@ -94,11 +93,9 @@ const StyledBadge = styled(Badge)(({ theme }) => ({
   },
 }));
 
-export default function HeaderCustomer(props: HeaderProps) {
-  const {} = props;
+export default function HeaderCustomer() {
+  const { isLogin, openLoginCustomer, setOpenLoginCustomer } = useAuth();
 
-  const isLogin = false;
-  const [openLoginCustomer, setOpenLoginCustomer] = useState(false);
   const handleOpenLoginCustomer = () => setOpenLoginCustomer(true);
   const handleCloseLoginCustomer = () => setOpenLoginCustomer(false);
   const [openMenu, setOpenMenu] = useState(false);
@@ -272,7 +269,7 @@ export default function HeaderCustomer(props: HeaderProps) {
             dataMessages={dataMessages}
             openNotifications={openNotifications}
             handleCloseNotifications={handleCloseNotifications}
-            handleOpenLoginCustomer={handleOpenLoginCustomer}
+            handleOpenLoginCustomer={() => setOpenLoginCustomer(true)}
           />
         </Box>
         {isLogin ? (

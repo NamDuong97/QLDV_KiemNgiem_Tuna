@@ -1,5 +1,5 @@
 import { Popover } from "@mui/material";
-import { FaUserEdit, FaUserPlus } from "react-icons/fa";
+import { FaUserEdit } from "react-icons/fa";
 import { useNavigate } from "react-router";
 import { APP_ROUTES } from "../../../../constants/routers";
 
@@ -46,9 +46,7 @@ const PopoverChucNang = (props: Props) => {
         className="text-cyan-800 flex gap-2 items-center p-2 bg-white text-center rounded-lg border-[2px] border-cyan-800 cursor-pointer hover:text-orange-400 hover:shadow-[0_4px_4px_rgba(0,0,0,0.25)]"
       >
         <FaUserEdit className="w-6 h-6" />
-        <span className="text-lg/6 font-semibold capitalize">
-          Sửa hóa đơn
-        </span>
+        <span className="text-lg/6 font-semibold capitalize">Sửa hóa đơn</span>
       </button>
     </Popover>
   );

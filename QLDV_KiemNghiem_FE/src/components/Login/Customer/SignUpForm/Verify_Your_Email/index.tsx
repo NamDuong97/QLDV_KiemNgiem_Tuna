@@ -22,13 +22,13 @@ const VerifyYourEmail = (props: VerifyYourEmailProps) => {
           />
         </Box>
         <Box className="text-center gap-2 grid">
-          <h1 className="text-3xl font-bold">Verify your email</h1>
+          <h1 className="text-3xl font-bold">Xác thực email</h1>
           <Typography className="text-base/6 font-medium text-gray-400">
-            Chúng tôi đã gửi liên kết đến địa chỉ email của bạn:
+            Tạo tài khoản thành công. Chúng tôi đã gửi liên kết đến địa chỉ
+            email của bạn
           </Typography>
-
           <Typography className="text-base/6 font-medium text-gray-400">
-            Vui lòng nhấp vào Quay lại Đăng nhập để tiếp tục Đăng nhập
+            Vui lòng truy cập vào email để xác thực tài khoản.
           </Typography>
         </Box>
         <Box className="flex justify-center">

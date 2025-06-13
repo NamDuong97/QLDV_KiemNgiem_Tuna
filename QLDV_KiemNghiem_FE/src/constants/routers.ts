@@ -145,10 +145,8 @@ export const APP_ROUTES = {
     },
     QUAN_LY_PHIEU_THU: {
       to: "/tuna/quan-ly-phieu-thu",
-      create_phieu_thu:
-        "/tuna/quan-ly-phieu-thu/them-thong-tin-phieu-thu",
-      edit_phieu_thu:
-        "/tuna/quan-ly-phieu-thu/cap-nhat-thong-tin-phieu-thu",
+      create_phieu_thu: "/tuna/quan-ly-phieu-thu/them-thong-tin-phieu-thu",
+      edit_phieu_thu: "/tuna/quan-ly-phieu-thu/cap-nhat-thong-tin-phieu-thu",
       xem_chi_tiet: "/tuna/quan-ly-phieu-thu/xem-chi-tiet",
     },
   },
@@ -194,4 +192,5 @@ export const APP_ROUTES = {
       },
     },
   },
+  TUNA_XAC_MINH_EMAIL: "/xac-minh-email",
 };

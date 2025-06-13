@@ -24,7 +24,6 @@ import { Align } from "../../../../models/Table";
 import TableCTHoaDonThu from "./Table";
 import { useState } from "react";
 import Inputs2 from "../../../../components/Inputs2";
-import { Textarea2 } from "../../../../components/Textarea2";
 
 const data = {
   thongtinchung: {

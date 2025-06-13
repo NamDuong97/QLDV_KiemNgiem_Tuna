@@ -11,7 +11,6 @@ import { FormBoLocQuanLyPhieuDKyDVHN } from "../../../../models/PhieuDangKy";
 import { IoClose } from "react-icons/io5";
 import InputSelectKhoa from "./InputSelectKhoa";
 import InputSelectPhieuLuuMau from "./InputSelectPhieuLuuMau";
-import InputSelectTenMau from "./InputSelectTenMau";
 
 interface Props {
   open: boolean;

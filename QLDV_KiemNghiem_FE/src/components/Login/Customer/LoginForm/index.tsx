@@ -12,10 +12,11 @@ import { useDangNhapKhachHang } from "../../../../hooks/access/useAccess";
 interface Props {
   btnSignUp: () => void;
   btnRepassword: () => void;
+  handleCloseLoginCustomer: () => void;
 }
 
 const LoginForm = (props: Props) => {
-  const { btnSignUp, btnRepassword } = props;
+  const { btnSignUp, btnRepassword, handleCloseLoginCustomer } = props;
 
   let schemaLogin = useMemo(() => {
     return yup.object().shape({
@@ -46,6 +47,7 @@ const LoginForm = (props: Props) => {
       queryKey: ["DangNhapKhachHang"],
     });
     if (response.status === 200) {
+      handleCloseLoginCustomer?.();
       reset({ email: "", password: "" });
     }
   };

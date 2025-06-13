@@ -5,7 +5,6 @@ import { Pagination } from "@mui/material";
 import { Align } from "../../../models/Table";
 import { IoMdArrowDropup } from "react-icons/io";
 import PopoverChucNang from "./PopoverChucNang";
-import TableQuanLyPhieuXuatKho from "./Table";
 import TableQuanLyPhieuTienDo from "./Table";
 
 const tableHead = [

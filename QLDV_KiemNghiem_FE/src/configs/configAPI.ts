@@ -1,5 +1,5 @@
 import axios from "axios";
-import { EKey } from "../constants/commons";
+// import { EKey } from "../constants/commons";
 
 const _APIInstance = axios.create({
   baseURL: `${import.meta.env.VITE_PUBLIC_BASE_URL_SERVER}`,
@@ -8,18 +8,18 @@ const _APIInstance = axios.create({
   },
 });
 
-_APIInstance.interceptors.request.use(
-  async (config: any) => {
-    const token = localStorage.getItem(EKey.TOKEN_GUEST);
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
-    }
-    return config;
-  },
-  (error: any) => {
-    return Promise.reject(error);
-  }
-);
+// _APIInstance.interceptors.request.use(
+//   async (config: any) => {
+//     const token = localStorage.getItem(EKey.TOKEN_GUEST);
+//     if (token) {
+//       config.headers.Authorization = `Bearer ${token}`;
+//     }
+//     return config;
+//   },
+//   (error: any) => {
+//     return Promise.reject(error);
+//   }
+// );
 
 export default _APIInstance;
 
