@@ -34,6 +34,33 @@ namespace QLDV_KiemNghiem_BE
             result = Regex.Replace(result, @"[^a-z0-9]", "");
             return result;
         }
+
+        public static string GenerateResetPassword(int length = 12)
+        {
+            const string upper = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+            const string lower = "abcdefghijklmnopqrstuvwxyz";
+            const string digits = "0123456789";
+            const string special = "!@#$%^&*()-_=+<>?";
+
+            string allChars = upper + lower + digits + special;
+            Random rand = new Random();
+
+            // Đảm bảo có ít nhất 1 ký tự từ mỗi nhóm
+            char[] password = new char[length];
+            password[0] = upper[rand.Next(upper.Length)];
+            password[1] = lower[rand.Next(lower.Length)];
+            password[2] = digits[rand.Next(digits.Length)];
+            password[3] = special[rand.Next(special.Length)];
+
+            for (int i = 4; i < length; i++)
+            {
+                password[i] = allChars[rand.Next(allChars.Length)];
+            }
+
+            // Shuffle để mật khẩu không luôn có định dạng predictable (chữ hoa, thường, số, đặc biệt)
+            return new string(password.OrderBy(x => rand.Next()).ToArray());
+        }
+
     }
 }
 // Chứa các hàm thường được sử dụng
