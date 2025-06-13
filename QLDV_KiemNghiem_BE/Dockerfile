@@ -1,5 +1,5 @@
 #Giai đoạn 1: Runtime image nhẹ chỉ để chạy ứng dụng
-FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
+FROM mcr.microsoft.com/dotnet/sdk:9.0-preview AS build
 WORKDIR /app
 # Thiết lập thư mục làm việc trong container
 EXPOSE 80
@@ -8,7 +8,7 @@ ENV ASPNETCORE_URLS=http://+:80
 # Cấu hình để ASP.NET Core lắng nghe trên mọi địa chỉ IP, cổng 80
 
 #Giai đoạn 2: SDK image dùng để build source code
-FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+FROM mcr.microsoft.com/dotnet/sdk:9.0-preview AS build
 WORKDIR /src
 # Thư mục làm việc cho quá trình build
 
