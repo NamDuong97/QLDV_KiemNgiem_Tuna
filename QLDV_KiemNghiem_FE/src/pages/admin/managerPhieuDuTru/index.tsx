@@ -163,8 +163,8 @@ const QuanLyPhieuDuTru = () => {
                     border: "1px solid #1976d280",
                     color: "#1976d2",
                   },
-                ".MuiPagination-ul": {
-                  justifyContent: "center",
+                button: {
+                  boxShadow: "0 4px 4px rgba(0,0,0,0.25)",
                 },
               }}
             />

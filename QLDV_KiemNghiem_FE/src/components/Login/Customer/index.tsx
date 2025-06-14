@@ -3,7 +3,7 @@ import { useState } from "react";
 import { IoMdClose } from "react-icons/io";
 import LoginForm from "./LoginForm";
 import SignUpForm from "./SignUpForm";
-import Repassword from "./Repassword";
+import ForgotPassword from "./ForgotPassword";
 
 interface LoginCustomerProps {
   openLoginCustomer: boolean;
@@ -26,11 +26,14 @@ const LoginCustomer = (props: LoginCustomerProps) => {
           <LoginForm
             btnSignUp={() => setIsSignUpLoginRepassword("signup")}
             btnRepassword={() => setIsSignUpLoginRepassword("repassword")}
+            handleCloseLoginCustomer={handleCloseLoginCustomer}
           />
         );
       case "repassword":
         return (
-          <Repassword btnLogin={() => setIsSignUpLoginRepassword("login")} />
+          <ForgotPassword
+            btnLogin={() => setIsSignUpLoginRepassword("login")}
+          />
         );
     }
   };
@@ -43,8 +46,13 @@ const LoginCustomer = (props: LoginCustomerProps) => {
         handleCloseLoginCustomer();
         setIsSignUpLoginRepassword("login");
       }}
+      sx={{
+        ".MuiPaper-root": {
+          borderRadius: 4,
+        },
+      }}
     >
-      <Box className="!relative px-7 py-6 w-auto sm:w-[458px]">
+      <Box className="!relative px-7 py-6 w-auto sm:w-[550px]">
         <Box className="!absolute top-4 right-4">
           <button
             className="bg-gray-400 rounded-full p-[6px] hover:bg-gray-500 cursor-pointer"

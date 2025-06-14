@@ -6,20 +6,24 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { InputTextField } from "../../../InputTextField";
 import yup from "../../../../configs/yup.custom";
+import { queryClient } from "../../../../lib/reactQuery";
+import { useDangNhapKhachHang } from "../../../../hooks/access/useAccess";
 
 interface Props {
   btnSignUp: () => void;
   btnRepassword: () => void;
+  handleCloseLoginCustomer: () => void;
 }
 
 const LoginForm = (props: Props) => {
-  const { btnSignUp, btnRepassword } = props;
+  const { btnSignUp, btnRepassword, handleCloseLoginCustomer } = props;
 
   let schemaLogin = useMemo(() => {
     return yup.object().shape({
-      username: yup
+      email: yup
         .string()
         .required("Yêu cầu nhập Tài khoản")
+        .email("Yêu cầu nhập đúng định dạng")
         .max(200, "Tài khoản nhập phải dưới 200 ký tự"),
       password: yup
         .string()
@@ -38,12 +42,27 @@ const LoginForm = (props: Props) => {
     mode: "onChange",
   });
 
+  const handleOnSettled = async (response: any) => {
+    await queryClient.invalidateQueries({
+      queryKey: ["DangNhapKhachHang"],
+    });
+    if (response.status === 200) {
+      handleCloseLoginCustomer?.();
+      reset({ email: "", password: "" });
+    }
+  };
+
+  const { mutate } = useDangNhapKhachHang({
+    queryKey: "DangNhapKhachHang",
+    onSettled: handleOnSettled,
+  });
+
   const LoginSubmit = (data: FormAccountCustomerLogin) => {
-    console.log("data", data);
+    mutate(data);
   };
 
   useEffect(() => {
-    reset({ username: "", password: "" });
+    reset({ email: "", password: "" });
   }, []);
 
   return (
@@ -71,11 +90,12 @@ const LoginForm = (props: Props) => {
           <form onSubmit={handleSubmit(LoginSubmit)} className="grid gap-2">
             <Box className="grid gap-4">
               <InputTextField
-                title="Tài Khoản"
+                title="Email"
+                type="email"
                 variant="standard"
                 className="w-full"
-                inputRef={register("username")}
-                errorMessage={errors.username?.message}
+                inputRef={register("email")}
+                errorMessage={errors.email?.message}
               />
               <Box className="mb-4 grid gap-1">
                 <InputTextField

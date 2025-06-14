@@ -5,6 +5,7 @@ import { Align } from "../../../../../../models/Table";
 import clsx from "clsx";
 import PopupHuyPhieu from "./PopupHuyPhieu";
 import { useGetPhieuDangKyKiemNghiemByTrangThaiArray } from "../../../../../../hooks/customers/usePhieuDKyDVKN";
+import { useAuth } from "../../../../../../configs/stores/auth";
 
 const tableHead = [
   {
@@ -53,9 +54,11 @@ const ChoXuLy = () => {
     setOpenPopupHuyPhieu(true);
   };
 
+  const { user } = useAuth();
+
   const dataChoTiepNhanXuLy = useGetPhieuDangKyKiemNghiemByTrangThaiArray({
     queryKey: "dataChoTiepNhanXuLy",
-    maKH: "KH001",
+    maKH: user?.maKh,
     trangThaiIDs: ["TT01", "TT02", "TT03", "TT04"],
   });
 

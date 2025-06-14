@@ -3,6 +3,7 @@ import TableDangKiemNghiem from "./TableDangKiemNghiem";
 import { Align } from "../../../../../../models/Table";
 import { useState } from "react";
 import { useGetPhieuDangKyKiemNghiemByTrangThaiArray } from "../../../../../../hooks/customers/usePhieuDKyDVKN";
+import { useAuth } from "../../../../../../configs/stores/auth";
 
 interface Props {}
 
@@ -47,10 +48,10 @@ const tableHead = [
 
 const DangKiemNghiem = (props: Props) => {
   const {} = props;
-
+  const { user } = useAuth();
   const dataDangKiemNghiem = useGetPhieuDangKyKiemNghiemByTrangThaiArray({
     queryKey: "dataDangKiemNghiem",
-    maKH: "KH001",
+    maKH: user?.maKh,
     trangThaiIDs: ["TT07", "TT11"],
   });
 

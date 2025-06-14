@@ -3,8 +3,7 @@ import { Align } from "../../../../../../models/Table";
 import TableDaDuyet from "./TableDaDuyet";
 import { useGetPhieuDangKyKiemNghiemByTrangThaiArray } from "../../../../../../hooks/customers/usePhieuDKyDVKN";
 import { useState } from "react";
-
-interface Props {}
+import { useAuth } from "../../../../../../configs/stores/auth";
 
 const tableHead = [
   {
@@ -45,12 +44,11 @@ const tableHead = [
   },
 ];
 
-const DaDuyet = (props: Props) => {
-  const {} = props;
-
+const DaDuyet = () => {
+  const { user } = useAuth();
   const dataDaDuyet = useGetPhieuDangKyKiemNghiemByTrangThaiArray({
     queryKey: "dataDaDuyet",
-    maKH: "KH001",
+    maKH: user?.maKh,
     trangThaiIDs: ["TT05", "TT06"],
   });
 

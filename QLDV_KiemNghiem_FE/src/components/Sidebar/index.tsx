@@ -2,21 +2,44 @@ import { Box, Drawer, Tooltip } from "@mui/material";
 import HomeIcon from "@mui/icons-material/Home";
 import { SiGoogleclassroom } from "react-icons/si";
 import {
+  danhSachHoaDon,
   danhSachPhanCong,
   danhSachPhanCongNoiBo,
   danhSachPhieuDuTru,
+  danhSachPhieuMuaVatTu,
   PhieuDKyDVKNManager,
+  quanLyHoaDonTrangAdmin,
   quanLyLuuMau,
   quanLyNhanVien,
   quanLyPhanCongKhoaChuyenMon,
   quanLyPhanCongNoiBo,
   quanLyPhieuDuTru,
+  quanLyPhieuMuaVatTu,
+  quanLyPhieuPhanTichKetQua,
+  quanLyPhieuThu,
+  quanLyPhieuTienDo,
+  quanLyPhieuXuatKho,
 } from "../../models/Sidebar";
 import { useLocation, useNavigate } from "react-router";
 import { APP_ROUTES } from "../../constants/routers";
 import clsx from "clsx";
-import { MdAssignment, MdAssignmentInd } from "react-icons/md";
-import { FaFlask, FaUserCheck, FaVoteYea } from "react-icons/fa";
+import {
+  MdAddShoppingCart,
+  MdAssignment,
+  MdAssignmentInd,
+  MdReceipt,
+  MdReceiptLong,
+  MdTimeline,
+} from "react-icons/md";
+import {
+  FaBox,
+  FaChartBar,
+  FaFileSignature,
+  FaFlask,
+  FaShoppingCart,
+  FaUserCheck,
+  FaVoteYea,
+} from "react-icons/fa";
 import { image } from "../../constants/image";
 import { FaArrowAltCircleRight } from "react-icons/fa";
 import { Dispatch, SetStateAction } from "react";
@@ -62,7 +85,22 @@ const SideBar = (props: SideBarProps) => {
         return navigate(APP_ROUTES.TUNA_ADMIN.QUAN_LY_PHIEU_DU_TRU.to);
       case danhSachPhieuDuTru:
         return navigate(APP_ROUTES.TUNA_ADMIN.LIST_PHIEU_DU_TRU.to);
-
+      case quanLyPhieuXuatKho:
+        return navigate(APP_ROUTES.TUNA_ADMIN.QUAN_LY_PHIEU_XUAT_KHO.to);
+      case quanLyPhieuMuaVatTu:
+        return navigate(APP_ROUTES.TUNA_ADMIN.QUAN_LY_PHIEU_MUA_VAT_TU.to);
+      case danhSachPhieuMuaVatTu:
+        return navigate(APP_ROUTES.TUNA_ADMIN.LIST_PHIEU_MUA_VAT_TU.to);
+      case quanLyHoaDonTrangAdmin:
+        return navigate(APP_ROUTES.TUNA_ADMIN.QUAN_LY_HOA_DON.to);
+      case danhSachHoaDon:
+        return navigate(APP_ROUTES.TUNA_ADMIN.LIST_HOA_DON.to);
+      case quanLyPhieuTienDo:
+        return navigate(APP_ROUTES.TUNA_ADMIN.QUAN_LY_TIEN_DO.to);
+      case quanLyPhieuPhanTichKetQua:
+        return navigate(APP_ROUTES.TUNA_ADMIN.QUAN_LY_PHAN_TICH_KET_QUA.to);
+      case quanLyPhieuThu:
+        return navigate(APP_ROUTES.TUNA_ADMIN.QUAN_LY_PHIEU_THU.to);
       default:
         return navigate(APP_ROUTES.TUNA_ADMIN.DASHBOARD.to);
     }
@@ -365,6 +403,228 @@ const SideBar = (props: SideBarProps) => {
                 </Box>
               </Box>
               <Box className="py-2 pl-4 pr-2 gap-4 grid">
+                <Box className="gap-4 grid">
+                  <button
+                    className={clsx(
+                      "flex items-center gap-2 w-full text-cyan-800 hover:text-orange-500 cursor-pointer",
+                      {
+                        "text-orange-500":
+                          pathname.split("/")[2] ===
+                          APP_ROUTES.TUNA_ADMIN.LIST_HOA_DON.to.split("/")[2],
+                      }
+                    )}
+                    onClick={() => {
+                      handleRedirect(danhSachHoaDon);
+                      handleMenuDashBoard(false);
+                    }}
+                  >
+                    <div className="w-8">
+                      <MdReceiptLong className="!w-8 !h-8" />
+                    </div>
+
+                    <p className="text-base !font-bold whitespace-normal text-start uppercase">
+                      Danh Sách Hóa Đơn
+                    </p>
+                  </button>
+                </Box>
+              </Box>
+              <Box className="py-2 pl-4 pr-2 gap-4 grid">
+                <Box className="gap-4 grid">
+                  <button
+                    className={clsx(
+                      "flex items-center gap-2 w-full text-cyan-800 hover:text-orange-500 cursor-pointer",
+                      {
+                        "text-orange-500":
+                          pathname.split("/")[2] ===
+                          APP_ROUTES.TUNA_ADMIN.LIST_PHIEU_MUA_VAT_TU.to.split(
+                            "/"
+                          )[2],
+                      }
+                    )}
+                    onClick={() => {
+                      handleRedirect(danhSachPhieuMuaVatTu);
+                      handleMenuDashBoard(false);
+                    }}
+                  >
+                    <div className="w-8">
+                      <FaShoppingCart className="!w-8 !h-8" />
+                    </div>
+
+                    <p className="text-base !font-bold whitespace-normal text-start uppercase">
+                      Danh Sách phiếu mua vật tư
+                    </p>
+                  </button>
+                </Box>
+              </Box>
+              <Box className="py-2 pl-4 pr-2 gap-4 grid">
+                <Box className="gap-4 grid">
+                  <button
+                    className={clsx(
+                      "flex items-center gap-2 w-full text-cyan-800 hover:text-orange-500 cursor-pointer",
+                      {
+                        "text-orange-500":
+                          pathname.split("/")[2] ===
+                          APP_ROUTES.TUNA_ADMIN.QUAN_LY_HOA_DON.to.split(
+                            "/"
+                          )[2],
+                      }
+                    )}
+                    onClick={() => {
+                      handleRedirect(quanLyHoaDonTrangAdmin);
+                      handleMenuDashBoard(false);
+                    }}
+                  >
+                    <div className="w-8">
+                      <MdReceipt className="!w-8 !h-8" />
+                    </div>
+
+                    <p className="text-base !font-bold whitespace-normal text-start uppercase">
+                      quản lý hóa đơn
+                    </p>
+                  </button>
+                </Box>
+              </Box>
+              <Box className="py-2 pl-4 pr-2 gap-4 grid">
+                <Box className="gap-4 grid">
+                  <button
+                    className={clsx(
+                      "flex items-center gap-2 w-full text-cyan-800 hover:text-orange-500 cursor-pointer",
+                      {
+                        "text-orange-500":
+                          pathname.split("/")[2] ===
+                          APP_ROUTES.TUNA_ADMIN.QUAN_LY_PHIEU_MUA_VAT_TU.to.split(
+                            "/"
+                          )[2],
+                      }
+                    )}
+                    onClick={() => {
+                      handleRedirect(quanLyPhieuMuaVatTu);
+                      handleMenuDashBoard(false);
+                    }}
+                  >
+                    <div className="w-8">
+                      <MdAddShoppingCart className="!w-8 !h-8" />
+                    </div>
+
+                    <p className="text-base !font-bold whitespace-normal text-start uppercase">
+                      quản lý phiếu mua vật tư
+                    </p>
+                  </button>
+                </Box>
+              </Box>
+              <Box className="py-2 pl-4 pr-2 gap-4 grid">
+                <Box className="gap-4 grid">
+                  <button
+                    className={clsx(
+                      "flex items-center gap-2 w-full text-cyan-800 hover:text-orange-500 cursor-pointer",
+                      {
+                        "text-orange-500":
+                          pathname.split("/")[2] ===
+                          APP_ROUTES.TUNA_ADMIN.QUAN_LY_PHAN_TICH_KET_QUA.to.split(
+                            "/"
+                          )[2],
+                      }
+                    )}
+                    onClick={() => {
+                      handleRedirect(quanLyPhieuPhanTichKetQua);
+                      handleMenuDashBoard(false);
+                    }}
+                  >
+                    <div className="w-8">
+                      <FaChartBar className="!w-8 !h-8" />
+                    </div>
+
+                    <p className="text-base !font-bold whitespace-normal text-start uppercase">
+                      quản lý phiếu phân tích kết quả
+                    </p>
+                  </button>
+                </Box>
+              </Box>
+              <Box className="py-2 pl-4 pr-2 gap-4 grid">
+                <Box className="gap-4 grid">
+                  <button
+                    className={clsx(
+                      "flex items-center gap-2 w-full text-cyan-800 hover:text-orange-500 cursor-pointer",
+                      {
+                        "text-orange-500":
+                          pathname.split("/")[2] ===
+                          APP_ROUTES.TUNA_ADMIN.QUAN_LY_PHIEU_XUAT_KHO.to.split(
+                            "/"
+                          )[2],
+                      }
+                    )}
+                    onClick={() => {
+                      handleRedirect(quanLyPhieuXuatKho);
+                      handleMenuDashBoard(false);
+                    }}
+                  >
+                    <div className="w-8">
+                      <FaBox className="!w-8 !h-8" />
+                    </div>
+
+                    <p className="text-base !font-bold whitespace-normal text-start uppercase">
+                      quản lý phiếu xuất kho
+                    </p>
+                  </button>
+                </Box>
+              </Box>
+              <Box className="py-2 pl-4 pr-2 gap-4 grid">
+                <Box className="gap-4 grid">
+                  <button
+                    className={clsx(
+                      "flex items-center gap-2 w-full text-cyan-800 hover:text-orange-500 cursor-pointer",
+                      {
+                        "text-orange-500":
+                          pathname.split("/")[2] ===
+                          APP_ROUTES.TUNA_ADMIN.QUAN_LY_TIEN_DO.to.split(
+                            "/"
+                          )[2],
+                      }
+                    )}
+                    onClick={() => {
+                      handleRedirect(quanLyPhieuTienDo);
+                      handleMenuDashBoard(false);
+                    }}
+                  >
+                    <div className="w-8">
+                      <MdTimeline className="!w-8 !h-8" />
+                    </div>
+
+                    <p className="text-base !font-bold whitespace-normal text-start uppercase">
+                      quản lý phiếu tiến độ
+                    </p>
+                  </button>
+                </Box>
+              </Box>
+              <Box className="py-2 pl-4 pr-2 gap-4 grid">
+                <Box className="gap-4 grid">
+                  <button
+                    className={clsx(
+                      "flex items-center gap-2 w-full text-cyan-800 hover:text-orange-500 cursor-pointer",
+                      {
+                        "text-orange-500":
+                          pathname.split("/")[2] ===
+                          APP_ROUTES.TUNA_ADMIN.QUAN_LY_PHIEU_THU.to.split(
+                            "/"
+                          )[2],
+                      }
+                    )}
+                    onClick={() => {
+                      handleRedirect(quanLyPhieuThu);
+                      handleMenuDashBoard(false);
+                    }}
+                  >
+                    <div className="w-8">
+                      <FaFileSignature className="!w-8 !h-8" />
+                    </div>
+
+                    <p className="text-base !font-bold whitespace-normal text-start uppercase">
+                      quản lý phiếu thu
+                    </p>
+                  </button>
+                </Box>
+              </Box>
+              <Box className="py-2 pl-4 pr-2 gap-4 grid">
                 <Box className="flex items-center justify-center p-[10px]">
                   <button
                     className={clsx(
@@ -401,7 +661,7 @@ const SideBar = (props: SideBarProps) => {
                   onClick={() => handleRedirect()}
                 >
                   <Tooltip
-                    title="Thống Kê"
+                    title="Thống kê"
                     placement="right"
                     arrow
                     disableInteractive
@@ -618,12 +878,208 @@ const SideBar = (props: SideBarProps) => {
                     onClick={() => handleRedirect(danhSachPhieuDuTru)}
                   >
                     <Tooltip
-                      title="Danh Sách phiếu dự trù"
+                      title="Danh sách phiếu dự trù"
                       placement="right"
                       arrow
                       disableInteractive
                     >
                       <GiTestTubes className="!w-8 !h-8" />
+                    </Tooltip>
+                  </button>
+                </Box>
+                <Box className="flex items-center justify-center p-[10px]">
+                  <button
+                    className={clsx(
+                      "text-cyan-800 hover:text-orange-500 cursor-pointer",
+                      {
+                        "text-orange-500":
+                          pathname.split("/")[2] ===
+                          APP_ROUTES.TUNA_ADMIN.LIST_HOA_DON.to.split("/")[2],
+                      }
+                    )}
+                    onClick={() => handleRedirect(danhSachHoaDon)}
+                  >
+                    <Tooltip
+                      title="Danh sách hóa đơn"
+                      placement="right"
+                      arrow
+                      disableInteractive
+                    >
+                      <MdReceiptLong className="!w-8 !h-8" />
+                    </Tooltip>
+                  </button>
+                </Box>
+
+                <Box className="flex items-center justify-center p-[10px]">
+                  <button
+                    className={clsx(
+                      "text-cyan-800 hover:text-orange-500 cursor-pointer",
+                      {
+                        "text-orange-500":
+                          pathname.split("/")[2] ===
+                          APP_ROUTES.TUNA_ADMIN.LIST_PHIEU_MUA_VAT_TU.to.split(
+                            "/"
+                          )[2],
+                      }
+                    )}
+                    onClick={() => handleRedirect(danhSachPhieuMuaVatTu)}
+                  >
+                    <Tooltip
+                      title="Danh sách phiếu mua vật tư"
+                      placement="right"
+                      arrow
+                      disableInteractive
+                    >
+                      <FaShoppingCart className="!w-8 !h-8" />
+                    </Tooltip>
+                  </button>
+                </Box>
+
+                <Box className="flex items-center justify-center p-[10px]">
+                  <button
+                    className={clsx(
+                      "text-cyan-800 hover:text-orange-500 cursor-pointer",
+                      {
+                        "text-orange-500":
+                          pathname.split("/")[2] ===
+                          APP_ROUTES.TUNA_ADMIN.QUAN_LY_HOA_DON.to.split(
+                            "/"
+                          )[2],
+                      }
+                    )}
+                    onClick={() => handleRedirect(quanLyHoaDonTrangAdmin)}
+                  >
+                    <Tooltip
+                      title="Quản lý hóa đơn"
+                      placement="right"
+                      arrow
+                      disableInteractive
+                    >
+                      <MdReceipt className="!w-8 !h-8" />
+                    </Tooltip>
+                  </button>
+                </Box>
+
+                <Box className="flex items-center justify-center p-[10px]">
+                  <button
+                    className={clsx(
+                      "text-cyan-800 hover:text-orange-500 cursor-pointer",
+                      {
+                        "text-orange-500":
+                          pathname.split("/")[2] ===
+                          APP_ROUTES.TUNA_ADMIN.QUAN_LY_PHIEU_MUA_VAT_TU.to.split(
+                            "/"
+                          )[2],
+                      }
+                    )}
+                    onClick={() => handleRedirect(quanLyPhieuMuaVatTu)}
+                  >
+                    <Tooltip
+                      title="Quản lý phiếu mua vật tư"
+                      placement="right"
+                      arrow
+                      disableInteractive
+                    >
+                      <MdAddShoppingCart className="!w-8 !h-8" />
+                    </Tooltip>
+                  </button>
+                </Box>
+
+                <Box className="flex items-center justify-center p-[10px]">
+                  <button
+                    className={clsx(
+                      "text-cyan-800 hover:text-orange-500 cursor-pointer",
+                      {
+                        "text-orange-500":
+                          pathname.split("/")[2] ===
+                          APP_ROUTES.TUNA_ADMIN.QUAN_LY_PHAN_TICH_KET_QUA.to.split(
+                            "/"
+                          )[2],
+                      }
+                    )}
+                    onClick={() => handleRedirect(quanLyPhieuPhanTichKetQua)}
+                  >
+                    <Tooltip
+                      title="Quản lý phiếu phân tích kết quả"
+                      placement="right"
+                      arrow
+                      disableInteractive
+                    >
+                      <FaChartBar className="!w-8 !h-8" />
+                    </Tooltip>
+                  </button>
+                </Box>
+
+                <Box className="flex items-center justify-center p-[10px]">
+                  <button
+                    className={clsx(
+                      "text-cyan-800 hover:text-orange-500 cursor-pointer",
+                      {
+                        "text-orange-500":
+                          pathname.split("/")[2] ===
+                          APP_ROUTES.TUNA_ADMIN.QUAN_LY_PHIEU_XUAT_KHO.to.split(
+                            "/"
+                          )[2],
+                      }
+                    )}
+                    onClick={() => handleRedirect(quanLyPhieuXuatKho)}
+                  >
+                    <Tooltip
+                      title="Quản lý phiếu xuất kho"
+                      placement="right"
+                      arrow
+                      disableInteractive
+                    >
+                      <FaBox className="!w-8 !h-8" />
+                    </Tooltip>
+                  </button>
+                </Box>
+
+                <Box className="flex items-center justify-center p-[10px]">
+                  <button
+                    className={clsx(
+                      "text-cyan-800 hover:text-orange-500 cursor-pointer",
+                      {
+                        "text-orange-500":
+                          pathname.split("/")[2] ===
+                          APP_ROUTES.TUNA_ADMIN.QUAN_LY_TIEN_DO.to.split(
+                            "/"
+                          )[2],
+                      }
+                    )}
+                    onClick={() => handleRedirect(quanLyPhieuTienDo)}
+                  >
+                    <Tooltip
+                      title="Quản lý phiếu tiến độ"
+                      placement="right"
+                      arrow
+                      disableInteractive
+                    >
+                      <MdTimeline className="!w-8 !h-8" />
+                    </Tooltip>
+                  </button>
+                </Box>
+                <Box className="flex items-center justify-center p-[10px]">
+                  <button
+                    className={clsx(
+                      "text-cyan-800 hover:text-orange-500 cursor-pointer",
+                      {
+                        "text-orange-500":
+                          pathname.split("/")[2] ===
+                          APP_ROUTES.TUNA_ADMIN.QUAN_LY_PHIEU_THU.to.split(
+                            "/"
+                          )[2],
+                      }
+                    )}
+                    onClick={() => handleRedirect(quanLyPhieuThu)}
+                  >
+                    <Tooltip
+                      title="Quản lý phiếu thu"
+                      placement="right"
+                      arrow
+                      disableInteractive
+                    >
+                      <FaFileSignature className="!w-8 !h-8" />
                     </Tooltip>
                   </button>
                 </Box>

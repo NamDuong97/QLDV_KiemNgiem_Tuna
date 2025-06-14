@@ -7,7 +7,7 @@ import HeaderAdmin from "../../components/HeaderAdmin";
 
 export default function LayoutAdmin() {
   const [isMenuDashBoard, setIsMenuDashBoard] = useState(false);
-  const drawerWidth = isMenuDashBoard ? 290 : 80;
+  const drawerWidth = isMenuDashBoard ? 290 : 95;
   const path = useLocation();
 
   const isLoginForgot = ["/tuna/login", "/tuna/forgot-password"].includes(

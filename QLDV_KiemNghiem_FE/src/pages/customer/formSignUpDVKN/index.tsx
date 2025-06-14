@@ -20,24 +20,17 @@ import PopupThoatForm from "./components/PopupThoatForm";
 import clsx from "clsx";
 import { useQueryClient } from "@tanstack/react-query";
 import { image } from "../../../constants/image";
+import { useAuth } from "../../../configs/stores/auth";
 
 const dataHinhThucGuiTra = [
   { value: "Trực tiếp", label: "Trực tiếp" },
   { value: "Bưu điện", label: "Bưu điện" },
 ];
 
-const dataKhachHang = {
-  tenKH: "Công ty ABC",
-  tenNguoiDaiDien: "Nguyễn Nguyễn",
-  email: "abc@gmail.com",
-  soDienThoai: "0397426194",
-  diaChi: "78 ABC, phường 2, Quận Cam, TPHCM",
-};
-
 const FormSignUpDVKN = () => {
   const [openPopupNofitication, setOpenPopupNofitication] = useState(false);
   const [openPopupThoatForm, setOpenPopupThoatForm] = useState(false);
-
+  const { user, isLogin } = useAuth();
   const [isThongTinChung, setThongTinChung] = useState(true);
   const [isMaus, setIsMaus] = useState(false);
   const [isPLHCs, setIsPLHCs] = useState(false);
@@ -306,21 +299,27 @@ const FormSignUpDVKN = () => {
         KetQuaTiengAnh: data.ketQuaTiengAnh,
         NgayGiaoMau: data.ngayGiaoMau,
       });
-    } else if (dataKhachHang) {
+    } else if (user) {
       reset({
         ...defaultFormValues,
-        NguoiGuiMau: dataKhachHang.tenNguoiDaiDien,
-        DonViGuiMau: dataKhachHang.tenKH,
-        SoDienThoai: dataKhachHang.soDienThoai,
-        Email: dataKhachHang.email,
-        DiaChiLienHe: dataKhachHang.diaChi,
+        NguoiGuiMau: user.tenNguoiDaiDien,
+        DonViGuiMau: user.tenKh,
+        SoDienThoai: user.soDienThoai,
+        Email: user.email,
+        DiaChiLienHe: user.diaChi,
       });
     } else {
       reset(defaultFormValues);
     }
-  }, [reset, dataKhachHang, data]);
+  }, [reset, user, data]);
 
-  return (
+  // useEffect(() => {
+  //   if (!isLogin && user === null) {
+  //     navigate(APP_ROUTES.TUNA_CUSTOMER.HOME.to);
+  //   }
+  // }, [isLogin, user]);
+
+  return isLogin ? (
     <Box>
       <motion.div
         key="FormSignUpDVKN"
@@ -660,7 +659,7 @@ const FormSignUpDVKN = () => {
         handleClose={handleClosePopupThoatForm}
       />
     </Box>
-  );
+  ) : null;
 };
 
 export default FormSignUpDVKN;

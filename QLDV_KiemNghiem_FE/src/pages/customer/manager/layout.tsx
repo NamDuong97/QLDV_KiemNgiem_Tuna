@@ -13,7 +13,6 @@ export default function LayoutCustomerManager() {
   const [isSidebarMobile, setIsSidebarMobile] = useState(false);
   const [openSidebarMobile, setOpenSidebarMobile] = useState(false);
   const pathName = useLocation().pathname;
-  console.log("path", pathName);
 
   const handleIsOpenSidebarMobile = (newOpen: boolean) => () => {
     setOpenSidebarMobile(newOpen);

@@ -5,6 +5,7 @@ import { FaDoorOpen } from "react-icons/fa";
 import { RiBillLine } from "react-icons/ri";
 import { useNavigate } from "react-router";
 import { APP_ROUTES } from "../../../constants/routers";
+import { useAuth } from "../../../configs/stores/auth";
 
 interface AccountPopupProps {
   openAccountPopup: boolean;
@@ -17,6 +18,8 @@ const AccountPopup = (props: AccountPopupProps) => {
     props;
 
   const navigate = useNavigate();
+
+  const { user, logout } = useAuth();
 
   return (
     <Popover
@@ -41,7 +44,7 @@ const AccountPopup = (props: AccountPopupProps) => {
         <Box className="flex gap-2 items-center cursor-pointer rounded p-1">
           <RxAvatar className="w-6 h-6 sm:w-9 sm:h-9" />
           <p className="text-cyan-950 text-base/6 sm:text-xl/6 font-bold">
-            Nguyễn Văn A
+            {user?.tenNguoiDaiDien}
           </p>
         </Box>
         <hr className="text-gray-300" />
@@ -69,7 +72,10 @@ const AccountPopup = (props: AccountPopupProps) => {
             Quản lý hóa đơn
           </p>
         </Box>
-        <Box className="flex gap-2 items-center hover:bg-[rgb(230,236,246)] cursor-pointer rounded p-1">
+        <Box
+          onClick={logout}
+          className="flex gap-2 items-center hover:bg-[rgb(230,236,246)] cursor-pointer rounded p-1"
+        >
           <FaDoorOpen className="w-5 h-5 sm:w-6 sm:h-6 text-[#d2405d]" />
           <p className="text-[#d71a40] text-xs/6 sm:text-base/6 font-medium">
             Đăng Xuất
