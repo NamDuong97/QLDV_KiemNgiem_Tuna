@@ -53,11 +53,7 @@ app.MapControllers();
 if (app.Environment.IsDevelopment() || app.Environment.IsProduction())
 {
     app.UseSwagger();
-    app.UseSwaggerUI(c =>
-    {
-        c.SwaggerEndpoint("/swagger/v1/swagger.json", "QLDV_KiemNghiem API V1");
-        c.RoutePrefix = string.Empty; 
-    });
+    app.UseSwaggerUI();
 }
 
 app.Run();
