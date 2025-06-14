@@ -70,6 +70,28 @@ namespace QLDV_KiemNghiem_BE.Controllers
                 return BadRequest(ex.Message);
             }
         }
+      
+        [HttpGet]
+        [Route("getRefreshToken")]
+        public async Task<ActionResult> getRefreshToken( [FromBody] TokenDto tokenDto)
+        {
+            try
+            {
+                ResponseModel1<TokenDto> token = await _service.KhachHang.GetRefreshTokenForKhachHang(tokenDto);
+                if (token.KetQua)
+                {
+                    return Ok(token);
+                }
+                else
+                {
+                    return BadRequest(token);
+                }
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
 
         // Action này để sau khi người dùng tạo tk thành công, hệ thống sẽ gửi email để khách hàng bấm vào đường link và xác thực => gọi action này
         [HttpGet]
@@ -154,7 +176,7 @@ namespace QLDV_KiemNghiem_BE.Controllers
                 _logger.LogError("Loi validate tham so dau vao");
                 return BadRequest(new { Errors = errors });
             }
-            LoginResponse<KhachHangReturnClientDto> checkLogin = await _service.KhachHang.LoginKhachHangAsync(login);
+            LoginResponse checkLogin = await _service.KhachHang.LoginKhachHangAsync(login);
             if (checkLogin.KetQua)
             {
                 _logger.LogDebug(checkLogin.Message);

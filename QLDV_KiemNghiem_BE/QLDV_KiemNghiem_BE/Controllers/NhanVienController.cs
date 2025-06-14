@@ -53,6 +53,28 @@ namespace QLDV_KiemNghiem_BE.Controllers
         }
 
         [HttpGet]
+        [Route("getRefreshToken")]
+        public async Task<ActionResult> getRefreshToken([FromBody] TokenDto tokenDto)
+        {
+            try
+            {
+                ResponseModel1<TokenDto> token = await _service.NhanVien.GetRefreshTokenForNhanVien(tokenDto);
+                if (token.KetQua)
+                {
+                    return Ok(token);
+                }
+                else
+                {
+                    return BadRequest(token);
+                }
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpGet]
         [Route("getNhanVienAll")]
         public async Task<ActionResult> getNhanVienAll(NhanVienParam nhanVienParam)
         {

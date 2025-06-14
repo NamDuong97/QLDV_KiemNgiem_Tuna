@@ -93,6 +93,11 @@ public partial class NhanVien
     [Column(TypeName = "datetime")]
     public DateTime? NgayHetHanMatKhau { get; set; }
 
+    [StringLength(100)]
+    public string? RefreshToken { get; set; }
+
+    public DateTime? RefreshTokenExpiryTime { get; set; }
+
     [InverseProperty("ManvLapNavigation")]
     public virtual ICollection<HoaDonMuaPlhc> HoaDonMuaPlhcs { get; set; } = new List<HoaDonMuaPlhc>();
 

@@ -30,7 +30,7 @@ namespace QLDV_KiemNghiem_BE.Services
         public async Task<ResponseModel1<string>> LoginNhanVienAsync(LoginDto login)
         {
             // Kiểm tra email tồn tại
-            var nhanVien = await _repositoryManager.NhanVien.GetNhanVienByEmailAsync(login.Email, false);
+            var nhanVien = await _repositoryManager.NhanVien.GetNhanVienByEmailAsync(login.Email, true);
             if (nhanVien == null)
             {
                 return new ResponseModel1<string>
@@ -55,15 +55,23 @@ namespace QLDV_KiemNghiem_BE.Services
                 ID = nhanVien.MaId,
                 Email = nhanVien.EmailCaNhan,
                 Role = nhanVien.MaLoaiTk,
-                IsCustomer = false
             };
             string token = _tokenService.GenerateJwtToken(param);
+            string refreshToken = _tokenService.GenerateRefreshToken();
+            nhanVien.RefreshToken = refreshToken;
+            nhanVien.RefreshTokenExpiryTime = DateTime.Now.AddDays(7);
+            await _repositoryManager.SaveChangesAsync();
+
             return new ResponseModel1<string>
             {
                 KetQua = true,
                 Message = "Đăng nhập thành công",
                 Data = token
             };
+        }
+        public async Task<ResponseModel1<TokenDto>> GetRefreshTokenForNhanVien(TokenDto token)
+        {
+            return await _tokenService.RefreshToken(token);
         }
         public async Task<NhanVienDto?> FindNhanVienAsync(string maNhanVien)
         {

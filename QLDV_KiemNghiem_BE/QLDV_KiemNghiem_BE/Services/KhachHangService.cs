@@ -36,13 +36,13 @@ namespace QLDV_KiemNghiem_BE.Services
             var result = _mapper.Map<IEnumerable<KhachHangReturnDto>>(KhachHangDomains);
             return (datas: result, pagi: KhachHangDomains.Pagination);
         }
-        public async Task<LoginResponse<KhachHangReturnClientDto>> LoginKhachHangAsync(LoginDto login)
+        public async Task<LoginResponse> LoginKhachHangAsync(LoginDto login)
         {
             // Kiểm tra email tồn tại
-            var khachHang = await _repositoryManager.KhachHang.GetKhacHangByEmailAsync(login.Email, false);
+            var khachHang = await _repositoryManager.KhachHang.GetKhacHangByEmailAsync(login.Email, true);
             if (khachHang == null)
             {
-                return new LoginResponse<KhachHangReturnClientDto>
+                return new LoginResponse
                 {
                     KetQua = false,
                     Message = "Email không tồn tại, vui lòng kiểm tra lại!",
@@ -51,7 +51,7 @@ namespace QLDV_KiemNghiem_BE.Services
             // Kiểm tra pasword, tham số 1 là pass từ client gửi lên, tham số 2 là từ csdl lấy
             if(!BCrypt.Net.BCrypt.Verify(login.Password, khachHang.MatKhau))
             {
-                return new LoginResponse<KhachHangReturnClientDto>
+                return new LoginResponse
                 {
                     KetQua = false,
                     Message = "Mật khẩu không đúng, vui lòng kiểm tra lại!",
@@ -60,25 +60,36 @@ namespace QLDV_KiemNghiem_BE.Services
             // Kiểm tra tài khoản - email đã được verify xác minh chưa
             if (!khachHang.IsEmailVerify)
             {
-                return new LoginResponse<KhachHangReturnClientDto>
+                return new LoginResponse
                 {
                     KetQua = false,
                     Message = "Tài khoản chưa được xác minh email, vui lòng kiểm tra hộp thư email và xác minh",
                 };
             }
+
             TokenParam param = new TokenParam()
             {
                 ID = khachHang.MaId,
-                Email = khachHang.Email
+                Email = khachHang.Email,
+                Role = "KH"
             };
             string token = _tokenService.GenerateJwtToken(param);
-            return new LoginResponse<KhachHangReturnClientDto>
+            string refreshToken = _tokenService.GenerateRefreshToken();
+            khachHang.RefreshToken = refreshToken;
+            khachHang.RefreshTokenExpiryTime = DateTime.Now.AddDays(7);
+            await _repositoryManager.SaveChangesAsync();    
+
+            return new LoginResponse
             {
                 KetQua = true,
                 Message = "Đăng nhập thành công",
-                Data = _mapper.Map<KhachHangReturnClientDto>(khachHang),
-                Token = token
+                Token = token,
+                RefreshToken = refreshToken
             }; 
+        }
+        public async Task<ResponseModel1<TokenDto>> GetRefreshTokenForKhachHang(TokenDto token)
+        {
+            return  await _tokenService.RefreshToken(token);
         }
         public async Task<KhachHangDto?> FindKhachHangByNhanVienAsync(string maKhachHang)
         {

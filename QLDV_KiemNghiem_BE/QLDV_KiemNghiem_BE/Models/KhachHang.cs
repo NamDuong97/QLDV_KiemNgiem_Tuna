@@ -65,6 +65,11 @@ public partial class KhachHang
     [StringLength(200)]
     public string? TockenXacMinh { get; set; }
 
+    [StringLength(100)]
+    public string? RefreshToken { get; set; }
+ 
+    public DateTime? RefreshTokenExpiryTime { get; set; }
+
     [InverseProperty("MaKhNavigation")]
     public virtual ICollection<PhieuDangKy> PhieuDangKies { get; set; } = new List<PhieuDangKy>();
 
