@@ -1,5 +1,5 @@
 import _APIInstance from "../../configs/configAPI";
-import { API, EKey } from "../../constants/commons";
+import { API } from "../../constants/commons";
 
 export default class accessServices {
   static async loginKhachHang(params: any) {
@@ -26,16 +26,20 @@ export default class accessServices {
 
   static async getInforUser() {
     try {
-      const token = localStorage.getItem(EKey.TOKEN_GUEST);
-      if (!token) return null;
-      else {
-        const response = await _APIInstance.get(API.CUSTOMER.USER_INFO, {
-          headers: {
-            Authorization: `Bearer ${JSON.parse(token)}`,
-          },
-        });
-        return response.data?.data;
-      }
+      const response = await _APIInstance.get(API.CUSTOMER.USER_INFO);
+      return response.data?.data;
+    } catch (res: any) {
+      return res.response.data;
+    }
+  }
+
+  static async getRefreshToken(params: any) {
+    try {
+      const response = await _APIInstance.get(
+        API.CUSTOMER.REFRESH_TOKEN,
+        params
+      );
+      return response.data?.data;
     } catch (res: any) {
       return res.response.data;
     }

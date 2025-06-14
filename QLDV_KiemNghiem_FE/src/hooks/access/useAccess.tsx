@@ -2,6 +2,7 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { useStoreNotification } from "../../configs/stores/useStoreNotification";
 import accessServices from "../../services/customers/accessService";
 import { EKey } from "../../constants/commons";
+import Cookies from "js-cookie";
 
 interface Props {
   queryKey?: string;
@@ -53,11 +54,8 @@ export const useDangNhapKhachHang = (props: Props) => {
         });
       } else {
         showNotification({ message: "Đăng nhập thành công", status: 200 });
-        window.location.reload();
-        localStorage.setItem(
-          EKey.TOKEN_GUEST,
-          JSON.stringify(response.data.token)
-        );
+        Cookies.set(EKey.TOKEN_GUEST, response.data.token);
+        // window.location.reload();
       }
     },
     onError: (errors: any) => {
