@@ -99,7 +99,7 @@ namespace QLDV_KiemNghiem_BE.Extensions
                     ValidIssuer = jwtSettings["Issuer"],
                     ValidateAudience = true,
                     ValidAudience = jwtSettings["Audience"],
-                    ValidateLifetime = true, // ✅ Kiểm tra thời gian sống của token
+                    ValidateLifetime = true, //Kiểm tra thời gian sống của token
                     ClockSkew = TimeSpan.Zero
                 };
             });
