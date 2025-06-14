@@ -13,8 +13,8 @@ import NotificationsPopover from "../Popup/NotificationsPopover";
 import { IoHome } from "react-icons/io5";
 import { FaFileCirclePlus } from "react-icons/fa6";
 import clsx from "clsx";
-
-interface HeaderProps {}
+import { motion } from "motion/react";
+import { useAuth } from "../../configs/stores/auth";
 
 const dataMessages = [
   {
@@ -93,11 +93,9 @@ const StyledBadge = styled(Badge)(({ theme }) => ({
   },
 }));
 
-export default function HeaderCustomer(props: HeaderProps) {
-  const {} = props;
+export default function HeaderCustomer() {
+  const { isLogin, openLoginCustomer, setOpenLoginCustomer } = useAuth();
 
-  const isLogin = true;
-  const [openLoginCustomer, setOpenLoginCustomer] = useState(false);
   const handleOpenLoginCustomer = () => setOpenLoginCustomer(true);
   const handleCloseLoginCustomer = () => setOpenLoginCustomer(false);
   const [openMenu, setOpenMenu] = useState(false);
@@ -131,7 +129,13 @@ export default function HeaderCustomer(props: HeaderProps) {
   };
 
   return (
-    <header className={`flex justify-center w-full fixed z-99 pt-2 sm:pt-5`}>
+    <motion.header
+      initial={{ y: -10, opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
+      exit={{ y: 10, opacity: 0 }}
+      transition={{ duration: 0.5 }}
+      className={`flex justify-center w-full fixed z-99 pt-2 sm:pt-5`}
+    >
       <Box className="gap-6 sm:gap-10 border-[2px] border-gray-300 shadow-[0_4px_4px_rgba(0,0,0,0.25)] flex items-center bg-cyan-800 px-4 py-1 sm:px-10 sm:py-2 rounded-full">
         <Box>
           <Tooltip
@@ -265,7 +269,7 @@ export default function HeaderCustomer(props: HeaderProps) {
             dataMessages={dataMessages}
             openNotifications={openNotifications}
             handleCloseNotifications={handleCloseNotifications}
-            handleOpenLoginCustomer={handleOpenLoginCustomer}
+            handleOpenLoginCustomer={() => setOpenLoginCustomer(true)}
           />
         </Box>
         {isLogin ? (
@@ -307,7 +311,7 @@ export default function HeaderCustomer(props: HeaderProps) {
           </Box>
         ) : (
           <button
-            className="bg-blue-500 px-3 py-1 rounded cursor-pointer hover:bg-blue-600 shadow-[3px_3px_2px_rgba(0,0,0,0.4)]"
+            className="bg-cyan-800 border-[2px] border-gray-300 px-3 py-1 rounded cursor-pointer hover:bg-cyan-700 shadow-[3px_3px_2px_rgba(0,0,0,0.4)]"
             onClick={handleOpenLoginCustomer}
           >
             <span className="text-sm/4 font-bold text-amber-50">Đăng nhập</span>
@@ -368,6 +372,6 @@ export default function HeaderCustomer(props: HeaderProps) {
           </Box>
         </Box>
       </Drawer>
-    </header>
+    </motion.header>
   );
 }

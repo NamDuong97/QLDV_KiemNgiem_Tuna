@@ -99,7 +99,7 @@ const Maus = (props: MausProps) => {
         return (
           <Box className="sm:flex items-center overflow-x-auto whitespace-nowrap">
             <Box
-              className="w-full px-2 py-4 text-center cursor-pointer border-b-[2px] border-gray-300 group hover:bg-gray-200 hover:rounded-tr hover:rounded-tl"
+              className="w-full px-2 py-4 text-center cursor-pointer border-b-[2px] border-gray-300 group  hover:rounded-tr hover:rounded-tl"
               onClick={() => setisTag(1)}
             >
               <p className="text-lg/4 font-semibold capitalize text-gray-700 group-hover:text-cyan-700">
@@ -107,7 +107,7 @@ const Maus = (props: MausProps) => {
               </p>
             </Box>
             <Box
-              className="w-full px-2 py-4 text-center border-b-[2px] border-b-cyan-700 cursor-pointer hover:bg-gray-200 hover:rounded-tr hover:rounded-tl hover:transition-all hover:duration-200 hover:ease-in-out"
+              className="w-full px-2 py-4 text-center border-b-[2px] border-b-cyan-700 cursor-pointer hover:rounded-tr hover:rounded-tl hover:transition-all hover:duration-200 hover:ease-in-out bg-gray-100"
               onClick={() => setisTag(2)}
             >
               <p className="text-lg/4 font-semibold capitalize text-cyan-700">
@@ -120,7 +120,7 @@ const Maus = (props: MausProps) => {
         return (
           <Box className="sm:flex items-center overflow-x-auto whitespace-nowrap">
             <Box
-              className="w-full px-2 py-4 text-center border-b-[2px] border-b-cyan-700 cursor-pointer hover:bg-gray-200 hover:rounded-tr hover:rounded-tl hover:transition-all hover:duration-200 hover:ease-in-out"
+              className="w-full px-2 py-4 text-center border-b-[2px] border-b-cyan-700 cursor-pointer hover:rounded-tr hover:rounded-tl hover:transition-all hover:duration-200 hover:ease-in-out  bg-gray-100"
               onClick={() => setisTag(1)}
             >
               <p className="text-lg/4 font-semibold capitalize text-cyan-700">
@@ -128,7 +128,7 @@ const Maus = (props: MausProps) => {
               </p>
             </Box>
             <Box
-              className="w-full px-2 py-4 text-center border-b-[2px] border-gray-300 cursor-pointer group hover:bg-gray-200 hover:rounded-tr hover:rounded-tl"
+              className="w-full px-2 py-4 text-center border-b-[2px] border-gray-300 cursor-pointer group  hover:rounded-tr hover:rounded-tl"
               onClick={() => setisTag(2)}
             >
               <p className="text-lg/4 font-semibold capitalize text-gray-700 group-hover:text-cyan-700">
@@ -144,7 +144,13 @@ const Maus = (props: MausProps) => {
     switch (isTag as number) {
       case 2:
         return (
-          <div>
+          <motion.div
+            key={"tag2"}
+            initial={{ y: 10, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            exit={{ y: -10, opacity: 0 }}
+            transition={{ duration: 0.2 }}
+          >
             {listCheckbox.length > 0 && (
               <div className="flex items-center justify-end pt-4">
                 <button
@@ -190,22 +196,29 @@ const Maus = (props: MausProps) => {
                 />
               </Box>
             )}
-          </div>
+          </motion.div>
         );
-
       default:
         return (
-          <FormThongTinMau
-            handleRedirectDanhSachMau={() => setisTag(2)}
-            settableBody={settableBody}
-            dataEditMaus={dataEditMaus}
-            setDataEditMaus={setDataEditMaus}
-            dataCopyMaus={dataCopyMaus}
-            setDataCopyMaus={setDataCopyMaus}
-            tableBody={tableBody}
-            handleRedirectTag2={() => setisTag(2)}
-            setData={setData}
-          />
+          <motion.div
+            key={"tag1"}
+            initial={{ y: 10, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            exit={{ y: -10, opacity: 0 }}
+            transition={{ duration: 0.2 }}
+          >
+            <FormThongTinMau
+              handleRedirectDanhSachMau={() => setisTag(2)}
+              settableBody={settableBody}
+              dataEditMaus={dataEditMaus}
+              setDataEditMaus={setDataEditMaus}
+              dataCopyMaus={dataCopyMaus}
+              setDataCopyMaus={setDataCopyMaus}
+              tableBody={tableBody}
+              handleRedirectTag2={() => setisTag(2)}
+              setData={setData}
+            />
+          </motion.div>
         );
     }
   };

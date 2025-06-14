@@ -12,16 +12,27 @@ export const keyTag = {
 };
 
 export interface FormAccountCustomerLogin {
-  username: string;
+  email: string;
   password: string;
 }
 
 export interface FormAccountCustomerSignUp {
-  tenKH: string;
+  tenKh: string;
   email: string;
-  username: string;
-  password: string;
-  rePassword: string;
+  matKhau: string;
+  xacNhanMatKhau: string;
+  soDienThoai: string;
+  diaChi: string;
+  tenNguoiDaiDien: string;
+}
+
+export interface RequestCustomerSignUp {
+  tenKh: string;
+  email: string;
+  matKhau: string;
+  soDienThoai: string;
+  diaChi: string;
+  tenNguoiDaiDien: string;
 }
 
 export interface FormAccountCustomerRepassword {
