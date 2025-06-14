@@ -41,3 +41,4 @@ namespace QLDV_KiemNghiem_BE.DTO
         public DateTime? NgaySua { get; set; }
     }
 }
+//Trả về cho nhân viên trong viện

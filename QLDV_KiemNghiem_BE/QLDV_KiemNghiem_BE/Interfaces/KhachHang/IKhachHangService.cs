@@ -12,8 +12,9 @@ namespace QLDV_KiemNghiem_BE.Interfaces
         Task<KhachHangDto?> FindKhachHangByNhanVienAsync(string maKhachHang);
         Task<ResponseModel1<KhachHangReturnClientDto?>> FindKhachHangBySeflAsync(string maKhachHang);
         Task<KhachHangDto?> VerifyKhachHangByTokenAsync(string token);
+        Task<ResponseModel1<TokenDto>> GetRefreshTokenForKhachHang(TokenDto token);
         Task<ResponseModel1<string>> ForgetPasswordAsync(string email);
-        Task<LoginResponse<KhachHangReturnClientDto>> LoginKhachHangAsync(LoginDto login);
+        Task<LoginResponse> LoginKhachHangAsync(LoginDto login);
         Task<ResponseModel1<KhachHangDto>> CreateKhachHangAsync(KhachHangDto KhachHangDto);
         Task<ResponseModel1<KhachHangDto>> UpdateKhachHangAsync(KhachHangDto KhachHangDto);
         Task<bool> DeleteKhachHangAsync(KhachHang KhachHang);
