@@ -1,11 +1,13 @@
 ﻿using QLDV_KiemNghiem_BE.DTO;
 using QLDV_KiemNghiem_BE.Models;
+using QLDV_KiemNghiem_BE.RequestFeatures.PagingRequest;
+using QLDV_KiemNghiem_BE.Shared;
 
 namespace QLDV_KiemNghiem_BE.Interfaces
 {
     public interface IHoaDonThuRepository
     {
-        Task<IEnumerable<HoaDonThu>> GetHoaDonThusAllAsync();
+        Task<PagedList<HoaDonThu>> GetHoaDonThusAllAsync(HoaDonThuParam param, bool tracking);
         Task<IEnumerable<HoaDonThu>> GetHoaDonThuOfCustomer(string maKH);
         Task<decimal> GetToTalMoneyOfMau(string dmMau, string maTieuChuan, string maLoaiDichVu);
         Task<HoaDonThu?> FindHoaDonThuAsync(string maHoaDonThu, bool tracking);

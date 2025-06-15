@@ -7,6 +7,8 @@ using QLDV_KiemNghiem_BE.Interfaces;
 using QLDV_KiemNghiem_BE.Interfaces.ManagerInterface;
 using QLDV_KiemNghiem_BE.Models;
 using QLDV_KiemNghiem_BE.RequestFeatures;
+using QLDV_KiemNghiem_BE.RequestFeatures.PagingRequest;
+using QLDV_KiemNghiem_BE.Shared;
 
 namespace QLDV_KiemNghiem_BE.Services
 {
@@ -19,9 +21,9 @@ namespace QLDV_KiemNghiem_BE.Services
             _repositoryManager = repositoryManager;
             _mapper = mapper;
         }
-        public async Task<IEnumerable<HoaDonThuDto>> GetHoaDonThusAllAsync()
+        public async Task<(IEnumerable<HoaDonThuDto> datas, Pagination pagi)> GetHoaDonThusAllAsync(HoaDonThuParam param, bool tracking)
         {
-            var HoaDonThuDomains = await _repositoryManager.HoaDonThu.GetHoaDonThusAllAsync();
+            var HoaDonThuDomains = await _repositoryManager.HoaDonThu.GetHoaDonThusAllAsync(param, tracking);
             List<HoaDonThuDto> hoaDonThuDtos = new List<HoaDonThuDto>();
             foreach(var hoaDon in HoaDonThuDomains)
             {
@@ -42,7 +44,8 @@ namespace QLDV_KiemNghiem_BE.Services
 
                 hoaDonThuDtos.Add(hoaDonThuDto);
             }
-            return hoaDonThuDtos;
+
+            return (datas: hoaDonThuDtos, pagi: HoaDonThuDomains.Pagination);
         }
         public async Task<IEnumerable<HoaDonThuDto>>  GetHoaDonThuOfCustomer(string maKH)
         {
@@ -76,7 +79,7 @@ namespace QLDV_KiemNghiem_BE.Services
             var result = _mapper.Map<HoaDonThuDto>(HoaDonThuDomain);
             return result;
         }
-        public async Task<ResponseModel1<HoaDonThuDto>> CreateHoaDonThuByAsync(HoaDonThuDto hoaDonThuDto)
+        public async Task<ResponseModel1<HoaDonThuDto>> CreateHoaDonThuAsync(HoaDonThuDto hoaDonThuDto, string user)
         {
             if (hoaDonThuDto == null)
             {
@@ -88,8 +91,11 @@ namespace QLDV_KiemNghiem_BE.Services
                 };
             }
             var hoaDonThuDomain = _mapper.Map<HoaDonThu>(hoaDonThuDto);
+            hoaDonThuDomain.NgayTao = DateTime.Now;
+            hoaDonThuDomain.NguoiTao = user;
             _repositoryManager.HoaDonThu.UpdateHoaDonThuAsync(hoaDonThuDomain);
             bool check = await _repositoryManager.SaveChangesAsync();
+
             var hoaDonThuReturn = _mapper.Map<HoaDonThuDto>(hoaDonThuDomain);
             return new ResponseModel1<HoaDonThuDto>
             {
@@ -147,7 +153,7 @@ namespace QLDV_KiemNghiem_BE.Services
                 Data = hoaDonThuDto
             };
         }
-        public async Task<ResponseModel1<HoaDonThuDto>> UpdateHoaDonThuAsync(HoaDonThuDto hoaDonThuDto)
+        public async Task<ResponseModel1<HoaDonThuDto>> UpdateHoaDonThuAsync(HoaDonThuDto hoaDonThuDto, string user)
         {
             if (hoaDonThuDto == null || hoaDonThuDto.MaId==null || hoaDonThuDto.MaId == "")
             {
@@ -171,7 +177,7 @@ namespace QLDV_KiemNghiem_BE.Services
             else
             {
                 hoaDonThuDto.NgaySua = DateTime.Now;
-                hoaDonThuDto.NguoiSua = "admin";
+                hoaDonThuDto.NguoiSua = user;
                 _mapper.Map(hoaDonThuDto, checkHoaDonThu);
                 _repositoryManager.HoaDonThu.UpdateHoaDonThuAsync(checkHoaDonThu);
                 bool check = await _repositoryManager.SaveChangesAsync();
@@ -206,20 +212,35 @@ namespace QLDV_KiemNghiem_BE.Services
                 Data = hoaDonThuReturn
             };
         }
-        public async Task<bool> DeleteHoaDonThuAsync(HoaDonThu HoaDonThu)
+        public async Task<ResponseModel1<string>> DeleteHoaDonThuAsync(string maHoaDonThu, string user)
         {
-            if (HoaDonThu == null) return false;
-            else
+            if (maHoaDonThu == null || maHoaDonThu == "")                     
+             return new ResponseModel1<string>
+             {
+                KetQua = false,
+                Message = "Tham so dau vao null hoac rong, vui long kiem tra lai",
+             };
+           
+            var HoaDonThuDomain = await _repositoryManager.HoaDonThu.FindHoaDonThuAsync(maHoaDonThu, false);
+            if (HoaDonThuDomain == null)
             {
-                var HoaDonThuDomain = await _repositoryManager.HoaDonThu.FindHoaDonThuAsync(HoaDonThu.MaId, false);
-                if (HoaDonThuDomain == null)
+                return new ResponseModel1<string>
                 {
-                    return false;
-                }
-                _repositoryManager.HoaDonThu.DeleteHoaDonThuAsync(HoaDonThuDomain);
-                bool check = await _repositoryManager.SaveChangesAsync();
-                return check;
+                    KetQua = false,
+                    Message = "Du lieu can xoa khong ton tai, vui long kiem tra lai",
+                };
             }
+            HoaDonThuDomain.TrangThai = false;
+            HoaDonThuDomain.NguoiSua = user;
+            HoaDonThuDomain.NgaySua = DateTime.Now;
+
+            _repositoryManager.HoaDonThu.UpdateHoaDonThuAsync(HoaDonThuDomain);
+            bool check = await _repositoryManager.SaveChangesAsync();
+            return new ResponseModel1<string>
+            {
+                KetQua = true,
+                Message = "Xoa du lieu thanh cong",
+            };
         }
     }
 }

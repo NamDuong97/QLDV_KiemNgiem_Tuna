@@ -27,27 +27,25 @@ namespace QLDV_KiemNghiem_BE.Services
 
             return (datas: result, pagi: NhanVienDomains.Pagination);
         }
-        public async Task<ResponseModel1<string>> LoginNhanVienAsync(LoginDto login)
+        public async Task<LoginResponse> LoginNhanVienAsync(LoginDto login)
         {
             // Kiểm tra email tồn tại
             var nhanVien = await _repositoryManager.NhanVien.GetNhanVienByEmailAsync(login.Email, true);
             if (nhanVien == null)
             {
-                return new ResponseModel1<string>
+                return new LoginResponse
                 {
                     KetQua = false,
                     Message = "Email không tồn tại, vui lòng kiểm tra lại!",
-                    Data = null
                 };
             }
             // Kiểm tra pasword, tham số 1 là pass từ client gửi lên, tham số 2 là từ csdl lấy
             if (!BCrypt.Net.BCrypt.Verify(login.Password, nhanVien.MatKhau))
             {
-                return new ResponseModel1<string>
+                return new LoginResponse
                 {
                     KetQua = false,
                     Message = "Mật khẩu không đúng, vui lòng kiểm tra lại!",
-                    Data = null
                 };
             }
             TokenParam param = new TokenParam()
@@ -62,11 +60,12 @@ namespace QLDV_KiemNghiem_BE.Services
             nhanVien.RefreshTokenExpiryTime = DateTime.Now.AddDays(7);
             await _repositoryManager.SaveChangesAsync();
 
-            return new ResponseModel1<string>
+            return new LoginResponse
             {
                 KetQua = true,
                 Message = "Đăng nhập thành công",
-                Data = token
+                Token = token,
+                RefreshToken = refreshToken
             };
         }
         public async Task<ResponseModel1<TokenDto>> GetRefreshTokenForNhanVien(TokenDto token)

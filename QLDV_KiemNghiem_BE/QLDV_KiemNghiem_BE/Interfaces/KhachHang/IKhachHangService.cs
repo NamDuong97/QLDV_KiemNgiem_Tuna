@@ -16,7 +16,7 @@ namespace QLDV_KiemNghiem_BE.Interfaces
         Task<ResponseModel1<string>> ForgetPasswordAsync(string email);
         Task<LoginResponse> LoginKhachHangAsync(LoginDto login);
         Task<ResponseModel1<KhachHangDto>> CreateKhachHangAsync(KhachHangDto KhachHangDto);
-        Task<ResponseModel1<KhachHangDto>> UpdateKhachHangAsync(KhachHangDto KhachHangDto);
-        Task<bool> DeleteKhachHangAsync(KhachHang KhachHang);
+        Task<ResponseModel1<KhachHangDto>> UpdateKhachHangAsync(KhachHangRequestDto KhachHangDto, string user);
+        Task<bool> DeleteKhachHangAsync(string maKhachHang, string user);
     }
 }
