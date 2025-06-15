@@ -217,6 +217,7 @@ namespace QLDV_KiemNghiem_BE.Services
             var KhachHangDomain = _mapper.Map<KhachHang>(khachHangDto);
             KhachHangDomain.MaId = Guid.NewGuid().ToString();
             KhachHangDomain.MaKh = "KH_" + PublicFunction.getTimeSystem();
+            KhachHangDomain.NguoiTao = khachHangDto.Email;
             KhachHangDomain.NgayTao = DateTime.Now;
             KhachHangDomain.ThanThien = 0; // tài khoản mới tạo sẽ có thân thiện = 0
             KhachHangDomain.NgayHetHanMatKhau = DateTime.Now.AddMonths(3); // thời hạn của mật khẩu là 3 tháng
@@ -260,7 +261,7 @@ namespace QLDV_KiemNghiem_BE.Services
                 Data = KhachHangReturnDto
             };
         }
-        public async Task<ResponseModel1<KhachHangDto>> UpdateKhachHangAsync(KhachHangDto KhachHangDto)
+        public async Task<ResponseModel1<KhachHangDto>> UpdateKhachHangAsync(KhachHangRequestDto KhachHangDto, string user)
         {
             if (KhachHangDto == null || KhachHangDto.MaId == null || KhachHangDto.MaId == "") return new ResponseModel1<KhachHangDto>
             {
@@ -279,12 +280,17 @@ namespace QLDV_KiemNghiem_BE.Services
                     Data = null
                 };
             }
-            var KhachHangDomain = _mapper.Map<KhachHang>(KhachHangDto);
-            KhachHangDomain.NgaySua = DateTime.Now;
-            KhachHangDomain.NguoiSua = "admin";
-            _repositoryManager.KhachHang.UpdateKhachHangAsync(KhachHangDomain);
+            KhachHangCheck.NgaySua = DateTime.Now;
+            KhachHangCheck.NguoiSua = user;
+            // Mã hoá pasword
+            KhachHangDto.MatKhau = BCrypt.Net.BCrypt.HashPassword(KhachHangDto.MatKhau);
+            if(KhachHangCheck.MatKhau != KhachHangDto.MatKhau)
+                KhachHangCheck.NgaySuaMatKhau = DateTime.Now;
+
+            _mapper.Map(KhachHangDto, KhachHangCheck);
+            _repositoryManager.KhachHang.UpdateKhachHangAsync(KhachHangCheck);
             bool check = await _repositoryManager.SaveChangesAsync();
-            var KhachHangReturnDto = _mapper.Map<KhachHangDto>(KhachHangDomain);
+            var KhachHangReturnDto = _mapper.Map<KhachHangDto>(KhachHangCheck);
             return new ResponseModel1<KhachHangDto>
             {
                 KetQua = check,
@@ -292,17 +298,20 @@ namespace QLDV_KiemNghiem_BE.Services
                 Data = KhachHangReturnDto
             };
         }
-        public async Task<bool> DeleteKhachHangAsync(KhachHang KhachHang)
+        public async Task<bool> DeleteKhachHangAsync(string maKhachHang, string user)
         {
-            if (KhachHang == null) return false;
+            if (maKhachHang == null) return false;
             else
             {
-                var KhachHangDomain = await _repositoryManager.KhachHang.FindKhachHangAsync(KhachHang.MaId);
+                var KhachHangDomain = await _repositoryManager.KhachHang.FindKhachHangAsync(maKhachHang);
                 if (KhachHangDomain == null)
                 {
                     return false;
                 }
-                _repositoryManager.KhachHang.DeleteKhachHangAsync(KhachHangDomain);
+                KhachHangDomain.TrangThai = false;
+                KhachHangDomain.NgaySua = DateTime.Now;
+                KhachHangDomain.NguoiSua = user;
+                _repositoryManager.KhachHang.UpdateKhachHangAsync(KhachHangDomain);
                 bool check = await _repositoryManager.SaveChangesAsync();
                 return check;
             }

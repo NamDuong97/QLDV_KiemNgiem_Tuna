@@ -116,6 +116,13 @@ namespace QLDV_KiemNghiem_BE.Extensions
                 });
             });
         }
+        public static void ConfigureResponseCaching(this IServiceCollection services) =>services.AddResponseCaching();
+        public static void ConfigureRedisCaching(this IServiceCollection services, string configuration) 
+        => services.AddStackExchangeRedisCache(options =>
+        {
+                options.Configuration = configuration;
+                options.InstanceName = "MyApp:";
+        });
     }
 }
 
