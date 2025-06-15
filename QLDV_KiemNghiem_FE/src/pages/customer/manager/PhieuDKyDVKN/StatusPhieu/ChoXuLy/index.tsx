@@ -1,11 +1,11 @@
 import { Box, Pagination } from "@mui/material";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import TableChoXetDuyet from "./TableChoXetDuyet";
 import { Align } from "../../../../../../models/Table";
 import clsx from "clsx";
 import PopupHuyPhieu from "./PopupHuyPhieu";
 import { useGetPhieuDangKyKiemNghiemByTrangThaiArray } from "../../../../../../hooks/customers/usePhieuDKyDVKN";
-import { useAuth } from "../../../../../../configs/stores/auth";
+import { StoreContext } from "../../../../../../contexts/storeProvider";
 
 const tableHead = [
   {
@@ -54,7 +54,7 @@ const ChoXuLy = () => {
     setOpenPopupHuyPhieu(true);
   };
 
-  const { user } = useAuth();
+  const { user } = useContext(StoreContext);
 
   const dataChoTiepNhanXuLy = useGetPhieuDangKyKiemNghiemByTrangThaiArray({
     queryKey: "dataChoTiepNhanXuLy",

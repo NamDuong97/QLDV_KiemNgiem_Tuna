@@ -46,7 +46,7 @@ const LoginForm = (props: Props) => {
     await queryClient.invalidateQueries({
       queryKey: ["DangNhapKhachHang"],
     });
-    if (response.status === 200) {
+    if (response && response.status === 200) {
       handleCloseLoginCustomer?.();
       reset({ email: "", password: "" });
     }

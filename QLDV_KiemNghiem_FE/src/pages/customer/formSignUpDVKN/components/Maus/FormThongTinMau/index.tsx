@@ -1,5 +1,5 @@
 import { Box } from "@mui/material";
-import { Dispatch, useEffect, useMemo, useState } from "react";
+import { Dispatch, useContext, useEffect, useMemo, useState } from "react";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm, useWatch } from "react-hook-form";
 import ListImage from "./ListImage";
@@ -19,14 +19,7 @@ import {
 } from "../../../../../../hooks/customers/usePhieuDKyDVKN";
 import PopupThemTieuChuan from "./PopupThemTieuChuan";
 import InputSelectDonViTinhMau from "./InputSelectDonViTinhMau";
-
-const dataKhachHang = {
-  maKH: "KH001",
-  tenKH: "Công ty ABC",
-  email: "abc@gmail.com",
-  soDienThoai: "0397426194",
-  diaChi: "78 ABC, phường 2, Quận Cam, TPHCM",
-};
+import { StoreContext } from "../../../../../../contexts/storeProvider";
 
 interface FormThongTinMauProps {
   handleRedirectDanhSachMau: () => void;
@@ -97,6 +90,7 @@ const FormThongTinMau = (props: FormThongTinMauProps) => {
 
   const dataTest = sessionStorage.getItem("PhieuDangKy");
   const dataPhieuDangky = dataTest ? JSON.parse(dataTest) : null;
+  const { userInfo } = useContext(StoreContext);
 
   const [listImage, setListImage] = useState(() => {
     const dataImageTemp = sessionStorage.getItem("ImageTemp");
@@ -318,7 +312,6 @@ const FormThongTinMau = (props: FormThongTinMauProps) => {
     ).maId;
     const dataImage: any[] = [];
 
-    const maKh = dataKhachHang.maKH;
     data.phieuDangKyMauHinhAnhs.map((item) =>
       dataImage.push({
         maId: "",
@@ -329,7 +322,7 @@ const FormThongTinMau = (props: FormThongTinMauProps) => {
         ghiChu: "",
         loaiAnh: "",
         trangThai: "",
-        nguoiTao: maKh,
+        nguoiTao: userInfo?.maKh,
         nguoiSua: "",
         ngayTao: "",
         ngaySua: "",
@@ -357,7 +350,7 @@ const FormThongTinMau = (props: FormThongTinMauProps) => {
       xuatKetQua: data.xuatKetQua,
       trangThaiNhanMau: "",
       ghiChu: data.ghiChu,
-      nguoiTao: maKh,
+      nguoiTao: userInfo?.maKh,
       nguoiSua: "",
       ngayTao: "",
       ngaySua: "",
@@ -397,9 +390,8 @@ const FormThongTinMau = (props: FormThongTinMauProps) => {
     const maTieuChuan = dataTieuChuanAll.find(
       (item: any) => item.tenTieuChuan === data.tenTieuChuan
     ).maId;
-    const dataImage: any[] = [];
 
-    const maKh = dataKhachHang.maKH;
+    const dataImage: any[] = [];
     data.phieuDangKyMauHinhAnhs.map((item) =>
       dataImage.push({
         maId: "",
@@ -410,7 +402,7 @@ const FormThongTinMau = (props: FormThongTinMauProps) => {
         ghiChu: "",
         loaiAnh: "",
         trangThai: "",
-        nguoiTao: maKh,
+        nguoiTao: userInfo?.maKh,
         nguoiSua: "",
         ngayTao: "",
         ngaySua: "",
@@ -438,7 +430,7 @@ const FormThongTinMau = (props: FormThongTinMauProps) => {
       xuatKetQua: data.xuatKetQua,
       trangThaiNhanMau: "",
       ghiChu: data.ghiChu,
-      nguoiTao: maKh,
+      nguoiTao: userInfo?.maKh,
       nguoiSua: "",
       ngayTao: "",
       ngaySua: "",

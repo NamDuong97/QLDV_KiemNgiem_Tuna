@@ -1,6 +1,6 @@
 import { Box } from "@mui/material";
 import { motion } from "motion/react";
-import { useEffect, useMemo, useState } from "react";
+import { useContext, useEffect, useMemo, useState } from "react";
 import PopupNofitication from "./components/PopupNofitication";
 import Maus from "./components/Maus";
 import PhuLieuHoaChat from "./components/PhuLieuHoaChat";
@@ -20,7 +20,7 @@ import PopupThoatForm from "./components/PopupThoatForm";
 import clsx from "clsx";
 import { useQueryClient } from "@tanstack/react-query";
 import { image } from "../../../constants/image";
-import { useAuth } from "../../../configs/stores/auth";
+import { StoreContext } from "../../../contexts/storeProvider";
 
 const dataHinhThucGuiTra = [
   { value: "Trực tiếp", label: "Trực tiếp" },
@@ -30,7 +30,8 @@ const dataHinhThucGuiTra = [
 const FormSignUpDVKN = () => {
   const [openPopupNofitication, setOpenPopupNofitication] = useState(false);
   const [openPopupThoatForm, setOpenPopupThoatForm] = useState(false);
-  const { user, isLogin } = useAuth();
+  const { userInfo, isLogin, isLoadingAuth, setOpenLoginCustomer } =
+    useContext(StoreContext);
   const [isThongTinChung, setThongTinChung] = useState(true);
   const [isMaus, setIsMaus] = useState(false);
   const [isPLHCs, setIsPLHCs] = useState(false);
@@ -96,8 +97,6 @@ const FormSignUpDVKN = () => {
     mode: "onChange",
   });
 
-  console.log("errors", errors);
-
   const HinhThucTraKQ = useWatch({ control, name: "HinhThucTraKQ" });
   const handleClickOpenPopupNofitication = () => {
     setOpenPopupNofitication(true);
@@ -130,7 +129,7 @@ const FormSignUpDVKN = () => {
       const dataFinal = {
         ...data,
         maId: "",
-        maKh: "KH001",
+        maKh: userInfo?.maKh,
         manvNhanMau: "NV001",
         nguoiNhanMau: "Nguyễn Văn A",
         donViGuiMau: dataForm.DonViGuiMau,
@@ -227,7 +226,7 @@ const FormSignUpDVKN = () => {
     if (isThongTinChung) {
       const dataPhieuDKY: any = {
         maId: "",
-        maKh: "KH001",
+        maKh: userInfo?.maKh,
         manvNhanMau: "NV001",
         nguoiNhanMau: "Nguyễn Văn A",
         donViGuiMau: dataForm.DonViGuiMau,
@@ -249,7 +248,7 @@ const FormSignUpDVKN = () => {
     } else {
       const dataPhieuDKY: any = {
         maId: "",
-        maKh: "KH001",
+        maKh: userInfo?.maKh,
         manvNhanMau: "NV001",
         nguoiNhanMau: "Nguyễn Văn A",
         donViGuiMau: data.donViGuiMau,
@@ -267,6 +266,8 @@ const FormSignUpDVKN = () => {
         Maus: dataMaus,
         PhieuDangKyPhuLieuHoaChats: dataPLHC,
       };
+      console.log("dataPhieuDKY", dataPhieuDKY);
+
       mutate(dataPhieuDKY);
     }
 
@@ -299,25 +300,25 @@ const FormSignUpDVKN = () => {
         KetQuaTiengAnh: data.ketQuaTiengAnh,
         NgayGiaoMau: data.ngayGiaoMau,
       });
-    } else if (user) {
+    } else if (userInfo) {
       reset({
         ...defaultFormValues,
-        NguoiGuiMau: user.tenNguoiDaiDien,
-        DonViGuiMau: user.tenKh,
-        SoDienThoai: user.soDienThoai,
-        Email: user.email,
-        DiaChiLienHe: user.diaChi,
+        NguoiGuiMau: userInfo.tenNguoiDaiDien,
+        DonViGuiMau: userInfo.tenKh,
+        SoDienThoai: userInfo.soDienThoai,
+        Email: userInfo.email,
+        DiaChiLienHe: userInfo.diaChi,
       });
     } else {
       reset(defaultFormValues);
     }
-  }, [reset, user, data]);
+  }, [reset, userInfo, data]);
 
-  // useEffect(() => {
-  //   if (!isLogin && user === null) {
-  //     navigate(APP_ROUTES.TUNA_CUSTOMER.HOME.to);
-  //   }
-  // }, [isLogin, user]);
+  useEffect(() => {
+    if (!isLogin && !isLoadingAuth) {
+      setOpenLoginCustomer(true);
+    }
+  }, [isLogin, isLoadingAuth]);
 
   return isLogin ? (
     <Box>

@@ -2,7 +2,7 @@ import { Box, Pagination } from "@mui/material";
 import { motion } from "motion/react";
 import { Align } from "../../../../../models/Table";
 import TablePLHC from "./TablePLHC";
-import { Dispatch, useEffect, useMemo, useState } from "react";
+import { Dispatch, useContext, useEffect, useMemo, useState } from "react";
 import yup from "../../../../../configs/yup.custom";
 import { FormPhuLieuHoaChat } from "../../../../../models/PhuLieuHoaChat";
 import { useForm, useWatch } from "react-hook-form";
@@ -18,6 +18,7 @@ import InputSelectDonViTinhPLHC from "./InputSelectDonViTinhPLHC";
 import { DonViTinh } from "../Maus/FormThongTinMau";
 import InputSelectDonViNongDo from "./InputSelectDonViNongDo";
 import { useQueryClient } from "@tanstack/react-query";
+import { StoreContext } from "../../../../../contexts/storeProvider";
 
 interface PhuLieuHoaChatProps {
   setData: Dispatch<any>;
@@ -65,6 +66,7 @@ const tableHead = [
 const PhuLieuHoaChat = (props: PhuLieuHoaChatProps) => {
   const { setData } = props;
 
+  const { userInfo } = useContext(StoreContext);
   const dataTest = sessionStorage.getItem("PhieuDangKy");
   const dataPhieuDangky = dataTest ? JSON.parse(dataTest) : null;
   const [isTag, setisTag] = useState(1);
@@ -258,7 +260,7 @@ const PhuLieuHoaChat = (props: PhuLieuHoaChatProps) => {
       donViNongDo: data.DonViNongDo,
       dieuKienBaoQuan: data.DieuKienBaoQuan,
       soLo: data.SoLo,
-      nguoiTao: "KH001",
+      nguoiTao: userInfo?.maKh,
       nguoiSua: "",
       ngayTao: "",
       ngaySua: "",
@@ -301,7 +303,7 @@ const PhuLieuHoaChat = (props: PhuLieuHoaChatProps) => {
       donViNongDo: data.DonViNongDo,
       dieuKienBaoQuan: data.DieuKienBaoQuan,
       soLo: data.SoLo,
-      nguoiTao: "KH001",
+      nguoiTao: userInfo?.maKh,
       nguoiSua: "",
       ngayTao: "",
       ngaySua: "",

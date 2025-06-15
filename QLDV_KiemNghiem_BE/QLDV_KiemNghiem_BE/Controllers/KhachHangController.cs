@@ -71,9 +71,9 @@ namespace QLDV_KiemNghiem_BE.Controllers
             }
         }
       
-        [HttpGet]
+        [HttpPost]
         [Route("getRefreshToken")]
-        public async Task<ActionResult> getRefreshToken( [FromBody] TokenDto tokenDto)
+        public async Task<ActionResult> getRefreshToken( TokenDto tokenDto)
         {
             try
             {

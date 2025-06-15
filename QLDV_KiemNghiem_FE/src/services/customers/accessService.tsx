@@ -1,3 +1,4 @@
+import axios from "axios";
 import _APIInstance from "../../configs/configAPI";
 import { API } from "../../constants/commons";
 
@@ -8,8 +9,8 @@ export default class accessServices {
         headers: { "Content-Type": "application/json" },
       });
       return response;
-    } catch (res) {
-      return res;
+    } catch (err: any) {
+      return err;
     }
   }
 
@@ -27,17 +28,22 @@ export default class accessServices {
   static async getInforUser() {
     try {
       const response = await _APIInstance.get(API.CUSTOMER.USER_INFO);
-      return response.data?.data;
+      return response;
     } catch (res: any) {
-      return res.response.data;
+      return res;
     }
   }
 
   static async getRefreshToken(params: any) {
     try {
-      const response = await _APIInstance.get(
+      const response = await _APIInstance.post(
         API.CUSTOMER.REFRESH_TOKEN,
-        params
+        params,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
       );
       return response.data?.data;
     } catch (res: any) {

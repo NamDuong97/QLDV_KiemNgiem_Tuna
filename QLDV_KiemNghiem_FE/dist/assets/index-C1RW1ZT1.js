@@ -1,0 +1,1 @@
+import{h as e,Y as a}from"./index-BRn6aJwf.js";const m=()=>e.jsxDEV("img",{src:a.imageBanner,alt:"imageBannerPage"},void 0,!1,{fileName:"D:/Study/DATN/FE/QLDV_KiemNgiem_Tuna/QLDV_KiemNghiem_FE/src/pages/admin/dashboard/index.tsx",lineNumber:4,columnNumber:10},void 0);export{m as default};
