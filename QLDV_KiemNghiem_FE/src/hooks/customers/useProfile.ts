@@ -1,6 +1,6 @@
 import { useMutation } from "@tanstack/react-query";
 import profileServices from "../../services/customers/profile";
-import { useStoreNotification } from "../../configs/stores/useStoreNotification";
+// import { useStoreNotification } from "../../configs/stores/useStoreNotification";
 
 interface Props {
   queryKey: string;
@@ -8,9 +8,9 @@ interface Props {
 
 export const updateInfor = (props: Props) => {
   const { queryKey } = props;
-  const showNotification = useStoreNotification(
-    (state: any) => state.showNotification
-  );
+  // const showNotification = useStoreNotification(
+  //   (state: any) => state.showNotification
+  // );
   return useMutation({
     mutationKey: [queryKey],
     mutationFn: async (params: any) => {
