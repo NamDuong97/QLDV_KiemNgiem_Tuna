@@ -16,6 +16,7 @@ const PopupNofitication = (props: Props) => {
 
   const handleRedirectManagerPhieuDKy = () => {
     navigate(APP_ROUTES.TUNA_CUSTOMER.PHIEU_DKY_DVKN.to);
+    sessionStorage.removeItem("PhieuDangKy");
   };
 
   const handleCloseNofitication = () => {

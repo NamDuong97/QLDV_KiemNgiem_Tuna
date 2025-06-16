@@ -224,17 +224,11 @@ const Maus = (props: MausProps) => {
   };
 
   return (
-    <motion.div
-      key="form-signup-maus"
-      initial={{ x: 0, opacity: 0 }}
-      animate={{ x: 0, opacity: 1 }}
-      exit={{ x: 0, opacity: 0 }}
-      transition={{ duration: 0.3 }}
-      className="border border-gray-300 rounded-br-[6px] rounded-bl-[6px] py-4 px-4 sm:px-10"
+    <div
     >
       {handleTagMau()}
       {handleShowTagMau()}
-    </motion.div>
+    </div>
   );
 };
 

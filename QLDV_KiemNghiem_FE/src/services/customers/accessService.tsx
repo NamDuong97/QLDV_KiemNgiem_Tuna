@@ -1,5 +1,5 @@
 import _APIInstance from "../../configs/configAPI";
-import { API, EKey } from "../../constants/commons";
+import { API } from "../../constants/commons";
 
 export default class accessServices {
   static async loginKhachHang(params: any) {
@@ -8,8 +8,8 @@ export default class accessServices {
         headers: { "Content-Type": "application/json" },
       });
       return response;
-    } catch (res) {
-      return res;
+    } catch (err: any) {
+      return err;
     }
   }
 
@@ -19,23 +19,32 @@ export default class accessServices {
         headers: { "Content-Type": "application/json" },
       });
       return response;
-    } catch (res) {
-      return res;
+    } catch (err: any) {
+      return err;
     }
   }
 
   static async getInforUser() {
     try {
-      const token = localStorage.getItem(EKey.TOKEN_GUEST);
-      if (!token) return null;
-      else {
-        const response = await _APIInstance.get(API.CUSTOMER.USER_INFO, {
+      const response = await _APIInstance.get(API.CUSTOMER.USER_INFO);
+      return response;
+    } catch (res: any) {
+      return res;
+    }
+  }
+
+  static async getRefreshToken(params: any) {
+    try {
+      const response = await _APIInstance.post(
+        API.CUSTOMER.REFRESH_TOKEN,
+        params,
+        {
           headers: {
-            Authorization: `Bearer ${JSON.parse(token)}`,
+            "Content-Type": "application/json",
           },
-        });
-        return response.data?.data;
-      }
+        }
+      );
+      return response.data?.data;
     } catch (res: any) {
       return res.response.data;
     }

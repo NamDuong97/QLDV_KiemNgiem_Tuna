@@ -1,5 +1,4 @@
 import { Box, Dialog } from "@mui/material";
-import { IoMdClose } from "react-icons/io";
 import { FormThemMauVaoDanhMuc } from "../../../../../../../../../models/PhieuDangKy";
 import { useForm } from "react-hook-form";
 import { useEffect, useMemo } from "react";
@@ -32,21 +31,22 @@ const PopupThemMau = (props: Props) => {
     return yup.object().shape({
       tenMau: yup
         .string()
-        .required("Yêu cầu nhập Tên Mẫu")
-        .max(200, "Tên Mẫu nhập không quá 200 ký tự")
-        .test("Trùng tên mẫu", "Tên mẫu đã tồn tại", (value) => {
-          if (!value) return true;
-          const trimmedValue = value.trim().toLowerCase();
+        .test("Trùng tên mẫu", "Tên mẫu đã tồn tại", (value: any) => {
+          if (!value) return true; // tránh lỗi khi value null
+          console.log("dataDmMauAll dataDmMauAll", dataDmMauAll);
 
-          const isTrungLap = dataDmMauAll.find(
-            (item: any) => item.tenMau?.trim().toLowerCase() === trimmedValue
+          const isTrungLap = dataDmMauAll?.find(
+            (item: any) =>
+              item.tenMau?.trim().toLowerCase() === value.trim().toLowerCase()
           );
 
           return !isTrungLap;
-        }),
+        })
+        .required("Yêu cầu nhập Tên Mẫu")
+        .max(200, "Tên Mẫu nhập không quá 200 ký tự"),
       maID: yup.string().required("Yêu cầu chọn Loại mẫu"),
     });
-  }, []);
+  }, [dataDmMauAll]);
 
   const {
     register,
@@ -129,19 +129,17 @@ const PopupThemMau = (props: Props) => {
         },
       }}
     >
-      <Box className="lg:w-[400px]">
-        <Box className="px-4 py-4 border-b border-solid border-gray-300 flex justify-between items-center">
-          <Box className="text-center flex-1 pl-[34px]">
-            <p className="text-gray-80 font-bold text-2xl/6 flex gap-2 justify-center">
-              Thêm Mẫu <GiTestTubes className="w-6 h-6 text-cyan-700" />
+      <Box className="w-auto sm:w-[600px]">
+        <Box className="px-4 pt-8 text-center">
+          <Box className="grid gap-2">
+            <Box className="flex justify-center">
+              <GiTestTubes className="w-10 h-10 sm:w-[70px] sm:h-[70px] text-cyan-700" />
+            </Box>
+
+            <p className="text-gray-80 font-bold text-xl/4 sm:text-[28px]/6">
+              Thêm Mẫu
             </p>
           </Box>
-          <button
-            onClick={handleClosePopup}
-            className="p-1 rounded-full group hover:bg-blue-200"
-          >
-            <IoMdClose className="text-gray-500 group-hover:text-blue-800" />
-          </button>
         </Box>
         <form
           onSubmit={handleSubmit(handleThem)}
@@ -170,8 +168,15 @@ const PopupThemMau = (props: Props) => {
               placeholder="Yêu cầu chọn Loại Mẫu"
             />
           </Box>
-          <Box>
-            <button className="w-full flex justify-center border border-solid border-blue-500 rounded-md px-3 py-[6px] text-blue-500 font-bold text-base/6 gap-2 cursor-pointer hover:bg-blue-500 hover:text-white">
+          <Box className="flex gap-6 justify-center">
+            <button
+              type="button"
+              onClick={handleClosePopup}
+              className="flex justify-center border border-solid border-indigo-600 rounded-md px-12 py-[6px] text-indigo-600 font-bold text-base/6 gap-2 cursor-pointer hover:bg-indigo-600 hover:text-white"
+            >
+              Tắt
+            </button>
+            <button className="flex justify-center border border-solid border-cyan-700 rounded-md px-10 py-[6px] text-cyan-700 font-bold text-base/6 gap-2 cursor-pointer hover:bg-cyan-700 hover:text-white">
               Thêm
             </button>
           </Box>

@@ -23,8 +23,8 @@ const SignUpForm = (props: Props) => {
     return yup.object().shape({
       tenKh: yup
         .string()
-        .required("Yêu cầu nhập Tên khách hàng")
-        .max(200, "Tên khách hàng nhập phải dưới 200 ký tự"),
+        .required("Yêu cầu nhập Tên đơn vị")
+        .max(200, "Tên đơn vị nhập phải dưới 200 ký tự"),
       tenNguoiDaiDien: yup
         .string()
         .required("Yêu cầu nhập Tên người đại diện")
@@ -36,7 +36,7 @@ const SignUpForm = (props: Props) => {
         .max(50, "Email nhập phải dưới 50 ký tự"),
       soDienThoai: yup
         .string()
-        .required("Yêu cầu nhập số điện thoại")
+        .required("Yêu cầu nhập Số điện thoại")
         .test(
           "Bắt đầu bằng số 0",
           "Số điện thoại nhập phải bắt đầu bằng số 0",
@@ -44,7 +44,7 @@ const SignUpForm = (props: Props) => {
             return value?.startsWith("0");
           }
         )
-        .max(12, "Số điện thoại nhập phải dưới 12 ký tự")
+        .max(12, "Số điện thoại nhập tối đa 12 ký tự")
         .min(8, "Số điện thoại nhập phải trên 8 ký tự"),
       matKhau: yup
         .string()

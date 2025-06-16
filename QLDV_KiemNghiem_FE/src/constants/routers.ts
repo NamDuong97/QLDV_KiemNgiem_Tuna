@@ -179,6 +179,10 @@ export const APP_ROUTES = {
       to: "/chi-tiet-phieu-dang-ky-dich-vu-kiem-nghiem",
       title: "Trang sửa phiếu đăng ký dịch vụ kiểm nghiệm",
     },
+    PROFILE: {
+      to: "/trang-ca-nhan",
+      title: "Trang cá nhân",
+    },
     QUAN_LY_HOA_DON: {
       to: "/quan-ly-hoa-don",
       title: "Quản lý hóa đơn",

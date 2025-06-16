@@ -32,7 +32,7 @@ namespace QLDV_KiemNghiem_BE.Services
         }
         public async Task<ResponseModel1<TieuChuanDto>> CreateTieuChuanAsync(TieuChuanRequestCreateDto tieuChuanDto, string user)
         {
-            if (tieuChuanDto == null  ||tieuChuanDto.TenTieuChuan == null || tieuChuanDto.TenTieuChuan == "") 
+            if (tieuChuanDto == null || tieuChuanDto.TenTieuChuan == null || tieuChuanDto.TenTieuChuan == "") 
             return new ResponseModel1<TieuChuanDto>
             {
                 KetQua = false,

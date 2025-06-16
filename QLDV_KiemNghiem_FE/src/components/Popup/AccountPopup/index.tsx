@@ -5,7 +5,8 @@ import { FaDoorOpen } from "react-icons/fa";
 import { RiBillLine } from "react-icons/ri";
 import { useNavigate } from "react-router";
 import { APP_ROUTES } from "../../../constants/routers";
-import { useAuth } from "../../../configs/stores/auth";
+import { useContext } from "react";
+import { StoreContext } from "../../../contexts/storeProvider";
 
 interface AccountPopupProps {
   openAccountPopup: boolean;
@@ -19,7 +20,7 @@ const AccountPopup = (props: AccountPopupProps) => {
 
   const navigate = useNavigate();
 
-  const { user, logout } = useAuth();
+  const { userInfo, logout } = useContext(StoreContext);
 
   return (
     <Popover
@@ -41,10 +42,16 @@ const AccountPopup = (props: AccountPopupProps) => {
       }}
     >
       <Box className="bg-white border-[1px] border-gray-100 shadow-[0px_4px_4px_rgba(0, 0, 0, 0.25)] rounded-lg px-2 py-3 w-[200px] sm:w-[300px] grid gap-1">
-        <Box className="flex gap-2 items-center cursor-pointer rounded p-1">
+        <Box
+          onClick={() => {
+            navigate(APP_ROUTES.TUNA_CUSTOMER.PROFILE.to);
+            handleCloseAccountPopup?.();
+          }}
+          className="flex gap-2 items-center cursor-pointer rounded p-1 hover:bg-[rgb(230,236,246)]"
+        >
           <RxAvatar className="w-6 h-6 sm:w-9 sm:h-9" />
           <p className="text-cyan-950 text-base/6 sm:text-xl/6 font-bold">
-            {user?.tenNguoiDaiDien}
+            {userInfo?.tenNguoiDaiDien}
           </p>
         </Box>
         <hr className="text-gray-300" />

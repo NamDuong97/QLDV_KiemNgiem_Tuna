@@ -1,6 +1,6 @@
 import { Box } from "@mui/material";
 import { motion } from "motion/react";
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { FormAccountCustomerLogin } from "../../../../models/Account-Customer";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -17,6 +17,9 @@ interface Props {
 
 const LoginForm = (props: Props) => {
   const { btnSignUp, btnRepassword, handleCloseLoginCustomer } = props;
+
+  const [count, setCount] = useState(0);
+  const [disabled, setDisabled] = useState(false);
 
   let schemaLogin = useMemo(() => {
     return yup.object().shape({
@@ -46,11 +49,14 @@ const LoginForm = (props: Props) => {
     await queryClient.invalidateQueries({
       queryKey: ["DangNhapKhachHang"],
     });
-    if (response.status === 200) {
+    if (response && response.status === 200) {
       handleCloseLoginCustomer?.();
       reset({ email: "", password: "" });
+    } else {
+      setCount(count + 1);
     }
   };
+  console.log("count", count);
 
   const { mutate } = useDangNhapKhachHang({
     queryKey: "DangNhapKhachHang",
@@ -60,6 +66,16 @@ const LoginForm = (props: Props) => {
   const LoginSubmit = (data: FormAccountCustomerLogin) => {
     mutate(data);
   };
+  useEffect(() => {
+    if (count === 3) {
+      setDisabled(true);
+      const timer = setTimeout(() => {
+        setDisabled(false);
+        setCount(0);
+      }, 30000);
+      return () => clearTimeout(timer);
+    }
+  }, [count]);
 
   useEffect(() => {
     reset({ email: "", password: "" });
@@ -107,16 +123,25 @@ const LoginForm = (props: Props) => {
                   errorMessage={errors.password?.message}
                 />
 
-                <p
-                  className="text-end text-base/6 font-medium text-gray-500 hover:underline cursor-pointer"
-                  onClick={btnRepassword}
-                >
-                  Quên mật khẩu?
-                </p>
+                <div className="flex justify-end">
+                  <p
+                    className="text-end text-base/6 font-medium text-gray-500 hover:underline cursor-pointer"
+                    onClick={btnRepassword}
+                  >
+                    Quên mật khẩu?
+                  </p>
+                </div>
               </Box>
             </Box>
             <Box>
-              <button className="font-bold text-center w-full bg-blue-500 py-2 text-white rounded-md hover:bg-blue-400 cursor-pointer">
+              <button
+                disabled={disabled}
+                className={`font-bold text-center w-full  py-2 text-white rounded-md  ${
+                  disabled
+                    ? "cursor-no-drop bg-blue-400"
+                    : "cursor-pointer bg-blue-500 hover:bg-blue-400"
+                }`}
+              >
                 Đăng nhập
               </button>
             </Box>

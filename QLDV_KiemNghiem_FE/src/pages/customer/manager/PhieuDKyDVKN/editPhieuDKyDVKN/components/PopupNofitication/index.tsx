@@ -4,6 +4,8 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useUpdatePhieuDangKy } from "../../../../../../../hooks/customers/usePhieuDKyDVKN";
 import { IoMdNotifications } from "react-icons/io";
 import { useStoreNotification } from "../../../../../../../configs/stores/useStoreNotification";
+import { useNavigate } from "react-router";
+import { APP_ROUTES } from "../../../../../../../constants/routers";
 
 interface Props {
   openPopupNofitication: boolean;
@@ -13,7 +15,7 @@ interface Props {
 const PopupNofitication = (props: Props) => {
   const { openPopupNofitication, handleClosePopupNofitication } = props;
 
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
   const showNotification = useStoreNotification(
     (state: any) => state.showNotification
   );
@@ -34,13 +36,13 @@ const PopupNofitication = (props: Props) => {
   const { mutate } = useUpdatePhieuDangKy({
     queryKey: "UpdatePhieuDangKy",
     onSettled: handleOnSettled,
-    onSuccess: (response) => {
-      if (response.status === 200) {
-        showNotification({
-          message: "Cập nhật thành công",
-          status: 200,
-        });
-      }
+    onSuccess: () => {
+      showNotification({
+        message: "Cập nhật thành công",
+        status: 200,
+      });
+      navigate(APP_ROUTES.TUNA_CUSTOMER.PHIEU_DKY_DVKN.to);
+      sessionStorage.removeItem("sua-phieuDky");
     },
     onError: (errors) => {
       if (errors) {
@@ -50,11 +52,7 @@ const PopupNofitication = (props: Props) => {
   });
 
   const handleRedirectManagerPhieuDKy = () => {
-    console.log("adsa", data);
-
     mutate(data);
-    // navigate(APP_ROUTES.TUNA_CUSTOMER.PHIEU_DKY_DVKN.to);
-    // sessionStorage.removeItem("sua-phieuDky");
   };
   return (
     <Dialog

@@ -2,7 +2,7 @@ import { Box, Pagination } from "@mui/material";
 import { motion } from "motion/react";
 import { Align } from "../../../../../../../models/Table";
 import TablePLHC from "./TablePLHC";
-import { Dispatch, useEffect, useMemo, useState } from "react";
+import { Dispatch, useContext, useEffect, useMemo, useState } from "react";
 import yup from "../../../../../../../configs/yup.custom";
 import { FormPhuLieuHoaChat } from "../../../../../../../models/PhuLieuHoaChat";
 import { useForm, useWatch } from "react-hook-form";
@@ -18,6 +18,7 @@ import InputSelectDonViTinhPLHC from "./InputSelectDonViTinhPLHC";
 import { DonViTinh } from "../Maus/FormThongTinMau";
 import InputSelectDonViNongDo from "./InputSelectDonViNongDo";
 import { useQueryClient } from "@tanstack/react-query";
+import { StoreContext } from "../../../../../../../contexts/storeProvider";
 
 interface PhuLieuHoaChatProps {
   setData: Dispatch<any>;
@@ -49,9 +50,15 @@ const tableHead = [
     align: Align.Center,
   },
   {
-    id: "tenNhaCungCap",
+    id: "DieuKienBaoQuan",
     sort: false,
-    label: "Tên Nhà Cung Cấp ",
+    label: "Điều kiện bảo quản",
+    align: Align.Center,
+  },
+  {
+    id: "chucNang",
+    sort: false,
+    label: "Chức Năng",
     align: Align.Center,
   },
 ];
@@ -59,6 +66,7 @@ const tableHead = [
 const PhuLieuHoaChat = (props: PhuLieuHoaChatProps) => {
   const { setData } = props;
 
+  const { userInfo } = useContext(StoreContext);
   const dataTest = sessionStorage.getItem("sua-phieuDky");
   const dataPhieuDangky = dataTest ? JSON.parse(dataTest) : null;
   const [isTag, setisTag] = useState(1);
@@ -69,6 +77,7 @@ const PhuLieuHoaChat = (props: PhuLieuHoaChatProps) => {
 
   const [listCheckbox, setListCheckbox] = useState<any[]>([]);
   const [dataEditPLHC, setDataEditPLHC] = useState<any>();
+  const [dataCopyPLHC, setDataCopyPLHC] = useState<any>();
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(5);
 
@@ -153,7 +162,8 @@ const PhuLieuHoaChat = (props: PhuLieuHoaChatProps) => {
         .number()
         .typeError("Yêu cầu nhập Số lượng")
         .required("Yêu cầu nhập Số lượng")
-        .min(1, "Số lượng nhập phải lớn hơn 0"),
+        .max(100, "Số lượng nhập phải nhỏ hơn hoặc bằng 100")
+        .min(0, "Yêu cầu nhập số nguyên lớn hơn 0"),
       DonViTinh: yup
         .string()
         .required("Yêu cầu nhập Đơn vị tính")
@@ -217,14 +227,13 @@ const PhuLieuHoaChat = (props: PhuLieuHoaChatProps) => {
 
   const createPLHC = (data: FormPhuLieuHoaChat) => {
     const maplhc = dataDM_PhuLieuHoaChat.find(
-      (item: any) => item.tenDmPlhc === data.TenDM_PLHC
+      (item: any) => item.maDmPlhc === data?.TenDM_PLHC
     ).maId;
     const datatest = dataDM_PhuLieuHoaChat.some(
       (item: any) =>
         item.tenHienThi?.trim().toLowerCase() ===
         data.TenHienThi?.trim().toLowerCase()
     );
-
     if (!datatest) {
       mutate({
         tenDmPlhc: data.TenDM_PLHC,
@@ -251,11 +260,10 @@ const PhuLieuHoaChat = (props: PhuLieuHoaChatProps) => {
       donViNongDo: data.DonViNongDo,
       dieuKienBaoQuan: data.DieuKienBaoQuan,
       soLo: data.SoLo,
-      nguoiTao: "KH001",
+      nguoiTao: userInfo?.maKh,
       nguoiSua: "",
       ngayTao: "",
       ngaySua: "",
-      isdel: false,
     };
 
     const PhieuDangKy = {
@@ -267,24 +275,24 @@ const PhuLieuHoaChat = (props: PhuLieuHoaChatProps) => {
     };
     setData(PhieuDangKy);
     settableBody(PhieuDangKy.phieuDangKyPhuLieuHoaChats);
+    setDataCopyPLHC(null);
     sessionStorage.setItem("sua-phieuDky", JSON.stringify(PhieuDangKy));
     setisTag(2);
   };
 
   const editPLHC = (data: FormPhuLieuHoaChat) => {
-    const index = dataPhieuDangky?.phieuDangKyPhuLieuHoaChats.findIndex(
-      (item: any) => item.maId === dataEditPLHC?.maId
+    const index = dataPhieuDangky?.PLHC.findIndex(
+      (item: any) => item.TenPLHC === dataEditPLHC?.TenPLHC
     );
 
-    const updatedPLHC = [...dataPhieuDangky?.phieuDangKyPhuLieuHoaChats];
-
+    const updatedPLHC = [...dataPhieuDangky?.PLHC];
     const maplhc = dataDM_PhuLieuHoaChat.find(
-      (item: any) => item.maDmPlhc === data.TenDM_PLHC
+      (item: any) => item.tenDmPlhc === data.TenDM_PLHC
     ).maId;
 
     const dataPLHC = {
-      maId: dataEditPLHC?.maId,
-      maPhieuDangKy: dataEditPLHC?.maPhieuDangKy,
+      maId: "",
+      maPhieuDangKy: "",
       maPlhc: maplhc,
       tenPlhc: data.TenPLHC,
       tenHienThi: data.TenHienThi,
@@ -297,11 +305,11 @@ const PhuLieuHoaChat = (props: PhuLieuHoaChatProps) => {
       donViNongDo: data.DonViNongDo,
       dieuKienBaoQuan: data.DieuKienBaoQuan,
       soLo: data.SoLo,
-      nguoiTao: dataEditPLHC?.nguoiTao,
-      nguoiSua: dataEditPLHC?.nguoiSua,
-      ngayTao: dataEditPLHC?.ngayTao,
-      ngaySua: dataEditPLHC?.ngaySua,
-      isdel: false,
+      nguoiTao: userInfo?.maKh,
+      nguoiSua: "",
+      ngayTao: "",
+      ngaySua: "",
+      isDel: false,
     };
 
     if (index !== -1) {
@@ -314,7 +322,6 @@ const PhuLieuHoaChat = (props: PhuLieuHoaChatProps) => {
       ...dataPhieuDangky,
       phieuDangKyPhuLieuHoaChats: updatedPLHC,
     };
-
     setData(updatedPhieuDangky);
     setDataEditPLHC(null);
     settableBody(updatedPhieuDangky.phieuDangKyPhuLieuHoaChats);
@@ -322,35 +329,134 @@ const PhuLieuHoaChat = (props: PhuLieuHoaChatProps) => {
     setisTag(2);
   };
 
-  const handlePageChange = (event: any, value: number) => {
-    console.log("event", event);
-
+  const handlePageChange = (_: any, value: number) => {
     setCurrentPage(value);
   };
 
+  const pushIfNotExist = (arr: any[], item: any) => {
+    const exists = arr.some((x) => x.tenPlhc === item.tenPlhc);
+    if (!exists) {
+      arr.push(item);
+    }
+  };
+
   const handleXoaPLHC = () => {
-    const dataGop = tableBody.map((item: any) => {
-      const isInCheckbox = listCheckbox.some(
+    const data = tableBody.filter((item: any) => {
+      return listCheckbox.some(
         (subitem: any) => subitem.tenPlhc === item.tenPlhc
       );
-      return {
-        ...item,
-        ...(isInCheckbox && { isdel: true }),
-      };
     });
+    const dataNotRemove = tableBody.filter((item: any) => {
+      return !listCheckbox.some(
+        (subitem: any) => subitem.tenPlhc === item.tenPlhc
+      );
+    });
+    let dataFinal: any = [];
 
+    data.map((item: any) => {
+      if (item.isDel !== undefined && item.isDel !== null) {
+        pushIfNotExist(dataFinal, {
+          maId: item.maId,
+          maPhieuDangKy: item.maPhieuDangKy,
+          maPlhc: item.maPlhc,
+          tenPlhc: item.tenPlhc,
+          tenHienThi: item.tenHienThi,
+          soLuong: item.soLuong,
+          donViTinh: item.donViTinh,
+          ghiChu: item.ghiChu,
+          ngayHetHan: item.ngayHetHan,
+          tenNhaCungCap: item.tenNhaCungCap,
+          nongDo: item.nongDo,
+          donViNongDo: item.donViNongDo,
+          dieuKienBaoQuan: item.dieuKienBaoQuan,
+          soLo: item.soLo,
+          nguoiTao: item.nguoiTao,
+          nguoiSua: item.nguoiSua,
+          ngayTao: item.ngayTao,
+          ngaySua: item.ngaySua,
+          isDel: true,
+        });
+
+        dataNotRemove.map((item: any) =>
+          item.isDel !== undefined && item.isDel !== null
+            ? pushIfNotExist(dataFinal, {
+                maId: item.maId,
+                maPhieuDangKy: item.maPhieuDangKy,
+                maPlhc: item.maPlhc,
+                tenPlhc: item.tenPlhc,
+                tenHienThi: item.tenHienThi,
+                soLuong: item.soLuong,
+                donViTinh: item.donViTinh,
+                ghiChu: item.ghiChu,
+                ngayHetHan: item.ngayHetHan,
+                tenNhaCungCap: item.tenNhaCungCap,
+                nongDo: item.nongDo,
+                donViNongDo: item.donViNongDo,
+                dieuKienBaoQuan: item.dieuKienBaoQuan,
+                soLo: item.soLo,
+                nguoiTao: item.nguoiTao,
+                nguoiSua: item.nguoiSua,
+                ngayTao: item.ngayTao,
+                ngaySua: item.ngaySua,
+                isDel: item.isDel,
+              })
+            : pushIfNotExist(dataFinal, {
+                maId: item.maId,
+                maPhieuDangKy: item.maPhieuDangKy,
+                maPlhc: item.maPlhc,
+                tenPlhc: item.tenPlhc,
+                tenHienThi: item.tenHienThi,
+                soLuong: item.soLuong,
+                donViTinh: item.donViTinh,
+                ghiChu: item.ghiChu,
+                ngayHetHan: item.ngayHetHan,
+                tenNhaCungCap: item.tenNhaCungCap,
+                nongDo: item.nongDo,
+                donViNongDo: item.donViNongDo,
+                dieuKienBaoQuan: item.dieuKienBaoQuan,
+                soLo: item.soLo,
+                nguoiTao: item.nguoiTao,
+                nguoiSua: item.nguoiSua,
+                ngayTao: item.ngayTao,
+                ngaySua: item.ngaySua,
+              })
+        );
+      } else {
+        dataNotRemove.map((item: any) =>
+          pushIfNotExist(dataFinal, {
+            maId: item.maId,
+            maPhieuDangKy: item.maPhieuDangKy,
+            maPlhc: item.maPlhc,
+            tenPlhc: item.tenPlhc,
+            tenHienThi: item.tenHienThi,
+            soLuong: item.soLuong,
+            donViTinh: item.donViTinh,
+            ghiChu: item.ghiChu,
+            ngayHetHan: item.ngayHetHan,
+            tenNhaCungCap: item.tenNhaCungCap,
+            nongDo: item.nongDo,
+            donViNongDo: item.donViNongDo,
+            dieuKienBaoQuan: item.dieuKienBaoQuan,
+            soLo: item.soLo,
+            nguoiTao: item.nguoiTao,
+            nguoiSua: item.nguoiSua,
+            ngayTao: item.ngayTao,
+            ngaySua: item.ngaySua,
+            isDel: item.isDel,
+          })
+        );
+      }
+    });
     const dataTest = sessionStorage.getItem("sua-phieuDky");
     const dataPhieuDangky = dataTest ? JSON.parse(dataTest) : null;
     const PhieuDangKy = {
       ...dataPhieuDangky,
-      phieuDangKyPhuLieuHoaChats: dataGop,
+      phieuDangKyPhuLieuHoaChats: dataFinal,
     };
-
-    console.log("PhieuDangKyPhieuDangKy", PhieuDangKy);
     setData(PhieuDangKy);
     sessionStorage.setItem("sua-phieuDky", JSON.stringify(PhieuDangKy));
 
-    settableBody(dataGop);
+    settableBody(dataFinal);
     setListCheckbox([]);
   };
 
@@ -424,6 +530,8 @@ const PhuLieuHoaChat = (props: PhuLieuHoaChatProps) => {
                 tableBody={currentItems}
                 setDataEditPLHC={setDataEditPLHC}
                 dataEditPLHC={dataEditPLHC}
+                setDataCopyPLHC={setDataCopyPLHC}
+                dataCopyPLHC={dataCopyPLHC}
                 handleRedirectTag1={() => setisTag(1)}
               />
             </Box>
@@ -452,28 +560,8 @@ const PhuLieuHoaChat = (props: PhuLieuHoaChatProps) => {
 
       default:
         return (
-          <Box className="py-4">
+          <Box className="pt-4">
             <form autoComplete="off" className="grid gap-4">
-              <Box className="gap-5 sm:gap-0 flex flex-wrap-reverse sm:flex-nowrap justify-end items-center">
-                {dataEditPLHC ? (
-                  <button
-                    type="button"
-                    onClick={handleSubmit(editPLHC)}
-                    className="text-lg/6 font-bold text-center border border-solid border-yellow-500 text-yellow-500 px-4 py-1 lg:px-10 lg:py-2 hover:text-white rounded-md hover:bg-yellow-500 cursor-pointer"
-                  >
-                    Sửa
-                  </button>
-                ) : (
-                  <button
-                    type="button"
-                    onClick={handleSubmit(createPLHC)}
-                    className="text-lg/6 font-bold text-center border border-solid border-blue-500 text-blue-500 px-4 py-1 lg:px-10 lg:py-2 hover:text-white rounded-md hover:bg-blue-500 cursor-pointer"
-                  >
-                    Thêm
-                  </button>
-                )}
-              </Box>
-              <hr className="text-gray-300" />
               <Box className="grid grid-cols-12 gap-1 lg:gap-[0px_24px]">
                 <Box className="col-span-12 md:col-span-6 lg:col-span-4">
                   <InputSelectDM_PLHC
@@ -635,6 +723,26 @@ const PhuLieuHoaChat = (props: PhuLieuHoaChatProps) => {
                   />
                 </Box>
               </Box>
+              <hr className="text-gray-300" />
+              <Box className="gap-5 sm:gap-0 flex flex-wrap-reverse sm:flex-nowrap justify-end items-center">
+                {dataEditPLHC ? (
+                  <button
+                    type="button"
+                    onClick={handleSubmit(editPLHC)}
+                    className="w-full text-lg/6 font-bold text-center bg-yellow-500 text-white border-[2px] border-solid border-gray-300 px-10 py-2 rounded-md hover:bg-yellow-600 cursor-pointer shadow-[0_4px_4px_rgba(0,0,0,0.25)]"
+                  >
+                    Sửa
+                  </button>
+                ) : (
+                  <button
+                    type="button"
+                    onClick={handleSubmit(createPLHC)}
+                    className="w-full text-lg/6 font-bold text-center bg-cyan-800 text-white border-[2px] border-solid border-gray-300 px-10 py-2 rounded-md hover:bg-cyan-700 cursor-pointer shadow-[0_4px_4px_rgba(0,0,0,0.25)]"
+                  >
+                    Thêm
+                  </button>
+                )}
+              </Box>
             </form>
           </Box>
         );
@@ -642,23 +750,27 @@ const PhuLieuHoaChat = (props: PhuLieuHoaChatProps) => {
   };
 
   useEffect(() => {
-    if (dataEditPLHC) {
+    if (dataEditPLHC || dataCopyPLHC) {
       const tenDmPlhc = dataDM_PhuLieuHoaChat.find(
-        (item: any) => item.maId === dataEditPLHC.maPlhc
+        (item: any) =>
+          item.maId === dataEditPLHC?.maPlhc ||
+          item.maId === dataCopyPLHC?.maPlhc
       ).tenDmPlhc;
       reset({
         TenDM_PLHC: tenDmPlhc,
-        TenPLHC: dataEditPLHC?.tenPlhc,
-        TenHienThi: dataEditPLHC?.tenHienThi,
-        SoLuong: dataEditPLHC?.soLuong,
-        DonViTinh: dataEditPLHC?.donViTinh,
-        SoLo: dataEditPLHC?.soLo,
-        TenNhaCungCap: dataEditPLHC?.tenNhaCungCap,
-        NongDo: dataEditPLHC?.nongDo,
-        DonViNongDo: dataEditPLHC?.donViNongDo,
-        NgayHetHan: dataEditPLHC?.ngayHetHan?.split("T")[0],
-        DieuKienBaoQuan: dataEditPLHC?.dieuKienBaoQuan,
-        GhiChu: dataEditPLHC?.ghiChu,
+        TenPLHC: dataEditPLHC?.tenPlhc || dataCopyPLHC?.tenPlhc,
+        TenHienThi: dataEditPLHC?.tenHienThi || dataCopyPLHC?.tenHienThi,
+        SoLuong: dataEditPLHC?.soLuong || dataCopyPLHC?.soLuong,
+        DonViTinh: dataEditPLHC?.donViTinh || dataCopyPLHC?.donViTinh,
+        SoLo: dataEditPLHC?.soLo || dataCopyPLHC?.soLo,
+        TenNhaCungCap:
+          dataEditPLHC?.tenNhaCungCap || dataCopyPLHC?.tenNhaCungCap,
+        NongDo: dataEditPLHC?.nongDo || dataCopyPLHC?.nongDo,
+        DonViNongDo: dataEditPLHC?.donViNongDo || dataCopyPLHC?.donViNongDo,
+        NgayHetHan: dataEditPLHC?.ngayHetHan || dataCopyPLHC?.ngayHetHan,
+        DieuKienBaoQuan:
+          dataEditPLHC?.dieuKienBaoQuan || dataCopyPLHC?.dieuKienBaoQuan,
+        GhiChu: dataEditPLHC?.ghiChu || dataCopyPLHC?.ghiChu,
       });
     } else
       reset({
@@ -675,7 +787,7 @@ const PhuLieuHoaChat = (props: PhuLieuHoaChatProps) => {
         DieuKienBaoQuan: "",
         GhiChu: "",
       });
-  }, [tableBody, dataEditPLHC]);
+  }, [tableBody, dataEditPLHC, dataCopyPLHC]);
 
   useEffect(() => {
     if (TenDM_PLHC) {
@@ -708,7 +820,7 @@ const PhuLieuHoaChat = (props: PhuLieuHoaChatProps) => {
       initial={{ x: 0, opacity: 0 }}
       animate={{ x: 0, opacity: 1 }}
       exit={{ x: 0, opacity: 0 }}
-      transition={{ duration: 0.7 }}
+      transition={{ duration: 0.3 }}
       className="border border-gray-300 rounded-br-[6px] rounded-bl-[6px] py-4 px-4 sm:px-12"
     >
       {handleTagPLHC()}

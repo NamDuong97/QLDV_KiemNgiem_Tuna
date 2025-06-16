@@ -1,7 +1,11 @@
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import { useStoreNotification } from "../../configs/stores/useStoreNotification";
 import accessServices from "../../services/customers/accessService";
 import { EKey } from "../../constants/commons";
+import Cookies from "js-cookie";
+import { useContext } from "react";
+import { StoreContext } from "../../contexts/storeProvider";
+import { isProd } from "../../utils/env";
 
 interface Props {
   queryKey?: string;
@@ -39,43 +43,44 @@ export const useDangNhapKhachHang = (props: Props) => {
   const showNotification = useStoreNotification(
     (state: any) => state.showNotification
   );
+  const { setToken, setOpenLoginCustomer } = useContext(StoreContext);
   return useMutation({
     mutationKey: [queryKey],
     mutationFn: async (params: any) => {
       const response = await accessServices.loginKhachHang(params);
       return response;
     },
-    onSuccess: (response: any) => {
-      if (response.status !== 200) {
+    onSuccess: (res: any) => {
+      const { status, response } = res;
+      if (status !== 200) {
         showNotification({
-          message: `${response.response.data.message}`,
-          status: response.response.status,
+          message:
+            response?.data?.message || "Email không tồn tại hoặc sai mật khẩu",
+          status: status,
         });
+        return;
       } else {
         showNotification({ message: "Đăng nhập thành công", status: 200 });
-        window.location.reload();
-        localStorage.setItem(
-          EKey.TOKEN_GUEST,
-          JSON.stringify(response.data.token)
-        );
+        const { token, refreshToken } = res.data;
+
+        Cookies.set(EKey.TOKEN_GUEST, token, {
+          expires: 2,
+          sameSite: "Strict",
+          secure: isProd(),
+        });
+        Cookies.set(EKey.REFRESH_TOKEN_GUEST, refreshToken, {
+          expires: 2,
+          sameSite: "Strict",
+          secure: isProd(),
+        });
+        setToken(token);
+        setOpenLoginCustomer(false);
       }
     },
     onError: (errors: any) => {
-      console.log("errors", errors);
+      return errors;
     },
     onSettled: onSettled,
-  });
-};
-
-export const getInfoUser = (props: Props) => {
-  const { queryKey } = props;
-  return useQuery({
-    queryKey: [queryKey],
-    queryFn: async () => {
-      const response = await accessServices.getInforUser();
-      return response;
-    },
-    staleTime: Infinity,
   });
 };
 
@@ -96,7 +101,7 @@ export const useQuenMatKhau = (props: Props) => {
           message: `${response.response.data}`,
           status: response.response.status,
         });
-      } else showNotification({ message: response.data.data, status: 200 });
+      } else return response;
     },
     onError: (errors: any) => {
       console.log("errors", errors);

@@ -1,9 +1,9 @@
 import { Box, Pagination } from "@mui/material";
 import TableDangKiemNghiem from "./TableDangKiemNghiem";
 import { Align } from "../../../../../../models/Table";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { useGetPhieuDangKyKiemNghiemByTrangThaiArray } from "../../../../../../hooks/customers/usePhieuDKyDVKN";
-import { useAuth } from "../../../../../../configs/stores/auth";
+import { StoreContext } from "../../../../../../contexts/storeProvider";
 
 interface Props {}
 
@@ -48,10 +48,10 @@ const tableHead = [
 
 const DangKiemNghiem = (props: Props) => {
   const {} = props;
-  const { user } = useAuth();
+  const { userInfo } = useContext(StoreContext);
   const dataDangKiemNghiem = useGetPhieuDangKyKiemNghiemByTrangThaiArray({
     queryKey: "dataDangKiemNghiem",
-    maKH: user?.maKh,
+    maKH: userInfo?.maId,
     trangThaiIDs: ["TT07", "TT11"],
   });
 

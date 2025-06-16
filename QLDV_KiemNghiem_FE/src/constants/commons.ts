@@ -19,10 +19,13 @@ export const API = {
     },
     UPDATE_PHIEU_DANG_KY: "/api/phieudangky/updatePhieuDangKy",
     HUY_PHIEU_DANG_KY: "/api/phieudangky/deletePhieuDangKy",
-    DANG_NHAP: "/api/khachhang/loginKhachHang",
+    DANG_NHAP: "/api/KhachHang/loginKhachHang",
     DANG_KY: "/api/khachhang/createKhachHang",
     USER_INFO: "/api/khachhang/getInfoKhachHang",
     QUEN_MAT_KHAU: "/api/khachhang/forgetPassword",
+    REFRESH_TOKEN: "/api/khachhang/getRefreshToken",
+    UPDATE_INFOR: "/api/khachhang/updateKhachHang",
+    DOI_MAT_KHAU: "/api/khachhang/updateKhachHang",
   },
 };
 
@@ -31,5 +34,7 @@ export const REFRESH_TOKEN = "REFRESH_TOKEN_APP";
 
 export enum EKey {
   TOKEN = "token",
+  REFRESH_TOKEN = "refresh_token",
   TOKEN_GUEST = "token_guest",
+  REFRESH_TOKEN_GUEST = "refresh_token_guest",
 }

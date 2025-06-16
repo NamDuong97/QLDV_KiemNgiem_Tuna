@@ -14,8 +14,11 @@ const QuanLyHoaDon = lazy(
 const EditPhieuDKyDVKN = lazy(
   () => import("../pages/customer/manager/PhieuDKyDVKN/editPhieuDKyDVKN")
 );
-import Redirect from "./redirect";
 import XacMinhEmail from "../pages/xacminhEmail";
+import RedirectCustomer from "./redirectCustomer";
+
+const ProfileCustomer = lazy(() => import("../pages/customer/manager/Profile"));
+
 const ShowPhieuDKyDVKN = lazy(
   () => import("../pages/customer/manager/PhieuDKyDVKN/showPhieuDKyDVKN")
 );
@@ -509,13 +512,24 @@ const Routers = () => {
         {/* ==== Customer Routes ====*/}
         <Route element={<LayoutCustomer />}>
           <Route path={APP_ROUTES.TUNA_CUSTOMER.HOME.to} element={<Home />} />
+
           <Route
             path={APP_ROUTES.TUNA_CUSTOMER.FORM_SIGN_UP_DVKN.to}
             element={<FormSignUpDVKN />}
           />
 
           {/* Customer Manager Pages */}
-          <Route element={<LayoutCustomerManager />}>
+          <Route
+            element={
+              <RedirectCustomer pathRedirect={APP_ROUTES.TUNA_CUSTOMER.HOME.to}>
+                <LayoutCustomerManager />
+              </RedirectCustomer>
+            }
+          >
+            <Route
+              path={APP_ROUTES.TUNA_CUSTOMER.PROFILE.to}
+              element={<ProfileCustomer />}
+            />
             <Route
               path={APP_ROUTES.TUNA_CUSTOMER.PHIEU_DKY_DVKN.to}
               element={<PhieuDKyDVKN />}
@@ -528,17 +542,21 @@ const Routers = () => {
           <Route
             path={APP_ROUTES.TUNA_CUSTOMER.EDIT_PHIEU_DKY_DVKN.to}
             element={
-              <Redirect path={APP_ROUTES.TUNA_CUSTOMER.PHIEU_DKY_DVKN.to}>
+              <RedirectCustomer
+                pathRedirect={APP_ROUTES.TUNA_CUSTOMER.PHIEU_DKY_DVKN.to}
+              >
                 <EditPhieuDKyDVKN />
-              </Redirect>
+              </RedirectCustomer>
             }
           />
           <Route
             path={APP_ROUTES.TUNA_CUSTOMER.SHOW_PHIEU_DKY_DVKN.to}
             element={
-              <Redirect path={APP_ROUTES.TUNA_CUSTOMER.PHIEU_DKY_DVKN.to}>
+              <RedirectCustomer
+                pathRedirect={APP_ROUTES.TUNA_CUSTOMER.PHIEU_DKY_DVKN.to}
+              >
                 <ShowPhieuDKyDVKN />
-              </Redirect>
+              </RedirectCustomer>
             }
           />
           <Route
