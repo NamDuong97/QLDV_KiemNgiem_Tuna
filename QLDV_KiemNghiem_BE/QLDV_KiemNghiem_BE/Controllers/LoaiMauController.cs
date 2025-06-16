@@ -1,9 +1,13 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using QLDV_KiemNghiem_BE.DTO;
+using Microsoft.Extensions.Logging;
+using QLDV_KiemNghiem_BE.DTO.RequestDto;
+using QLDV_KiemNghiem_BE.DTO.ResponseDto;
 using QLDV_KiemNghiem_BE.Interfaces.ManagerInterface;
 using QLDV_KiemNghiem_BE.Models;
+using QLDV_KiemNghiem_BE.RequestFeatures;
+using System.Security.Claims;
 
 namespace QLDV_KiemNghiem_BE.Controllers
 {
@@ -41,7 +45,7 @@ namespace QLDV_KiemNghiem_BE.Controllers
 
         [HttpPost]
         [Route("createLoaiMau")]
-        public async Task<ActionResult> createLoaiMau(LoaiMauDto LoaiMauDto)
+        public async Task<ActionResult> createLoaiMau(LoaiMauRequestCreateDto LoaiMauDto)
         {
             if (!ModelState.IsValid)
             {
@@ -52,22 +56,23 @@ namespace QLDV_KiemNghiem_BE.Controllers
                 _logger.LogError("Loi validate tham so dau vao");
                 return BadRequest(new { Errors = errors });
             }
-            bool create = await _service.LoaiMau.CreateLoaiMauAsync(LoaiMauDto);
-            if (create)
+            var user = User.FindFirst(ClaimTypes.NameIdentifier)?.Value.ToString();
+            ResponseModel1<LoaiMauDto> create = await _service.LoaiMau.CreateLoaiMauAsync(LoaiMauDto, user);
+            if (create.KetQua)
             {
-                _logger.LogDebug("Tao loai mau thanh cong");
-                return Ok(LoaiMauDto);
+                _logger.LogDebug(create.Message);
+                return Ok(create);
             }
             else
             {
-                _logger.LogDebug("Tao loai mau that bai");
-                return BadRequest();
+                _logger.LogDebug(create.Message);
+                return BadRequest(create);
             }
         }
 
         [HttpPut]
         [Route("updateLoaiMau")]
-        public async Task<ActionResult> updateLoaiMau(LoaiMauDto LoaiMauDto)
+        public async Task<ActionResult> updateLoaiMau(LoaiMauRequestUpdateDto LoaiMauDto)
         {
             if (!ModelState.IsValid)
             {
@@ -78,42 +83,34 @@ namespace QLDV_KiemNghiem_BE.Controllers
                 _logger.LogError("Loi validate tham so dau vao");
                 return BadRequest(new { Errors = errors });
             }
-            bool update = await _service.LoaiMau.UpdateLoaiMauAsync(LoaiMauDto);
-            if (update)
+            var user = User.FindFirst(ClaimTypes.NameIdentifier)?.Value.ToString();
+            ResponseModel1<LoaiMauDto> update = await _service.LoaiMau.UpdateLoaiMauAsync(LoaiMauDto, user);
+            if (update.KetQua)
             {
-                _logger.LogDebug("Cap nhat loai mau thanh cong");
-                return Ok(LoaiMauDto);
+                _logger.LogDebug(update.Message);
+                return Ok(update);
             }
             else
             {
-                _logger.LogDebug("Cap nhat loai mau that bai");
-                return BadRequest();
+                _logger.LogDebug(update.Message);
+                return BadRequest(update);
             }
         }
 
         [HttpDelete]
         [Route("deleteLoaiMau")]
-        public async Task<ActionResult> deleteLoaiMau(LoaiMau LoaiMau)
+        public async Task<ActionResult> deleteLoaiMau(string maLoaiMau)
         {
-            var checkExists = await _service.LoaiMau.FindLoaiMauAsync(LoaiMau.MaId);
-            if (checkExists != null)
+            bool delete = await _service.LoaiMau.DeleteLoaiMauAsync(maLoaiMau);
+            if (delete)
             {
-                bool delete = await _service.LoaiMau.DeleteLoaiMauAsync(LoaiMau);
-                if (delete)
-                {
-                    _logger.LogDebug("Cap nhat loai mau thanh cong");
-                    return Ok(LoaiMau);
-                }
-                else
-                {
-                    _logger.LogDebug("Cap nhat loai mau that bai");
-                    return BadRequest();
-                }
+                _logger.LogDebug("Xoa loai mau thanh cong");
+                return Ok("Xoa loai mau thanh cong");
             }
             else
             {
-                _logger.LogDebug("loai mau khong ton tai");
-                return BadRequest();
+                _logger.LogDebug("Xoa loai mau that bai");
+                return BadRequest("Xoa loai mau that bai");
             }
         }
     }

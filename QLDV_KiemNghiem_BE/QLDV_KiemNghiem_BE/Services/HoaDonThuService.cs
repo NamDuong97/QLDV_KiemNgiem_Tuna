@@ -2,7 +2,7 @@
 using AutoMapper;
 using Microsoft.AspNetCore.Http.HttpResults;
 using QLDV_KiemNghiem_BE.Data;
-using QLDV_KiemNghiem_BE.DTO;
+using QLDV_KiemNghiem_BE.DTO.ResponseDto;
 using QLDV_KiemNghiem_BE.Interfaces;
 using QLDV_KiemNghiem_BE.Interfaces.ManagerInterface;
 using QLDV_KiemNghiem_BE.Models;

@@ -24,7 +24,10 @@ namespace QLDV_KiemNghiem_BE.Repositories
         {
             return await _context.DmPhuLieuHoaChats.FindAsync(id);
         }
-
+        public async Task<DmPhuLieuHoaChat?> FindDmPhuLieuHoaChatByNameAsync(string dmPLHC)
+        {
+            return await _context.DmPhuLieuHoaChats.AsNoTracking().SingleOrDefaultAsync(item => item.TenDmPlhc.ToLower().Trim() == dmPLHC);
+        }
         public void CreateDmPhuLieuHoaChatAsync(DmPhuLieuHoaChat plhc)
         {
             _context.DmPhuLieuHoaChats.Add(plhc);

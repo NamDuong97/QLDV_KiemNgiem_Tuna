@@ -1,4 +1,6 @@
 ﻿using AutoMapper;
+using QLDV_KiemNghiem_BE.DTO.RequestDto;
+using QLDV_KiemNghiem_BE.DTO.ResponseDto;
 using QLDV_KiemNghiem_BE.Models;
 
 namespace QLDV_KiemNghiem_BE.DTO.AutoMapper
@@ -10,7 +12,9 @@ namespace QLDV_KiemNghiem_BE.DTO.AutoMapper
             CreateMap<PhieuDangKy, PhieuDangKyDto>().ReverseMap().ForMember(dest => dest.PhieuDangKyMaus, opt => opt.Ignore());
             CreateMap<PhieuDangKyMau, PhieuDangKyMauDto>().ReverseMap().ForMember(dest => dest.PhieuDangKyMauHinhAnhs, opt => opt.Ignore());
             CreateMap<PhieuDangKyPhuLieuHoaChat, PhieuDangKyPhuLieuHoaChatDto>().ReverseMap();
-            CreateMap<TieuChuan, TieuChuanDto>().ReverseMap().ForMember(dest => dest.MaId, opt => opt.Ignore());
+            CreateMap<TieuChuan, TieuChuanDto>().ReverseMap();
+            CreateMap<TieuChuan, TieuChuanRequestCreateDto>().ReverseMap();
+            CreateMap<TieuChuan, TieuChuanRequestUpdateDto>().ReverseMap();
             CreateMap<ChiTieu, ChiTieuDto>().ReverseMap().ForMember(dest => dest.MaId, opt => opt.Ignore());
             CreateMap<PhuongPhap, PhuongPhapDto>().ReverseMap().ForMember(dest => dest.MaId, opt => opt.Ignore());
             CreateMap<PhieuDangKyMauHinhAnh, PhieuDangKyMauHinhAnhDto>().ReverseMap().ForMember(dest => dest.MaId, opt => opt.Ignore());
@@ -18,7 +22,7 @@ namespace QLDV_KiemNghiem_BE.DTO.AutoMapper
             CreateMap<DmPhuLieuHoaChat, DmPhuLieuHoaChatDto>().ReverseMap().ForMember(dest => dest.MaId, opt => opt.Ignore());
             CreateMap<LoaiDichVu, LoaiDichVuDto>().ReverseMap().ForMember(dest => dest.MaId, opt => opt.Ignore());
             CreateMap<TrangThaiPhieuDk, TrangThaiPhieuDkDto>().ReverseMap().ForMember(dest => dest.MaId, opt => opt.Ignore());
-            CreateMap<BoPhan, BoPhanDto>().ReverseMap().ForMember(dest => dest.MaId, opt => opt.Ignore());
+            CreateMap<BoPhan, BoPhanDto>().ReverseMap();
             CreateMap<ChucVu, ChucVuDto>().ReverseMap().ForMember(dest => dest.MaId, opt => opt.Ignore());
             CreateMap<Khoa, KhoaDto>().ReverseMap().ForMember(dest => dest.MaId, opt => opt.Ignore());
             CreateMap<LoaiMau, LoaiMauDto>().ReverseMap().ForMember(dest => dest.MaId, opt => opt.Ignore());

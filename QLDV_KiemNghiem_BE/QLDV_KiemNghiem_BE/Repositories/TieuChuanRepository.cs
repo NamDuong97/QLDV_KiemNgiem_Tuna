@@ -25,11 +25,10 @@ namespace QLDV_KiemNghiem_BE.Repositories
             return await _context.TieuChuans.FindAsync(maTieuChuan);
         }
 
-        public async Task<List<TieuChuan>?> FindTieuChuanByNameAsync(string tenTieuChuan)
+        public async Task<TieuChuan?> FindTieuChuanByNameAsync(string tenTieuChuan)
         {
-            return  _context.TieuChuans.AsNoTracking()
-            .AsEnumerable() // Chuyển về xử lý phía client
-            .Where(item => item.TenTieuChuan.ToLower().Trim() == tenTieuChuan).ToList();
+            return await _context.TieuChuans.AsNoTracking()
+            .SingleOrDefaultAsync(item => item.TenTieuChuan.ToLower().Trim() == tenTieuChuan);
         }
 
         public void CreateTieuChuanAsync(TieuChuan tieuChuan)

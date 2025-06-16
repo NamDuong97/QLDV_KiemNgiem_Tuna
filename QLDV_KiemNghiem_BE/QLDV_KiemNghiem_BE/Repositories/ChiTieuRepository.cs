@@ -25,6 +25,10 @@ namespace QLDV_KiemNghiem_BE.Repositories
         {
             return await _context.ChiTieus.FindAsync(maChiTieu);
         }
+        public async Task<ChiTieu?> FindChiTieuByNameAsync(string tenChiTieu)
+        {
+            return await _context.ChiTieus.AsNoTracking().SingleOrDefaultAsync(item => item.TenChiTieu.ToLower().Trim() == tenChiTieu);
+        }
         public void CreateChiTieuAsync(ChiTieu chiTieu)
         {
             _context.ChiTieus.Add(chiTieu);

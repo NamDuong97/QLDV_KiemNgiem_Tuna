@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
-using QLDV_KiemNghiem_BE.DTO;
 using QLDV_KiemNghiem_BE.Interfaces.ManagerInterface;
 using QLDV_KiemNghiem_BE.Models;
 using Microsoft.AspNetCore.Authorization;
@@ -13,6 +12,8 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using QLDV_KiemNghiem_BE.Interfaces.Redis;
 using QLDV_KiemNghiem_BE.Services;
+using QLDV_KiemNghiem_BE.DTO.ResponseDto;
+using QLDV_KiemNghiem_BE.DTO.RequestDto;
 
 namespace QLDV_KiemNghiem_BE.Controllers
 {
@@ -205,6 +206,28 @@ namespace QLDV_KiemNghiem_BE.Controllers
             try
             {
                 ResponseModel1<string> result = await _service.KhachHang.ForgetPasswordAsync(email);
+                if (result.KetQua)
+                {
+                    return Ok(result);
+                }
+                else
+                {
+                    return BadRequest(result);
+                }
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpPut]
+        [Route("changePassword")]
+        public async Task<ActionResult> changePassword(ResetPasswordRequestDto pass)
+        {
+            try
+            {
+                ResponseModel1<KhachHangDto> result = await _service.KhachHang.ChangePasswordAsync(pass);
                 if (result.KetQua)
                 {
                     return Ok(result);

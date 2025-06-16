@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using QLDV_KiemNghiem_BE.DTO;
+using QLDV_KiemNghiem_BE.DTO.ResponseDto;
 using QLDV_KiemNghiem_BE.Interfaces;
 using QLDV_KiemNghiem_BE.Interfaces.ManagerInterface;
 using QLDV_KiemNghiem_BE.Models;

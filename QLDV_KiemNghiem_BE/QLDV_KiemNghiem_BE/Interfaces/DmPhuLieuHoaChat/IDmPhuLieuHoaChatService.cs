@@ -1,5 +1,7 @@
-﻿using QLDV_KiemNghiem_BE.DTO;
+﻿using QLDV_KiemNghiem_BE.DTO.RequestDto;
+using QLDV_KiemNghiem_BE.DTO.ResponseDto;
 using QLDV_KiemNghiem_BE.Models;
+using QLDV_KiemNghiem_BE.RequestFeatures;
 
 namespace QLDV_KiemNghiem_BE.Interfaces
 {
@@ -8,9 +10,9 @@ namespace QLDV_KiemNghiem_BE.Interfaces
         Task<IEnumerable<DmPhuLieuHoaChatDto>> GetDmPhuLieuHoaChatAllAsync();
         Task<DmPhuLieuHoaChatDto?> FindDmPhuLieuHoaChatAsync(string id);
 
-        Task<bool> CreateDmPhuLieuHoaChatAsync(DmPhuLieuHoaChatDto mau);
+        Task<ResponseModel1<DmPhuLieuHoaChatDto>> CreateDmPhuLieuHoaChatAsync(DmPhuLieuHoaChatRequestCreateDto plhc, string user);
 
-        Task<bool> UpdateDmPhuLieuHoaChatAsync(DmPhuLieuHoaChatDto mau);
-        Task<bool> DeleteDmPhuLieuHoaChatAsync(DmPhuLieuHoaChat plhc);
+        Task<ResponseModel1<DmPhuLieuHoaChatDto>> UpdateDmPhuLieuHoaChatAsync(DmPhuLieuHoaChatRequestUpdateDto plhc, string user);
+        Task<bool> DeleteDmPhuLieuHoaChatAsync(string maPLHC);
     }
 }
