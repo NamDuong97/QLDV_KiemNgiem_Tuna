@@ -23,6 +23,11 @@ namespace QLDV_KiemNghiem_BE.Repositories
         {
             return await _context.PhuongPhaps.FindAsync(maPhuongPhap);
         }
+        public async  Task<PhuongPhap?> FindPhuongPhapByNameAsync(string tenPhuongPhap)
+        {
+            return await _context.PhuongPhaps.AsNoTracking().SingleOrDefaultAsync(item => item.TenPp.ToLower().Trim() == tenPhuongPhap);
+        }
+
         public  void CreatePhuongPhapAsync(PhuongPhap phuongPhap)
         {
             _context.PhuongPhaps.Add(phuongPhap);

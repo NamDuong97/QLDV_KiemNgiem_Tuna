@@ -23,6 +23,11 @@ namespace QLDV_KiemNghiem_BE.Repositories
         {
             return await _context.LoaiMaus.FindAsync(maLoaiMau);
         }
+        public async Task<LoaiMau?> FindLoaiMauByNameAsync(string tenLoaiMau)
+        {
+            return await _context.LoaiMaus.AsNoTracking().SingleOrDefaultAsync(item => item.TenLoaiMau.ToLower().Trim() == tenLoaiMau);
+
+        }
         public void CreateLoaiMauAsync(LoaiMau LoaiMau)
         {
             _context.LoaiMaus.Add(LoaiMau);

@@ -221,6 +221,28 @@ namespace QLDV_KiemNghiem_BE.Controllers
             }
         }
 
+        [HttpPut]
+        [Route("changePassword")]
+        public async Task<ActionResult> changePassword(ResetPasswordRequestDto pass)
+        {
+            try
+            {
+                ResponseModel1<KhachHangDto> result = await _service.KhachHang.ChangePasswordAsync(pass);
+                if (result.KetQua)
+                {
+                    return Ok(result);
+                }
+                else
+                {
+                    return BadRequest(result);
+                }
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
         [HttpPost]
         [Route("createKhachHang")]
         public async Task<ActionResult> createKhachHang(KhachHangDto KhachHangDto)

@@ -48,15 +48,6 @@ namespace QLDV_KiemNghiem_BE.Services
                     KetQua = false,
                     Message = "Email không tồn tại, vui lòng kiểm tra lại!",
                 };
-            } 
-            // Kiểm tra pasword, tham số 1 là pass từ client gửi lên, tham số 2 là từ csdl lấy
-            if(!BCrypt.Net.BCrypt.Verify(login.Password, khachHang.MatKhau))
-            {
-                return new LoginResponse
-                {
-                    KetQua = false,
-                    Message = "Mật khẩu không đúng, vui lòng kiểm tra lại!",
-                };
             }
             // Kiểm tra tài khoản - email đã được verify xác minh chưa
             if (!khachHang.IsEmailVerify)
@@ -65,6 +56,24 @@ namespace QLDV_KiemNghiem_BE.Services
                 {
                     KetQua = false,
                     Message = "Tài khoản chưa được xác minh email, vui lòng kiểm tra hộp thư email và xác minh",
+                };
+            }
+            // Kiểm tra pasword, tham số 1 là pass từ client gửi lên, tham số 2 là từ csdl lấy
+            if (!BCrypt.Net.BCrypt.Verify(login.Password, khachHang.MatKhau))
+            {
+                return new LoginResponse
+                {
+                    KetQua = false,
+                    Message = "Mật khẩu không đúng, vui lòng kiểm tra lại!",
+                };
+            }
+            // Kiểm tra pasword đã hết hạn đăng nhập chưa
+            if (khachHang.NgayHetHanMatKhau <= DateTime.Now)
+            {
+                return new LoginResponse
+                {
+                    KetQua = false,
+                    Message = "Mật khẩu đã hết hạn vui lòng thay đổi mật khẩu và đăng nhập lại!",
                 };
             }
 
@@ -177,6 +186,32 @@ namespace QLDV_KiemNghiem_BE.Services
                 KetQua = true,
                 Message = "Sucessfully",
                 Data = "Mat khau moi da duoc gui vao email cua ban, vui long kiem tra email",
+            };
+        }
+        public async Task<ResponseModel1<KhachHangDto>> ChangePasswordAsync(ResetPasswordRequestDto pass)
+        {
+            var checkExists = await _repositoryManager.KhachHang.FindKhachHangAsync(pass.MaId);
+            if(checkExists == null)
+            {
+                return new ResponseModel1<KhachHangDto>
+                {
+                    KetQua = false,
+                    Message = "Nguoi dung khong ton tai, vui long kiem tra lai!",
+                };
+            }
+            checkExists.MatKhau = BCrypt.Net.BCrypt.HashPassword(pass.Password);
+            checkExists.NgaySuaMatKhau = DateTime.Now;
+            checkExists.NgayHetHanMatKhau = DateTime.Now.AddMonths(3);
+            checkExists.NgaySua = DateTime.Now;
+            checkExists.NguoiSua = "admin";
+            _repositoryManager.KhachHang.UpdateKhachHangAsync(checkExists);
+            bool check = await _repositoryManager.SaveChangesAsync();
+            var dataReturn = _mapper.Map<KhachHangDto>(checkExists);
+            return new ResponseModel1<KhachHangDto>
+            {
+                KetQua = check,
+                Message = check ? "Doi mat khau thanh cong" : "Doi mat khau that bai",
+                Data = dataReturn
             };
         }
         public async Task<ResponseModel1<KhachHangDto>> CreateKhachHangAsync(KhachHangDto khachHangDto)

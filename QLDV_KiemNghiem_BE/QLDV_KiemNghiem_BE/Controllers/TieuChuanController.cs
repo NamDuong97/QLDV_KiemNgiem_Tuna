@@ -2,10 +2,12 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
+using QLDV_KiemNghiem_BE.DTO.RequestDto;
 using QLDV_KiemNghiem_BE.DTO.ResponseDto;
 using QLDV_KiemNghiem_BE.Interfaces.ManagerInterface;
 using QLDV_KiemNghiem_BE.Models;
 using QLDV_KiemNghiem_BE.RequestFeatures;
+using System.Security.Claims;
 
 namespace QLDV_KiemNghiem_BE.Controllers
 {
@@ -43,7 +45,7 @@ namespace QLDV_KiemNghiem_BE.Controllers
 
         [HttpPost]
         [Route("createTieuChuan")]
-        public async Task<ActionResult> createTieuChuan(TieuChuanDto tieuChuanDto)
+        public async Task<ActionResult> createTieuChuan(TieuChuanRequestCreateDto tieuChuanDto)
         {
             if (!ModelState.IsValid)
             {
@@ -54,22 +56,23 @@ namespace QLDV_KiemNghiem_BE.Controllers
                 _logger.LogError("Loi validate tham so dau vao");
                 return BadRequest(new { Errors = errors });
             }
-            ResponseModel1<TieuChuanDto> create = await _service.TieuChuan.CreateTieuChuanAsync(tieuChuanDto);
+            var user = User.FindFirst(ClaimTypes.NameIdentifier)?.Value.ToString();
+            ResponseModel1<TieuChuanDto> create = await _service.TieuChuan.CreateTieuChuanAsync(tieuChuanDto, user);
             if (create.KetQua)
             {
                 _logger.LogDebug(create.Message);
-                return Ok(create.Data);
+                return Ok(create);
             }
             else
             {
                 _logger.LogDebug(create.Message);
-                return BadRequest(create.Message);
+                return BadRequest(create);
             }
         }
 
         [HttpPut]
         [Route("updateTieuChuan")]
-        public async Task<ActionResult> updateTieuChuan(TieuChuanDto tieuChuanDto)
+        public async Task<ActionResult> updateTieuChuan(TieuChuanRequestUpdateDto tieuChuanDto)
         {
             if (!ModelState.IsValid)
             {
@@ -80,36 +83,37 @@ namespace QLDV_KiemNghiem_BE.Controllers
                 _logger.LogError("Loi validate tham so dau vao");
                 return BadRequest(new { Errors = errors });
             }
-            ResponseModel1<TieuChuanDto> update = await _service.TieuChuan.UpdateTieuChuanAsync(tieuChuanDto);
+            var user = User.FindFirst(ClaimTypes.NameIdentifier)?.Value.ToString();
+            ResponseModel1<TieuChuanDto> update = await _service.TieuChuan.UpdateTieuChuanAsync(tieuChuanDto, user);
             if (update.KetQua)
             {
                 _logger.LogDebug(update.Message);
-                return Ok(update.Data);
+                return Ok(update);
             }
             else
             {
                 _logger.LogDebug(update.Message);
-                return BadRequest(update.Message);
+                return BadRequest(update);
             }
         }
 
         [HttpDelete]
         [Route("deleteTieuChuan")]
-        public async Task<ActionResult> deleteTieuChuan(TieuChuan TieuChuan)
+        public async Task<ActionResult> deleteTieuChuan(string maTieuChuan)
         {
-            var checkExists = await _service.TieuChuan.FindTieuChuanAsync(TieuChuan.MaId);
+            var checkExists = await _service.TieuChuan.FindTieuChuanAsync(maTieuChuan);
             if (checkExists != null)
             {
-                bool delete = await _service.TieuChuan.DeleteTieuChuanAsync(TieuChuan);
+                bool delete = await _service.TieuChuan.DeleteTieuChuanAsync(maTieuChuan);
                 if (delete)
                 {
-                    _logger.LogDebug("Cap nhat tieu chuan thanh cong");
-                    return Ok(TieuChuan);
+                    _logger.LogDebug("Xoa tieu chuan thanh cong");
+                    return Ok("Xoa tieu chuan thanh cong");
                 }
                 else
                 {
-                    _logger.LogDebug("Cap nhat tieu chuan that bai");
-                    return BadRequest();
+                    _logger.LogDebug("Xoa tieu chuan that bai");
+                    return BadRequest("Xoa tieu chuan that bai");
                 }
             }
             else

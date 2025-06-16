@@ -1,8 +1,11 @@
-﻿using AutoMapper;
+﻿
+using AutoMapper;
+using QLDV_KiemNghiem_BE.DTO.RequestDto;
 using QLDV_KiemNghiem_BE.DTO.ResponseDto;
 using QLDV_KiemNghiem_BE.Interfaces;
 using QLDV_KiemNghiem_BE.Interfaces.ManagerInterface;
 using QLDV_KiemNghiem_BE.Models;
+using QLDV_KiemNghiem_BE.RequestFeatures;
 
 namespace QLDV_KiemNghiem_BE.Services
 {
@@ -29,37 +32,92 @@ namespace QLDV_KiemNghiem_BE.Services
             var result = _mapper.Map<LoaiMauDto>(LoaiMauDomain);
             return result;
         }
-        public async Task<bool> CreateLoaiMauAsync(LoaiMauDto LoaiMauDto)
+        public async Task<ResponseModel1<LoaiMauDto>> CreateLoaiMauAsync(LoaiMauRequestCreateDto LoaiMauDto, string user)
         {
-            var LoaiMauDomain = _mapper.Map<LoaiMau>(LoaiMauDto);
-            LoaiMauDomain.MaId = Guid.NewGuid().ToString();
-            LoaiMauDomain.NgayTao = DateTime.Now;
-            LoaiMauDomain.NguoiTao = "admin";
-
-            _repositoryManager.LoaiMau.CreateLoaiMauAsync(LoaiMauDomain);
-            bool check = await _repositoryManager.SaveChangesAsync();
-            return check;
-        }
-        public async Task<bool> UpdateLoaiMauAsync(LoaiMauDto LoaiMauDto)
-        {
-            var LoaiMauDomain = _mapper.Map<LoaiMau>(LoaiMauDto);
-            var LoaiMauCheck = await _repositoryManager.LoaiMau.FindLoaiMauAsync(LoaiMauDto.MaId);
-            if (LoaiMauCheck == null)
+            if (LoaiMauDto == null || LoaiMauDto.TenLoaiMau == null || LoaiMauDto.TenLoaiMau == "")
             {
-                return false;
+                return new ResponseModel1<LoaiMauDto>
+                {
+                    KetQua = false,
+                    Message = "Thieu du lieu dau vao vui long kiem tra"
+                };
             }
+            var checkExist = await _repositoryManager.LoaiMau.FindLoaiMauByNameAsync(LoaiMauDto.TenLoaiMau.ToLower().Trim());
+            if (checkExist != null)
+            {
+                return new ResponseModel1<LoaiMauDto>
+                {
+                    KetQua = false,
+                    Message = "Ten loai mau da ton tai, vui long kiem tra lai!"
+                };
+            }
+            LoaiMau LoaiMau = new LoaiMau()
+            {
+                MaId = Guid.NewGuid().ToString(),
+                MaLoaiMau = "LM_" + PublicFunction.processString(LoaiMauDto.TenLoaiMau),
+                TrangThai = true,
+                Mota = LoaiMauDto.MoTa,
+                TenLoaiMau = LoaiMauDto.TenLoaiMau,
+                NgayTao = DateTime.Now,
+                NguoiTao = user ?? "unknow"
+            };
+
+            _repositoryManager.LoaiMau.CreateLoaiMauAsync(LoaiMau);
+            bool check = await _repositoryManager.SaveChangesAsync();
+            var dataReturn = _mapper.Map<LoaiMauDto>(LoaiMau);
+            return new ResponseModel1<LoaiMauDto>
+            {
+                KetQua = check,
+                Message = check ? "Create thanh cong!" : "Create that bai!",
+                Data = check ? dataReturn : null
+            };
+        }
+
+        public async Task<ResponseModel1<LoaiMauDto>> UpdateLoaiMauAsync(LoaiMauRequestUpdateDto LoaiMauDto, string user)
+        {
+            var LoaiMauDomain = await _repositoryManager.LoaiMau.FindLoaiMauAsync(LoaiMauDto.MaId);
+            if (LoaiMauDomain == null)
+            {
+                return new ResponseModel1<LoaiMauDto>
+                {
+                    KetQua = true,
+                    Message = "loai mau khong ton tai, vui long kiem tra lai!"
+                };
+            }
+            var checkExist = await _repositoryManager.LoaiMau.FindLoaiMauByNameAsync(LoaiMauDto.TenLoaiMau.ToLower().Trim());
+            if (checkExist != null)
+            {
+                return new ResponseModel1<LoaiMauDto>
+                {
+                    KetQua = false,
+                    Message = "Ten loai mau da ton tai, vui long kiem tra lai!"
+                };
+            }
+            LoaiMauDomain.NguoiSua = user ?? "unknow";
+            LoaiMauDomain.NgaySua = DateTime.Now;
+            LoaiMauDomain.MaLoaiMau = "LM_" + PublicFunction.processString(LoaiMauDto.TenLoaiMau);
+            LoaiMauDomain.TenLoaiMau = LoaiMauDto.TenLoaiMau;
+           
+
             _repositoryManager.LoaiMau.UpdateLoaiMauAsync(LoaiMauDomain);
             bool check = await _repositoryManager.SaveChangesAsync();
-            return check;
+            var dataReturn = _mapper.Map<LoaiMauDto>(LoaiMauDomain);
+
+            return new ResponseModel1<LoaiMauDto>
+            {
+                KetQua = check,
+                Message = check ? "Update thanh cong!" : "Update that bai!",
+                Data = check ? dataReturn : null
+            };
         }
-        public async Task<bool> DeleteLoaiMauAsync(LoaiMau LoaiMau)
+        public async Task<bool> DeleteLoaiMauAsync(string maLoaiMau)
         {
-            var LoaiMauDomain = await _repositoryManager.LoaiMau.FindLoaiMauAsync(LoaiMau.MaId);
+            var LoaiMauDomain = await _repositoryManager.LoaiMau.FindLoaiMauAsync(maLoaiMau);
             if (LoaiMauDomain == null)
             {
                 return false;
             }
-            _repositoryManager.LoaiMau.DeleteLoaiMauAsync(LoaiMau);
+            _repositoryManager.LoaiMau.DeleteLoaiMauAsync(LoaiMauDomain);
             bool check = await _repositoryManager.SaveChangesAsync();
             return check;
         }

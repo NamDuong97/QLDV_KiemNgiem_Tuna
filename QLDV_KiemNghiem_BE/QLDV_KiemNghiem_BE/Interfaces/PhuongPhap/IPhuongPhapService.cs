@@ -1,5 +1,7 @@
-﻿using QLDV_KiemNghiem_BE.DTO.ResponseDto;
+﻿using QLDV_KiemNghiem_BE.DTO.RequestDto;
+using QLDV_KiemNghiem_BE.DTO.ResponseDto;
 using QLDV_KiemNghiem_BE.Models;
+using QLDV_KiemNghiem_BE.RequestFeatures;
 
 namespace QLDV_KiemNghiem_BE.Interfaces
 {
@@ -7,8 +9,9 @@ namespace QLDV_KiemNghiem_BE.Interfaces
     {
         Task<IEnumerable<PhuongPhapDto>> GetPhuongPhapsAllAsync();
         Task<PhuongPhapDto?> FindPhuongPhapAsync(string maPhuongPhap);
-        Task<bool> CreatePhuongPhapAsync(PhuongPhapDto phuongPhapDto);
-        Task<bool> UpdatePhuongPhapAsync(PhuongPhapDto phuongPhapDto);
-        Task<bool> DeletePhuongPhapAsync(PhuongPhap phuongPhap);
+        Task<ResponseModel1<PhuongPhapDto>> CreatePhuongPhapAsync(PhuongPhapRequestCreateDto PhuongPhap, string user);
+
+        Task<ResponseModel1<PhuongPhapDto>> UpdatePhuongPhapAsync(PhuongPhapRequestUpdateDto PhuongPhap, string user);
+        Task<bool> DeletePhuongPhapAsync(string maPhuongPhap);
     }
 }

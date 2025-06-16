@@ -135,7 +135,7 @@ namespace QLDV_KiemNghiem_BE.Services
                 mauDomain = _mapper.Map<PhieuDangKyMau>(mau);
                 mauDomain.MaId = Guid.NewGuid().ToString();
                 mauDomain.MaPhieuDangKy = phieuDangKyDomain.MaId;
-                mauDomain.MaPdkMau = mauDomain.TenMau + "_" + mauDomain.LoaiDv + "_" + PublicFunction.getTimeSystem() + "_" + mauDomain.ThoiGianTieuChuan.ToString();
+                mauDomain.MaPdkMau = PublicFunction.processString(mauDomain.TenMau) + "_" + mauDomain.LoaiDv  + "_" + mauDomain.ThoiGianTieuChuan.ToString();
                 mauDomain.NgayTao = DateTime.Now;
                 // Thêm hình ảnh vào CSDL
                 Console.WriteLine("So luong hinh anh trong mau: " + mau.PhieuDangKyMauHinhAnhs.Count);

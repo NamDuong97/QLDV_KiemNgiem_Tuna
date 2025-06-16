@@ -10,9 +10,6 @@ namespace QLDV_KiemNghiem_BE.DTO.ResponseDto
         [StringLength(200)]
         public string? MaChiTieu { get; set; }
 
-        [StringLength(50)]
-        public string? MaTieuChuan { get; set; }
-
         [StringLength(200)]
         public string? TenChiTieu { get; set; }
 

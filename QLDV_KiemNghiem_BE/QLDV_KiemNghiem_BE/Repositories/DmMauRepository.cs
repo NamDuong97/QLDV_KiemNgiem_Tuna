@@ -23,10 +23,10 @@ namespace QLDV_KiemNghiem_BE.Repositories
         {
             return await _context.DmMaus.FindAsync(maDmMau);
         }
-        //public async Task<List<DmMau>?> FindDmMauByNamAsync(string tenDmMau)
-        //{
-        //    return await _context.DmMaus.Where(item => item.TenDmMau.Split("-")[0].ToLower().Trim().Contains(tenDmMau)).ToListAsync();
-        //}
+        public async Task<DmMau?> FindDmMauByNameAsync(string tenDmMau)
+        {
+            return await _context.DmMaus.AsNoTracking().SingleOrDefaultAsync(item => item.TenMau.ToLower().Trim() == tenDmMau);
+        }
         public void CreateDmMauAsync(DmMau DmMau)
         {
             _context.DmMaus.Add(DmMau);

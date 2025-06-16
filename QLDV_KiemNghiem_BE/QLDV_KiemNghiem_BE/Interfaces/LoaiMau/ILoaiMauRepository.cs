@@ -6,6 +6,7 @@ namespace QLDV_KiemNghiem_BE.Interfaces
     {
         Task<IEnumerable<LoaiMau>> GetLoaiMausAllAsync();
         Task<LoaiMau?> FindLoaiMauAsync(string maLoaiMau);
+        Task<LoaiMau?> FindLoaiMauByNameAsync(string tenLoaiMau);
         void CreateLoaiMauAsync(LoaiMau LoaiMau);
         void UpdateLoaiMauAsync(LoaiMau LoaiMau);
         void DeleteLoaiMauAsync(LoaiMau LoaiMau);

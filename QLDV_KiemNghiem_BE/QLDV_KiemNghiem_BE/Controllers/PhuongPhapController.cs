@@ -1,9 +1,13 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
+using QLDV_KiemNghiem_BE.DTO.RequestDto;
 using QLDV_KiemNghiem_BE.DTO.ResponseDto;
 using QLDV_KiemNghiem_BE.Interfaces.ManagerInterface;
 using QLDV_KiemNghiem_BE.Models;
+using QLDV_KiemNghiem_BE.RequestFeatures;
+using System.Security.Claims;
 
 namespace QLDV_KiemNghiem_BE.Controllers
 {
@@ -41,7 +45,7 @@ namespace QLDV_KiemNghiem_BE.Controllers
 
         [HttpPost]
         [Route("createPhuongPhap")]
-        public async Task<ActionResult> createPhuongPhap(PhuongPhapDto PhuongPhapDto)
+        public async Task<ActionResult> createPhuongPhap(PhuongPhapRequestCreateDto PhuongPhapDto)
         {
             if (!ModelState.IsValid)
             {
@@ -52,22 +56,23 @@ namespace QLDV_KiemNghiem_BE.Controllers
                 _logger.LogError("Loi validate tham so dau vao");
                 return BadRequest(new { Errors = errors });
             }
-            bool create = await _service.PhuongPhap.CreatePhuongPhapAsync(PhuongPhapDto);
-            if (create)
+            var user = User.FindFirst(ClaimTypes.NameIdentifier)?.Value.ToString();
+            ResponseModel1<PhuongPhapDto> create = await _service.PhuongPhap.CreatePhuongPhapAsync(PhuongPhapDto, user);
+            if (create.KetQua)
             {
-                _logger.LogDebug("Tao phuong phap thanh cong");
-                return Ok(PhuongPhapDto);
+                _logger.LogDebug(create.Message);
+                return Ok(create);
             }
             else
             {
-                _logger.LogDebug("Tao phuong phap that bai");
-                return BadRequest();
+                _logger.LogDebug(create.Message);
+                return BadRequest(create);
             }
         }
 
         [HttpPut]
         [Route("updatePhuongPhap")]
-        public async Task<ActionResult> updatePhuongPhap(PhuongPhapDto PhuongPhapDto)
+        public async Task<ActionResult> updatePhuongPhap(PhuongPhapRequestUpdateDto PhuongPhapDto)
         {
             if (!ModelState.IsValid)
             {
@@ -78,43 +83,36 @@ namespace QLDV_KiemNghiem_BE.Controllers
                 _logger.LogError("Loi validate tham so dau vao");
                 return BadRequest(new { Errors = errors });
             }
-            bool update = await _service.PhuongPhap.UpdatePhuongPhapAsync(PhuongPhapDto);
-            if (update)
+            var user = User.FindFirst(ClaimTypes.NameIdentifier)?.Value.ToString();
+            ResponseModel1<PhuongPhapDto> update = await _service.PhuongPhap.UpdatePhuongPhapAsync(PhuongPhapDto, user);
+            if (update.KetQua)
             {
-                _logger.LogDebug("Cap nhat phuong phap thanh cong");
-                return Ok(PhuongPhapDto);
+                _logger.LogDebug(update.Message);
+                return Ok(update);
             }
             else
             {
-                _logger.LogDebug("Cap nhat phuong phap that bai");
-                return BadRequest();
+                _logger.LogDebug(update.Message);
+                return BadRequest(update);
             }
         }
 
         [HttpDelete]
         [Route("deletePhuongPhap")]
-        public async Task<ActionResult> deletePhuongPhap(PhuongPhap PhuongPhap)
+        public async Task<ActionResult> deletePhuongPhap(string  maPhuongPhap)
         {
-            var checkExists = await _service.PhuongPhap.FindPhuongPhapAsync(PhuongPhap.MaId);
-            if (checkExists != null)
+            bool delete = await _service.PhuongPhap.DeletePhuongPhapAsync(maPhuongPhap);
+            if (delete)
             {
-                bool delete = await _service.PhuongPhap.DeletePhuongPhapAsync(PhuongPhap);
-                if (delete)
-                {
-                    _logger.LogDebug("Cap nhat phuong phap thanh cong");
-                    return Ok(PhuongPhap);
-                }
-                else
-                {
-                    _logger.LogDebug("Cap nhat phuong phap that bai");
-                    return BadRequest();
-                }
+                _logger.LogDebug("Xoa phuong phap thanh cong");
+                return Ok("Xoa phuong phap thanh cong");
             }
             else
             {
-                _logger.LogDebug("phuong phap khong ton tai");
-                return BadRequest();
+                _logger.LogDebug("Xoa phuong phap that bai");
+                return BadRequest("Xoa phuong phap that bai");
             }
+           
         }
     }
 }

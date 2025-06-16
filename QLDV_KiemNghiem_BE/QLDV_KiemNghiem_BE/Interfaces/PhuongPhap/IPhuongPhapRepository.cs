@@ -6,6 +6,7 @@ namespace QLDV_KiemNghiem_BE.Interfaces
     {
         Task<IEnumerable<PhuongPhap>> GetPhuongPhapsAllAsync();
         Task<PhuongPhap?> FindPhuongPhapAsync(string maPhuongPhap);
+        Task<PhuongPhap?> FindPhuongPhapByNameAsync(string tenPhuongPhap);
         void CreatePhuongPhapAsync(PhuongPhap phuongPhap);
         void UpdatePhuongPhapAsync(PhuongPhap phuongPhap);
         void DeletePhuongPhapAsync(PhuongPhap phuongPhap);

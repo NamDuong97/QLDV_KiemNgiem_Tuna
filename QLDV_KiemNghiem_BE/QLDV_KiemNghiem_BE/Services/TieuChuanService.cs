@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using QLDV_KiemNghiem_BE.DTO.RequestDto;
 using QLDV_KiemNghiem_BE.DTO.ResponseDto;
 using QLDV_KiemNghiem_BE.Interfaces;
 using QLDV_KiemNghiem_BE.Interfaces.ManagerInterface;
@@ -29,10 +30,9 @@ namespace QLDV_KiemNghiem_BE.Services
             var result = _mapper.Map<TieuChuanDto>(tieuChuanDomain);
             return result;
         }
-        public async Task<ResponseModel1<TieuChuanDto>> CreateTieuChuanAsync(TieuChuanDto tieuChuanDto)
+        public async Task<ResponseModel1<TieuChuanDto>> CreateTieuChuanAsync(TieuChuanRequestCreateDto tieuChuanDto, string user)
         {
-            if (tieuChuanDto == null ||  tieuChuanDto.MaId == null || tieuChuanDto.MaId == "" ||
-                tieuChuanDto.TenTieuChuan == null || tieuChuanDto.TenTieuChuan == "") 
+            if (tieuChuanDto == null  ||tieuChuanDto.TenTieuChuan == null || tieuChuanDto.TenTieuChuan == "") 
             return new ResponseModel1<TieuChuanDto>
             {
                 KetQua = false,
@@ -40,26 +40,20 @@ namespace QLDV_KiemNghiem_BE.Services
                 Data = null
             };
 
-            var checkExistsByID = await _repositoryManager.TieuChuan.FindTieuChuanAsync(tieuChuanDto.MaId);
-            if(checkExistsByID != null) return new ResponseModel1<TieuChuanDto>
-            {
-                KetQua = false,
-                Message = "Du lieu them vo da ton tai, vui long kiem tra lai!",
-                Data = null
-            };
-
-            var nameTieuChuan = PublicFunction.processString(tieuChuanDto.TenTieuChuan);
-            var checkExistsByName = await _repositoryManager.TieuChuan.FindTieuChuanByNameAsync(nameTieuChuan);
-            if ((checkExistsByName?.Count() ?? 0) > 0) return new ResponseModel1<TieuChuanDto>
+            var checkExistsByName = await _repositoryManager.TieuChuan.FindTieuChuanByNameAsync(tieuChuanDto.TenTieuChuan.ToLower().Trim());
+            if (checkExistsByName != null) return new ResponseModel1<TieuChuanDto>
             {
                 KetQua = false,
                 Message = "Ten tieu chuan them vo da ton tai, vui long thu lai voi ten khac!",
                 Data = null
             };
 
-            var tieuChuanDomain = _mapper.Map<TieuChuan>(tieuChuanDto);
+            TieuChuan tieuChuanDomain = new TieuChuan();
             tieuChuanDomain.MaId = Guid.NewGuid().ToString();
             tieuChuanDomain.NgayTao = DateTime.Now;
+            tieuChuanDomain.NguoiTao = user ?? "unknow";
+            tieuChuanDomain.TrangThai = true;
+            _mapper.Map(tieuChuanDto, tieuChuanDomain);
 
             _repositoryManager.TieuChuan.CreateTieuChuanAsync(tieuChuanDomain);
             bool check = await _repositoryManager.SaveChangesAsync();
@@ -72,7 +66,7 @@ namespace QLDV_KiemNghiem_BE.Services
                 Data = tieuChuanReturnDto
             };  
         }
-        public async Task<ResponseModel1<TieuChuanDto>> UpdateTieuChuanAsync(TieuChuanDto tieuChuanDto)
+        public async Task<ResponseModel1<TieuChuanDto>> UpdateTieuChuanAsync(TieuChuanRequestUpdateDto tieuChuanDto, string user)
         {
             if (tieuChuanDto == null || tieuChuanDto.MaId == null || tieuChuanDto.MaId == "") return new ResponseModel1<TieuChuanDto>
             {
@@ -91,12 +85,22 @@ namespace QLDV_KiemNghiem_BE.Services
                     Data = null
                 };
             }
-            var tieuChuanDomain = _mapper.Map<TieuChuan>(tieuChuanDto);
-            tieuChuanDomain.NgaySua = DateTime.Now;
-            tieuChuanDomain.NguoiSua = "admin";
-            _repositoryManager.TieuChuan.UpdateTieuChuanAsync(tieuChuanDomain);
+            var checkExistsByName = await _repositoryManager.TieuChuan.FindTieuChuanByNameAsync(tieuChuanDto.TenTieuChuan.ToLower().Trim());
+            if (checkExistsByName != null) return new ResponseModel1<TieuChuanDto>
+            {
+                KetQua = false,
+                Message = "Ten tieu chuan them vo da ton tai, vui long thu lai voi ten khac!",
+                Data = null
+            };
+
+            tieuChuanCheck.NgaySua = DateTime.Now;
+            tieuChuanCheck.NguoiSua = user ?? "unknow";
+            _mapper.Map(tieuChuanDto, tieuChuanCheck);
+
+
+            _repositoryManager.TieuChuan.UpdateTieuChuanAsync(tieuChuanCheck);
             bool check = await _repositoryManager.SaveChangesAsync();
-            var resultReturn = _mapper.Map<TieuChuanDto>(tieuChuanDomain);
+            var resultReturn = _mapper.Map<TieuChuanDto>(tieuChuanCheck);
             return new ResponseModel1<TieuChuanDto>
             {
                 KetQua = check,
@@ -104,12 +108,12 @@ namespace QLDV_KiemNghiem_BE.Services
                 Data = resultReturn
             };
         }
-        public async Task<bool> DeleteTieuChuanAsync(TieuChuan tieuChuan)
+        public async Task<bool> DeleteTieuChuanAsync(string maTieuChuan)
         {
-            if (tieuChuan == null) return false;
+            if (maTieuChuan == null || maTieuChuan == "" )  return false;
             else
             {
-                var TieuChuanDomain = await _repositoryManager.TieuChuan.FindTieuChuanAsync(tieuChuan.MaId);
+                var TieuChuanDomain = await _repositoryManager.TieuChuan.FindTieuChuanAsync(maTieuChuan);
                 if (TieuChuanDomain == null)
                 {
                     return false;

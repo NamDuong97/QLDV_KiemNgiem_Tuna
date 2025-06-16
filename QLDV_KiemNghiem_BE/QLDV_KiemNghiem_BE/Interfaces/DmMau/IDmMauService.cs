@@ -1,5 +1,7 @@
-﻿using QLDV_KiemNghiem_BE.DTO.ResponseDto;
+﻿using QLDV_KiemNghiem_BE.DTO.RequestDto;
+using QLDV_KiemNghiem_BE.DTO.ResponseDto;
 using QLDV_KiemNghiem_BE.Models;
+using QLDV_KiemNghiem_BE.RequestFeatures;
 
 namespace QLDV_KiemNghiem_BE.Interfaces
 {
@@ -7,8 +9,9 @@ namespace QLDV_KiemNghiem_BE.Interfaces
     {
         Task<IEnumerable<DmMauDto>> GetDmMausAllAsync();
         Task<DmMauDto?> FindDmMauAsync(string maDmMau);
-        Task<bool> CreateDmMauAsync(DmMauDto DmMauDto);
-        Task<bool> UpdateDmMauAsync(DmMauDto DmMauDto);
-        Task<bool> DeleteDmMauAsync(DmMau DmMau);
+        Task<ResponseModel1<DmMauDto>> CreateDmMauAsync(DmMauRequestCreateDto DmMau, string user);
+
+        Task<ResponseModel1<DmMauDto>> UpdateDmMauAsync(DmMauRequestUpdateDto DmMau, string user);
+        Task<bool> DeleteDmMauAsync(string maDmMau);
     }
 }

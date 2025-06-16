@@ -1,9 +1,12 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using QLDV_KiemNghiem_BE.DTO.RequestDto;
 using QLDV_KiemNghiem_BE.DTO.ResponseDto;
 using QLDV_KiemNghiem_BE.Interfaces.ManagerInterface;
 using QLDV_KiemNghiem_BE.Models;
+using QLDV_KiemNghiem_BE.RequestFeatures;
+using System.Security.Claims;
 
 namespace QLDV_KiemNghiem_BE.Controllers
 {
@@ -39,18 +42,9 @@ namespace QLDV_KiemNghiem_BE.Controllers
             return Ok(result);
         }
 
-        //[HttpGet]
-        //[Route("getDmMauByName")]
-        //public async Task<ActionResult> getDmMauByName(string tenDmMau)
-        //{
-        //    var result = await _service.DmMau.FindDmMauByNameAsync(tenDmMau);
-        //    _logger.LogDebug("lay dm mau can tim: " + tenDmMau);
-        //    return Ok(result);
-        //}
-
         [HttpPost]
         [Route("createDmMau")]
-        public async Task<ActionResult> createDmMau(DmMauDto DmMauDto)
+        public async Task<ActionResult> createDmMau(DmMauRequestCreateDto DmMauDto)
         {
             if (!ModelState.IsValid)
             {
@@ -61,22 +55,23 @@ namespace QLDV_KiemNghiem_BE.Controllers
                 _logger.LogError("Loi validate tham so dau vao");
                 return BadRequest(new { Errors = errors });
             }
-            bool create = await _service.DmMau.CreateDmMauAsync(DmMauDto);
-            if (create)
+            var user = User.FindFirst(ClaimTypes.NameIdentifier)?.Value.ToString();
+            ResponseModel1<DmMauDto> create = await _service.DmMau.CreateDmMauAsync(DmMauDto, user);
+            if (create.KetQua)
             {
-                _logger.LogDebug("Tao dm mau thanh cong");
-                return Ok(DmMauDto);
+                _logger.LogDebug(create.Message);
+                return Ok(create);
             }
             else
             {
-                _logger.LogDebug("Tao dm mau that bai");
-                return BadRequest();
+                _logger.LogDebug(create.Message);
+                return BadRequest(create);
             }
         }
 
         [HttpPut]
         [Route("updateDmMau")]
-        public async Task<ActionResult> updateDmMau(DmMauDto DmMauDto)
+        public async Task<ActionResult> updateDmMau(DmMauRequestUpdateDto DmMauDto)
         {
             if (!ModelState.IsValid)
             {
@@ -87,43 +82,36 @@ namespace QLDV_KiemNghiem_BE.Controllers
                 _logger.LogError("Loi validate tham so dau vao");
                 return BadRequest(new { Errors = errors });
             }
-            bool update = await _service.DmMau.UpdateDmMauAsync(DmMauDto);
-            if (update)
+            var user = User.FindFirst(ClaimTypes.NameIdentifier)?.Value.ToString();
+            ResponseModel1<DmMauDto> update = await _service.DmMau.UpdateDmMauAsync(DmMauDto, user);
+            if (update.KetQua)
             {
-                _logger.LogDebug("Cap nhat dm mau thanh cong");
-                return Ok(DmMauDto);
+                _logger.LogDebug(update.Message);
+                return Ok(update);
             }
             else
             {
-                _logger.LogDebug("Cap nhat dm mau that bai");
-                return BadRequest();
+                _logger.LogDebug(update.Message);
+                return BadRequest(update);
             }
         }
 
         [HttpDelete]
         [Route("deleteDmMau")]
-        public async Task<ActionResult> deleteDmMau(DmMau DmMau)
+        public async Task<ActionResult> deleteDmMau(string maDmMau)
         {
-            var checkExists = await _service.DmMau.FindDmMauAsync(DmMau.MaId);
-            if (checkExists != null)
+            bool delete = await _service.DmMau.DeleteDmMauAsync(maDmMau);
+            if (delete)
             {
-                bool delete = await _service.DmMau.DeleteDmMauAsync(DmMau);
-                if (delete)
-                {
-                    _logger.LogDebug("Cap nhat dm mau thanh cong");
-                    return Ok(DmMau);
-                }
-                else
-                {
-                    _logger.LogDebug("Cap nhat dm mau that bai");
-                    return BadRequest();
-                }
+                _logger.LogDebug("Xoa dm mau thanh cong");
+                return Ok("Xoa dm mau thanh cong");
             }
             else
             {
-                _logger.LogDebug("dm mau khong ton tai");
-                return BadRequest();
+                _logger.LogDebug("Xoa dm mau that bai");
+                return BadRequest("Xoa dm mau that bai");
             }
+
         }
     }
 }
