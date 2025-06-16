@@ -32,9 +32,7 @@ const FormSignUpDVKN = () => {
   const [openPopupThoatForm, setOpenPopupThoatForm] = useState(false);
   const { userInfo, isLogin, isLoadingAuth, setOpenLoginCustomer } =
     useContext(StoreContext);
-  const [isThongTinChung, setThongTinChung] = useState(true);
-  const [isMaus, setIsMaus] = useState(false);
-  const [isPLHCs, setIsPLHCs] = useState(false);
+  const [isShow, setIsShow] = useState(1);
   const queryClient = useQueryClient();
 
   const dataSession = sessionStorage.getItem("PhieuDangKy");
@@ -129,7 +127,7 @@ const FormSignUpDVKN = () => {
       const dataFinal = {
         ...data,
         maId: "",
-        maKh: userInfo?.maKh,
+        maKh: userInfo?.maId,
         manvNhanMau: "NV001",
         nguoiNhanMau: "Nguyễn Văn A",
         donViGuiMau: dataForm.DonViGuiMau,
@@ -223,10 +221,10 @@ const FormSignUpDVKN = () => {
       })
     );
 
-    if (isThongTinChung) {
+    if (isShow === 1) {
       const dataPhieuDKY: any = {
         maId: "",
-        maKh: userInfo?.maKh,
+        maKh: userInfo.maId,
         manvNhanMau: "NV001",
         nguoiNhanMau: "Nguyễn Văn A",
         donViGuiMau: dataForm.DonViGuiMau,
@@ -248,7 +246,7 @@ const FormSignUpDVKN = () => {
     } else {
       const dataPhieuDKY: any = {
         maId: "",
-        maKh: userInfo?.maKh,
+        maKh: userInfo.maId,
         manvNhanMau: "NV001",
         nguoiNhanMau: "Nguyễn Văn A",
         donViGuiMau: data.donViGuiMau,
@@ -266,12 +264,367 @@ const FormSignUpDVKN = () => {
         Maus: dataMaus,
         PhieuDangKyPhuLieuHoaChats: dataPLHC,
       };
-      console.log("dataPhieuDKY", dataPhieuDKY);
-
       mutate(dataPhieuDKY);
     }
+  };
 
-    // sessionStorage.removeItem("PhieuDangKy");
+  const handleShow = () => {
+    switch (isShow as number) {
+      case 2:
+        return (
+          <motion.div
+            key="form-mau"
+            initial={{ y: 10, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            exit={{ y: -10, opacity: 0 }}
+            transition={{ duration: 0.5 }}
+            className="overflow-x-auto whitespace-nowrap grid grid-cols-12 gap-6 px-6 py-6 sm:py-8"
+          >
+            <div className="relative col-span-12 xl:col-span-8 border-[2px] border-cyan-800 rounded-lg shadow-[0_4px_4px_rgba(0,0,0,0.4)] p-5">
+              <Maus setData={setData} />
+            </div>
+            <div className="col-span-12 self-start xl:col-span-4 border-[2px] border-cyan-800 bg-gray-50 rounded-lg shadow-[0_4px_4px_rgba(0,0,0,0.4)] p-5">
+              <div className="flex justify-center">
+                <img
+                  src={image.imageYelling}
+                  alt="imageYelling"
+                  className="w-72 h-72"
+                />
+              </div>
+              <div className="grid gap-6">
+                <button
+                  onClick={() => {
+                    setIsShow(1);
+                  }}
+                  className="whitespace-normal capitalize border-[2px] border-solid  hover:bg-gray-100 text-cyan-800 border-gray-300 rounded-md px-4 py-2 font-semibold text-base/6 flex justify-center cursor-pointer items-center gap-2 hover:shadow-[0_4px_4px_rgba(0,0,0,0.2)]"
+                >
+                  <span className="w-5 sm:w-7">
+                    <MdAccountBox className="w-5 h-5 sm:w-7 sm:h-7 shrink-0 text-indigo-600" />
+                  </span>
+                  <span className="pt-[2px] whitespace-normal">
+                    Thông tin chung
+                  </span>
+                </button>
+                <button
+                  onClick={() => {
+                    setIsShow(3);
+                  }}
+                  className="whitespace-normal capitalize border-[2px] border-solid  hover:bg-gray-100 text-cyan-800 border-gray-300 rounded-md px-4 py-2 font-semibold text-base/6 flex justify-center cursor-pointer items-start sm:items-center sm:gap-2 hover:shadow-[0_4px_4px_rgba(0,0,0,0.2)]"
+                >
+                  <span className="w-7 sm:w-7">
+                    <MdScience className="w-7 h-7 sm:w-7 sm:h-7 shrink-0 text-orange-300" />
+                  </span>
+                  <span className="pt-[2px]">
+                    Điền thông tin phụ liệu hóa chất cần gửi
+                  </span>
+                </button>
+                {data?.Maus?.length >= 1 && data?.PLHC?.length >= 1 && (
+                  <button
+                    onClick={handleSubmit(handleGui, () => {
+                      errors && setIsShow(1);
+                    })}
+                    className="whitespace-normal capitalize border-[2px] bg-blue-500 border-solid  hover:bg-blue-600 text-cyan-800 border-gray-300 rounded-md px-4 py-2 font-semibold text-base/6 flex justify-center cursor-pointer items-start sm:items-center sm:gap-2 hover:shadow-[0_4px_4px_rgba(0,0,0,0.2)]"
+                  >
+                    <span className="pt-[2px] text-white">Gửi</span>
+                  </button>
+                )}
+              </div>
+            </div>
+          </motion.div>
+        );
+      case 3:
+        return (
+          <motion.div
+            key="form-plhc"
+            initial={{ y: 10, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            exit={{ y: -10, opacity: 0 }}
+            transition={{ duration: 0.5 }}
+            className="overflow-x-auto whitespace-nowrap grid grid-cols-12 gap-6 px-6 py-6 sm:py-8"
+          >
+            <div className="relative col-span-12 xl:col-span-8 border-[2px] border-cyan-800 rounded-lg shadow-[0_4px_4px_rgba(0,0,0,0.4)] p-5">
+              <PhuLieuHoaChat setData={setData} />
+            </div>
+            <div className="col-span-12 self-start xl:col-span-4 border-[2px] border-cyan-800 bg-gray-50 rounded-lg shadow-[0_4px_4px_rgba(0,0,0,0.4)] p-5">
+              <div className="flex justify-center">
+                <img
+                  src={image.imageYelling}
+                  alt="imageYelling"
+                  className="w-72 h-72"
+                />
+              </div>
+              <div className="grid gap-6">
+                <button
+                  onClick={() => {
+                    setIsShow(1);
+                  }}
+                  className="whitespace-normal capitalize border-[2px] border-solid  hover:bg-gray-100 text-cyan-800 border-gray-300 rounded-md px-4 py-2 font-semibold text-base/6 flex justify-center cursor-pointer items-center gap-2 hover:shadow-[0_4px_4px_rgba(0,0,0,0.2)]"
+                >
+                  <span className="w-5 sm:w-7">
+                    <MdAccountBox className="w-5 h-5 sm:w-7 sm:h-7 shrink-0 text-indigo-600" />
+                  </span>
+                  <span className="pt-[2px] whitespace-normal">
+                    Thông tin chung
+                  </span>
+                </button>
+                <button
+                  onClick={() => {
+                    setIsShow(2);
+                  }}
+                  className="whitespace-normal capitalize border-[2px] border-solid  hover:bg-gray-100 text-cyan-800 border-gray-300 rounded-md px-4 py-2 font-semibold text-base/6 flex justify-center cursor-pointer items-start sm:items-center sm:gap-2 hover:shadow-[0_4px_4px_rgba(0,0,0,0.2)]"
+                >
+                  <span className="w-5 sm:w-7">
+                    <MdDescription className="w-5 h-5 sm:w-7 sm:h-7 shrink-0 text-blue-500" />
+                  </span>
+                  <span className="pt-[2px] whitespace-normal">
+                    Điền thông tin mẫu cần gửi
+                  </span>
+                </button>
+                {data?.Maus?.length >= 1 && data?.PLHC?.length >= 1 && (
+                  <button
+                    onClick={handleSubmit(handleGui, () => {
+                      errors && setIsShow(1);
+                    })}
+                    className="whitespace-normal capitalize border-[2px] bg-blue-500 border-solid  hover:bg-blue-600 text-cyan-800 border-gray-300 rounded-md px-4 py-2 font-semibold text-base/6 flex justify-center cursor-pointer items-start sm:items-center sm:gap-2 hover:shadow-[0_4px_4px_rgba(0,0,0,0.2)]"
+                  >
+                    <span className="pt-[2px] text-white">Gửi</span>
+                  </button>
+                )}
+              </div>
+            </div>
+          </motion.div>
+        );
+      default:
+        return (
+          <motion.div
+            key="form-signup-thongtinchung"
+            initial={{ y: 10, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            exit={{ y: -10, opacity: 0 }}
+            transition={{ duration: 0.5 }}
+            className="overflow-x-auto whitespace-nowrap grid grid-cols-12 gap-6 px-6 py-6 sm:py-8"
+          >
+            <div className="relative col-span-12 xl:col-span-8 border-[2px] border-cyan-800 rounded-lg shadow-[0_4px_4px_rgba(0,0,0,0.4)]">
+              <Box className="absolute z-50 -top-5 left-1/2 -translate-x-1/2 text-center bg-cyan-800 px-6 py-1 rounded-lg border-[2px] border-gray-300 shadow-[0_4px_4px_rgba(0,0,0,0.25)]">
+                <p className="text-lg/6 capitalize font-medium text-white">
+                  Thông tin chung
+                </p>
+              </Box>
+              <form className="px-5 pt-8 pb-6 self-start grid grid-cols-12 gap-1 md:gap-[0px_24px]">
+                <Box className="col-span-12 md:col-span-6 lg:col-span-4">
+                  <Inputs
+                    title="Người gửi mẫu"
+                    className="h-[42px]"
+                    name="NguoiGuiMau"
+                    inputRef={register("NguoiGuiMau")}
+                    errorMessage={errors.NguoiGuiMau?.message}
+                    placeholder="VD: Nguyễn Văn A"
+                    sx={{
+                      input: {
+                        padding: "9.5px 14px",
+                        backgroundColor: "white",
+                      },
+                    }}
+                  />
+                </Box>
+                <Box className="col-span-12 md:col-span-6 lg:col-span-4">
+                  <Inputs
+                    title="Đơn vị gửi mẫu"
+                    className="h-[42px]"
+                    name="DonViGuiMau"
+                    inputRef={register("DonViGuiMau")}
+                    errorMessage={errors.DonViGuiMau?.message}
+                    placeholder="VD: Công ty TNHH ABC"
+                    sx={{
+                      input: {
+                        padding: "9.5px 14px",
+                        backgroundColor: "white",
+                      },
+                    }}
+                  />
+                </Box>
+                <Box className="col-span-12 md:col-span-6 lg:col-span-4">
+                  <Inputs
+                    title="Email"
+                    type="email"
+                    name="Email"
+                    inputRef={register("Email")}
+                    errorMessage={errors.Email?.message}
+                    placeholder="VD: abc@gmail.com"
+                    className="h-[42px]"
+                    sx={{
+                      input: {
+                        padding: "9.5px 14px",
+                        backgroundColor: "white",
+                      },
+                    }}
+                  />
+                </Box>
+                <Box className="col-span-12 md:col-span-6 lg:col-span-4">
+                  <Inputs
+                    title="Số điện thoại"
+                    type="number"
+                    className="h-[42px]"
+                    name="SoDienThoai"
+                    inputRef={register("SoDienThoai")}
+                    errorMessage={errors.SoDienThoai?.message}
+                    placeholder="VD: 03976*****"
+                    sx={{
+                      input: {
+                        padding: "9.5px 14px",
+                        backgroundColor: "white",
+                      },
+                      'input[type="number"]': {
+                        MozAppearance: "textfield",
+                      },
+                      'input[type="number"]::-webkit-outer-spin-button, input[type="number"]::-webkit-inner-spin-button':
+                        {
+                          WebkitAppearance: "none",
+                          margin: 0,
+                        },
+                    }}
+                  />
+                </Box>
+                <Box className="col-span-12 md:col-span-6 lg:col-span-4">
+                  <InputSelect
+                    title="Hình thức gửi mẫu"
+                    name="HinhThucGuiMau"
+                    control={control}
+                    options={dataHinhThucGuiTra}
+                    selectProps={{
+                      isSearchable: false,
+                      placeholder: "Chọn hình thức gửi mẫu",
+                    }}
+                    errorMessage={(errors.HinhThucGuiMau as any)?.message}
+                  />
+                </Box>
+                <Box className="col-span-12 md:col-span-6 lg:col-span-4">
+                  <InputSelect
+                    title="Hình thức trả kết quả"
+                    name="HinhThucTraKQ"
+                    control={control}
+                    options={dataHinhThucGuiTra}
+                    selectProps={{
+                      isSearchable: false,
+                      placeholder: "Chọn hình thức trả mẫu",
+                    }}
+                    errorMessage={(errors.HinhThucTraKQ as any)?.message}
+                  />
+                </Box>
+                {HinhThucTraKQ === "Bưu điện" && (
+                  <Box className="col-span-12">
+                    <Inputs
+                      title="Địa chỉ giao mẫu"
+                      name="DiaChiGiaoMau"
+                      inputRef={register("DiaChiGiaoMau")}
+                      errorMessage={errors.DiaChiGiaoMau?.message}
+                      placeholder="VD: 607 Cao Sơn,...."
+                      className="h-[42px]"
+                      sx={{
+                        input: {
+                          padding: "9.5px 14px",
+                        },
+                      }}
+                    />
+                  </Box>
+                )}
+                <Box className="col-span-12 md:col-span-6">
+                  <Inputs
+                    title="Ngày giao mẫu"
+                    type="date"
+                    name="NgayGiaoMau"
+                    inputRef={register("NgayGiaoMau")}
+                    errorMessage={errors.NgayGiaoMau?.message}
+                    className="h-[42px]"
+                    sx={{
+                      input: {
+                        padding: "9.5px 14px",
+                        backgroundColor: "white",
+                      },
+                    }}
+                  />
+                </Box>
+                <Box className="col-span-12 md:col-span-6">
+                  <Inputs
+                    title="Địa chỉ liên hệ"
+                    name="DiaChiLienHe"
+                    inputRef={register("DiaChiLienHe")}
+                    errorMessage={errors.DiaChiLienHe?.message}
+                    placeholder="VD: 607 Cao Sơn,...."
+                    className="h-[42px]"
+                    sx={{
+                      input: {
+                        padding: "9.5px 14px",
+                        backgroundColor: "white",
+                      },
+                    }}
+                  />
+                </Box>
+                <Box className="col-span-12 md:col-span-6 gap-2 grid">
+                  <p className="!font-semibold text-base/6 text-cyan-950">
+                    Kết quả
+                  </p>
+                  <Box className="gap-2 flex bg-white items-center border border-solid border-gray-300 rounded py-[10px] px-4 w-full">
+                    <input
+                      type="checkbox"
+                      className="w-5 h-5 cursor-pointer"
+                      {...register("KetQuaTiengAnh")}
+                    />
+                    <span className="text-base/6 font-medium">Tiếng Anh</span>
+                  </Box>
+                </Box>
+              </form>
+            </div>
+            <div className="col-span-12 self-start xl:col-span-4 border-[2px] border-cyan-800 bg-gray-50 rounded-lg shadow-[0_4px_4px_rgba(0,0,0,0.4)] p-5">
+              <div className="flex justify-center">
+                <img
+                  src={image.imageYelling}
+                  alt="imageYelling"
+                  className="w-72 h-72"
+                />
+              </div>
+              <div className="grid gap-6">
+                <button
+                  onClick={() => {
+                    setIsShow(2);
+                  }}
+                  className="whitespace-normal capitalize border-[2px] border-solid  hover:bg-gray-100 text-cyan-800 border-gray-300 rounded-md px-4 py-2 font-semibold text-base/6 flex justify-center cursor-pointer items-center gap-2 hover:shadow-[0_4px_4px_rgba(0,0,0,0.2)]"
+                >
+                  <span className="w-5 sm:w-7">
+                    <MdDescription className="w-5 h-5 sm:w-7 sm:h-7 shrink-0 text-blue-500" />
+                  </span>
+                  <span className="pt-[2px] whitespace-normal">
+                    Điền thông tin mẫu cần gửi
+                  </span>
+                </button>
+                <button
+                  onClick={() => {
+                    setIsShow(3);
+                  }}
+                  className="whitespace-normal capitalize border-[2px] border-solid  hover:bg-gray-100 text-cyan-800 border-gray-300 rounded-md px-4 py-2 font-semibold text-base/6 flex justify-center cursor-pointer items-start sm:items-center sm:gap-2 hover:shadow-[0_4px_4px_rgba(0,0,0,0.2)]"
+                >
+                  <span className="w-7 sm:w-7">
+                    <MdScience className="w-7 h-7 sm:w-7 sm:h-7 shrink-0 text-orange-300" />
+                  </span>
+                  <span className="pt-[2px]">
+                    Điền thông tin phụ liệu hóa chất cần gửi
+                  </span>
+                </button>
+                {data?.Maus?.length >= 1 && data?.PLHC?.length >= 1 && (
+                  <button
+                    onClick={handleSubmit(handleGui, () => {
+                      errors && setIsShow(1);
+                    })}
+                    className="whitespace-normal capitalize border-[2px] bg-blue-500 border-solid  hover:bg-blue-600 text-cyan-800 border-gray-300 rounded-md px-4 py-2 font-semibold text-base/6 flex justify-center cursor-pointer items-start sm:items-center sm:gap-2 hover:shadow-[0_4px_4px_rgba(0,0,0,0.2)]"
+                  >
+                    <span className="pt-[2px] text-white">Gửi</span>
+                  </button>
+                )}
+              </div>
+            </div>
+          </motion.div>
+        );
+    }
   };
 
   useEffect(() => {
@@ -329,327 +682,34 @@ const FormSignUpDVKN = () => {
         exit={{ x: 0, opacity: 0 }}
         transition={{ duration: 0.3 }}
       >
-        <div className="grid gap-4 pb-10">
-          <Box className="relative w-full h-[200px]">
-            <Box
-              sx={{
-                position: "absolute",
-                inset: 0,
-                backgroundImage: `url(${image.imageBannerPage})`,
-                backgroundSize: "cover",
-                backgroundPosition: "center",
-                backgroundRepeat: "no-repeat",
-                filter: "brightness(50%)",
-                zIndex: 0,
-              }}
-            />
-            <Box className="!absolute bottom-0 w-full flex items-center justify-between px-6 py-6 sm:py-8 z-10">
-              <Box className="flex items-center gap-2 sm:gap-4">
-                <button
-                  className="p-1 sm:p-2 rounded-full bg-gray-200 hover:bg-gray-300 transition-colors group cursor-pointer"
-                  onClick={handleClickOpenPopupThoatForm}
-                >
-                  <MdDoorBack className="w-4 h-4 sm:w-7 sm:h-7 text-[#306fb2]" />
-                </button>
-                <h1 className="capitalize text-xl/4 sm:text-3xl/6 font-bold text-white">
-                  Đăng Ký Dịch Vụ Kiểm Nghiệm
-                </h1>
-              </Box>
-              <button
-                type="button"
-                onClick={handleSubmit(handleGui, () => {
-                  errors && setThongTinChung(true);
-                })}
-                disabled={
-                  data?.Maus?.length >= 1 && data?.PLHC?.length >= 1
-                    ? false
-                    : true
-                }
-                className={clsx(
-                  "hidden px-4 py-[5px] sm:px-6 sm:py-2 sm:flex items-center text-white  border-[2px] border-solid border-gray-300 rounded-[6px] shadow-[0_4px_4px_rgba(0,0,0,0.25)]",
-                  data?.Maus?.length >= 1 && data?.PLHC?.length >= 1
-                    ? "cursor-pointer bg-indigo-600 hover:bg-indigo-700"
-                    : "cursor-no-drop bg-indigo-400"
-                )}
-              >
-                <span className="text-[10px] sm:text-lg/6 font-bold text-amber-50">
-                  Gửi
-                </span>
-              </button>
-            </Box>
-          </Box>
-
-          <Box className="overflow-x-auto whitespace-nowrap grid gap-6 px-6 py-6 sm:py-8">
-            <Box>
-              <button
-                onClick={() => {
-                  handleSubmit(onSubmitPhieuDkyDV)();
-                  setThongTinChung(!isThongTinChung);
-                  setIsMaus(false);
-                  setIsPLHCs(false);
-                }}
-                className={`border-gray-300 ${
-                  isThongTinChung
-                    ? "rounded-tr-[6px] rounded-tl-[6px] border-t border-l border-r bg-gray-100"
-                    : "rounded-[6px] border"
-                } p-2 sm:p-4 flex items-center justify-between w-full cursor-pointer hover:bg-gray-100 transition-colors`}
-              >
-                <p className="text-base/6 sm:text-xl/6 text-cyan-900 font-bold flex gap-2 items-center leading-6">
-                  <MdAccountBox className="w-5 h-5 sm:w-7 sm:h-7 shrink-0 text-indigo-600" />{" "}
-                  Thông Tin Chung
-                </p>
-                <IoMdArrowDropdown
-                  className={`w-5 h-5 sm:w-7 sm:h-7 text-gray-700 ${
-                    isThongTinChung && "rotate-180"
-                  }`}
-                />
-              </button>
-              {isThongTinChung && (
-                <motion.div
-                  key="form-signup-thongtinchung"
-                  initial={{ x: 0, opacity: 0 }}
-                  animate={{ x: 0, opacity: 1 }}
-                  exit={{ x: 0, opacity: 0 }}
-                  transition={{ duration: 0.3 }}
-                  className="border border-gray-300 rounded-br-[6px] rounded-bl-[6px]"
-                >
-                  <form className="p-5 grid grid-cols-12 gap-1 md:gap-[0px_24px]">
-                    <Box className="col-span-12 md:col-span-6 lg:col-span-4">
-                      <Inputs
-                        title="Người gửi mẫu"
-                        className="h-[42px]"
-                        name="NguoiGuiMau"
-                        inputRef={register("NguoiGuiMau")}
-                        errorMessage={errors.NguoiGuiMau?.message}
-                        placeholder="VD: Nguyễn Văn A"
-                        sx={{
-                          input: {
-                            padding: "9.5px 14px",
-                          },
-                        }}
-                      />
-                    </Box>
-                    <Box className="col-span-12 md:col-span-6 lg:col-span-4">
-                      <Inputs
-                        title="Đơn vị gửi mẫu"
-                        className="h-[42px]"
-                        name="DonViGuiMau"
-                        inputRef={register("DonViGuiMau")}
-                        errorMessage={errors.DonViGuiMau?.message}
-                        placeholder="VD: Công ty TNHH ABC"
-                        sx={{
-                          input: {
-                            padding: "9.5px 14px",
-                          },
-                        }}
-                      />
-                    </Box>
-                    <Box className="col-span-12 md:col-span-6 lg:col-span-4">
-                      <Inputs
-                        title="Email"
-                        type="email"
-                        name="Email"
-                        inputRef={register("Email")}
-                        errorMessage={errors.Email?.message}
-                        placeholder="VD: abc@gmail.com"
-                        className="h-[42px]"
-                        sx={{
-                          input: {
-                            padding: "9.5px 14px",
-                          },
-                        }}
-                      />
-                    </Box>
-                    <Box className="col-span-12 md:col-span-6 lg:col-span-4">
-                      <Inputs
-                        title="Số điện thoại"
-                        type="number"
-                        className="h-[42px]"
-                        name="SoDienThoai"
-                        inputRef={register("SoDienThoai")}
-                        errorMessage={errors.SoDienThoai?.message}
-                        placeholder="VD: 03976*****"
-                        sx={{
-                          input: {
-                            padding: "9.5px 14px",
-                          },
-                          'input[type="number"]': {
-                            MozAppearance: "textfield",
-                          },
-                          'input[type="number"]::-webkit-outer-spin-button, input[type="number"]::-webkit-inner-spin-button':
-                            {
-                              WebkitAppearance: "none",
-                              margin: 0,
-                            },
-                        }}
-                      />
-                    </Box>
-                    <Box className="col-span-12 md:col-span-6 lg:col-span-4">
-                      <InputSelect
-                        title="Hình thức gửi mẫu"
-                        name="HinhThucGuiMau"
-                        control={control}
-                        options={dataHinhThucGuiTra}
-                        selectProps={{
-                          isSearchable: false,
-                          placeholder: "Chọn hình thức gửi mẫu",
-                        }}
-                        errorMessage={(errors.HinhThucGuiMau as any)?.message}
-                      />
-                    </Box>
-                    <Box className="col-span-12 md:col-span-6 lg:col-span-4">
-                      <InputSelect
-                        title="Hình thức trả kết quả"
-                        name="HinhThucTraKQ"
-                        control={control}
-                        options={dataHinhThucGuiTra}
-                        selectProps={{
-                          isSearchable: false,
-                          placeholder: "Chọn hình thức trả mẫu",
-                        }}
-                        errorMessage={(errors.HinhThucTraKQ as any)?.message}
-                      />
-                    </Box>
-                    {HinhThucTraKQ === "Bưu điện" && (
-                      <Box className="col-span-12">
-                        <Inputs
-                          title="Địa chỉ giao mẫu"
-                          name="DiaChiGiaoMau"
-                          inputRef={register("DiaChiGiaoMau")}
-                          errorMessage={errors.DiaChiGiaoMau?.message}
-                          placeholder="VD: 607 Cao Sơn,...."
-                          className="h-[42px]"
-                          sx={{
-                            input: {
-                              padding: "9.5px 14px",
-                            },
-                          }}
-                        />
-                      </Box>
-                    )}
-                    <Box className="col-span-12 md:col-span-6">
-                      <Inputs
-                        title="Ngày giao mẫu"
-                        type="date"
-                        name="NgayGiaoMau"
-                        inputRef={register("NgayGiaoMau")}
-                        errorMessage={errors.NgayGiaoMau?.message}
-                        className="h-[42px]"
-                        sx={{
-                          input: {
-                            padding: "9.5px 14px",
-                          },
-                        }}
-                      />
-                    </Box>
-                    <Box className="col-span-12 md:col-span-6">
-                      <Inputs
-                        title="Địa chỉ liên hệ"
-                        name="DiaChiLienHe"
-                        inputRef={register("DiaChiLienHe")}
-                        errorMessage={errors.DiaChiLienHe?.message}
-                        placeholder="VD: 607 Cao Sơn,...."
-                        className="h-[42px]"
-                        sx={{
-                          input: {
-                            padding: "9.5px 14px",
-                          },
-                        }}
-                      />
-                    </Box>
-                    <Box className="col-span-12 md:col-span-6 gap-2 grid">
-                      <p className="!font-semibold text-base/6 text-gray_80">
-                        Kết quả
-                      </p>
-                      <Box className="gap-2 flex items-center border border-solid border-gray-300 rounded py-[10px] px-4 w-full">
-                        <input
-                          type="checkbox"
-                          className="w-5 h-5 cursor-pointer"
-                          {...register("KetQuaTiengAnh")}
-                        />
-                        <span className="text-base/6 font-medium">
-                          Tiếng Anh
-                        </span>
-                      </Box>
-                    </Box>
-                  </form>
-                </motion.div>
-              )}
-            </Box>
-            <Box className="overflow-x-auto whitespace-nowrap">
-              <button
-                type="button"
-                onClick={() => {
-                  handleSubmit(onSubmitPhieuDkyDV)();
-                  setIsMaus(!isMaus);
-                  setThongTinChung(false);
-                  setIsPLHCs(false);
-                }}
-                className={`border-gray-300 ${
-                  isMaus
-                    ? "rounded-tr-[6px] rounded-tl-[6px] border-t border-l border-r bg-gray-100"
-                    : "rounded-[6px] border"
-                } p-2 sm:p-4 flex items-center justify-between w-full cursor-pointer hover:bg-gray-100 transition-colors`}
-              >
-                <p className="text-base/6 sm:text-xl/6 text-cyan-900 font-bold flex gap-2 items-center leading-6">
-                  <MdDescription className="w-5 h-5 sm:w-7 sm:h-7 shrink-0 text-blue-500" />{" "}
-                  Mẫu
-                </p>
-                <IoMdArrowDropdown
-                  className={`w-5 h-5 sm:w-7 sm:h-7 text-gray-700 ${
-                    isMaus && "rotate-180"
-                  }`}
-                />
-              </button>
-              {isMaus && <Maus setData={setData} />}
-              {/* {errors.Maus?.message && (
-                <p className="text-red-800 text-sm mt-2">
-                  {errors.Maus?.message}
-                </p>
-              )} */}
-            </Box>
-            <Box className="overflow-x-auto whitespace-nowrap">
-              <button
-                onClick={() => {
-                  handleSubmit(onSubmitPhieuDkyDV)();
-                  setIsPLHCs(!isPLHCs);
-                  setIsMaus(false);
-                  setThongTinChung(false);
-                }}
-                className={`border-gray-300 ${
-                  isPLHCs
-                    ? "rounded-tr-[6px] rounded-tl-[6px] border-t border-l border-r bg-gray-100"
-                    : "rounded-[6px] border"
-                }   p-2 sm:p-4 flex items-center justify-between w-full cursor-pointer hover:bg-gray-100 transition-colors`}
-              >
-                <p className="text-base/6 sm:text-xl/6 text-cyan-900 font-bold flex gap-2 items-center leading-6">
-                  <MdScience className="w-5 h-5 sm:w-7 sm:h-7 shrink-0 text-orange-300" />{" "}
-                  Phụ Liệu Hóa Chất
-                </p>
-                <IoMdArrowDropdown
-                  className={`w-5 h-5 sm:w-7 sm:h-7 text-gray-700 ${
-                    isPLHCs && "rotate-180"
-                  }`}
-                />
-              </button>
-              {isPLHCs && <PhuLieuHoaChat setData={setData} />}
-              {/* {errors.PLHC?.message && (
-                <p className="text-red-800 text-sm mt-2">
-                  {errors.PLHC?.message}
-                </p>
-              )} */}
-            </Box>
-          </Box>
-          <Box className="sm:hidden px-6">
+        <Box className="relative w-full h-[200px]">
+          <Box
+            sx={{
+              position: "absolute",
+              inset: 0,
+              backgroundImage: `url(${image.imageBannerPage})`,
+              backgroundSize: "cover",
+              backgroundPosition: "center",
+              backgroundRepeat: "no-repeat",
+              filter: "brightness(50%)",
+              zIndex: 0,
+            }}
+          />
+          <Box className="!absolute bottom-0 w-full flex items-center justify-between px-6 py-6 sm:py-8 z-10">
             <button
-              type="button"
-              onClick={handleSubmit(handleGui)}
-              className="px-4 py-[6px] w-full flex items-center justify-center bg-indigo-600 text-white hover:bg-indigo-700 border-[2px] border-solid border-gray-300 rounded-[6px] shadow-[0_4px_4px_rgba(0,0,0,0.25)] cursor-pointer"
+              className="p-1 sm:p-2 rounded-full bg-gray-200 hover:bg-gray-300 transition-colors group cursor-pointer"
+              onClick={handleClickOpenPopupThoatForm}
             >
-              <span className="text-[14px]/6 font-bold text-amber-50">Gửi</span>
+              <MdDoorBack className="w-4 h-4 sm:w-7 sm:h-7 text-[#306fb2]" />
             </button>
+            <div className="flex-1 flex justify-center">
+              <p className="capitalize text-xl/4 sm:text-3xl/6 font-bold text-white border-[2px] px-6 py-2 rounded-lg bg-cyan-800 mr-16">
+                Đăng Ký Dịch Vụ Kiểm Nghiệm
+              </p>
+            </div>
           </Box>
-        </div>
+        </Box>
+        {handleShow()}
       </motion.div>
       <PopupNofitication
         openPopupNofitication={openPopupNofitication}

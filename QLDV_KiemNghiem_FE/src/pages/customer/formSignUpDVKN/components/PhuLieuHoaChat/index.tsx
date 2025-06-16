@@ -402,7 +402,14 @@ const PhuLieuHoaChat = (props: PhuLieuHoaChatProps) => {
     switch (isTag as number) {
       case 2:
         return (
-          <Box className="py-4">
+          <motion.div
+            key={"tag2"}
+            initial={{ y: 10, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            exit={{ y: -10, opacity: 0 }}
+            transition={{ duration: 0.2 }}
+            className="py-4"
+          >
             {listCheckbox.length > 0 && (
               <Box className="flex justify-end items-center mb-2">
                 <button
@@ -446,12 +453,19 @@ const PhuLieuHoaChat = (props: PhuLieuHoaChatProps) => {
                 />
               </Box>
             )}
-          </Box>
+          </motion.div>
         );
 
       default:
         return (
-          <Box className="pt-4">
+          <motion.div
+            key={"tag1"}
+            initial={{ y: 10, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            exit={{ y: -10, opacity: 0 }}
+            transition={{ duration: 0.2 }}
+            className="pt-4"
+          >
             <form autoComplete="off" className="grid gap-4">
               <Box className="grid grid-cols-12 gap-1 lg:gap-[0px_24px]">
                 <Box className="col-span-12 md:col-span-6 lg:col-span-4">
@@ -635,7 +649,7 @@ const PhuLieuHoaChat = (props: PhuLieuHoaChatProps) => {
                 )}
               </Box>
             </form>
-          </Box>
+          </motion.div>
         );
     }
   };
@@ -706,17 +720,10 @@ const PhuLieuHoaChat = (props: PhuLieuHoaChatProps) => {
   }, [TenDM_PLHC, dataDM_PhuLieuHoaChat, TenHienThi]);
 
   return (
-    <motion.div
-      key="PhuLieuHoaChat"
-      initial={{ x: 0, opacity: 0 }}
-      animate={{ x: 0, opacity: 1 }}
-      exit={{ x: 0, opacity: 0 }}
-      transition={{ duration: 0.3 }}
-      className="border border-gray-300 rounded-br-[6px] rounded-bl-[6px] py-4 px-4 sm:px-12"
-    >
+    <div>
       {handleTagPLHC()}
       {handleShowTagPLHC()}
-    </motion.div>
+    </div>
   );
 };
 

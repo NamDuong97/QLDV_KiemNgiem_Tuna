@@ -1,4 +1,3 @@
-import axios from "axios";
 import _APIInstance from "../../configs/configAPI";
 import { API } from "../../constants/commons";
 
@@ -20,8 +19,8 @@ export default class accessServices {
         headers: { "Content-Type": "application/json" },
       });
       return response;
-    } catch (res) {
-      return res;
+    } catch (err: any) {
+      return err;
     }
   }
 

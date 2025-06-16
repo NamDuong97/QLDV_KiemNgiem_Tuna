@@ -111,29 +111,28 @@ const EditPhieuDKyDVKN = () => {
   };
 
   const onSubmitPhieuDkyDV = (dataForm: FormPhieuDangKy) => {
-    if (data.donViGuiMau !== dataForm.DonViGuiMau) {
-      const dataFinal = {
-        ...data,
-        maId: data?.maId,
-        maKh: data?.maKh,
-        manvNhanMau: data?.manvNhanMau,
-        nguoiNhanMau: data?.nguoiNhanMau,
-        donViGuiMau: dataForm.DonViGuiMau,
-        nguoiGuiMau: dataForm.NguoiGuiMau,
-        soDienThoai: dataForm.SoDienThoai,
-        email: dataForm.Email,
-        diaChiLienHe: dataForm.DiaChiLienHe,
-        hinhThucGuiMau: dataForm.HinhThucGuiMau,
-        hinhThucTraKq: dataForm.HinhThucTraKQ,
-        diaChiGiaoMau: dataForm.DiaChiGiaoMau ? dataForm.DiaChiGiaoMau : "",
-        trangThaiId: data?.trangThaiId,
-        ketQuaTiengAnh: dataForm.KetQuaTiengAnh ? true : false,
-        ngayGiaoMau: dataForm.NgayGiaoMau,
-        ngayThucHien: data?.ngayThucHien,
-      };
-      setData(dataFinal);
-      sessionStorage.setItem("sua-phieuDky", JSON.stringify(dataFinal));
-    }
+    const dataFinal = {
+      ...data,
+      maId: data?.maId,
+      maKh: data?.maKh,
+      manvNhanMau: data?.manvNhanMau,
+      nguoiNhanMau: data?.nguoiNhanMau,
+      donViGuiMau: dataForm.DonViGuiMau,
+      nguoiGuiMau: dataForm.NguoiGuiMau,
+      soDienThoai: dataForm.SoDienThoai,
+      email: dataForm.Email,
+      diaChiLienHe: dataForm.DiaChiLienHe,
+      hinhThucGuiMau: dataForm.HinhThucGuiMau,
+      hinhThucTraKq: dataForm.HinhThucTraKQ,
+      diaChiGiaoMau: dataForm.DiaChiGiaoMau ? dataForm.DiaChiGiaoMau : "",
+      trangThaiId: data?.trangThaiId,
+      ketQuaTiengAnh: dataForm.KetQuaTiengAnh ? true : false,
+      ngayGiaoMau: dataForm.NgayGiaoMau,
+      ngayThucHien: data?.ngayThucHien,
+    };
+
+    setData(dataFinal);
+    sessionStorage.setItem("sua-phieuDky", JSON.stringify(dataFinal));
   };
 
   const handleGui = (dataForm: FormPhieuDangKy) => {
@@ -339,7 +338,6 @@ const EditPhieuDKyDVKN = () => {
                 }
                 className={clsx(
                   "hidden px-4 py-[5px] sm:px-6 sm:py-2 sm:flex items-center text-white  border-[2px] border-solid border-gray-300 rounded-[6px] shadow-[0_4px_4px_rgba(0,0,0,0.25)]",
-
                   (data?.maus?.length >= 1 &&
                     data?.phieuDangKyPhuLieuHoaChats?.length >= 1) ||
                     (data?.Maus?.length >= 1 &&

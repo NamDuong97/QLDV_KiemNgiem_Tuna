@@ -5,7 +5,9 @@ import yup from "../../../../../configs/yup.custom";
 import { FormDoiMatKhau } from "../../../../../models/KhachHang";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { useEffect, useMemo } from "react";
+import { useContext, useEffect, useMemo } from "react";
+import { StoreContext } from "../../../../../contexts/storeProvider";
+import bcrypt from "bcryptjs";
 
 interface Props {
   setisShow: React.Dispatch<React.SetStateAction<number>>;
@@ -13,13 +15,20 @@ interface Props {
 
 const DoiMatKhau = (props: Props) => {
   const { setisShow } = props;
-
+  const { userInfo } = useContext(StoreContext);
   let schemaDoiMatKhau = useMemo(() => {
     return yup.object().shape({
       matKhauCu: yup
         .string()
         .required("Vui lòng nhập mật khẩu cũ")
-        .min(6, "Mật khẩu phải có ít nhất 6 ký tự"),
+        .test("Sai mật khẩu", "Sai mật khẩu", async function (value) {
+          const isMatch = await bcrypt.compare(value, userInfo.matKhau);
+          if (isMatch) {
+            return true;
+          } else {
+            return this.createError({ message: "Sai mật khẩu" });
+          }
+        }),
       matKhauMoi: yup
         .string()
         .required("Vui lòng nhập mật khẩu mới")

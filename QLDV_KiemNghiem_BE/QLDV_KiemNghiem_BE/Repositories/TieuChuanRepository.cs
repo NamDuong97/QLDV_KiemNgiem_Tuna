@@ -29,7 +29,7 @@ namespace QLDV_KiemNghiem_BE.Repositories
         {
             return  _context.TieuChuans.AsNoTracking()
             .AsEnumerable() // Chuyển về xử lý phía client
-            .Where(item => PublicFunction.processString(item.TenTieuChuan).Contains(tenTieuChuan)).ToList();
+            .Where(item => item.TenTieuChuan.ToLower().Trim() == tenTieuChuan).ToList();
         }
 
         public void CreateTieuChuanAsync(TieuChuan tieuChuan)

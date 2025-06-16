@@ -1,9 +1,9 @@
 import { Box, Pagination } from "@mui/material";
 import { motion } from "motion/react";
 import TableMau from "./TableMau";
-import { Align } from "../../../../../../../models/Table";
 import { Dispatch, useState } from "react";
 import FormThongTinMau from "./FormThongTinMau";
+import { Align } from "../../../../../../../models/Table";
 
 interface MausProps {
   setData: Dispatch<any>;
@@ -40,6 +40,12 @@ const tableHead = [
     label: "Số Lượng",
     align: Align.Center,
   },
+  {
+    id: "chucNang",
+    sort: false,
+    label: "Chức Năng",
+    align: Align.Center,
+  },
 ];
 
 const Maus = (props: MausProps) => {
@@ -51,6 +57,7 @@ const Maus = (props: MausProps) => {
   });
 
   const [dataEditMaus, setDataEditMaus] = useState<any>();
+  const [dataCopyMaus, setDataCopyMaus] = useState<any>();
   const [listCheckbox, setListCheckbox] = useState<any[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(3);
@@ -62,34 +69,246 @@ const Maus = (props: MausProps) => {
 
   const totalPages = Math.ceil(tableBody && tableBody.length / itemsPerPage);
 
-  const handlePageChange = (event: any, value: number) => {
-    console.log("event", event);
-
+  const handlePageChange = (_: any, value: number) => {
     setCurrentPage(value);
+  };
+
+  const pushIfNotExist = (arr: any[], item: any) => {
+    const exists = arr.some((x) => x.tenMau === item.tenMau);
+    if (!exists) {
+      arr.push(item);
+    }
   };
 
   const handleXoaMau = () => {
     const data = tableBody.filter((item: any) => {
-      return !listCheckbox.some(
-        (subitem: any) => subitem.tenMau === item.tenMau
-      );
-    });
-    const dataXoa = tableBody.filter((item: any) => {
       return listCheckbox.some(
         (subitem: any) => subitem.tenMau === item.tenMau
       );
     });
-    console.log("dataXoa", dataXoa);
+    const dataNotRemove = tableBody.filter((item: any) => {
+      return !listCheckbox.some(
+        (subitem: any) => subitem.tenMau === item.tenMau
+      );
+    });
+    let dataFinal: any = [];
 
+    data.map((item: any) => {
+      if (item.isDel !== undefined && item.isDel !== null) {
+        const dataImage: any[] = [];
+        item.phieuDangKyMauHinhAnhs.map((item: any) =>
+          dataImage.push({
+            maId: "",
+            maMau: "",
+            ten: item.ten,
+            dinhDang: "",
+            ghiChu: item.ghiChu,
+            loaiAnh: "",
+            trangThai: "",
+            nguoiTao: item.nguoiTao,
+            nguoiSua: "",
+            ngayTao: "",
+            ngaySua: "",
+            isDel: true,
+          })
+        );
+        pushIfNotExist(dataFinal, {
+          maId: item.maId,
+          maDmMau: item.maDmMau,
+          tenMau: item.tenMau,
+          maTieuChuan: item.maTieuChuan,
+          maPhieuDangKy: item.maPhieuDangKy,
+          manvThucHien: item.manvThucHien,
+          madv: item.madv,
+          soLo: item.soLo,
+          donViSanXuat: item.donViSanXuat,
+          ngaySanXuat: item.ngaySanXuat,
+          hanSuDung: item.hanSuDung,
+          donViTinh: item.donViTinh,
+          soLuong: item.soLuong,
+          yeuCauKiemNghiem: item.yeuCauKiemNghiem,
+          tinhTrangMau: item.tinhTrangMau,
+          dieuKienBaoQuan: item.dieuKienBaoQuan,
+          luuMau: item.luuMau,
+          xuatKetQua: item.xuatKetQua,
+          trangThaiNhanMau: item.trangThaiNhanMau,
+          ghiChu: item.ghiChu,
+          nguoiTao: item.nguoiTao,
+          nguoiSua: item.nguoiSua,
+          ngayTao: item.ngayTao,
+          ngaySua: item.ngaySua,
+          thoiGianTieuChuan: item.thoiGianTieuChuan,
+          maPdkMau: item.maPdkMau,
+          loaiDv: item.loaiDv,
+          maLoaiDV: item.maLoaiDV,
+          isDel: true,
+          phieuDangKyMauHinhAnhs: dataImage,
+        });
+
+        dataNotRemove.map((item: any) => {
+          if (item.isDel !== undefined && item.isDel !== null) {
+            const dataImage: any[] = [];
+            item.phieuDangKyMauHinhAnhs.map((item: any) =>
+              dataImage.push({
+                maId: "",
+                maMau: "",
+                ten: item.ten,
+                dinhDang: "",
+                ghiChu: item.ghiChu,
+                loaiAnh: "",
+                trangThai: "",
+                nguoiTao: item.nguoiTao,
+                nguoiSua: "",
+                ngayTao: "",
+                ngaySua: "",
+                isDel: item.isDel,
+              })
+            );
+            pushIfNotExist(dataFinal, {
+              maId: item.maId,
+              maDmMau: item.maDmMau,
+              tenMau: item.tenMau,
+              maTieuChuan: item.maTieuChuan,
+              maPhieuDangKy: item.maPhieuDangKy,
+              manvThucHien: item.manvThucHien,
+              madv: item.madv,
+              soLo: item.soLo,
+              donViSanXuat: item.donViSanXuat,
+              ngaySanXuat: item.ngaySanXuat,
+              hanSuDung: item.hanSuDung,
+              donViTinh: item.donViTinh,
+              soLuong: item.soLuong,
+              yeuCauKiemNghiem: item.yeuCauKiemNghiem,
+              tinhTrangMau: item.tinhTrangMau,
+              dieuKienBaoQuan: item.dieuKienBaoQuan,
+              luuMau: item.luuMau,
+              xuatKetQua: item.xuatKetQua,
+              trangThaiNhanMau: item.trangThaiNhanMau,
+              ghiChu: item.ghiChu,
+              nguoiTao: item.nguoiTao,
+              nguoiSua: item.nguoiSua,
+              ngayTao: item.ngayTao,
+              ngaySua: item.ngaySua,
+              thoiGianTieuChuan: item.thoiGianTieuChuan,
+              maPdkMau: item.maPdkMau,
+              loaiDv: item.loaiDv,
+              maLoaiDV: item.maLoaiDV,
+              isDel: item.isDel,
+              phieuDangKyMauHinhAnhs: dataImage,
+            });
+          } else {
+            const dataImage: any[] = [];
+            item.phieuDangKyMauHinhAnhs.map((item: any) =>
+              dataImage.push({
+                maId: "",
+                maMau: "",
+                ten: item.ten,
+                dinhDang: "",
+                ghiChu: item.ghiChu,
+                loaiAnh: "",
+                trangThai: "",
+                nguoiTao: item.nguoiTao,
+                nguoiSua: "",
+                ngayTao: "",
+                ngaySua: "",
+              })
+            );
+            pushIfNotExist(dataFinal, {
+              maId: item.maId,
+              maDmMau: item.maDmMau,
+              tenMau: item.tenMau,
+              maTieuChuan: item.maTieuChuan,
+              maPhieuDangKy: item.maPhieuDangKy,
+              manvThucHien: item.manvThucHien,
+              madv: item.madv,
+              soLo: item.soLo,
+              donViSanXuat: item.donViSanXuat,
+              ngaySanXuat: item.ngaySanXuat,
+              hanSuDung: item.hanSuDung,
+              donViTinh: item.donViTinh,
+              soLuong: item.soLuong,
+              yeuCauKiemNghiem: item.yeuCauKiemNghiem,
+              tinhTrangMau: item.tinhTrangMau,
+              dieuKienBaoQuan: item.dieuKienBaoQuan,
+              luuMau: item.luuMau,
+              xuatKetQua: item.xuatKetQua,
+              trangThaiNhanMau: item.trangThaiNhanMau,
+              ghiChu: item.ghiChu,
+              nguoiTao: item.nguoiTao,
+              nguoiSua: item.nguoiSua,
+              ngayTao: item.ngayTao,
+              ngaySua: item.ngaySua,
+              thoiGianTieuChuan: item.thoiGianTieuChuan,
+              maPdkMau: item.maPdkMau,
+              loaiDv: item.loaiDv,
+              maLoaiDV: item.maLoaiDV,
+              phieuDangKyMauHinhAnhs: dataImage,
+            });
+          }
+        });
+      } else {
+        dataNotRemove.map((item: any) => {
+          const dataImage: any[] = [];
+          item.phieuDangKyMauHinhAnhs.map((item: any) =>
+            dataImage.push({
+              maId: "",
+              maMau: "",
+              ten: item.ten,
+              dinhDang: "",
+              ghiChu: item.ghiChu,
+              loaiAnh: "",
+              trangThai: "",
+              nguoiTao: item.nguoiTao,
+              nguoiSua: "",
+              ngayTao: "",
+              ngaySua: "",
+              isDel: item.isDel,
+            })
+          );
+          pushIfNotExist(dataFinal, {
+            maId: item.maId,
+            maDmMau: item.maDmMau,
+            tenMau: item.tenMau,
+            maTieuChuan: item.maTieuChuan,
+            maPhieuDangKy: item.maPhieuDangKy,
+            manvThucHien: item.manvThucHien,
+            madv: item.madv,
+            soLo: item.soLo,
+            donViSanXuat: item.donViSanXuat,
+            ngaySanXuat: item.ngaySanXuat,
+            hanSuDung: item.hanSuDung,
+            donViTinh: item.donViTinh,
+            soLuong: item.soLuong,
+            yeuCauKiemNghiem: item.yeuCauKiemNghiem,
+            tinhTrangMau: item.tinhTrangMau,
+            dieuKienBaoQuan: item.dieuKienBaoQuan,
+            luuMau: item.luuMau,
+            xuatKetQua: item.xuatKetQua,
+            trangThaiNhanMau: item.trangThaiNhanMau,
+            ghiChu: item.ghiChu,
+            nguoiTao: item.nguoiTao,
+            nguoiSua: item.nguoiSua,
+            ngayTao: item.ngayTao,
+            ngaySua: item.ngaySua,
+            thoiGianTieuChuan: item.thoiGianTieuChuan,
+            maPdkMau: item.maPdkMau,
+            loaiDv: item.loaiDv,
+            maLoaiDV: item.maLoaiDV,
+            isDel: item.isDel,
+            phieuDangKyMauHinhAnhs: dataImage,
+          });
+        });
+      }
+    });
     const dataTest = sessionStorage.getItem("sua-phieuDky");
     const dataPhieuDangky = dataTest ? JSON.parse(dataTest) : null;
     const PhieuDangKy = {
       ...dataPhieuDangky,
-      maus: data,
+      maus: dataFinal,
     };
     setData(PhieuDangKy);
     sessionStorage.setItem("sua-phieuDky", JSON.stringify(PhieuDangKy));
-    settableBody(data);
+    settableBody(dataFinal);
     setListCheckbox([]);
   };
 
@@ -99,7 +318,7 @@ const Maus = (props: MausProps) => {
         return (
           <Box className="sm:flex items-center overflow-x-auto whitespace-nowrap">
             <Box
-              className="w-full px-2 py-4 text-center cursor-pointer border-b-[2px] border-gray-300 group hover:bg-gray-200 hover:rounded-tr hover:rounded-tl"
+              className="w-full px-2 py-4 text-center cursor-pointer border-b-[2px] border-gray-300 group  hover:rounded-tr hover:rounded-tl"
               onClick={() => setisTag(1)}
             >
               <p className="text-lg/4 font-semibold capitalize text-gray-700 group-hover:text-cyan-700">
@@ -107,7 +326,7 @@ const Maus = (props: MausProps) => {
               </p>
             </Box>
             <Box
-              className="w-full px-2 py-4 text-center border-b-[2px] border-b-cyan-700 cursor-pointer hover:bg-gray-200 hover:rounded-tr hover:rounded-tl hover:transition-all hover:duration-200 hover:ease-in-out"
+              className="w-full px-2 py-4 text-center border-b-[2px] border-b-cyan-700 cursor-pointer hover:rounded-tr hover:rounded-tl hover:transition-all hover:duration-200 hover:ease-in-out bg-gray-100"
               onClick={() => setisTag(2)}
             >
               <p className="text-lg/4 font-semibold capitalize text-cyan-700">
@@ -120,7 +339,7 @@ const Maus = (props: MausProps) => {
         return (
           <Box className="sm:flex items-center overflow-x-auto whitespace-nowrap">
             <Box
-              className="w-full px-2 py-4 text-center border-b-[2px] border-b-cyan-700 cursor-pointer hover:bg-gray-200 hover:rounded-tr hover:rounded-tl hover:transition-all hover:duration-200 hover:ease-in-out"
+              className="w-full px-2 py-4 text-center border-b-[2px] border-b-cyan-700 cursor-pointer hover:rounded-tr hover:rounded-tl hover:transition-all hover:duration-200 hover:ease-in-out  bg-gray-100"
               onClick={() => setisTag(1)}
             >
               <p className="text-lg/4 font-semibold capitalize text-cyan-700">
@@ -128,7 +347,7 @@ const Maus = (props: MausProps) => {
               </p>
             </Box>
             <Box
-              className="w-full px-2 py-4 text-center border-b-[2px] border-gray-300 cursor-pointer group hover:bg-gray-200 hover:rounded-tr hover:rounded-tl"
+              className="w-full px-2 py-4 text-center border-b-[2px] border-gray-300 cursor-pointer group  hover:rounded-tr hover:rounded-tl"
               onClick={() => setisTag(2)}
             >
               <p className="text-lg/4 font-semibold capitalize text-gray-700 group-hover:text-cyan-700">
@@ -144,7 +363,13 @@ const Maus = (props: MausProps) => {
     switch (isTag as number) {
       case 2:
         return (
-          <div>
+          <motion.div
+            key={"tag2"}
+            initial={{ y: 10, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            exit={{ y: -10, opacity: 0 }}
+            transition={{ duration: 0.2 }}
+          >
             {listCheckbox.length > 0 && (
               <div className="flex items-center justify-end pt-4">
                 <button
@@ -165,6 +390,8 @@ const Maus = (props: MausProps) => {
                 tableBody={currentItems}
                 setDataEditMaus={setDataEditMaus}
                 dataEditMaus={dataEditMaus}
+                dataCopyMaus={dataCopyMaus}
+                setDataCopyMaus={setDataCopyMaus}
                 handleRedirectTag1={() => setisTag(1)}
               />
             </Box>
@@ -188,20 +415,29 @@ const Maus = (props: MausProps) => {
                 />
               </Box>
             )}
-          </div>
+          </motion.div>
         );
-
       default:
         return (
-          <FormThongTinMau
-            handleRedirectDanhSachMau={() => setisTag(2)}
-            settableBody={settableBody}
-            dataEditMaus={dataEditMaus}
-            setDataEditMaus={setDataEditMaus}
-            tableBody={tableBody}
-            handleRedirectTag2={() => setisTag(2)}
-            setData={setData}
-          />
+          <motion.div
+            key={"tag1"}
+            initial={{ y: 10, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            exit={{ y: -10, opacity: 0 }}
+            transition={{ duration: 0.2 }}
+          >
+            <FormThongTinMau
+              handleRedirectDanhSachMau={() => setisTag(2)}
+              settableBody={settableBody}
+              dataEditMaus={dataEditMaus}
+              setDataEditMaus={setDataEditMaus}
+              dataCopyMaus={dataCopyMaus}
+              setDataCopyMaus={setDataCopyMaus}
+              tableBody={tableBody}
+              handleRedirectTag2={() => setisTag(2)}
+              setData={setData}
+            />
+          </motion.div>
         );
     }
   };
@@ -212,7 +448,7 @@ const Maus = (props: MausProps) => {
       initial={{ x: 0, opacity: 0 }}
       animate={{ x: 0, opacity: 1 }}
       exit={{ x: 0, opacity: 0 }}
-      transition={{ duration: 0.7 }}
+      transition={{ duration: 0.3 }}
       className="border border-gray-300 rounded-br-[6px] rounded-bl-[6px] py-4 px-4 sm:px-10"
     >
       {handleTagMau()}

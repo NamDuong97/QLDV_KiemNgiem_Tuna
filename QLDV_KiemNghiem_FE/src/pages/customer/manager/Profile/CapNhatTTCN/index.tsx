@@ -7,6 +7,7 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import yup from "../../../../../configs/yup.custom";
 import { StoreContext } from "../../../../../contexts/storeProvider";
+import { updateInfor } from "../../../../../hooks/customers/useProfile";
 
 interface Props {
   setisShow: React.Dispatch<React.SetStateAction<number>>;
@@ -40,9 +41,13 @@ const CapNhatTTCN = (props: Props) => {
   } = useForm<FormTTCN>({
     resolver: yupResolver(schemaTTCN),
   });
+  const { mutate } = updateInfor({
+    queryKey: "updateInfor",
+  });
 
   const onSubmit = (data: FormTTCN) => {
     console.log("Thông tin cá nhân:", data);
+    // mutate()
   };
 
   useEffect(() => {

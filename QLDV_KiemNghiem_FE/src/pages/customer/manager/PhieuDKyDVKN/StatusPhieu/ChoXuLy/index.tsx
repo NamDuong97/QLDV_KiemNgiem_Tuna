@@ -54,11 +54,11 @@ const ChoXuLy = () => {
     setOpenPopupHuyPhieu(true);
   };
 
-  const { user } = useContext(StoreContext);
+  const { userInfo } = useContext(StoreContext);
 
   const dataChoTiepNhanXuLy = useGetPhieuDangKyKiemNghiemByTrangThaiArray({
     queryKey: "dataChoTiepNhanXuLy",
-    maKH: user?.maKh,
+    maKH: userInfo?.maId,
     trangThaiIDs: ["TT01", "TT02", "TT03", "TT04"],
   });
 

@@ -24,6 +24,8 @@ export const API = {
     USER_INFO: "/api/khachhang/getInfoKhachHang",
     QUEN_MAT_KHAU: "/api/khachhang/forgetPassword",
     REFRESH_TOKEN: "/api/khachhang/getRefreshToken",
+    UPDATE_INFOR: "/api/khachhang/updateKhachHang",
+    DOI_MAT_KHAU: "/api/khachhang/updateKhachHang",
   },
 };
 

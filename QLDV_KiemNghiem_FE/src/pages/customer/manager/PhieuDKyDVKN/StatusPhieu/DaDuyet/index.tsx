@@ -45,10 +45,10 @@ const tableHead = [
 ];
 
 const DaDuyet = () => {
-  const { user } = useContext(StoreContext);
+  const { userInfo } = useContext(StoreContext);
   const dataDaDuyet = useGetPhieuDangKyKiemNghiemByTrangThaiArray({
     queryKey: "dataDaDuyet",
-    maKH: user?.maKh,
+    maKH: userInfo?.maId,
     trangThaiIDs: ["TT05", "TT06"],
   });
 

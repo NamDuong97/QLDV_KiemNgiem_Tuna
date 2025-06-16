@@ -3,12 +3,10 @@ import { EKey } from "../constants/commons";
 import Cookies from "js-cookie";
 import accessServices from "../services/customers/accessService";
 import { isProd } from "../utils/env";
-import { useContext } from "react";
-import { StoreContext } from "../contexts/storeProvider";
 
 const _APIInstance = axios.create({
   baseURL: `${import.meta.env.VITE_PUBLIC_BASE_URL_SERVER}`,
-  timeout: 10000,
+  // timeout: 10000,
   headers: {
     "Content-Type": "application/json",
   },
@@ -33,7 +31,6 @@ _APIInstance.interceptors.response.use(
   },
   async (err: any) => {
     const originalRequest = err.config;
-    const { setToken } = useContext(StoreContext);
     if (err.response.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
       const refreshToken = Cookies.get(EKey.REFRESH_TOKEN_GUEST);
@@ -46,8 +43,6 @@ _APIInstance.interceptors.response.use(
           refreshToken: refreshToken,
         };
         const res = await accessServices.getRefreshToken(params);
-        console.log("resresresres", res);
-
         const newToken = res.accessToken || "";
         const newRefreshToken = res.refreshToken || "";
         Cookies.set(EKey.TOKEN_GUEST, newToken, {
@@ -60,7 +55,6 @@ _APIInstance.interceptors.response.use(
           sameSite: "Strict",
           secure: isProd(),
         });
-        setToken(newToken);
         originalRequest.headers.Authorization = `Bearer ${newToken}`;
         return _APIInstance(originalRequest);
       } catch (err) {
@@ -69,6 +63,7 @@ _APIInstance.interceptors.response.use(
         }
       }
     }
+    return err;
   }
 );
 

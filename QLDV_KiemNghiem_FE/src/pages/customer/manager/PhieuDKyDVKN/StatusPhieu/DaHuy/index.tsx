@@ -48,10 +48,10 @@ const tableHead = [
 
 const DaHuy = (props: Props) => {
   const {} = props;
-  const { user } = useContext(StoreContext);
+  const { userInfo } = useContext(StoreContext);
   const dataDaHuy = useGetPhieuDangKyKiemNghiemByTrangThaiArray({
     queryKey: "dataDaHuy",
-    maKH: user?.maKh,
+    maKH: userInfo?.maId,
     trangThaiIDs: ["TT10"],
   });
 

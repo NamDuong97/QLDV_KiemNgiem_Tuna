@@ -24,8 +24,6 @@ export const useDangKyKhachHang = (props: Props) => {
       return response;
     },
     onSuccess: (response: any) => {
-      console.log("response", response);
-
       if (response.status !== 200) {
         showNotification({
           message: `${response.response.data}`,
@@ -52,17 +50,19 @@ export const useDangNhapKhachHang = (props: Props) => {
       const response = await accessServices.loginKhachHang(params);
       return response;
     },
-    onSuccess: (response: any) => {
-      const { status, data } = response;
-      if (status !== 200 || data?.ketQua === false) {
+    onSuccess: (res: any) => {
+      const { status, response } = res;
+      if (status !== 200) {
         showNotification({
-          message: data?.message || "Email không tồn tại hoặc sai mật khẩu",
+          message:
+            response?.data?.message || "Email không tồn tại hoặc sai mật khẩu",
           status: status,
         });
         return;
       } else {
         showNotification({ message: "Đăng nhập thành công", status: 200 });
-        const { token, refreshToken } = response.data;
+        const { token, refreshToken } = res.data;
+
         Cookies.set(EKey.TOKEN_GUEST, token, {
           expires: 2,
           sameSite: "Strict",
@@ -77,8 +77,8 @@ export const useDangNhapKhachHang = (props: Props) => {
         setOpenLoginCustomer(false);
       }
     },
-    onError: async (errors: any) => {
-      return await errors;
+    onError: (errors: any) => {
+      return errors;
     },
     onSettled: onSettled,
   });
@@ -101,7 +101,7 @@ export const useQuenMatKhau = (props: Props) => {
           message: `${response.response.data}`,
           status: response.response.status,
         });
-      } else showNotification({ message: response.data.data, status: 200 });
+      } else return response;
     },
     onError: (errors: any) => {
       console.log("errors", errors);
