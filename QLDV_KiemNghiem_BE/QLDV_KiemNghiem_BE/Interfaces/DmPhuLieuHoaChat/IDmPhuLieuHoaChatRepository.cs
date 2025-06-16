@@ -6,6 +6,7 @@ namespace QLDV_KiemNghiem_BE.Interfaces
     {
         Task<IEnumerable<DmPhuLieuHoaChat>> GetDmPhuLieuHoaChatAllAsync();
         Task<DmPhuLieuHoaChat?> FindDmPhuLieuHoaChatAsync(string id);
+        Task<DmPhuLieuHoaChat?> FindDmPhuLieuHoaChatByNameAsync(string dmPLHC);
         void CreateDmPhuLieuHoaChatAsync(DmPhuLieuHoaChat plhc);
         void UpdateDmPhuLieuHoaChatAsync(DmPhuLieuHoaChat plhc);
         void DeleteDmPhuLieuHoaChatAsync(DmPhuLieuHoaChat plhc);

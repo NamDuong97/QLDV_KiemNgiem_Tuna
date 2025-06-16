@@ -4,7 +4,6 @@ using System.Security.Claims;
 using System.Text;
 using QLDV_KiemNghiem_BE.RequestFeatures;
 using QLDV_KiemNghiem_BE.Interfaces;
-using QLDV_KiemNghiem_BE.DTO;
 using System.Security.Cryptography;
 using System.Data;
 using Newtonsoft.Json.Linq;
@@ -13,6 +12,7 @@ using Microsoft.AspNetCore.Identity;
 using QLDV_KiemNghiem_BE.Interfaces.ManagerInterface;
 using QLDV_KiemNghiem_BE.Models;
 using Org.BouncyCastle.Crypto.Macs;
+using QLDV_KiemNghiem_BE.DTO.ResponseDto;
 
 namespace QLDV_KiemNghiem_BE.Services
 {

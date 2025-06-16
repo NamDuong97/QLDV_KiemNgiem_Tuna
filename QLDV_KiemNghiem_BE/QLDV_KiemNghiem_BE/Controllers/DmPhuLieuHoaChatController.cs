@@ -1,10 +1,14 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using QLDV_KiemNghiem_BE.DTO;
+using Microsoft.Extensions.Logging;
+using QLDV_KiemNghiem_BE.DTO.RequestDto;
+using QLDV_KiemNghiem_BE.DTO.ResponseDto;
 using QLDV_KiemNghiem_BE.Interfaces.ManagerInterface;
 using QLDV_KiemNghiem_BE.Models;
+using QLDV_KiemNghiem_BE.RequestFeatures;
 using System.ComponentModel.DataAnnotations;
+using System.Security.Claims;
 
 namespace QLDV_KiemNghiem_BE.Controllers
 {
@@ -45,7 +49,7 @@ namespace QLDV_KiemNghiem_BE.Controllers
 
         [HttpPost]
         [Route("createDmPhuLieuHoaChat")]
-        public async Task<ActionResult> createDmPhuLieuHoaChat(DmPhuLieuHoaChatDto dmPhuLieuHoaChat)
+        public async Task<ActionResult> createDmPhuLieuHoaChat(DmPhuLieuHoaChatRequestCreateDto dmPhuLieuHoaChat)
         {
             if (!ModelState.IsValid)
             {
@@ -56,23 +60,24 @@ namespace QLDV_KiemNghiem_BE.Controllers
                 _logger.LogDebug("Loi validate du lieu dau vao");
                 return BadRequest(new { Errors = errors });
             }
-            bool create = await _service.DmPhuLieuHoaChat.CreateDmPhuLieuHoaChatAsync(dmPhuLieuHoaChat);
-            if (create)
+            var user = User.FindFirst(ClaimTypes.NameIdentifier)?.Value.ToString();
+            ResponseModel1<DmPhuLieuHoaChatDto> create = await _service.DmPhuLieuHoaChat.CreateDmPhuLieuHoaChatAsync(dmPhuLieuHoaChat, user);
+            if (create.KetQua)
             {
-                _logger.LogDebug("Tao danh muc phu lieu hoa chat thanh cong");
-                return Ok(dmPhuLieuHoaChat);
+                _logger.LogDebug(create.Message);
+                return Ok(create);
             }
             else
             {
-                _logger.LogDebug("Tao danh muc phu lieu hoa chat that bai");
-                return BadRequest();
+                _logger.LogDebug(create.Message);
+                return BadRequest(create);
             }
         }
 
 
         [HttpPut]
         [Route("updateDmPhuLieuHoaChat")]
-        public async Task<ActionResult> updateDmPhuLieuHoaChat(DmPhuLieuHoaChatDto dmPhuLieuHoaChat)
+        public async Task<ActionResult> updateDmPhuLieuHoaChat(DmPhuLieuHoaChatRequestUpdateDto dmPhuLieuHoaChat)
         {
             if (!ModelState.IsValid)
             {
@@ -83,34 +88,35 @@ namespace QLDV_KiemNghiem_BE.Controllers
                 _logger.LogDebug("Loi validate du lieu dau vao");
                 return BadRequest(new { Errors = errors });
             }
-            bool create = await _service.DmPhuLieuHoaChat.UpdateDmPhuLieuHoaChatAsync(dmPhuLieuHoaChat);
-            if (create)
+            var user = User.FindFirst(ClaimTypes.NameIdentifier)?.Value.ToString();
+            ResponseModel1<DmPhuLieuHoaChatDto> update = await _service.DmPhuLieuHoaChat.UpdateDmPhuLieuHoaChatAsync(dmPhuLieuHoaChat, user);
+            if (update.KetQua)
             {
-                _logger.LogDebug("Cap nhat danh muc phu lieu hoa chat thanh cong");
-                return Ok(dmPhuLieuHoaChat);
+                _logger.LogDebug(update.Message);
+                return Ok(update);
             }
             else
             {
-                _logger.LogDebug("Cap nhat danh muc phu lieu hoa chat that bai");
-                return BadRequest();
+                _logger.LogDebug(update.Message);
+                return BadRequest(update);
             }
         }
 
         [HttpDelete]
         [Route("deleteDmPhuLieuHoaChat")]
-        public async Task<ActionResult> deleteDmPhuLieuHoaChat(DmPhuLieuHoaChatDto dmPhuLieuHoaChat)
+        public async Task<ActionResult> deleteDmPhuLieuHoaChat(string maDmPhuLieuHoaChat)
         {
            
-            bool create = await _service.DmPhuLieuHoaChat.UpdateDmPhuLieuHoaChatAsync(dmPhuLieuHoaChat);
+            bool create = await _service.DmPhuLieuHoaChat.DeleteDmPhuLieuHoaChatAsync(maDmPhuLieuHoaChat);
             if (create)
             {
-                _logger.LogDebug("Cap nhat danh muc phu lieu hoa chat thanh cong");
-                return Ok(dmPhuLieuHoaChat);
+                _logger.LogDebug("Xoa danh muc phu lieu hoa chat thanh cong");
+                return Ok("Xoa danh muc phu lieu hoa chat thanh cong");
             }
             else
             {
-                _logger.LogDebug("Cap nhat danh muc phu lieu hoa chat that bai");
-                return BadRequest();
+                _logger.LogDebug("Xoa danh muc phu lieu hoa chat that bai");
+                return BadRequest("Xoa danh muc phu lieu hoa chat that bai");
             }
         }
     }

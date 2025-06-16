@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using QLDV_KiemNghiem_BE.DTO;
+using QLDV_KiemNghiem_BE.DTO.ResponseDto;
 using QLDV_KiemNghiem_BE.Interfaces.ManagerInterface;
 using QLDV_KiemNghiem_BE.Models;
 using QLDV_KiemNghiem_BE.RequestFeatures;
@@ -100,7 +100,7 @@ namespace QLDV_KiemNghiem_BE.Controllers
             else
             {
                 _logger.LogDebug("Tao phieu dang ky that bai");
-                return BadRequest();
+                return BadRequest(phieuDangKy.Message);
             }
         }
 

@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using QLDV_KiemNghiem_BE.DTO;
 using QLDV_KiemNghiem_BE.Interfaces.ManagerInterface;
 using QLDV_KiemNghiem_BE.Models;
 using QLDV_KiemNghiem_BE.Interfaces;
@@ -11,6 +10,8 @@ using System.IdentityModel.Tokens.Jwt;
 using QLDV_KiemNghiem_BE.RequestFeatures;
 using QLDV_KiemNghiem_BE.Shared;
 using QLDV_KiemNghiem_BE.RequestFeatures.PagingRequest;
+using QLDV_KiemNghiem_BE.DTO.ResponseDto;
+using QLDV_KiemNghiem_BE.DTO.RequestDto;
 
 namespace QLDV_KiemNghiem_BE.Services
 {

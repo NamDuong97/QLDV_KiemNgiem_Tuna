@@ -1,8 +1,10 @@
 ﻿using AutoMapper;
-using QLDV_KiemNghiem_BE.DTO;
+using QLDV_KiemNghiem_BE.DTO.RequestDto;
+using QLDV_KiemNghiem_BE.DTO.ResponseDto;
 using QLDV_KiemNghiem_BE.Interfaces;
 using QLDV_KiemNghiem_BE.Interfaces.ManagerInterface;
 using QLDV_KiemNghiem_BE.Models;
+using QLDV_KiemNghiem_BE.RequestFeatures;
 
 namespace QLDV_KiemNghiem_BE.Services
 {
@@ -30,39 +32,95 @@ namespace QLDV_KiemNghiem_BE.Services
             return dmPhuLieuHoaChatDto;
         }
 
-        public async Task<bool> CreateDmPhuLieuHoaChatAsync(DmPhuLieuHoaChatDto plhcDto)
+        public async Task<ResponseModel1<DmPhuLieuHoaChatDto>> CreateDmPhuLieuHoaChatAsync(DmPhuLieuHoaChatRequestCreateDto plhcDto, string user)
         {
-            var dmPhuLieuHoaChatDomain = _mapper.Map<DmPhuLieuHoaChat>(plhcDto);
-            dmPhuLieuHoaChatDomain.MaId = Guid.NewGuid().ToString();
-            dmPhuLieuHoaChatDomain.MaDmPlhc = plhcDto?.TenDmPlhc?.Trim().ToString() ?? "null";
-            dmPhuLieuHoaChatDomain.NgayTao = DateTime.Now;
-            dmPhuLieuHoaChatDomain.NguoiTao = "admin";
-
-            _repositoryManager.DmPhuLieuHoaChat.CreateDmPhuLieuHoaChatAsync(dmPhuLieuHoaChatDomain);
-            bool check = await _repositoryManager.SaveChangesAsync();
-            return check;
-        }
-
-        public async Task<bool> UpdateDmPhuLieuHoaChatAsync(DmPhuLieuHoaChatDto plhcDto)
-        {
-            var checkDmPhuLieuHoaChat = await _repositoryManager.DmPhuLieuHoaChat.FindDmPhuLieuHoaChatAsync(plhcDto.MaId);
-            if (checkDmPhuLieuHoaChat == null)
+            if (plhcDto == null || plhcDto.TenDmPlhc == null || plhcDto.TenDmPlhc == "")
             {
-                return false;
+                return new ResponseModel1<DmPhuLieuHoaChatDto>
+                {
+                    KetQua = false,
+                    Message = "Thieu du lieu dau vao vui long kiem tra"
+                };
             }
-            var dmPhuLieuHoaChatDomain = _mapper.Map<DmPhuLieuHoaChat>(plhcDto);
-            _repositoryManager.DmPhuLieuHoaChat.UpdateDmPhuLieuHoaChatAsync(dmPhuLieuHoaChatDomain);
+            var checkExist = await _repositoryManager.DmPhuLieuHoaChat.FindDmPhuLieuHoaChatByNameAsync(plhcDto.TenDmPlhc.ToLower().Trim());
+            if (checkExist != null)
+            {
+                return new ResponseModel1<DmPhuLieuHoaChatDto>
+                {
+                    KetQua = false,
+                    Message = "Ten plhc da ton tai, vui long kiem tra lai!"
+                };
+            }
+            DmPhuLieuHoaChat dmPLHC = new DmPhuLieuHoaChat()
+            {
+                MaId = Guid.NewGuid().ToString(),
+                MaDmPlhc = "PLHC_" + PublicFunction.processString(plhcDto.TenDmPlhc),
+                TenDmPlhc = plhcDto.TenDmPlhc,
+                NongDo = plhcDto.NongDo,
+                DonViNongDo = plhcDto.DonViNongDo,
+                TrangThai = true,
+                NgayTao = DateTime.Now,
+                NguoiTao = user ?? "unknow"
+            };
+
+            _repositoryManager.DmPhuLieuHoaChat.CreateDmPhuLieuHoaChatAsync(dmPLHC);
             bool check = await _repositoryManager.SaveChangesAsync();
-            return check;
+            var dataReturn = _mapper.Map<DmPhuLieuHoaChatDto>(dmPLHC);
+            return new ResponseModel1<DmPhuLieuHoaChatDto>
+            {
+                KetQua = check,
+                Message = check ? "Create thanh cong!" : "Create that bai!",
+                Data = check ? dataReturn : null
+            };
         }
-        public async Task<bool> DeleteDmPhuLieuHoaChatAsync(DmPhuLieuHoaChat plhc)
+
+        public async Task<ResponseModel1<DmPhuLieuHoaChatDto>> UpdateDmPhuLieuHoaChatAsync(DmPhuLieuHoaChatRequestUpdateDto plhcDto, string user)
         {
-            var dmPhuLieuHoaChatDomain = await _repositoryManager.DmPhuLieuHoaChat.FindDmPhuLieuHoaChatAsync(plhc.MaId);
+            var dmPLHCDomain = await _repositoryManager.DmPhuLieuHoaChat.FindDmPhuLieuHoaChatAsync(plhcDto.MaId);
+            if (dmPLHCDomain == null)
+            {
+                return new ResponseModel1<DmPhuLieuHoaChatDto>
+                {
+                    KetQua = true,
+                    Message = "Ten danh muc plhc da ton tai, vui long kiem tra lai!"
+                };
+            }
+            var checkExist = await _repositoryManager.DmPhuLieuHoaChat.FindDmPhuLieuHoaChatByNameAsync(plhcDto.TenDmPlhc.ToLower().Trim());
+            if (checkExist != null)
+            {
+                return new ResponseModel1<DmPhuLieuHoaChatDto>
+                {
+                    KetQua = false,
+                    Message = "Ten danh muc plhc da ton tai, vui long kiem tra lai!"
+                };
+            }
+            dmPLHCDomain.NguoiSua = user ?? "unknow";
+            dmPLHCDomain.NgaySua = DateTime.Now;
+            dmPLHCDomain.MaDmPlhc = "PLHC_" + PublicFunction.processString(plhcDto.TenDmPlhc);
+            dmPLHCDomain.TenDmPlhc = plhcDto.TenDmPlhc;
+            dmPLHCDomain.DonViNongDo = plhcDto.DonViNongDo;
+            dmPLHCDomain.TenHienThi = plhcDto.TenHienThi;
+            dmPLHCDomain.NongDo = plhcDto.NongDo;
+
+            _repositoryManager.DmPhuLieuHoaChat.UpdateDmPhuLieuHoaChatAsync(dmPLHCDomain);
+            bool check = await _repositoryManager.SaveChangesAsync();
+            var dataReturn = _mapper.Map<DmPhuLieuHoaChatDto>(dmPLHCDomain);
+
+            return new ResponseModel1<DmPhuLieuHoaChatDto>
+            {
+                KetQua = check,
+                Message = check ? "Update thanh cong!" : "Update that bai!",
+                Data = check ? dataReturn : null
+            };
+        }
+        public async Task<bool> DeleteDmPhuLieuHoaChatAsync(string maPLHC)
+        {
+            var dmPhuLieuHoaChatDomain = await _repositoryManager.DmPhuLieuHoaChat.FindDmPhuLieuHoaChatAsync(maPLHC);
             if (dmPhuLieuHoaChatDomain == null)
             {
                 return false;
             }
-            _repositoryManager.DmPhuLieuHoaChat.DeleteDmPhuLieuHoaChatAsync(plhc);
+            _repositoryManager.DmPhuLieuHoaChat.DeleteDmPhuLieuHoaChatAsync(dmPhuLieuHoaChatDomain);
             bool check = await _repositoryManager.SaveChangesAsync();
             return check;
         }

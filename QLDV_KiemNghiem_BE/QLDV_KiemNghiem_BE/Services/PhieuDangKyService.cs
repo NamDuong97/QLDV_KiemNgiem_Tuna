@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.EntityFrameworkCore;
 using QLDV_KiemNghiem_BE.Data;
-using QLDV_KiemNghiem_BE.DTO;
+using QLDV_KiemNghiem_BE.DTO.ResponseDto;
 using QLDV_KiemNghiem_BE.Interfaces;
 using QLDV_KiemNghiem_BE.Interfaces.ManagerInterface;
 using QLDV_KiemNghiem_BE.Models;
@@ -113,7 +113,7 @@ namespace QLDV_KiemNghiem_BE.Services
             }
 
             if (phieuDangKyDto.Maus == null || phieuDangKyDto.PhieuDangKyPhuLieuHoaChats == null || phieuDangKyDto.Maus.Count() <= 0 ||
-                phieuDangKyDto.MaId == "" || phieuDangKyDto.PhieuDangKyPhuLieuHoaChats.Count() <= 0)
+               phieuDangKyDto.PhieuDangKyPhuLieuHoaChats.Count() <= 0)
             {
                 return new ResponseModel1<PhieuDangKyDto>
                 {

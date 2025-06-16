@@ -1,9 +1,14 @@
-﻿using AutoMapper;
+﻿using System.Security.Claims;
+using AutoMapper;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
-using QLDV_KiemNghiem_BE.DTO;
+using Microsoft.Extensions.Logging;
+using QLDV_KiemNghiem_BE.DTO.RequestDto;
+using QLDV_KiemNghiem_BE.DTO.ResponseDto;
 using QLDV_KiemNghiem_BE.Interfaces.ManagerInterface;
 using QLDV_KiemNghiem_BE.Models;
+using QLDV_KiemNghiem_BE.RequestFeatures;
 
 namespace QLDV_KiemNghiem_BE.Controllers
 {
@@ -39,18 +44,9 @@ namespace QLDV_KiemNghiem_BE.Controllers
             return Ok(result);
         }
 
-        //[HttpGet]
-        //[Route("getBoPhanByName")]
-        //public async Task<ActionResult> getBoPhanByName(string tenBoPhan)
-        //{
-        //    var result = await _service.BoPhan.FindBoPhanByNameAsync(tenBoPhan);
-        //    _logger.LogDebug("lay bo phan can tim: " + tenBoPhan);
-        //    return Ok(result);
-        //}
-
         [HttpPost]
         [Route("createBoPhan")]
-        public async Task<ActionResult> createBoPhan(BoPhanDto BoPhanDto)
+        public async Task<ActionResult> createBoPhan(BoPhanRequestCreateDto BoPhanDto)
         {
             if (!ModelState.IsValid)
             {
@@ -61,22 +57,23 @@ namespace QLDV_KiemNghiem_BE.Controllers
                 _logger.LogError("Loi validate tham so dau vao");
                 return BadRequest(new { Errors = errors });
             }
-            bool create = await _service.BoPhan.CreateBoPhanAsync(BoPhanDto);
-            if (create)
+            var user = User.FindFirst(ClaimTypes.NameIdentifier)?.Value.ToString();
+            ResponseModel1<BoPhanDto> create = await _service.BoPhan.CreateBoPhanAsync(BoPhanDto, user);
+            if (create.KetQua)
             {
-                _logger.LogDebug("Tao bo phan thanh cong");
-                return Ok(BoPhanDto);
+                _logger.LogDebug(create.Message);
+                return Ok(create);
             }
             else
             {
-                _logger.LogDebug("Tao bo phan that bai");
-                return BadRequest();
+                _logger.LogDebug(create.Message);
+                return BadRequest(create);
             }
         }
 
         [HttpPut]
         [Route("updateBoPhan")]
-        public async Task<ActionResult> updateBoPhan(BoPhanDto BoPhanDto)
+        public async Task<ActionResult> updateBoPhan(BoPhanRequestUpdateDto BoPhanDto)
         {
             if (!ModelState.IsValid)
             {
@@ -87,42 +84,34 @@ namespace QLDV_KiemNghiem_BE.Controllers
                 _logger.LogError("Loi validate tham so dau vao");
                 return BadRequest(new { Errors = errors });
             }
-            bool update = await _service.BoPhan.UpdateBoPhanAsync(BoPhanDto);
-            if (update)
+            var user = User.FindFirst(ClaimTypes.NameIdentifier)?.Value.ToString();
+            ResponseModel1<BoPhanDto> update = await _service.BoPhan.UpdateBoPhanAsync(BoPhanDto, user);
+            if (update.KetQua)
             {
-                _logger.LogDebug("Cap nhat bo phan thanh cong");
-                return Ok(BoPhanDto);
+                _logger.LogDebug(update.Message);
+                return Ok(update);
             }
             else
             {
-                _logger.LogDebug("Cap nhat bo phan that bai");
-                return BadRequest();
+                _logger.LogDebug(update.Message);
+                return BadRequest(update.Message);
             }
         }
 
         [HttpDelete]
         [Route("deleteBoPhan")]
-        public async Task<ActionResult> deleteBoPhan(BoPhan BoPhan)
+        public async Task<ActionResult> deleteBoPhan(string maBoPhan)
         {
-            var checkExists = await _service.BoPhan.FindBoPhanAsync(BoPhan.MaId);
-            if (checkExists != null)
+            bool delete = await _service.BoPhan.DeleteBoPhanAsync(maBoPhan);
+            if (delete)
             {
-                bool delete = await _service.BoPhan.DeleteBoPhanAsync(BoPhan);
-                if (delete)
-                {
-                    _logger.LogDebug("Cap nhat bo phan thanh cong");
-                    return Ok(BoPhan);
-                }
-                else
-                {
-                    _logger.LogDebug("Cap nhat bo phan that bai");
-                    return BadRequest();
-                }
+                _logger.LogDebug("Xoa bo phan thanh cong");
+                return Ok("Xoa bo phan thanh cong");
             }
             else
             {
-                _logger.LogDebug("bo phan khong ton tai");
-                return BadRequest();
+                _logger.LogDebug("Xoa bo phan that bai");
+                return BadRequest("Xoa bo phan that bai");
             }
         }
     }

@@ -24,6 +24,10 @@ namespace QLDV_KiemNghiem_BE.Repositories
         {
             return await _context.BoPhans.FindAsync(maBoPhan);
         }
+        public async Task<BoPhan?> FindBoPhanByNameAsync(string tenBoPhan)
+        {
+            return await _context.BoPhans.AsNoTracking().SingleOrDefaultAsync(item => item.TenBoPhan.ToLower().Trim() == tenBoPhan);
+        }
         public void CreateBoPhanAsync(BoPhan BoPhan)
         {
             _context.BoPhans.Add(BoPhan);

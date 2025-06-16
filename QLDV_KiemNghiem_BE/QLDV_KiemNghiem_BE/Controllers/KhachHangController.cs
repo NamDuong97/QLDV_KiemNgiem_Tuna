@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
-using QLDV_KiemNghiem_BE.DTO;
 using QLDV_KiemNghiem_BE.Interfaces.ManagerInterface;
 using QLDV_KiemNghiem_BE.Models;
 using Microsoft.AspNetCore.Authorization;
@@ -13,6 +12,8 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using QLDV_KiemNghiem_BE.Interfaces.Redis;
 using QLDV_KiemNghiem_BE.Services;
+using QLDV_KiemNghiem_BE.DTO.ResponseDto;
+using QLDV_KiemNghiem_BE.DTO.RequestDto;
 
 namespace QLDV_KiemNghiem_BE.Controllers
 {
