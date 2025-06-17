@@ -110,9 +110,10 @@ namespace QLDV_KiemNghiem_BE.Extensions
             {
                 options.AddPolicy(name: "AllowFrontend",policy =>
                 {
-                    policy.AllowAnyOrigin()   // Cho phép frontend
+                    policy.WithOrigins("http://localhost:5175")
                             .AllowAnyHeader()
-                            .AllowAnyMethod();
+                            .AllowAnyMethod()
+                            .AllowCredentials(); // cho phép hub realtime kết nối
                 });
             });
         }

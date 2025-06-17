@@ -1,4 +1,5 @@
-﻿using QLDV_KiemNghiem_BE.DTO.ResponseDto;
+﻿using QLDV_KiemNghiem_BE.DTO.RequestDto;
+using QLDV_KiemNghiem_BE.DTO.ResponseDto;
 using QLDV_KiemNghiem_BE.Models;
 using QLDV_KiemNghiem_BE.RequestFeatures;
 
@@ -8,8 +9,8 @@ namespace QLDV_KiemNghiem_BE.Interfaces
     {
         Task<IEnumerable<PhieuDeXuatPhongBanDto>> GetPhieuDeXuatPhongBansAllAsync();
         Task<PhieuDeXuatPhongBanDto?> FindPhieuDeXuatPhongBanAsync(string maPhieuDeXuatPhongBan);
-        Task<ResponseModel1<PhieuDeXuatPhongBanDto>> CreatePhieuDeXuatPhongBanAsync(PhieuDeXuatPhongBanDto PhieuDeXuatPhongBanDto);
-        Task<ResponseModel1<PhieuDeXuatPhongBanDto>> UpdatePhieuDeXuatPhongBanAsync(PhieuDeXuatPhongBanDto PhieuDeXuatPhongBanDto);
+        Task<ResponseModel1<PhieuDeXuatPhongBanDto>> CreatePhieuDeXuatPhongBanAsync(PhieuDeXuatPhongBanRequestCreateDto PhieuDeXuatPhongBanDto, string user);
+        Task<ResponseModel1<PhieuDeXuatPhongBanDto>> UpdatePhieuDeXuatPhongBanAsync(PhieuDeXuatPhongBanRequestUpdateDto PhieuDeXuatPhongBanDto, string user);
         Task<bool> DeletePhieuDeXuatPhongBanAsync(PhieuDeXuatPhongBan PhieuDeXuatPhongBan);
     }
 }

@@ -14,6 +14,9 @@ using QLDV_KiemNghiem_BE.Interfaces.ManagerInterface;
 using QLDV_KiemNghiem_BE.Repositories;
 using QLDV_KiemNghiem_BE.Services;
 using StackExchange.Redis;
+using Microsoft.AspNetCore.SignalR;
+using QLDV_KiemNghiem_BE.HubsRealTime;
+using QLDV_KiemNghiem_BE.Interfaces.Notification;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -24,6 +27,8 @@ builder.Services.AddScoped<IRepositoryManager, RepositoryManager>();
 builder.Services.AddScoped<IServiceManager, ServiceManager>();
 builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddScoped<ITokenService, TokenService>();
+builder.Services.AddScoped<INotificationService, NotificationService>();
+
 // Redis connection
 builder.Services.AddSingleton<IConnectionMultiplexer>(sp =>
 {
@@ -37,6 +42,7 @@ builder.Services.AddControllers( config =>
     config.CacheProfiles.Add("120SecondsDuration", new CacheProfile{Duration =120})
 ); 
 builder.Services.AddControllers();
+builder.Services.AddSignalR(); 
 builder.Logging.AddDebug();   // Ghi ra Debug output
 var jwtSettings = builder.Configuration.GetSection("Jwt"); // Cau hinh Jwt
 var key = Encoding.ASCII.GetBytes(jwtSettings["Key"]);
@@ -71,5 +77,6 @@ if (app.Environment.IsDevelopment() || app.Environment.IsProduction())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+app.MapHub<NotificationHub>("/NotificationService"); // <-- ánh xạ vào hub NotificationCustomerToEmployeeHub
 
 app.Run();

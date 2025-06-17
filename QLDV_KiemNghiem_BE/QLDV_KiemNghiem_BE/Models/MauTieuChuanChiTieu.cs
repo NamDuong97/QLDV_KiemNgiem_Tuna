@@ -44,4 +44,7 @@ public partial class MauTieuChuanChiTieu
     [ForeignKey("MaMauTieuChuan")]
     [InverseProperty("MauTieuChuanChiTieus")]
     public virtual MauTieuChuan? MaMauTieuChuanNavigation { get; set; }
+
+    [InverseProperty("MaMauTieuChuanChiTieuNavigation")]
+    public virtual ICollection<MauTieuChuanChiTieuPhuongPhap> MauTieuChuanChiTieuPhuongPhaps { get; set; } = new List<MauTieuChuanChiTieuPhuongPhap>();
 }

@@ -30,5 +30,9 @@ namespace QLDV_KiemNghiem_BE.DTO.ResponseDto
 
         [StringLength(100)]
         public string? TrangThai { get; set; }
+
+        public List<ChiTietPhieuDeXuatPhongBanDto> ChiTietPhieuDeXuatPhongBans { get; set; } = new List<ChiTietPhieuDeXuatPhongBanDto>();
+
+
     }
 }

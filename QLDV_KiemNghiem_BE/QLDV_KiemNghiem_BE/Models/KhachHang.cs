@@ -60,14 +60,15 @@ public partial class KhachHang
     [Column(TypeName = "datetime")]
     public DateTime? NgayHetHanMatKhau { get; set; }
 
-    public bool IsEmailVerify { get; set; } = false;
+    public bool IsEmailVerify { get; set; }
 
     [StringLength(200)]
     public string? TockenXacMinh { get; set; }
 
     [StringLength(100)]
     public string? RefreshToken { get; set; }
- 
+
+    [Column(TypeName = "datetime")]
     public DateTime? RefreshTokenExpiryTime { get; set; }
 
     [InverseProperty("MaKhNavigation")]

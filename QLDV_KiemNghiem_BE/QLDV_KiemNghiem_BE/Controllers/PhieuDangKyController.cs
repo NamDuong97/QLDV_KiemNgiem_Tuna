@@ -4,9 +4,11 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using QLDV_KiemNghiem_BE.DTO.ResponseDto;
 using QLDV_KiemNghiem_BE.Interfaces.ManagerInterface;
+using QLDV_KiemNghiem_BE.Interfaces.Notification;
 using QLDV_KiemNghiem_BE.Models;
 using QLDV_KiemNghiem_BE.RequestFeatures;
 using System;
+using System.Security.Claims;
 
 namespace QLDV_KiemNghiem_BE.Controllers
 {
@@ -17,11 +19,13 @@ namespace QLDV_KiemNghiem_BE.Controllers
         private readonly IServiceManager _service;
         private readonly ILogger<PhieuDangKyController> _logger;
         private readonly IMapper _mapper;
-        public PhieuDangKyController(IServiceManager serviceManager, ILogger<PhieuDangKyController> logger, IMapper mapper)
+        private readonly INotificationService _notification;
+        public PhieuDangKyController(IServiceManager serviceManager, ILogger<PhieuDangKyController> logger, IMapper mapper, INotificationService notification)
         {
             _service = serviceManager;
             _logger = logger;
             _mapper = mapper;
+            _notification = notification;
         }
 
         // action này dùng cho nhân viên phòng kế hoạch đầu tư sử dụng để xem
@@ -43,7 +47,17 @@ namespace QLDV_KiemNghiem_BE.Controllers
         [Route("reviewPhieuDangKyByKHDT")]
         public async Task<ActionResult> reviewPhieuDangKyByKHDT( RequestReviewPhieuDangKy duyetPhieu)
         {
+            var user = User.FindFirst(ClaimTypes.Email)?.Value.ToString() ?? "unknow";
             var phieuDangKys = await _service.PhieuDangKy.ReviewPhieuDangKyByKHDT(duyetPhieu);
+            // Tao thong bao gui cho phong KHTH
+            NotificationModel noti = new NotificationModel()
+            {
+                Title = "Duyet phieu dang ky boi KHTH",
+                Message = phieuDangKys.KetQua ?  $"Phieu dang ky co maid {phieuDangKys.MaPhieuDangKy} duoc duyet thanh cong boi nguoi dung {user}!"
+                : $"Phieu dang ky co maid {phieuDangKys.MaPhieuDangKy} da bi tu choi boi nguoi dung {user}!",
+                CreatedAt = DateTime.Now,
+            };
+            await _notification.NotifyToOneGroupAsync("BLD", noti);
             _logger.LogDebug(phieuDangKys.Message);
             return Ok(phieuDangKys);
         }
@@ -52,7 +66,16 @@ namespace QLDV_KiemNghiem_BE.Controllers
         [Route("reviewPhieuDangKyByBLD")]
         public async Task<ActionResult> reviewPhieuDangKyByBLD(RequestReviewPhieuDangKy duyetPhieu)
         {
+            var user = User.FindFirst(ClaimTypes.Email)?.Value.ToString() ?? "unknow";
             var phieuDangKys = await _service.PhieuDangKy.ReviewPhieuDangKyByBLD(duyetPhieu);
+            NotificationModel noti = new NotificationModel()
+            {
+                Title = "Duyet phieu dang ky boi BLD",
+                Message = phieuDangKys.KetQua ? $"Phieu dang ky co maid {phieuDangKys.MaPhieuDangKy} duoc duyet thanh cong boi nguoi dung {user}!"
+               : $"Phieu dang ky co maid {phieuDangKys.MaPhieuDangKy} da bi tu choi boi nguoi dung {user}!",
+                CreatedAt = DateTime.Now,
+            };
+            await _notification.NotifyToOneGroupAsync("BLD", noti);
             _logger.LogDebug(phieuDangKys.Message);
             return Ok(phieuDangKys);
         }
@@ -92,6 +115,16 @@ namespace QLDV_KiemNghiem_BE.Controllers
             ResponseModel1<PhieuDangKyDto> phieuDangKy = await _service.PhieuDangKy.CreatePhieuDangKyAsync(phieuDangKyDto);
             if (phieuDangKy.KetQua)
             {
+                var user = User.FindFirst(ClaimTypes.Email)?.Value.ToString() ?? "unknow";
+                // Tao thong bao gui cho phong KHTH
+                NotificationModel noti = new NotificationModel()
+                {
+                    Title = "Tao phieu dang ky thanh cong!",
+                    Message = $"Phieu dang ky co maid {phieuDangKy.Data.MaId} duoc tao thanh cong boi khach hang {user}, vui long kiem tra va xet duyet",
+                    CreatedAt = DateTime.Now,
+                };
+                await _notification.NotifyToOneGroupAsync("KHTH", noti);
+
                 // Them hoa don sau khi them phieu dang ky
                 ResponseModel1<HoaDonThuDto> hoaDonThu =  await _service.HoaDonThu.CreateHoaDonThuByPhieuDangKyAsync(phieuDangKy?.Data);
                 _logger.LogDebug("Tao phieu dang ky thanh cong");

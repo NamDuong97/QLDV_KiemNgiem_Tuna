@@ -50,6 +50,9 @@ public partial class PhieuDeXuatPhongBan
     [Column(TypeName = "datetime")]
     public DateTime? NgaySua { get; set; }
 
+    [InverseProperty("MaPhieuDeXuatNavigation")]
+    public virtual ICollection<ChiTietPhieuDeXuatPhongBan> ChiTietPhieuDeXuatPhongBans { get; set; } = new List<ChiTietPhieuDeXuatPhongBan>();
+
     [ForeignKey("MaKhoaTiepNhan")]
     [InverseProperty("PhieuDeXuatPhongBans")]
     public virtual Khoa MaKhoaTiepNhanNavigation { get; set; } = null!;

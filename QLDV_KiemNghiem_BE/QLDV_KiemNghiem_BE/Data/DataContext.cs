@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
-using QLDV_KiemNghiem_BE.DTO;
 using QLDV_KiemNghiem_BE.Models;
 
 namespace QLDV_KiemNghiem_BE.Data;
@@ -66,6 +65,8 @@ public partial class DataContext : DbContext
     public virtual DbSet<MauTieuChuan> MauTieuChuans { get; set; }
 
     public virtual DbSet<MauTieuChuanChiTieu> MauTieuChuanChiTieus { get; set; }
+
+    public virtual DbSet<MauTieuChuanChiTieuPhuongPhap> MauTieuChuanChiTieuPhuongPhaps { get; set; }
 
     public virtual DbSet<NhaCungCap> NhaCungCaps { get; set; }
 
@@ -166,11 +167,11 @@ public partial class DataContext : DbContext
 
         modelBuilder.Entity<ChiTietPhieuDeXuatPhongBan>(entity =>
         {
-            entity.HasOne(d => d.MaPdkMauNavigation).WithMany().HasConstraintName("Fk_ChiTietPhieuDeXuatPhongBan_Mau");
+            entity.HasOne(d => d.MaPdkMauNavigation).WithMany(p => p.ChiTietPhieuDeXuatPhongBans).HasConstraintName("Fk_ChiTietPhieuDeXuatPhongBan_Mau");
 
-            entity.HasOne(d => d.MaPhieuDeXuatNavigation).WithMany().HasConstraintName("Fk_ChiTietPhieuDeXuatPhongBan_PhieuDeXuatPhongBan");
+            entity.HasOne(d => d.MaPhieuDeXuatNavigation).WithMany(p => p.ChiTietPhieuDeXuatPhongBans).HasConstraintName("Fk_ChiTietPhieuDeXuatPhongBan_PhieuDeXuatPhongBan");
 
-            entity.HasOne(d => d.ManvTuChoiNavigation).WithMany().HasConstraintName("Fk_ChiTietPhieuDeXuatPhongBan_NhanVien");
+            entity.HasOne(d => d.ManvTuChoiNavigation).WithMany(p => p.ChiTietPhieuDeXuatPhongBans).HasConstraintName("Fk_ChiTietPhieuDeXuatPhongBan_NhanVien");
         });
 
         modelBuilder.Entity<ChiTietPhieuDuTru>(entity =>
@@ -323,6 +324,15 @@ public partial class DataContext : DbContext
             entity.HasOne(d => d.MaChiTieuNavigation).WithMany(p => p.MauTieuChuanChiTieus).HasConstraintName("FK_TieuChuan_ChiTieu_ChiTieu");
 
             entity.HasOne(d => d.MaMauTieuChuanNavigation).WithMany(p => p.MauTieuChuanChiTieus).HasConstraintName("FK_TieuChuan_ChiTieu_Mau_TieuChuan");
+        });
+
+        modelBuilder.Entity<MauTieuChuanChiTieuPhuongPhap>(entity =>
+        {
+            entity.HasKey(e => e.MaId).HasName("PK__Mau_Tieu__2725BF40921C9EC2");
+
+            entity.HasOne(d => d.MaMauTieuChuanChiTieuNavigation).WithMany(p => p.MauTieuChuanChiTieuPhuongPhaps).HasConstraintName("FK_MTCCTPP_Mau_TieuChuan_ChiTieu");
+
+            entity.HasOne(d => d.MaPpNavigation).WithMany(p => p.MauTieuChuanChiTieuPhuongPhaps).HasConstraintName("FK_MTCCTPP_PhuongPhap");
         });
 
         modelBuilder.Entity<NhaCungCap>(entity =>

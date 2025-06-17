@@ -6,13 +6,13 @@ using Microsoft.EntityFrameworkCore;
 
 namespace QLDV_KiemNghiem_BE.Models;
 
-[Keyless]
 [Table("ChiTietPhieuDeXuatPhongBan")]
 public partial class ChiTietPhieuDeXuatPhongBan
 {
+    [Key]
     [Column("MaID")]
     [StringLength(50)]
-    public string? MaId { get; set; }
+    public string MaId { get; set; } = null!;
 
     [StringLength(50)]
     public string? MaPhieuDeXuat { get; set; }
@@ -51,11 +51,14 @@ public partial class ChiTietPhieuDeXuatPhongBan
     public int? TrangThai { get; set; }
 
     [ForeignKey("MaPdkMau")]
+    [InverseProperty("ChiTietPhieuDeXuatPhongBans")]
     public virtual PhieuDangKyMau? MaPdkMauNavigation { get; set; }
 
     [ForeignKey("MaPhieuDeXuat")]
+    [InverseProperty("ChiTietPhieuDeXuatPhongBans")]
     public virtual PhieuDeXuatPhongBan? MaPhieuDeXuatNavigation { get; set; }
 
     [ForeignKey("ManvTuChoi")]
+    [InverseProperty("ChiTietPhieuDeXuatPhongBans")]
     public virtual NhanVien? ManvTuChoiNavigation { get; set; }
 }

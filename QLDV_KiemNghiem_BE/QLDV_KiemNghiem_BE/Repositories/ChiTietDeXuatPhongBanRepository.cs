@@ -19,9 +19,16 @@ namespace QLDV_KiemNghiem_BE.Repositories
         {
             return await _context.ChiTietPhieuDeXuatPhongBans.ToListAsync();
         }
-        public async Task<ChiTietPhieuDeXuatPhongBan?> FindChiTietPhieuDeXuatPhongBanAsync(string maChiTietPhieuDeXuatPhongBan)
+        public async Task<ChiTietPhieuDeXuatPhongBan?> FindChiTietPhieuDeXuatPhongBanAsync(string maChiTietPhieuDeXuatPhongBan, bool tracking)
         {
-            return await _context.ChiTietPhieuDeXuatPhongBans.FindAsync(maChiTietPhieuDeXuatPhongBan);
+            if (tracking)
+            {
+                return await _context.ChiTietPhieuDeXuatPhongBans.FindAsync(maChiTietPhieuDeXuatPhongBan);
+            }
+            else
+            {
+                return await _context.ChiTietPhieuDeXuatPhongBans.AsNoTracking().SingleOrDefaultAsync(item => item.MaId == maChiTietPhieuDeXuatPhongBan);
+            }
         }
 
         public void CreateChiTietPhieuDeXuatPhongBanAsync(ChiTietPhieuDeXuatPhongBan ChiTietPhieuDeXuatPhongBan)
