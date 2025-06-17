@@ -5,7 +5,6 @@ import PopupNofitication from "./components/PopupNofitication";
 import Maus from "./components/Maus";
 import PhuLieuHoaChat from "./components/PhuLieuHoaChat";
 import { MdDoorBack } from "react-icons/md";
-import { IoMdArrowDropdown } from "react-icons/io";
 import { Inputs } from "../../../components/Inputs";
 import InputSelect from "../../../components/InputSelect";
 import { FormPhieuDangKy } from "../../../models/PhieuDangKy";
@@ -17,7 +16,6 @@ import { MdDescription } from "react-icons/md";
 import { MdScience } from "react-icons/md";
 import { useCreatePhieuDKyDVKN } from "../../../hooks/customers/usePhieuDKyDVKN";
 import PopupThoatForm from "./components/PopupThoatForm";
-import clsx from "clsx";
 import { useQueryClient } from "@tanstack/react-query";
 import { image } from "../../../constants/image";
 import { StoreContext } from "../../../contexts/storeProvider";
@@ -295,6 +293,7 @@ const FormSignUpDVKN = () => {
                 <button
                   onClick={() => {
                     setIsShow(1);
+                    handleSubmit(onSubmitPhieuDkyDV)();
                   }}
                   className="whitespace-normal capitalize border-[2px] border-solid  hover:bg-gray-100 text-cyan-800 border-gray-300 rounded-md px-4 py-2 font-semibold text-base/6 flex justify-center cursor-pointer items-center gap-2 hover:shadow-[0_4px_4px_rgba(0,0,0,0.2)]"
                 >
@@ -308,6 +307,7 @@ const FormSignUpDVKN = () => {
                 <button
                   onClick={() => {
                     setIsShow(3);
+                    handleSubmit(onSubmitPhieuDkyDV)();
                   }}
                   className="whitespace-normal capitalize border-[2px] border-solid  hover:bg-gray-100 text-cyan-800 border-gray-300 rounded-md px-4 py-2 font-semibold text-base/6 flex justify-center cursor-pointer items-start sm:items-center sm:gap-2 hover:shadow-[0_4px_4px_rgba(0,0,0,0.2)]"
                 >
@@ -357,6 +357,7 @@ const FormSignUpDVKN = () => {
                 <button
                   onClick={() => {
                     setIsShow(1);
+                    handleSubmit(onSubmitPhieuDkyDV)();
                   }}
                   className="whitespace-normal capitalize border-[2px] border-solid  hover:bg-gray-100 text-cyan-800 border-gray-300 rounded-md px-4 py-2 font-semibold text-base/6 flex justify-center cursor-pointer items-center gap-2 hover:shadow-[0_4px_4px_rgba(0,0,0,0.2)]"
                 >
@@ -370,6 +371,7 @@ const FormSignUpDVKN = () => {
                 <button
                   onClick={() => {
                     setIsShow(2);
+                    handleSubmit(onSubmitPhieuDkyDV)();
                   }}
                   className="whitespace-normal capitalize border-[2px] border-solid  hover:bg-gray-100 text-cyan-800 border-gray-300 rounded-md px-4 py-2 font-semibold text-base/6 flex justify-center cursor-pointer items-start sm:items-center sm:gap-2 hover:shadow-[0_4px_4px_rgba(0,0,0,0.2)]"
                 >
@@ -585,8 +587,10 @@ const FormSignUpDVKN = () => {
               </div>
               <div className="grid gap-6">
                 <button
+                  type="button"
                   onClick={() => {
                     setIsShow(2);
+                    handleSubmit(onSubmitPhieuDkyDV)();
                   }}
                   className="whitespace-normal capitalize border-[2px] border-solid  hover:bg-gray-100 text-cyan-800 border-gray-300 rounded-md px-4 py-2 font-semibold text-base/6 flex justify-center cursor-pointer items-center gap-2 hover:shadow-[0_4px_4px_rgba(0,0,0,0.2)]"
                 >
@@ -600,6 +604,7 @@ const FormSignUpDVKN = () => {
                 <button
                   onClick={() => {
                     setIsShow(3);
+                    handleSubmit(onSubmitPhieuDkyDV)();
                   }}
                   className="whitespace-normal capitalize border-[2px] border-solid  hover:bg-gray-100 text-cyan-800 border-gray-300 rounded-md px-4 py-2 font-semibold text-base/6 flex justify-center cursor-pointer items-start sm:items-center sm:gap-2 hover:shadow-[0_4px_4px_rgba(0,0,0,0.2)]"
                 >

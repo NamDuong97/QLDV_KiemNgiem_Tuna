@@ -1,5 +1,5 @@
 import { Box, Dialog } from "@mui/material";
-import { AnimatePresence, motion } from "framer-motion";
+import { motion } from "framer-motion";
 import { useNavigate } from "react-router";
 import { APP_ROUTES } from "../../../../../constants/routers";
 import { IoWarningOutline } from "react-icons/io5";

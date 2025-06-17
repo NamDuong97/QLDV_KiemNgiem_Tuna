@@ -25,7 +25,7 @@ namespace QLDV_KiemNghiem_BE.Services
         public async Task<ChiTietPhieuDeXuatPhongBanDto?> FindChiTietPhieuDeXuatPhongBanAsync(string maChiTietPhieuDeXuatPhongBan)
         {
             if (maChiTietPhieuDeXuatPhongBan == null || maChiTietPhieuDeXuatPhongBan == "") return null;
-            var ChiTietPhieuDeXuatPhongBanDomain = await _repositoryManager.ChiTietPhieuDeXuatPhongBan.FindChiTietPhieuDeXuatPhongBanAsync(maChiTietPhieuDeXuatPhongBan);
+            var ChiTietPhieuDeXuatPhongBanDomain = await _repositoryManager.ChiTietPhieuDeXuatPhongBan.FindChiTietPhieuDeXuatPhongBanAsync(maChiTietPhieuDeXuatPhongBan, false);
             var result = _mapper.Map<ChiTietPhieuDeXuatPhongBanDto>(ChiTietPhieuDeXuatPhongBanDomain);
             return result;
         }
@@ -38,7 +38,7 @@ namespace QLDV_KiemNghiem_BE.Services
                 Data = null
             };
 
-            var checkExistsByID = await _repositoryManager.ChiTietPhieuDeXuatPhongBan.FindChiTietPhieuDeXuatPhongBanAsync(ChiTietPhieuDeXuatPhongBanDto.MaId);
+            var checkExistsByID = await _repositoryManager.ChiTietPhieuDeXuatPhongBan.FindChiTietPhieuDeXuatPhongBanAsync(ChiTietPhieuDeXuatPhongBanDto.MaId, false);
             if (checkExistsByID != null) return new ResponseModel1<ChiTietPhieuDeXuatPhongBanDto>
             {
                 KetQua = false,
@@ -70,7 +70,7 @@ namespace QLDV_KiemNghiem_BE.Services
                 Data = null
             };
 
-            var ChiTietPhieuDeXuatPhongBanCheck = await _repositoryManager.ChiTietPhieuDeXuatPhongBan.FindChiTietPhieuDeXuatPhongBanAsync(ChiTietPhieuDeXuatPhongBanDto.MaId);
+            var ChiTietPhieuDeXuatPhongBanCheck = await _repositoryManager.ChiTietPhieuDeXuatPhongBan.FindChiTietPhieuDeXuatPhongBanAsync(ChiTietPhieuDeXuatPhongBanDto.MaId, false);
             if (ChiTietPhieuDeXuatPhongBanCheck == null)
             {
                 return new ResponseModel1<ChiTietPhieuDeXuatPhongBanDto>
@@ -98,7 +98,7 @@ namespace QLDV_KiemNghiem_BE.Services
             if (ChiTietPhieuDeXuatPhongBan == null) return false;
             else
             {
-                var ChiTietPhieuDeXuatPhongBanDomain = await _repositoryManager.ChiTietPhieuDeXuatPhongBan.FindChiTietPhieuDeXuatPhongBanAsync(ChiTietPhieuDeXuatPhongBan.MaId);
+                var ChiTietPhieuDeXuatPhongBanDomain = await _repositoryManager.ChiTietPhieuDeXuatPhongBan.FindChiTietPhieuDeXuatPhongBanAsync(ChiTietPhieuDeXuatPhongBan.MaId, false);
                 if (ChiTietPhieuDeXuatPhongBanDomain == null)
                 {
                     return false;

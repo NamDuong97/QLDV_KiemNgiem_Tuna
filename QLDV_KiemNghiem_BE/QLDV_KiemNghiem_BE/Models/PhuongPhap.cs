@@ -44,6 +44,12 @@ public partial class PhuongPhap
 
     public string? NoiDung { get; set; }
 
+    [Column(TypeName = "decimal(18, 2)")]
+    public decimal? ThoiGianLam { get; set; }
+
     [InverseProperty("MaPpNavigation")]
     public virtual ICollection<ChiTieuPhuongPhap> ChiTieuPhuongPhaps { get; set; } = new List<ChiTieuPhuongPhap>();
+
+    [InverseProperty("MaPpNavigation")]
+    public virtual ICollection<MauTieuChuanChiTieuPhuongPhap> MauTieuChuanChiTieuPhuongPhaps { get; set; } = new List<MauTieuChuanChiTieuPhuongPhap>();
 }
