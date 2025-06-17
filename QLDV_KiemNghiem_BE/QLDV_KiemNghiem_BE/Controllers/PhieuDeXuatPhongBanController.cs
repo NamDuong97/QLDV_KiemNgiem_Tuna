@@ -1,6 +1,8 @@
-﻿using AutoMapper;
+﻿using System.Security.Claims;
+using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using QLDV_KiemNghiem_BE.DTO.RequestDto;
 using QLDV_KiemNghiem_BE.DTO.ResponseDto;
 using QLDV_KiemNghiem_BE.Interfaces.ManagerInterface;
 using QLDV_KiemNghiem_BE.Models;
@@ -42,7 +44,7 @@ namespace QLDV_KiemNghiem_BE.Controllers
 
         [HttpPost]
         [Route("createPhieuPhieuDeXuatPhongBan")]
-        public async Task<ActionResult> createPhieuPhieuDeXuatPhongBan(PhieuDeXuatPhongBanDto PhieuDeXuatPhongBanDto)
+        public async Task<ActionResult> createPhieuPhieuDeXuatPhongBan(PhieuDeXuatPhongBanRequestCreateDto PhieuDeXuatPhongBanDto)
         {
             if (!ModelState.IsValid)
             {
@@ -53,7 +55,8 @@ namespace QLDV_KiemNghiem_BE.Controllers
                 _logger.LogError("Loi validate tham so dau vao");
                 return BadRequest(new { Errors = errors });
             }
-            ResponseModel1<PhieuDeXuatPhongBanDto> create = await _service.PhieuDeXuatPhongBan.CreatePhieuDeXuatPhongBanAsync(PhieuDeXuatPhongBanDto);
+            var user = User.FindFirst(ClaimTypes.Email)?.Value.ToString() ?? "unknow";
+            ResponseModel1<PhieuDeXuatPhongBanDto> create = await _service.PhieuDeXuatPhongBan.CreatePhieuDeXuatPhongBanAsync(PhieuDeXuatPhongBanDto, user);
             if (create.KetQua)
             {
                 _logger.LogDebug(create.Message);
@@ -68,7 +71,7 @@ namespace QLDV_KiemNghiem_BE.Controllers
 
         [HttpPut]
         [Route("updatePhieuDeXuatPhongBan")]
-        public async Task<ActionResult> updatePhieuDeXuatPhongBan(PhieuDeXuatPhongBanDto PhieuDeXuatPhongBanDto)
+        public async Task<ActionResult> updatePhieuDeXuatPhongBan(PhieuDeXuatPhongBanRequestUpdateDto PhieuDeXuatPhongBanDto)
         {
             if (!ModelState.IsValid)
             {
@@ -79,7 +82,8 @@ namespace QLDV_KiemNghiem_BE.Controllers
                 _logger.LogError("Loi validate tham so dau vao");
                 return BadRequest(new { Errors = errors });
             }
-            ResponseModel1<PhieuDeXuatPhongBanDto> update = await _service.PhieuDeXuatPhongBan.UpdatePhieuDeXuatPhongBanAsync(PhieuDeXuatPhongBanDto);
+            var user = User.FindFirst(ClaimTypes.Email)?.Value.ToString() ?? "unknow";
+            ResponseModel1<PhieuDeXuatPhongBanDto> update = await _service.PhieuDeXuatPhongBan.UpdatePhieuDeXuatPhongBanAsync(PhieuDeXuatPhongBanDto, user);
             if (update.KetQua)
             {
                 _logger.LogDebug(update.Message);
