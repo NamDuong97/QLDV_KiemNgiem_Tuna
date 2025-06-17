@@ -16,7 +16,6 @@ import CapNhatTTCN from "./CapNhatTTCN";
 const ProfileCustomer = () => {
   const { userInfo } = useContext(StoreContext);
   const [isShow, setisShow] = useState(1);
-
   const handleShow = () => {
     switch (isShow as number) {
       case 2:

@@ -59,10 +59,10 @@ const Maus = (props: MausProps) => {
   const [dataEditMaus, setDataEditMaus] = useState<any>();
   const [dataCopyMaus, setDataCopyMaus] = useState<any>();
   const [listCheckbox, setListCheckbox] = useState<any[]>([]);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage] = useState(3);
   const [isTag, setisTag] = useState(1);
 
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage] = useState(3);
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentItems = tableBody?.slice(indexOfFirstItem, indexOfLastItem);

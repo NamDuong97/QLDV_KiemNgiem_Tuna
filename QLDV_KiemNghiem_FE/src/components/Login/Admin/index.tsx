@@ -1,39 +1,28 @@
 import { yupResolver } from "@hookform/resolvers/yup";
-import {
-  Box,
-  Button,
-  Checkbox,
-  Container,
-  FormControlLabel,
-  Link,
-  Typography,
-} from "@mui/material";
-import Card from "@mui/material/Card";
-import CardContent from "@mui/material/CardContent";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo } from "react";
 import { useForm } from "react-hook-form";
-import CancelIcon from "@mui/icons-material/Cancel";
 import { useNavigate } from "react-router";
 import yup from "../../../configs/yup.custom";
 import { APP_ROUTES } from "../../../constants/routers";
-import { InputTextField } from "../../InputTextField";
+import { image } from "../../../constants/image";
+import { useDangNhapNhanVien } from "../../../hooks/personnels/access/useAccess";
+import { queryClient } from "../../../lib/reactQuery";
 
 interface LoginForm {
-  username: string;
+  email: string;
   password: string;
 }
 
 const Login = () => {
   const router = useNavigate();
 
-  const [isError, setIsError] = useState(false);
-
   let schema = useMemo(() => {
     return yup.object().shape({
-      username: yup
+      email: yup
         .string()
-        .required("Yêu cầu nhập Tài khoản")
-        .max(200, "Tài khoản nhập phải dưới 200 ký tự"),
+        .required("Yêu cầu nhập Email")
+        .email("Email sai định dạng")
+        .max(50, "Email nhập phải dưới 50 ký tự"),
       password: yup
         .string()
         .required("Yêu cầu nhập mật khẩu")
@@ -48,111 +37,120 @@ const Login = () => {
     formState: { errors },
   } = useForm<LoginForm>({ resolver: yupResolver(schema), mode: "onChange" });
 
+  const handleOnSettled = async (response: any) => {
+    await queryClient.invalidateQueries({
+      queryKey: ["DangNhapNhanVien"],
+    });
+    if (response?.status === 200) router(APP_ROUTES.TUNA_ADMIN.DASHBOARD.to);
+  };
+
+  const { mutate } = useDangNhapNhanVien({
+    queryKey: "DangNhapNhanVien",
+    onSettled: handleOnSettled,
+  });
+
   const onSubmit = (data: LoginForm) => {
-    // const form = new FormData();
-    // form.append("email", data.email)
-    // form.append("password", data.password)
-    if (data.username === "admin123" && data.password === "123")
-      router(APP_ROUTES.TUNA_ADMIN.DASHBOARD.to);
-    else {
-      setIsError(true);
-      setTimeout(() => {
-        setIsError(false);
-      }, 5000);
-    }
+    mutate(data);
   };
 
-  const handleRedirectForgot = () => {
-    router(APP_ROUTES.TUNA_ADMIN.FORGOTPASSWORD.to);
-  };
-
-  // const onSubmit: SubmitHandler<LoginForm> = (data) => console.log(data)
+  // const handleRedirectForgot = () => {
+  //   router(APP_ROUTES.TUNA_ADMIN.FORGOTPASSWORD.to);
+  // };
 
   useEffect(() => {
     reset({
-      username: "",
+      email: "",
       password: "",
     });
   }, []);
 
   return (
-    <Container className="pt-32">
-      <Box className="py-5 flex justify-center">
-        <Card
-          sx={{ width: 518, borderRadius: "10px", border: "1px solid #d1d5dc" }}
-        >
-          <CardContent className="!p-8">
-            <Box className="gap-6 grid">
-              <Box className="text-center gap-2 grid">
-                <h1 className="text-3xl font-bold">Log In</h1>
-              </Box>
-              <form autoComplete="off" onSubmit={handleSubmit(onSubmit)}>
-                <Box className="gap-3 grid">
-                  <Box className="gap-6 grid">
-                    <Box>
-                      <InputTextField
-                        title="Tài Khoản"
-                        name="username"
-                        variant="standard"
-                        className="w-full"
-                        inputRef={register("username")}
-                        errorMessage={errors.username?.message}
+    <section className="min-h-screen bg-[linear-gradient(to_bottom,#F7797D,#FBD786,#C6FFDD)] flex items-center justify-center">
+      <div className="container py-5">
+        <div className="flex justify-center items-center min-h-screen">
+          <div className="w-full max-w-4xl">
+            <div className="bg-white rounded-xl shadow-lg overflow-hidden flex flex-col md:flex-row">
+              <div className="w-2/5 flex items-center bg-[linear-gradient(to_bottom,#F7797D,#FBD786,#C6FFDD)]">
+                <img
+                  src={image.imageTunaLogo}
+                  alt="login form"
+                  className="object-cover"
+                  style={{ borderRadius: "1rem 0 0 1rem" }}
+                />
+              </div>
+              <div className="flex-1 flex items-center">
+                <div className="p-8 md:p-12 w-full">
+                  <form autoComplete="off" onSubmit={handleSubmit(onSubmit)}>
+                    <div className="flex items-center mb-8">
+                      <span className="text-3xl font-bold">Đăng nhập</span>
+                    </div>
+                    <div className="mb-6 grid gap-1 relative">
+                      <label
+                        htmlFor="form2Example17"
+                        className="block text-cyan-950"
+                      >
+                        Email address
+                      </label>
+                      <input
+                        type="email"
+                        id="form2Example17"
+                        {...register("email")}
+                        className="form-input w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-400"
                       />
-                    </Box>
-                    <Box>
-                      <Box>
-                        <InputTextField
-                          title="Mật Khẩu"
-                          type="password"
-                          name="password"
-                          variant="standard"
-                          className="w-full"
-                          inputRef={register("password")}
-                          errorMessage={errors.password?.message}
-                        />
-                      </Box>
-                      <Box className="text-end">
-                        <Link
-                          className="cursor-pointer !text-gray-400 !text-sm/4"
-                          onClick={handleRedirectForgot}
-                          underline="hover"
-                        >
-                          Forgot Password?
-                        </Link>
-                      </Box>
-                    </Box>
-                  </Box>
-                  {isError && (
-                    <Box className="border-2 border-red-200 rounded-sm py-2 px-3 flex gap-3 items-center">
-                      <CancelIcon className="text-[#af1c10]" />
-                      <Typography className="text-[#af1c10] font-medium text-xs/[140%]">
-                        Vui lòng nhập đúng Email/Password
-                      </Typography>
-                    </Box>
-                  )}
-                  <Box>
-                    <FormControlLabel
-                      control={<Checkbox />}
-                      label="Remember me"
-                      className="text-gray-400"
-                    />
-                  </Box>
-                  <Box>
-                    <Button
-                      variant="contained"
-                      className="w-full !py-3"
-                      type="submit"
-                    >
-                      Login
-                    </Button>
-                  </Box>
-                </Box>
-              </form>
-            </Box>
-          </CardContent>
-        </Card>
-      </Box>
-    </Container>
+                      {errors.email?.message && (
+                        <p className="text-sm text-red-600 absolute -bottom-6">
+                          {errors.email?.message}
+                        </p>
+                      )}
+                    </div>
+                    <div className="mb-8 relative">
+                      <label
+                        htmlFor="form2Example27"
+                        className="block mb-2 text-cyan-950"
+                      >
+                        Password
+                      </label>
+                      <input
+                        type="password"
+                        id="form2Example27"
+                        {...register("password")}
+                        className="form-input w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                      />
+                      {errors.password?.message && (
+                        <p className="text-sm text-red-600 absolute -bottom-6">
+                          {errors.password?.message}
+                        </p>
+                      )}
+                    </div>
+                    <div className="mb-6">
+                      <button className="w-full py-3 bg-[#41737c] text-white text-lg rounded-lg hover:bg-[#356267] transition cursor-pointer">
+                        Login
+                      </button>
+                    </div>
+                    <div className="flex justify-between items-center mb-4">
+                      <a
+                        className="text-sm text-cyan-950 hover:underline"
+                        href="#!"
+                      >
+                        Forgot password?
+                      </a>
+                    </div>
+                    <div className="flex flex-wrap gap-4 text-xs text-cyan-950">
+                      <a href="#!" className="hover:underline">
+                        Terms of use.
+                      </a>
+                      <a href="#!" className="hover:underline">
+                        Privacy policy
+                      </a>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
   );
 };
 

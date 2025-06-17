@@ -47,7 +47,7 @@ export const APP_ROUTES = {
     QUAN_LY_PHIEU_DANG_KY_DICH_VU_KIEM_NGHIEM: {
       to: "/tuna/quan-ly-phieu-dang-ky-dich-vu-kiem-nghiem",
       title: "Quản Lý Phiếu đăng ký dịch vụ kiểm nghiệm",
-      id: "/tuna/quan-ly-phieu-dang-ky-dich-vu-kiem-nghiem/:id",
+      id: "/tuna/quan-ly-phieu-dang-ky-dich-vu-kiem-nghiem/xem-chi-tiet",
     },
     LIST_PHAN_CONG_PHONG_CHUYEN_MON: {
       to: "/tuna/danh-sach-phan-cong-phong-chuyen-mon",

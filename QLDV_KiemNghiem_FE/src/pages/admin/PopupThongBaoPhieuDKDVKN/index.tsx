@@ -5,8 +5,6 @@ import { useNavigate } from "react-router";
 import { APP_ROUTES } from "../../../constants/routers";
 import { Inputs } from "../../../components/Inputs";
 import { useEffect, useState } from "react";
-import DetailMaus from "../manager-phieudkydvkn/ChiTietPhieuDKyDVKN/Detail-Maus";
-import DetailPLHCs from "../manager-phieudkydvkn/ChiTietPhieuDKyDVKN/Detail-PLHC";
 import { Align } from "../../../models/Table";
 import TablePhieuDKDVKN from "./TablePhieuDKDVKN";
 import { IoMdNotifications } from "react-icons/io";
@@ -227,10 +225,12 @@ const PopupThongBaoPhieuDKDVKN = (props: Props) => {
   const handleShowByTag = () => {
     switch (isTag) {
       case 2: {
-        return <DetailMaus />;
+        //  <DetailMaus />;
+        return null;
       }
       case 3: {
-        return <DetailPLHCs />;
+        return null;
+        // return <DetailPLHCs />;
       }
       default: {
         return (

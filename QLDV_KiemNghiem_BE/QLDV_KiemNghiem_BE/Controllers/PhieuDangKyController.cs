@@ -27,7 +27,7 @@ namespace QLDV_KiemNghiem_BE.Controllers
         // action này dùng cho nhân viên phòng kế hoạch đầu tư sử dụng để xem
         [HttpGet]
         [Route("getPhieuDangKyAll")]
-        public async Task<ActionResult> getPhieuDangKyAll(PhieuDangKyParam phieuDangKyParam)
+        public async Task<ActionResult> getPhieuDangKyAll([FromQuery] PhieuDangKyParam phieuDangKyParam)
         {
             if(phieuDangKyParam == null)
             {

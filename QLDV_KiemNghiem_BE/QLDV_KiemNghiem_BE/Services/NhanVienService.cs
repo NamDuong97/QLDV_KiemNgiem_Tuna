@@ -65,7 +65,8 @@ namespace QLDV_KiemNghiem_BE.Services
                 KetQua = true,
                 Message = "Đăng nhập thành công",
                 Token = token,
-                RefreshToken = refreshToken
+                RefreshToken = refreshToken,
+                MaId = nhanVien.MaId
             };
         }
         public async Task<ResponseModel1<TokenDto>> GetRefreshTokenForNhanVien(TokenDto token)
