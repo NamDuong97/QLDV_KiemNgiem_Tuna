@@ -14,8 +14,9 @@ const _APIInstance = axios.create({
 
 _APIInstance.interceptors.request.use(
   async (config: any) => {
-    const token = Cookies.get(EKey.TOKEN_GUEST);
-    if (token) {
+    const token_guest = Cookies.get(EKey.TOKEN_GUEST);
+    const token = Cookies.get(EKey.TOKEN);
+    if (token_guest || token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
     return config;

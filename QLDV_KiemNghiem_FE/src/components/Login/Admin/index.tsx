@@ -65,11 +65,11 @@ const Login = () => {
   }, []);
 
   return (
-    <section className="min-h-screen bg-[linear-gradient(to_bottom,#F7797D,#FBD786,#C6FFDD)] flex items-center justify-center">
+    <section className="flex items-center justify-center">
       <div className="container py-5">
         <div className="flex justify-center items-center min-h-screen">
           <div className="w-full max-w-4xl">
-            <div className="bg-white rounded-xl shadow-lg overflow-hidden flex flex-col md:flex-row">
+            <div className="bg-white rounded-xl shadow-lg overflow-hidden flex flex-col md:flex-row border border-gray-300">
               <div className="w-2/5 flex items-center bg-[linear-gradient(to_bottom,#F7797D,#FBD786,#C6FFDD)]">
                 <img
                   src={image.imageTunaLogo}
