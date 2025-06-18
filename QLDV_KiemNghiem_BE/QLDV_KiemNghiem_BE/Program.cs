@@ -16,7 +16,6 @@ using QLDV_KiemNghiem_BE.Services;
 using StackExchange.Redis;
 using Microsoft.AspNetCore.SignalR;
 using QLDV_KiemNghiem_BE.HubsRealTime;
-using QLDV_KiemNghiem_BE.Interfaces.Notification;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -27,7 +26,6 @@ builder.Services.AddScoped<IRepositoryManager, RepositoryManager>();
 builder.Services.AddScoped<IServiceManager, ServiceManager>();
 builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddScoped<ITokenService, TokenService>();
-builder.Services.AddScoped<INotificationService, NotificationService>();
 
 // Redis connection
 builder.Services.AddSingleton<IConnectionMultiplexer>(sp =>

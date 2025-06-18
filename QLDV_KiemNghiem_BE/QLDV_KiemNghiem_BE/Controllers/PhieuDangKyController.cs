@@ -1,10 +1,12 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using QLDV_KiemNghiem_BE.DTO.ResponseDto;
+using QLDV_KiemNghiem_BE.HubsRealTime;
 using QLDV_KiemNghiem_BE.Interfaces.ManagerInterface;
-using QLDV_KiemNghiem_BE.Interfaces.Notification;
 using QLDV_KiemNghiem_BE.Models;
 using QLDV_KiemNghiem_BE.RequestFeatures;
 using System;
@@ -19,13 +21,13 @@ namespace QLDV_KiemNghiem_BE.Controllers
         private readonly IServiceManager _service;
         private readonly ILogger<PhieuDangKyController> _logger;
         private readonly IMapper _mapper;
-        private readonly INotificationService _notification;
-        public PhieuDangKyController(IServiceManager serviceManager, ILogger<PhieuDangKyController> logger, IMapper mapper, INotificationService notification)
+        private readonly IHubContext<NotificationHub> _hubContext;
+        public PhieuDangKyController(IServiceManager serviceManager, ILogger<PhieuDangKyController> logger, IMapper mapper, IHubContext<NotificationHub> hubContext)
         {
             _service = serviceManager;
             _logger = logger;
             _mapper = mapper;
-            _notification = notification;
+            _hubContext = hubContext;
         }
 
         // action này dùng cho nhân viên phòng kế hoạch đầu tư sử dụng để xem
@@ -57,7 +59,7 @@ namespace QLDV_KiemNghiem_BE.Controllers
                 : $"Phieu dang ky co maid {phieuDangKys.MaPhieuDangKy} da bi tu choi boi nguoi dung {user}!",
                 CreatedAt = DateTime.Now,
             };
-            await _notification.NotifyToOneGroupAsync("BLD", noti);
+            await _hubContext.Clients.Group("BLD").SendAsync("receiveNotification", noti);
             _logger.LogDebug(phieuDangKys.Message);
             return Ok(phieuDangKys);
         }
@@ -75,7 +77,7 @@ namespace QLDV_KiemNghiem_BE.Controllers
                : $"Phieu dang ky co maid {phieuDangKys.MaPhieuDangKy} da bi tu choi boi nguoi dung {user}!",
                 CreatedAt = DateTime.Now,
             };
-            await _notification.NotifyToOneGroupAsync("BLD", noti);
+            await _hubContext.Clients.Group("KHTH").SendAsync("receiveNotification", noti);
             _logger.LogDebug(phieuDangKys.Message);
             return Ok(phieuDangKys);
         }
@@ -123,7 +125,7 @@ namespace QLDV_KiemNghiem_BE.Controllers
                     Message = $"Phieu dang ky co maid {phieuDangKy.Data.MaId} duoc tao thanh cong boi khach hang {user}, vui long kiem tra va xet duyet",
                     CreatedAt = DateTime.Now,
                 };
-                await _notification.NotifyToOneGroupAsync("KHTH", noti);
+                await _hubContext.Clients.Group("KHTH").SendAsync("receiveNotification", noti);
 
                 // Them hoa don sau khi them phieu dang ky
                 ResponseModel1<HoaDonThuDto> hoaDonThu =  await _service.HoaDonThu.CreateHoaDonThuByPhieuDangKyAsync(phieuDangKy?.Data);
