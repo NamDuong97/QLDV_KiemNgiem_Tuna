@@ -6,25 +6,21 @@ import RoutesPersonnels from "./routers/RoutesPersonnels";
 import { PersonnelProvider } from "./contexts/PersonelsProvider";
 import { StoreProvider } from "./contexts/storeProvider";
 import { SignalRProvider } from "./contexts/SignalRProvider";
-import Cookie from "js-cookie";
-import { EKey } from "./constants/commons";
 import { useLocation } from "react-router";
 
 function App() {
-  const token = Cookie.get(EKey.TOKEN);
-  const token_guest = Cookie.get(EKey.TOKEN_GUEST);
   const isAdmin = useLocation().pathname.startsWith("/tuna");
 
   return (
     <QueryClientProvider client={queryClient}>
       {isAdmin ? (
-        <SignalRProvider token={token}>
-          <PersonnelProvider>
+        <PersonnelProvider>
+          <SignalRProvider>
             <RoutesPersonnels />
-          </PersonnelProvider>
-        </SignalRProvider>
+          </SignalRProvider>
+        </PersonnelProvider>
       ) : (
-        <SignalRProvider token={token_guest}>
+        <SignalRProvider>
           <StoreProvider>
             <Routers />
           </StoreProvider>

@@ -46,7 +46,7 @@ import { Dispatch, SetStateAction } from "react";
 import { FaUsers } from "react-icons/fa6";
 import { VscSaveAs } from "react-icons/vsc";
 import { GiTestTubes } from "react-icons/gi";
-import { usePersonnel } from "../../contexts/PersonelsProvider";
+// import { usePersonnel } from "../../contexts/PersonelsProvider";
 
 interface SideBarProps {
   drawerWidth: number;
@@ -57,8 +57,7 @@ interface SideBarProps {
 const SideBar = (props: SideBarProps) => {
   const { drawerWidth, isMenuDashBoard, handleMenuDashBoard } = props;
   const pathname = useLocation().pathname;
-  const { personnelInfo } = usePersonnel();
-  console.log("personnelInfo", personnelInfo);
+  // const { personnelInfo } = usePersonnel();
 
   const navigate = useNavigate();
 

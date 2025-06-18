@@ -48,7 +48,7 @@ namespace QLDV_KiemNghiem_BE.Services
             var token = new JwtSecurityToken(
                 issuer: _configuration["Jwt:Issuer"],
                 claims: claims, // Thong tin cua nguoi dung
-                expires: DateTime.UtcNow.AddMinutes(2), // Thoi gian song cua token la 1 tieng
+                expires: DateTime.UtcNow.AddMinutes(60), // Thoi gian song cua token la 1 tieng
                 signingCredentials: creadentials,
                 audience: _configuration["Jwt:Audience"]
             );
