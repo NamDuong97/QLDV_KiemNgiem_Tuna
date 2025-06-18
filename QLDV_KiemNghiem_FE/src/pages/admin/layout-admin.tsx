@@ -4,6 +4,7 @@ import ThemeRegistry from "../../configs/ThemeRegistry";
 import { Outlet, useLocation } from "react-router";
 import SideBar from "../../components/Sidebar";
 import HeaderAdmin from "../../components/HeaderAdmin";
+import { PersonnelProvider } from "../../contexts/PersonelsProvider";
 
 export default function LayoutAdmin() {
   const [isMenuDashBoard, setIsMenuDashBoard] = useState(false);
@@ -15,24 +16,26 @@ export default function LayoutAdmin() {
   );
 
   return (
-    <ThemeRegistry>
-      <Box>
-        <HeaderAdmin />
-        <Box className="flex">
-          <Box>
-            {!isLoginForgot && (
-              <SideBar
-                drawerWidth={drawerWidth}
-                isMenuDashBoard={isMenuDashBoard}
-                handleMenuDashBoard={setIsMenuDashBoard}
-              />
-            )}
-          </Box>
-          <Box className="w-full">
-            <Outlet />
+    <PersonnelProvider>
+      <ThemeRegistry>
+        <Box>
+          {!isLoginForgot && <HeaderAdmin />}
+          <Box className="flex">
+            <Box>
+              {!isLoginForgot && (
+                <SideBar
+                  drawerWidth={drawerWidth}
+                  isMenuDashBoard={isMenuDashBoard}
+                  handleMenuDashBoard={setIsMenuDashBoard}
+                />
+              )}
+            </Box>
+            <Box className="w-full">
+              <Outlet />
+            </Box>
           </Box>
         </Box>
-      </Box>
-    </ThemeRegistry>
+      </ThemeRegistry>
+    </PersonnelProvider>
   );
 }

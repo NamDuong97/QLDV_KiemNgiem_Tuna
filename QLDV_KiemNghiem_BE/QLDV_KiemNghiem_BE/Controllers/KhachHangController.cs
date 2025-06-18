@@ -118,30 +118,30 @@ namespace QLDV_KiemNghiem_BE.Controllers
             try
             {
                 var userID = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-                // Kiểm tra xem trong cache co lưu chưa, nếu có thì trả về
-                var cacheKey = $"khachhang:{userID}";
-                var cacheData = await _cache.GetStringAsync(cacheKey);
-                if (!string.IsNullOrEmpty(cacheData))
-                {
-                    // Trả về đối tượng CachedResponse
-                    var cached = JsonConvert.DeserializeObject<CachedResponse<ResponseModel1<KhachHangReturnClientDto>>>(cacheData);
-                    // Trả về đối tượng ResponseModel1<KhachHangReturnDto>
-                    return Ok(cached.Data);
-                }
+                //// Kiểm tra xem trong cache co lưu chưa, nếu có thì trả về
+                //var cacheKey = $"khachhang:{userID}";
+                //var cacheData = await _cache.GetStringAsync(cacheKey);
+                //if (!string.IsNullOrEmpty(cacheData))
+                //{
+                //    // Trả về đối tượng CachedResponse
+                //    var cached = JsonConvert.DeserializeObject<CachedResponse<ResponseModel1<KhachHangReturnClientDto>>>(cacheData);
+                //    // Trả về đối tượng ResponseModel1<KhachHangReturnDto>
+                //    return Ok(cached.Data);
+                //}
 
                 // Ngược lại nếu cache chưa có thì tiến hành lưu redis và trả về từ BD
                 var khachhang = await _service.KhachHang.FindKhachHangBySeflAsync(userID);
                 if (khachhang != null)
                 {
-                    var cacheObj = new CachedResponse<ResponseModel1<KhachHangReturnClientDto>>
-                    {
-                        Data = khachhang
-                    };
-                    // Lưu dữ liệu vào redis
-                    await _cache.SetStringAsync(cacheKey, JsonConvert.SerializeObject(cacheObj), new DistributedCacheEntryOptions
-                    {
-                        AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(5)
-                    });
+                    //var cacheObj = new CachedResponse<ResponseModel1<KhachHangReturnClientDto>>
+                    //{
+                    //    Data = khachhang
+                    //};
+                    //// Lưu dữ liệu vào redis
+                    //await _cache.SetStringAsync(cacheKey, JsonConvert.SerializeObject(cacheObj), new DistributedCacheEntryOptions
+                    //{
+                    //    AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(5)
+                    //});
                     return Ok(khachhang);
                 }
                 else

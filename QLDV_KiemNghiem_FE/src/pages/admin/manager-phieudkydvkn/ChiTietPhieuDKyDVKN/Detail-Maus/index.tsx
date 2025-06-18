@@ -1,8 +1,27 @@
 import { Box, Pagination } from "@mui/material";
 import { motion } from "motion/react";
 import Maus from "./Maus";
+import { useState } from "react";
 
-const DetailMaus = () => {
+interface Props {
+  dataMaus: any;
+  isLoading: boolean;
+}
+
+const DetailMaus = (props: Props) => {
+  const { dataMaus } = props;
+
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage] = useState(1);
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = dataMaus?.slice(indexOfFirstItem, indexOfLastItem);
+  const totalPages = Math.ceil(dataMaus && dataMaus?.length / itemsPerPage);
+
+  const handlePageChange = (_: any, value: number) => {
+    setCurrentPage(value);
+  };
+
   return (
     <motion.div
       key="tag2"
@@ -12,13 +31,13 @@ const DetailMaus = () => {
       transition={{ duration: 0.5 }}
       className="border border-solid border-gray-300 rounded-[10px] grid gap-2"
     >
-      <Maus />
+      <Maus currentItems={currentItems[0]} />
       <hr className="text-gray-300" />
       <Box className="px-4 pb-4 pt-2 flex justify-center">
         <Pagination
-          count={10}
-          // page={currentPage}
-          // onChange={handlePageChange}
+          count={totalPages}
+          page={currentPage}
+          onChange={handlePageChange}
           variant="outlined"
           shape="rounded"
           color="primary"
