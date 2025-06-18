@@ -15,6 +15,11 @@ namespace QLDV_KiemNghiem_BE
            return DateTime.Now.Year.ToString() + DateTime.Now.Month.ToString() + DateTime.Now.Day.ToString() + DateTime.Now.Hour.ToString() + DateTime.Now.Minute.ToString() + DateTime.Now.Second.ToString() + DateTime.Now.Millisecond.ToString();  
         }
 
+        public static bool IsValidDateTime(DateTime? inputDateTime)
+        {
+            return inputDateTime.HasValue && inputDateTime.Value != DateTime.MinValue;
+        }
+
         public static string processString(string input)
         {
             if (string.IsNullOrWhiteSpace(input))

@@ -29,6 +29,46 @@ namespace QLDV_KiemNghiem_BE.Services
             var result = _mapper.Map<ChiTietPhieuDeXuatPhongBanDto>(ChiTietPhieuDeXuatPhongBanDomain);
             return result;
         }
+        public async Task<ResponseReviewPhieuDeXuatPhongBan> ReviewPhieuDeXuatPhongBanByPhongKhoa(RequestReviewPhieuDeXuatPhongBan duyetPhieu, string user)
+        {
+            if (duyetPhieu == null || duyetPhieu.MaPhieuDeXuat == "")
+            {
+                return new ResponseReviewPhieuDeXuatPhongBan
+                {
+                    KetQua = false,
+                    Message = "Thieu du lieu dau vao!",
+                };
+            }
+
+            var checkExistsChiTietPhieuDXPB = await _repositoryManager.ChiTietPhieuDeXuatPhongBan.FindChiTietPhieuDeXuatPhongBanAsync(duyetPhieu.MaPhieuDeXuat, true);
+            if (checkExistsChiTietPhieuDXPB != null)
+            {
+                if (duyetPhieu.Action)
+                    // neu action = 1 thi tiep theo se la cho BLD duyet
+                    checkExistsChiTietPhieuDXPB.TrangThai = "Da Duyet";
+                else // nguoc lai thi trang thai la bi phong KHDT tu choi duyet, thi cho BLD quyet dinh
+                    checkExistsChiTietPhieuDXPB.TrangThai = "Khong Duyet";
+                checkExistsChiTietPhieuDXPB.NgaySua = DateTime.Now;
+                checkExistsChiTietPhieuDXPB.NguoiSua = user;
+                _repositoryManager.ChiTietPhieuDeXuatPhongBan.UpdateChiTietPhieuDeXuatPhongBanAsync(checkExistsChiTietPhieuDXPB);
+                bool check = await _repositoryManager.SaveChangesAsync();
+                return new ResponseReviewPhieuDeXuatPhongBan
+                {
+                    MaPhieuDeXuat = duyetPhieu.MaPhieuDeXuat,
+                    Message = check ? "Xu ly duyet phieu de xuat phong ban thanh cong!" : "Xu ly duyet phieu de xuat phong ban that bai vui long thu lai!",
+                    KetQua = check
+                };
+            }
+            else
+            {
+                return new ResponseReviewPhieuDeXuatPhongBan
+                {
+                    KetQua = false,
+                    Message = "Chi tiet phieu de xuat phong ban khong ton tai",
+                    MaPhieuDeXuat = duyetPhieu.MaPhieuDeXuat,
+                };
+            }
+        }
         public async Task<ResponseModel1<ChiTietPhieuDeXuatPhongBanDto>> CreateChiTietPhieuDeXuatPhongBanAsync(ChiTietPhieuDeXuatPhongBanDto ChiTietPhieuDeXuatPhongBanDto)
         {
             if (ChiTietPhieuDeXuatPhongBanDto == null) return new ResponseModel1<ChiTietPhieuDeXuatPhongBanDto>

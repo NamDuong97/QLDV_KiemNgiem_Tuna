@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.SignalR;
 using QLDV_KiemNghiem_BE.Data;
+using QLDV_KiemNghiem_BE.HubsRealTime;
 using QLDV_KiemNghiem_BE.Interfaces;
 using QLDV_KiemNghiem_BE.Interfaces.ManagerInterface;
 using QLDV_KiemNghiem_BE.Models;
@@ -44,7 +46,8 @@ namespace QLDV_KiemNghiem_BE.Services
         private readonly Lazy<IChiTietPhieuDeXuatPhongBanService> _chiTietPhieuDeXuatPhongBanService;
        
 
-        public ServiceManager(IRepositoryManager repositoryManager, IMapper mapper, DataContext dataContext, IEmailService emailService, ITokenService tokenService, IConfiguration configuration)
+        public ServiceManager(IRepositoryManager repositoryManager, IMapper mapper, DataContext dataContext, IEmailService emailService, ITokenService tokenService, IConfiguration configuration,
+            IHubContext<NotificationHub> hubContext)
         {
             _repositoryManager = repositoryManager;
             _mapper = mapper;
@@ -68,7 +71,7 @@ namespace QLDV_KiemNghiem_BE.Services
             _trangThaiPhieuDkService = new Lazy<ITrangThaiPhieuDkService>(() => new TrangThaiPhieuDkService(repositoryManager, mapper));
             _hoaDonThuService = new Lazy<IHoaDonThuService>(() => new HoaDonThuService(repositoryManager, mapper));
             _chiTietHoaDonThuService = new Lazy<IChiTietHoaDonThuService>(() => new ChiTietHoaDonThuService(repositoryManager, mapper));
-            _phieuDeXuatPhongBan = new Lazy<IPhieuDeXuatPhongBanService>(() => new PhieuDeXuatPhongBanService(repositoryManager, mapper, dataContext));
+            _phieuDeXuatPhongBan = new Lazy<IPhieuDeXuatPhongBanService>(() => new PhieuDeXuatPhongBanService(repositoryManager, mapper, dataContext, hubContext));
             _phanCongNoiBoService = new Lazy<IPhanCongNoiBoService>(() => new PhanCongNoiBoService(repositoryManager, mapper));
             _phieuDuTruService = new Lazy<IPhieuDuTruService>(() => new PhieuDuTruService(repositoryManager, mapper));
             _phieuLuuMauService = new Lazy<IPhieuLuuMauService>(() => new PhieuLuuMauService(repositoryManager, mapper));

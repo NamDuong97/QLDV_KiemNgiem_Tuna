@@ -1,9 +1,12 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using QLDV_KiemNghiem_BE.DTO.ResponseDto;
+using QLDV_KiemNghiem_BE.HubsRealTime;
 using QLDV_KiemNghiem_BE.Interfaces.ManagerInterface;
 using QLDV_KiemNghiem_BE.Models;
 using QLDV_KiemNghiem_BE.RequestFeatures;
+using System.Security.Claims;
 
 namespace QLDV_KiemNghiem_BE.Controllers
 {
@@ -14,11 +17,13 @@ namespace QLDV_KiemNghiem_BE.Controllers
         private readonly IServiceManager _service;
         private readonly ILogger<ChiTietPhieuDeXuatPhongBanController> _logger;
         private readonly IMapper _mapper;
-        public ChiTietPhieuDeXuatPhongBanController(IServiceManager serviceManager, ILogger<ChiTietPhieuDeXuatPhongBanController> logger, IMapper mapper)
+        private readonly IHubContext<NotificationHub> _hubContext;
+        public ChiTietPhieuDeXuatPhongBanController(IServiceManager serviceManager, ILogger<ChiTietPhieuDeXuatPhongBanController> logger, IMapper mapper, IHubContext<NotificationHub> hubContext)
         {
             _service = serviceManager;
             _logger = logger;
             _mapper = mapper;
+            _hubContext = hubContext;
         }
 
         [HttpGet]
@@ -28,6 +33,25 @@ namespace QLDV_KiemNghiem_BE.Controllers
             var result = await _service.ChiTietPhieuDeXuatPhongBan.GetChiTietPhieuDeXuatPhongBansAllAsync();
             _logger.LogDebug("get toan bo chi tiet phieu de xuat phong ban");
             return Ok(result);
+        }
+
+        [HttpPut]
+        [Route("reviewPhieuDeXuatPhongBanByPhongKhoa")]
+        public async Task<ActionResult> reviewPhieuDeXuatPhongBanByPhongKhoa(RequestReviewPhieuDeXuatPhongBan duyetPhieu)
+        {
+            var user = User.FindFirst(ClaimTypes.Email)?.Value.ToString() ?? "unknow";
+            var phieuDeXuat = await _service.ChiTietPhieuDeXuatPhongBan.ReviewPhieuDeXuatPhongBanByPhongKhoa(duyetPhieu, user);
+            // Tao thong bao gui cho phong KHTH
+            NotificationModel noti = new NotificationModel()
+            {
+                Title = "Duyet phieu de xuat phong ban",
+                Message = phieuDeXuat.KetQua ? $"Chi tiet phieu de xuat co maid {phieuDeXuat.MaPhieuDeXuat} duoc duyet thanh cong boi nguoi dung {user}!"
+                : $"Chi tiet phieu de xuat co maid {phieuDeXuat.MaPhieuDeXuat} da bi tu choi boi nguoi dung {user}!",
+                CreatedAt = DateTime.Now,
+            };
+            await _hubContext.Clients.Group("KHTH").SendAsync("receiveNotification", noti);
+            _logger.LogDebug(phieuDeXuat.Message);
+            return Ok(phieuDeXuat);
         }
 
         [HttpGet]

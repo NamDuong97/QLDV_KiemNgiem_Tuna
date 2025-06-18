@@ -50,5 +50,10 @@ namespace QLDV_KiemNghiem_BE.HubsRealTime
         {
             await Clients.Group(role).SendAsync("receiveNotification", notification);
         }
+
+        public async Task SendToUsers(List<string> userIds, NotificationModel noti)
+        {
+            await Clients.Users(userIds).SendAsync("notificationForPDXPB", noti);
+        }
     }
 }

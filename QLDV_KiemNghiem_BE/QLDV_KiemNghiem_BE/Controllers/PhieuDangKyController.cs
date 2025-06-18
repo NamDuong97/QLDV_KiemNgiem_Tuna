@@ -81,7 +81,16 @@ namespace QLDV_KiemNghiem_BE.Controllers
                 CreatedAt = DateTime.Now,
             };
             await _hubContext.Clients.Group("KHTH").SendAsync("receiveNotification", noti);
-            _logger.LogDebug(phieuDangKys.Message);
+
+            if(phieuDangKys.KetQua) // Cập nhật trạng thái phiếu đăng ký
+            {
+
+            }
+            else
+            {
+
+            }
+                _logger.LogDebug(phieuDangKys.Message);
             return Ok(phieuDangKys);
         }
 
