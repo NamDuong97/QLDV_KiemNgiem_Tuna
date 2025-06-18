@@ -2,8 +2,25 @@ import { Box, Pagination } from "@mui/material";
 import { motion } from "motion/react";
 import { Textarea } from "../../../../../components/Textarea";
 import { Inputs } from "../../../../../components/Inputs";
+import { useState } from "react";
+interface Props {
+  dataPLHC: any;
+  isLoading: boolean;
+}
+const DetailPLHCs = (props: Props) => {
+  const { dataPLHC } = props;
 
-const DetailPLHCs = () => {
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage] = useState(1);
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = dataPLHC?.slice(indexOfFirstItem, indexOfLastItem);
+  const totalPages = Math.ceil(dataPLHC && dataPLHC?.length / itemsPerPage);
+  const handlePageChange = (_: any, value: number) => {
+    setCurrentPage(value);
+  };
+  console.log("currentItemscurrentItems", currentItems);
+
   return (
     <motion.div
       key="form-signup-dvkm-tag2"
@@ -13,55 +30,125 @@ const DetailPLHCs = () => {
       transition={{ duration: 0.5 }}
       className="border border-solid border-gray-300 rounded-[10px] grid gap-2"
     >
-      <Box className="grid grid-cols-12 gap-1 lg:gap-[0px_24px] p-6">
-        <Box className="col-span-12 md:col-span-6 lg:col-span-4">
+      {currentItems?.map((item: any) => (
+        <Box className="grid grid-cols-12 gap-1 lg:gap-[0px_24px] p-6">
+          <Box className="col-span-3">
+            <Inputs
+              title="Tên Phụ Liệu Hóa Chất"
+              className="h-[42px]"
+              sx={{
+                input: {
+                  padding: "9.5px 14px",
+                },
+                "& .Mui-disabled": {
+                  WebkitTextFillColor: "black !important",
+                },
+              }}
+              disabled
+              defaultValue={item?.tenPlhc}
+            />
+          </Box>
+          <Box className="col-span-3">
+            <Inputs
+              title="Tên hiển thị"
+              className="h-[42px]"
+              name="TenHienThi"
+              disabled
+              sx={{
+                input: {
+                  padding: "9.5px 14px",
+                },
+                "& .Mui-disabled": {
+                  WebkitTextFillColor: "black !important",
+                },
+              }}
+              defaultValue={item?.tenHienThi}
+            />
+          </Box>
+          <Box className="col-span-3">
+            <Inputs
+              title="Số Lượng"
+              className="h-[42px]"
+              name="SoLuong"
+              disabled
+              sx={{
+                input: {
+                  padding: "9.5px 14px",
+                },
+                "& .Mui-disabled": {
+                  WebkitTextFillColor: "black !important",
+                },
+              }}
+              defaultValue={item?.soLuong}
+            />
+          </Box>
+          <Box className="col-span-3">
+            <Inputs
+              title="Đơn Vị Tính"
+              name="DonViTinh"
+              className="h-[42px]"
+              disabled
+              sx={{
+                input: {
+                  padding: "9.5px 14px",
+                },
+                "& .Mui-disabled": {
+                  WebkitTextFillColor: "black !important",
+                },
+              }}
+              defaultValue={item?.donViTinh}
+            />
+          </Box>
+          <Box className="col-span-4">
+            <Inputs
+              title="Số lô"
+              name="SoLo"
+              className="h-[42px]"
+              disabled
+              sx={{
+                input: {
+                  padding: "9.5px 14px",
+                },
+                "& .Mui-disabled": {
+                  WebkitTextFillColor: "black !important",
+                },
+              }}
+              defaultValue={item?.soLo}
+            />
+          </Box>
+          <Box className="col-span-4">
+            <Inputs
+              title="Tên nhà cung cấp"
+              name="TenNhaCungCap"
+              className="h-[42px]"
+              disabled
+              sx={{
+                input: {
+                  padding: "9.5px 14px",
+                },
+                "& .Mui-disabled": {
+                  WebkitTextFillColor: "black !important",
+                },
+              }}
+              defaultValue={item?.tenNhaCungCap}
+            />
+          </Box>
+          {/* <Box className="col-span-12 md:col-span-6 lg:col-span-4">
           <Inputs
-            title="Tên danh mục Phụ Liệu Hóa Chất"
-            name="TenDM_PLHC"
+            title="Nồng độ"
+            name="NongDo"
             className="h-[42px]"
             disabled
+            sx={{
+              input: {
+                padding: "9.5px 14px",
+              },
+              "& .Mui-disabled": {
+                WebkitTextFillColor: "black !important",
+              },
+            }}
+            defaultValue={item?.nongDo}
           />
-        </Box>
-        <Box className="col-span-12 md:col-span-6 lg:col-span-4">
-          <Inputs title="Tên Phụ Liệu Hóa Chất" className="h-[42px]" disabled />
-        </Box>
-        <Box className="col-span-12 md:col-span-6 lg:col-span-4">
-          <Inputs
-            title="Tên hiển thị"
-            className="h-[42px]"
-            name="TenHienThi"
-            disabled
-          />
-        </Box>
-        <Box className="col-span-12 md:col-span-6 lg:col-span-4">
-          <Inputs
-            title="Số Lượng"
-            className="h-[42px]"
-            name="SoLuong"
-            disabled
-          />
-        </Box>
-        <Box className="col-span-12 md:col-span-6 lg:col-span-4">
-          <Inputs
-            title="Đơn Vị Tính"
-            name="DonViTinh"
-            className="h-[42px]"
-            disabled
-          />
-        </Box>
-        <Box className="col-span-12 md:col-span-6 lg:col-span-4">
-          <Inputs title="Số lô" name="SoLo" className="h-[42px]" disabled />
-        </Box>
-        <Box className="col-span-12 md:col-span-6 lg:col-span-4">
-          <Inputs
-            title="Tên nhà cung cấp"
-            name="TenNhaCungCap"
-            className="h-[42px]"
-            disabled
-          />
-        </Box>
-        <Box className="col-span-12 md:col-span-6 lg:col-span-4">
-          <Inputs title="Nồng độ" name="NongDo" className="h-[42px]" disabled />
         </Box>
         <Box className="col-span-12 md:col-span-6 lg:col-span-4">
           <Inputs
@@ -69,45 +156,69 @@ const DetailPLHCs = () => {
             name="DonViNongDo"
             className="h-[42px]"
             disabled
-          />
-        </Box>
-        <Box className="col-span-12 md:col-span-6">
-          <Inputs
-            title="Ngày hết hạn"
-            name="NgayHetHan"
-            className="h-[42px]"
             sx={{
               input: {
                 padding: "9.5px 14px",
               },
+              "& .Mui-disabled": {
+                WebkitTextFillColor: "black !important",
+              },
             }}
-            disabled
+            defaultValue={item?.donViNongDo}
           />
-        </Box>
-        <Box className="col-span-12 md:col-span-6">
+        </Box> */}
+          <Box className="col-span-4">
+            <Inputs
+              title="Ngày hết hạn"
+              name="NgayHetHan"
+              className="h-[42px]"
+              disabled
+              sx={{
+                input: {
+                  padding: "9.5px 14px",
+                },
+                "& .Mui-disabled": {
+                  WebkitTextFillColor: "black !important",
+                },
+              }}
+              defaultValue={item?.ngayHetHan}
+            />
+          </Box>
+          {/* <Box className="col-span-6">
           <Inputs
             title="Điều kiện bảo quản"
             name="DieuKienBaoQuan"
             className="h-[42px]"
             disabled
           />
+        </Box> */}
+          <Box className="col-span-12">
+            <Textarea
+              title="Ghi Chú"
+              name="GhiChu"
+              className="h-[124px]"
+              height="h-[156px]"
+              disabled
+              sx={{
+                input: {
+                  padding: "9.5px 14px",
+                },
+                "& .Mui-disabled": {
+                  WebkitTextFillColor: "black !important",
+                },
+              }}
+              defaultValue={item?.ghiChu}
+            />
+          </Box>
         </Box>
-        <Box className="col-span-12">
-          <Textarea
-            title="Ghi Chú"
-            name="GhiChu"
-            className="h-[124px]"
-            height="h-[156px]"
-            disabled
-          />
-        </Box>
-      </Box>
+      ))}
+
       <hr className="text-gray-300" />
       <Box className="px-4 pb-4 pt-2 flex justify-center">
         <Pagination
-          count={10}
-          // page={currentPage}
-          // onChange={handlePageChange}
+          count={totalPages}
+          page={currentPage}
+          onChange={handlePageChange}
           variant="outlined"
           shape="rounded"
           color="primary"

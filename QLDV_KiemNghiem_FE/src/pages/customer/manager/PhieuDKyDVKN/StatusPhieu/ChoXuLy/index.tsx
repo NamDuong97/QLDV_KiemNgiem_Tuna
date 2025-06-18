@@ -1,11 +1,10 @@
 import { Box, Pagination } from "@mui/material";
-import { useContext, useState } from "react";
+import { useState } from "react";
 import TableChoXetDuyet from "./TableChoXetDuyet";
 import { Align } from "../../../../../../models/Table";
 import clsx from "clsx";
 import PopupHuyPhieu from "./PopupHuyPhieu";
 import { useGetPhieuDangKyKiemNghiemByTrangThaiArray } from "../../../../../../hooks/customers/usePhieuDKyDVKN";
-import { StoreContext } from "../../../../../../contexts/storeProvider";
 
 const tableHead = [
   {
@@ -53,12 +52,12 @@ const ChoXuLy = () => {
   const handleHuyPhieu = () => {
     setOpenPopupHuyPhieu(true);
   };
-
-  const { userInfo } = useContext(StoreContext);
+  const dataSession = sessionStorage.getItem("id");
+  const id = dataSession ? JSON.parse(dataSession) : "";
 
   const dataChoTiepNhanXuLy = useGetPhieuDangKyKiemNghiemByTrangThaiArray({
     queryKey: "dataChoTiepNhanXuLy",
-    maKH: userInfo?.maId,
+    maKH: id,
     trangThaiIDs: ["TT01", "TT02", "TT03", "TT04"],
   });
 

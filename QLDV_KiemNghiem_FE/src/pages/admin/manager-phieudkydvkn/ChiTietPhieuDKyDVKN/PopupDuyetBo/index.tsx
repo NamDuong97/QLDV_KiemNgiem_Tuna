@@ -7,18 +7,19 @@ import { IoMdNotifications } from "react-icons/io";
 interface Props {
   open: boolean;
   handleClose?: () => void;
+  maLoaiTk: string;
 }
 
 const PopupDuyetBo = (props: Props) => {
-  const { open, handleClose } = props;
+  const { open, handleClose, maLoaiTk } = props;
 
   const navigate = useNavigate();
-  const userName = "Ban lãnh đạo";
+
   const handleContentByName = () => {
-    switch (userName as string) {
-      case "Phòng Kế Hoạch và Đầu Tư":
+    switch (maLoaiTk as string) {
+      case "KHTH":
         return "Sơ duyệt thành công, vui lòng đợi BLĐ phê duyệt!";
-      case "Ban lãnh đạo":
+      case "BLD":
         return "Phiếu đăng ký dịch vụ được được phê duyệt thành công!";
     }
   };
@@ -48,7 +49,9 @@ const PopupDuyetBo = (props: Props) => {
                 <div className="flex justify-center">
                   <IoMdNotifications className="w-[70px] h-[70px]  text-yellow-400" />
                 </div>
-                <p className="text-gray-80 font-bold text-3xl/6 text-cyan-900">Thông báo</p>
+                <p className="text-gray-80 font-bold text-3xl/6 text-cyan-900">
+                  Thông báo
+                </p>
               </Box>
             </Box>
             <Box className="text-center">

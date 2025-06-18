@@ -15,6 +15,7 @@ namespace QLDV_KiemNghiem_BE.HubsRealTime
         {
             _contextAccessor = contextAccessor;
         }
+   
         public async Task JoinGroup(string groupName)
         {
             await Groups.AddToGroupAsync(Context.ConnectionId, groupName);

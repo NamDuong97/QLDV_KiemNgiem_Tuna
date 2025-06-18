@@ -1,5 +1,14 @@
 export const API = {
-  ADMIN: {},
+  ADMIN: {
+    DANG_NHAP: "/api/nhanvien/loginNhanVien",
+    GET_INFOR_NHAN_VIEN: "/api/nhanvien/getNhanVienByID",
+    PHIEU_DKY_DVKM: {
+      QUAN_LY_PHIEU_DKY_DVKM: "/api/phieudangky/getPhieuDangKyAll",
+      XEM_CHI_TIET: "/api/phieudangky/findPhieuDangKy?maPhieuDangKy=",
+      DANH_GIA_NHANVIEN: "/api/PhieuDangKy/reviewPhieuDangKyByKHDT",
+      DANH_GIA_BLD: "/api/PhieuDangKy/reviewPhieuDangKyByBLD",
+    },
+  },
   CUSTOMER: {
     PHIEU_DANG_KY_DICH_VU_KIEM_NGHIEM: {
       CREATE_PHIEU_DANG_KY: "/api/phieudangky/createPhieuDangKy",
@@ -37,4 +46,5 @@ export enum EKey {
   REFRESH_TOKEN = "refresh_token",
   TOKEN_GUEST = "token_guest",
   REFRESH_TOKEN_GUEST = "refresh_token_guest",
+  ID = "id",
 }

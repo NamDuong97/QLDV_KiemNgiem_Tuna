@@ -1,7 +1,7 @@
 import { Box } from "@mui/material";
 import { motion } from "motion/react";
-import { useState } from "react";
-import { useLocation, useNavigate } from "react-router";
+import { useContext, useState } from "react";
+import { useNavigate } from "react-router";
 import { Inputs } from "../../../../components/Inputs";
 import DetailMaus from "./Detail-Maus";
 import DetailPLHCs from "./Detail-PLHC";
@@ -13,12 +13,39 @@ import { MdDoorBack } from "react-icons/md";
 import { MdAccountBox } from "react-icons/md";
 import { MdDescription } from "react-icons/md";
 import { MdScience } from "react-icons/md";
+import {
+  useDanhGiaBLD,
+  useDanhGiaNhanVien,
+  xemChitietPhieuDKKM,
+} from "../../../../hooks/personnels/quanLyPhieuDKKM";
+import { queryClient } from "../../../../lib/reactQuery";
+import { PersonnelContext } from "../../../../contexts/PersonelsProvider";
 
 const ChiTietPhieuDKyDVKN = () => {
-  const NameID = useLocation().pathname.split("/")[3];
   const [isTag, setIsTag] = useState(1);
-  const userName = "Phòng Kế Hoạch và Đầu Tư"; // "Phòng Kế Hoạch và Đầu Tư" || "Ban lãnh đạo"
-  const statusPhieuDKyDVKN = "Chờ BLĐ xét duyệt"; // "Chờ tiếp nhận xử lý" || "Chờ BLĐ xét duyệt"
+  const { personnelInfo } = useContext(PersonnelContext);
+  const dataSession = sessionStorage.getItem("phieu-DKKN-xem-chi-tiet");
+  const id = dataSession ? JSON.parse(dataSession) : "";
+  const { data, isLoading } = xemChitietPhieuDKKM({
+    queryKey: "xemChitietPhieuDKKM",
+    params: id,
+  });
+
+  const handleOnSettled = async () => {
+    await queryClient.refetchQueries({
+      queryKey: ["quanLyPhieuDKKM"],
+    });
+  };
+
+  const { mutate: mutateBLD } = useDanhGiaBLD({
+    queryKey: "useDanhGiaBLD",
+    onSettled: handleOnSettled,
+  });
+
+  const { mutate: mutateNhanVien } = useDanhGiaNhanVien({
+    queryKey: "DanhGiaNhanVienDuyet",
+    onSettled: handleOnSettled,
+  });
 
   const [openPopupHuyPhieu, setOpenPopupHuyPhieu] = useState(false);
   const [openPopupDuyetBo, setOpenPopupDuyetBo] = useState(false);
@@ -50,11 +77,31 @@ const ChiTietPhieuDKyDVKN = () => {
     setOpenPopupTuChoiPhongKHDT(false);
   };
 
+  const handleDuyetSoBoNhanVien = () => {
+    const params = {
+      maPhieuDangKy: id,
+      message: "",
+      action: true,
+    };
+    mutateNhanVien(params);
+    handleClickOpenPopupDuyetBo();
+  };
+
+  const handleBLDDuyet = () => {
+    const params = {
+      maPhieuDangKy: id,
+      message: "",
+      action: true,
+    };
+    mutateBLD(params);
+    handleClickOpenPopupDuyetBo();
+  };
+
   const handleShowByUserName = () => {
-    switch (userName as string) {
-      case "Phòng Kế Hoạch và Đầu Tư": {
-        switch (statusPhieuDKyDVKN as string) {
-          case "Chờ tiếp nhận xử lý":
+    switch (personnelInfo?.maLoaiTk as string) {
+      case "KHTH": {
+        switch (data?.trangThaiId as string) {
+          case "TT01":
             return (
               <div className="flex justify-between items-center">
                 <Box className="flex items-center gap-2 sm:gap-4">
@@ -70,7 +117,7 @@ const ChiTietPhieuDKyDVKN = () => {
                     <MdDoorBack className="w-4 h-4 sm:w-7 sm:h-7 text-[#306fb2]" />
                   </button>
                   <h1 className="capitalize text-xl/4 sm:text-3xl/6 font-bold text-white">
-                    Số ĐKPT:{NameID}
+                    Số ĐKPT:{data?.soDkpt}
                   </h1>
                 </Box>
                 <div className="flex gap-4">
@@ -81,7 +128,7 @@ const ChiTietPhieuDKyDVKN = () => {
                     Từ chối tiếp nhận
                   </button>
                   <button
-                    onClick={handleClickOpenPopupDuyetBo}
+                    onClick={handleDuyetSoBoNhanVien}
                     className="px-6 py-3 text-base/4 font-medium text-white bg-blue-500 border-[2px] border-solid border-gray-300 rounded-[6px] shadow-[0_4px_4px_rgba(0,0,0,0.25)] hover:bg-blue-600 cursor-pointer"
                   >
                     Duyệt sơ bộ
@@ -89,7 +136,7 @@ const ChiTietPhieuDKyDVKN = () => {
                 </div>
               </div>
             );
-          case "Chờ BLĐ xét duyệt":
+          case "TT02":
             return (
               <div className="flex justify-between items-center">
                 <Box className="flex items-center gap-2 sm:gap-4">
@@ -105,7 +152,7 @@ const ChiTietPhieuDKyDVKN = () => {
                     <MdDoorBack className="w-4 h-4 sm:w-7 sm:h-7 text-[#306fb2]" />
                   </button>
                   <h1 className="capitalize text-xl/4 sm:text-3xl/6 font-bold text-white">
-                    Số ĐKPT: {NameID}
+                    Số ĐKPT: {data?.soDkpt}
                   </h1>
                 </Box>
                 <div className="flex gap-4">
@@ -130,20 +177,35 @@ const ChiTietPhieuDKyDVKN = () => {
             return (
               <div className="flex justify-between items-center">
                 <div>
-                  <p className="text-2xl/6 font-bold text-white">{NameID}</p>
+                  <p className="text-2xl/6 font-bold text-white">
+                    {data?.soDkpt}
+                  </p>
                 </div>
               </div>
             );
         }
       }
-      case "Ban lãnh đạo": {
-        switch (statusPhieuDKyDVKN as string) {
-          case "Chờ BLĐ xét duyệt":
+      case "BLD": {
+        switch (data?.trangThaiId as string) {
+          case "TT02":
             return (
               <div className="flex justify-between items-center">
-                <div>
-                  <p className="text-2xl/6 font-bold text-white">{NameID}</p>
-                </div>
+                <Box className="flex items-center gap-2 sm:gap-4">
+                  <button
+                    className="p-1 sm:p-2 rounded-full bg-gray-200 hover:bg-gray-300 transition-colors group cursor-pointer"
+                    onClick={() =>
+                      navigate(
+                        APP_ROUTES.TUNA_ADMIN
+                          .QUAN_LY_PHIEU_DANG_KY_DICH_VU_KIEM_NGHIEM.to
+                      )
+                    }
+                  >
+                    <MdDoorBack className="w-4 h-4 sm:w-7 sm:h-7 text-[#306fb2]" />
+                  </button>
+                  <h1 className="capitalize text-xl/4 sm:text-3xl/6 font-bold text-white">
+                    Số ĐKPT:{data?.soDkpt}
+                  </h1>
+                </Box>
                 <div className="flex gap-4">
                   <button
                     onClick={handleClickOpenPopupTuChoiPhongKHDT}
@@ -158,7 +220,7 @@ const ChiTietPhieuDKyDVKN = () => {
                     Từ chối tiếp nhận
                   </button>
                   <button
-                    onClick={handleClickOpenPopupDuyetBo}
+                    onClick={handleBLDDuyet}
                     className="px-6 py-3 text-base/4 font-medium text-white bg-blue-500 border-[2px] border-solid border-gray-300 rounded-[6px] shadow-[0_4px_4px_rgba(0,0,0,0.25)] hover:bg-blue-600 cursor-pointer"
                   >
                     Phê duyệt
@@ -170,7 +232,9 @@ const ChiTietPhieuDKyDVKN = () => {
             return (
               <div className="flex justify-between items-center">
                 <div>
-                  <p className="text-2xl/6 font-bold text-white">{NameID}</p>
+                  <p className="text-2xl/6 font-bold text-white">
+                    {data?.soDkpt}
+                  </p>
                 </div>
               </div>
             );
@@ -266,7 +330,7 @@ const ChiTietPhieuDKyDVKN = () => {
               onClick={() => setIsTag(2)}
             >
               <p className="text-base/6 sm:text-xl/6 text-cyan-800 group-hover:text-blue-500 font-bold flex gap-2 items-center leading-6">
-                <MdDescription className="w-5 h-5 sm:w-7 sm:h-7 shrink-0 text-blue-500" />{" "}
+                <MdDescription className="w-5 h-5 sm:w-7 sm:h-7 shrink-0 text-blue-500" />
                 Mẫu
               </p>
             </div>
@@ -288,10 +352,15 @@ const ChiTietPhieuDKyDVKN = () => {
   const handleShowByTag = () => {
     switch (isTag) {
       case 2: {
-        return <DetailMaus />;
+        return <DetailMaus dataMaus={data?.maus} isLoading={isLoading} />;
       }
       case 3: {
-        return <DetailPLHCs />;
+        return (
+          <DetailPLHCs
+            dataPLHC={data?.phieuDangKyPhuLieuHoaChats}
+            isLoading={isLoading}
+          />
+        );
       }
       default: {
         return (
@@ -318,7 +387,7 @@ const ChiTietPhieuDKyDVKN = () => {
                     },
                   }}
                   disabled
-                  // value={dataPhieu.nguoiGuiMau}
+                  defaultValue={data?.nguoiGuiMau}
                 />
               </Box>
               <Box className="col-span-12 md:col-span-6 lg:col-span-4">
@@ -335,7 +404,7 @@ const ChiTietPhieuDKyDVKN = () => {
                     },
                   }}
                   disabled
-                  // value={dataPhieu.donViGuiMau}
+                  defaultValue={data?.donViGuiMau}
                 />
               </Box>
               <Box className="col-span-12 md:col-span-6 lg:col-span-4">
@@ -352,7 +421,7 @@ const ChiTietPhieuDKyDVKN = () => {
                     },
                   }}
                   disabled
-                  // value={dataPhieu.email}
+                  defaultValue={data?.email}
                 />
               </Box>
               <Box className="col-span-12 md:col-span-6 lg:col-span-4">
@@ -369,7 +438,7 @@ const ChiTietPhieuDKyDVKN = () => {
                     },
                   }}
                   disabled
-                  // value={dataPhieu.soDienThoai}
+                  defaultValue={data?.soDienThoai}
                 />
               </Box>
               <Box className="col-span-12 md:col-span-6 lg:col-span-4">
@@ -386,7 +455,7 @@ const ChiTietPhieuDKyDVKN = () => {
                     },
                   }}
                   disabled
-                  // value={dataPhieu.hinhThucGuiMau}
+                  defaultValue={data?.hinhThucGuiMau}
                 />
               </Box>
               <Box className="col-span-12 md:col-span-6 lg:col-span-4">
@@ -403,10 +472,10 @@ const ChiTietPhieuDKyDVKN = () => {
                     },
                   }}
                   disabled
-                  // value={dataPhieu.hinhThucTraKq}
+                  defaultValue={data?.hinhThucTraKq}
                 />
               </Box>
-              {/* {dataPhieu.diaChiGiaoMau && (
+              {data?.diaChiGiaoMau && (
                 <Box className="col-span-12">
                   <Inputs
                     title="Địa chỉ giao mẫu"
@@ -421,10 +490,10 @@ const ChiTietPhieuDKyDVKN = () => {
                       },
                     }}
                     disabled
-                    value={dataPhieu.diaChiGiaoMau}
+                    defaultValue={data?.diaChiGiaoMau}
                   />
                 </Box>
-              )} */}
+              )}
               <Box className="col-span-12 md:col-span-6 lg:col-span-4">
                 <Inputs
                   title="Ngày giao mẫu"
@@ -439,7 +508,7 @@ const ChiTietPhieuDKyDVKN = () => {
                     },
                   }}
                   disabled
-                  // value={dataPhieu.ngayGiaoMau.split("T")[0]}
+                  defaultValue={data?.ngayGiaoMau.split("T")[0]}
                 />
               </Box>
               <Box className="col-span-12 md:col-span-6 lg:col-span-4">
@@ -456,7 +525,7 @@ const ChiTietPhieuDKyDVKN = () => {
                     },
                   }}
                   disabled
-                  // value={dataPhieu.diaChiLienHe}
+                  defaultValue={data?.diaChiLienHe}
                 />
               </Box>
               <Box className="col-span-12 md:col-span-6 lg:col-span-4">
@@ -473,7 +542,9 @@ const ChiTietPhieuDKyDVKN = () => {
                     },
                   }}
                   disabled
-                  // value={dataPhieu.ketQuaTiengAnh ? "Tiếng Anh" : "Tiếng Việt"}
+                  defaultValue={
+                    data?.ketQuaTiengAnh ? "Tiếng Anh" : "Tiếng Việt"
+                  }
                 />
               </Box>
             </Box>
@@ -502,10 +573,13 @@ const ChiTietPhieuDKyDVKN = () => {
       <PopupHuyPhieu
         open={openPopupHuyPhieu}
         handleClose={handleClosePopupHuyPhieu}
+        id={id}
+        roll={personnelInfo?.maLoaiTk}
       />
       <PopupDuyetBo
         open={openPopupDuyetBo}
         handleClose={handleClosePopupDuyetBo}
+        maLoaiTk={personnelInfo?.maLoaiTk}
       />
       <PopupTuChoiPhongKHDT
         open={openPopupTuChoiPhongKHDT}

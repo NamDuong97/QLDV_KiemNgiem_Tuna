@@ -18,9 +18,8 @@ const NotificationsPopover = (props: NotificationsPopoverProps) => {
     handleCloseNotifications,
     handleOpenLoginCustomer,
   } = props;
-
+  // const [messages, setMessages] = useState<DataMessenger[]>(dataMessages);
   const isLogin = true;
-
   const name = "";
 
   const handleThongBaoByName = () => {
@@ -46,7 +45,7 @@ const NotificationsPopover = (props: NotificationsPopoverProps) => {
                 Chưa xem
               </p>
               {dataMessages.map((item, index) => (
-                <p
+                <div
                   key={index}
                   className={`flex gap-2 items-center py-3 cursor-pointer rounded w-full hover:!bg-gray-100`}
                   // onClick={handleOpenRegisterTestingProfile}
@@ -76,13 +75,13 @@ const NotificationsPopover = (props: NotificationsPopoverProps) => {
                       <GoDotFill className="text-blue-500 w-4 h-4" />
                     </Box>
                   )}
-                </p>
+                </div>
               ))}
               <p className="px-2 text-lg/6 font-semibold text-gray-800 pt-2">
                 Đã xem
               </p>
               {dataMessages.map((item, index) => (
-                <p
+                <div
                   key={index}
                   className={`flex gap-2 items-center py-3 cursor-pointer rounded w-full hover:!bg-gray-100`}
                   // onClick={handleOpenRegisterTestingProfile}
@@ -112,7 +111,7 @@ const NotificationsPopover = (props: NotificationsPopoverProps) => {
                       <GoDotFill className="text-blue-500 w-4 h-4" />
                     </Box>
                   )}
-                </p>
+                </div>
               ))}
               <Box className="px-2 py-2">
                 <button className="w-full bg-[#9e9a9a] text-white rounded-sm py-3 cursor-pointer hover:bg-[#777676] font-medium text-lg/4">
@@ -140,7 +139,7 @@ const NotificationsPopover = (props: NotificationsPopoverProps) => {
                 Chưa xem
               </p>
               {dataMessages.map((item, index) => (
-                <p
+                <div
                   key={index}
                   className={`flex gap-2 items-center py-3 cursor-pointer rounded w-full hover:!bg-gray-100`}
                   // onClick={handleOpenRegisterTestingProfile}
@@ -170,13 +169,13 @@ const NotificationsPopover = (props: NotificationsPopoverProps) => {
                       <GoDotFill className="text-blue-500 w-4 h-4" />
                     </Box>
                   )}
-                </p>
+                </div>
               ))}
               <p className="px-2 text-lg/6 font-semibold text-gray-800 pt-2">
                 Đã xem
               </p>
               {dataMessages.map((item, index) => (
-                <p
+                <div
                   key={index}
                   className={`flex gap-2 items-center py-3 cursor-pointer rounded w-full hover:!bg-gray-100`}
                   // onClick={handleOpenRegisterTestingProfile}
@@ -206,7 +205,7 @@ const NotificationsPopover = (props: NotificationsPopoverProps) => {
                       <GoDotFill className="text-blue-500 w-4 h-4" />
                     </Box>
                   )}
-                </p>
+                </div>
               ))}
               <Box className="px-2 py-2">
                 <button className="w-full bg-[#9e9a9a] text-white rounded-sm py-3 cursor-pointer hover:bg-[#777676] font-medium text-lg/4">
@@ -219,6 +218,8 @@ const NotificationsPopover = (props: NotificationsPopoverProps) => {
       }
     }
   };
+
+  
 
   return (
     <Dialog

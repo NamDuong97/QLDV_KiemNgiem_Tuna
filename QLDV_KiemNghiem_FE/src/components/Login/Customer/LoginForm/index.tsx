@@ -56,7 +56,6 @@ const LoginForm = (props: Props) => {
       setCount(count + 1);
     }
   };
-  console.log("count", count);
 
   const { mutate } = useDangNhapKhachHang({
     queryKey: "DangNhapKhachHang",

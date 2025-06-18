@@ -1,10 +1,12 @@
 import { motion } from "motion/react";
 import { Inputs } from "../../../components/Inputs";
 import PopupBoloc from "./PopupBoloc";
-import { MouseEvent, useState } from "react";
+import { MouseEvent, useContext, useState } from "react";
 import TableQuanLyPhieuDKyDVHN from "./Table";
 import { Pagination } from "@mui/material";
 import { Align } from "../../../models/Table";
+import { quanLyPhieuDKKM } from "../../../hooks/personnels/quanLyPhieuDKKM";
+import { PersonnelContext } from "../../../contexts/PersonelsProvider";
 
 const tableHead = [
   {
@@ -32,12 +34,6 @@ const tableHead = [
     align: Align.Center,
   },
   {
-    id: "KetQua",
-    sort: false,
-    label: "Kết Quả",
-    align: Align.Center,
-  },
-  {
     id: "lienKetNhanh",
     sort: false,
     label: "Liên kết nhanh",
@@ -45,19 +41,28 @@ const tableHead = [
   },
 ];
 
-const tableBody = [
-  {
-    SoDKPT: "KD02546",
-    NguoiGuiMau: "Nguyễn Văn A",
-    DonViGuiMau: "Công ty ABC",
-    NgayGiaoMau: "25/04/2025",
-    KetQua: 1,
-  },
-];
-
 const QuanLyPhieuDKyDVHN = () => {
   const [anchorElPopupBoloc, setAnchorElPopupBoloc] =
     useState<HTMLButtonElement | null>(null);
+  const { personnelInfo } = useContext(PersonnelContext);
+
+  const { data, isLoading } = quanLyPhieuDKKM({
+    queryKey: "quanLyPhieuDKKM",
+    params: {
+      trangThaiID: personnelInfo?.maLoaiTk === "KHTH" ? "TT01" : "TT02",
+    },
+  });
+
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage] = useState(10);
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = data?.slice(indexOfFirstItem, indexOfLastItem);
+  const totalPages = Math.ceil(data && data?.length / itemsPerPage);
+
+  const handlePageChange = (_: any, value: number) => {
+    setCurrentPage(value);
+  };
 
   const handleClickPopupBoloc = (event: MouseEvent<HTMLButtonElement>) => {
     setAnchorElPopupBoloc(event.currentTarget);
@@ -134,14 +139,15 @@ const QuanLyPhieuDKyDVHN = () => {
           <div>
             <TableQuanLyPhieuDKyDVHN
               tableHead={tableHead}
-              tableBody={tableBody}
+              tableBody={currentItems}
+              isLoading={isLoading}
             />
           </div>
           <div className="px-4 py-2 flex justify-center">
             <Pagination
-              count={10}
-              // page={currentPage}
-              // onChange={handlePageChange}
+              count={totalPages}
+              page={currentPage}
+              onChange={handlePageChange}
               variant="outlined"
               shape="rounded"
               color="primary"

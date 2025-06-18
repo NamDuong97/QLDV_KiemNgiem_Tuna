@@ -7,14 +7,25 @@ import yup from "../../../../../configs/yup.custom";
 import { Textarea } from "../../../../../components/Textarea";
 import { FormLyDoHuy } from "../../../../../models/LydoHuy";
 import { MdOutlineFolderDelete } from "react-icons/md";
+import { queryClient } from "../../../../../lib/reactQuery";
+import {
+  useDanhGiaBLD,
+  useDanhGiaNhanVien,
+} from "../../../../../hooks/personnels/quanLyPhieuDKKM";
+import { useNavigate } from "react-router";
+import { APP_ROUTES } from "../../../../../constants/routers";
 
 interface Props {
   open: boolean;
   handleClose?: () => void;
+  id: any;
+  roll: any;
 }
 
 const PopupHuyPhieu = (props: Props) => {
-  const { open, handleClose } = props;
+  const { open, handleClose, id, roll } = props;
+
+  const navigate = useNavigate();
 
   let schema = useMemo(() => {
     return yup.object().shape({
@@ -31,8 +42,36 @@ const PopupHuyPhieu = (props: Props) => {
     resolver: yupResolver(schema),
     mode: "onChange",
   });
+
+  const handleOnSettled = async (response: any) => {
+    await queryClient.refetchQueries({
+      queryKey: ["quanLyPhieuDKKM"],
+    });
+    if (response.ketQua === true) {
+      reset({ lydo: "" });
+      navigate(
+        APP_ROUTES.TUNA_ADMIN.QUAN_LY_PHIEU_DANG_KY_DICH_VU_KIEM_NGHIEM.to
+      );
+    }
+  };
+  const { mutate: mutateBLD } = useDanhGiaBLD({
+    queryKey: "useDanhGiaBLD",
+    onSettled: handleOnSettled,
+  });
+
+  const { mutate: mutateNhanVien } = useDanhGiaNhanVien({
+    queryKey: "DanhGiaNhanVienTuChoi",
+    onSettled: handleOnSettled,
+  });
+
   const handleHuyPhieu = (data: FormLyDoHuy) => {
-    console.log("handleHuyPhieu", data);
+    const params = {
+      maPhieuDangKy: id,
+      message: data.lydo,
+      action: false,
+    };
+    if (roll === "roll") mutateNhanVien(params);
+    mutateBLD(params);
   };
   const handleClosePopup = () => {
     reset({
