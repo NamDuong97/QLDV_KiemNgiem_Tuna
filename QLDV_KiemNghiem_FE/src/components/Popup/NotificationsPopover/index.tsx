@@ -3,8 +3,6 @@ import { DataMessenger } from "../../../models/dataMessenger";
 import { ImHappy } from "react-icons/im";
 import { GoDotFill } from "react-icons/go";
 import { IoCloseCircle } from "react-icons/io5";
-import { useSignalR } from "../../../contexts/SignalRProvider";
-import { useEffect } from "react";
 
 interface NotificationsPopoverProps {
   dataMessages: DataMessenger[];
@@ -22,11 +20,7 @@ const NotificationsPopover = (props: NotificationsPopoverProps) => {
   } = props;
   // const [messages, setMessages] = useState<DataMessenger[]>(dataMessages);
   const isLogin = true;
-  const { connection } = useSignalR();
   const name = "";
-
-  console.log('connection',connection);
-  
 
   const handleThongBaoByName = () => {
     switch (name as string) {
@@ -225,19 +219,7 @@ const NotificationsPopover = (props: NotificationsPopoverProps) => {
     }
   };
 
-  useEffect(() => {
-    if (!connection) return;
-
-    const handleMessage = (message: string) => {
-      console.log("📩 Nhận được message từ server:", message);
-    };
-
-    connection.on("ReceiveMessage", handleMessage);
-
-    return () => {
-      connection.off("ReceiveMessage", handleMessage);
-    };
-  }, [connection]);
+  
 
   return (
     <Dialog

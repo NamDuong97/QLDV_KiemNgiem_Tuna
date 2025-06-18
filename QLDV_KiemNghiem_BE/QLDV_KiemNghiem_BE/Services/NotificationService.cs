@@ -17,13 +17,13 @@ namespace QLDV_KiemNghiem_BE.Services
         }
         public async Task NotifyToOneGroupAsync(string role, NotificationModel notification)
         {
-            await _hubContext.Clients.Group(role).SendAsync("ReciveNotification", notification);
+            await _hubContext.Clients.Group(role).SendAsync("recivenotification", notification);
         }
         public async Task NotifyToManyGroupAsync(List<string> roles, NotificationModel notification)
         {
             foreach(var role in roles)
             {
-                await _hubContext.Clients.Group(role).SendAsync("ReciveNotification", notification);
+                await _hubContext.Clients.Group(role).SendAsync("recivenotification", notification);
             }
         }
     }

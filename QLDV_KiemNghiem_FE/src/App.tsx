@@ -14,7 +14,6 @@ function App() {
   const token = Cookie.get(EKey.TOKEN);
   const token_guest = Cookie.get(EKey.TOKEN_GUEST);
   const isAdmin = useLocation().pathname.startsWith("/tuna");
-  console.log("isAdmin", isAdmin);
 
   return (
     <QueryClientProvider client={queryClient}>

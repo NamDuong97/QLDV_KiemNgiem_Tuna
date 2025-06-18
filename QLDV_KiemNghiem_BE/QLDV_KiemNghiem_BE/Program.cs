@@ -77,6 +77,6 @@ if (app.Environment.IsDevelopment() || app.Environment.IsProduction())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-app.MapHub<NotificationHub>("/NotificationService"); // <-- ánh xạ vào hub NotificationCustomerToEmployeeHub
+app.MapHub<NotificationHub>("/notify"); // <-- ánh xạ vào hub NotificationCustomerToEmployeeHub
 
 app.Run();
