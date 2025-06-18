@@ -9,7 +9,12 @@ namespace QLDV_KiemNghiem_BE.HubsRealTime
     {
         // Tạo từ điển lưu tên các role để khi disconnect sẽ có tên group để xoá
         private static ConcurrentDictionary<string, string> _connectionGroups = new();
+        private readonly IHttpContextAccessor _contextAccessor;
 
+        public NotificationHub(IHttpContextAccessor contextAccessor)
+        {
+            _contextAccessor = contextAccessor;
+        }
         public async Task JoinGroup(string groupName)
         {
             await Groups.AddToGroupAsync(Context.ConnectionId, groupName);
@@ -20,7 +25,7 @@ namespace QLDV_KiemNghiem_BE.HubsRealTime
         }
         public override async Task OnConnectedAsync()
         {
-            var role  = Context.User?.FindFirst(ClaimTypes.Role)?.Value;
+            var role = _contextAccessor.HttpContext.User.FindFirst(ClaimTypes.Role)?.Value.ToString();
             if (!string.IsNullOrEmpty(role))
             {
                 await Groups.AddToGroupAsync(Context.ConnectionId, role);

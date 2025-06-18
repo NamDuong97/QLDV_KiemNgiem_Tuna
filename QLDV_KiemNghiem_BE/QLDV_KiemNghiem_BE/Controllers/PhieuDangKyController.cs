@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
@@ -45,6 +46,7 @@ namespace QLDV_KiemNghiem_BE.Controllers
             return Ok(phieuDangKys);
         }
 
+        [Authorize(Roles = "KHTH")]
         [HttpPut]
         [Route("reviewPhieuDangKyByKHDT")]
         public async Task<ActionResult> reviewPhieuDangKyByKHDT( RequestReviewPhieuDangKy duyetPhieu)
@@ -64,6 +66,7 @@ namespace QLDV_KiemNghiem_BE.Controllers
             return Ok(phieuDangKys);
         }
 
+        [Authorize(Roles = "BLD")]
         [HttpPut]
         [Route("reviewPhieuDangKyByBLD")]
         public async Task<ActionResult> reviewPhieuDangKyByBLD(RequestReviewPhieuDangKy duyetPhieu)
