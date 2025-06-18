@@ -142,9 +142,6 @@ namespace QLDV_KiemNghiem_BE.Services
                             // Dùng hàm map như trên là cách an toàn k tạo ra object mới, cũng k làm mất đi tracking của chiTietPhieuDeXuatPhongBanCheck
                             chiTietPhieuDeXuatPhongBanCheck.NgaySua = DateTime.Now;
                             chiTietPhieuDeXuatPhongBanCheck.NguoiSua = user;
-                            _context.ChangeTracker.DetectChanges();
-                            Console.WriteLine(_context.ChangeTracker.DebugView.LongView);
-
                             _repositoryManager.ChiTietPhieuDeXuatPhongBan.UpdateChiTietPhieuDeXuatPhongBanAsync(chiTietPhieuDeXuatPhongBanCheck);
                             var returnData = _mapper.Map<ChiTietPhieuDeXuatPhongBanDto>(chiTietPhieuDeXuatPhongBanCheck);
                             chiTietPhieuDeXuatPhongBanDtos.Add(returnData);
@@ -156,7 +153,8 @@ namespace QLDV_KiemNghiem_BE.Services
                     } 
                 }
             }
-
+            _context.ChangeTracker.DetectChanges();
+            Console.WriteLine(_context.ChangeTracker.DebugView.LongView);
             _repositoryManager.PhieuDeXuatPhongBan.UpdatePhieuDeXuatPhongBanAsync(PhieuDeXuatPhongBanCheck);
             bool check = await _repositoryManager.SaveChangesAsync();
             var PhieuDeXuatPhongBanReturnDto = _mapper.Map<PhieuDeXuatPhongBanDto>(PhieuDeXuatPhongBanCheck);
