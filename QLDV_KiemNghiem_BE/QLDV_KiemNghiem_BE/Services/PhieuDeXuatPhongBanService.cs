@@ -9,6 +9,7 @@ using QLDV_KiemNghiem_BE.Interfaces;
 using QLDV_KiemNghiem_BE.Interfaces.ManagerInterface;
 using QLDV_KiemNghiem_BE.Models;
 using QLDV_KiemNghiem_BE.RequestFeatures;
+using QLDV_KiemNghiem_BE.RequestFeatures.PagingRequest;
 
 namespace QLDV_KiemNghiem_BE.Services
 {
@@ -40,6 +41,8 @@ namespace QLDV_KiemNghiem_BE.Services
         }
         public async Task<ResponseModel1<PhieuDeXuatPhongBanDto>> CreatePhieuDeXuatPhongBanAsync(PhieuDeXuatPhongBanRequestCreateDto PhieuDeXuatPhongBanDto, string user)
         {
+            NotificationModel noti = new NotificationModel();
+            string listMau = "";
             List<ChiTietPhieuDeXuatPhongBanDto> chiTietPhieuDeXuatPhongBanDtos = new List<ChiTietPhieuDeXuatPhongBanDto>();
             if (PhieuDeXuatPhongBanDto == null) return new ResponseModel1<PhieuDeXuatPhongBanDto>
             {
@@ -75,14 +78,7 @@ namespace QLDV_KiemNghiem_BE.Services
                     NgayTao = DateTime.Now,
                     NguoiTao = user
                 };
-
-                NotificationModel noti = new NotificationModel()
-                {
-                    Title = "Phan cong kiem nghiem cho phong/khoa",
-                    Message = $"Phong khoa {PhieuDeXuatPhongBanDto.MaKhoaTiepNhan} da duoc phan cong kiem nghiem mau {item.MaPdkMau}, vui long kiem tra va xet duyet",
-                    CreatedAt = DateTime.Now,
-                };
-                await _hubContext.Clients.Group("KHTH").SendAsync("receiveNotification", noti);
+                listMau += item.MaPdkMau + " ";
 
                 _repositoryManager.ChiTietPhieuDeXuatPhongBan.CreateChiTietPhieuDeXuatPhongBanAsync(chiTietPhieuDeXuatPhongBan);
                 var returnData1 = _mapper.Map<ChiTietPhieuDeXuatPhongBanDto>(chiTietPhieuDeXuatPhongBan);
@@ -91,6 +87,22 @@ namespace QLDV_KiemNghiem_BE.Services
 
             _repositoryManager.PhieuDeXuatPhongBan.CreatePhieuDeXuatPhongBanAsync(PhieuDeXuatPhongBanDomain);
             bool check = await _repositoryManager.SaveChangesAsync();
+            // Tạo phiếu phân công phòng ban thành công thì mới gửi thông báo
+            if (check)
+            {
+                noti.Title = "Phan cong kiem nghiem cho phong/khoa";
+                noti.Message = $"Phong khoa {PhieuDeXuatPhongBanDto.MaKhoaTiepNhan} da duoc phan cong kiem nghiem mau {listMau}, vui long kiem tra va xet duyet";
+                noti.CreatedAt = DateTime.Now;
+                ParamGetUserIdNhanVien nhanVienParam = new ParamGetUserIdNhanVien()
+                {
+                    MaKhoa = "K01",
+                    GetLeader = "1",
+                    GetEmployee = "0",
+                    GetBld = "0"
+                };
+                var userIds =  await _repositoryManager.NhanVien.GetUserIdOfEmployeeCustom(nhanVienParam);
+                await _hubContext.Clients.Users(userIds).SendAsync("notificationForPDXPB", noti);
+            }
             var PhieuDeXuatPhongBanReturnDto = _mapper.Map<PhieuDeXuatPhongBanDto>(PhieuDeXuatPhongBanDomain);
             PhieuDeXuatPhongBanReturnDto.ChiTietPhieuDeXuatPhongBans = chiTietPhieuDeXuatPhongBanDtos;
 
