@@ -7,8 +7,8 @@ node_modules/
 # Bỏ qua thư mục tạm thời
 /tmp
 
-# Bỏ qua thư mục dish
-dish/
+# Bỏ qua thư mục dist
+dist/
 
 # Bỏ qua file IDE cấu hình
 .idea/
