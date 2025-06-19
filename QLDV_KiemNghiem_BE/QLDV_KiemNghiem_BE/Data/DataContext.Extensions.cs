@@ -6,12 +6,14 @@ namespace QLDV_KiemNghiem_BE.Data
 {
     public partial class DataContext
     {
-        public DbSet<NhanVienProcedure> NhanVienProcedures { get; set; }
-        public DbSet<ThoiGianTieuChuan> ThoiGianTieuChuans { get; set; }
-        public DbSet<ThanhTienTungMau> ThanhTienTungMaus { get; set; }
-        public DbSet<UserIdNhanVien> UserIdNhanViens { get; set; }
+        public virtual DbSet<NhanVienProcedure> NhanVienProcedures { get; set; }
+        public virtual DbSet<ThoiGianTieuChuan> ThoiGianTieuChuans { get; set; }
+        public virtual DbSet<ThanhTienTungMau> ThanhTienTungMaus { get; set; }
+        public virtual DbSet<UserIdNhanVien> UserIdNhanViens { get; set; }
+
         partial void OnModelCreatingPartial(ModelBuilder modelBuilder)
         {
+       
             modelBuilder.Entity<NhanVienProcedure>().HasNoKey();
             modelBuilder.Entity<ThoiGianTieuChuan>().HasNoKey();
             modelBuilder.Entity<ThanhTienTungMau>().HasNoKey();

@@ -43,7 +43,7 @@ namespace QLDV_KiemNghiem_BE.Repositories
         public async Task<List<string>> GetUserIdOfEmployeeCustom(ParamGetUserIdNhanVien nhanVienParam)
         {
             var result = await _context.UserIdNhanViens.
-            FromSqlRaw("exec GetUserIDOfEmployee @maKhoa = N{0}, @getLeader ={1}, @getEmployee = {2}, @getBLD = {3}",
+            FromSqlRaw("exec GetUserIDOfEmployee @maKhoa = {0}, @getLeader ={1}, @getEmployee = {2}, @getBLD = {3}",
             nhanVienParam.MaKhoa, nhanVienParam.GetLeader, nhanVienParam.GetEmployee, nhanVienParam.GetBld).
             ToListAsync();
             List<string> userId = new List<string>();
