@@ -48,7 +48,8 @@ public partial class ChiTietPhieuDeXuatPhongBan
     [Column(TypeName = "datetime")]
     public DateTime? NgayThucHienKiemNghiem { get; set; }
 
-    public int? TrangThai { get; set; }
+    [StringLength(100)]
+    public string? TrangThai { get; set; }
 
     [ForeignKey("MaPdkMau")]
     [InverseProperty("ChiTietPhieuDeXuatPhongBans")]

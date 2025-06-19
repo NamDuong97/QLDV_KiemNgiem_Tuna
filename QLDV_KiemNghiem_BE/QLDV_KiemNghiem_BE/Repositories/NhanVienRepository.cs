@@ -5,6 +5,8 @@ using QLDV_KiemNghiem_BE.Interfaces;
 using QLDV_KiemNghiem_BE.Models;
 using QLDV_KiemNghiem_BE.Shared;
 using QLDV_KiemNghiem_BE.RequestFeatures.PagingRequest;
+using QLDV_KiemNghiem_BE.RequestFeatures;
+using System.Collections.Generic;
 
 namespace QLDV_KiemNghiem_BE.Repositories
 {
@@ -37,6 +39,22 @@ namespace QLDV_KiemNghiem_BE.Repositories
                 return PagedList<NhanVienProcedure>.ToPagedList(result, nhanVienParam.PageNumber, nhanVienParam.PageSize);
             }
         }
+
+        public async Task<List<string>> GetUserIdOfEmployeeCustom(ParamGetUserIdNhanVien nhanVienParam)
+        {
+            var result = await _context.UserIdNhanViens.
+            FromSqlRaw("exec GetUserIDOfEmployee @maKhoa = {0}, @getLeader ={1}, @getEmployee = {2}, @getBLD = {3}",
+            nhanVienParam.MaKhoa, nhanVienParam.GetLeader, nhanVienParam.GetEmployee, nhanVienParam.GetBld).
+            ToListAsync();
+            List<string> userId = new List<string>();
+            foreach(var item in result)
+            {
+                if (item.MaID != null && item.MaID != "")
+                userId.Add(item.MaID);
+            }
+            return userId;
+        }
+
         public async Task<NhanVien?> CheckExistsEmailAsync(string email, bool tracking)
         {
             if (tracking)

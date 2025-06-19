@@ -1,12 +1,15 @@
 ﻿using AutoMapper;
-using QLDV_KiemNghiem_BE.Interfaces.ManagerInterface;
-using QLDV_KiemNghiem_BE.Models;
-using QLDV_KiemNghiem_BE.Interfaces;
-using QLDV_KiemNghiem_BE.RequestFeatures;
-using QLDV_KiemNghiem_BE.DTO.ResponseDto;
-using QLDV_KiemNghiem_BE.DTO.RequestDto;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using QLDV_KiemNghiem_BE.Data;
+using QLDV_KiemNghiem_BE.DTO.RequestDto;
+using QLDV_KiemNghiem_BE.DTO.ResponseDto;
+using QLDV_KiemNghiem_BE.HubsRealTime;
+using QLDV_KiemNghiem_BE.Interfaces;
+using QLDV_KiemNghiem_BE.Interfaces.ManagerInterface;
+using QLDV_KiemNghiem_BE.Models;
+using QLDV_KiemNghiem_BE.RequestFeatures;
+using QLDV_KiemNghiem_BE.RequestFeatures.PagingRequest;
 
 namespace QLDV_KiemNghiem_BE.Services
 {
@@ -15,11 +18,13 @@ namespace QLDV_KiemNghiem_BE.Services
         private readonly IRepositoryManager _repositoryManager;
         private readonly IMapper _mapper;
         private readonly DataContext _context;
-        public PhieuDeXuatPhongBanService(IRepositoryManager repositoryManager, IMapper mapper, DataContext context)
+        private readonly IHubContext<NotificationHub> _hubContext;
+        public PhieuDeXuatPhongBanService(IRepositoryManager repositoryManager, IMapper mapper, DataContext context, IHubContext<NotificationHub> hubContext)
         {
             _repositoryManager = repositoryManager;
             _mapper = mapper;
             _context = context;
+            _hubContext = hubContext;
         }
         public async Task<IEnumerable<PhieuDeXuatPhongBanDto>> GetPhieuDeXuatPhongBansAllAsync()
         {
@@ -36,6 +41,8 @@ namespace QLDV_KiemNghiem_BE.Services
         }
         public async Task<ResponseModel1<PhieuDeXuatPhongBanDto>> CreatePhieuDeXuatPhongBanAsync(PhieuDeXuatPhongBanRequestCreateDto PhieuDeXuatPhongBanDto, string user)
         {
+            NotificationModel noti = new NotificationModel();
+            string listMau = "";
             List<ChiTietPhieuDeXuatPhongBanDto> chiTietPhieuDeXuatPhongBanDtos = new List<ChiTietPhieuDeXuatPhongBanDto>();
             if (PhieuDeXuatPhongBanDto == null) return new ResponseModel1<PhieuDeXuatPhongBanDto>
             {
@@ -67,10 +74,11 @@ namespace QLDV_KiemNghiem_BE.Services
                     MaPdkMau = item.MaPdkMau,
                     GhiChu = item.GhiChu,
                     NgayThucHienKiemNghiem = item.NgayThucHienKiemNghiem,
-                    TrangThai = item.TrangThai,
+                    TrangThai = "Cho Duyet",
                     NgayTao = DateTime.Now,
                     NguoiTao = user
                 };
+                listMau += item.MaPdkMau + " ";
 
                 _repositoryManager.ChiTietPhieuDeXuatPhongBan.CreateChiTietPhieuDeXuatPhongBanAsync(chiTietPhieuDeXuatPhongBan);
                 var returnData1 = _mapper.Map<ChiTietPhieuDeXuatPhongBanDto>(chiTietPhieuDeXuatPhongBan);
@@ -79,6 +87,22 @@ namespace QLDV_KiemNghiem_BE.Services
 
             _repositoryManager.PhieuDeXuatPhongBan.CreatePhieuDeXuatPhongBanAsync(PhieuDeXuatPhongBanDomain);
             bool check = await _repositoryManager.SaveChangesAsync();
+            // Tạo phiếu phân công phòng ban thành công thì mới gửi thông báo
+            if (check)
+            {
+                noti.Title = "Phan cong kiem nghiem cho phong/khoa";
+                noti.Message = $"Phong khoa {PhieuDeXuatPhongBanDto.MaKhoaTiepNhan} da duoc phan cong kiem nghiem mau {listMau}, vui long kiem tra va xet duyet";
+                noti.CreatedAt = DateTime.Now;
+                ParamGetUserIdNhanVien nhanVienParam = new ParamGetUserIdNhanVien()
+                {
+                    MaKhoa = "K01",
+                    GetLeader = "1",
+                    GetEmployee = "0",
+                    GetBld = "0"
+                };
+                var userIds =  await _repositoryManager.NhanVien.GetUserIdOfEmployeeCustom(nhanVienParam);
+                await _hubContext.Clients.Users(userIds).SendAsync("notificationForPDXPB", noti);
+            }
             var PhieuDeXuatPhongBanReturnDto = _mapper.Map<PhieuDeXuatPhongBanDto>(PhieuDeXuatPhongBanDomain);
             PhieuDeXuatPhongBanReturnDto.ChiTietPhieuDeXuatPhongBans = chiTietPhieuDeXuatPhongBanDtos;
 
@@ -99,7 +123,7 @@ namespace QLDV_KiemNghiem_BE.Services
                 Data = null
             };
 
-            var PhieuDeXuatPhongBanCheck = await _repositoryManager.PhieuDeXuatPhongBan.FindPhieuDeXuatPhongBanAsync(PhieuDeXuatPhongBanDto.MaId, false);
+            var PhieuDeXuatPhongBanCheck = await _repositoryManager.PhieuDeXuatPhongBan.FindPhieuDeXuatPhongBanAsync(PhieuDeXuatPhongBanDto.MaId, true);
             if (PhieuDeXuatPhongBanCheck == null)
             {
                 return new ResponseModel1<PhieuDeXuatPhongBanDto>
@@ -110,7 +134,14 @@ namespace QLDV_KiemNghiem_BE.Services
                 };
             }
 
-            _mapper.Map(PhieuDeXuatPhongBanDto, PhieuDeXuatPhongBanCheck);
+            PhieuDeXuatPhongBanCheck.MaPhieuDeXuat = !string.IsNullOrEmpty(PhieuDeXuatPhongBanDto.MaPhieuDeXuat) ? PhieuDeXuatPhongBanDto.MaPhieuDeXuat : PhieuDeXuatPhongBanCheck.MaPhieuDeXuat;
+            PhieuDeXuatPhongBanCheck.TenKhachHang = !string.IsNullOrEmpty(PhieuDeXuatPhongBanDto.TenKhachHang) ? PhieuDeXuatPhongBanDto.TenKhachHang : PhieuDeXuatPhongBanCheck.TenKhachHang;
+            PhieuDeXuatPhongBanCheck.MaKhoaTiepNhan = !string.IsNullOrEmpty(PhieuDeXuatPhongBanDto.MaKhoaTiepNhan) ? PhieuDeXuatPhongBanDto.MaKhoaTiepNhan : PhieuDeXuatPhongBanCheck.MaKhoaTiepNhan;
+            PhieuDeXuatPhongBanCheck.ManvDeXuat = !string.IsNullOrEmpty(PhieuDeXuatPhongBanDto.ManvDeXuat) ? PhieuDeXuatPhongBanDto.ManvDeXuat : PhieuDeXuatPhongBanCheck.ManvDeXuat;
+            PhieuDeXuatPhongBanCheck.ManvTiepNhan = !string.IsNullOrEmpty(PhieuDeXuatPhongBanDto.ManvTiepNhan) ? PhieuDeXuatPhongBanDto.ManvTiepNhan : PhieuDeXuatPhongBanCheck.ManvTiepNhan;
+            PhieuDeXuatPhongBanCheck.ThoiGianGiaoMau = PublicFunction.IsValidDateTime(PhieuDeXuatPhongBanDto.ThoiGianGiaoMau) ? PhieuDeXuatPhongBanDto.ThoiGianGiaoMau : PhieuDeXuatPhongBanCheck.ThoiGianGiaoMau;
+            PhieuDeXuatPhongBanCheck.ManvTiepNhan = !string.IsNullOrEmpty(PhieuDeXuatPhongBanDto.ManvTiepNhan) ? PhieuDeXuatPhongBanDto.ManvTiepNhan : PhieuDeXuatPhongBanCheck.ManvTiepNhan;
+            PhieuDeXuatPhongBanCheck.TrangThai = !string.IsNullOrEmpty(PhieuDeXuatPhongBanDto.TrangThai) ? PhieuDeXuatPhongBanDto.TrangThai : PhieuDeXuatPhongBanCheck.TrangThai;
             PhieuDeXuatPhongBanCheck.NgaySua = DateTime.Now;
             PhieuDeXuatPhongBanCheck.NguoiSua = user;
 
@@ -118,36 +149,47 @@ namespace QLDV_KiemNghiem_BE.Services
             {
                 foreach (var item in PhieuDeXuatPhongBanDto.ChiTietPhieuDeXuatPhongBans)
                 {
-                    if(item.MaId == null || item.MaId == "")
+                    if(item.MaId == null || item.MaId == "") // Thêm chi tiết
                     {
                         ChiTietPhieuDeXuatPhongBan chiTiet = new ChiTietPhieuDeXuatPhongBan()
                         {
                             MaId = Guid.NewGuid().ToString(),
                             NgayTao = DateTime.Now,
-                            NguoiTao = user
+                            NguoiTao = user,
+                            MaPhieuDeXuat = PhieuDeXuatPhongBanCheck.MaId,
+                            MaPdkMau = item.MaPdkMau,
+                            GhiChu = item.GhiChu,
+                            TrangThai = "Cho Duyet"
                         };
-                        chiTiet = _mapper.Map<ChiTietPhieuDeXuatPhongBan>(item);
+
                         _repositoryManager.ChiTietPhieuDeXuatPhongBan.CreateChiTietPhieuDeXuatPhongBanAsync(chiTiet);
-                        var returnData = _mapper.Map<ChiTietPhieuDeXuatPhongBanDto>(chiTiet);
-                        // Dùng _mapper.Map<ChiTietPhieuDeXuatPhongBanDto>(chiTiet) như này là đang tạo 1 OBJECT mới và ván vào biến returnData
-                        // Có thể dẫn tới mất tracking của EF Core dẫn tới double tracking
-                        chiTietPhieuDeXuatPhongBanDtos.Add(returnData);
+                        ChiTietPhieuDeXuatPhongBanDto chiTieuPhieuDeXuatPhongBanDto = new ChiTietPhieuDeXuatPhongBanDto();
+                        _mapper.Map(chiTiet, chiTieuPhieuDeXuatPhongBanDto); // nghi vấn lỗi ở đây
+                        chiTietPhieuDeXuatPhongBanDtos.Add(chiTieuPhieuDeXuatPhongBanDto);
                     }
                     else
                     {
-                        var chiTietPhieuDeXuatPhongBanCheck = await _repositoryManager.ChiTietPhieuDeXuatPhongBan.FindChiTietPhieuDeXuatPhongBanAsync(item.MaId, false);
-                        if (chiTietPhieuDeXuatPhongBanCheck != null && item.TrangThai == 1)
+                        var chiTietPhieuDeXuatPhongBanCheck = await _repositoryManager.ChiTietPhieuDeXuatPhongBan.FindChiTietPhieuDeXuatPhongBanAsync(item.MaId, true);
+                        if (chiTietPhieuDeXuatPhongBanCheck != null && item.IsDel == false) // Sửa 
                         {
-                            _mapper.Map(item, chiTietPhieuDeXuatPhongBanCheck);
-                            // Dùng hàm map như trên là cách an toàn k tạo ra object mới, cũng k làm mất đi tracking của chiTietPhieuDeXuatPhongBanCheck
+                            chiTietPhieuDeXuatPhongBanCheck.MaPhieuDeXuat = !string.IsNullOrEmpty(item.MaPhieuDeXuat) ? item.MaPhieuDeXuat : chiTietPhieuDeXuatPhongBanCheck.MaPhieuDeXuat;
+                            chiTietPhieuDeXuatPhongBanCheck.MaPdkMau = !string.IsNullOrEmpty(item.MaPdkMau) ? item.MaPdkMau : chiTietPhieuDeXuatPhongBanCheck.MaPdkMau;
+                            chiTietPhieuDeXuatPhongBanCheck.GhiChu = !string.IsNullOrEmpty(item.GhiChu) ? item.GhiChu : chiTietPhieuDeXuatPhongBanCheck.GhiChu;
+                            chiTietPhieuDeXuatPhongBanCheck.LyDoTuChoi = !string.IsNullOrEmpty(item.LyDoTuChoi) ? item.LyDoTuChoi : chiTietPhieuDeXuatPhongBanCheck.LyDoTuChoi;
+                            chiTietPhieuDeXuatPhongBanCheck.ManvTuChoi = !string.IsNullOrEmpty(item.ManvTuChoi) ? item.ManvTuChoi : chiTietPhieuDeXuatPhongBanCheck.ManvTuChoi;
+                            chiTietPhieuDeXuatPhongBanCheck.NgayTuChoi = PublicFunction.IsValidDateTime(item.NgayTuChoi) ? item.NgayTuChoi : chiTietPhieuDeXuatPhongBanCheck.NgayTuChoi;
+                            chiTietPhieuDeXuatPhongBanCheck.NgayThucHienKiemNghiem = PublicFunction.IsValidDateTime(item.NgayThucHienKiemNghiem) ? item.NgayThucHienKiemNghiem : chiTietPhieuDeXuatPhongBanCheck.NgayThucHienKiemNghiem;
+                            chiTietPhieuDeXuatPhongBanCheck.TrangThai = !string.IsNullOrEmpty(item.TrangThai) ? item.TrangThai : chiTietPhieuDeXuatPhongBanCheck.TrangThai;
                             chiTietPhieuDeXuatPhongBanCheck.NgaySua = DateTime.Now;
                             chiTietPhieuDeXuatPhongBanCheck.NguoiSua = user;
+
                             _repositoryManager.ChiTietPhieuDeXuatPhongBan.UpdateChiTietPhieuDeXuatPhongBanAsync(chiTietPhieuDeXuatPhongBanCheck);
                             var returnData = _mapper.Map<ChiTietPhieuDeXuatPhongBanDto>(chiTietPhieuDeXuatPhongBanCheck);
                             chiTietPhieuDeXuatPhongBanDtos.Add(returnData);
                         }
-                        else
+                        else if(chiTietPhieuDeXuatPhongBanCheck != null && item.IsDel == true) // Xóa
                         {
+
                             _repositoryManager.ChiTietPhieuDeXuatPhongBan.DeleteChiTietPhieuDeXuatPhongBanAsync(chiTietPhieuDeXuatPhongBanCheck);
                         }
                     } 

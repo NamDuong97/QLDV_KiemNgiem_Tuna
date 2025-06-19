@@ -15,11 +15,10 @@ namespace QLDV_KiemNghiem_BE.DTO.RequestDto
         public string MaPdkMau { get; set; } = null!;
 
         [StringLength(50, ErrorMessage = "Ghi chú không được vượt quá 50 ký tự.")]
-        public string? GhiChu { get; set; } 
+        public string? GhiChu { get; set; }
 
         [Required(ErrorMessage = "Ngày thực hiện kiểm nghiệm là bắt buộc.")]
         [DataType(DataType.DateTime, ErrorMessage = "Ngày thực hiện kiểm nghiệm phải là ngày giờ hợp lệ.")]
         public DateTime? NgayThucHienKiemNghiem { get; set; } = null!;
-        public int TrangThai { get; set; }
     }
 }

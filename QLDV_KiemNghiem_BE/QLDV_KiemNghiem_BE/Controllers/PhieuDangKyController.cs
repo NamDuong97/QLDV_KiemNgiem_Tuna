@@ -45,7 +45,8 @@ namespace QLDV_KiemNghiem_BE.Controllers
             _logger.LogDebug("lay toan bo phieu dang ky");
             return Ok(phieuDangKys);
         }
-        [Authorize( Roles = "KHTH")]
+
+        [Authorize(Roles = "KHTH")]
         [HttpPut]
         [Route("reviewPhieuDangKyByKHDT")]
         public async Task<ActionResult> reviewPhieuDangKyByKHDT( RequestReviewPhieuDangKy duyetPhieu)
@@ -80,7 +81,16 @@ namespace QLDV_KiemNghiem_BE.Controllers
                 CreatedAt = DateTime.Now,
             };
             await _hubContext.Clients.Group("KHTH").SendAsync("receiveNotification", noti);
-            _logger.LogDebug(phieuDangKys.Message);
+
+            if(phieuDangKys.KetQua) // Cập nhật trạng thái phiếu đăng ký
+            {
+
+            }
+            else
+            {
+
+            }
+                _logger.LogDebug(phieuDangKys.Message);
             return Ok(phieuDangKys);
         }
 

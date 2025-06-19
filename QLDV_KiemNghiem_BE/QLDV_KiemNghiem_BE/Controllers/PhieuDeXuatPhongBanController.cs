@@ -87,7 +87,7 @@ namespace QLDV_KiemNghiem_BE.Controllers
             if (update.KetQua)
             {
                 _logger.LogDebug(update.Message);
-                return Ok(update.Data);
+                return Ok(update);
             }
             else
             {
