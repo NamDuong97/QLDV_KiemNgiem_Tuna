@@ -10,6 +10,7 @@ using QLDV_KiemNghiem_BE.Interfaces.ManagerInterface;
 using QLDV_KiemNghiem_BE.Models;
 using QLDV_KiemNghiem_BE.RequestFeatures;
 using QLDV_KiemNghiem_BE.RequestFeatures.PagingRequest;
+using StackExchange.Redis;
 
 namespace QLDV_KiemNghiem_BE.Services
 {
@@ -67,6 +68,24 @@ namespace QLDV_KiemNghiem_BE.Services
 
             foreach (var item in PhieuDeXuatPhongBanDto.ChiTietPhieuDeXuatPhongBans)
             {
+                CheckSampleAssignedToDepartmentModel checkSample = new CheckSampleAssignedToDepartmentModel()
+                {
+                    MaPhieuDangKy = PhieuDeXuatPhongBanDto.MaPhieuDangKy,
+                    MaKhoa = PhieuDeXuatPhongBanDto.MaKhoaTiepNhan,
+                    MaMau = item.MaPdkMau
+                };
+
+                // Dang lam do buoc nay
+                var checkSampleAssignedToDepartment = await _repositoryManager.ChiTietPhieuDeXuatPhongBan.CheckSampleAssignedToDepartment(checkSample);
+                if (checkSampleAssignedToDepartment!= null && checkSampleAssignedToDepartment.Count() > 0)
+                {
+                    return new ResponseModel1<PhieuDeXuatPhongBanDto>
+                    {
+                        KetQua = false,
+                        Message =  "Trong phieu dang ky nay, mau nay da duoc phan cong cho phong khoa ban chon roi, vui long khong phan cong lai nua",
+                        Data = null
+                    };
+                }
                 ChiTietPhieuDeXuatPhongBan chiTietPhieuDeXuatPhongBan = new ChiTietPhieuDeXuatPhongBan()
                 {
                     MaId = Guid.NewGuid().ToString(),
@@ -100,7 +119,7 @@ namespace QLDV_KiemNghiem_BE.Services
                     GetEmployee = "0",
                     GetBld = "0"
                 };
-                var userIds = await _repositoryManager.NhanVien.GetUserIdOfEmployeeCustom(nhanVienParam);
+                var userIds =  await _repositoryManager.NhanVien.GetUserIdOfEmployeeCustom(nhanVienParam);
                 foreach (var userId in userIds)
                 {
                     await _hubContext.Clients.Group(userId).SendAsync("receiveNotification", noti);

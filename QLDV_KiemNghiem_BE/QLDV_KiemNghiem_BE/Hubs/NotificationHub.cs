@@ -1,7 +1,8 @@
-﻿using System.Collections.Concurrent;
-using System.Security.Claims;
-using Microsoft.AspNetCore.SignalR;
+﻿using Microsoft.AspNetCore.SignalR;
 using QLDV_KiemNghiem_BE.RequestFeatures;
+using System.Collections.Concurrent;
+using System.Security.Claims;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace QLDV_KiemNghiem_BE.HubsRealTime
 {
@@ -9,11 +10,13 @@ namespace QLDV_KiemNghiem_BE.HubsRealTime
     {
         // Tạo từ điển lưu tên các role để khi disconnect sẽ có tên group để xoá
         private static ConcurrentDictionary<string, string> _connectionGroups = new();
+        private readonly HubConnectionContext _connectionContext;
         private readonly IHttpContextAccessor _contextAccessor;
 
-        public NotificationHub(IHttpContextAccessor contextAccessor)
+        public NotificationHub(IHttpContextAccessor contextAccessor, HubConnectionContext connectionContext)
         {
             _contextAccessor = contextAccessor;
+            _connectionContext = connectionContext;
         }
    
         public async Task JoinGroup(string groupName)
@@ -21,10 +24,12 @@ namespace QLDV_KiemNghiem_BE.HubsRealTime
             await Groups.AddToGroupAsync(Context.ConnectionId, groupName);
         }
 
-        //public async Task JoinGroupUserId(string userId)
-        //{
-        //    await Groups.AddToGroupAsync(Context.ConnectionId, userId);
-        //}
+        public async Task JoinGroupUserId()  
+        {
+            var userId = _connectionContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value.ToString();
+            if (userId != null && userId != "")
+            await Groups.AddToGroupAsync(Context.ConnectionId, userId);
+        }
 
         public async Task LeaveGroup(string groupName)
         {

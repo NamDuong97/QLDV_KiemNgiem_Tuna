@@ -46,12 +46,18 @@ namespace QLDV_KiemNghiem_BE.Services
                 if (duyetPhieu.Action)
                     // neu action = 1 thi tiep theo se la cho BLD duyet
                     checkExistsChiTietPhieuDXPB.TrangThai = "Da Duyet";
-                else // nguoc lai thi trang thai la bi phong KHDT tu choi duyet, thi cho BLD quyet dinh
+                else
+                {
+                    // nguoc lai thi trang thai la bi phong KHDT tu choi duyet, thi cho BLD quyet dinh
                     checkExistsChiTietPhieuDXPB.TrangThai = "Khong Duyet";
+                    checkExistsChiTietPhieuDXPB.LyDoTuChoi = duyetPhieu.Message;
+                    checkExistsChiTietPhieuDXPB.ManvTuChoi = duyetPhieu.MaId;
+                }
                 checkExistsChiTietPhieuDXPB.NgaySua = DateTime.Now;
                 checkExistsChiTietPhieuDXPB.NguoiSua = user;
                 _repositoryManager.ChiTietPhieuDeXuatPhongBan.UpdateChiTietPhieuDeXuatPhongBanAsync(checkExistsChiTietPhieuDXPB);
                 bool check = await _repositoryManager.SaveChangesAsync();
+               
                 return new ResponseReviewPhieuDeXuatPhongBan
                 {
                     MaPhieuDeXuat = duyetPhieu.MaPhieuDeXuat,

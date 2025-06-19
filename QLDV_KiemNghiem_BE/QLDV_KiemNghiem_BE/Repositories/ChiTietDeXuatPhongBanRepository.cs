@@ -3,6 +3,8 @@ using Microsoft.EntityFrameworkCore;
 using QLDV_KiemNghiem_BE.Data;
 using QLDV_KiemNghiem_BE.Interfaces;
 using QLDV_KiemNghiem_BE.Models;
+using QLDV_KiemNghiem_BE.RequestFeatures;
+using QLDV_KiemNghiem_BE.RequestFeatures.PagingRequest;
 
 namespace QLDV_KiemNghiem_BE.Repositories
 {
@@ -30,7 +32,15 @@ namespace QLDV_KiemNghiem_BE.Repositories
                 return await _context.ChiTietPhieuDeXuatPhongBans.AsNoTracking().SingleOrDefaultAsync(item => item.MaId == maChiTietPhieuDeXuatPhongBan);
             }
         }
-
+        public async Task<List<ChiTietPhieuDeXuatPhongBan>?> CheckSampleAssignedToDepartment(CheckSampleAssignedToDepartmentModel checkSample)
+        {
+            var result = await _context.ChiTietPhieuDeXuatPhongBans.
+           FromSqlRaw("exec CheckSampleAssignedToDepartment @maPDK = {0}, @maMau ={1}, @maKhoa = {2}",
+           checkSample.MaPhieuDangKy, checkSample.MaMau, checkSample.MaKhoa).
+           ToListAsync();
+            
+            return result;
+        }
         public void CreateChiTietPhieuDeXuatPhongBanAsync(ChiTietPhieuDeXuatPhongBan ChiTietPhieuDeXuatPhongBan)
         {
             _context.ChiTietPhieuDeXuatPhongBans.Add(ChiTietPhieuDeXuatPhongBan);

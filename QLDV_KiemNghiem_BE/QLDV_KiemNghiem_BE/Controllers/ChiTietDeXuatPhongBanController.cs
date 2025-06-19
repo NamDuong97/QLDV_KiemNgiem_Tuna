@@ -42,14 +42,18 @@ namespace QLDV_KiemNghiem_BE.Controllers
             var user = User.FindFirst(ClaimTypes.Email)?.Value.ToString() ?? "unknow";
             var phieuDeXuat = await _service.ChiTietPhieuDeXuatPhongBan.ReviewPhieuDeXuatPhongBanByPhongKhoa(duyetPhieu, user);
             // Tao thong bao gui cho phong KHTH
-            NotificationModel noti = new NotificationModel()
+            if(phieuDeXuat.KetQua) // Lưu thành công rồi mới xem xét gửi thông báo
             {
-                Title = "Duyet phieu de xuat phong ban",
-                Message = phieuDeXuat.KetQua ? $"Chi tiet phieu de xuat co maid {phieuDeXuat.MaPhieuDeXuat} duoc duyet thanh cong boi nguoi dung {user}!"
+                NotificationModel noti = new NotificationModel()
+                {
+                    Title = "Lanh dao phong/khoa duyet phieu de xuat kiem nghiem phong ban",
+                    Message = duyetPhieu.Action ? $"Chi tiet phieu de xuat co maid {phieuDeXuat.MaPhieuDeXuat} duoc duyet thanh cong boi nguoi dung {user}!"
                 : $"Chi tiet phieu de xuat co maid {phieuDeXuat.MaPhieuDeXuat} da bi tu choi boi nguoi dung {user}!",
-                CreatedAt = DateTime.Now,
-            };
-            await _hubContext.Clients.Group("KHTH").SendAsync("receiveNotification", noti);
+                    CreatedAt = DateTime.Now,
+                };
+                await _hubContext.Clients.Group("KHTH").SendAsync("receiveNotification", noti);
+            }
+            
             _logger.LogDebug(phieuDeXuat.Message);
             return Ok(phieuDeXuat);
         }

@@ -41,10 +41,10 @@ namespace QLDV_KiemNghiem_BE.Services
             {
                 new Claim(JwtRegisteredClaimNames.Sub, param.ID.ToString()),
                 new Claim(JwtRegisteredClaimNames.Email, param.Email),
-                new Claim(ClaimTypes.Role, param.Role),
+                new Claim(ClaimTypes.Role, param.Role)
             };
 
-            if (param.MaChucVu != "")
+            if(param.MaChucVu != "")
             {
                 claims.Add(new Claim("MaChucVu", param.MaChucVu));
             }
