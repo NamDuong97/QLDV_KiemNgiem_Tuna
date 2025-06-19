@@ -30,8 +30,6 @@ const Maus = (props: MausProps) => {
     queryKey: "GetLoaiDichVuAll",
   });
   const dataTieuChuan: any = dataTC;
-  console.log();
-
   const dataLoaiDV: any = dataLDV;
 
   return isLoading ? (

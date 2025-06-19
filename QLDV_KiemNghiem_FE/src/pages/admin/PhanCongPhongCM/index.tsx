@@ -2,34 +2,20 @@ import { AnimatePresence, motion } from "framer-motion";
 import RegistrationDetails from "./RegistrationDetails";
 import SampleList from "./SampleList";
 import "./style.module.scss";
-interface Props {}
-
-export interface samples {
-  id: string;
-  name: string;
-  type: string;
-  status: string;
-  priority: string;
-  receivedDate: string;
-  patientName: string;
-  patientId: string;
-  description: string;
-  assignedDepartment: null;
+import { xemChitietPhieuDKKM } from "../../../hooks/personnels/quanLyPhieuDKKM";
+import { queryKhoaAll } from "../../../hooks/personnels/queryKhoa";
+export interface Sample {
+  id?: string;
+  name?: string;
+  type?: string;
+  status?: string;
+  priority?: string;
+  receivedDate?: string;
+  patientName?: string;
+  patientId?: string;
+  description?: string;
+  assignedDepartment?: string | null;
 }
-
-const registrationForm = {
-  id: "PDK-2023-0125",
-  title: "Phiếu đăng ký xét nghiệm tổng hợp",
-  status: "Chờ phân công",
-  createdDate: "2023-11-15T08:30",
-  dueDate: "2023-11-18T17:00",
-  priority: "Cao",
-  customer: {
-    name: "Bệnh viện Đa khoa Trung ương",
-    address: "16 Sư Vạn Hạnh, Phường 9, Quận 5, TP.HCM",
-    phone: "028 3855 4137",
-  },
-};
 
 const sampleData = [
   {
@@ -73,8 +59,38 @@ const departments = [
   },
 ];
 
-const PhanCongPhongCM = (props: Props) => {
-  const {} = props;
+const colorPresets = [
+  "bg-red-100 text-red-800 border-red-200 hover:bg-red-200",
+  "bg-blue-100 text-blue-800 border-blue-200 hover:bg-blue-200",
+  "bg-green-100 text-green-800 border-green-200 hover:bg-green-200",
+  "bg-yellow-100 text-yellow-800 border-yellow-200 hover:bg-yellow-200",
+  "bg-purple-100 text-purple-800 border-purple-200 hover:bg-purple-200",
+  "bg-teal-100 text-teal-800 border-teal-200 hover:bg-teal-200",
+  "bg-pink-100 text-pink-800 border-pink-200 hover:bg-pink-200",
+];
+
+const PhanCongPhongCM = () => {
+  const sessionId = sessionStorage.getItem("phan-cong");
+  const ID = sessionId ? JSON.parse(sessionId) : "";
+
+  const { data, isLoading } = xemChitietPhieuDKKM({
+    queryKey: "ChitietPhieuDKKM",
+    params: ID,
+  });
+
+  const { data: dataKhoaAll } = queryKhoaAll({
+    queryKey: "queryKhoaAll",
+  });
+  const departments =
+    dataKhoaAll
+      ?.filter((khoa: any) => khoa.maId !== "K06")
+      ?.map((khoa: any, index: number) => ({
+        id: khoa.maId,
+        name: khoa.tenKhoa,
+        description: khoa.ghiChu,
+        color: colorPresets[index % colorPresets.length],
+      })) || [];
+
   return (
     <AnimatePresence mode="wait">
       <motion.div
@@ -85,8 +101,13 @@ const PhanCongPhongCM = (props: Props) => {
         transition={{ duration: 0.5 }}
         className="p-6 grid gap-4"
       >
-        <RegistrationDetails registrationForm={registrationForm} />
-        <SampleList initialSamples={sampleData} departments={departments} />
+        <RegistrationDetails data={data} isLoading={isLoading} />
+        <SampleList
+          initialSamples={sampleData}
+          departments={departments}
+          data={data}
+          isLoading={isLoading}
+        />
       </motion.div>
     </AnimatePresence>
   );

@@ -201,6 +201,10 @@ const XemChiTietPhieuThu = lazy(
   () => import("../pages/admin/managePhieuThu/XemChiTietPhieuThu")
 );
 
+const DanhSachPhieuChoPhanCongKhoaCM = lazy(
+  () => import("../pages/admin/listChoPhanCongKhoaCM")
+);
+
 const RoutesPersonnels = () => {
   return (
     <Suspense>
@@ -219,7 +223,6 @@ const RoutesPersonnels = () => {
             path={APP_ROUTES.TUNA_ADMIN.DASHBOARD.to}
             element={<Dashboard />}
           />
-
           <Route
             path={APP_ROUTES.TUNA_ADMIN.FORGOTPASSWORD.to}
             element={<ForGotPasswordPage />}
@@ -466,6 +469,10 @@ const RoutesPersonnels = () => {
           <Route
             path={APP_ROUTES.TUNA_ADMIN.QUAN_LY_PHIEU_THU.xem_chi_tiet}
             element={<XemChiTietPhieuThu />}
+          />
+          <Route
+            path={APP_ROUTES.TUNA_ADMIN.PHAN_CONG_PHONG_CHUYEN_MON.list}
+            element={<DanhSachPhieuChoPhanCongKhoaCM />}
           />
         </Route>
 

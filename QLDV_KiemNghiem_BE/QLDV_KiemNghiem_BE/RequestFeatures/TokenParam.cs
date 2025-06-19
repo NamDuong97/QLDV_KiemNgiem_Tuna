@@ -2,10 +2,12 @@
 {
     public class TokenParam
     {
-        public string ID { get; set; }  = string.Empty;
+        public string ID { get; set; } = string.Empty;
         public string Name { get; set; } = string.Empty;
         public string Email { get; set; } = string.Empty;
-        public string Role {  get; set; } = string.Empty;   
+        public string Role { get; set; } = string.Empty;
+        public string MaChucVu { get; set; } = string.Empty;
+        public string MaKhoa { get; set; } = string.Empty;
         public bool IsCustomer { get; set; } = true;
     }
 }

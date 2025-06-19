@@ -1,16 +1,12 @@
 import { useEffect, useState } from "react";
-// import { useSignalR } from "../../contexts/SignalRProvider";
+import { useSignalR } from "../../contexts/SignalRProvider";
 import { usePersonnel } from "../../contexts/PersonelsProvider";
-import Cookies from "js-cookie";
-import { EKey } from "../../constants/commons";
-import createSignalRConnection from "../../contexts/test";
 
 const Notification = () => {
-  // const connection = useSignalR();
+  const connection = useSignalR();
   const { personnelInfo } = usePersonnel();
   const [notifications, setNotifications] = useState<any>([]);
-  const token: any = Cookies.get(EKey.TOKEN);
-  const connection = createSignalRConnection(token);
+  console.log("notifications", notifications);
 
   useEffect(() => {
     if (
@@ -55,6 +51,17 @@ const Notification = () => {
               .catch((err: any) =>
                 console.error(
                   `Failed to join group ${personnelInfo?.maChucVu}`,
+                  err
+                )
+              );
+
+            //JoinGroup UserId
+            connection
+              .invoke("JoinGroup", personnelInfo?.maId)
+              .then(() => console.log(`JoinGroup ${personnelInfo?.maId}`))
+              .catch((err: any) =>
+                console.error(
+                  `Failed to JoinGroupUserId ${personnelInfo?.maId}`,
                   err
                 )
               );

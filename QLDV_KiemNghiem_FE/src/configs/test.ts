@@ -1,6 +1,7 @@
 import * as signalR from "@microsoft/signalr";
 
 const createSignalRConnection = (token: string) => {
+  console.log("tokenSignalR", token);
   const connection = new signalR.HubConnectionBuilder()
     .withUrl("https://localhost:7233/notify", {
       accessTokenFactory: async () => token,

@@ -13,6 +13,7 @@ import { IoMdClose } from "react-icons/io";
 import DoneAllIcon from "@mui/icons-material/DoneAll";
 import SmsFailedIcon from "@mui/icons-material/SmsFailed";
 import PopupHuyPhieu from "./PopupHuyPhieu";
+import { formatDate, renderTrangThai } from "../../../../configs/configAll";
 
 interface Props {
   open: boolean;
@@ -74,94 +75,6 @@ const ChiTietPhieuDKyDVKN = (props: Props) => {
       action: true,
     };
     mutateBLD(params);
-  };
-
-  const renderTrangThai = (trangThaiId: string) => {
-    switch (trangThaiId) {
-      case "TT01":
-        return (
-          <span className="inline-block px-2 py-1 text-xs font-medium bg-yellow-100 text-yellow-800 rounded-full">
-            Chờ phòng KHĐT tiếp nhận xử lý
-          </span>
-        );
-
-      case "TT02":
-        return (
-          <span className="inline-block px-2 py-1 text-xs font-medium bg-blue-100 text-blue-800 rounded-full">
-            Phòng KHĐT đã duyệt và chờ BLĐ xét duyệt
-          </span>
-        );
-
-      case "TT03":
-        return (
-          <span className="inline-block px-2 py-1 text-xs font-medium bg-orange-100 text-orange-800 rounded-full">
-            Phòng KHĐT từ chối và chờ BLĐ quyết định
-          </span>
-        );
-
-      case "TT04":
-        return (
-          <span className="inline-block px-2 py-1 text-xs font-medium bg-red-100 text-red-800 rounded-full">
-            BLĐ từ chối
-          </span>
-        );
-
-      case "TT05":
-        return (
-          <span className="inline-block px-2 py-1 text-xs font-medium bg-sky-100 text-sky-800 rounded-full">
-            BLD đã duyệt và chờ phân công phòng ban
-          </span>
-        );
-
-      case "TT06":
-        return (
-          <span className="inline-block px-2 py-1 text-xs font-medium bg-red-100 text-red-800 rounded-full">
-            Các phòng ban đều từ chối
-          </span>
-        );
-
-      case "TT07":
-        return (
-          <span className="inline-block px-2 py-1 text-xs font-medium bg-indigo-100 text-indigo-800 rounded-full">
-            Đang kiểm nghiệm
-          </span>
-        );
-
-      case "TT08":
-        return (
-          <span className="inline-block px-2 py-1 text-xs font-medium bg-teal-100 text-teal-800 rounded-full">
-            Đã hoàn thành kiểm nghiệm chờ duyệt phiếu phân tích
-          </span>
-        );
-
-      case "TT09":
-        return (
-          <span className="inline-block px-2 py-1 text-xs font-medium bg-green-100 text-green-800 rounded-full">
-            Đã hoàn thành tất cả
-          </span>
-        );
-
-      case "TT10":
-        return (
-          <span className="inline-block px-2 py-1 text-xs font-medium bg-gray-200 text-gray-700 rounded-full">
-            Đã hủy kiểm nghiệm
-          </span>
-        );
-
-      case "TT11":
-        return (
-          <span className="inline-block px-2 py-1 text-xs font-medium bg-purple-100 text-purple-800 rounded-full">
-            Đang kiểm tra lại
-          </span>
-        );
-
-      default:
-        return (
-          <span className="inline-block px-2 py-1 text-xs font-medium bg-gray-100 text-gray-800 rounded-full">
-            Không xác định
-          </span>
-        );
-    }
   };
 
   const handleButton = () => {
@@ -370,116 +283,166 @@ const ChiTietPhieuDKyDVKN = (props: Props) => {
           </Box>
         ) : (
           <Box className="p-5 space-y-4">
-            <div className="space-y-2">
-              <h4 className="text-base/6 font-semibold text-gray-500">
-                Thông tin đăng ký
-              </h4>
-              <div className="grid grid-cols-2 gap-y-2 gap-x-8">
-                <div className="flex gap-2 items-center">
-                  <label className="text-sm text-gray-500">Số ĐKPT:</label>
-                  <p className="font-semibold text-gray-900">{data?.soDkpt}</p>
-                </div>
-                <div className="flex gap-2 items-center">
-                  <label className="block text-sm text-gray-500">
-                    Trạng thái phiếu:
-                  </label>
-                  {renderTrangThai(data?.trangThaiId)}
-                </div>
-                <div className="flex gap-2 items-center">
-                  <label className="block text-sm text-gray-500">
-                    Ngày đăng ký:
-                  </label>
-                  <p className="font-semibold text-gray-900">
-                    {new Date(data?.ngayTao).toLocaleDateString("vi-VN")}
-                  </p>
-                </div>
-              </div>
-            </div>
-            <div className="space-y-1">
-              <h4 className="text-base/6 font-semibold text-gray-500 mb-4">
-                Thông tin người gửi mẫu
-              </h4>
-
-              <div className="grid grid-cols-2 gap-y-4 gap-x-8 text-sm text-gray-700">
-                <div>
-                  <label className="text-sm/6 text-gray-500">
-                    Người gửi mẫu
-                  </label>
-                  <p className="font-semibold text-gray-900">
-                    {data?.nguoiGuiMau}
-                  </p>
-                </div>
-                <div>
-                  <label className="text-sm/6 text-gray-500">
-                    Đơn vị gửi mẫu
-                  </label>
-                  <p className="font-semibold text-gray-900">
-                    {data?.donViGuiMau}
-                  </p>
-                </div>
-                <div>
-                  <label className="text-sm/6 text-gray-500">Email</label>
-                  <p className="font-semibold text-gray-900">{data?.email}</p>
-                </div>
-
-                <div>
-                  <label className="text-sm/6 text-gray-500">
-                    Số điện thoại
-                  </label>
-                  <p className="font-semibold text-gray-900">
-                    {data?.soDienThoai}
-                  </p>
-                </div>
-
-                <div>
-                  <label className="text-sm/6 text-gray-500">
-                    Hình thức gửi mẫu
-                  </label>
-                  <p className="font-semibold text-gray-900">
-                    {data?.hinhThucGuiMau}
-                  </p>
-                </div>
-
-                <div>
-                  <label className="text-sm/6 text-gray-500">
-                    Hình thức trả kết quả
-                  </label>
-                  <p className="font-semibold text-gray-900">
-                    {data?.hinhThucTraKq}
-                  </p>
-                </div>
-                {data?.diaChiGiaoMau && (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <h3 className="text-base/6 font-medium text-gray-500 mb-4">
+                  Thông tin phiếu đăng ký
+                </h3>
+                <div className="space-y-4">
+                  <div className="flex items-center space-x-2">
+                    <label className="block text-xs text-gray-500">
+                      Trạng thái phiếu
+                    </label>
+                    {isLoading ? (
+                      <Skeleton variant="rounded" width={100} height={20} />
+                    ) : (
+                      renderTrangThai(data?.trangThaiId)
+                    )}
+                  </div>
                   <div>
-                    <label className="text-sm/6 text-gray-500">
+                    <label className="block text-xs text-gray-500">
+                      Ngày đăng ký
+                    </label>
+                    {isLoading ? (
+                      <Skeleton variant="rounded" width={100} height={20} />
+                    ) : (
+                      <p className="font-medium text-gray-900">
+                        {formatDate(data?.ngayTao)}
+                      </p>
+                    )}
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-xs text-gray-500">
+                        Hình thức trả kết quả
+                      </label>
+                      {isLoading ? (
+                        <Skeleton variant="rounded" width={100} height={20} />
+                      ) : (
+                        <p className="font-medium text-gray-900">
+                          {data?.hinhThucTraKq}
+                        </p>
+                      )}
+                    </div>
+                    <div>
+                      <label className="block text-xs text-gray-500">
+                        Hình thức gửi mẫu
+                      </label>
+                      {isLoading ? (
+                        <Skeleton variant="rounded" width={100} height={20} />
+                      ) : (
+                        <p className="font-medium text-gray-900">
+                          {data?.hinhThucGuiMau}
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-xs text-gray-500">
+                        Kết quả
+                      </label>
+                      {isLoading ? (
+                        <Skeleton variant="rounded" width={100} height={20} />
+                      ) : (
+                        <p className="font-medium text-gray-900">
+                          {data?.ketQua ? "Tiếng Anh" : "Tiếng Việt"}
+                        </p>
+                      )}
+                    </div>
+                    <div>
+                      <label className="block text-xs text-gray-500">
+                        Ngày giao mẫu
+                      </label>
+                      {isLoading ? (
+                        <Skeleton variant="rounded" width={100} height={20} />
+                      ) : (
+                        <p className="font-medium text-gray-900">
+                          {formatDate(data?.ngayGiaoMau)}
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                  <div>
+                    <label className="block text-xs text-gray-500">
                       Địa chỉ giao mẫu
                     </label>
-                    <p className="font-semibold text-gray-900">
-                      {data?.diaChiGiaoMau}
-                    </p>
+                    {isLoading ? (
+                      <Skeleton variant="rounded" width={100} height={20} />
+                    ) : (
+                      <p className="font-medium text-gray-900">
+                        {data?.diaChiGiaoMau}
+                      </p>
+                    )}
                   </div>
-                )}
-                <div>
-                  <label className="text-sm/6 text-gray-500">
-                    Địa chỉ liên hệ
-                  </label>
-                  <p className="font-semibold text-gray-900">
-                    {data?.diaChiLienHe}
-                  </p>
                 </div>
-                <div>
-                  <label className="text-sm/6 text-gray-500">
-                    Ngày giao mẫu
-                  </label>
-                  <p className="font-semibold text-gray-900">
-                    {new Date(data?.ngayGiaoMau).toLocaleDateString("vi-VN")}
-                  </p>
-                </div>
+              </div>
 
-                <div>
-                  <label className="text-sm/6 text-gray-500">Kết quả</label>
-                  <p className="font-semibold text-gray-900">
-                    {data?.ketQuaTiengAnh ? "Tiếng Anh" : "Tiếng Việt"}
-                  </p>
+              {/* Customer Information */}
+              <div>
+                <h3 className="text-base/6 font-medium text-gray-500 mb-4">
+                  Thông tin khách hàng
+                </h3>
+                <div className="space-y-4">
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-xs text-gray-500">
+                        Người gửi mẫu
+                      </label>
+                      {isLoading ? (
+                        <Skeleton variant="rounded" width={100} height={20} />
+                      ) : (
+                        <p className="font-medium text-gray-900">
+                          {data?.nguoiGuiMau}
+                        </p>
+                      )}
+                    </div>
+                    <div>
+                      <label className="block text-xs text-gray-500">
+                        Đơn vị gửi mẫu
+                      </label>
+                      {isLoading ? (
+                        <Skeleton variant="rounded" width={100} height={20} />
+                      ) : (
+                        <p className="font-medium text-gray-900">
+                          {data?.donViGuiMau}
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                  <div>
+                    <label className="block text-xs text-gray-500">
+                      Số điện thoại
+                    </label>
+                    {isLoading ? (
+                      <Skeleton variant="rounded" width={100} height={20} />
+                    ) : (
+                      <p className="font-medium text-gray-900">
+                        {data?.soDienThoai}
+                      </p>
+                    )}
+                  </div>
+                  <div>
+                    <label className="block text-xs text-gray-500">Email</label>
+                    {isLoading ? (
+                      <Skeleton variant="rounded" width={100} height={20} />
+                    ) : (
+                      <p className="font-medium text-gray-900">{data?.email}</p>
+                    )}
+                  </div>
+                  <div>
+                    <label className="block text-xs text-gray-500">
+                      Địa chỉ liên hệ
+                    </label>
+                    {isLoading ? (
+                      <Skeleton variant="rounded" width={100} height={20} />
+                    ) : (
+                      <p className="font-medium text-gray-900">
+                        {data?.diaChiLienHe}
+                      </p>
+                    )}
+                  </div>
                 </div>
               </div>
             </div>

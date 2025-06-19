@@ -53,6 +53,8 @@ namespace QLDV_KiemNghiem_BE.Services
                 ID = nhanVien.MaId,
                 Email = nhanVien.EmailCaNhan,
                 Role = nhanVien.MaLoaiTk,
+                MaChucVu = nhanVien.MaChucVu,
+                MaKhoa = nhanVien.MaKhoa
             };
             string token = _tokenService.GenerateJwtToken(param);
             string refreshToken = _tokenService.GenerateRefreshToken();

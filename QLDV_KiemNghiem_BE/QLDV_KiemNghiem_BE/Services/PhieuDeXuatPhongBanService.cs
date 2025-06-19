@@ -95,13 +95,16 @@ namespace QLDV_KiemNghiem_BE.Services
                 noti.CreatedAt = DateTime.Now;
                 ParamGetUserIdNhanVien nhanVienParam = new ParamGetUserIdNhanVien()
                 {
-                    MaKhoa = "K01",
+                    MaKhoa = PhieuDeXuatPhongBanDto.MaKhoaTiepNhan,
                     GetLeader = "1",
                     GetEmployee = "0",
                     GetBld = "0"
                 };
-                var userIds =  await _repositoryManager.NhanVien.GetUserIdOfEmployeeCustom(nhanVienParam);
-                await _hubContext.Clients.Users(userIds).SendAsync("notificationForPDXPB", noti);
+                var userIds = await _repositoryManager.NhanVien.GetUserIdOfEmployeeCustom(nhanVienParam);
+                foreach (var userId in userIds)
+                {
+                    await _hubContext.Clients.Group(userId).SendAsync("receiveNotification", noti);
+                }
             }
             var PhieuDeXuatPhongBanReturnDto = _mapper.Map<PhieuDeXuatPhongBanDto>(PhieuDeXuatPhongBanDomain);
             PhieuDeXuatPhongBanReturnDto.ChiTietPhieuDeXuatPhongBans = chiTietPhieuDeXuatPhongBanDtos;

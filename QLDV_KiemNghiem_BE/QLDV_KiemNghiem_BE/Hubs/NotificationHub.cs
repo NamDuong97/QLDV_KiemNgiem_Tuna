@@ -20,6 +20,12 @@ namespace QLDV_KiemNghiem_BE.HubsRealTime
         {
             await Groups.AddToGroupAsync(Context.ConnectionId, groupName);
         }
+
+        //public async Task JoinGroupUserId(string userId)
+        //{
+        //    await Groups.AddToGroupAsync(Context.ConnectionId, userId);
+        //}
+
         public async Task LeaveGroup(string groupName)
         {
             await Groups.RemoveFromGroupAsync(Context.ConnectionId, groupName);

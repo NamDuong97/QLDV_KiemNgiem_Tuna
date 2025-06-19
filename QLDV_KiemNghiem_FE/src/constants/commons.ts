@@ -1,12 +1,21 @@
 export const API = {
   ADMIN: {
     DANG_NHAP: "/api/nhanvien/loginNhanVien",
-    GET_INFOR_NHAN_VIEN: "/api/nhanvien/getNhanVienByID",
+    NHAN_VIEN: {
+      GET_INFOR_NHAN_VIEN: "/api/nhanvien/getNhanVienByID",
+    },
     PHIEU_DKY_DVKM: {
       QUAN_LY_PHIEU_DKY_DVKM: "/api/phieudangky/getPhieuDangKyAll",
       XEM_CHI_TIET: "/api/phieudangky/findPhieuDangKy?maPhieuDangKy=",
       DANH_GIA_NHANVIEN: "/api/PhieuDangKy/reviewPhieuDangKyByKHDT",
       DANH_GIA_BLD: "/api/PhieuDangKy/reviewPhieuDangKyByBLD",
+    },
+    KHOA: {
+      GET_KHOA_ALL: "/api/Khoa/getKhoaAll",
+    },
+    PHIEU_PHIEU_DE_XUAT_PHONG_BAN: {
+      CREATE_PHIEU_PHIEU_DE_XUAT_PHONG_BAN:
+        "/api/PhieuPhieuDeXuatPhongBan/createPhieuPhieuDeXuatPhongBan",
     },
   },
   CUSTOMER: {

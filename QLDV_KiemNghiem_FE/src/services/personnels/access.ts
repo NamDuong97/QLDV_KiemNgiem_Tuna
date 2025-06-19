@@ -15,7 +15,7 @@ export default class accessServices {
   static async getInforNhanVien(params: any) {
     try {
       const response = await _APIInstance.get(
-        `${API.ADMIN.GET_INFOR_NHAN_VIEN}?maNhanVien=${params}`
+        `${API.ADMIN.NHAN_VIEN.GET_INFOR_NHAN_VIEN}?maNhanVien=${params}`
       );
       return response;
     } catch (err: any) {

@@ -15,3 +15,4 @@ export const quanLyPhieuTienDo = "quanLyPhieuTienDo";
 export const quanLyPhieuPhanTichKetQua = "quanLyPhieuPhanTichKetQua";
 export const quanLyPhieuXuatKho = "quanLyPhieuXuatKho";
 export const quanLyPhieuThu = "quanLyPhieuThu";
+export const phanCongKhoaCM = "phanCongKhoaCM";

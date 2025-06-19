@@ -1,0 +1,20 @@
+import { useQuery } from "@tanstack/react-query";
+import khoaServices from "../../services/personnels/khoa";
+
+interface Props {
+  queryKey: string;
+  params?: any;
+  onSettled?: any;
+}
+
+export const queryKhoaAll = (props: Props) => {
+  const { queryKey } = props;
+  return useQuery({
+    queryKey: [queryKey],
+    queryFn: async () => {
+      const response = await khoaServices.getKhoaAll();
+      return response?.data;
+    },
+    refetchOnWindowFocus: false,
+  });
+};

@@ -1,4 +1,4 @@
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQueries, useQuery } from "@tanstack/react-query";
 import QuanlyPhieuDKYKNServices from "../../services/personnels/quanlyPhieuDKYKN";
 
 interface Props {
@@ -7,7 +7,20 @@ interface Props {
   onSettled?: any;
 }
 
-export const quanLyPhieuDKKM = (props: Props) => {
+export const listPhieuDKKNAll = (props: Props) => {
+  const { queryKey } = props;
+  return useQuery({
+    queryKey: [queryKey],
+    queryFn: async () => {
+      const response = await QuanlyPhieuDKYKNServices.listPhieuDKKNAll();
+      return response?.data;
+    },
+    refetchOnWindowFocus: false,
+    staleTime: Infinity,
+  });
+};
+
+export const listPhieuDKKM_KHTH = (props: Props) => {
   const { queryKey, params } = props;
   return useQuery({
     queryKey: [queryKey],
@@ -16,6 +29,7 @@ export const quanLyPhieuDKKM = (props: Props) => {
       return response?.data;
     },
     refetchOnWindowFocus: false,
+    staleTime: Infinity,
   });
 };
 
@@ -31,6 +45,7 @@ export const xemChitietPhieuDKKM = (props: Props) => {
     },
     refetchOnWindowFocus: false,
     enabled: !!params,
+    staleTime: Infinity,
   });
 };
 

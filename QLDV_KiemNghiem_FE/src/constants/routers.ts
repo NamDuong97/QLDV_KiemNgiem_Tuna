@@ -61,6 +61,7 @@ export const APP_ROUTES = {
       id_xem_chi_tiet: "/tuna/quan-ly-phan-cong-khoa-chuyen-mon/xem-chi-tiet",
     },
     PHAN_CONG_PHONG_CHUYEN_MON: {
+      list: "/tuna/danh-sach-phieu-cho-phan-cong",
       to: "/tuna/phan-cong-phong-chuyen-mon",
     },
     QUAN_LY_NHAN_VIEN: {

@@ -107,3 +107,16 @@ export interface Maus {
   maLoaiDV: string;
   phieuDangKyMauHinhAnhs: phieuDangKyMauHinhAnhs2[];
 }
+
+export interface MauPhanCong {
+  maId: string;
+  tenMau: string;
+  tenTieuChuan: string;
+  tenDichVu: string;
+  soLo: string;
+  donViSanXuat: string;
+  ngaySanXuat: string;
+  hanSuDung: string;
+  soLuong: number;
+  donViTinh: string;
+}

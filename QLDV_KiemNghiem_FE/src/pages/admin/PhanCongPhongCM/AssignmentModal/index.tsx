@@ -1,12 +1,39 @@
-import { useState } from "react";
+import { Dialog } from "@mui/material";
+import { useEffect, useState } from "react";
+import { MauPhanCong } from "../../../../models/mau";
+import yup from "../../../../configs/yup.custom";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { useForm } from "react-hook-form";
+import { queryClient } from "../../../../lib/reactQuery";
+import { createPhieuPhanCongKhoa } from "../../../../hooks/personnels/phanCongKhoa";
 
-const AssignmentModal = ({
-  isOpen,
-  onClose,
-  onSubmit,
-  selectedSamples,
-  departments,
-}: any) => {
+interface Props {
+  samples: MauPhanCong[];
+  isOpen: boolean;
+  onClose: () => void;
+  selectedSamples: any;
+  departments: any;
+  setSamples: React.Dispatch<React.SetStateAction<MauPhanCong[]>>;
+  setSuccessMessage: React.Dispatch<React.SetStateAction<string>>;
+  setShowSuccessMessage: React.Dispatch<React.SetStateAction<boolean>>;
+}
+interface FormPhanCong {
+  ghiChu: {
+    [tenMau: string]: string;
+  };
+}
+
+const AssignmentModal = (props: Props) => {
+  const {
+    isOpen,
+    onClose,
+    selectedSamples,
+    departments,
+    samples,
+    setSamples,
+    setSuccessMessage,
+    setShowSuccessMessage,
+  } = props;
   const [selectedDepartment, setSelectedDepartment] = useState(null);
 
   // Handle department selection
@@ -14,17 +41,86 @@ const AssignmentModal = ({
     setSelectedDepartment(departmentId);
   };
 
-  // Handle submit
-  const handleSubmit = () => {
-    onSubmit(selectedDepartment);
+  const shema = yup.object().shape({
+    ghiChu: yup.object(),
+  });
+
+  const { reset, register, handleSubmit } = useForm({
+    resolver: yupResolver<FormPhanCong>(shema),
+  });
+
+  const handleSettled = async () => {
+    await queryClient.refetchQueries({ queryKey: ["ChitietPhieuDKKM"] });
   };
 
-  if (!isOpen) return null;
+  const { mutate } = createPhieuPhanCongKhoa({
+    queryKey: "createPhieuPhanCongKhoa",
+    onSettled: handleSettled,
+  });
+
+  const handleAssignSubmit = (data: FormPhanCong) => {
+    if (!selectedDepartment || selectedSamples.length === 0) {
+      return;
+    }
+
+    const department = departments.find(
+      (dept: any) => dept.id === selectedDepartment
+    );
+    console.log("department", department);
+
+    const maus = selectedSamples?.map((sample: any) => ({
+      tenMau: sample.tenMau,
+      ghiChu: data.ghiChu?.[sample.tenMau] || "",
+    }));
+    const phanCong = {
+      tenKH: "",
+      maKhoa: selectedDepartment,
+      maNVDeXuat: "",
+      maNVTiepNhan: "",
+      thoiGianGiaoMau: "",
+      thoiGianThucHien: "",
+      maus,
+    };
+    console.log("phanCong", phanCong);
+
+    const updatedSamples = samples.map((sample: MauPhanCong) => {
+      if (selectedSamples.includes(sample.maId as string)) {
+        return {
+          ...sample,
+          assignedDepartment: department,
+          status: "Đã phân công",
+        };
+      }
+      return sample;
+    });
+    // console.log("updatedSamples", updatedSamples);
+
+    // setSamples(updatedSamples);
+    // setSuccessMessage(
+    //   `Đã phân công ${selectedSamples.length} mẫu cho ${department.name}`
+    // );
+
+    // setShowSuccessMessage(true);
+    // onClose();
+
+    // // Hide success message after 3 seconds
+    // setTimeout(() => {
+    //   setShowSuccessMessage(false);
+    // }, 3000);
+  };
+
+  useEffect(() => {
+    reset({
+      ghiChu: {},
+    });
+  }, []);
 
   return (
-    <div className="fixed inset-0 z-50 overflow-y-auto bg-black bg-opacity-50 backdrop-blur-sm flex items-center justify-center p-4">
-      <div className="bg-white rounded-lg shadow-xl max-w-3xl w-full max-h-[90vh] overflow-hidden flex flex-col animate-fade-in">
-        {/* Modal header */}
+    <Dialog open={isOpen} onClose={onClose} maxWidth="xl">
+      <form
+        onSubmit={handleSubmit(handleAssignSubmit)}
+        className="bg-white rounded-lg shadow-xl max-w-4xl w-full"
+      >
         <div className="p-6 border-b border-gray-200 flex justify-between items-center">
           <h3 className="text-lg font-bold text-gray-900">
             Phân công mẫu cho phòng ban
@@ -54,14 +150,23 @@ const AssignmentModal = ({
         <div className="flex-grow overflow-y-auto p-6">
           <div className="mb-6">
             <h4 className="text-sm font-medium text-gray-700 mb-2">
-              Đã chọn {selectedSamples.length} mẫu
+              Đã chọn {selectedSamples?.length} mẫu
             </h4>
-            <div className="bg-gray-50 p-3 rounded-lg max-h-32 overflow-y-auto">
+            <div className="bg-gray-50 p-3 rounded-lg">
               <ul className="list-disc pl-5 space-y-1">
-                {selectedSamples.map((sample: any) => (
-                  <li key={sample.id} className="text-sm text-gray-600">
-                    {sample.name}{" "}
-                    <span className="text-gray-400">({sample.id})</span>
+                {selectedSamples?.map((sample: any) => (
+                  <li key={sample.maId} className="text-sm text-gray-600">
+                    <p>
+                      {sample.tenMau}
+                      <span className="text-gray-400">({sample.soLo})</span>
+                    </p>
+                    <div>
+                      <textarea
+                        placeholder="Ghi chú..."
+                        {...register(`ghiChu.${sample.tenMau}` as const)}
+                        className="border border-gray-200 p-2 rounded w-full max-h-20 min-h-20 focus-within:outline-1 focus-within:border focus-within:!border-blue-500"
+                      />
+                    </div>
                   </li>
                 ))}
               </ul>
@@ -121,8 +226,6 @@ const AssignmentModal = ({
             Hủy
           </button>
           <button
-            type="button"
-            onClick={handleSubmit}
             disabled={!selectedDepartment || selectedSamples.length === 0}
             className={`px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white ${
               !selectedDepartment || selectedSamples.length === 0
@@ -133,8 +236,8 @@ const AssignmentModal = ({
             Phân công
           </button>
         </div>
-      </div>
-    </div>
+      </form>
+    </Dialog>
   );
 };
 

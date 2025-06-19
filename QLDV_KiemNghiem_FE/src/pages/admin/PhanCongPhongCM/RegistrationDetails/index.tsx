@@ -1,49 +1,14 @@
+import { Skeleton } from "@mui/material";
 import { IoIosArrowBack } from "react-icons/io";
+import { formatDate, renderTrangThai } from "../../../../configs/configAll";
 
-const RegistrationDetails = ({ registrationForm }: any) => {
-  // Format date function
-  const formatDate = (dateString: any) => {
-    const date = new Date(dateString);
-    return date.toLocaleString("vi-VN", {
-      day: "2-digit",
-      month: "2-digit",
-      year: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
-    });
-  };
+interface Props {
+  data: any;
+  isLoading: boolean;
+}
 
-  // Get status badge color
-  const getStatusColor = (status: any) => {
-    switch (status) {
-      case "Hoàn thành":
-        return "bg-green-100 text-green-800";
-      case "Đang xử lý":
-        return "bg-blue-100 text-blue-800";
-      case "Chờ phân công":
-        return "bg-yellow-100 text-yellow-800";
-      case "Đã phân công":
-        return "bg-purple-100 text-purple-800";
-      case "Hủy":
-        return "bg-red-100 text-red-800";
-      default:
-        return "bg-gray-100 text-gray-800";
-    }
-  };
-
-  // Get priority badge color
-  const getPriorityColor = (priority: any) => {
-    switch (priority) {
-      case "Cao":
-        return "bg-red-100 text-red-800";
-      case "Trung bình":
-        return "bg-yellow-100 text-yellow-800";
-      case "Thấp":
-        return "bg-green-100 text-green-800";
-      default:
-        return "bg-gray-100 text-gray-800";
-    }
-  };
+const RegistrationDetails = (props: Props) => {
+  const { data, isLoading } = props;
 
   return (
     <div className="bg-white shadow-sm rounded-lg overflow-hidden mb-6">
@@ -56,17 +21,20 @@ const RegistrationDetails = ({ registrationForm }: any) => {
             <IoIosArrowBack className="w-5 h-6 text-gray-700" />
           </button>
         </div>
-        <div className="flex items-center">
+        <div className="flex items-center space-x-3">
           <h2 className="text-lg font-medium text-gray-900">
-            Số đăng ký phân tích: {registrationForm.id}
+            Số đăng ký phân tích:{" "}
+            {isLoading ? (
+              <Skeleton variant="rounded" width={130} height={20} />
+            ) : (
+              data?.soDkpt
+            )}
           </h2>
-          <span
-            className={`ml-4 px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatusColor(
-              registrationForm.status
-            )}`}
-          >
-            {registrationForm.status}
-          </span>
+          {isLoading ? (
+            <Skeleton variant="rounded" width={100} height={20} />
+          ) : (
+            renderTrangThai(data?.trangThaiId)
+          )}
         </div>
       </div>
 
@@ -81,49 +49,75 @@ const RegistrationDetails = ({ registrationForm }: any) => {
                 <label className="block text-xs text-gray-500">
                   Ngày đăng ký
                 </label>
-                <p className="font-medium text-gray-900">1/1/1970</p>
+                {isLoading ? (
+                  <Skeleton variant="rounded" width={100} height={20} />
+                ) : (
+                  <p className="font-medium text-gray-900">
+                    {formatDate(data?.ngayTao)}
+                  </p>
+                )}
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <label className="block text-xs text-gray-500">
                     Hình thức trả kết quả
                   </label>
-                  <p className="font-medium text-gray-900">
-                    {formatDate(registrationForm.createdDate)}
-                  </p>
+                  {isLoading ? (
+                    <Skeleton variant="rounded" width={100} height={20} />
+                  ) : (
+                    <p className="font-medium text-gray-900">
+                      {data?.hinhThucTraKq}
+                    </p>
+                  )}
                 </div>
                 <div>
                   <label className="block text-xs text-gray-500">
                     Hình thức gửi mẫu
                   </label>
-                  <p className="font-medium text-gray-900">
-                    {formatDate(registrationForm.dueDate)}
-                  </p>
+                  {isLoading ? (
+                    <Skeleton variant="rounded" width={100} height={20} />
+                  ) : (
+                    <p className="font-medium text-gray-900">
+                      {data?.hinhThucGuiMau}
+                    </p>
+                  )}
                 </div>
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <label className="block text-xs text-gray-500">Kết quả</label>
-                  <p className="font-medium text-gray-900">
-                    {formatDate(registrationForm.createdDate)}
-                  </p>
+                  {isLoading ? (
+                    <Skeleton variant="rounded" width={100} height={20} />
+                  ) : (
+                    <p className="font-medium text-gray-900">
+                      {data?.ketQua ? "Tiếng Anh" : "Tiếng Việt"}
+                    </p>
+                  )}
                 </div>
                 <div>
                   <label className="block text-xs text-gray-500">
                     Ngày giao mẫu
                   </label>
-                  <p className="font-medium text-gray-900">
-                    {formatDate(registrationForm.dueDate)}
-                  </p>
+                  {isLoading ? (
+                    <Skeleton variant="rounded" width={100} height={20} />
+                  ) : (
+                    <p className="font-medium text-gray-900">
+                      {formatDate(data?.ngayGiaoMau)}
+                    </p>
+                  )}
                 </div>
               </div>
               <div>
                 <label className="block text-xs text-gray-500">
                   Địa chỉ giao mẫu
                 </label>
-                <p className="font-medium text-gray-900">
-                  16 Sư Vạn Hạnh, Phường 9, Quận 5, TP.HCM
-                </p>
+                {isLoading ? (
+                  <Skeleton variant="rounded" width={100} height={20} />
+                ) : (
+                  <p className="font-medium text-gray-900">
+                    {data?.diaChiGiaoMau}
+                  </p>
+                )}
               </div>
             </div>
           </div>
@@ -139,40 +133,58 @@ const RegistrationDetails = ({ registrationForm }: any) => {
                   <label className="block text-xs text-gray-500">
                     Người gửi mẫu
                   </label>
-                  <p className="font-medium text-gray-900">
-                    {registrationForm.customer.name}
-                  </p>
+                  {isLoading ? (
+                    <Skeleton variant="rounded" width={100} height={20} />
+                  ) : (
+                    <p className="font-medium text-gray-900">
+                      {data?.nguoiGuiMau}
+                    </p>
+                  )}
                 </div>
                 <div>
                   <label className="block text-xs text-gray-500">
                     Đơn vị gửi mẫu
                   </label>
-                  <p className="font-medium text-gray-900">
-                    {registrationForm.customer.name}
-                  </p>
+                  {isLoading ? (
+                    <Skeleton variant="rounded" width={100} height={20} />
+                  ) : (
+                    <p className="font-medium text-gray-900">
+                      {data?.donViGuiMau}
+                    </p>
+                  )}
                 </div>
               </div>
               <div>
                 <label className="block text-xs text-gray-500">
                   Số điện thoại
                 </label>
-                <p className="font-medium text-gray-900">
-                  {registrationForm.customer.phone}
-                </p>
+                {isLoading ? (
+                  <Skeleton variant="rounded" width={100} height={20} />
+                ) : (
+                  <p className="font-medium text-gray-900">
+                    {data?.soDienThoai}
+                  </p>
+                )}
               </div>
               <div>
                 <label className="block text-xs text-gray-500">Email</label>
-                <p className="font-medium text-gray-900">
-                  {registrationForm.customer.phone}
-                </p>
+                {isLoading ? (
+                  <Skeleton variant="rounded" width={100} height={20} />
+                ) : (
+                  <p className="font-medium text-gray-900">{data?.email}</p>
+                )}
               </div>
               <div>
                 <label className="block text-xs text-gray-500">
                   Địa chỉ liên hệ
                 </label>
-                <p className="font-medium text-gray-900">
-                  {registrationForm.customer.address}
-                </p>
+                {isLoading ? (
+                  <Skeleton variant="rounded" width={100} height={20} />
+                ) : (
+                  <p className="font-medium text-gray-900">
+                    {data?.diaChiLienHe}
+                  </p>
+                )}
               </div>
             </div>
           </div>

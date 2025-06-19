@@ -1,5 +1,19 @@
-const SampleCard = ({ sample, isSelected, onSelect }: any) => {
-  // Format date
+import { Skeleton } from "@mui/material";
+import {
+  useGetLoaiDichVuAll,
+  useGetTieuChuanAll,
+} from "../../../../hooks/customers/usePhieuDKyDVKN";
+
+const SampleCard = ({ sample, isSelected, onSelect, isLoading }: any) => {
+  const { data: dataTC } = useGetTieuChuanAll({
+    queryKey: "TieuChuanAll",
+  });
+  const { data: dataLDV } = useGetLoaiDichVuAll({
+    queryKey: "LoaiDichVuAll",
+  });
+  const dataTieuChuan: any = dataTC;
+  const dataLoaiDV: any = dataLDV;
+
   const formatDate = (dateString: any) => {
     const date = new Date(dateString);
     return date.toLocaleString("vi-VN", {
@@ -11,99 +25,97 @@ const SampleCard = ({ sample, isSelected, onSelect }: any) => {
     });
   };
 
-  // Get status badge color
-  const getStatusColor = (status: any) => {
-    switch (status) {
-      case "Hoàn thành":
-        return "bg-green-100 text-green-800";
-      case "Đang xử lý":
-        return "bg-blue-100 text-blue-800";
-      case "Chờ phân công":
-        return "bg-yellow-100 text-yellow-800";
-      case "Đã phân công":
-        return "bg-purple-100 text-purple-800";
-      case "Hủy":
-        return "bg-red-100 text-red-800";
-      default:
-        return "bg-gray-100 text-gray-800";
-    }
-  };
-
-  // Get priority badge color
-  const getPriorityColor = (priority: any) => {
-    switch (priority) {
-      case "Cao":
-        return "bg-red-100 text-red-800";
-      case "Trung bình":
-        return "bg-yellow-100 text-yellow-800";
-      case "Thấp":
-        return "bg-green-100 text-green-800";
-      default:
-        return "bg-gray-100 text-gray-800";
-    }
-  };
-
   return (
     <div
       className={`border rounded-lg overflow-hidden sample-card transition-all cursor-pointer ${
         isSelected ? "border-blue-500 bg-blue-50" : "border-gray-200"
       }`}
-      onClick={() => onSelect(sample.id)}
+      onClick={() => onSelect(sample.maId)}
     >
       <div className="p-4">
         <div className="flex justify-between items-start mb-3">
-          <div>
-            <h3 className="font-medium text-gray-900 mb-1">{sample.name}</h3>
-            <p className="text-sm text-gray-500">{sample.id}</p>
-          </div>
+          {isLoading ? (
+            <div>
+              <Skeleton variant="text" width={200} height={20} />
+              <Skeleton variant="text" width={60} height={20} />
+            </div>
+          ) : (
+            <div>
+              <h3 className="font-medium text-gray-900 mb-1">
+                {sample.tenMau}
+              </h3>
+              <p className="text-sm text-gray-500">{sample.soLo}</p>
+            </div>
+          )}
+
           <input
             type="checkbox"
             checked={isSelected}
-            onChange={() => {}} // Handled by the div click
-            onClick={(e) => e.stopPropagation()}
+            onChange={() => {}}
+            onClick={() => onSelect(sample.maId)}
             className="h-5 w-5 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
           />
         </div>
 
-        <div className="flex flex-wrap gap-2 mb-3">
-          <span
-            className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatusColor(
-              sample.status
-            )}`}
-          >
-            {sample.status}
-          </span>
-          <span
-            className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getPriorityColor(
-              sample.priority
-            )}`}
-          >
-            {sample.priority}
-          </span>
-          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
-            {sample.type}
-          </span>
-        </div>
+        {isLoading ? (
+          <div className="text-sm text-gray-600 mb-3 space-y-2">
+            <Skeleton variant="text" width={123} height={20} />
+            <Skeleton variant="text" width={200} height={20} />
+          </div>
+        ) : (
+          <div className="text-sm text-gray-600 mb-3 space-y-2">
+            <p>
+              {`Tiêu Chuẩn:
+              ${
+                dataTieuChuan?.find(
+                  (item: any) => item.maId === sample.tenTieuChuan
+                ).tenTieuChuan
+              }`}
+            </p>
+            <p>
+              {`Dịch vụ:
+              ${
+                dataLoaiDV?.find(
+                  (item: any) => item.maLoaiDv === sample.tenDichVu
+                ).tenDichVu
+              }`}
+            </p>
+          </div>
+        )}
 
-        <div className="text-sm text-gray-600 mb-3">
-          <p>
-            Bệnh nhân: {sample.patientName} ({sample.patientId})
-          </p>
-          <p>Ngày nhận: {formatDate(sample.receivedDate)}</p>
-        </div>
+        {isLoading ? (
+          <div className="text-sm text-gray-600 mb-3 flex justify-between items-center">
+            <Skeleton variant="text" width={123} height={20} />
+            <Skeleton variant="text" width={200} height={20} />
+          </div>
+        ) : (
+          <div className="text-sm text-gray-600 mb-3 flex justify-between items-center">
+            <p>Số lượng: {`${sample.soLuong} ${sample.donViTinh}`}</p>
+            <p>hạn sử dụng: {formatDate(sample.hanSuDung)}</p>
+          </div>
+        )}
 
-        <p className="text-sm text-gray-500 line-clamp-2">
-          {sample.description}
-        </p>
+        {isLoading ? (
+          <div className="text-sm text-gray-600 mb-3 flex justify-between items-center">
+            <Skeleton variant="text" width={200} height={20} />
+          </div>
+        ) : (
+          <div className="text-sm text-gray-600 mb-3 flex justify-between items-center"></div>
+        )}
 
-        {sample.assignedDepartment && (
-          <div className="mt-3 pt-3 border-t border-gray-100">
-            <p className="text-xs text-gray-500">Đã phân công cho:</p>
-            <div
-              className={`mt-1 inline-flex items-center px-3 py-1 rounded-full text-xs font-medium ${sample.assignedDepartment.color}`}
+        {isLoading ? (
+          <div className="text-sm text-gray-600 mb-3 flex justify-between items-center">
+            <Skeleton variant="text" width={200} height={20} />
+            <Skeleton variant="text" width={100} height={20} />
+          </div>
+        ) : (
+          <div className="text-sm text-gray-600 mb-3 flex justify-between items-center">
+            <p>Ngày sản xuất: {formatDate(sample.ngaySanXuat)}</p>
+            <span
+              className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800`}
             >
-              {sample.assignedDepartment.name}
-            </div>
+              Chờ phân công
+            </span>
           </div>
         )}
       </div>

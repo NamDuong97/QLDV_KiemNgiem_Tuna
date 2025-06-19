@@ -16,7 +16,7 @@ const NotificationTest = (props: Props) => {
   const { isOpen, setNotifications, notifications, setIsOpen } = props;
 
   const test = Notification()
-  console.log('test',test);
+  console.log('testNotification',test);
   
 
   const markAsRead = (id: any) => {

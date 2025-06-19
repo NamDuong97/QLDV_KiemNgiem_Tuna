@@ -1,69 +1,62 @@
-import { samples } from "..";
+import { Sample as SampleType } from "..";
 
 interface Props {
-  initialSamples: samples[];
+  initialSamples: SampleType[];
   departments: any;
+  data: any;
+  isLoading: boolean;
 }
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import SampleCard from "../SampleCard";
 import AssignmentModal from "../AssignmentModal";
+import InputSearch2 from "../../../../components/InputSearch2";
+import { MauPhanCong } from "../../../../models/mau";
+
+function convertToMauPhanCong(data: any): MauPhanCong {
+  return {
+    maId: data.maId,
+    tenMau: data.tenMau,
+    tenTieuChuan: data.maTieuChuan,
+    tenDichVu: data.loaiDv,
+    soLo: data.soLo,
+    donViSanXuat: data.donViSanXuat,
+    ngaySanXuat: data.ngaySanXuat,
+    hanSuDung: data.hanSuDung,
+    soLuong: data.soLuong,
+    donViTinh: data.donViTinh,
+  };
+}
 
 const SampleList = (props: Props) => {
-  const { initialSamples, departments } = props;
-  const [samples, setSamples] = useState<samples[]>(initialSamples);
-  const [selectedSamples, setSelectedSamples] = useState([]);
+  const { departments, data, isLoading } = props;
+
+  const [samples, setSamples] = useState<MauPhanCong[]>(
+    data?.maus.map(convertToMauPhanCong) || []
+  );
+  const [selectedSamples, setSelectedSamples] = useState<any[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
-  const [filter, setFilter] = useState({
-    type: "all",
-    priority: "all",
-    status: "all",
-  });
+
   const [isAssignModalOpen, setIsAssignModalOpen] = useState(false);
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
-
-  // Get unique sample types for filter
-  const sampleTypes = ["all", ...new Set(samples.map((sample) => sample.type))];
-
-  // Get unique priorities for filter
-  const priorities = [
-    "all",
-    ...new Set(samples.map((sample) => sample.priority)),
-  ];
-
-  // Get unique statuses for filter
-  const statuses = ["all", ...new Set(samples.map((sample) => sample.status))];
-
-  // Filter samples based on search query and filters
-  const filteredSamples = samples.filter((sample: any) => {
+  const filteredSamples: any = samples?.filter((sample: any) => {
     // Filter by search query
     const matchesSearch =
-      sample.id.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      sample.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      sample.patientName.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      sample.patientId.toLowerCase().includes(searchQuery.toLowerCase());
-
-    // Filter by type
-    const matchesType = filter.type === "all" || sample.type === filter.type;
-
-    // Filter by priority
-    const matchesPriority =
-      filter.priority === "all" || sample.priority === filter.priority;
-
-    // Filter by status
-    const matchesStatus =
-      filter.status === "all" || sample.status === filter.status;
-
-    return matchesSearch && matchesType && matchesPriority && matchesStatus;
+      sample.maId.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      sample.tenMau.toLowerCase().includes(searchQuery.toLowerCase());
+    return matchesSearch;
   });
 
   // Handle sample selection
-  const toggleSampleSelection = (sampleId: any) => {
-    if (selectedSamples.includes(sampleId)) {
-      setSelectedSamples(selectedSamples.filter((id: any) => id !== sampleId));
-    } else {
-      setSelectedSamples([...selectedSamples, sampleId]);
-    }
+  const toggleSampleSelection = (sampleId: never) => {
+    if (sampleId)
+      if (selectedSamples.includes(sampleId)) {
+        setSelectedSamples(
+          selectedSamples?.filter((id: any) => id !== sampleId)
+        );
+      } else {
+        setSelectedSamples([...selectedSamples, sampleId]);
+      }
   };
 
   // Handle select all samples
@@ -71,65 +64,23 @@ const SampleList = (props: Props) => {
     if (selectedSamples.length === filteredSamples.length) {
       setSelectedSamples([]);
     } else {
-      setSelectedSamples(filteredSamples.map((sample: any) => sample.id));
+      setSelectedSamples(filteredSamples.map((sample: any) => sample.maId));
     }
   };
 
   // Handle search input change
-  const handleSearchChange = (e) => {
+  const handleSearchChange = (e: any) => {
     setSearchQuery(e.target.value);
   };
 
-  // Handle filter change
-  const handleFilterChange = (filterType: any, value: any) => {
-    setFilter({
-      ...filter,
-      [filterType]: value,
-    });
-  };
-
   // Handle assignment submission
-  const handleAssignSubmit = (departmentId: any) => {
-    if (!departmentId || selectedSamples.length === 0) {
-      return;
-    }
 
-    const department = departments.find(
-      (dept: any) => dept.id === departmentId
-    );
-
-    // Update samples with assigned department
-    const updatedSamples = samples.map((sample: any) => {
-      if (selectedSamples.includes(sample.id)) {
-        return {
-          ...sample,
-          assignedDepartment: department,
-          status: "Đã phân công",
-        };
-      }
-      return sample;
-    });
-
-    setSamples(updatedSamples);
-
-    // Show success message
-    setSuccessMessage(
-      `Đã phân công ${selectedSamples.length} mẫu cho ${department.name}`
-    );
-    setShowSuccessMessage(true);
-
-    // Close modal and reset selection
-    setIsAssignModalOpen(false);
-
-    // Hide success message after 3 seconds
-    setTimeout(() => {
-      setShowSuccessMessage(false);
-    }, 3000);
-  };
+  useEffect(() => {
+    setSamples(data?.maus.map(convertToMauPhanCong));
+  }, [data]);
 
   return (
-    <>
-      {/* Success Message */}
+    <div>
       {showSuccessMessage && (
         <div className="mb-6 bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg animate-fade-in flex items-center">
           <svg
@@ -150,7 +101,6 @@ const SampleList = (props: Props) => {
         </div>
       )}
 
-      {/* Samples Section */}
       <div className="bg-white shadow-sm rounded-lg overflow-hidden">
         <div className="px-6 py-4 border-b border-gray-200 flex justify-between items-center">
           <h2 className="text-lg font-medium text-gray-900">
@@ -182,87 +132,14 @@ const SampleList = (props: Props) => {
           </div>
         </div>
 
-        {/* Search and Filters */}
         <div className="px-6 py-4 border-b border-gray-200">
           <div className="flex flex-col md:flex-row md:items-center md:justify-between space-y-4 md:space-y-0">
-            {/* Search */}
             <div className="w-full md:w-1/3">
-              <div className="relative">
-                <input
-                  type="text"
-                  placeholder="Tìm kiếm mẫu..."
-                  value={searchQuery}
-                  onChange={handleSearchChange}
-                  className="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 pl-10"
-                />
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="h-5 w-5 text-gray-400"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                      d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-                    />
-                  </svg>
-                </div>
-              </div>
-            </div>
-
-            {/* Filters */}
-            <div className="flex flex-wrap gap-2">
-              {/* Type Filter */}
-              <select
-                value={filter.type}
-                onChange={(e) => handleFilterChange("type", e.target.value)}
-                className="rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-sm"
-              >
-                <option value="all">Tất cả loại mẫu</option>
-                {sampleTypes
-                  .filter((type) => type !== "all")
-                  .map((type, index) => (
-                    <option key={index} value={type}>
-                      {type}
-                    </option>
-                  ))}
-              </select>
-
-              {/* Priority Filter */}
-              <select
-                value={filter.priority}
-                onChange={(e) => handleFilterChange("priority", e.target.value)}
-                className="rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-sm"
-              >
-                <option value="all">Tất cả độ ưu tiên</option>
-                {priorities
-                  .filter((priority) => priority !== "all")
-                  .map((priority, index) => (
-                    <option key={index} value={priority}>
-                      {priority}
-                    </option>
-                  ))}
-              </select>
-
-              {/* Status Filter */}
-              <select
-                value={filter.status}
-                onChange={(e) => handleFilterChange("status", e.target.value)}
-                className="rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-sm"
-              >
-                <option value="all">Tất cả trạng thái</option>
-                {statuses
-                  .filter((status) => status !== "all")
-                  .map((status, index) => (
-                    <option key={index} value={status}>
-                      {status}
-                    </option>
-                  ))}
-              </select>
+              <InputSearch2
+                placeholder="Tìm kiếm mẫu..."
+                value={searchQuery}
+                onChange={handleSearchChange}
+              />
             </div>
           </div>
         </div>
@@ -275,8 +152,8 @@ const SampleList = (props: Props) => {
                 type="checkbox"
                 id="select-all"
                 checked={
-                  selectedSamples.length === filteredSamples.length &&
-                  filteredSamples.length > 0
+                  selectedSamples?.length === filteredSamples?.length &&
+                  filteredSamples?.length > 0
                 }
                 onChange={handleSelectAll}
                 className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
@@ -285,7 +162,7 @@ const SampleList = (props: Props) => {
                 htmlFor="select-all"
                 className="ml-2 text-sm text-gray-700"
               >
-                Chọn tất cả ({filteredSamples.length})
+                Chọn tất cả ({filteredSamples?.length})
               </label>
             </div>
             <div className="text-sm text-gray-500">
@@ -293,7 +170,7 @@ const SampleList = (props: Props) => {
             </div>
           </div>
 
-          {filteredSamples.length === 0 ? (
+          {filteredSamples?.length === 0 ? (
             <div className="text-center py-8">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -315,12 +192,13 @@ const SampleList = (props: Props) => {
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {filteredSamples.map((sample) => (
+              {filteredSamples?.map((sample: any) => (
                 <SampleCard
-                  key={sample.id}
+                  key={sample.maId}
                   sample={sample}
-                  isSelected={selectedSamples.includes(sample.id)}
+                  isSelected={selectedSamples.includes(sample.maId)}
                   onSelect={toggleSampleSelection}
+                  isLoading={isLoading}
                 />
               ))}
             </div>
@@ -328,19 +206,19 @@ const SampleList = (props: Props) => {
         </div>
       </div>
 
-      {/* Assignment Modal */}
-      {isAssignModalOpen && (
-        <AssignmentModal
-          isOpen={isAssignModalOpen}
-          onClose={() => setIsAssignModalOpen(false)}
-          onSubmit={handleAssignSubmit}
-          selectedSamples={samples.filter((sample: any) =>
-            selectedSamples.includes(sample.id)
-          )}
-          departments={departments}
-        />
-      )}
-    </>
+      <AssignmentModal
+        isOpen={isAssignModalOpen}
+        onClose={() => setIsAssignModalOpen(false)}
+        selectedSamples={samples?.filter((sample: any) =>
+          selectedSamples.includes(sample.maId)
+        )}
+        departments={departments}
+        samples={samples}
+        setSamples={setSamples}
+        setSuccessMessage={setSuccessMessage}
+        setShowSuccessMessage={setShowSuccessMessage}
+      />
+    </div>
   );
 };
 

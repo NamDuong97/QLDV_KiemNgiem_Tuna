@@ -6,6 +6,7 @@ import {
   danhSachPhanCongNoiBo,
   danhSachPhieuDuTru,
   danhSachPhieuMuaVatTu,
+  phanCongKhoaCM,
   PhieuDKyDVKNManager,
   quanLyHoaDonTrangAdmin,
   quanLyLuuMau,
@@ -22,16 +23,15 @@ import {
 import { APP_ROUTES } from "../../constants/routers";
 import { useLocation, useNavigate } from "react-router";
 import clsx from "clsx";
-import { MdAssignment } from "react-icons/md";
+import { MdAssignment, MdAssignmentInd } from "react-icons/md";
 import { usePersonnel } from "../../contexts/PersonelsProvider";
 import { TbLogout } from "react-icons/tb";
+import { role } from "../../configs/parseJwt";
 
 const SidebarPersonnal = () => {
   const navigate = useNavigate();
   const pathname = useLocation().pathname;
   const { personnelInfo, logout } = usePersonnel();
-
-  console.log("personnelInfo", personnelInfo);
 
   const handleRedirect = (value?: string) => {
     switch (value) {
@@ -75,6 +75,8 @@ const SidebarPersonnal = () => {
         return navigate(APP_ROUTES.TUNA_ADMIN.QUAN_LY_PHAN_TICH_KET_QUA.to);
       case quanLyPhieuThu:
         return navigate(APP_ROUTES.TUNA_ADMIN.QUAN_LY_PHIEU_THU.to);
+      case phanCongKhoaCM:
+        return navigate(APP_ROUTES.TUNA_ADMIN.PHAN_CONG_PHONG_CHUYEN_MON.list);
       default:
         return navigate(APP_ROUTES.TUNA_ADMIN.DASHBOARD.to);
     }
@@ -142,6 +144,37 @@ const SidebarPersonnal = () => {
                 </span>
                 <span className="text-start">Phiếu kiểm nghiệm</span>
               </button>
+              {role === "KHTH" && (
+                <button
+                  onClick={() => {
+                    handleRedirect(phanCongKhoaCM);
+                  }}
+                  className={clsx(
+                    "flex items-start space-x-2 sidebar-link px-4 py-3 text-gray-700 rounded-lg",
+                    {
+                      "text-indigo-600 active":
+                        pathname.split("/")[2] ===
+                        APP_ROUTES.TUNA_ADMIN.PHAN_CONG_PHONG_CHUYEN_MON.list.split(
+                          "/"
+                        )[2],
+                    }
+                  )}
+                >
+                  <span className="w-5">
+                    <MdAssignmentInd
+                      className={clsx("w-5 h-5 text-gray-500", {
+                        "text-indigo-600":
+                          pathname.split("/")[2] ===
+                          APP_ROUTES.TUNA_ADMIN.PHAN_CONG_PHONG_CHUYEN_MON.list.split(
+                            "/"
+                          )[2],
+                      })}
+                    />
+                  </span>
+                  <span className="text-start">Phân công Khoa chuyên môn</span>
+                </button>
+              )}
+
               <button
                 onClick={() => {
                   handleRedirect(danhSachPhanCong);

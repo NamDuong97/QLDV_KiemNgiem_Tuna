@@ -44,6 +44,15 @@ namespace QLDV_KiemNghiem_BE.Services
                 new Claim(ClaimTypes.Role, param.Role),
             };
 
+            if (param.MaChucVu != "")
+            {
+                claims.Add(new Claim("MaChucVu", param.MaChucVu));
+            }
+            if (param.MaKhoa != "")
+            {
+                claims.Add(new Claim("MaKhoa", param.MaKhoa));
+            }
+
             // Tạo token
             var token = new JwtSecurityToken(
                 issuer: _configuration["Jwt:Issuer"],
