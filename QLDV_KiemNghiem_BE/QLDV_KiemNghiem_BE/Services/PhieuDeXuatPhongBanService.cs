@@ -10,6 +10,7 @@ using QLDV_KiemNghiem_BE.Interfaces.ManagerInterface;
 using QLDV_KiemNghiem_BE.Models;
 using QLDV_KiemNghiem_BE.RequestFeatures;
 using QLDV_KiemNghiem_BE.RequestFeatures.PagingRequest;
+using StackExchange.Redis;
 
 namespace QLDV_KiemNghiem_BE.Services
 {
@@ -67,6 +68,24 @@ namespace QLDV_KiemNghiem_BE.Services
 
             foreach (var item in PhieuDeXuatPhongBanDto.ChiTietPhieuDeXuatPhongBans)
             {
+                CheckSampleAssignedToDepartmentModel checkSample = new CheckSampleAssignedToDepartmentModel()
+                {
+                    MaPhieuDangKy = PhieuDeXuatPhongBanDto.MaPhieuDangKy,
+                    MaKhoa = PhieuDeXuatPhongBanDto.MaKhoaTiepNhan,
+                    MaMau = item.MaPdkMau
+                };
+
+                // Dang lam do buoc nay
+                var checkSampleAssignedToDepartment = await _repositoryManager.ChiTietPhieuDeXuatPhongBan.CheckSampleAssignedToDepartment(checkSample);
+                if (checkSampleAssignedToDepartment!= null && checkSampleAssignedToDepartment.Count() > 0)
+                {
+                    return new ResponseModel1<PhieuDeXuatPhongBanDto>
+                    {
+                        KetQua = false,
+                        Message =  "Trong phieu dang ky nay, mau nay da duoc phan cong cho phong khoa ban chon roi, vui long khong phan cong lai nua",
+                        Data = null
+                    };
+                }
                 ChiTietPhieuDeXuatPhongBan chiTietPhieuDeXuatPhongBan = new ChiTietPhieuDeXuatPhongBan()
                 {
                     MaId = Guid.NewGuid().ToString(),
@@ -95,13 +114,16 @@ namespace QLDV_KiemNghiem_BE.Services
                 noti.CreatedAt = DateTime.Now;
                 ParamGetUserIdNhanVien nhanVienParam = new ParamGetUserIdNhanVien()
                 {
-                    MaKhoa = "K01",
+                    MaKhoa = PhieuDeXuatPhongBanDto.MaKhoaTiepNhan,
                     GetLeader = "1",
                     GetEmployee = "0",
                     GetBld = "0"
                 };
                 var userIds =  await _repositoryManager.NhanVien.GetUserIdOfEmployeeCustom(nhanVienParam);
-                await _hubContext.Clients.Users(userIds).SendAsync("notificationForPDXPB", noti);
+                foreach (var userId in userIds)
+                {
+                    await _hubContext.Clients.Group(userId).SendAsync("receiveNotification", noti);
+                }
             }
             var PhieuDeXuatPhongBanReturnDto = _mapper.Map<PhieuDeXuatPhongBanDto>(PhieuDeXuatPhongBanDomain);
             PhieuDeXuatPhongBanReturnDto.ChiTietPhieuDeXuatPhongBans = chiTietPhieuDeXuatPhongBanDtos;

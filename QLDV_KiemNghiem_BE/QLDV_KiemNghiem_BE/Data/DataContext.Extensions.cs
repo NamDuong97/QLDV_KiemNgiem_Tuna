@@ -24,3 +24,4 @@ namespace QLDV_KiemNghiem_BE.Data
 }
 
 // Đây là phần mở rộng của DbContext lưu lại những DbSet người dùng tự thêm, để tránh bị mất khi thực hiện scanfold
+// Tạo các dbset custom để hứng việc gọi thủ tục csdl, phải có virtual nếu k sẽ không thể hứng dc.
