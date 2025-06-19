@@ -1,13 +1,27 @@
 import * as signalR from "@microsoft/signalr";
 
-const connection = new signalR.HubConnectionBuilder()
+const createSignalRConnection = (token: string) => {
+  const connection = new signalR.HubConnectionBuilder()
+    .withUrl("https://localhost:7233/notify", {
+      accessTokenFactory: async () => token,
+    })
+    .withAutomaticReconnect() // tùy chỉnh thời gian reconnect
+    .configureLogging(signalR.LogLevel.Information)
+    .build();
 
-  .withUrl("https://localhost:7233/notify")
+  // Xử lý các sự kiện kết nối
+  connection.onclose((error) => {
+    console.error("❌ Kết nối đã đóng:", error);
+  });
 
-  .withAutomaticReconnect()
+  connection.onreconnecting((error) => {
+    console.warn("🔄 Đang cố gắng kết nối lại:", error);
+  });
 
-  .configureLogging(signalR.LogLevel.Information)
+  connection.onreconnected((connectionId) => {
+    console.log("✅ Đã kết nối lại. Connection ID:", connectionId);
+  });
 
-  .build();
-
-export default connection;
+  return connection;
+};
+export default createSignalRConnection;

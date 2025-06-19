@@ -1,14 +1,11 @@
-import { Box, Pagination } from "@mui/material";
-import { motion } from "motion/react";
-import { Textarea } from "../../../../../components/Textarea";
-import { Inputs } from "../../../../../components/Inputs";
+import { Box, Pagination, Skeleton } from "@mui/material";
 import { useState } from "react";
 interface Props {
   dataPLHC: any;
   isLoading: boolean;
 }
 const DetailPLHCs = (props: Props) => {
-  const { dataPLHC } = props;
+  const { dataPLHC, isLoading } = props;
 
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(1);
@@ -19,201 +16,125 @@ const DetailPLHCs = (props: Props) => {
   const handlePageChange = (_: any, value: number) => {
     setCurrentPage(value);
   };
-  console.log("currentItemscurrentItems", currentItems);
 
-  return (
-    <motion.div
-      key="form-signup-dvkm-tag2"
-      initial={{ x: 0, opacity: 0 }}
-      animate={{ x: 0, opacity: 1 }}
-      exit={{ x: 0, opacity: 0 }}
-      transition={{ duration: 0.5 }}
-      className="border border-solid border-gray-300 rounded-[10px] grid gap-2"
-    >
-      {currentItems?.map((item: any) => (
-        <Box className="grid grid-cols-12 gap-1 lg:gap-[0px_24px] p-6">
-          <Box className="col-span-3">
-            <Inputs
-              title="Tên Phụ Liệu Hóa Chất"
-              className="h-[42px]"
-              sx={{
-                input: {
-                  padding: "9.5px 14px",
-                },
-                "& .Mui-disabled": {
-                  WebkitTextFillColor: "black !important",
-                },
-              }}
-              disabled
-              defaultValue={item?.tenPlhc}
-            />
-          </Box>
-          <Box className="col-span-3">
-            <Inputs
-              title="Tên hiển thị"
-              className="h-[42px]"
-              name="TenHienThi"
-              disabled
-              sx={{
-                input: {
-                  padding: "9.5px 14px",
-                },
-                "& .Mui-disabled": {
-                  WebkitTextFillColor: "black !important",
-                },
-              }}
-              defaultValue={item?.tenHienThi}
-            />
-          </Box>
-          <Box className="col-span-3">
-            <Inputs
-              title="Số Lượng"
-              className="h-[42px]"
-              name="SoLuong"
-              disabled
-              sx={{
-                input: {
-                  padding: "9.5px 14px",
-                },
-                "& .Mui-disabled": {
-                  WebkitTextFillColor: "black !important",
-                },
-              }}
-              defaultValue={item?.soLuong}
-            />
-          </Box>
-          <Box className="col-span-3">
-            <Inputs
-              title="Đơn Vị Tính"
-              name="DonViTinh"
-              className="h-[42px]"
-              disabled
-              sx={{
-                input: {
-                  padding: "9.5px 14px",
-                },
-                "& .Mui-disabled": {
-                  WebkitTextFillColor: "black !important",
-                },
-              }}
-              defaultValue={item?.donViTinh}
-            />
-          </Box>
-          <Box className="col-span-4">
-            <Inputs
-              title="Số lô"
-              name="SoLo"
-              className="h-[42px]"
-              disabled
-              sx={{
-                input: {
-                  padding: "9.5px 14px",
-                },
-                "& .Mui-disabled": {
-                  WebkitTextFillColor: "black !important",
-                },
-              }}
-              defaultValue={item?.soLo}
-            />
-          </Box>
-          <Box className="col-span-4">
-            <Inputs
-              title="Tên nhà cung cấp"
-              name="TenNhaCungCap"
-              className="h-[42px]"
-              disabled
-              sx={{
-                input: {
-                  padding: "9.5px 14px",
-                },
-                "& .Mui-disabled": {
-                  WebkitTextFillColor: "black !important",
-                },
-              }}
-              defaultValue={item?.tenNhaCungCap}
-            />
-          </Box>
-          {/* <Box className="col-span-12 md:col-span-6 lg:col-span-4">
-          <Inputs
-            title="Nồng độ"
-            name="NongDo"
-            className="h-[42px]"
-            disabled
-            sx={{
-              input: {
-                padding: "9.5px 14px",
-              },
-              "& .Mui-disabled": {
-                WebkitTextFillColor: "black !important",
-              },
-            }}
-            defaultValue={item?.nongDo}
-          />
-        </Box>
-        <Box className="col-span-12 md:col-span-6 lg:col-span-4">
-          <Inputs
-            title="Đơn vị nồng độ"
-            name="DonViNongDo"
-            className="h-[42px]"
-            disabled
-            sx={{
-              input: {
-                padding: "9.5px 14px",
-              },
-              "& .Mui-disabled": {
-                WebkitTextFillColor: "black !important",
-              },
-            }}
-            defaultValue={item?.donViNongDo}
-          />
-        </Box> */}
-          <Box className="col-span-4">
-            <Inputs
-              title="Ngày hết hạn"
-              name="NgayHetHan"
-              className="h-[42px]"
-              disabled
-              sx={{
-                input: {
-                  padding: "9.5px 14px",
-                },
-                "& .Mui-disabled": {
-                  WebkitTextFillColor: "black !important",
-                },
-              }}
-              defaultValue={item?.ngayHetHan}
-            />
-          </Box>
-          {/* <Box className="col-span-6">
-          <Inputs
-            title="Điều kiện bảo quản"
-            name="DieuKienBaoQuan"
-            className="h-[42px]"
-            disabled
-          />
-        </Box> */}
-          <Box className="col-span-12">
-            <Textarea
-              title="Ghi Chú"
-              name="GhiChu"
-              className="h-[124px]"
-              height="h-[156px]"
-              disabled
-              sx={{
-                input: {
-                  padding: "9.5px 14px",
-                },
-                "& .Mui-disabled": {
-                  WebkitTextFillColor: "black !important",
-                },
-              }}
-              defaultValue={item?.ghiChu}
-            />
-          </Box>
-        </Box>
+  return isLoading ? (
+    <Box className="p-5 space-y-4">
+      <div className="space-y-2">
+        <Skeleton width={150} height={24} />
+        <div className="space-x-40 flex items-center">
+          <div className="flex gap-2 items-center">
+            <Skeleton width={60} height={24} />
+            <Skeleton width={100} height={24} />
+          </div>
+          <div className="flex gap-2 items-center">
+            <Skeleton width={90} height={24} />
+            <Skeleton width={100} height={24} />
+          </div>
+        </div>
+      </div>
+      <div className="space-y-1">
+        <Skeleton width={200} height={24} />
+
+        <div className="grid grid-cols-2 gap-y-4 gap-x-8 text-sm text-gray-700">
+          <div>
+            <Skeleton width={80} height={24} />
+            <Skeleton width={150} height={24} />
+          </div>
+          <div>
+            <Skeleton width={80} height={24} />
+            <Skeleton width={150} height={24} />
+          </div>
+          <div>
+            <Skeleton width={80} height={24} />
+            <Skeleton width={150} height={24} />
+          </div>
+
+          <div>
+            <Skeleton width={80} height={24} />
+            <Skeleton width={150} height={24} />
+          </div>
+
+          <div>
+            <Skeleton width={80} height={24} />
+            <Skeleton width={150} height={24} />
+          </div>
+
+          <div>
+            <Skeleton width={80} height={24} />
+            <Skeleton width={150} height={24} />
+          </div>
+          <div>
+            <Skeleton width={80} height={24} />
+            <Skeleton width={150} height={24} />
+          </div>
+          <div>
+            <Skeleton width={80} height={24} />
+            <Skeleton width={150} height={24} />
+          </div>
+
+          <div>
+            <Skeleton width={80} height={24} />
+            <Skeleton width={150} height={24} />
+          </div>
+        </div>
+      </div>
+    </Box>
+  ) : (
+    <div className="grid gap-2 p-6">
+      {currentItems?.map((item: any, index: any) => (
+        <div key={index} className="space-y-1">
+          <div className="grid grid-cols-2 gap-y-4 gap-x-8 text-sm text-gray-700">
+            <div>
+              <label className="text-sm/6 text-gray-500">
+                Tên Phụ Liệu Hóa Chất
+              </label>
+              <p className="font-semibold text-gray-900">{item?.tenPlhc}</p>
+            </div>
+
+            <div>
+              <label className="text-sm/6 text-gray-500">Tên hiển thị</label>
+              <p className="font-semibold text-gray-900">{item?.tenHienThi}</p>
+            </div>
+
+            <div>
+              <label className="text-sm/6 text-gray-500">Số Lượng</label>
+              <p className="font-semibold text-gray-900">
+                {item?.soLuong}
+                {item?.donViTinh}
+              </p>
+            </div>
+
+            <div>
+              <label className="text-sm/6 text-gray-500">Số lô</label>
+              <p className="font-semibold text-gray-900">{item?.soLo}</p>
+            </div>
+
+            <div>
+              <label className="text-sm/6 text-gray-500">
+                Tên nhà cung cấp
+              </label>
+              <p className="font-semibold text-gray-900">
+                {item?.tenNhaCungCap}
+              </p>
+            </div>
+
+            <div>
+              <label className="text-sm/6 text-gray-500">Hạn sử dụng</label>
+              <p className="font-semibold text-gray-900">
+                {new Date(item?.ngayHetHan).toLocaleDateString("vi-VN")}
+              </p>
+            </div>
+
+            <div className="col-span-2">
+              <label className="text-sm/6 text-gray-500">Ghi chú</label>
+              <div className="bg-gray-50 p-4 rounded-lg">
+                <p className="text-gray-700 font-semibold">{item?.ghiChu}</p>
+              </div>
+            </div>
+          </div>
+        </div>
       ))}
 
-      <hr className="text-gray-300" />
       <Box className="px-4 pb-4 pt-2 flex justify-center">
         <Pagination
           count={totalPages}
@@ -232,7 +153,7 @@ const DetailPLHCs = (props: Props) => {
           }}
         />
       </Box>
-    </motion.div>
+    </div>
   );
 };
 

@@ -2,7 +2,7 @@ import _APIInstance from "../../configs/configAPI";
 import { API } from "../../constants/commons";
 
 export default class QuanlyPhieuDKYKNServices {
-  static async quanLyPhieuDKKN(params: any) {
+  static async quanLyPhieuDKKN(params?: any) {
     try {
       const response = await _APIInstance.get(
         API.ADMIN.PHIEU_DKY_DVKM.QUAN_LY_PHIEU_DKY_DVKM,

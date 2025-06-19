@@ -1,41 +1,20 @@
-import { Box } from "@mui/material";
-import { useState } from "react";
+import { Outlet } from "react-router";
+import SidebarPersonnal from "../../components/SidebarPersonnal";
+import HeaderPersonnal from "../../components/HeaderPersonnal";
 import ThemeRegistry from "../../configs/ThemeRegistry";
-import { Outlet, useLocation } from "react-router";
-import SideBar from "../../components/Sidebar";
-import HeaderAdmin from "../../components/HeaderAdmin";
-import { PersonnelProvider } from "../../contexts/PersonelsProvider";
 
-export default function LayoutAdmin() {
-  const [isMenuDashBoard, setIsMenuDashBoard] = useState(false);
-  const drawerWidth = isMenuDashBoard ? 290 : 95;
-  const path = useLocation();
-
-  const isLoginForgot = ["/tuna/login", "/tuna/forgot-password"].includes(
-    path.pathname
-  );
-
+export const MainLayout = () => {
   return (
-    <PersonnelProvider>
-      <ThemeRegistry>
-        <Box>
-          {!isLoginForgot && <HeaderAdmin />}
-          <Box className="flex">
-            <Box>
-              {!isLoginForgot && (
-                <SideBar
-                  drawerWidth={drawerWidth}
-                  isMenuDashBoard={isMenuDashBoard}
-                  handleMenuDashBoard={setIsMenuDashBoard}
-                />
-              )}
-            </Box>
-            <Box className="w-full">
-              <Outlet />
-            </Box>
-          </Box>
-        </Box>
-      </ThemeRegistry>
-    </PersonnelProvider>
+    <ThemeRegistry>
+      <div className="flex h-screen bg-gray-50">
+        <SidebarPersonnal />
+        <div className="flex flex-col flex-1 overflow-hidden">
+          <HeaderPersonnal />
+          <main className="overflow-auto">
+            <Outlet />
+          </main>
+        </div>
+      </div>
+    </ThemeRegistry>
   );
-}
+};

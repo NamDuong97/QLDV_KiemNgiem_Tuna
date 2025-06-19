@@ -22,7 +22,7 @@ export const quanLyPhieuDKKM = (props: Props) => {
 export const xemChitietPhieuDKKM = (props: Props) => {
   const { queryKey, params } = props;
   return useQuery({
-    queryKey: [queryKey],
+    queryKey: [queryKey, params],
     queryFn: async () => {
       const response = await QuanlyPhieuDKYKNServices.xemChitietPhieuDKKM(
         params
@@ -30,6 +30,7 @@ export const xemChitietPhieuDKKM = (props: Props) => {
       return response;
     },
     refetchOnWindowFocus: false,
+    enabled: !!params,
   });
 };
 

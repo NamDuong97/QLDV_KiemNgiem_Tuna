@@ -1,15 +1,18 @@
 import { useEffect, useState } from "react";
-import { useSignalR } from "../../contexts/SignalRProvider";
+// import { useSignalR } from "../../contexts/SignalRProvider";
 import { usePersonnel } from "../../contexts/PersonelsProvider";
+import Cookies from "js-cookie";
+import { EKey } from "../../constants/commons";
+import createSignalRConnection from "../../contexts/test";
 
 const Notification = () => {
-  const connection = useSignalR();
+  // const connection = useSignalR();
   const { personnelInfo } = usePersonnel();
-  console.log("personnelInfo", personnelInfo?.maLoaiTk);
   const [notifications, setNotifications] = useState<any>([]);
+  const token: any = Cookies.get(EKey.TOKEN);
+  const connection = createSignalRConnection(token);
 
   useEffect(() => {
-    console.log("chưa vào if", personnelInfo?.maLoaiTk);
     if (
       personnelInfo !== null &&
       personnelInfo !== undefined &&
@@ -21,25 +24,58 @@ const Notification = () => {
           .start()
           .then(() => {
             // Gọi tới Hub server để join nhóm "BLD", chỗ này cần thay đổi theo role người dùng
-            console.log("Vào invoke");
+
+            //JoinGroup Loại TK
             connection
               .invoke("JoinGroup", personnelInfo?.maLoaiTk)
               .then(() =>
                 console.log(`Joined group ${personnelInfo?.maLoaiTk}`)
               )
-              .catch((err: any) => console.error("Failed to join group", err));
+              .catch((err: any) =>
+                console.error(`Joined group ${personnelInfo?.maLoaiTk}`, err)
+              );
+
+            //JoinGroup Khoa
+            connection
+              .invoke("JoinGroup", personnelInfo?.maKhoa)
+              .then(() => console.log(`Joined group ${personnelInfo?.maKhoa}`))
+              .catch((err: any) =>
+                console.error(
+                  `Failed to join group ${personnelInfo?.maKhoa}`,
+                  err
+                )
+              );
+
+            //JoinGroup Chức Vụ
+            connection
+              .invoke("JoinGroup", personnelInfo?.maChucVu)
+              .then(() =>
+                console.log(`Joined group ${personnelInfo?.maChucVu}`)
+              )
+              .catch((err: any) =>
+                console.error(
+                  `Failed to join group ${personnelInfo?.maChucVu}`,
+                  err
+                )
+              );
 
             // Lắng nghe sự kiện notifycation
             console.log("SignalR Connected 1");
             connection.on("notifycation", (data: any) => {
-              console.log("New notification:", data);
+              console.log("New notifycation:", data);
               setNotifications((prev: any) => [...prev, data]);
             });
 
             // Lắng nghe sự kiện receiveNotification
             console.log("SignalR Connected 2");
             connection.on("receiveNotification", (data: any) => {
-              console.log("New notification:", data);
+              console.log("New receiveNotification:", data);
+              setNotifications((prev: any) => [...prev, data]);
+            });
+
+            console.log("SignalR Connected 3");
+            connection.on("notificationForPDXPB", (data: any) => {
+              console.log("New notificationForPDXPB:", data);
               setNotifications((prev: any) => [...prev, data]);
             });
           })

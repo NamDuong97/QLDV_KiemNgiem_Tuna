@@ -1,18 +1,7 @@
-import { Box } from "@mui/material";
-import { motion } from "motion/react";
+import { Box, Dialog, Skeleton } from "@mui/material";
 import { useContext, useState } from "react";
-import { useNavigate } from "react-router";
-import { Inputs } from "../../../../components/Inputs";
 import DetailMaus from "./Detail-Maus";
 import DetailPLHCs from "./Detail-PLHC";
-import PopupHuyPhieu from "./PopupHuyPhieu";
-import PopupDuyetBo from "./PopupDuyetBo";
-import PopupTuChoiPhongKHDT from "./PopupTuChoiPhongKHDT";
-import { APP_ROUTES } from "../../../../constants/routers";
-import { MdDoorBack } from "react-icons/md";
-import { MdAccountBox } from "react-icons/md";
-import { MdDescription } from "react-icons/md";
-import { MdScience } from "react-icons/md";
 import {
   useDanhGiaBLD,
   useDanhGiaNhanVien,
@@ -20,21 +9,43 @@ import {
 } from "../../../../hooks/personnels/quanLyPhieuDKKM";
 import { queryClient } from "../../../../lib/reactQuery";
 import { PersonnelContext } from "../../../../contexts/PersonelsProvider";
+import { IoMdClose } from "react-icons/io";
+import DoneAllIcon from "@mui/icons-material/DoneAll";
+import SmsFailedIcon from "@mui/icons-material/SmsFailed";
+import PopupHuyPhieu from "./PopupHuyPhieu";
 
-const ChiTietPhieuDKyDVKN = () => {
+interface Props {
+  open: boolean;
+  handleClose: () => void;
+}
+
+const ChiTietPhieuDKyDVKN = (props: Props) => {
+  const { open, handleClose } = props;
   const [isTag, setIsTag] = useState(1);
+  const [isTuChoi, setTuChoi] = useState(false);
   const { personnelInfo } = useContext(PersonnelContext);
   const dataSession = sessionStorage.getItem("phieu-DKKN-xem-chi-tiet");
   const id = dataSession ? JSON.parse(dataSession) : "";
+
   const { data, isLoading } = xemChitietPhieuDKKM({
     queryKey: "xemChitietPhieuDKKM",
     params: id,
   });
 
-  const handleOnSettled = async () => {
+  const handleClosePopup = () => {
+    handleClose();
+    setIsTag(1);
+    setTuChoi(false);
+  };
+
+  const handleOnSettled = async (response: any) => {
     await queryClient.refetchQueries({
       queryKey: ["quanLyPhieuDKKM"],
     });
+
+    if (response.ketQua === true) {
+      handleClosePopup();
+    }
   };
 
   const { mutate: mutateBLD } = useDanhGiaBLD({
@@ -47,36 +58,6 @@ const ChiTietPhieuDKyDVKN = () => {
     onSettled: handleOnSettled,
   });
 
-  const [openPopupHuyPhieu, setOpenPopupHuyPhieu] = useState(false);
-  const [openPopupDuyetBo, setOpenPopupDuyetBo] = useState(false);
-  const [openPopupTuChoiPhongKHDT, setOpenPopupTuChoiPhongKHDT] =
-    useState(false);
-  const navigate = useNavigate();
-
-  const handleClickOpenPopupHuyPhieu = () => {
-    setOpenPopupHuyPhieu(true);
-  };
-
-  const handleClickOpenPopupDuyetBo = () => {
-    setOpenPopupDuyetBo(true);
-  };
-
-  const handleClickOpenPopupTuChoiPhongKHDT = () => {
-    setOpenPopupTuChoiPhongKHDT(true);
-  };
-
-  const handleClosePopupDuyetBo = () => {
-    setOpenPopupDuyetBo(false);
-  };
-
-  const handleClosePopupHuyPhieu = () => {
-    setOpenPopupHuyPhieu(false);
-  };
-
-  const handleClosePopupTuChoiPhongKHDT = () => {
-    setOpenPopupTuChoiPhongKHDT(false);
-  };
-
   const handleDuyetSoBoNhanVien = () => {
     const params = {
       maPhieuDangKy: id,
@@ -84,7 +65,6 @@ const ChiTietPhieuDKyDVKN = () => {
       action: true,
     };
     mutateNhanVien(params);
-    handleClickOpenPopupDuyetBo();
   };
 
   const handleBLDDuyet = () => {
@@ -94,257 +74,213 @@ const ChiTietPhieuDKyDVKN = () => {
       action: true,
     };
     mutateBLD(params);
-    handleClickOpenPopupDuyetBo();
   };
 
-  const handleShowByUserName = () => {
+  const renderTrangThai = (trangThaiId: string) => {
+    switch (trangThaiId) {
+      case "TT01":
+        return (
+          <span className="inline-block px-2 py-1 text-xs font-medium bg-yellow-100 text-yellow-800 rounded-full">
+            Chờ phòng KHĐT tiếp nhận xử lý
+          </span>
+        );
+
+      case "TT02":
+        return (
+          <span className="inline-block px-2 py-1 text-xs font-medium bg-blue-100 text-blue-800 rounded-full">
+            Phòng KHĐT đã duyệt và chờ BLĐ xét duyệt
+          </span>
+        );
+
+      case "TT03":
+        return (
+          <span className="inline-block px-2 py-1 text-xs font-medium bg-orange-100 text-orange-800 rounded-full">
+            Phòng KHĐT từ chối và chờ BLĐ quyết định
+          </span>
+        );
+
+      case "TT04":
+        return (
+          <span className="inline-block px-2 py-1 text-xs font-medium bg-red-100 text-red-800 rounded-full">
+            BLĐ từ chối
+          </span>
+        );
+
+      case "TT05":
+        return (
+          <span className="inline-block px-2 py-1 text-xs font-medium bg-sky-100 text-sky-800 rounded-full">
+            BLD đã duyệt và chờ phân công phòng ban
+          </span>
+        );
+
+      case "TT06":
+        return (
+          <span className="inline-block px-2 py-1 text-xs font-medium bg-red-100 text-red-800 rounded-full">
+            Các phòng ban đều từ chối
+          </span>
+        );
+
+      case "TT07":
+        return (
+          <span className="inline-block px-2 py-1 text-xs font-medium bg-indigo-100 text-indigo-800 rounded-full">
+            Đang kiểm nghiệm
+          </span>
+        );
+
+      case "TT08":
+        return (
+          <span className="inline-block px-2 py-1 text-xs font-medium bg-teal-100 text-teal-800 rounded-full">
+            Đã hoàn thành kiểm nghiệm chờ duyệt phiếu phân tích
+          </span>
+        );
+
+      case "TT09":
+        return (
+          <span className="inline-block px-2 py-1 text-xs font-medium bg-green-100 text-green-800 rounded-full">
+            Đã hoàn thành tất cả
+          </span>
+        );
+
+      case "TT10":
+        return (
+          <span className="inline-block px-2 py-1 text-xs font-medium bg-gray-200 text-gray-700 rounded-full">
+            Đã hủy kiểm nghiệm
+          </span>
+        );
+
+      case "TT11":
+        return (
+          <span className="inline-block px-2 py-1 text-xs font-medium bg-purple-100 text-purple-800 rounded-full">
+            Đang kiểm tra lại
+          </span>
+        );
+
+      default:
+        return (
+          <span className="inline-block px-2 py-1 text-xs font-medium bg-gray-100 text-gray-800 rounded-full">
+            Không xác định
+          </span>
+        );
+    }
+  };
+
+  const handleButton = () => {
     switch (personnelInfo?.maLoaiTk as string) {
       case "KHTH": {
         switch (data?.trangThaiId as string) {
           case "TT01":
             return (
-              <div className="flex justify-between items-center">
-                <Box className="flex items-center gap-2 sm:gap-4">
-                  <button
-                    className="p-1 sm:p-2 rounded-full bg-gray-200 hover:bg-gray-300 transition-colors group cursor-pointer"
-                    onClick={() =>
-                      navigate(
-                        APP_ROUTES.TUNA_ADMIN
-                          .QUAN_LY_PHIEU_DANG_KY_DICH_VU_KIEM_NGHIEM.to
-                      )
-                    }
-                  >
-                    <MdDoorBack className="w-4 h-4 sm:w-7 sm:h-7 text-[#306fb2]" />
-                  </button>
-                  <h1 className="capitalize text-xl/4 sm:text-3xl/6 font-bold text-white">
-                    Số ĐKPT:{data?.soDkpt}
-                  </h1>
-                </Box>
-                <div className="flex gap-4">
-                  <button
-                    onClick={handleClickOpenPopupHuyPhieu}
-                    className="px-6 py-3 text-base/4 font-medium text-white bg-yellow-400 border-[2px] border-solid border-gray-300 rounded-[6px] shadow-[0_4px_4px_rgba(0,0,0,0.25)] hover:bg-yellow-500 cursor-pointer"
-                  >
-                    Từ chối tiếp nhận
-                  </button>
+              <div className="p-5 space-y-4">
+                <div className="flex items-center">
+                  <div className="flex-shrink-0">
+                    <div className="h-8 w-8 rounded-full bg-blue-100 flex items-center justify-center">
+                      <DoneAllIcon className="text-blue-500" />
+                    </div>
+                  </div>
                   <button
                     onClick={handleDuyetSoBoNhanVien}
-                    className="px-6 py-3 text-base/4 font-medium text-white bg-blue-500 border-[2px] border-solid border-gray-300 rounded-[6px] shadow-[0_4px_4px_rgba(0,0,0,0.25)] hover:bg-blue-600 cursor-pointer"
+                    className="ml-4 bg-blue-100 hover:bg-blue-200 cursor-pointer px-4 py-2 rounded-md"
                   >
-                    Duyệt sơ bộ
+                    <p className="text-sm font-medium text-blue-700">
+                      Duyệt phiếu
+                    </p>
                   </button>
+                </div>
+                <div className="space-y-2">
+                  <div className="flex items-center">
+                    <div className="flex-shrink-0">
+                      <div className="h-8 w-8 rounded-full bg-yellow-100 flex items-center justify-center">
+                        <SmsFailedIcon className="text-yellow-500" />
+                      </div>
+                    </div>
+                    <button
+                      onClick={() => setTuChoi(true)}
+                      className="ml-4 bg-yellow-100 hover:bg-yellow-200 cursor-pointer px-4 py-2 rounded-md"
+                    >
+                      <p className="text-sm font-medium text-yellow-700">
+                        Từ chối
+                      </p>
+                    </button>
+                  </div>
+                  {isTuChoi && (
+                    <PopupHuyPhieu
+                      id={id}
+                      roll={personnelInfo?.maLoaiTk}
+                      handleClose={handleClosePopup}
+                    />
+                  )}
                 </div>
               </div>
             );
           case "TT02":
             return (
-              <div className="flex justify-between items-center">
-                <Box className="flex items-center gap-2 sm:gap-4">
-                  <button
-                    className="p-1 sm:p-2 rounded-full bg-gray-200 hover:bg-gray-300 transition-colors group cursor-pointer"
-                    onClick={() =>
-                      navigate(
-                        APP_ROUTES.TUNA_ADMIN
-                          .QUAN_LY_PHIEU_DANG_KY_DICH_VU_KIEM_NGHIEM.to
-                      )
-                    }
-                  >
-                    <MdDoorBack className="w-4 h-4 sm:w-7 sm:h-7 text-[#306fb2]" />
-                  </button>
-                  <h1 className="capitalize text-xl/4 sm:text-3xl/6 font-bold text-white">
-                    Số ĐKPT: {data?.soDkpt}
-                  </h1>
-                </Box>
-                <div className="flex gap-4">
-                  <button
-                    onClick={() =>
-                      navigate(
-                        APP_ROUTES.TUNA_ADMIN.PHAN_CONG_PHONG_CHUYEN_MON.to,
-                        {
-                          state:
-                            APP_ROUTES.TUNA_ADMIN.PHAN_CONG_PHONG_CHUYEN_MON.to,
-                        }
-                      )
-                    }
-                    className="px-6 py-3 text-base/4 font-medium bg-teal-600 text-white hover:bg-teal-700 border-[2px] border-solid border-gray-300 rounded-[6px] shadow-[0_4px_4px_rgba(0,0,0,0.25)] cursor-pointer"
-                  >
-                    Phân Công Phòng Chuyên Môn
-                  </button>
+              <div className="flex items-center">
+                <div className="flex-shrink-0">
+                  <div className="h-8 w-8 rounded-full bg-blue-100 flex items-center justify-center">
+                    <DoneAllIcon className="text-blue-500" />
+                  </div>
                 </div>
+                <button
+                  onClick={handleDuyetSoBoNhanVien}
+                  className="ml-4 bg-blue-100 hover:bg-blue-200 cursor-pointer px-4 py-2 rounded-md"
+                >
+                  <p className="text-sm font-medium text-blue-700">Phân Công</p>
+                </button>
               </div>
             );
           default:
-            return (
-              <div className="flex justify-between items-center">
-                <div>
-                  <p className="text-2xl/6 font-bold text-white">
-                    {data?.soDkpt}
-                  </p>
-                </div>
-              </div>
-            );
+            return null;
         }
       }
       case "BLD": {
         switch (data?.trangThaiId as string) {
           case "TT02":
             return (
-              <div className="flex justify-between items-center">
-                <Box className="flex items-center gap-2 sm:gap-4">
-                  <button
-                    className="p-1 sm:p-2 rounded-full bg-gray-200 hover:bg-gray-300 transition-colors group cursor-pointer"
-                    onClick={() =>
-                      navigate(
-                        APP_ROUTES.TUNA_ADMIN
-                          .QUAN_LY_PHIEU_DANG_KY_DICH_VU_KIEM_NGHIEM.to
-                      )
-                    }
-                  >
-                    <MdDoorBack className="w-4 h-4 sm:w-7 sm:h-7 text-[#306fb2]" />
-                  </button>
-                  <h1 className="capitalize text-xl/4 sm:text-3xl/6 font-bold text-white">
-                    Số ĐKPT:{data?.soDkpt}
-                  </h1>
-                </Box>
-                <div className="flex gap-4">
-                  <button
-                    onClick={handleClickOpenPopupTuChoiPhongKHDT}
-                    className="px-6 py-3 text-base/4 font-medium text-white bg-green-400 border-[2px] border-solid border-gray-300 rounded-[6px] shadow-[0_4px_4px_rgba(0,0,0,0.25)] hover:bg-green-500 cursor-pointer"
-                  >
-                    Thông báo từ chối
-                  </button>
-                  <button
-                    onClick={handleClickOpenPopupHuyPhieu}
-                    className="px-6 py-3 text-base/4 font-medium text-white bg-yellow-400 border-[2px] border-solid border-gray-300 rounded-[6px] shadow-[0_4px_4px_rgba(0,0,0,0.25)] hover:bg-yellow-500 cursor-pointer"
-                  >
-                    Từ chối tiếp nhận
-                  </button>
+              <div className="p-5 space-y-4">
+                <div className="flex items-center">
+                  <div className="flex-shrink-0">
+                    <div className="h-8 w-8 rounded-full bg-blue-100 flex items-center justify-center">
+                      <DoneAllIcon className="text-blue-500" />
+                    </div>
+                  </div>
                   <button
                     onClick={handleBLDDuyet}
-                    className="px-6 py-3 text-base/4 font-medium text-white bg-blue-500 border-[2px] border-solid border-gray-300 rounded-[6px] shadow-[0_4px_4px_rgba(0,0,0,0.25)] hover:bg-blue-600 cursor-pointer"
+                    className="ml-4 bg-blue-100 hover:bg-blue-200 cursor-pointer px-4 py-2 rounded-md"
                   >
-                    Phê duyệt
+                    <p className="text-sm font-medium text-blue-700">
+                      Duyệt phiếu
+                    </p>
                   </button>
+                </div>
+                <div className="space-y-2">
+                  <div className="flex items-center">
+                    <div className="flex-shrink-0">
+                      <div className="h-8 w-8 rounded-full bg-yellow-100 flex items-center justify-center">
+                        <SmsFailedIcon className="text-yellow-500" />
+                      </div>
+                    </div>
+                    <button
+                      onClick={() => setTuChoi(true)}
+                      className="ml-4 bg-yellow-100 hover:bg-yellow-200 cursor-pointer px-4 py-2 rounded-md"
+                    >
+                      <p className="text-sm font-medium text-yellow-700">
+                        Từ chối
+                      </p>
+                    </button>
+                  </div>
+                  {isTuChoi && (
+                    <PopupHuyPhieu
+                      id={id}
+                      roll={personnelInfo?.maLoaiTk}
+                      handleClose={handleClosePopup}
+                    />
+                  )}
                 </div>
               </div>
             );
           default:
-            return (
-              <div className="flex justify-between items-center">
-                <div>
-                  <p className="text-2xl/6 font-bold text-white">
-                    {data?.soDkpt}
-                  </p>
-                </div>
-              </div>
-            );
+            return null;
         }
-      }
-    }
-  };
-
-  const handleTag = () => {
-    switch (isTag) {
-      case 2: {
-        return (
-          <div className="px-1 py-1 bg-[#e9ecf1] flex gap-4 justify-between rounded-[8px] ">
-            <div
-              className="flex items-center justify-center py-2 border border-solid border-white rounded-[8px] w-full cursor-pointer group hover:transition-all hover:ease-in-out hover:duration-200"
-              onClick={() => setIsTag(1)}
-            >
-              <p className="text-base/6 sm:text-xl/6 text-cyan-800 group-hover:text-blue-500 font-bold flex gap-2 items-center leading-6">
-                <MdAccountBox className="w-5 h-5 sm:w-7 sm:h-7 shrink-0 text-indigo-600" />{" "}
-                Thông Tin Chung
-              </p>
-            </div>
-
-            <div
-              className="flex items-center justify-center py-2 border border-solid border-gray-300 rounded-[8px] bg-white shadow-[0_4px_4px_rgba(0,0,0,0.25)] w-full cursor-pointer transition-all ease-in-out duration-200 hover:bg-gray-100 hover:transition-all hover:ease-in-out hover:duration-200"
-              onClick={() => setIsTag(2)}
-            >
-              <p className="text-base/6 sm:text-xl/6 text-cyan-800 group-hover:text-blue-500 font-bold flex gap-2 items-center leading-6">
-                <MdDescription className="w-5 h-5 sm:w-7 sm:h-7 shrink-0 text-blue-500" />{" "}
-                Mẫu
-              </p>
-            </div>
-            <div
-              className="flex items-center justify-center py-2 border border-solid border-white rounded-[8px] w-full cursor-pointer group hover:transition-all hover:ease-in-out hover:duration-200"
-              onClick={() => setIsTag(3)}
-            >
-              <p className="text-base/6 sm:text-xl/6 text-cyan-800 group-hover:text-blue-500 font-bold flex gap-2 items-center leading-6">
-                <MdScience className="w-5 h-5 sm:w-7 sm:h-7 shrink-0 text-orange-300" />
-                Phụ Liệu Hóa Chất
-              </p>
-            </div>
-          </div>
-        );
-      }
-      case 3: {
-        return (
-          <div className="px-1 py-1 bg-[#e9ecf1] flex gap-4 justify-between rounded-[8px] ">
-            <div
-              className="flex items-center justify-center py-2 border border-solid border-white rounded-[8px] w-full cursor-pointer group hover:transition-all hover:ease-in-out hover:duration-200"
-              onClick={() => setIsTag(1)}
-            >
-              <p className="text-base/6 sm:text-xl/6 text-cyan-800 group-hover:text-blue-500 font-bold flex gap-2 items-center leading-6">
-                <MdAccountBox className="w-5 h-5 sm:w-7 sm:h-7 shrink-0 text-indigo-600" />{" "}
-                Thông Tin Chung
-              </p>
-            </div>
-            <div
-              className="flex items-center justify-center py-2 border border-solid border-white rounded-[8px] w-full cursor-pointer group hover:transition-all hover:ease-in-out hover:duration-200"
-              onClick={() => setIsTag(2)}
-            >
-              <p className="text-base/6 sm:text-xl/6 text-cyan-800 group-hover:text-blue-500 font-bold flex gap-2 items-center leading-6">
-                <MdDescription className="w-5 h-5 sm:w-7 sm:h-7 shrink-0 text-blue-500" />{" "}
-                Mẫu
-              </p>
-            </div>
-
-            <div
-              className="flex items-center justify-center py-2 border border-solid border-gray-300 rounded-[8px] bg-white shadow-[0_4px_4px_rgba(0,0,0,0.25)] w-full cursor-pointer transition-all ease-in-out duration-200 hover:bg-gray-100 hover:transition-all hover:ease-in-out hover:duration-200"
-              onClick={() => setIsTag(3)}
-            >
-              <p className="text-base/6 sm:text-xl/6 text-cyan-800 font-bold flex gap-2 items-center leading-6">
-                <MdScience className="w-5 h-5 sm:w-7 sm:h-7 shrink-0 text-orange-300" />
-                Phụ Liệu Hóa Chất
-              </p>
-            </div>
-          </div>
-        );
-      }
-      default: {
-        return (
-          <div className="px-1 py-1 bg-[#e9ecf1] flex gap-4 justify-between rounded-[8px] ">
-            <div
-              className="flex items-center justify-center py-2 border border-solid border-gray-300 rounded-[8px] bg-white shadow-[0_4px_4px_rgba(0,0,0,0.25)] w-full cursor-pointer transition-all ease-in-out duration-200 hover:bg-gray-100 hover:transition-all hover:ease-in-out hover:duration-200"
-              onClick={() => setIsTag(1)}
-            >
-              <p className="text-base/6 sm:text-xl/6 text-cyan-800 font-bold flex gap-2 items-center leading-6">
-                <MdAccountBox className="w-5 h-5 sm:w-7 sm:h-7 shrink-0 text-indigo-600" />
-                Thông Tin Chung
-              </p>
-            </div>
-            <div
-              className="flex items-center justify-center py-2 border border-solid border-white rounded-[8px] w-full cursor-pointer group hover:transition-all hover:ease-in-out hover:duration-200"
-              onClick={() => setIsTag(2)}
-            >
-              <p className="text-base/6 sm:text-xl/6 text-cyan-800 group-hover:text-blue-500 font-bold flex gap-2 items-center leading-6">
-                <MdDescription className="w-5 h-5 sm:w-7 sm:h-7 shrink-0 text-blue-500" />
-                Mẫu
-              </p>
-            </div>
-            <div
-              className="flex items-center justify-center py-2 border border-solid border-white rounded-[8px] w-full cursor-pointer group hover:transition-all hover:ease-in-out hover:duration-200"
-              onClick={() => setIsTag(3)}
-            >
-              <p className="text-base/6 sm:text-xl/6 text-cyan-800 group-hover:text-blue-500 font-bold flex gap-2 items-center leading-6">
-                <MdScience className="w-5 h-5 sm:w-7 sm:h-7 shrink-0 text-orange-300" />{" "}
-                Phụ Liệu Hóa Chất
-              </p>
-            </div>
-          </div>
-        );
       }
     }
   };
@@ -352,7 +288,11 @@ const ChiTietPhieuDKyDVKN = () => {
   const handleShowByTag = () => {
     switch (isTag) {
       case 2: {
-        return <DetailMaus dataMaus={data?.maus} isLoading={isLoading} />;
+        return (
+          <Box className="overflow-y-auto h-[579px]">
+            <DetailMaus dataMaus={data?.maus} isLoading={isLoading} />;
+          </Box>
+        );
       }
       case 3: {
         return (
@@ -362,230 +302,267 @@ const ChiTietPhieuDKyDVKN = () => {
           />
         );
       }
+      case 4: {
+        return handleButton();
+      }
       default: {
-        return (
-          <motion.div
-            key="form-signup-thongtinchung"
-            initial={{ x: 0, opacity: 0 }}
-            animate={{ x: 0, opacity: 1 }}
-            exit={{ x: 0, opacity: 0 }}
-            transition={{ duration: 0.5 }}
-            className="border border-gray-300 rounded-xl"
-          >
-            <Box className="p-5 grid grid-cols-12 gap-1 md:gap-[0px_24px]">
-              <Box className="col-span-12 md:col-span-6 lg:col-span-4">
-                <Inputs
-                  title="Người gửi mẫu"
-                  className="h-[42px]"
-                  name="NguoiGuiMau"
-                  sx={{
-                    input: {
-                      padding: "9.5px 14px",
-                    },
-                    "& .Mui-disabled": {
-                      WebkitTextFillColor: "black !important",
-                    },
-                  }}
-                  disabled
-                  defaultValue={data?.nguoiGuiMau}
-                />
-              </Box>
-              <Box className="col-span-12 md:col-span-6 lg:col-span-4">
-                <Inputs
-                  title="Đơn vị gửi mẫu"
-                  className="h-[42px]"
-                  name="DonViGuiMau"
-                  sx={{
-                    input: {
-                      padding: "9.5px 14px",
-                    },
-                    "& .Mui-disabled": {
-                      WebkitTextFillColor: "black !important",
-                    },
-                  }}
-                  disabled
-                  defaultValue={data?.donViGuiMau}
-                />
-              </Box>
-              <Box className="col-span-12 md:col-span-6 lg:col-span-4">
-                <Inputs
-                  title="Email"
-                  name="Email"
-                  className="h-[42px]"
-                  sx={{
-                    input: {
-                      padding: "9.5px 14px",
-                    },
-                    "& .Mui-disabled": {
-                      WebkitTextFillColor: "black !important",
-                    },
-                  }}
-                  disabled
-                  defaultValue={data?.email}
-                />
-              </Box>
-              <Box className="col-span-12 md:col-span-6 lg:col-span-4">
-                <Inputs
-                  title="Số điện thoại"
-                  className="h-[42px]"
-                  name="SoDienThoai"
-                  sx={{
-                    input: {
-                      padding: "9.5px 14px",
-                    },
-                    "& .Mui-disabled": {
-                      WebkitTextFillColor: "black !important",
-                    },
-                  }}
-                  disabled
-                  defaultValue={data?.soDienThoai}
-                />
-              </Box>
-              <Box className="col-span-12 md:col-span-6 lg:col-span-4">
-                <Inputs
-                  title="Hình thức gửi mẫu"
-                  name="HinhThucGuiMau"
-                  className="h-[42px]"
-                  sx={{
-                    input: {
-                      padding: "9.5px 14px",
-                    },
-                    "& .Mui-disabled": {
-                      WebkitTextFillColor: "black !important",
-                    },
-                  }}
-                  disabled
-                  defaultValue={data?.hinhThucGuiMau}
-                />
-              </Box>
-              <Box className="col-span-12 md:col-span-6 lg:col-span-4">
-                <Inputs
-                  title="Hình thức trả kết quả"
-                  name="HinhThucTraKQ"
-                  className="h-[42px]"
-                  sx={{
-                    input: {
-                      padding: "9.5px 14px",
-                    },
-                    "& .Mui-disabled": {
-                      WebkitTextFillColor: "black !important",
-                    },
-                  }}
-                  disabled
-                  defaultValue={data?.hinhThucTraKq}
-                />
-              </Box>
-              {data?.diaChiGiaoMau && (
-                <Box className="col-span-12">
-                  <Inputs
-                    title="Địa chỉ giao mẫu"
-                    name="DiaChiGiaoMau"
-                    className="h-[42px]"
-                    sx={{
-                      input: {
-                        padding: "9.5px 14px",
-                      },
-                      "& .Mui-disabled": {
-                        WebkitTextFillColor: "black !important",
-                      },
-                    }}
-                    disabled
-                    defaultValue={data?.diaChiGiaoMau}
-                  />
-                </Box>
-              )}
-              <Box className="col-span-12 md:col-span-6 lg:col-span-4">
-                <Inputs
-                  title="Ngày giao mẫu"
-                  name="NgayGiaoMau"
-                  className="h-[42px]"
-                  sx={{
-                    input: {
-                      padding: "9.5px 14px",
-                    },
-                    "& .Mui-disabled": {
-                      WebkitTextFillColor: "black !important",
-                    },
-                  }}
-                  disabled
-                  defaultValue={data?.ngayGiaoMau.split("T")[0]}
-                />
-              </Box>
-              <Box className="col-span-12 md:col-span-6 lg:col-span-4">
-                <Inputs
-                  title="Địa chỉ liên hệ"
-                  name="DiaChiLienHe"
-                  className="h-[42px]"
-                  sx={{
-                    input: {
-                      padding: "9.5px 14px",
-                    },
-                    "& .Mui-disabled": {
-                      WebkitTextFillColor: "black !important",
-                    },
-                  }}
-                  disabled
-                  defaultValue={data?.diaChiLienHe}
-                />
-              </Box>
-              <Box className="col-span-12 md:col-span-6 lg:col-span-4">
-                <Inputs
-                  title="Kết quả"
-                  name="ketQuaTiengAnh"
-                  className="h-[42px]"
-                  sx={{
-                    input: {
-                      padding: "9.5px 14px",
-                    },
-                    "& .Mui-disabled": {
-                      WebkitTextFillColor: "black !important",
-                    },
-                  }}
-                  disabled
-                  defaultValue={
-                    data?.ketQuaTiengAnh ? "Tiếng Anh" : "Tiếng Việt"
-                  }
-                />
-              </Box>
-            </Box>
-          </motion.div>
+        return isLoading ? (
+          <Box className="p-5 space-y-4">
+            <div className="space-y-2">
+              <Skeleton width={150} height={24} />
+              <div className="space-x-40 flex items-center">
+                <div className="flex gap-2 items-center">
+                  <Skeleton width={60} height={24} />
+                  <Skeleton width={100} height={24} />
+                </div>
+                <div className="flex gap-2 items-center">
+                  <Skeleton width={90} height={24} />
+                  <Skeleton width={100} height={24} />
+                </div>
+              </div>
+            </div>
+            <div className="space-y-1">
+              <Skeleton width={200} height={24} />
+
+              <div className="grid grid-cols-2 gap-y-4 gap-x-8 text-sm text-gray-700">
+                <div>
+                  <Skeleton width={80} height={24} />
+                  <Skeleton width={150} height={24} />
+                </div>
+                <div>
+                  <Skeleton width={80} height={24} />
+                  <Skeleton width={150} height={24} />
+                </div>
+                <div>
+                  <Skeleton width={80} height={24} />
+                  <Skeleton width={150} height={24} />
+                </div>
+
+                <div>
+                  <Skeleton width={80} height={24} />
+                  <Skeleton width={150} height={24} />
+                </div>
+
+                <div>
+                  <Skeleton width={80} height={24} />
+                  <Skeleton width={150} height={24} />
+                </div>
+
+                <div>
+                  <Skeleton width={80} height={24} />
+                  <Skeleton width={150} height={24} />
+                </div>
+                <div>
+                  <Skeleton width={80} height={24} />
+                  <Skeleton width={150} height={24} />
+                </div>
+                <div>
+                  <Skeleton width={80} height={24} />
+                  <Skeleton width={150} height={24} />
+                </div>
+
+                <div>
+                  <Skeleton width={80} height={24} />
+                  <Skeleton width={150} height={24} />
+                </div>
+              </div>
+            </div>
+          </Box>
+        ) : (
+          <Box className="p-5 space-y-4">
+            <div className="space-y-2">
+              <h4 className="text-base/6 font-semibold text-gray-500">
+                Thông tin đăng ký
+              </h4>
+              <div className="grid grid-cols-2 gap-y-2 gap-x-8">
+                <div className="flex gap-2 items-center">
+                  <label className="text-sm text-gray-500">Số ĐKPT:</label>
+                  <p className="font-semibold text-gray-900">{data?.soDkpt}</p>
+                </div>
+                <div className="flex gap-2 items-center">
+                  <label className="block text-sm text-gray-500">
+                    Trạng thái phiếu:
+                  </label>
+                  {renderTrangThai(data?.trangThaiId)}
+                </div>
+                <div className="flex gap-2 items-center">
+                  <label className="block text-sm text-gray-500">
+                    Ngày đăng ký:
+                  </label>
+                  <p className="font-semibold text-gray-900">
+                    {new Date(data?.ngayTao).toLocaleDateString("vi-VN")}
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div className="space-y-1">
+              <h4 className="text-base/6 font-semibold text-gray-500 mb-4">
+                Thông tin người gửi mẫu
+              </h4>
+
+              <div className="grid grid-cols-2 gap-y-4 gap-x-8 text-sm text-gray-700">
+                <div>
+                  <label className="text-sm/6 text-gray-500">
+                    Người gửi mẫu
+                  </label>
+                  <p className="font-semibold text-gray-900">
+                    {data?.nguoiGuiMau}
+                  </p>
+                </div>
+                <div>
+                  <label className="text-sm/6 text-gray-500">
+                    Đơn vị gửi mẫu
+                  </label>
+                  <p className="font-semibold text-gray-900">
+                    {data?.donViGuiMau}
+                  </p>
+                </div>
+                <div>
+                  <label className="text-sm/6 text-gray-500">Email</label>
+                  <p className="font-semibold text-gray-900">{data?.email}</p>
+                </div>
+
+                <div>
+                  <label className="text-sm/6 text-gray-500">
+                    Số điện thoại
+                  </label>
+                  <p className="font-semibold text-gray-900">
+                    {data?.soDienThoai}
+                  </p>
+                </div>
+
+                <div>
+                  <label className="text-sm/6 text-gray-500">
+                    Hình thức gửi mẫu
+                  </label>
+                  <p className="font-semibold text-gray-900">
+                    {data?.hinhThucGuiMau}
+                  </p>
+                </div>
+
+                <div>
+                  <label className="text-sm/6 text-gray-500">
+                    Hình thức trả kết quả
+                  </label>
+                  <p className="font-semibold text-gray-900">
+                    {data?.hinhThucTraKq}
+                  </p>
+                </div>
+                {data?.diaChiGiaoMau && (
+                  <div>
+                    <label className="text-sm/6 text-gray-500">
+                      Địa chỉ giao mẫu
+                    </label>
+                    <p className="font-semibold text-gray-900">
+                      {data?.diaChiGiaoMau}
+                    </p>
+                  </div>
+                )}
+                <div>
+                  <label className="text-sm/6 text-gray-500">
+                    Địa chỉ liên hệ
+                  </label>
+                  <p className="font-semibold text-gray-900">
+                    {data?.diaChiLienHe}
+                  </p>
+                </div>
+                <div>
+                  <label className="text-sm/6 text-gray-500">
+                    Ngày giao mẫu
+                  </label>
+                  <p className="font-semibold text-gray-900">
+                    {new Date(data?.ngayGiaoMau).toLocaleDateString("vi-VN")}
+                  </p>
+                </div>
+
+                <div>
+                  <label className="text-sm/6 text-gray-500">Kết quả</label>
+                  <p className="font-semibold text-gray-900">
+                    {data?.ketQuaTiengAnh ? "Tiếng Anh" : "Tiếng Việt"}
+                  </p>
+                </div>
+              </div>
+            </div>
+          </Box>
         );
       }
     }
   };
 
   return (
-    <motion.div
-      key="QuanLyPhieuDKyDVHN"
-      initial={{ x: 0, opacity: 0 }}
-      animate={{ x: 0, opacity: 1 }}
-      exit={{ x: 0, opacity: 0 }}
-      transition={{ duration: 0.7 }}
-      className="px-10 py-20 grid gap-4"
+    <Dialog
+      open={open}
+      maxWidth="xl"
+      onClose={handleClosePopup}
+      sx={{
+        ".MuiPaper-root": {
+          borderRadius: 2,
+        },
+      }}
     >
-      <Box className="bg-cyan-800 px-6 py-3 rounded-full border-[2px] border-gray-300 shadow-[0_4px_4px_rgba(0,0,0,0.25)]">
-        {handleShowByUserName()}
-      </Box>
-      <div className="grid gap-2 p-6 rounded-2xl border-[2px] border-cyan-600 shadow-[0_4px_4px_rgba(0,0,0,0.25)]">
-        {handleTag()}
-        {handleShowByTag()}
+      <div className="w-4xl">
+        <div className="px-6 pt-6 pb-4 border-b border-gray-300 flex justify-between items-center">
+          <h1 className="text-xl font-semibold text-gray-800">
+            Chi tiết phiếu đăng ký - {data?.soDkpt}
+          </h1>
+          <button
+            onClick={handleClosePopup}
+            className="p-1 hover:bg-gray-200 rounded-full text-gray-500 hover:text-gray-600 cursor-pointer"
+          >
+            <IoMdClose className="w-6 h-6 " />
+          </button>
+        </div>
+        <div className="grid gap-2">
+          <div className="flex gap-4 justify-between border-b border-gray-300">
+            <div
+              className={`px-6 w-full text-center cursor-pointer py-4 text-base font-[550] relative ${
+                isTag === 1 ? "text-indigo-600" : "text-gray-500"
+              }`}
+              onClick={() => setIsTag(1)}
+            >
+              Thông tin chung
+              {isTag === 1 && (
+                <span className="absolute bottom-0 left-0 w-full h-0.5 bg-indigo-600"></span>
+              )}
+            </div>
+            <div
+              className={`px-6 py-4 w-full text-center cursor-pointer text-base font-[550] relative ${
+                isTag === 2 ? "text-indigo-600" : "text-gray-500"
+              }`}
+              onClick={() => setIsTag(2)}
+            >
+              Mẫu
+              {isTag === 2 && (
+                <span className="absolute bottom-0 left-0 w-full h-0.5 bg-indigo-600"></span>
+              )}
+            </div>
+            <div
+              className={`px-6 py-4 w-full text-center cursor-pointer text-base font-[550] relative ${
+                isTag === 3 ? "text-indigo-600" : "text-gray-500"
+              }`}
+              onClick={() => setIsTag(3)}
+            >
+              Phụ liệu hóa chất
+              {isTag === 3 && (
+                <span className="absolute bottom-0 left-0 w-full h-0.5 bg-indigo-600"></span>
+              )}
+            </div>
+            <div
+              className={`px-6 py-4 w-full text-center cursor-pointer text-base font-[550] relative ${
+                isTag === 4 ? "text-indigo-600" : "text-gray-500"
+              }`}
+              onClick={() => setIsTag(4)}
+            >
+              Đánh giá
+              {isTag === 4 && (
+                <span className="absolute bottom-0 left-0 w-full h-0.5 bg-indigo-600"></span>
+              )}
+            </div>
+          </div>
+          {handleShowByTag()}
+        </div>
       </div>
-      <PopupHuyPhieu
-        open={openPopupHuyPhieu}
-        handleClose={handleClosePopupHuyPhieu}
-        id={id}
-        roll={personnelInfo?.maLoaiTk}
-      />
-      <PopupDuyetBo
-        open={openPopupDuyetBo}
-        handleClose={handleClosePopupDuyetBo}
-        maLoaiTk={personnelInfo?.maLoaiTk}
-      />
-      <PopupTuChoiPhongKHDT
-        open={openPopupTuChoiPhongKHDT}
-        handleClose={handleClosePopupTuChoiPhongKHDT}
-      />
-    </motion.div>
+    </Dialog>
   );
 };
 
