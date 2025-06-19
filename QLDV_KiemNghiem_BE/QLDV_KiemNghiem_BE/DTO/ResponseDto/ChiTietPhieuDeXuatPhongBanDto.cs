@@ -41,5 +41,7 @@ namespace QLDV_KiemNghiem_BE.DTO.ResponseDto
         [Column(TypeName = "datetime")]
         public DateTime? NgayThucHienKiemNghiem { get; set; }
 
+        public int? TrangThai { get; set; }
+
     }
 }

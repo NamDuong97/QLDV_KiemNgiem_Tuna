@@ -68,24 +68,6 @@ namespace QLDV_KiemNghiem_BE.Services
 
             foreach (var item in PhieuDeXuatPhongBanDto.ChiTietPhieuDeXuatPhongBans)
             {
-                CheckSampleAssignedToDepartmentModel checkSample = new CheckSampleAssignedToDepartmentModel()
-                {
-                    MaPhieuDangKy = PhieuDeXuatPhongBanDto.MaPhieuDangKy,
-                    MaKhoa = PhieuDeXuatPhongBanDto.MaKhoaTiepNhan,
-                    MaMau = item.MaPdkMau
-                };
-
-                // Dang lam do buoc nay
-                var checkSampleAssignedToDepartment = await _repositoryManager.ChiTietPhieuDeXuatPhongBan.CheckSampleAssignedToDepartment(checkSample);
-                if (checkSampleAssignedToDepartment!= null && checkSampleAssignedToDepartment.Count() > 0)
-                {
-                    return new ResponseModel1<PhieuDeXuatPhongBanDto>
-                    {
-                        KetQua = false,
-                        Message =  "Trong phieu dang ky nay, mau nay da duoc phan cong cho phong khoa ban chon roi, vui long khong phan cong lai nua",
-                        Data = null
-                    };
-                }
                 ChiTietPhieuDeXuatPhongBan chiTietPhieuDeXuatPhongBan = new ChiTietPhieuDeXuatPhongBan()
                 {
                     MaId = Guid.NewGuid().ToString(),
@@ -93,7 +75,7 @@ namespace QLDV_KiemNghiem_BE.Services
                     MaPdkMau = item.MaPdkMau,
                     GhiChu = item.GhiChu,
                     NgayThucHienKiemNghiem = item.NgayThucHienKiemNghiem,
-                    TrangThai = "Cho Duyet",
+                    TrangThai = 2,
                     NgayTao = DateTime.Now,
                     NguoiTao = user
                 };
@@ -181,7 +163,7 @@ namespace QLDV_KiemNghiem_BE.Services
                             MaPhieuDeXuat = PhieuDeXuatPhongBanCheck.MaId,
                             MaPdkMau = item.MaPdkMau,
                             GhiChu = item.GhiChu,
-                            TrangThai = "Cho Duyet"
+                            TrangThai = 2
                         };
 
                         _repositoryManager.ChiTietPhieuDeXuatPhongBan.CreateChiTietPhieuDeXuatPhongBanAsync(chiTiet);
@@ -201,7 +183,7 @@ namespace QLDV_KiemNghiem_BE.Services
                             chiTietPhieuDeXuatPhongBanCheck.ManvTuChoi = !string.IsNullOrEmpty(item.ManvTuChoi) ? item.ManvTuChoi : chiTietPhieuDeXuatPhongBanCheck.ManvTuChoi;
                             chiTietPhieuDeXuatPhongBanCheck.NgayTuChoi = PublicFunction.IsValidDateTime(item.NgayTuChoi) ? item.NgayTuChoi : chiTietPhieuDeXuatPhongBanCheck.NgayTuChoi;
                             chiTietPhieuDeXuatPhongBanCheck.NgayThucHienKiemNghiem = PublicFunction.IsValidDateTime(item.NgayThucHienKiemNghiem) ? item.NgayThucHienKiemNghiem : chiTietPhieuDeXuatPhongBanCheck.NgayThucHienKiemNghiem;
-                            chiTietPhieuDeXuatPhongBanCheck.TrangThai = !string.IsNullOrEmpty(item.TrangThai) ? item.TrangThai : chiTietPhieuDeXuatPhongBanCheck.TrangThai;
+                            chiTietPhieuDeXuatPhongBanCheck.TrangThai =  chiTietPhieuDeXuatPhongBanCheck.TrangThai;
                             chiTietPhieuDeXuatPhongBanCheck.NgaySua = DateTime.Now;
                             chiTietPhieuDeXuatPhongBanCheck.NguoiSua = user;
 
@@ -209,10 +191,11 @@ namespace QLDV_KiemNghiem_BE.Services
                             var returnData = _mapper.Map<ChiTietPhieuDeXuatPhongBanDto>(chiTietPhieuDeXuatPhongBanCheck);
                             chiTietPhieuDeXuatPhongBanDtos.Add(returnData);
                         }
-                        else if(chiTietPhieuDeXuatPhongBanCheck != null && item.IsDel == true) // Xóa
+                        else if(chiTietPhieuDeXuatPhongBanCheck != null && item.IsDel == true) 
                         {
-
-                            _repositoryManager.ChiTietPhieuDeXuatPhongBan.DeleteChiTietPhieuDeXuatPhongBanAsync(chiTietPhieuDeXuatPhongBanCheck);
+                            // Xóa khi kh hàng k mún kiểm nghiệm nữa
+                            chiTietPhieuDeXuatPhongBanCheck.TrangThai = 0;
+                            _repositoryManager.ChiTietPhieuDeXuatPhongBan.UpdateChiTietPhieuDeXuatPhongBanAsync(chiTietPhieuDeXuatPhongBanCheck);
                         }
                     } 
                 }

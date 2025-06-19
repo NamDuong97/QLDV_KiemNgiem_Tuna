@@ -86,6 +86,8 @@ namespace QLDV_KiemNghiem_BE.DTO.ResponseDto
         [StringLength(50)]
         public string? MaLoaiDv { get; set; }
 
+        public int? TrangThaiPhanCong { get; set; }
+
         public bool IsDel { get; set; } = false;
         public ICollection<PhieuDangKyMauHinhAnhDto> PhieuDangKyMauHinhAnhs { get; set; } = new List<PhieuDangKyMauHinhAnhDto>();
     }

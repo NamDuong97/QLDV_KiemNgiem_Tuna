@@ -32,6 +32,14 @@ namespace QLDV_KiemNghiem_BE.Repositories
                 return await _context.ChiTietPhieuDeXuatPhongBans.AsNoTracking().SingleOrDefaultAsync(item => item.MaId == maChiTietPhieuDeXuatPhongBan);
             }
         }
+        public async Task<int> CheckAllSamplesApproved_PDXPB (string maPDXPB, string maCTDXPB)
+        {
+            var result = await _context.CheckAllSamplesApproved_PDXPBs
+            .FromSqlRaw("SELECT dbo.fn_CheckAllSamplesApproved_PDXPB({0}, {1}) AS CheckAllSamplesApproved", maPDXPB, maCTDXPB)
+            .AsNoTracking()
+            .FirstOrDefaultAsync();
+            return result?.CheckAllSamplesApproved ?? 0;
+        }
         public async Task<List<ChiTietPhieuDeXuatPhongBan>?> CheckSampleAssignedToDepartment(CheckSampleAssignedToDepartmentModel checkSample)
         {
             var result = await _context.ChiTietPhieuDeXuatPhongBans.

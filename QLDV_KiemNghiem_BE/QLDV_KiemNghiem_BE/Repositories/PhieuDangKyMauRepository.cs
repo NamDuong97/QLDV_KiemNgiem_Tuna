@@ -23,6 +23,11 @@ namespace QLDV_KiemNghiem_BE.Repositories
         {
             return await _context.PhieuDangKyMaus.Include(item => item.PhieuDangKyMauHinhAnhs).Where(item => item.MaId == maPhieuDangKyMau).SingleOrDefaultAsync();
         }
+
+        public async Task<PhieuDangKyMau?> FindPhieuDangKyMauAsync(string maPhieuDangKyMau)
+        {
+            return await _context.PhieuDangKyMaus.FindAsync(maPhieuDangKyMau);
+        }
         public async Task CreatePhieuDangKyMauAsync(PhieuDangKyMau PhieuDangKyMau)
         {
             await _context.PhieuDangKyMaus.AddAsync(PhieuDangKyMau);

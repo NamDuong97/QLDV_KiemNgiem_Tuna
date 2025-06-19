@@ -11,6 +11,8 @@ namespace QLDV_KiemNghiem_BE.Data
         public virtual DbSet<ThanhTienTungMau> ThanhTienTungMaus { get; set; }
         public virtual DbSet<UserIdNhanVien> UserIdNhanViens { get; set; }
 
+        public virtual DbSet<CheckAllSamplesApproved_PDXPB> CheckAllSamplesApproved_PDXPBs { get; set; }    
+
         partial void OnModelCreatingPartial(ModelBuilder modelBuilder)
         {
        
@@ -18,6 +20,7 @@ namespace QLDV_KiemNghiem_BE.Data
             modelBuilder.Entity<ThoiGianTieuChuan>().HasNoKey();
             modelBuilder.Entity<ThanhTienTungMau>().HasNoKey();
             modelBuilder.Entity<UserIdNhanVien>().HasNoKey();
+            modelBuilder.Entity<CheckAllSamplesApproved_PDXPB>().HasNoKey();
         }
     }
 
