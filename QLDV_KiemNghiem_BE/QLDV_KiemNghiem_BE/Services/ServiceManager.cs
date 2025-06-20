@@ -82,7 +82,7 @@ namespace QLDV_KiemNghiem_BE.Services
             _phieuChiService = new Lazy<IPhieuChiService>(() => new PhieuChiService(repositoryManager, mapper));
             _phieuPhanTichKetQuaChiTietService = new Lazy<IPhieuPhanTichKetQuaChiTietService>(() => new PhieuPhanTichKetQuaChiTietService(repositoryManager, mapper));
             _phieuThuService = new Lazy<IPhieuThuService>(() => new PhieuThuService(repositoryManager, mapper));
-            _chiTietPhieuDeXuatPhongBanService = new Lazy<IChiTietPhieuDeXuatPhongBanService>(() => new ChiTietPhieuDeXuatPhongBanService(repositoryManager, mapper));
+            _chiTietPhieuDeXuatPhongBanService = new Lazy<IChiTietPhieuDeXuatPhongBanService>(() => new ChiTietPhieuDeXuatPhongBanService(repositoryManager, mapper, hubContext));
         }
 
         //public IEmailService Email => _email.Value;

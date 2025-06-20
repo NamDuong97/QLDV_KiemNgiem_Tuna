@@ -7,6 +7,7 @@ namespace QLDV_KiemNghiem_BE.Interfaces
     {
         Task<IEnumerable<PhieuDangKyMau>> GetPhieuDangKyMauAllAsync();
         Task<PhieuDangKyMau?> GetPhieuDangKyMauAsync(string maPhieuDangKyMau);
+        Task<PhieuDangKyMau?> FindPhieuDangKyMauAsync(string maPhieuDangKyMau);
         Task CreatePhieuDangKyMauAsync(PhieuDangKyMau PhieuDangKyMau);
         void UpdatePhieuDangKyMauAsync(PhieuDangKyMau PhieuDangKyMau);
         void DeletePhieuDangKyMauAsync(PhieuDangKyMau PhieuDangKyMau);

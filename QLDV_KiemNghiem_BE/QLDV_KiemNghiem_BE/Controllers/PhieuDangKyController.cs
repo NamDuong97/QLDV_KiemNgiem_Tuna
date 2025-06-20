@@ -117,10 +117,10 @@ namespace QLDV_KiemNghiem_BE.Controllers
                 _logger.LogError("Loi validate tham so dau vao");
                 return BadRequest(new { Errors = errors });
             }
-            ResponseModel1<PhieuDangKyDto> phieuDangKy = await _service.PhieuDangKy.CreatePhieuDangKyAsync(phieuDangKyDto);
+            var user = User.FindFirst(ClaimTypes.NameIdentifier)?.Value.ToString() ?? "unknow";
+            ResponseModel1<PhieuDangKyDto> phieuDangKy = await _service.PhieuDangKy.CreatePhieuDangKyAsync(phieuDangKyDto, user);
             if (phieuDangKy.KetQua)
             {
-                var user = User.FindFirst(ClaimTypes.Email)?.Value.ToString() ?? "unknow";
                 // Tao thong bao gui cho phong KHTH
                 NotificationModel noti = new NotificationModel()
                 {
@@ -155,8 +155,8 @@ namespace QLDV_KiemNghiem_BE.Controllers
                 _logger.LogError("Loi validate tham so dau vao");
                 return BadRequest(new { Errors = errors });
             }
-
-            ResponseModel1<PhieuDangKyDto> phieuDangKy = await _service.PhieuDangKy.UpdatePhieuDangKyAsync(phieuDangKyDto);
+            var user = User.FindFirst(ClaimTypes.NameIdentifier)?.Value.ToString() ?? "unknow";
+            ResponseModel1<PhieuDangKyDto> phieuDangKy = await _service.PhieuDangKy.UpdatePhieuDangKyAsync(phieuDangKyDto, user);
             if (phieuDangKy.KetQua)
             {
                 // Cap nhat hoa don sau khi them phieu dang ky

@@ -44,16 +44,30 @@ namespace QLDV_KiemNghiem_BE.Controllers
             // Tao thong bao gui cho phong KHTH
             if(phieuDeXuat.KetQua) // Lưu thành công rồi mới xem xét gửi thông báo
             {
-                NotificationModel noti = new NotificationModel()
+                if(duyetPhieu.Action)
                 {
-                    Title = "Lanh dao phong/khoa duyet phieu de xuat kiem nghiem phong ban",
-                    Message = duyetPhieu.Action ? $"Chi tiet phieu de xuat co maid {phieuDeXuat.MaPhieuDeXuat} duoc duyet thanh cong boi nguoi dung {user}!"
-                : $"Chi tiet phieu de xuat co maid {phieuDeXuat.MaPhieuDeXuat} da bi tu choi boi nguoi dung {user}!",
-                    CreatedAt = DateTime.Now,
-                };
-                await _hubContext.Clients.Group("KHTH").SendAsync("receiveNotification", noti);
+                    NotificationModel noti = new NotificationModel()
+                    {
+                        Title = "Lanh dao phong/khoa duyet phieu de xuat kiem nghiem phong ban",
+                        Message = duyetPhieu.Action ? $"Chi tiet phieu de xuat co maid {phieuDeXuat.MaPhieuDeXuat} duoc duyet thanh cong boi nguoi dung {user}!"
+                        : $"Chi tiet phieu de xuat co maid {phieuDeXuat.MaPhieuDeXuat} da bi tu choi boi nguoi dung {user}!",
+                        CreatedAt = DateTime.Now,
+                    };
+                    await _hubContext.Clients.Group("KHTH").SendAsync("receiveNotification", noti);
+                }
+                else
+                {
+                    NotificationModel notification = new NotificationModel()
+                    {
+                        Message = duyetPhieu.Message,
+                        Title = $"Mau {duyetPhieu.MaMau} da bi tu choi tiep nhan boi nguoi dung {user}",
+                        CreatedAt = DateTime.Now,
+                    };
+                    await _hubContext.Clients.Group("BLD").SendAsync("receiveNotification", notification);
+                    // Can them thong bao vao database
+                }
             }
-            
+
             _logger.LogDebug(phieuDeXuat.Message);
             return Ok(phieuDeXuat);
         }

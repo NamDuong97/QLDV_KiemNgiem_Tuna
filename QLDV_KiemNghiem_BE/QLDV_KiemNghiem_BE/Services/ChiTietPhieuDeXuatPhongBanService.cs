@@ -4,6 +4,8 @@ using QLDV_KiemNghiem_BE.Models;
 using QLDV_KiemNghiem_BE.Interfaces;
 using QLDV_KiemNghiem_BE.RequestFeatures;
 using QLDV_KiemNghiem_BE.DTO.ResponseDto;
+using Microsoft.AspNetCore.SignalR;
+using QLDV_KiemNghiem_BE.HubsRealTime;
 
 namespace QLDV_KiemNghiem_BE.Services
 {
@@ -11,10 +13,12 @@ namespace QLDV_KiemNghiem_BE.Services
     {
         private readonly IRepositoryManager _repositoryManager;
         private readonly IMapper _mapper;
-        public ChiTietPhieuDeXuatPhongBanService(IRepositoryManager repositoryManager, IMapper mapper)
+        private readonly IHubContext<NotificationHub> _hubContext;
+        public ChiTietPhieuDeXuatPhongBanService(IRepositoryManager repositoryManager, IMapper mapper, IHubContext<NotificationHub> hubContext)
         {
             _repositoryManager = repositoryManager;
             _mapper = mapper;
+            _hubContext = hubContext;
         }
         public async Task<IEnumerable<ChiTietPhieuDeXuatPhongBanDto>> GetChiTietPhieuDeXuatPhongBansAllAsync()
         {
@@ -39,17 +43,37 @@ namespace QLDV_KiemNghiem_BE.Services
                     Message = "Thieu du lieu dau vao!",
                 };
             }
-
             var checkExistsChiTietPhieuDXPB = await _repositoryManager.ChiTietPhieuDeXuatPhongBan.FindChiTietPhieuDeXuatPhongBanAsync(duyetPhieu.MaPhieuDeXuat, true);
             if (checkExistsChiTietPhieuDXPB != null)
             {
                 if (duyetPhieu.Action)
-                    // neu action = 1 thi tiep theo se la cho BLD duyet
-                    checkExistsChiTietPhieuDXPB.TrangThai = "Da Duyet";
+                {
+                    // Nếu action = true thì tức là phòng khoa đã đồng ý phân công mẫu này. BLĐ không cần duyệt nữa.
+                    checkExistsChiTietPhieuDXPB.TrangThai = 3;
+                    // Kiểm tra xem các mẫu trong phiếu đề xuất này đã được phân công và chấp nhận hết chưa -> cập nhật trạng thái của bảng PhieuDeXuatPhanCong
+                    var checkAllSamplesApproved_PDXPB = await _repositoryManager.ChiTietPhieuDeXuatPhongBan.CheckAllSamplesApproved_PDXPB(duyetPhieu.MaPhieuDeXuat, duyetPhieu.MaId);
+                    if(checkAllSamplesApproved_PDXPB == 1)
+                    {
+                        // Da duyet het mau trong phieu de xuat nay cap nhat trang thai cho phieu de xuat
+                        var phieuDeXuat = await _repositoryManager.PhieuDeXuatPhongBan.FindPhieuDeXuatPhongBanAsync(duyetPhieu.MaPhieuDeXuat, true);
+                        if (phieuDeXuat != null)
+                        {
+                            phieuDeXuat.TrangThai = "Toan bo mau da duoc phong khoa phe duyet, tiep theo se la giai doan kiem nghiem";
+                            _repositoryManager.PhieuDeXuatPhongBan.UpdatePhieuDeXuatPhongBanAsync(phieuDeXuat);
+                        }
+                    }
+                    // Cập nhật trạng thái cho mẫu tương ứng trong bảng PhieuDangKy_Mau
+                    var phieuDangKyMau = await _repositoryManager.PhieuDangKyMau.FindPhieuDangKyMauAsync(checkExistsChiTietPhieuDXPB.MaPdkMau ?? "");
+                    if(phieuDangKyMau!=null)
+                    {
+                        phieuDangKyMau.TrangThaiPhanCong = 2;
+                        _repositoryManager.PhieuDangKyMau.UpdatePhieuDangKyMauAsync(phieuDangKyMau);
+                    }
+                }
                 else
                 {
                     // nguoc lai thi trang thai la bi phong KHDT tu choi duyet, thi cho BLD quyet dinh
-                    checkExistsChiTietPhieuDXPB.TrangThai = "Khong Duyet";
+                    checkExistsChiTietPhieuDXPB.TrangThai = 1;
                     checkExistsChiTietPhieuDXPB.LyDoTuChoi = duyetPhieu.Message;
                     checkExistsChiTietPhieuDXPB.ManvTuChoi = duyetPhieu.MaId;
                 }
