@@ -36,7 +36,7 @@ const TableQuanLyPhieuDKyDVHN = (props: TableProps) => {
         return "justify-end";
     }
   };
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   const handleRedirectXemChiTiet = (id: any) => {
     handleClickXemChiTiet();
     sessionStorage.setItem("phieu-DKKN-xem-chi-tiet", JSON.stringify(id));

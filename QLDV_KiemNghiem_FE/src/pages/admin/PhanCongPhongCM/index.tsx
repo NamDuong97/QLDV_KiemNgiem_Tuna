@@ -44,21 +44,6 @@ const sampleData = [
   },
 ];
 
-const departments = [
-  {
-    id: "PB001",
-    name: "Phòng Xét Nghiệm Huyết Học",
-    description: "Xét nghiệm liên quan đến máu và các thành phần của máu",
-    color: "bg-red-100 text-red-800 border-red-200 hover:bg-red-200",
-  },
-  {
-    id: "PB002",
-    name: "Phòng Xét Nghiệm Sinh Hóa",
-    description: "Xét nghiệm các chỉ số sinh hóa trong cơ thể",
-    color: "bg-blue-100 text-blue-800 border-blue-200 hover:bg-blue-200",
-  },
-];
-
 const colorPresets = [
   "bg-red-100 text-red-800 border-red-200 hover:bg-red-200",
   "bg-blue-100 text-blue-800 border-blue-200 hover:bg-blue-200",

@@ -3,8 +3,6 @@ import { useEffect, useState } from "react";
 import { usePersonnel } from "../../contexts/PersonelsProvider";
 import { HubConnectionState } from "@microsoft/signalr";
 //import createSignalRConnection from "../test";
-import { EKey } from "../../constants/commons";
-import Cookies from "js-cookie";
 import { useSignalR } from "../../contexts/SignalRProvider";
 
 const Notification = () => {
