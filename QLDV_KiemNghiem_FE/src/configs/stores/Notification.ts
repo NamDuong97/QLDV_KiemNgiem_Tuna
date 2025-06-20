@@ -1,8 +1,15 @@
 import { useEffect, useState } from "react";
-import { useSignalR } from "../../contexts/SignalRProvider";
+// import { useSignalR } from "../../contexts/SignalRProvider";
 import { usePersonnel } from "../../contexts/PersonelsProvider";
+import { HubConnectionState } from "@microsoft/signalr";
+//import createSignalRConnection from "../test";
+import { EKey } from "../../constants/commons";
+import Cookies from "js-cookie";
+import { useSignalR } from "../../contexts/SignalRProvider";
 
 const Notification = () => {
+  // const connection = useSignalR();
+  //const token = Cookies.get(EKey.TOKEN);
   const connection = useSignalR();
   const { personnelInfo } = usePersonnel();
   const [notifications, setNotifications] = useState<any>([]);
@@ -15,7 +22,7 @@ const Notification = () => {
       personnelInfo?.maLoaiTk !== null &&
       personnelInfo?.maLoaiTk !== ""
     ) {
-      if (connection) {
+      if (connection && connection.state === HubConnectionState.Disconnected) {
         connection
           .start()
           .then(() => {
@@ -89,7 +96,7 @@ const Notification = () => {
           .catch((e: any) => console.error("Connection failed: ", e));
       }
     }
-  }, [connection, personnelInfo]);
+  }, [connection]);
 
   return notifications;
 };

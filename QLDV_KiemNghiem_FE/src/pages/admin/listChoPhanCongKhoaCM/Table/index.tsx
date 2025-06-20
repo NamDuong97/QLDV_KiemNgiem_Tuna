@@ -41,6 +41,8 @@ const TableQuanLyPhieuDKyDVHN = (props: TableProps) => {
     sessionStorage.setItem("phan-cong", JSON.stringify(id));
   };
 
+  console.log("tabsle", tableBody);
+
   return (
     <TableContainer
       sx={{
@@ -110,7 +112,16 @@ const TableQuanLyPhieuDKyDVHN = (props: TableProps) => {
                       className="text-base/4 font-medium cursor-pointer text-blue-700 hover:underline"
                       onClick={() => handleRedirectPhanCong(item?.maId)}
                     >
-                      {item?.soDkpt}
+                      {item?.soDkpt}{" "}
+                      <span className="text-xs/4 font-medium text-gray-500 w-40">
+                        (
+                        {`Còn ${
+                          item?.maus.filter(
+                            (item: any) => !item.trangThaiPhangCong
+                          )?.length
+                        } mẫu`}
+                        )
+                      </span>
                     </p>
                   </Box>
                 </TableCell>
@@ -135,7 +146,7 @@ const TableQuanLyPhieuDKyDVHN = (props: TableProps) => {
                     </p>
                   </Box>
                 </TableCell>
-                <TableCell align="center" className="!py-3">
+                <TableCell align="center" className="!py-3 relative">
                   <Box className="flex gap-3 items-center justify-center">
                     <Tooltip
                       title="Phân công"

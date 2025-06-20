@@ -24,6 +24,7 @@ function convertToMauPhanCong(data: any): MauPhanCong {
     hanSuDung: data.hanSuDung,
     soLuong: data.soLuong,
     donViTinh: data.donViTinh,
+    trangThaiPhanCong: data.trangThaiPhanCong,
   };
 }
 
@@ -162,7 +163,13 @@ const SampleList = (props: Props) => {
                 htmlFor="select-all"
                 className="ml-2 text-sm text-gray-700"
               >
-                Chọn tất cả ({filteredSamples?.length})
+                Chọn tất cả (
+                {
+                  filteredSamples?.filter(
+                    (item: any) => !item.trangThaiPhanCong
+                  )?.length
+                }
+                )
               </label>
             </div>
             <div className="text-sm text-gray-500">
@@ -192,15 +199,17 @@ const SampleList = (props: Props) => {
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {filteredSamples?.map((sample: any) => (
-                <SampleCard
-                  key={sample.maId}
-                  sample={sample}
-                  isSelected={selectedSamples.includes(sample.maId)}
-                  onSelect={toggleSampleSelection}
-                  isLoading={isLoading}
-                />
-              ))}
+              {filteredSamples
+                ?.filter((item: any) => !item.trangThaiPhanCong)
+                ?.map((sample: any) => (
+                  <SampleCard
+                    key={sample.maId}
+                    sample={sample}
+                    isSelected={selectedSamples.includes(sample.maId)}
+                    onSelect={toggleSampleSelection}
+                    isLoading={isLoading}
+                  />
+                ))}
             </div>
           )}
         </div>

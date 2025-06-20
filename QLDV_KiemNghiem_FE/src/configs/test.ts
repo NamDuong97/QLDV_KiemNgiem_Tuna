@@ -1,10 +1,10 @@
 import * as signalR from "@microsoft/signalr";
 
-const createSignalRConnection = (token: string) => {
+const createSignalRConnection = (token: any) => {
   console.log("tokenSignalR", token);
   const connection = new signalR.HubConnectionBuilder()
     .withUrl("https://localhost:7233/notify", {
-      accessTokenFactory: async () => token,
+      accessTokenFactory: async () => token || "",
     })
     .withAutomaticReconnect() // tùy chỉnh thời gian reconnect
     .configureLogging(signalR.LogLevel.Information)
@@ -22,6 +22,7 @@ const createSignalRConnection = (token: string) => {
   connection.onreconnected((connectionId) => {
     console.log("✅ Đã kết nối lại. Connection ID:", connectionId);
   });
+  console.log("connectconnectionconnectionion", connection);
 
   return connection;
 };
