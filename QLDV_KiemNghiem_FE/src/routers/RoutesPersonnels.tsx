@@ -1,10 +1,9 @@
 import { Suspense, lazy } from "react";
 import { Route, Routes } from "react-router";
 import { APP_ROUTES } from "../constants/routers";
-
-import LayoutAdmin from "../pages/admin/layout-admin";
+import { MainLayout } from "../pages/admin/layout-admin";
 import XacMinhEmail from "../pages/xacminhEmail";
-
+import RedirectPersonnel from "./redirectPersonnel";
 
 const Dashboard = lazy(() => import("../pages/admin/dashboard"));
 const LoginPage = lazy(() => import("../pages/admin/login"));
@@ -12,9 +11,6 @@ const ForGotPasswordPage = lazy(() => import("../pages/admin/forgot-password"));
 
 const QuanLyPhieuDKyDVHN = lazy(
   () => import("../pages/admin/manager-phieudkydvkn")
-);
-const ChiTietPhieuDKyDVKN = lazy(
-  () => import("../pages/admin/manager-phieudkydvkn/ChiTietPhieuDKyDVKN")
 );
 
 const PhanCongPhongCM = lazy(() => import("../pages/admin/PhanCongPhongCM"));
@@ -205,19 +201,34 @@ const XemChiTietPhieuThu = lazy(
   () => import("../pages/admin/managePhieuThu/XemChiTietPhieuThu")
 );
 
+const DanhSachPhieuChoPhanCongKhoaCM = lazy(
+  () => import("../pages/admin/listChoPhanCongKhoaCM")
+);
+
+const DanhSachPhanCongKhoaCM = lazy(
+  () => import("../pages/admin/listPhanCongKhoaCM")
+);
+
+const ChiTietPhanCongPhongCM = lazy(
+  () => import("../pages/admin/listPhanCongKhoaCM/ChiTietPhanCongPhongCM")
+);
 const RoutesPersonnels = () => {
   return (
     <Suspense>
       <Routes>
         {/* Admin Routes */}
-        <Route path="/tuna" element={<LayoutAdmin />}>
+        <Route path={APP_ROUTES.TUNA_ADMIN.LOGIN.to} element={<LoginPage />} />
+        <Route
+          path="/tuna"
+          element={
+            <RedirectPersonnel>
+              <MainLayout />
+            </RedirectPersonnel>
+          }
+        >
           <Route
             path={APP_ROUTES.TUNA_ADMIN.DASHBOARD.to}
             element={<Dashboard />}
-          />
-          <Route
-            path={APP_ROUTES.TUNA_ADMIN.LOGIN.to}
-            element={<LoginPage />}
           />
           <Route
             path={APP_ROUTES.TUNA_ADMIN.FORGOTPASSWORD.to}
@@ -228,12 +239,6 @@ const RoutesPersonnels = () => {
               APP_ROUTES.TUNA_ADMIN.QUAN_LY_PHIEU_DANG_KY_DICH_VU_KIEM_NGHIEM.to
             }
             element={<QuanLyPhieuDKyDVHN />}
-          />
-          <Route
-            path={
-              APP_ROUTES.TUNA_ADMIN.QUAN_LY_PHIEU_DANG_KY_DICH_VU_KIEM_NGHIEM.id
-            }
-            element={<ChiTietPhieuDKyDVKN />}
           />
           <Route
             path={APP_ROUTES.TUNA_ADMIN.PHAN_CONG_PHONG_CHUYEN_MON.to}
@@ -471,6 +476,20 @@ const RoutesPersonnels = () => {
           <Route
             path={APP_ROUTES.TUNA_ADMIN.QUAN_LY_PHIEU_THU.xem_chi_tiet}
             element={<XemChiTietPhieuThu />}
+          />
+          <Route
+            path={APP_ROUTES.TUNA_ADMIN.PHAN_CONG_PHONG_CHUYEN_MON.list}
+            element={<DanhSachPhieuChoPhanCongKhoaCM />}
+          />
+          <Route
+            path={APP_ROUTES.TUNA_ADMIN.DANH_SACH_PHAN_CONG_KHOA_CM.to}
+            element={<DanhSachPhanCongKhoaCM />}
+          />
+          <Route
+            path={
+              APP_ROUTES.TUNA_ADMIN.DANH_SACH_PHAN_CONG_KHOA_CM.xem_chi_tiet
+            }
+            element={<ChiTietPhanCongPhongCM />}
           />
         </Route>
 

@@ -1,12 +1,27 @@
 export const API = {
   ADMIN: {
     DANG_NHAP: "/api/nhanvien/loginNhanVien",
-    GET_INFOR_NHAN_VIEN: "/api/nhanvien/getNhanVienByID",
+    NHAN_VIEN: {
+      GET_INFOR_NHAN_VIEN: "/api/nhanvien/getNhanVienByID",
+      GET_NHAN_VIEN_ALL: "/api/nhanvien/getNhanVienByID",
+    },
     PHIEU_DKY_DVKM: {
       QUAN_LY_PHIEU_DKY_DVKM: "/api/phieudangky/getPhieuDangKyAll",
       XEM_CHI_TIET: "/api/phieudangky/findPhieuDangKy?maPhieuDangKy=",
       DANH_GIA_NHANVIEN: "/api/PhieuDangKy/reviewPhieuDangKyByKHDT",
       DANH_GIA_BLD: "/api/PhieuDangKy/reviewPhieuDangKyByBLD",
+    },
+    KHOA: {
+      GET_KHOA_ALL: "/api/Khoa/getKhoaAll",
+      GET_KHOA_BY_ID: "/api/Khoa/getKhoaByID?maKhoa=",
+    },
+    PHIEU_PHIEU_DE_XUAT_PHONG_BAN: {
+      CREATE_PHIEU_PHIEU_DE_XUAT_PHONG_BAN:
+        "/api/PhieuPhieuDeXuatPhongBan/createPhieuPhieuDeXuatPhongBan",
+      GET_PHAN_CONG_KHOA_CHUYEN_MON_ALL:
+        "/api/PhieuPhieuDeXuatPhongBan/getPhieuPhieuDeXuatPhongBanAll",
+      GET_PHAN_CONG_KHOA_CHUYEN_MON_BY_ID:
+        "/api/PhieuPhieuDeXuatPhongBan/getPhieuPhieuDeXuatPhongBanByID?maPhieuPhieuDeXuatPhongBan=",
     },
   },
   CUSTOMER: {
@@ -32,7 +47,8 @@ export const API = {
     DANG_KY: "/api/khachhang/createKhachHang",
     USER_INFO: "/api/khachhang/getInfoKhachHang",
     QUEN_MAT_KHAU: "/api/khachhang/forgetPassword",
-    REFRESH_TOKEN: "/api/khachhang/getRefreshToken",
+    REFRESH_TOKEN_KHACH_HANG: "/api/khachhang/getRefreshToken",
+    REFRESH_TOKEN_TRUNG_TAM: "/api/nhanvien/getRefreshToken",
     UPDATE_INFOR: "/api/khachhang/updateKhachHang",
     DOI_MAT_KHAU: "/api/khachhang/updateKhachHang",
   },

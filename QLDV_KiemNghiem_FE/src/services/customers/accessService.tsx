@@ -33,10 +33,27 @@ export default class accessServices {
     }
   }
 
-  static async getRefreshToken(params: any) {
+  static async getRefreshTokenKhachHang(params: any) {
     try {
       const response = await _APIInstance.post(
-        API.CUSTOMER.REFRESH_TOKEN,
+        API.CUSTOMER.REFRESH_TOKEN_KHACH_HANG,
+        params,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      return response.data?.data;
+    } catch (res: any) {
+      return res.response.data;
+    }
+  }
+
+  static async getRefreshTokenNhanVien(params: any) {
+    try {
+      const response = await _APIInstance.post(
+        API.CUSTOMER.REFRESH_TOKEN_TRUNG_TAM,
         params,
         {
           headers: {

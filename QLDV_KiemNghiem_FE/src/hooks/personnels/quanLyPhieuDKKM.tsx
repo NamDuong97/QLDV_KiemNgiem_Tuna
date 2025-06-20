@@ -7,7 +7,20 @@ interface Props {
   onSettled?: any;
 }
 
-export const quanLyPhieuDKKM = (props: Props) => {
+export const listPhieuDKKNAll = (props: Props) => {
+  const { queryKey } = props;
+  return useQuery({
+    queryKey: [queryKey],
+    queryFn: async () => {
+      const response = await QuanlyPhieuDKYKNServices.listPhieuDKKNAll();
+      return response?.data;
+    },
+    refetchOnWindowFocus: false,
+    staleTime: Infinity,
+  });
+};
+
+export const listPhieuDKKM_KHTH = (props: Props) => {
   const { queryKey, params } = props;
   return useQuery({
     queryKey: [queryKey],
@@ -16,13 +29,14 @@ export const quanLyPhieuDKKM = (props: Props) => {
       return response?.data;
     },
     refetchOnWindowFocus: false,
+    staleTime: Infinity,
   });
 };
 
 export const xemChitietPhieuDKKM = (props: Props) => {
   const { queryKey, params } = props;
   return useQuery({
-    queryKey: [queryKey],
+    queryKey: [queryKey, params],
     queryFn: async () => {
       const response = await QuanlyPhieuDKYKNServices.xemChitietPhieuDKKM(
         params
@@ -30,6 +44,8 @@ export const xemChitietPhieuDKKM = (props: Props) => {
       return response;
     },
     refetchOnWindowFocus: false,
+    enabled: !!params,
+    staleTime: Infinity,
   });
 };
 

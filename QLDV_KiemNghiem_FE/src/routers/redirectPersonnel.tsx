@@ -1,10 +1,12 @@
-import { ReactNode, useContext } from "react";
-import { Navigate, useLocation } from "react-router";
-import { PersonnelContext } from "../contexts/PersonelsProvider";
+import { ReactNode } from "react";
+import { Navigate } from "react-router";
+import { APP_ROUTES } from "../constants/routers";
+import Cookies from "js-cookie";
+import { EKey } from "../constants/commons";
 
 interface RedirectPersonnelProps {
   children: ReactNode;
-  pathRedirect: string;
+  pathRedirect?: string;
 }
 
 const routeGuards: Record<string, { sessionKey: string }> = {
@@ -17,18 +19,20 @@ const RedirectPersonnel = ({
   children,
   pathRedirect,
 }: RedirectPersonnelProps) => {
-  const context = useContext(PersonnelContext);
-  const location = useLocation();
-  if (!context) return null;
-
-  const { isLoginPersonnel, isLoadingAuth } = context;
   const guard = routeGuards[location.pathname];
+  const login = Cookies.get(EKey.TOKEN);
   const passedSessionGuard = guard
     ? !!sessionStorage.getItem(guard.sessionKey)
     : true;
-  if (isLoadingAuth) return null;
-  if (!isLoginPersonnel || !passedSessionGuard) {
-    return <Navigate to={pathRedirect} state={{ from: location }} replace />;
+
+  if (!login || !passedSessionGuard) {
+    return (
+      <Navigate
+        to={pathRedirect ? pathRedirect : APP_ROUTES.TUNA_ADMIN.LOGIN.to}
+        state={{ from: location }}
+        replace
+      />
+    );
   }
 
   return <>{children}</>;

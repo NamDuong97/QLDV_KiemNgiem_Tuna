@@ -1,7 +1,8 @@
-import { ReactNode, useContext } from "react";
+import { ReactNode } from "react";
 import { Navigate, useLocation } from "react-router";
-import { StoreContext } from "../contexts/storeProvider";
 import { APP_ROUTES } from "../constants/routers";
+import { EKey } from "../constants/commons";
+import Cookies from "js-cookie";
 
 interface RedirectCustomerProps {
   children: ReactNode;
@@ -27,14 +28,14 @@ const RedirectCustomer = ({
   children,
   pathRedirect,
 }: RedirectCustomerProps) => {
-  const { isLogin, isLoadingAuth } = useContext(StoreContext);
+  const login = Cookies.get(EKey.TOKEN_GUEST);
   const location = useLocation();
   const guard = routeGuards[location.pathname];
   const passedSessionGuard = guard
     ? !!sessionStorage.getItem(guard.sessionKey)
     : true;
 
-  if (!isLogin && !isLoadingAuth) {
+  if (!login) {
     return <Navigate to={pathRedirect} state={{ from: location }} replace />;
   }
 
