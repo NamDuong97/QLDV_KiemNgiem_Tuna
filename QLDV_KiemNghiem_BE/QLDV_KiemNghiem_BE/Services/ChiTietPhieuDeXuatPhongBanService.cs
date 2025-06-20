@@ -58,9 +58,10 @@ namespace QLDV_KiemNghiem_BE.Services
                         var phieuDeXuat = await _repositoryManager.PhieuDeXuatPhongBan.FindPhieuDeXuatPhongBanAsync(duyetPhieu.MaPhieuDeXuat, true);
                         if (phieuDeXuat != null)
                         {
-                            phieuDeXuat.TrangThai = "Toan bo mau da duoc phong khoa phe duyet, tiep theo se la giai doan kiem nghiem";
+                            phieuDeXuat.TrangThai = 3;
                             _repositoryManager.PhieuDeXuatPhongBan.UpdatePhieuDeXuatPhongBanAsync(phieuDeXuat);
                         }
+
                     }
                     // Cập nhật trạng thái cho mẫu tương ứng trong bảng PhieuDangKy_Mau
                     var phieuDangKyMau = await _repositoryManager.PhieuDangKyMau.FindPhieuDangKyMauAsync(checkExistsChiTietPhieuDXPB.MaPdkMau ?? "");

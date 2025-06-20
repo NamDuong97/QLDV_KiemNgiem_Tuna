@@ -31,8 +31,6 @@ namespace QLDV_KiemNghiem_BE.DTO.RequestDto
 
         [DataType(DataType.DateTime, ErrorMessage = "Ngày thực hiện kiểm nghiệm phải là ngày giờ hợp lệ.")]
         public DateTime? NgayThucHienKiemNghiem { get; set; }
-        public string? TrangThai { get; set; } 
-        // Trang thai ("Chua Duyet", "Da Duyet", "Khong Duyet", "Bi Huy")
         public bool IsDel { get; set; } = false;
     }
 }

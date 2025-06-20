@@ -35,8 +35,7 @@ public partial class PhieuDeXuatPhongBan
     [Column(TypeName = "datetime")]
     public DateTime? ThoiGianGiaoMau { get; set; }
 
-    [StringLength(100)]
-    public string? TrangThai { get; set; }
+    public int? TrangThai { get; set; }
 
     [Column(TypeName = "datetime")]
     public DateTime? NgayTao { get; set; }

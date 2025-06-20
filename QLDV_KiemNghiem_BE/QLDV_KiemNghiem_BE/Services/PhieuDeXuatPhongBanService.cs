@@ -63,7 +63,7 @@ namespace QLDV_KiemNghiem_BE.Services
                 MaKhoaTiepNhan = PhieuDeXuatPhongBanDto.MaKhoaTiepNhan,
                 ManvDeXuat = PhieuDeXuatPhongBanDto.ManvDeXuat,
                 ThoiGianGiaoMau = PhieuDeXuatPhongBanDto.ThoiGianGiaoMau,
-                TrangThai = $"Đã phân công cho phòng/khoa {PhieuDeXuatPhongBanDto.MaKhoaTiepNhan}"
+                TrangThai = 2
             };
 
             foreach (var item in PhieuDeXuatPhongBanDto.ChiTietPhieuDeXuatPhongBans)
@@ -145,7 +145,6 @@ namespace QLDV_KiemNghiem_BE.Services
             PhieuDeXuatPhongBanCheck.ManvTiepNhan = !string.IsNullOrEmpty(PhieuDeXuatPhongBanDto.ManvTiepNhan) ? PhieuDeXuatPhongBanDto.ManvTiepNhan : PhieuDeXuatPhongBanCheck.ManvTiepNhan;
             PhieuDeXuatPhongBanCheck.ThoiGianGiaoMau = PublicFunction.IsValidDateTime(PhieuDeXuatPhongBanDto.ThoiGianGiaoMau) ? PhieuDeXuatPhongBanDto.ThoiGianGiaoMau : PhieuDeXuatPhongBanCheck.ThoiGianGiaoMau;
             PhieuDeXuatPhongBanCheck.ManvTiepNhan = !string.IsNullOrEmpty(PhieuDeXuatPhongBanDto.ManvTiepNhan) ? PhieuDeXuatPhongBanDto.ManvTiepNhan : PhieuDeXuatPhongBanCheck.ManvTiepNhan;
-            PhieuDeXuatPhongBanCheck.TrangThai = !string.IsNullOrEmpty(PhieuDeXuatPhongBanDto.TrangThai) ? PhieuDeXuatPhongBanDto.TrangThai : PhieuDeXuatPhongBanCheck.TrangThai;
             PhieuDeXuatPhongBanCheck.NgaySua = DateTime.Now;
             PhieuDeXuatPhongBanCheck.NguoiSua = user;
 
