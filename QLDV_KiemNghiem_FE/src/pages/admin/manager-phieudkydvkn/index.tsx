@@ -1,12 +1,21 @@
 import { motion } from "motion/react";
-import { Inputs } from "../../../components/Inputs";
-import PopupBoloc from "./PopupBoloc";
-import { MouseEvent, useContext, useState } from "react";
-import TableQuanLyPhieuDKyDVHN from "./Table";
-import { Pagination } from "@mui/material";
+import { useState } from "react";
+import { keyTag } from "../../../models/Account-Customer";
+
+import ChiTietPhieuDKyDVKN from "./ChiTietPhieuDKyDVKN";
+import KHTH from "./RolePhieuDKyHN/KHTH";
+import BLD from "./RolePhieuDKyHN/BLD";
 import { Align } from "../../../models/Table";
-import { quanLyPhieuDKKM } from "../../../hooks/personnels/quanLyPhieuDKKM";
-import { PersonnelContext } from "../../../contexts/PersonelsProvider";
+import { role } from "../../../configs/parseJwt";
+import Card from "../dashboard/Card";
+import {
+  AlertTriangle,
+  CheckCircle,
+  Clipboard,
+  Clock,
+  TrendingDown,
+  TrendingUp,
+} from "react-feather";
 
 const tableHead = [
   {
@@ -42,37 +51,14 @@ const tableHead = [
 ];
 
 const QuanLyPhieuDKyDVHN = () => {
-  const [anchorElPopupBoloc, setAnchorElPopupBoloc] =
-    useState<HTMLButtonElement | null>(null);
-  const { personnelInfo } = useContext(PersonnelContext);
+  const [activeFilter, setActiveFilter] = useState(keyTag.Cho_Xu_Ly);
 
-  const { data, isLoading } = quanLyPhieuDKKM({
-    queryKey: "quanLyPhieuDKKM",
-    params: {
-      trangThaiID: personnelInfo?.maLoaiTk === "KHTH" ? "TT01" : "TT02",
-    },
-  });
+  const [openXemChiTiet, setOpenXemChiTiet] = useState(false);
 
-  const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage] = useState(10);
-  const indexOfLastItem = currentPage * itemsPerPage;
-  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentItems = data?.slice(indexOfFirstItem, indexOfLastItem);
-  const totalPages = Math.ceil(data && data?.length / itemsPerPage);
-
-  const handlePageChange = (_: any, value: number) => {
-    setCurrentPage(value);
+  const handleCloseXemChiTiet = () => {
+    setOpenXemChiTiet(false);
+    sessionStorage.removeItem("phieu-DKKN-xem-chi-tiet");
   };
-
-  const handleClickPopupBoloc = (event: MouseEvent<HTMLButtonElement>) => {
-    setAnchorElPopupBoloc(event.currentTarget);
-  };
-
-  const handleClosePopupBoloc = () => {
-    setAnchorElPopupBoloc(null);
-  };
-
-  const openPopupBoloc = Boolean(anchorElPopupBoloc);
 
   return (
     <motion.div
@@ -81,92 +67,98 @@ const QuanLyPhieuDKyDVHN = () => {
       animate={{ x: 0, opacity: 1 }}
       exit={{ x: 0, opacity: 0 }}
       transition={{ duration: 0.7 }}
-      className="px-10 py-20 grid gap-6"
+      className="px-10 grid gap-6 bg-blue-50 p-6"
     >
-      <div className="bg-cyan-800 text-center px-6 py-6 rounded-full border-[2px] border-gray-300 shadow-[0_4px_4px_rgba(0,0,0,0.25)]">
-        <p className="text-3xl/6 uppercase font-bold text-white">
-          Quản Lý Phiếu Đăng Ký Dịch Vụ Kiểm Nghiệm
-        </p>
+      <div className="">
+        <h1 className="text-2xl capitalize font-semibold text-gray-800">
+          Phiếu đăng ký kiểm nghiệm
+        </h1>
       </div>
-      <div className="border-[2px] border-solid border-gray-300 rounded-[10px] shadow-[0px_4px_4px_rgba(0,0,0,0.25)] grid gap-2">
-        <div className="px-6 pt-4 flex justify-between">
-          <div className="flex gap-4">
-            <Inputs
-              height="h-0"
-              sx={{
-                input: {
-                  paddingBottom: "8px",
-                  paddingTop: "8px",
-                },
-              }}
-              placeholder="Số đăng ký phân tích..."
-            />
-            <Inputs
-              height="h-0"
-              sx={{
-                input: {
-                  paddingBottom: "8px",
-                  paddingTop: "8px",
-                },
-              }}
-              placeholder="Người gửi mẫu..."
-            />
-            <Inputs
-              height="h-0"
-              sx={{
-                input: {
-                  paddingBottom: "8px",
-                  paddingTop: "8px",
-                },
-              }}
-              placeholder="Đơn vị gửi mẫu..."
-            />
-          </div>
-          <div>
+      <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
+        <Card
+          title="Tổng phiếu"
+          value="1,284"
+          icon={<Clipboard className="w-6 h-6" />}
+          trend="up"
+          trendValue="12%"
+          trendIcon={<TrendingUp className="inline w-4 h-4 mr-1" />}
+          bgColor="bg-indigo-100"
+          textColor="text-indigo-600"
+        />
+        <Card
+          title="Đã hoàn thành"
+          value="876"
+          icon={<CheckCircle className="w-6 h-6" />}
+          trend="up"
+          trendValue="8%"
+          trendIcon={<TrendingUp className="inline w-4 h-4 mr-1" />}
+          bgColor="bg-green-100"
+          textColor="text-green-600"
+        />
+        <Card
+          title="Đang xử lý"
+          value="328"
+          icon={<Clock className="w-6 h-6" />}
+          trend="up"
+          trendValue="5%"
+          trendIcon={<TrendingUp className="inline w-4 h-4 mr-1" />}
+          bgColor="bg-yellow-100"
+          textColor="text-yellow-600"
+        />
+        <Card
+          title="Không đạt"
+          value="80"
+          icon={<AlertTriangle className="w-6 h-6" />}
+          trend="down"
+          trendValue="3%"
+          trendIcon={<TrendingDown className="inline w-4 h-4 mr-1" />}
+          bgColor="bg-red-100"
+          textColor="text-red-600"
+        />
+      </div>
+      <div className="bg-white p-4 rounded-lg shadow-sm">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+          <div className="flex flex-wrap gap-2">
             <button
-              onClick={handleClickPopupBoloc}
-              className="flex items-center gap-2 px-3 py-[6px] text-base/4 font-medium bg-teal-600 text-white hover:bg-teal-700 border-[2px] border-solid border-gray-300 rounded-[6px] shadow-[0_4px_4px_rgba(0,0,0,0.25)] cursor-pointer"
+              className={`px-3 py-1.5 cursor-pointer text-sm font-medium rounded-md ${
+                activeFilter === keyTag.Cho_Xu_Ly
+                  ? "bg-indigo-100 text-indigo-800"
+                  : "text-gray-600 hover:bg-gray-100"
+              }`}
+              onClick={() => setActiveFilter(keyTag.Cho_Xu_Ly)}
             >
-              Bộ Lọc
-              <span className="sm:px-[4px] sm:py-[3px] w-6 h-6 text-gray-800 bg-gray-200 rounded-full text-xs/4 flex items-center justify-center">
-                0
-              </span>
+              Chờ duyệt phiếu
+            </button>
+            <button
+              className={`px-3 py-1.5 cursor-pointer text-sm font-medium rounded-md ${
+                activeFilter === keyTag.Tat_Ca
+                  ? "bg-indigo-100 text-indigo-800"
+                  : "text-gray-600 hover:bg-gray-100"
+              }`}
+              onClick={() => setActiveFilter(keyTag.Tat_Ca)}
+            >
+              Tất cả
             </button>
           </div>
         </div>
-        <hr className="text-gray-300" />
-        <div className="grid gap-4 px-6 pt-4 pb-6">
-          <div>
-            <TableQuanLyPhieuDKyDVHN
-              tableHead={tableHead}
-              tableBody={currentItems}
-              isLoading={isLoading}
-            />
-          </div>
-          <div className="px-4 py-2 flex justify-center">
-            <Pagination
-              count={totalPages}
-              page={currentPage}
-              onChange={handlePageChange}
-              variant="outlined"
-              shape="rounded"
-              color="primary"
-              sx={{
-                '[aria-label="Go to next page"],[aria-label="Go to previous page"]':
-                  {
-                    backgroundColor: "#1976d21f",
-                    border: "1px solid #1976d280",
-                    color: "#1976d2",
-                  },
-                ".MuiPagination-ul": {
-                  justifyContent: "center",
-                },
-              }}
-            />
-          </div>
-        </div>
       </div>
-      <PopupBoloc open={openPopupBoloc} handleClose={handleClosePopupBoloc} />
+      {role === "BLD" ? (
+        <BLD
+          setOpenXemChiTiet={setOpenXemChiTiet}
+          tableHead={tableHead}
+          activeFilter={activeFilter}
+        />
+      ) : (
+        <KHTH
+          setOpenXemChiTiet={setOpenXemChiTiet}
+          tableHead={tableHead}
+          activeFilter={activeFilter}
+        />
+      )}
+      <ChiTietPhieuDKyDVKN
+        open={openXemChiTiet}
+        handleClose={handleCloseXemChiTiet}
+      />
     </motion.div>
   );
 };

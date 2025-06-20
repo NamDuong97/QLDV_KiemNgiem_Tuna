@@ -1,16 +1,15 @@
 import {
   Box,
-  Paper,
+  Skeleton,
   Table,
   TableBody,
   TableCell,
   TableContainer,
   TableHead,
   TableRow,
+  Tooltip,
 } from "@mui/material";
-import { useNavigate } from "react-router";
 import { Align } from "../../../../models/Table";
-import { APP_ROUTES } from "../../../../constants/routers";
 import { FaEye } from "react-icons/fa";
 
 interface TableProps {
@@ -18,12 +17,11 @@ interface TableProps {
   tableHead: any[];
   handleSort?: (value: string) => void;
   isLoading: boolean;
+  handleClickXemChiTiet: () => void;
 }
 
 const TableQuanLyPhieuDKyDVHN = (props: TableProps) => {
-  const { tableBody, tableHead } = props;
-
-  const navigate = useNavigate();
+  const { tableBody, tableHead, handleClickXemChiTiet, isLoading } = props;
 
   const handleAlign = (align: string) => {
     switch (align) {
@@ -35,22 +33,27 @@ const TableQuanLyPhieuDKyDVHN = (props: TableProps) => {
         return "justify-end";
     }
   };
-
+  // const navigate = useNavigate();
   const handleRedirectXemChiTiet = (id: any) => {
-    navigate(
-      APP_ROUTES.TUNA_ADMIN.QUAN_LY_PHIEU_DANG_KY_DICH_VU_KIEM_NGHIEM.id
-    );
+    handleClickXemChiTiet();
     sessionStorage.setItem("phieu-DKKN-xem-chi-tiet", JSON.stringify(id));
   };
+
   return (
-    <TableContainer component={Paper}>
+    <TableContainer
+      sx={{
+        "&.MuiTableContainer-root": {
+          borderRadius: 2,
+        },
+      }}
+    >
       <Table>
-        <TableHead className="bg-[#D9D9D9]">
+        <TableHead className="bg-gray-200">
           <TableRow>
             {tableHead.map((item) => (
               <TableCell key={item.id} padding="normal">
                 <Box className={`flex items-center ${handleAlign(item.align)}`}>
-                  <p className="text-sm/4 sm:text-lg/4 font-bold">
+                  <p className="text-base/4 font-bold text-gray-700">
                     {item.label}
                   </p>
                 </Box>
@@ -58,54 +61,108 @@ const TableQuanLyPhieuDKyDVHN = (props: TableProps) => {
             ))}
           </TableRow>
         </TableHead>
-        <TableBody className="bg-white">
-          {tableBody?.map((item) => (
+        <TableBody>
+          {isLoading ? (
             <TableRow
-              key={item.maId}
               sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
               hover={true}
               className="cursor-pointer"
             >
               <TableCell align="left">
-                <Box className="flex gap-2 items-center justify-start">
-                  <p className="text-sm/4 sm:text-base/4 font-medium cursor-pointer">
-                    {item?.soDkpt}
-                  </p>
-                </Box>
+                <div className="flex justify-start">
+                  <Skeleton variant="rounded" width={210} height={30} />
+                </div>
               </TableCell>
               <TableCell align="center">
-                <Box className="flex gap-2 items-center justify-center">
-                  <p className="text-sm/4 sm:text-base/4 font-medium">
-                    {item?.nguoiGuiMau}
-                  </p>
-                </Box>
+                <div className="flex justify-center">
+                  <Skeleton variant="rounded" width={210} height={30} />
+                </div>
               </TableCell>
               <TableCell align="center">
-                <Box className="flex gap-2 items-center justify-center">
-                  <p className="text-sm/4 sm:text-base/4 font-medium">
-                    {item?.donViGuiMau}
-                  </p>
-                </Box>
+                <div className="flex justify-center">
+                  <Skeleton variant="rounded" width={210} height={30} />
+                </div>
               </TableCell>
               <TableCell align="center">
-                <Box className="flex gap-2 items-center justify-center">
-                  <p className="text-sm/4 sm:text-base/4 font-medium">
-                    {item?.ngayGiaoMau}
-                  </p>
-                </Box>
+                <div className="flex justify-center">
+                  <Skeleton variant="rounded" width={210} height={30} />
+                </div>
               </TableCell>
               <TableCell align="center" className="!py-3">
-                <Box className="flex gap-2 items-center justify-center">
-                  <button
-                    onClick={() => handleRedirectXemChiTiet(item?.maId)}
-                    className="border-[2px] border-solid group hover:bg-gray-100 text-white border-gray-300 rounded-full p-1 font-medium text-base/6 flex justify-center cursor-pointer items-center gap-2 shadow-[0_4px_4px_rgba(0,0,0,0.2)]"
-                  >
-                    <FaEye className="w-6 h-6 text-yellow-500 group-hover:text-yellow-400 " />
-                  </button>
-                </Box>
+                <div className="flex justify-center">
+                  <Skeleton variant="rounded" width={210} height={30} />
+                </div>
               </TableCell>
             </TableRow>
-          ))}
+          ) : (
+            tableBody?.map((item) => (
+              <TableRow
+                key={item.maId}
+                sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+                hover={true}
+                className="cursor-pointer"
+              >
+                <TableCell align="left">
+                  <Box className="flex gap-2 items-center justify-start">
+                    <p
+                      className="text-base/4 font-medium cursor-pointer text-blue-700 hover:underline"
+                      onClick={() => handleRedirectXemChiTiet(item?.maId)}
+                    >
+                      {item?.soDkpt}
+                    </p>
+                  </Box>
+                </TableCell>
+                <TableCell align="center">
+                  <Box className="flex gap-2 items-center justify-center">
+                    <p className="text-base/4 font-medium text-gray-700">
+                      {item?.nguoiGuiMau}
+                    </p>
+                  </Box>
+                </TableCell>
+                <TableCell align="center">
+                  <Box className="flex gap-2 items-center justify-center">
+                    <p className="text-base/4 font-medium text-gray-700">
+                      {item?.donViGuiMau}
+                    </p>
+                  </Box>
+                </TableCell>
+                <TableCell align="center">
+                  <Box className="flex gap-2 items-center justify-center">
+                    <p className="text-base/4 font-medium text-gray-700">
+                      {new Date(item?.ngayGiaoMau).toLocaleDateString("vi-VN")}
+                    </p>
+                  </Box>
+                </TableCell>
+                <TableCell align="center" className="!py-3">
+                  <Box className="flex gap-3 items-center justify-center">
+                    <Tooltip
+                      title="Xem chi tiết"
+                      slotProps={{
+                        popper: {
+                          modifiers: [
+                            {
+                              name: "offset",
+                              options: {
+                                offset: [0, -14],
+                              },
+                            },
+                          ],
+                        },
+                      }}
+                      disableInteractive
+                    >
+                      <button
+                        onClick={() => handleRedirectXemChiTiet(item?.maId)}
+                        className="text-blue-700 font-semibold text-sm/6 cursor-pointer flex gap-2 items-center"
+                      >
+                        <FaEye className="w-5 h-5" />
+                      </button>
+                    </Tooltip>
+                  </Box>
+                </TableCell>
+              </TableRow>
+            ))
+          )}
         </TableBody>
       </Table>
     </TableContainer>
