@@ -1,4 +1,4 @@
-import { useMutation, useQueries, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import QuanlyPhieuDKYKNServices from "../../services/personnels/quanlyPhieuDKYKN";
 
 interface Props {

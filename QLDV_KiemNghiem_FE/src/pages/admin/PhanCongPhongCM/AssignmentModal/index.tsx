@@ -4,10 +4,9 @@ import { MauPhanCong } from "../../../../models/mau";
 import yup from "../../../../configs/yup.custom";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
-import { queryClient } from "../../../../lib/reactQuery";
-import { createPhieuPhanCongKhoa } from "../../../../hooks/personnels/phanCongKhoa";
+// import { queryClient } from "../../../../lib/reactQuery";
+// import { createPhieuPhanCongKhoa } from "../../../../hooks/personnels/phanCongKhoa";
 import { maNhanVien } from "../../../../configs/parseJwt";
-import { Inputs } from "../../../../components/Inputs";
 
 interface Props {
   samples: MauPhanCong[];
@@ -32,10 +31,10 @@ const AssignmentModal = (props: Props) => {
     onClose,
     selectedSamples,
     departments,
-    samples,
-    setSamples,
-    setSuccessMessage,
-    setShowSuccessMessage,
+    // samples,
+    // setSamples,
+    // setSuccessMessage,
+    // setShowSuccessMessage,
   } = props;
   const [selectedDepartment, setSelectedDepartment] = useState(null);
 
@@ -88,14 +87,14 @@ const AssignmentModal = (props: Props) => {
     resolver: yupResolver<FormPhanCong>(shema),
   });
 
-  const handleSettled = async () => {
-    await queryClient.refetchQueries({ queryKey: ["ChitietPhieuDKKM"] });
-  };
+  // const handleSettled = async () => {
+  //   await queryClient.refetchQueries({ queryKey: ["ChitietPhieuDKKM"] });
+  // };
 
-  const { mutate } = createPhieuPhanCongKhoa({
-    queryKey: "createPhieuPhanCongKhoa",
-    onSettled: handleSettled,
-  });
+  // const { mutate } = createPhieuPhanCongKhoa({
+  //   queryKey: "createPhieuPhanCongKhoa",
+  //   onSettled: handleSettled,
+  // });
 
   const handleAssignSubmit = (data: FormPhanCong) => {
     if (!selectedDepartment || selectedSamples.length === 0) {
@@ -121,16 +120,16 @@ const AssignmentModal = (props: Props) => {
     };
     console.log("phanCong", phanCong);
 
-    const updatedSamples = samples.map((sample: MauPhanCong) => {
-      if (selectedSamples.includes(sample.maId as string)) {
-        return {
-          ...sample,
-          assignedDepartment: department,
-          status: "Đã phân công",
-        };
-      }
-      return sample;
-    });
+    // const updatedSamples = samples.map((sample: MauPhanCong) => {
+    //   if (selectedSamples.includes(sample.maId as string)) {
+    //     return {
+    //       ...sample,
+    //       assignedDepartment: department,
+    //       status: "Đã phân công",
+    //     };
+    //   }
+    //   return sample;
+    // });
     // console.log("updatedSamples", updatedSamples);
 
     // setSamples(updatedSamples);

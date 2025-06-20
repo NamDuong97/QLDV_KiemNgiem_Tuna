@@ -11,9 +11,6 @@ import {
 } from "@mui/material";
 import { Align } from "../../../../models/Table";
 import { FaEye } from "react-icons/fa";
-import { ImUsers } from "react-icons/im";
-import { useNavigate } from "react-router";
-import { APP_ROUTES } from "../../../../constants/routers";
 
 interface TableProps {
   tableBody: any[];
@@ -36,7 +33,7 @@ const TableQuanLyPhieuDKyDVHN = (props: TableProps) => {
         return "justify-end";
     }
   };
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   const handleRedirectXemChiTiet = (id: any) => {
     handleClickXemChiTiet();
     sessionStorage.setItem("phieu-DKKN-xem-chi-tiet", JSON.stringify(id));
