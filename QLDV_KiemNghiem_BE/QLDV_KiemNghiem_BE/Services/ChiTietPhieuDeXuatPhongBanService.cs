@@ -1,11 +1,12 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.SignalR;
+using QLDV_KiemNghiem_BE.DTO.RequestDto;
+using QLDV_KiemNghiem_BE.DTO.ResponseDto;
+using QLDV_KiemNghiem_BE.HubsRealTime;
+using QLDV_KiemNghiem_BE.Interfaces;
 using QLDV_KiemNghiem_BE.Interfaces.ManagerInterface;
 using QLDV_KiemNghiem_BE.Models;
-using QLDV_KiemNghiem_BE.Interfaces;
 using QLDV_KiemNghiem_BE.RequestFeatures;
-using QLDV_KiemNghiem_BE.DTO.ResponseDto;
-using Microsoft.AspNetCore.SignalR;
-using QLDV_KiemNghiem_BE.HubsRealTime;
 
 namespace QLDV_KiemNghiem_BE.Services
 {
@@ -60,8 +61,18 @@ namespace QLDV_KiemNghiem_BE.Services
                         {
                             phieuDeXuat.TrangThai = 3;
                             _repositoryManager.PhieuDeXuatPhongBan.UpdatePhieuDeXuatPhongBanAsync(phieuDeXuat);
-                        }
 
+                            // Kiểm tra các phiếu đề xuất khác của phiếu đăng ký này đã được duyệt hết chưa, để cập trạng thái của pdk
+                            var checkAllPDXPBApproved = await _repositoryManager.PhieuDeXuatPhongBan.CheckAllPDXPBApproved(phieuDeXuat.MaId, phieuDeXuat.MaPhieuDangKy);
+                            if(checkAllPDXPBApproved == 1)
+                            {
+                                var phieuDangKy = await _repositoryManager.PhieuDangKy.FindPhieuDangKyAsync(phieuDeXuat.MaPhieuDangKy);
+                                if(phieuDangKy!= null)
+                                {
+                                    phieuDangKy.TrangThaiId = "TT07";
+                                }
+                            }
+                        }
                     }
                     // Cập nhật trạng thái cho mẫu tương ứng trong bảng PhieuDangKy_Mau
                     var phieuDangKyMau = await _repositoryManager.PhieuDangKyMau.FindPhieuDangKyMauAsync(checkExistsChiTietPhieuDXPB.MaPdkMau ?? "");
@@ -78,11 +89,11 @@ namespace QLDV_KiemNghiem_BE.Services
                     checkExistsChiTietPhieuDXPB.LyDoTuChoi = duyetPhieu.Message;
                     checkExistsChiTietPhieuDXPB.ManvTuChoi = duyetPhieu.MaId;
                 }
+
                 checkExistsChiTietPhieuDXPB.NgaySua = DateTime.Now;
                 checkExistsChiTietPhieuDXPB.NguoiSua = user;
                 _repositoryManager.ChiTietPhieuDeXuatPhongBan.UpdateChiTietPhieuDeXuatPhongBanAsync(checkExistsChiTietPhieuDXPB);
                 bool check = await _repositoryManager.SaveChangesAsync();
-               
                 return new ResponseReviewPhieuDeXuatPhongBan
                 {
                     MaPhieuDeXuat = duyetPhieu.MaPhieuDeXuat,
@@ -98,6 +109,66 @@ namespace QLDV_KiemNghiem_BE.Services
                     Message = "Chi tiet phieu de xuat phong ban khong ton tai",
                     MaPhieuDeXuat = duyetPhieu.MaPhieuDeXuat,
                 };
+            }
+        }
+        public async Task<ResponseReviewPhieuDeXuatPhongBan> ReviewPhieuDeXuatPhongBanByBLD(RequestReviewPhieuDeXuatPhongBan duyetPhieu, string user)
+        {
+            if (duyetPhieu == null || duyetPhieu.MaPhieuDeXuat == "")
+            {
+                return new ResponseReviewPhieuDeXuatPhongBan
+                {
+                    KetQua = false,
+                    Message = "Thieu du lieu dau vao!",
+                };
+            }
+            var checkExistsChiTietPhieuDXPB = await _repositoryManager.ChiTietPhieuDeXuatPhongBan.FindChiTietPhieuDeXuatPhongBanAsync(duyetPhieu.MaPhieuDeXuat, true);
+            if (checkExistsChiTietPhieuDXPB != null)
+            {
+                if (duyetPhieu.Action)
+                {
+                    // BLĐ đồng ý cho từ chối thì trang thái là: Phòng ban từ chối chờ phân công lại
+                    checkExistsChiTietPhieuDXPB.TrangThai = 4;
+                }
+                else
+                {
+                    // BLĐ không đồng ý thì trạng thái là: Đã duyệt - Tự nguyện hay bị BLĐ ép buộc
+                    // Lúc này cần xóa 
+                    checkExistsChiTietPhieuDXPB.TrangThai = 3;
+                    checkExistsChiTietPhieuDXPB.ManvTuChoi = "";
+                    checkExistsChiTietPhieuDXPB.LyDoTuChoi = "";
+                    checkExistsChiTietPhieuDXPB.NgayTuChoi = null;
+                }
+
+                checkExistsChiTietPhieuDXPB.NgaySua = DateTime.Now;
+                checkExistsChiTietPhieuDXPB.NguoiSua = user;
+                _repositoryManager.ChiTietPhieuDeXuatPhongBan.UpdateChiTietPhieuDeXuatPhongBanAsync(checkExistsChiTietPhieuDXPB);
+                bool check = await _repositoryManager.SaveChangesAsync();
+                return new ResponseReviewPhieuDeXuatPhongBan
+                {
+                    MaPhieuDeXuat = duyetPhieu.MaPhieuDeXuat,
+                    Message = check ? "Xu ly duyet phieu de xuat phong ban thanh cong!" : "Xu ly duyet phieu de xuat phong ban that bai vui long thu lai!",
+                    KetQua = check
+                };
+            }
+            else
+            {
+                return new ResponseReviewPhieuDeXuatPhongBan
+                {
+                    KetQua = false,
+                    Message = "Chi tiet phieu de xuat phong ban khong ton tai",
+                    MaPhieuDeXuat = duyetPhieu.MaPhieuDeXuat,
+                };
+            }
+        }
+        public async Task<bool> CancelChiTietPhieuDeXuatPhongBansByKHTH(CancelChiTietPhieuDeXuatPhongBanRequestDto cancelPhieu)
+        {
+            var chiTietPhieuDXPBs = await _repositoryManager.ChiTietPhieuDeXuatPhongBan.FindChiTietPhieuDeXuatPhongBanByMaMauAsync(cancelPhieu.MaMau, true);
+            if(chiTietPhieuDXPBs==null || chiTietPhieuDXPBs.Count() <=0)
+                return false;
+            foreach(var item in chiTietPhieuDXPBs)
+            {
+                item.TrangThai = 5;
+                _repositoryManager.ChiTietPhieuDeXuatPhongBan.UpdateChiTietPhieuDeXuatPhongBanAsync(item);
             }
         }
         public async Task<ResponseModel1<ChiTietPhieuDeXuatPhongBanDto>> CreateChiTietPhieuDeXuatPhongBanAsync(ChiTietPhieuDeXuatPhongBanDto ChiTietPhieuDeXuatPhongBanDto)

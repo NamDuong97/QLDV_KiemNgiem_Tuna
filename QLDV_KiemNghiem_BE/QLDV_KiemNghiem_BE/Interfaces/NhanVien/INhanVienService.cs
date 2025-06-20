@@ -12,6 +12,7 @@ namespace QLDV_KiemNghiem_BE.Interfaces
         Task<NhanVienDto?> FindNhanVienAsync(string maNhanVien);
         Task<LoginResponse> LoginNhanVienAsync(LoginDto login);
         Task<ResponseModel1<TokenDto>> GetRefreshTokenForNhanVien(TokenDto token);
+        Task<List<string>> GetUserIdOfEmployeeCustom(ParamGetUserIdNhanVien nhanVienParam);
         Task<ResponseModel1<NhanVienDto>> CreateNhanVienAsync(NhanVienDto NhanVienDto);
         Task<ResponseModel1<NhanVienDto>> UpdateNhanVienAsync(NhanVienDto NhanVienDto);
         Task<bool> DeleteNhanVienAsync(NhanVien NhanVien);

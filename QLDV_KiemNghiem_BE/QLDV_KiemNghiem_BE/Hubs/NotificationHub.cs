@@ -10,49 +10,34 @@ namespace QLDV_KiemNghiem_BE.HubsRealTime
     {
         // Tạo từ điển lưu tên các role để khi disconnect sẽ có tên group để xoá
         private static ConcurrentDictionary<string, string> _connectionGroups = new();
-        private readonly HubConnectionContext _connectionContext;
-        private readonly IHttpContextAccessor _contextAccessor;
-
-        public NotificationHub(IHttpContextAccessor contextAccessor, HubConnectionContext connectionContext)
-        {
-            _contextAccessor = contextAccessor;
-            _connectionContext = connectionContext;
-        }
    
         public async Task JoinGroup(string groupName)
         {
             await Groups.AddToGroupAsync(Context.ConnectionId, groupName);
         }
 
-        public async Task JoinGroupUserId()  
-        {
-            var userId = _connectionContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value.ToString();
-            if (userId != null && userId != "")
-            await Groups.AddToGroupAsync(Context.ConnectionId, userId);
-        }
-
         public async Task LeaveGroup(string groupName)
         {
             await Groups.RemoveFromGroupAsync(Context.ConnectionId, groupName);
         }
-        public override async Task OnConnectedAsync()
-        {
-            var role = _contextAccessor.HttpContext.User.FindFirst(ClaimTypes.Role)?.Value.ToString();
-            if (!string.IsNullOrEmpty(role))
-            {
-                await Groups.AddToGroupAsync(Context.ConnectionId, role);
-                _connectionGroups[Context.ConnectionId] = role;
-            }
-            await base.OnConnectedAsync();
-        }
-        public override async Task OnDisconnectedAsync(System.Exception? exception)
-        {
-            if (_connectionGroups.TryRemove(Context.ConnectionId, out var role))
-            {
-                await Groups.RemoveFromGroupAsync(Context.ConnectionId, role);
-            }
-            await base.OnDisconnectedAsync(exception);
-        }
+        //public override async Task OnConnectedAsync()
+        //{
+        //    var role = _contextAccessor.HttpContext.User.FindFirst(ClaimTypes.Role)?.Value.ToString();
+        //    if (!string.IsNullOrEmpty(role))
+        //    {
+        //        await Groups.AddToGroupAsync(Context.ConnectionId, role);
+        //        _connectionGroups[Context.ConnectionId] = role;
+        //    }
+        //    await base.OnConnectedAsync();
+        //}
+        //public override async Task OnDisconnectedAsync(System.Exception? exception)
+        //{
+        //    if (_connectionGroups.TryRemove(Context.ConnectionId, out var role))
+        //    {
+        //        await Groups.RemoveFromGroupAsync(Context.ConnectionId, role);
+        //    }
+        //    await base.OnDisconnectedAsync(exception);
+        //}
         public async Task NotifyToAllAsync(string role, NotificationModel notification)
         {
             await Clients.All.SendAsync("notifycation", notification);

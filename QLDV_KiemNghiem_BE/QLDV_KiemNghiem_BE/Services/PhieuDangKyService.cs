@@ -442,7 +442,7 @@ namespace QLDV_KiemNghiem_BE.Services
             }
             return await _repositoryManager.PhieuDangKy.DuTinhThoiGianKiemNghiem(maDmMau, maTieuChuan);
         }
-        public async Task<ResponReviewPhieuDangKy> ReviewPhieuDangKyByKHDT(RequestReviewPhieuDangKy duyetPhieu)
+        public async Task<ResponReviewPhieuDangKy> ReviewPhieuDangKyByKHDT(RequestReviewPhieuDangKy duyetPhieu,  string user)
         {
             if (duyetPhieu == null || duyetPhieu.MaPhieuDangKy == "")
             {
@@ -463,7 +463,7 @@ namespace QLDV_KiemNghiem_BE.Services
                 else // nguoc lai thi trang thai la bi phong KHDT tu choi duyet, thi cho BLD quyet dinh
                     checkExistsPhieuDangKy.TrangThaiId = "TT03";
                 checkExistsPhieuDangKy.NgaySua = DateTime.Now;
-                checkExistsPhieuDangKy.NguoiSua = "admin";
+                checkExistsPhieuDangKy.NguoiSua = user;
                 _repositoryManager.PhieuDangKy.UpdatePhieuDangKyAsync(checkExistsPhieuDangKy);
                 bool check = await _repositoryManager.SaveChangesAsync();
                 return new ResponReviewPhieuDangKy
@@ -483,7 +483,7 @@ namespace QLDV_KiemNghiem_BE.Services
                 };
             }
         }
-        public async Task<ResponReviewPhieuDangKy> ReviewPhieuDangKyByBLD(RequestReviewPhieuDangKy duyetPhieu)
+        public async Task<ResponReviewPhieuDangKy> ReviewPhieuDangKyByBLD(RequestReviewPhieuDangKy duyetPhieu, string user)
         {
             if (duyetPhieu == null || duyetPhieu.MaPhieuDangKy == "")
             {
@@ -503,7 +503,7 @@ namespace QLDV_KiemNghiem_BE.Services
                 else
                     checkExistsPhieuDangKy.TrangThaiId = "TT04";
                 checkExistsPhieuDangKy.NgaySua = DateTime.Now;
-                checkExistsPhieuDangKy.NguoiSua = "admin";
+                checkExistsPhieuDangKy.NguoiSua = user;
                 _repositoryManager.PhieuDangKy.UpdatePhieuDangKyAsync(checkExistsPhieuDangKy);
                 bool check = await _repositoryManager.SaveChangesAsync();
                 return new ResponReviewPhieuDangKy

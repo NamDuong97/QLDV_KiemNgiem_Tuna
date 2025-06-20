@@ -52,16 +52,20 @@ namespace QLDV_KiemNghiem_BE.Controllers
         public async Task<ActionResult> reviewPhieuDangKyByKHDT( RequestReviewPhieuDangKy duyetPhieu)
         {
             var user = User.FindFirst(ClaimTypes.Email)?.Value.ToString() ?? "unknow";
-            var phieuDangKys = await _service.PhieuDangKy.ReviewPhieuDangKyByKHDT(duyetPhieu);
-            // Tao thong bao gui cho phong KHTH
-            NotificationModel noti = new NotificationModel()
+            var phieuDangKys = await _service.PhieuDangKy.ReviewPhieuDangKyByKHDT(duyetPhieu, user);
+            if(phieuDangKys.KetQua )
             {
-                Title = "Duyet phieu dang ky boi KHTH",
-                Message = phieuDangKys.KetQua ?  $"Phieu dang ky co maid {phieuDangKys.MaPhieuDangKy} duoc duyet thanh cong boi nguoi dung {user}!"
-                : $"Phieu dang ky co maid {phieuDangKys.MaPhieuDangKy} da bi tu choi boi nguoi dung {user}!",
-                CreatedAt = DateTime.Now,
-            };
-            await _hubContext.Clients.Group("BLD").SendAsync("receiveNotification", noti);
+                // Tao thong bao gui cho phong KHTH
+                NotificationModel noti = new NotificationModel()
+                {
+                    Title = "Duyet phieu dang ky boi KHTH",
+                    Message = duyetPhieu.Action ? $"Phieu dang ky co maid {phieuDangKys.MaPhieuDangKy} duoc duyet thanh cong boi nguoi dung {user}!"
+                    : $"Phieu dang ky co maid {phieuDangKys.MaPhieuDangKy} da bi tu choi boi nguoi dung {user}!",
+                    CreatedAt = DateTime.Now,
+                };
+                await _hubContext.Clients.Group("BLD").SendAsync("receiveNotification", noti);
+            }
+       
             _logger.LogDebug(phieuDangKys.Message);
             return Ok(phieuDangKys);
         }

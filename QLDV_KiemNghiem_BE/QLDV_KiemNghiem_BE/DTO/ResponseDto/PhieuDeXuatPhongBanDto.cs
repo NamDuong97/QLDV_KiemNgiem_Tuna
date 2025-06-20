@@ -28,8 +28,7 @@ namespace QLDV_KiemNghiem_BE.DTO.ResponseDto
         [Column(TypeName = "datetime")]
         public DateTime? ThoiGianGiaoMau { get; set; }
 
-        [StringLength(100)]
-        public string? TrangThai { get; set; }
+        public int? TrangThai { get; set; }
 
         public List<ChiTietPhieuDeXuatPhongBanDto> ChiTietPhieuDeXuatPhongBans { get; set; } = new List<ChiTietPhieuDeXuatPhongBanDto>();
 

@@ -1,10 +1,12 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
+using QLDV_KiemNghiem_BE.DTO.RequestDto;
 using QLDV_KiemNghiem_BE.DTO.ResponseDto;
 using QLDV_KiemNghiem_BE.HubsRealTime;
 using QLDV_KiemNghiem_BE.Interfaces.ManagerInterface;
 using QLDV_KiemNghiem_BE.Models;
+using QLDV_KiemNghiem_BE.Repositories;
 using QLDV_KiemNghiem_BE.RequestFeatures;
 using System.Security.Claims;
 
@@ -36,8 +38,8 @@ namespace QLDV_KiemNghiem_BE.Controllers
         }
 
         [HttpPut]
-        [Route("reviewPhieuDeXuatPhongBanByPhongKhoa")]
-        public async Task<ActionResult> reviewPhieuDeXuatPhongBanByPhongKhoa(RequestReviewPhieuDeXuatPhongBan duyetPhieu)
+        [Route("reviewChiTietPhieuDeXuatPhongBanByPhongKhoa")]
+        public async Task<ActionResult> reviewChiTietPhieuDeXuatPhongBanByPhongKhoa(RequestReviewPhieuDeXuatPhongBan duyetPhieu)
         {
             var user = User.FindFirst(ClaimTypes.Email)?.Value.ToString() ?? "unknow";
             var phieuDeXuat = await _service.ChiTietPhieuDeXuatPhongBan.ReviewPhieuDeXuatPhongBanByPhongKhoa(duyetPhieu, user);
@@ -68,6 +70,95 @@ namespace QLDV_KiemNghiem_BE.Controllers
                 }
             }
 
+            _logger.LogDebug(phieuDeXuat.Message);
+            return Ok(phieuDeXuat);
+        }
+
+        [HttpPut]
+        [Route("reviewChiTietPhieuDeXuatPhongBanByBLD")]
+        public async Task<ActionResult> reviewChiTietPhieuDeXuatPhongBanByBLD(RequestReviewPhieuDeXuatPhongBan duyetPhieu)
+        {
+            var user = User.FindFirst(ClaimTypes.Email)?.Value.ToString() ?? "unknow";
+            var phieuDeXuat = await _service.ChiTietPhieuDeXuatPhongBan.ReviewPhieuDeXuatPhongBanByBLD(duyetPhieu, user);
+            
+            if (phieuDeXuat.KetQua) 
+            {
+                NotificationModel noti = new NotificationModel();
+                if (duyetPhieu.Action)
+                {
+                    // Action = true tức là BLD đồng ý cho phòng ban X từ chối mẫu - ChiTietPhieuDeXuatPhongBan
+                    // -> KHTH nhận thông báo tạo phân công mới cho phiếu này - mẫu này
+                    noti.Title = "BLD chấp nhận lý do từ chối tiếp nhận mẫu từ phòng ban - phân công lại mẫu này";
+                    noti.Message = $"Chi tiet phieu de xuat co maid {phieuDeXuat.MaPhieuDeXuat} da bi phong khoa tu choi tiep nhan, BLD da duyet. Vui long phan cong lai!";
+                    noti.CreatedAt = DateTime.Now;
+                }
+                else
+                {
+                    // Action = fasle tức là BLD không đồng ý cho phòng ban X từ chối mẫu - ChiTietPhieuDeXuatPhongBan
+                    // -> Phòng ban x bắt buộc nhận mẫu và kiểm nghiệm
+                    noti.Title = "BLD không chấp nhận lý do từ chối tiếp nhận mẫu từ phòng ban";
+                    noti.Message = $"Chi tiet phieu de xuat co maid {phieuDeXuat.MaPhieuDeXuat} da bi BLD bac bo tu choi, phong ban tiep tuc lam mau nay";
+                    noti.CreatedAt = DateTime.Now;
+                }
+                await _hubContext.Clients.Group("KHTH").SendAsync("receiveNotification", noti);
+                ParamGetUserIdNhanVien nhanVienParam = new ParamGetUserIdNhanVien()
+                {
+                    MaKhoa = duyetPhieu.MaKhoa,
+                    GetLeader = "1",
+                    GetEmployee = "0",
+                    GetBld = "0"
+                };
+                var userIds = await _service.NhanVien.GetUserIdOfEmployeeCustom(nhanVienParam);
+                foreach (var userId in userIds)
+                {
+                    await _hubContext.Clients.Group(userId).SendAsync("receiveNotification", noti);
+                }
+            }
+            _logger.LogDebug(phieuDeXuat.Message);
+            return Ok(phieuDeXuat);
+        }
+
+        [HttpPut]
+        [Route("cancelChiTietPhieuDeXuatPhongBansByKHTH")]
+        public async Task<ActionResult> cancelChiTietPhieuDeXuatPhongBansByKHTH(CancelChiTietPhieuDeXuatPhongBanRequestDto cancelPhieu)
+        {
+            // api này để thay đổi trạng thái của toàn bộ các chitietphieudexuatphong ban co mamau ma bi nhan vien huy
+            var user = User.FindFirst(ClaimTypes.Email)?.Value.ToString() ?? "unknow";
+            var phieuDeXuat = await _service.ChiTietPhieuDeXuatPhongBan.CancelChiTietPhieuDeXuatPhongBansByKHTH(cancelPhieu, user);
+
+            //if (phieuDeXuat.KetQua)
+            //{
+            //    NotificationModel noti = new NotificationModel();
+            //    if (duyetPhieu.Action)
+            //    {
+            //        // Action = true tức là BLD đồng ý cho phòng ban X từ chối mẫu - ChiTietPhieuDeXuatPhongBan
+            //        // -> KHTH nhận thông báo tạo phân công mới cho phiếu này - mẫu này
+            //        noti.Title = "BLD chấp nhận lý do từ chối tiếp nhận mẫu từ phòng ban - phân công lại mẫu này";
+            //        noti.Message = $"Chi tiet phieu de xuat co maid {phieuDeXuat.MaPhieuDeXuat} da bi phong khoa tu choi tiep nhan, BLD da duyet. Vui long phan cong lai!";
+            //        noti.CreatedAt = DateTime.Now;
+            //    }
+            //    else
+            //    {
+            //        // Action = fasle tức là BLD không đồng ý cho phòng ban X từ chối mẫu - ChiTietPhieuDeXuatPhongBan
+            //        // -> Phòng ban x bắt buộc nhận mẫu và kiểm nghiệm
+            //        noti.Title = "BLD không chấp nhận lý do từ chối tiếp nhận mẫu từ phòng ban";
+            //        noti.Message = $"Chi tiet phieu de xuat co maid {phieuDeXuat.MaPhieuDeXuat} da bi BLD bac bo tu choi, phong ban tiep tuc lam mau nay";
+            //        noti.CreatedAt = DateTime.Now;
+            //    }
+            //    await _hubContext.Clients.Group("KHTH").SendAsync("receiveNotification", noti);
+            //    ParamGetUserIdNhanVien nhanVienParam = new ParamGetUserIdNhanVien()
+            //    {
+            //        MaKhoa = duyetPhieu.MaKhoa,
+            //        GetLeader = "1",
+            //        GetEmployee = "0",
+            //        GetBld = "0"
+            //    };
+            //    var userIds = await _service.NhanVien.GetUserIdOfEmployeeCustom(nhanVienParam);
+            //    foreach (var userId in userIds)
+            //    {
+            //        await _hubContext.Clients.Group(userId).SendAsync("receiveNotification", noti);
+            //    }
+            //}
             _logger.LogDebug(phieuDeXuat.Message);
             return Ok(phieuDeXuat);
         }
