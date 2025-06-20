@@ -31,7 +31,6 @@ namespace QLDV_KiemNghiem_BE.DTO.RequestDto
         public DateTime? ThoiGianGiaoMau { get; set; }  
 
         [StringLength(100, ErrorMessage = "Trạng thái không được vượt quá 100 ký tự.")]
-        public string? TrangThai { get; set; }
 
         public List<ChiTietPhieuDeXuatPhongBanRequestUpdateDto> ChiTietPhieuDeXuatPhongBans { get; set; } = new List<ChiTietPhieuDeXuatPhongBanRequestUpdateDto>();
     }
