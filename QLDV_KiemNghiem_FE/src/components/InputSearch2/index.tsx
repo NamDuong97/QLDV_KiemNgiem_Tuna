@@ -3,8 +3,8 @@ import { ImSearch } from "react-icons/im";
 interface Props {
   endButton?: any;
   placeholder?: string;
-  value: any;
-  onChange: (e: any) => void;
+  value?: any;
+  onChange?: (e: any) => void;
 }
 
 const InputSearch2 = (props: Props) => {

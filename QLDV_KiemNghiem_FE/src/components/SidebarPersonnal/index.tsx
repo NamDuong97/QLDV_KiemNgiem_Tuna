@@ -40,9 +40,7 @@ const SidebarPersonnal = () => {
           APP_ROUTES.TUNA_ADMIN.QUAN_LY_PHIEU_DANG_KY_DICH_VU_KIEM_NGHIEM.to
         );
       case danhSachPhanCong:
-        return navigate(
-          APP_ROUTES.TUNA_ADMIN.LIST_PHAN_CONG_PHONG_CHUYEN_MON.to
-        );
+        return navigate(APP_ROUTES.TUNA_ADMIN.DANH_SACH_PHAN_CONG_KHOA_CM.to);
       case quanLyPhanCongKhoaChuyenMon:
         return navigate(
           APP_ROUTES.TUNA_ADMIN.QUAN_LY_PHAN_CONG_KHOA_CHUYEN_MON.to
@@ -81,6 +79,8 @@ const SidebarPersonnal = () => {
         return navigate(APP_ROUTES.TUNA_ADMIN.DASHBOARD.to);
     }
   };
+
+  console.log("danh-sach-phieu-cho-phan-cong", history);
 
   return (
     <div className="flex flex-col w-64 bg-white border-r border-gray-200">
@@ -184,7 +184,7 @@ const SidebarPersonnal = () => {
                   {
                     "text-indigo-600 active":
                       pathname.split("/")[2] ===
-                      APP_ROUTES.TUNA_ADMIN.LIST_PHAN_CONG_PHONG_CHUYEN_MON.to.split(
+                      APP_ROUTES.TUNA_ADMIN.DANH_SACH_PHAN_CONG_KHOA_CM.to.split(
                         "/"
                       )[2],
                   }
@@ -195,7 +195,7 @@ const SidebarPersonnal = () => {
                     className={clsx("w-5 h-5 text-gray-500", {
                       "text-indigo-600":
                         pathname.split("/")[2] ===
-                        APP_ROUTES.TUNA_ADMIN.LIST_PHAN_CONG_PHONG_CHUYEN_MON.to.split(
+                        APP_ROUTES.TUNA_ADMIN.DANH_SACH_PHAN_CONG_KHOA_CM.to.split(
                           "/"
                         )[2],
                     })}

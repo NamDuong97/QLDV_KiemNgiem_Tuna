@@ -6,6 +6,8 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
 import { queryClient } from "../../../../lib/reactQuery";
 import { createPhieuPhanCongKhoa } from "../../../../hooks/personnels/phanCongKhoa";
+import { maNhanVien } from "../../../../configs/parseJwt";
+import { Inputs } from "../../../../components/Inputs";
 
 interface Props {
   samples: MauPhanCong[];
@@ -21,6 +23,7 @@ interface FormPhanCong {
   ghiChu: {
     [tenMau: string]: string;
   };
+  thoiGianGiaoMau: string;
 }
 
 const AssignmentModal = (props: Props) => {
@@ -43,9 +46,45 @@ const AssignmentModal = (props: Props) => {
 
   const shema = yup.object().shape({
     ghiChu: yup.object(),
+    thoiGianGiaoMau: yup
+      .string()
+      .required("Yêu cầu chọn Thời Gian Giao Mẫu")
+      .test(
+        "Thời gian giao mẫu phải lớn hơn thời điểm hiện tại.",
+        "Thời gian giao mẫu phải lớn hơn thời điểm hiện tại.",
+        (value: any) => {
+          const namHienTai = new Date().getFullYear();
+          const ngayHienTai = new Date().getDate();
+          const thangHienTai = new Date().getMonth() + 1;
+          return value.split("-")[0] >= namHienTai &&
+            value.split("-")[1] >= thangHienTai &&
+            value.split("-")[2] > ngayHienTai
+            ? true
+            : false;
+        }
+      )
+      .test(
+        "Thời gian giao mẫu không được vượt quá 7 ngày",
+        "Thời gian giao mẫu không được vượt quá 7 ngày",
+        (value: any) => {
+          const namHienTai = new Date().getFullYear();
+          const ngayHienTai = new Date().getDate();
+          const thangHienTai = new Date().getMonth() + 1;
+          return value.split("-")[0] >= namHienTai &&
+            value.split("-")[1] >= thangHienTai &&
+            value.split("-")[2] <= ngayHienTai + 7
+            ? true
+            : false;
+        }
+      ),
   });
 
-  const { reset, register, handleSubmit } = useForm({
+  const {
+    reset,
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
     resolver: yupResolver<FormPhanCong>(shema),
   });
 
@@ -75,10 +114,9 @@ const AssignmentModal = (props: Props) => {
     const phanCong = {
       tenKH: "",
       maKhoa: selectedDepartment,
-      maNVDeXuat: "",
+      maNVDeXuat: maNhanVien,
       maNVTiepNhan: "",
-      thoiGianGiaoMau: "",
-      thoiGianThucHien: "",
+      thoiGianGiaoMau: data.thoiGianGiaoMau,
       maus,
     };
     console.log("phanCong", phanCong);
@@ -112,6 +150,7 @@ const AssignmentModal = (props: Props) => {
   useEffect(() => {
     reset({
       ghiChu: {},
+      thoiGianGiaoMau: "",
     });
   }, []);
 
@@ -173,9 +212,23 @@ const AssignmentModal = (props: Props) => {
             </div>
           </div>
 
+          <div className="mb-4 flex space-x-2 items-center">
+            <label className="text-sm font-medium text-gray-700">
+              Chọn thời gian giao mẫu *
+            </label>
+            <input
+              type="date"
+              {...register("thoiGianGiaoMau")}
+              className="cursor-pointer py-1 px-4 border border-gray-300 rounded"
+            />
+            {
+              errors.thoiGianGiaoMau?.message && <p className="text-xs/4 font-medium text-red-600">{errors.thoiGianGiaoMau?.message}</p>
+            }
+          </div>
+
           <div>
             <h4 className="text-sm font-medium text-gray-700 mb-4">
-              Chọn phòng ban
+              Chọn phòng ban *
             </h4>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {departments.map((department: any) => (

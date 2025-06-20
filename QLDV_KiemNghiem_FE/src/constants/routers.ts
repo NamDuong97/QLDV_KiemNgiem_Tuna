@@ -150,6 +150,10 @@ export const APP_ROUTES = {
       edit_phieu_thu: "/tuna/quan-ly-phieu-thu/cap-nhat-thong-tin-phieu-thu",
       xem_chi_tiet: "/tuna/quan-ly-phieu-thu/xem-chi-tiet",
     },
+    DANH_SACH_PHAN_CONG_KHOA_CM: {
+      to: "/tuna/danh-sach-phan-cong-khoa-chuyen-mon",
+      xem_chi_tiet: "/tuna/danh-sach-phan-cong-khoa-chuyen-mon/xem-chi-tiet",
+    },
   },
   TUNA_CUSTOMER: {
     HOME: {

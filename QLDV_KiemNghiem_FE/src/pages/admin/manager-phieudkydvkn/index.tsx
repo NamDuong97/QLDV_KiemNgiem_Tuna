@@ -7,6 +7,15 @@ import KHTH from "./RolePhieuDKyHN/KHTH";
 import BLD from "./RolePhieuDKyHN/BLD";
 import { Align } from "../../../models/Table";
 import { role } from "../../../configs/parseJwt";
+import Card from "../dashboard/Card";
+import {
+  AlertTriangle,
+  CheckCircle,
+  Clipboard,
+  Clock,
+  TrendingDown,
+  TrendingUp,
+} from "react-feather";
 
 const tableHead = [
   {
@@ -65,6 +74,48 @@ const QuanLyPhieuDKyDVHN = () => {
           Phiếu đăng ký kiểm nghiệm
         </h1>
       </div>
+      <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
+        <Card
+          title="Tổng phiếu"
+          value="1,284"
+          icon={<Clipboard className="w-6 h-6" />}
+          trend="up"
+          trendValue="12%"
+          trendIcon={<TrendingUp className="inline w-4 h-4 mr-1" />}
+          bgColor="bg-indigo-100"
+          textColor="text-indigo-600"
+        />
+        <Card
+          title="Đã hoàn thành"
+          value="876"
+          icon={<CheckCircle className="w-6 h-6" />}
+          trend="up"
+          trendValue="8%"
+          trendIcon={<TrendingUp className="inline w-4 h-4 mr-1" />}
+          bgColor="bg-green-100"
+          textColor="text-green-600"
+        />
+        <Card
+          title="Đang xử lý"
+          value="328"
+          icon={<Clock className="w-6 h-6" />}
+          trend="up"
+          trendValue="5%"
+          trendIcon={<TrendingUp className="inline w-4 h-4 mr-1" />}
+          bgColor="bg-yellow-100"
+          textColor="text-yellow-600"
+        />
+        <Card
+          title="Không đạt"
+          value="80"
+          icon={<AlertTriangle className="w-6 h-6" />}
+          trend="down"
+          trendValue="3%"
+          trendIcon={<TrendingDown className="inline w-4 h-4 mr-1" />}
+          bgColor="bg-red-100"
+          textColor="text-red-600"
+        />
+      </div>
       <div className="bg-white p-4 rounded-lg shadow-sm">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div className="flex flex-wrap gap-2">
@@ -76,7 +127,7 @@ const QuanLyPhieuDKyDVHN = () => {
               }`}
               onClick={() => setActiveFilter(keyTag.Cho_Xu_Ly)}
             >
-              Chờ xử lý
+              Chờ duyệt phiếu
             </button>
             <button
               className={`px-3 py-1.5 cursor-pointer text-sm font-medium rounded-md ${

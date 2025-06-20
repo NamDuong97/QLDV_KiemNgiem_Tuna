@@ -1,8 +1,9 @@
 import { motion } from "motion/react";
-import { useState } from "react";
-import { keyTag } from "../../../models/Account-Customer";
 import { Align } from "../../../models/Table";
 import DanhSach from "./List";
+import { ToastContainer, toast } from "react-toastify";
+import { useStoreNotification } from "../../../configs/stores/useStoreNotification";
+import { Button } from "@mui/material";
 
 const tableHead = [
   {
@@ -38,6 +39,10 @@ const tableHead = [
 ];
 
 const DanhSachPhieuChoPhanCongKhoaCM = () => {
+  const showNotification = useStoreNotification(
+    (state: any) => state.showNotification
+  );
+
   return (
     <motion.div
       key="DanhSachPhieuChoPhanCongKhoaCM"
@@ -52,6 +57,17 @@ const DanhSachPhieuChoPhanCongKhoaCM = () => {
           Danh sách phiếu chờ phân công khoa chuyên môn
         </h1>
       </div>
+      <Button
+        variant="contained"
+        onClick={() =>
+          showNotification({
+            message: "Đăng nhập thành công",
+            status: 200,
+          })
+        }
+      >
+        Text
+      </Button>
       <DanhSach tableHead={tableHead} />
     </motion.div>
   );

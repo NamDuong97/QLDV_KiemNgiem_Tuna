@@ -60,6 +60,26 @@ const trangThaiMap: Record<string, TrangThai> = {
     bgColor: "bg-purple-100",
     textColor: "text-purple-800",
   },
+  0: {
+    text: "Kh đã hủy",
+    bgColor: "bg-yellow-100",
+    textColor: "text-yellow-800",
+  },
+  1: {
+    text: "Bị từ chối bởi phòng ban",
+    bgColor: "bg-purple-100",
+    textColor: "text-purple-800",
+  },
+  2: {
+    text: "Chờ phòng ban duyệt",
+    bgColor: "bg-green-100",
+    textColor: "text-green-800",
+  },
+  3: {
+    text: "Đã duyệt",
+    bgColor: "bg-indigo-100",
+    textColor: "text-indigo-800",
+  },
 };
 
 export function renderTrangThai(trangThaiId: string) {

@@ -2,7 +2,7 @@ import { Skeleton } from "@mui/material";
 import {
   useGetLoaiDichVuAll,
   useGetTieuChuanAll,
-} from "../../../../hooks/customers/usePhieuDKyDVKN";
+} from "../../../../../hooks/customers/usePhieuDKyDVKN";
 
 const SampleCard = ({ sample, isSelected, onSelect, isLoading }: any) => {
   const { data: dataTC } = useGetTieuChuanAll({

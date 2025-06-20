@@ -205,6 +205,13 @@ const DanhSachPhieuChoPhanCongKhoaCM = lazy(
   () => import("../pages/admin/listChoPhanCongKhoaCM")
 );
 
+const DanhSachPhanCongKhoaCM = lazy(
+  () => import("../pages/admin/listPhanCongKhoaCM")
+);
+
+const ChiTietPhanCongPhongCM = lazy(
+  () => import("../pages/admin/listPhanCongKhoaCM/ChiTietPhanCongPhongCM")
+);
 const RoutesPersonnels = () => {
   return (
     <Suspense>
@@ -473,6 +480,16 @@ const RoutesPersonnels = () => {
           <Route
             path={APP_ROUTES.TUNA_ADMIN.PHAN_CONG_PHONG_CHUYEN_MON.list}
             element={<DanhSachPhieuChoPhanCongKhoaCM />}
+          />
+          <Route
+            path={APP_ROUTES.TUNA_ADMIN.DANH_SACH_PHAN_CONG_KHOA_CM.to}
+            element={<DanhSachPhanCongKhoaCM />}
+          />
+          <Route
+            path={
+              APP_ROUTES.TUNA_ADMIN.DANH_SACH_PHAN_CONG_KHOA_CM.xem_chi_tiet
+            }
+            element={<ChiTietPhanCongPhongCM />}
           />
         </Route>
 

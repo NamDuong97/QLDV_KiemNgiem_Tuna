@@ -14,6 +14,7 @@ import DoneAllIcon from "@mui/icons-material/DoneAll";
 import SmsFailedIcon from "@mui/icons-material/SmsFailed";
 import PopupHuyPhieu from "./PopupHuyPhieu";
 import { formatDate, renderTrangThai } from "../../../../configs/configAll";
+import { role } from "../../../../configs/parseJwt";
 
 interface Props {
   open: boolean;
@@ -39,24 +40,45 @@ const ChiTietPhieuDKyDVKN = (props: Props) => {
     setTuChoi(false);
   };
 
-  const handleOnSettled = async (response: any) => {
-    await queryClient.refetchQueries({
-      queryKey: ["quanLyPhieuDKKM"],
-    });
-
+  const handleOnSettledBLD = async (response: any) => {
     if (response.ketQua === true) {
       handleClosePopup();
     }
+    await Promise.all([
+      queryClient.refetchQueries({
+        queryKey: ["listPhieuDKKM_BLD"],
+      }),
+      queryClient.refetchQueries({
+        queryKey: ["listPhieuDKKNAll"],
+      }),
+      queryClient.refetchQueries({
+        queryKey: ["listPhieuChoPhanCong"],
+      }),
+    ]);
+  };
+
+  const handleOnSettledKHTH = async (response: any) => {
+    if (response.ketQua === true) {
+      handleClosePopup();
+    }
+    await Promise.all([
+      queryClient.refetchQueries({
+        queryKey: ["listPhieuDKKM_KHTH"],
+      }),
+      queryClient.refetchQueries({
+        queryKey: ["listPhieuDKKNAllKHTH"],
+      }),
+    ]);
   };
 
   const { mutate: mutateBLD } = useDanhGiaBLD({
     queryKey: "useDanhGiaBLD",
-    onSettled: handleOnSettled,
+    onSettled: handleOnSettledBLD,
   });
 
   const { mutate: mutateNhanVien } = useDanhGiaNhanVien({
     queryKey: "DanhGiaNhanVienDuyet",
-    onSettled: handleOnSettled,
+    onSettled: handleOnSettledKHTH,
   });
 
   const handleDuyetSoBoNhanVien = () => {
@@ -78,7 +100,7 @@ const ChiTietPhieuDKyDVKN = (props: Props) => {
   };
 
   const handleButton = () => {
-    switch (personnelInfo?.maLoaiTk as string) {
+    switch (role as string) {
       case "KHTH": {
         switch (data?.trangThaiId as string) {
           case "TT01":
@@ -125,22 +147,6 @@ const ChiTietPhieuDKyDVKN = (props: Props) => {
                 </div>
               </div>
             );
-          case "TT02":
-            return (
-              <div className="flex items-center">
-                <div className="flex-shrink-0">
-                  <div className="h-8 w-8 rounded-full bg-blue-100 flex items-center justify-center">
-                    <DoneAllIcon className="text-blue-500" />
-                  </div>
-                </div>
-                <button
-                  onClick={handleDuyetSoBoNhanVien}
-                  className="ml-4 bg-blue-100 hover:bg-blue-200 cursor-pointer px-4 py-2 rounded-md"
-                >
-                  <p className="text-sm font-medium text-blue-700">Phân Công</p>
-                </button>
-              </div>
-            );
           default:
             return null;
         }
@@ -148,6 +154,50 @@ const ChiTietPhieuDKyDVKN = (props: Props) => {
       case "BLD": {
         switch (data?.trangThaiId as string) {
           case "TT02":
+            return (
+              <div className="p-5 space-y-4">
+                <div className="flex items-center">
+                  <div className="flex-shrink-0">
+                    <div className="h-8 w-8 rounded-full bg-blue-100 flex items-center justify-center">
+                      <DoneAllIcon className="text-blue-500" />
+                    </div>
+                  </div>
+                  <button
+                    onClick={handleBLDDuyet}
+                    className="ml-4 bg-blue-100 hover:bg-blue-200 cursor-pointer px-4 py-2 rounded-md"
+                  >
+                    <p className="text-sm font-medium text-blue-700">
+                      Duyệt phiếu
+                    </p>
+                  </button>
+                </div>
+                <div className="space-y-2">
+                  <div className="flex items-center">
+                    <div className="flex-shrink-0">
+                      <div className="h-8 w-8 rounded-full bg-yellow-100 flex items-center justify-center">
+                        <SmsFailedIcon className="text-yellow-500" />
+                      </div>
+                    </div>
+                    <button
+                      onClick={() => setTuChoi(true)}
+                      className="ml-4 bg-yellow-100 hover:bg-yellow-200 cursor-pointer px-4 py-2 rounded-md"
+                    >
+                      <p className="text-sm font-medium text-yellow-700">
+                        Từ chối
+                      </p>
+                    </button>
+                  </div>
+                  {isTuChoi && (
+                    <PopupHuyPhieu
+                      id={id}
+                      roll={personnelInfo?.maLoaiTk}
+                      handleClose={handleClosePopup}
+                    />
+                  )}
+                </div>
+              </div>
+            );
+          case "TT03":
             return (
               <div className="p-5 space-y-4">
                 <div className="flex items-center">

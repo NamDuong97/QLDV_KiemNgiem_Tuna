@@ -11,7 +11,7 @@ import {
 } from "@mui/material";
 import { Align } from "../../../../models/Table";
 import { FaEye } from "react-icons/fa";
-import { ImUsers } from "react-icons/im";
+import { queryKhoaAll } from "../../../../hooks/personnels/queryKhoa";
 import { useNavigate } from "react-router";
 import { APP_ROUTES } from "../../../../constants/routers";
 
@@ -20,11 +20,15 @@ interface TableProps {
   tableHead: any[];
   handleSort?: (value: string) => void;
   isLoading: boolean;
-  handleClickXemChiTiet: () => void;
 }
 
 const TableQuanLyPhieuDKyDVHN = (props: TableProps) => {
-  const { tableBody, tableHead, handleClickXemChiTiet, isLoading } = props;
+  const { tableBody, tableHead, isLoading } = props;
+
+  const { data } = queryKhoaAll({
+    queryKey: "KhoaAll",
+  });
+  const dataKhoa: any = data;
 
   const handleAlign = (align: string) => {
     switch (align) {
@@ -36,10 +40,12 @@ const TableQuanLyPhieuDKyDVHN = (props: TableProps) => {
         return "justify-end";
     }
   };
+
   const navigate = useNavigate();
-  const handleRedirectXemChiTiet = (id: any) => {
-    handleClickXemChiTiet();
-    sessionStorage.setItem("phieu-DKKN-xem-chi-tiet", JSON.stringify(id));
+
+  const handleRedirectChiTiet = (id: any) => {
+    navigate(APP_ROUTES.TUNA_ADMIN.DANH_SACH_PHAN_CONG_KHOA_CM.xem_chi_tiet);
+    sessionStorage.setItem("chi-tiet-phan-cong", JSON.stringify(id));
   };
 
   return (
@@ -109,30 +115,41 @@ const TableQuanLyPhieuDKyDVHN = (props: TableProps) => {
                   <Box className="flex gap-2 items-center justify-start">
                     <p
                       className="text-base/4 font-medium cursor-pointer text-blue-700 hover:underline"
-                      onClick={() => handleRedirectXemChiTiet(item?.maId)}
+                      onClick={() => handleRedirectChiTiet(item?.maId)}
                     >
-                      {item?.soDkpt}
+                      {item?.maPhieuDeXuat}
                     </p>
                   </Box>
                 </TableCell>
                 <TableCell align="center">
                   <Box className="flex gap-2 items-center justify-center">
                     <p className="text-base/4 font-medium text-gray-700">
-                      {item?.nguoiGuiMau}
+                      {item?.tenKhachHang}
                     </p>
                   </Box>
                 </TableCell>
                 <TableCell align="center">
                   <Box className="flex gap-2 items-center justify-center">
                     <p className="text-base/4 font-medium text-gray-700">
-                      {item?.donViGuiMau}
+                      {item?.thoiGianGiaoMau}
                     </p>
                   </Box>
                 </TableCell>
                 <TableCell align="center">
                   <Box className="flex gap-2 items-center justify-center">
                     <p className="text-base/4 font-medium text-gray-700">
-                      {new Date(item?.ngayGiaoMau).toLocaleDateString("vi-VN")}
+                      {item?.manvDeXuat}
+                    </p>
+                  </Box>
+                </TableCell>
+                <TableCell align="center">
+                  <Box className="flex gap-2 items-center justify-center">
+                    <p className="text-base/4 font-medium text-gray-700">
+                      {
+                        dataKhoa?.find(
+                          (Khoa: any) => Khoa?.maId === item?.maKhoaTiepNhan
+                        ).tenKhoa
+                      }
                     </p>
                   </Box>
                 </TableCell>
@@ -155,7 +172,7 @@ const TableQuanLyPhieuDKyDVHN = (props: TableProps) => {
                       disableInteractive
                     >
                       <button
-                        onClick={() => handleRedirectXemChiTiet(item?.maId)}
+                        onClick={() => handleRedirectChiTiet(item?.maId)}
                         className="text-blue-700 font-semibold text-sm/6 cursor-pointer flex gap-2 items-center"
                       >
                         <FaEye className="w-5 h-5" />

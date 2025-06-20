@@ -34,24 +34,56 @@ _APIInstance.interceptors.response.use(
     const originalRequest = err.config;
     if (err.response.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
-      const refreshToken = Cookies.get(EKey.REFRESH_TOKEN_GUEST);
-      const token = Cookies.get(EKey.TOKEN_GUEST);
+      const refreshTokenGuest = Cookies.get(EKey.REFRESH_TOKEN_GUEST);
+      const tokenGuest = Cookies.get(EKey.TOKEN_GUEST);
 
-      if (!refreshToken) return Promise.reject(err);
+      const refreshToken = Cookies.get(EKey.REFRESH_TOKEN);
+      const token = Cookies.get(EKey.TOKEN);
+
+      //Token Khách hàng
+      if (!refreshTokenGuest) return Promise.reject(err);
       try {
         const params: any = {
-          accessToken: token,
-          refreshToken: refreshToken,
+          accessToken: tokenGuest,
+          refreshToken: refreshTokenGuest,
         };
-        const res = await accessServices.getRefreshToken(params);
+        const res = await accessServices.getRefreshTokenKhachHang(params);
         const newToken = res.accessToken || "";
-        const newRefreshToken = res.refreshToken || "";
+        const newRefreshToken = res.refreshTokenGuest || "";
         Cookies.set(EKey.TOKEN_GUEST, newToken, {
           expires: 2,
           sameSite: "Strict",
           secure: isProd(),
         });
         Cookies.set(EKey.REFRESH_TOKEN_GUEST, newRefreshToken, {
+          expires: 2,
+          sameSite: "Strict",
+          secure: isProd(),
+        });
+        originalRequest.headers.Authorization = `Bearer ${newToken}`;
+        return _APIInstance(originalRequest);
+      } catch (err) {
+        if (err) {
+          return Promise.reject(err);
+        }
+      }
+
+      //Token trung tâm
+      if (!refreshToken) return Promise.reject(err);
+      try {
+        const params: any = {
+          accessToken: token,
+          refreshToken: refreshToken,
+        };
+        const res = await accessServices.getRefreshTokenNhanVien(params);
+        const newToken = res.accessToken || "";
+        const newRefreshToken = res.refreshToken || "";
+        Cookies.set(EKey.TOKEN, newToken, {
+          expires: 2,
+          sameSite: "Strict",
+          secure: isProd(),
+        });
+        Cookies.set(EKey.REFRESH_TOKEN, newRefreshToken, {
           expires: 2,
           sameSite: "Strict",
           secure: isProd(),

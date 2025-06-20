@@ -6,8 +6,9 @@ import {
 } from "../../../../../hooks/personnels/quanLyPhieuDKKM";
 import { FaFilter } from "react-icons/fa";
 import TableQuanLyPhieuDKyDVHN from "../../Table";
-import { Pagination } from "@mui/material";
+import { Button, Pagination } from "@mui/material";
 import { keyTag } from "../../../../../models/Account-Customer";
+import InputSearch2 from "../../../../../components/InputSearch2";
 
 interface Props {
   setOpenXemChiTiet: React.Dispatch<React.SetStateAction<boolean>>;
@@ -23,7 +24,7 @@ const KHTH = (props: Props) => {
   });
 
   const { data: dataAll, isLoading: isLoadingAll } = listPhieuDKKNAll({
-    queryKey: "listPhieuDKKNAll",
+    queryKey: "listPhieuDKKNAllKHTH",
   });
 
   const [currentPage, setCurrentPage] = useState(1);
@@ -63,16 +64,17 @@ const KHTH = (props: Props) => {
     <>
       <div className="p-4 bg-white rounded-lg shadow-sm border border-gray-100 gap-2 flex justify-between">
         <div className="flex gap-4 w-full">
-          {/* <InputSearch2 placeholder="Số đăng ký phân tích..." /> */}
+          <InputSearch2 placeholder="Số đăng ký phân tích..." />
         </div>
         <div>
-          <button
+          <Button
+            variant="contained"
             onClick={handleClickPopupBoloc}
             className="flex items-center h-full gap-2 px-3 py-[6px] text-base/4 font-medium bg-blue-500 text-white hover:bg-blue-600 border-[2px] border-solid border-gray-300 rounded-[6px] cursor-pointer"
           >
             <FaFilter />
             Lọc
-          </button>
+          </Button>
         </div>
       </div>
       <div className="bg-white rounded-lg shadow-sm border border-gray-100">

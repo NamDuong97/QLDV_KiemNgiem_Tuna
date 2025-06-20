@@ -19,6 +19,8 @@ const parseJwt = (token: string) => {
 
 const token = Cookies.get(EKey.TOKEN);
 const payload = token ? parseJwt(token) : null;
+export const maNhanVien = payload?.sub;
+
 export const role =
   payload?.["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"];
 

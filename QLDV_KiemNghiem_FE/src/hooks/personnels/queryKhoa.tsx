@@ -18,3 +18,15 @@ export const queryKhoaAll = (props: Props) => {
     refetchOnWindowFocus: false,
   });
 };
+
+export const getKhoaByID = (props: Props) => {
+  const { queryKey, params } = props;
+  return useQuery({
+    queryKey: [queryKey, params],
+    queryFn: async () => {
+      const response = await khoaServices.getKhoaByID(params);
+      return response?.data;
+    },
+    refetchOnWindowFocus: false,
+  });
+};

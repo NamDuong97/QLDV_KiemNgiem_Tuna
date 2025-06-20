@@ -16,8 +16,6 @@ export const listPhieuDKKM_BLD = (props: Props) => {
         const response = await QuanlyPhieuDKYKNServices.quanLyPhieuDKKN(
           trangThaiID
         );
-        console.log("response", response);
-
         return response?.data ?? [];
       },
       staleTime: Infinity,
