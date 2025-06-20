@@ -15,8 +15,8 @@ interface Props {
 const NotificationTest = (props: Props) => {
   const { isOpen, setNotifications, notifications, setIsOpen } = props;
 
-  const test = Notification()
-  console.log('testNotification',test);
+  const tesNotification = Notification()
+  console.log('testNotification',tesNotification);
   
 
   const markAsRead = (id: any) => {
