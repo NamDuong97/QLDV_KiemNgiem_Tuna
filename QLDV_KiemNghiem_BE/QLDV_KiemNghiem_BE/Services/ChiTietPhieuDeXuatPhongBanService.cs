@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.SignalR;
+using Microsoft.VisualBasic;
 using QLDV_KiemNghiem_BE.DTO.RequestDto;
 using QLDV_KiemNghiem_BE.DTO.ResponseDto;
 using QLDV_KiemNghiem_BE.HubsRealTime;
@@ -61,17 +62,6 @@ namespace QLDV_KiemNghiem_BE.Services
                         {
                             phieuDeXuat.TrangThai = 3;
                             _repositoryManager.PhieuDeXuatPhongBan.UpdatePhieuDeXuatPhongBanAsync(phieuDeXuat);
-
-                            // Kiểm tra các phiếu đề xuất khác của phiếu đăng ký này đã được duyệt hết chưa, để cập trạng thái của pdk
-                            var checkAllPDXPBApproved = await _repositoryManager.PhieuDeXuatPhongBan.CheckAllPDXPBApproved(phieuDeXuat.MaId, phieuDeXuat.MaPhieuDangKy);
-                            if(checkAllPDXPBApproved == 1)
-                            {
-                                var phieuDangKy = await _repositoryManager.PhieuDangKy.FindPhieuDangKyAsync(phieuDeXuat.MaPhieuDangKy);
-                                if(phieuDangKy!= null)
-                                {
-                                    phieuDangKy.TrangThaiId = "TT07";
-                                }
-                            }
                         }
                     }
                     // Cập nhật trạng thái cho mẫu tương ứng trong bảng PhieuDangKy_Mau
@@ -80,6 +70,17 @@ namespace QLDV_KiemNghiem_BE.Services
                     {
                         phieuDangKyMau.TrangThaiPhanCong = 2;
                         _repositoryManager.PhieuDangKyMau.UpdatePhieuDangKyMauAsync(phieuDangKyMau);
+
+                        var checkPhanCongAllMauInPDK = await _repositoryManager.PhieuDangKyMau.CheckPhanCongAllMauInPDK(phieuDangKyMau.MaId, phieuDangKyMau.MaPhieuDangKy);
+                        if(checkPhanCongAllMauInPDK == 1)
+                        {
+                            var phieuDangKy = await _repositoryManager.PhieuDangKy.FindPhieuDangKyAsync(phieuDangKyMau.MaPhieuDangKy);
+                            if(phieuDangKy!= null)
+                            {
+                                phieuDangKy.TrangThaiId = "TT07";
+                                _repositoryManager.PhieuDangKy.UpdatePhieuDangKyAsync(phieuDangKy);
+                            }
+                        }
                     }
                 }
                 else
@@ -128,15 +129,39 @@ namespace QLDV_KiemNghiem_BE.Services
                 {
                     // BLĐ đồng ý cho từ chối thì trang thái là: Phòng ban từ chối chờ phân công lại
                     checkExistsChiTietPhieuDXPB.TrangThai = 4;
+                    // Update lai PhieuDangKyMau nay thanh cho phan cong
+                    var phieuDangKyMau = await _repositoryManager.PhieuDangKyMau.FindPhieuDangKyMauAsync(checkExistsChiTietPhieuDXPB.MaPdkMau ?? "");
+                    if (phieuDangKyMau != null)
+                    {
+                        phieuDangKyMau.TrangThaiPhanCong = 1;
+                        _repositoryManager.PhieuDangKyMau.UpdatePhieuDangKyMauAsync(phieuDangKyMau);
+                    }
                 }
                 else
                 {
                     // BLĐ không đồng ý thì trạng thái là: Đã duyệt - Tự nguyện hay bị BLĐ ép buộc
-                    // Lúc này cần xóa 
                     checkExistsChiTietPhieuDXPB.TrangThai = 3;
                     checkExistsChiTietPhieuDXPB.ManvTuChoi = "";
                     checkExistsChiTietPhieuDXPB.LyDoTuChoi = "";
                     checkExistsChiTietPhieuDXPB.NgayTuChoi = null;
+                    // Lúc này cần cập nhật trạng thái của PhieuDangKy_Mau, PhieuDangKy nếu như toàn bộ mẫu đều đang đc kiểm nghiệm
+                    var phieuDangKyMau = await _repositoryManager.PhieuDangKyMau.FindPhieuDangKyMauAsync(checkExistsChiTietPhieuDXPB.MaPdkMau ?? "");
+                    if (phieuDangKyMau != null)
+                    {
+                        phieuDangKyMau.TrangThaiPhanCong = 2;
+                        _repositoryManager.PhieuDangKyMau.UpdatePhieuDangKyMauAsync(phieuDangKyMau);
+
+                        var checkPhanCongAllMauInPDK = await _repositoryManager.PhieuDangKyMau.CheckPhanCongAllMauInPDK(phieuDangKyMau.MaId, phieuDangKyMau.MaPhieuDangKy);
+                        if (checkPhanCongAllMauInPDK == 1)
+                        {
+                            var phieuDangKy = await _repositoryManager.PhieuDangKy.FindPhieuDangKyAsync(phieuDangKyMau.MaPhieuDangKy);
+                            if (phieuDangKy != null)
+                            {
+                                phieuDangKy.TrangThaiId = "TT07";
+                                _repositoryManager.PhieuDangKy.UpdatePhieuDangKyAsync(phieuDangKy);
+                            }
+                        }
+                    }
                 }
 
                 checkExistsChiTietPhieuDXPB.NgaySua = DateTime.Now;
@@ -160,16 +185,10 @@ namespace QLDV_KiemNghiem_BE.Services
                 };
             }
         }
-        public async Task<bool> CancelChiTietPhieuDeXuatPhongBansByKHTH(CancelChiTietPhieuDeXuatPhongBanRequestDto cancelPhieu)
+        public async Task<bool> CancelChiTietPhieuDeXuatPhongBansByKHTH(CancelChiTietPhieuDeXuatPhongBanRequestDto cancelPhieu, string user)
         {
-            var chiTietPhieuDXPBs = await _repositoryManager.ChiTietPhieuDeXuatPhongBan.FindChiTietPhieuDeXuatPhongBanByMaMauAsync(cancelPhieu.MaMau, true);
-            if(chiTietPhieuDXPBs==null || chiTietPhieuDXPBs.Count() <=0)
-                return false;
-            foreach(var item in chiTietPhieuDXPBs)
-            {
-                item.TrangThai = 5;
-                _repositoryManager.ChiTietPhieuDeXuatPhongBan.UpdateChiTietPhieuDeXuatPhongBanAsync(item);
-            }
+            await _repositoryManager.PhieuDeXuatPhongBan.ProcessUpdatePDXPBFromMauCancel(cancelPhieu.MaMau);
+            return true;    
         }
         public async Task<ResponseModel1<ChiTietPhieuDeXuatPhongBanDto>> CreateChiTietPhieuDeXuatPhongBanAsync(ChiTietPhieuDeXuatPhongBanDto ChiTietPhieuDeXuatPhongBanDto)
         {

@@ -28,6 +28,15 @@ namespace QLDV_KiemNghiem_BE.Repositories
         {
             return await _context.PhieuDangKyMaus.FindAsync(maPhieuDangKyMau);
         }
+
+        public async Task<int> CheckPhanCongAllMauInPDK(string maId, string maPhieuDangKy)
+        {
+            var result = await _context.CheckPhanCongAllMauInPDKs
+          .FromSqlRaw("SELECT dbo.[fn_CheckPhanCongAllMauInPDK]({0}, {1}) AS CheckPhanCongAllMau", maId, maPhieuDangKy)
+          .AsNoTracking()
+          .FirstOrDefaultAsync();
+            return result?.CheckPhanCongAllMau ?? 0;
+        }
         public async Task CreatePhieuDangKyMauAsync(PhieuDangKyMau PhieuDangKyMau)
         {
             await _context.PhieuDangKyMaus.AddAsync(PhieuDangKyMau);

@@ -3,8 +3,8 @@
 namespace QLDV_KiemNghiem_BE.RequestFeatures
 {
     [Keyless]
-    public class CheckAllPDXPBApproved
+    public class CheckPhanCongAllMauInPDK
     {
-        public int CheckPDXPBAApproved { get; set; }
+        public int CheckPhanCongAllMau { get; set; }
     }
 }

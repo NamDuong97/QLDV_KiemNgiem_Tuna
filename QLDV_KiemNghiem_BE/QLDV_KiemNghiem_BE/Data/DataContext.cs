@@ -377,9 +377,13 @@ public partial class DataContext : DbContext
         {
             entity.HasKey(e => e.MaId).HasName("PK__PhieuDan__2725BF40E6D07D67");
 
+            entity.HasOne(d => d.MaBldduyetNavigation).WithMany(p => p.PhieuDangKyMaBldduyetNavigations).HasConstraintName("Fk_PhieuDangKy_NhanVien_TongDuyet");
+
             entity.HasOne(d => d.MaKhNavigation).WithMany(p => p.PhieuDangKies).HasConstraintName("Fk_PhieuDangKy_KhachHang");
 
-            entity.HasOne(d => d.ManvNhanMauNavigation).WithMany(p => p.PhieuDangKies).HasConstraintName("Fk_PhieuDangKy_NhanVien_Nhanmau");
+            entity.HasOne(d => d.ManvNhanMauNavigation).WithMany(p => p.PhieuDangKyManvNhanMauNavigations).HasConstraintName("Fk_PhieuDangKy_NhanVien_Nhanmau");
+
+            entity.HasOne(d => d.ManvSoDuyetNavigation).WithMany(p => p.PhieuDangKyManvSoDuyetNavigations).HasConstraintName("Fk_PhieuDangKy_NhanVien_SoDuyet");
 
             entity.HasOne(d => d.TrangThai).WithMany(p => p.PhieuDangKies).HasConstraintName("Fk_PhieuDangKy_TrangThaiPhieuDK");
         });

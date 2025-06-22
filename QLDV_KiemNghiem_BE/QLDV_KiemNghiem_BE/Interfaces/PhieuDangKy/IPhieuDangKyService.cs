@@ -16,5 +16,6 @@ namespace QLDV_KiemNghiem_BE.Interfaces
         Task<int> DuTinhThoiGianKiemNghiem(string maDmMau, string maTieuChuan);
         Task<ResponReviewPhieuDangKy> ReviewPhieuDangKyByKHDT(RequestReviewPhieuDangKy duyetPhieu, string user);
         Task<ResponReviewPhieuDangKy> ReviewPhieuDangKyByBLD(RequestReviewPhieuDangKy duyetPhieu, string user);
+        public async Task<ResponseUndoReviewPhieuDangKy> UndoReviewPhieuDangKyByBLD(RequestUndoReviewPhieuDangKy duyetPhieu, string user);
     }
 }

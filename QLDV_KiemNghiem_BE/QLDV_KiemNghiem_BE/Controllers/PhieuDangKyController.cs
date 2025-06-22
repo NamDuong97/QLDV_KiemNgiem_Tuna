@@ -72,19 +72,21 @@ namespace QLDV_KiemNghiem_BE.Controllers
 
         [Authorize(Roles = "BLD")]
         [HttpPut]
-        [Route("reviewPhieuDangKyByBLD")]
-        public async Task<ActionResult> reviewPhieuDangKyByBLD(RequestReviewPhieuDangKy duyetPhieu)
+        [Route("undoReviewPhieuDangKyByBLD")]
+        public async Task<ActionResult> undoReviewPhieuDangKyByBLD(RequestUndoReviewPhieuDangKy duyetPhieu)
         {
             var user = User.FindFirst(ClaimTypes.Email)?.Value.ToString() ?? "unknow";
-            var phieuDangKys = await _service.PhieuDangKy.ReviewPhieuDangKyByBLD(duyetPhieu);
-            NotificationModel noti = new NotificationModel()
+            var phieuDangKys = await _service.PhieuDangKy.UndoReviewPhieuDangKyByBLD(duyetPhieu, user);
+            if(phieuDangKys.KetQua)
             {
-                Title = "Duyet phieu dang ky boi BLD",
-                Message = phieuDangKys.KetQua ? $"Phieu dang ky co maid {phieuDangKys.MaPhieuDangKy} duoc duyet thanh cong boi nguoi dung {user}!"
-               : $"Phieu dang ky co maid {phieuDangKys.MaPhieuDangKy} da bi tu choi boi nguoi dung {user}!",
-                CreatedAt = DateTime.Now,
-            };
-            await _hubContext.Clients.Group("KHTH").SendAsync("receiveNotification", noti);
+                NotificationModel noti = new NotificationModel()
+                {
+                    Title = "Hoan tac duyet phieu dang ky boi BLD",
+                    Message = phieuDangKys.Message,
+                    CreatedAt = DateTime.Now,
+                };
+                await _hubContext.Clients.Group("KHTH").SendAsync("receiveNotification", noti);
+            }
             _logger.LogDebug(phieuDangKys.Message);
             return Ok(phieuDangKys);
         }

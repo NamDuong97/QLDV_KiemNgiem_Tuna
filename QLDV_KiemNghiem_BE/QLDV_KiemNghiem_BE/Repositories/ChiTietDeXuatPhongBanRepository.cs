@@ -40,7 +40,6 @@ namespace QLDV_KiemNghiem_BE.Repositories
             .FirstOrDefaultAsync();
             return result?.CheckAllSamplesApproved ?? 0;
         }
-
         public async Task<int> CheckAllSamplesCancel_PDXPB(string maPDXPB, string maCTDXPB)
         {
             var result = await _context.CheckAllSamplesCancel_PDXPBs
