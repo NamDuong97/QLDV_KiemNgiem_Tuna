@@ -1,10 +1,12 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.SignalR;
+using Microsoft.Extensions.Caching.Distributed;
 using QLDV_KiemNghiem_BE.Data;
 using QLDV_KiemNghiem_BE.HubsRealTime;
 using QLDV_KiemNghiem_BE.Interfaces;
 using QLDV_KiemNghiem_BE.Interfaces.ManagerInterface;
 using QLDV_KiemNghiem_BE.Models;
+using StackExchange.Redis;
 
 namespace QLDV_KiemNghiem_BE.Services
 {
@@ -47,14 +49,14 @@ namespace QLDV_KiemNghiem_BE.Services
        
 
         public ServiceManager(IRepositoryManager repositoryManager, IMapper mapper, DataContext dataContext, IEmailService emailService, ITokenService tokenService, IConfiguration configuration,
-            IHubContext<NotificationHub> hubContext)
+            IHubContext<NotificationHub> hubContext, IConnectionMultiplexer redis, IDistributedCache cache)
         {
             _repositoryManager = repositoryManager;
             _mapper = mapper;
             _configuration = configuration;
             //_email = new Lazy<IEmailService>(() => new EmailService(configuration));
             //_token = new Lazy<ITokenService>(() => new TokenService(configuration));
-            _phieuDangKyService = new Lazy<IPhieuDangKyService>(() => new PhieuDangKyService(repositoryManager, mapper, dataContext));
+            _phieuDangKyService = new Lazy<IPhieuDangKyService>(() => new PhieuDangKyService(repositoryManager, mapper, dataContext, redis, cache));
             _phieuDangKyMauService = new Lazy<IPhieuDangKyMauService>(() => new PhieuDangKyMauService(repositoryManager, mapper));
             _dmPhuLieuHoaChatService = new Lazy<IDmPhuLieuHoaChatService>(() => new DmPhuLieuHoaChatService(repositoryManager, mapper));
             _phieuDangKyPhuLieuHoaChatService = new Lazy<IPhieuDangKyPhuLieuHoaChatService>(() => new PhieuDangKyPhuLieuHoaChatService(repositoryManager, mapper));

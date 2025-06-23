@@ -91,8 +91,7 @@ namespace QLDV_KiemNghiem_BE.Controllers
         {
             if (_redis.IsConnected)
             {
-                var version = await _cache.GetStringAsync("phieudangkymau:version") ?? "v1";
-                var cacheKey = $"phieudangkymau:{version}:{JsonConvert.SerializeObject(maMau)}";
+                var cacheKey = $"phieudangkymau:{maMau}";
                 var cached = await _cache.GetStringAsync(cacheKey);
                 // Neu co cache
                 if (!string.IsNullOrEmpty(cached))
@@ -122,7 +121,7 @@ namespace QLDV_KiemNghiem_BE.Controllers
             else
             {
                 var result = await _service.PhieuDangKyMau.GetPhieuDangKyMauAsync(maMau);
-                _logger.LogDebug("get all nhan vien");
+                _logger.LogDebug($"get mau theo ma {maMau}");
                 return Ok(result);
             }
         }
@@ -156,13 +155,13 @@ namespace QLDV_KiemNghiem_BE.Controllers
                     {
                         Data = create?.Data
                     };
-                    // Lưu dữ liệu vào redis khachhang
+                    // Lưu dữ liệu vào redis phieudangkymau
                     await _cache.SetStringAsync(cacheKey, JsonConvert.SerializeObject(cacheObj), new DistributedCacheEntryOptions
                     {
                         AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(5)
                     });
-                    // Cap nhat version moi cho cache redis nhanvien:all
-                    await _cache.SetStringAsync("nhanvien:all:version", $"v{DateTime.UtcNow.Ticks}");
+                    // Cap nhat version moi cho cache redis phieudangkymau:all
+                    await _cache.SetStringAsync("phieudangkymau:all:version", $"v{DateTime.UtcNow.Ticks}");
                 }
                 _logger.LogDebug("Them mau thanh cong");
                 return Ok(mauDto);
