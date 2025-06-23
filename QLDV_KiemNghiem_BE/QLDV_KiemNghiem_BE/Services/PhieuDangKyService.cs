@@ -442,7 +442,7 @@ namespace QLDV_KiemNghiem_BE.Services
             }
             return await _repositoryManager.PhieuDangKy.DuTinhThoiGianKiemNghiem(maDmMau, maTieuChuan);
         }
-        public async Task<ResponReviewPhieuDangKy> ReviewPhieuDangKyByKHDT(RequestReviewPhieuDangKy duyetPhieu)
+        public async Task<ResponReviewPhieuDangKy> ReviewPhieuDangKyByKHDT(RequestReviewPhieuDangKy duyetPhieu,  string user)
         {
             if (duyetPhieu == null || duyetPhieu.MaPhieuDangKy == "")
             {
@@ -453,17 +453,22 @@ namespace QLDV_KiemNghiem_BE.Services
                     MaPhieuDangKy = string.Empty,
                 };
             }
-
             var checkExistsPhieuDangKy = await _repositoryManager.PhieuDangKy.CheckExistPhieuDangKyAsync(duyetPhieu.MaPhieuDangKy, true);
             if (checkExistsPhieuDangKy != null)
             {
                 if (duyetPhieu.Action)
-                    // neu action = 1 thi tiep theo se la cho BLD duyet
+                {
+                    // neu action = true tuc la phong KHTH dong y duyet, tiep theo BLD xem xet duyet
                     checkExistsPhieuDangKy.TrangThaiId = "TT02";
-                else // nguoc lai thi trang thai la bi phong KHDT tu choi duyet, thi cho BLD quyet dinh
+                }
+                else
+                {  // nguoc lai thi trang thai la bi phong KHDT tu choi duyet, luc nay chi gui thong bao cho BLD thoi, BLD co the xem
                     checkExistsPhieuDangKy.TrangThaiId = "TT03";
+                } 
                 checkExistsPhieuDangKy.NgaySua = DateTime.Now;
-                checkExistsPhieuDangKy.NguoiSua = "admin";
+                checkExistsPhieuDangKy.NoiDungDuyetSoBo = duyetPhieu.Message;
+                checkExistsPhieuDangKy.ManvSoDuyet = user;
+                checkExistsPhieuDangKy.NguoiSua = user;
                 _repositoryManager.PhieuDangKy.UpdatePhieuDangKyAsync(checkExistsPhieuDangKy);
                 bool check = await _repositoryManager.SaveChangesAsync();
                 return new ResponReviewPhieuDangKy
@@ -483,7 +488,7 @@ namespace QLDV_KiemNghiem_BE.Services
                 };
             }
         }
-        public async Task<ResponReviewPhieuDangKy> ReviewPhieuDangKyByBLD(RequestReviewPhieuDangKy duyetPhieu)
+        public async Task<ResponReviewPhieuDangKy> ReviewPhieuDangKyByBLD(RequestReviewPhieuDangKy duyetPhieu, string user)
         {
             if (duyetPhieu == null || duyetPhieu.MaPhieuDangKy == "")
             {
@@ -502,8 +507,10 @@ namespace QLDV_KiemNghiem_BE.Services
                     checkExistsPhieuDangKy.TrangThaiId = "TT05";
                 else
                     checkExistsPhieuDangKy.TrangThaiId = "TT04";
+                checkExistsPhieuDangKy.NoiDungTongDuyet = duyetPhieu.Message;
+                checkExistsPhieuDangKy.MaBldduyet = user;
                 checkExistsPhieuDangKy.NgaySua = DateTime.Now;
-                checkExistsPhieuDangKy.NguoiSua = "admin";
+                checkExistsPhieuDangKy.NguoiSua = user;
                 _repositoryManager.PhieuDangKy.UpdatePhieuDangKyAsync(checkExistsPhieuDangKy);
                 bool check = await _repositoryManager.SaveChangesAsync();
                 return new ResponReviewPhieuDangKy
@@ -516,6 +523,52 @@ namespace QLDV_KiemNghiem_BE.Services
             else
             {
                 return new ResponReviewPhieuDangKy
+                {
+                    KetQua = false,
+                    Message = "Phieu dang ky khong ton tai",
+                    MaPhieuDangKy = duyetPhieu.MaPhieuDangKy,
+                };
+            }
+        }
+        public async Task<ResponseUndoReviewPhieuDangKy> UndoReviewPhieuDangKyByBLD(RequestUndoReviewPhieuDangKy duyetPhieu, string user)
+        {
+            if (duyetPhieu == null || duyetPhieu.MaPhieuDangKy == "")
+            {
+                return new ResponseUndoReviewPhieuDangKy
+                {
+                    KetQua = false,
+                    Message = "Thieu du lieu dau vao!",
+                    MaPhieuDangKy = string.Empty,
+                };
+            }
+
+            var checkExistsPhieuDangKy = await _repositoryManager.PhieuDangKy.CheckExistPhieuDangKyAsync(duyetPhieu.MaPhieuDangKy, true);
+            if (checkExistsPhieuDangKy != null)
+            {
+                if (duyetPhieu.MaTrangThaiPDK != "TT04")
+                    // Neu phieu co trang thai khong phai tu choi, thi dao nguoc thanh tu choi
+                    checkExistsPhieuDangKy.TrangThaiId = "TT04";
+                else
+                    // Neu phieu co trang thai tu choi thi doi thanh da chap nhan cho phan cong
+                    checkExistsPhieuDangKy.TrangThaiId = "TT05";
+
+                checkExistsPhieuDangKy.NoiDungTongDuyet = duyetPhieu.Message;
+                checkExistsPhieuDangKy.MaBldduyet = user;
+                checkExistsPhieuDangKy.NgaySua = DateTime.Now;
+                checkExistsPhieuDangKy.NguoiSua = user;
+                _repositoryManager.PhieuDangKy.UpdatePhieuDangKyAsync(checkExistsPhieuDangKy);
+                bool check = await _repositoryManager.SaveChangesAsync();
+                return new ResponseUndoReviewPhieuDangKy
+                {
+                    MaPhieuDangKy = duyetPhieu.MaPhieuDangKy,
+                    Message = checkExistsPhieuDangKy.TrangThaiId == "TT04" ? $"Phieu dang ky {duyetPhieu.MaPhieuDangKy} da bi user tu choi boi nguoi dung {user}!" :
+                    $"Phieu dang ky {duyetPhieu.MaPhieuDangKy} da duoc phe duyet kiem nghiem boi nguoi dung {user}!",
+                    KetQua = check
+                };
+            }
+            else
+            {
+                return new ResponseUndoReviewPhieuDangKy
                 {
                     KetQua = false,
                     Message = "Phieu dang ky khong ton tai",

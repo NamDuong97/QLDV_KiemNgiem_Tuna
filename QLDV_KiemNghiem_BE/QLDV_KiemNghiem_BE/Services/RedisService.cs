@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Caching.Distributed;
 using QLDV_KiemNghiem_BE.Interfaces.Redis;
 using StackExchange.Redis;
+using System.ComponentModel;
 
 namespace QLDV_KiemNghiem_BE.Services
 {
@@ -23,6 +24,15 @@ namespace QLDV_KiemNghiem_BE.Services
             {
                 await _cache.RemoveAsync(key);
             }
+        }
+
+        public bool TryConnectRedis(string connectionString)
+        {
+            if (_redis.IsConnected)
+            {
+                return true;
+            }
+            return false;
         }
     }
 }

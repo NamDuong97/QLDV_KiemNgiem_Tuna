@@ -1,11 +1,13 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.SignalR;
+using Microsoft.VisualBasic;
+using QLDV_KiemNghiem_BE.DTO.RequestDto;
+using QLDV_KiemNghiem_BE.DTO.ResponseDto;
+using QLDV_KiemNghiem_BE.HubsRealTime;
+using QLDV_KiemNghiem_BE.Interfaces;
 using QLDV_KiemNghiem_BE.Interfaces.ManagerInterface;
 using QLDV_KiemNghiem_BE.Models;
-using QLDV_KiemNghiem_BE.Interfaces;
 using QLDV_KiemNghiem_BE.RequestFeatures;
-using QLDV_KiemNghiem_BE.DTO.ResponseDto;
-using Microsoft.AspNetCore.SignalR;
-using QLDV_KiemNghiem_BE.HubsRealTime;
 
 namespace QLDV_KiemNghiem_BE.Services
 {
@@ -61,7 +63,6 @@ namespace QLDV_KiemNghiem_BE.Services
                             phieuDeXuat.TrangThai = 3;
                             _repositoryManager.PhieuDeXuatPhongBan.UpdatePhieuDeXuatPhongBanAsync(phieuDeXuat);
                         }
-
                     }
                     // Cập nhật trạng thái cho mẫu tương ứng trong bảng PhieuDangKy_Mau
                     var phieuDangKyMau = await _repositoryManager.PhieuDangKyMau.FindPhieuDangKyMauAsync(checkExistsChiTietPhieuDXPB.MaPdkMau ?? "");
@@ -69,6 +70,17 @@ namespace QLDV_KiemNghiem_BE.Services
                     {
                         phieuDangKyMau.TrangThaiPhanCong = 2;
                         _repositoryManager.PhieuDangKyMau.UpdatePhieuDangKyMauAsync(phieuDangKyMau);
+
+                        var checkPhanCongAllMauInPDK = await _repositoryManager.PhieuDangKyMau.CheckPhanCongAllMauInPDK(phieuDangKyMau.MaId, phieuDangKyMau.MaPhieuDangKy);
+                        if(checkPhanCongAllMauInPDK == 1)
+                        {
+                            var phieuDangKy = await _repositoryManager.PhieuDangKy.FindPhieuDangKyAsync(phieuDangKyMau.MaPhieuDangKy);
+                            if(phieuDangKy!= null)
+                            {
+                                phieuDangKy.TrangThaiId = "TT07";
+                                _repositoryManager.PhieuDangKy.UpdatePhieuDangKyAsync(phieuDangKy);
+                            }
+                        }
                     }
                 }
                 else
@@ -78,11 +90,11 @@ namespace QLDV_KiemNghiem_BE.Services
                     checkExistsChiTietPhieuDXPB.LyDoTuChoi = duyetPhieu.Message;
                     checkExistsChiTietPhieuDXPB.ManvTuChoi = duyetPhieu.MaId;
                 }
+
                 checkExistsChiTietPhieuDXPB.NgaySua = DateTime.Now;
                 checkExistsChiTietPhieuDXPB.NguoiSua = user;
                 _repositoryManager.ChiTietPhieuDeXuatPhongBan.UpdateChiTietPhieuDeXuatPhongBanAsync(checkExistsChiTietPhieuDXPB);
                 bool check = await _repositoryManager.SaveChangesAsync();
-               
                 return new ResponseReviewPhieuDeXuatPhongBan
                 {
                     MaPhieuDeXuat = duyetPhieu.MaPhieuDeXuat,
@@ -99,6 +111,92 @@ namespace QLDV_KiemNghiem_BE.Services
                     MaPhieuDeXuat = duyetPhieu.MaPhieuDeXuat,
                 };
             }
+        }
+        public async Task<ResponseReviewPhieuDeXuatPhongBan> ReviewPhieuDeXuatPhongBanByBLD(RequestReviewPhieuDeXuatPhongBan duyetPhieu, string user)
+        {
+            if (duyetPhieu == null || duyetPhieu.MaPhieuDeXuat == "")
+            {
+                return new ResponseReviewPhieuDeXuatPhongBan
+                {
+                    KetQua = false,
+                    Message = "Thieu du lieu dau vao!",
+                };
+            }
+            var checkExistsChiTietPhieuDXPB = await _repositoryManager.ChiTietPhieuDeXuatPhongBan.FindChiTietPhieuDeXuatPhongBanAsync(duyetPhieu.MaPhieuDeXuat, true);
+            if (checkExistsChiTietPhieuDXPB != null)
+            {
+                if (duyetPhieu.Action)
+                {
+                    // BLĐ đồng ý cho từ chối thì trang thái là: Phòng ban từ chối chờ phân công lại
+                    checkExistsChiTietPhieuDXPB.TrangThai = 4;
+                    // Update lai PhieuDangKyMau nay thanh cho phan cong
+                    var phieuDangKyMau = await _repositoryManager.PhieuDangKyMau.FindPhieuDangKyMauAsync(checkExistsChiTietPhieuDXPB.MaPdkMau ?? "");
+                    if (phieuDangKyMau != null)
+                    {
+                        phieuDangKyMau.TrangThaiPhanCong = 1;
+                        _repositoryManager.PhieuDangKyMau.UpdatePhieuDangKyMauAsync(phieuDangKyMau);
+                    }
+                }
+                else
+                {
+                    // BLĐ không đồng ý thì trạng thái là: Đã duyệt - Tự nguyện hay bị BLĐ ép buộc
+                    checkExistsChiTietPhieuDXPB.TrangThai = 3;
+                    checkExistsChiTietPhieuDXPB.ManvTuChoi = "";
+                    checkExistsChiTietPhieuDXPB.LyDoTuChoi = "";
+                    checkExistsChiTietPhieuDXPB.NgayTuChoi = null;
+                    // Lúc này cần cập nhật trạng thái của PhieuDangKy_Mau, PhieuDangKy nếu như toàn bộ mẫu đều đang đc kiểm nghiệm
+                    var phieuDangKyMau = await _repositoryManager.PhieuDangKyMau.FindPhieuDangKyMauAsync(checkExistsChiTietPhieuDXPB.MaPdkMau ?? "");
+                    if (phieuDangKyMau != null)
+                    {
+                        phieuDangKyMau.TrangThaiPhanCong = 2;
+                        _repositoryManager.PhieuDangKyMau.UpdatePhieuDangKyMauAsync(phieuDangKyMau);
+
+                        var checkPhanCongAllMauInPDK = await _repositoryManager.PhieuDangKyMau.CheckPhanCongAllMauInPDK(phieuDangKyMau.MaId, phieuDangKyMau.MaPhieuDangKy);
+                        if (checkPhanCongAllMauInPDK == 1)
+                        {
+                            var phieuDangKy = await _repositoryManager.PhieuDangKy.FindPhieuDangKyAsync(phieuDangKyMau.MaPhieuDangKy);
+                            if (phieuDangKy != null)
+                            {
+                                phieuDangKy.TrangThaiId = "TT07";
+                                _repositoryManager.PhieuDangKy.UpdatePhieuDangKyAsync(phieuDangKy);
+                            }
+                        }
+                    }
+                }
+
+                checkExistsChiTietPhieuDXPB.NgaySua = DateTime.Now;
+                checkExistsChiTietPhieuDXPB.NguoiSua = user;
+                _repositoryManager.ChiTietPhieuDeXuatPhongBan.UpdateChiTietPhieuDeXuatPhongBanAsync(checkExistsChiTietPhieuDXPB);
+                bool check = await _repositoryManager.SaveChangesAsync();
+                return new ResponseReviewPhieuDeXuatPhongBan
+                {
+                    MaPhieuDeXuat = duyetPhieu.MaPhieuDeXuat,
+                    Message = check ? "Xu ly duyet phieu de xuat phong ban thanh cong!" : "Xu ly duyet phieu de xuat phong ban that bai vui long thu lai!",
+                    KetQua = check
+                };
+            }
+            else
+            {
+                return new ResponseReviewPhieuDeXuatPhongBan
+                {
+                    KetQua = false,
+                    Message = "Chi tiet phieu de xuat phong ban khong ton tai",
+                    MaPhieuDeXuat = duyetPhieu.MaPhieuDeXuat,
+                };
+            }
+        }
+        public async Task<bool> CancelChiTietPhieuDeXuatPhongBansByKHTH(CancelChiTietPhieuDeXuatPhongBanRequestDto cancelPhieu, string user)
+        {
+            try
+            {
+                await _repositoryManager.PhieuDeXuatPhongBan.ProcessUpdatePDXPBFromMauCancel(cancelPhieu.MaMau);
+                return true;
+            }
+            catch ( Exception ex)
+            {
+                Console.WriteLine($"Có lỗi xảy ra: {ex.Message}");
+                return false;
+            } 
         }
         public async Task<ResponseModel1<ChiTietPhieuDeXuatPhongBanDto>> CreateChiTietPhieuDeXuatPhongBanAsync(ChiTietPhieuDeXuatPhongBanDto ChiTietPhieuDeXuatPhongBanDto)
         {

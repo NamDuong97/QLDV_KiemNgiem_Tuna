@@ -40,6 +40,14 @@ namespace QLDV_KiemNghiem_BE.Repositories
             .FirstOrDefaultAsync();
             return result?.CheckAllSamplesApproved ?? 0;
         }
+        public async Task<int> CheckAllSamplesCancel_PDXPB(string maPDXPB, string maCTDXPB)
+        {
+            var result = await _context.CheckAllSamplesCancel_PDXPBs
+            .FromSqlRaw("SELECT dbo.fn_CheckAllSamplesCancel_PDXPB({0}, {1}) AS CheckAllSamplesApproved", maPDXPB, maCTDXPB)
+            .AsNoTracking()
+            .FirstOrDefaultAsync();
+            return result?.CheckAllSamplesCancel ?? 0;
+        }
         public async Task<List<ChiTietPhieuDeXuatPhongBan>?> CheckSampleAssignedToDepartment(CheckSampleAssignedToDepartmentModel checkSample)
         {
             var result = await _context.ChiTietPhieuDeXuatPhongBans.
@@ -48,6 +56,17 @@ namespace QLDV_KiemNghiem_BE.Repositories
            ToListAsync();
             
             return result;
+        }
+        public async Task<List<ChiTietPhieuDeXuatPhongBan>?> FindChiTietPhieuDeXuatPhongBanByMaMauAsync(string maMau, bool tracking)
+        {
+            if(tracking)
+            {
+                return await _context.ChiTietPhieuDeXuatPhongBans.Where(item => item.MaPdkMau == maMau).ToListAsync();
+            }
+            else
+            {
+                return await _context.ChiTietPhieuDeXuatPhongBans.AsNoTracking().Where(item => item.MaPdkMau == maMau).ToListAsync();
+            } 
         }
         public void CreateChiTietPhieuDeXuatPhongBanAsync(ChiTietPhieuDeXuatPhongBan ChiTietPhieuDeXuatPhongBan)
         {

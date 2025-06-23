@@ -3,8 +3,8 @@
 namespace QLDV_KiemNghiem_BE.RequestFeatures
 {
     [Keyless]
-    public class CheckAllSamplesCancel_PDXPB
+    public class CheckPhanCongAllMauInPDK
     {
-        public int CheckAllSamplesCancel {  get; set; } 
+        public int CheckPhanCongAllMau { get; set; }
     }
 }

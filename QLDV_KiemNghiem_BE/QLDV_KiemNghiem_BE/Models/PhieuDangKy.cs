@@ -74,16 +74,37 @@ public partial class PhieuDangKy
     [StringLength(50)]
     public string? SoDkpt { get; set; }
 
+    [StringLength(50)]
+    public string? ManvSoDuyet { get; set; }
+
+    [Column("MaBLDDuyet")]
+    [StringLength(50)]
+    public string? MaBldduyet { get; set; }
+
+    [StringLength(500)]
+    public string? NoiDungDuyetSoBo { get; set; }
+
+    [StringLength(500)]
+    public string? NoiDungTongDuyet { get; set; }
+
     [InverseProperty("MaPhieuDangKyNavigation")]
     public virtual ICollection<HoaDonThu> HoaDonThus { get; set; } = new List<HoaDonThu>();
+
+    [ForeignKey("MaBldduyet")]
+    [InverseProperty("PhieuDangKyMaBldduyetNavigations")]
+    public virtual NhanVien? MaBldduyetNavigation { get; set; }
 
     [ForeignKey("MaKh")]
     [InverseProperty("PhieuDangKies")]
     public virtual KhachHang? MaKhNavigation { get; set; }
 
     [ForeignKey("ManvNhanMau")]
-    [InverseProperty("PhieuDangKies")]
+    [InverseProperty("PhieuDangKyManvNhanMauNavigations")]
     public virtual NhanVien? ManvNhanMauNavigation { get; set; }
+
+    [ForeignKey("ManvSoDuyet")]
+    [InverseProperty("PhieuDangKyManvSoDuyetNavigations")]
+    public virtual NhanVien? ManvSoDuyetNavigation { get; set; }
 
     [InverseProperty("MaPhieuDangKyNavigation")]
     public virtual ICollection<PhieuDangKyMau> PhieuDangKyMaus { get; set; } = new List<PhieuDangKyMau>();

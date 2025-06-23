@@ -82,6 +82,11 @@ namespace QLDV_KiemNghiem_BE.Services
             var result = _mapper.Map<NhanVienDto>(NhanVienDomain);
             return result;
         }
+        public async Task<List<string>> GetUserIdOfEmployeeCustom(ParamGetUserIdNhanVien nhanVienParam)
+        {
+            var result = await _repositoryManager.NhanVien.GetUserIdOfEmployeeCustom(nhanVienParam);
+            return result;
+        }
         public async Task<ResponseModel1<NhanVienDto>> CreateNhanVienAsync(NhanVienDto NhanVienDto)
         {
             if (NhanVienDto == null) return new ResponseModel1<NhanVienDto>

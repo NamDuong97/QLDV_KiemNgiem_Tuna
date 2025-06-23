@@ -14,7 +14,8 @@ namespace QLDV_KiemNghiem_BE.Interfaces
         Task<bool> DeletePhieuDangKyAsync(PhieuDangKy phieuDangKy);
         Task<PhieuDangKy?> CheckExistPhieuDangKyAsync(string id, bool tracking);
         Task<int> DuTinhThoiGianKiemNghiem(string maDmMau, string maTieuChuan);
-        Task<ResponReviewPhieuDangKy> ReviewPhieuDangKyByKHDT(RequestReviewPhieuDangKy duyetPhieu);
-        Task<ResponReviewPhieuDangKy> ReviewPhieuDangKyByBLD(RequestReviewPhieuDangKy duyetPhieu);
+        Task<ResponReviewPhieuDangKy> ReviewPhieuDangKyByKHDT(RequestReviewPhieuDangKy duyetPhieu, string user);
+        Task<ResponReviewPhieuDangKy> ReviewPhieuDangKyByBLD(RequestReviewPhieuDangKy duyetPhieu, string user);
+        Task<ResponseUndoReviewPhieuDangKy> UndoReviewPhieuDangKyByBLD(RequestUndoReviewPhieuDangKy duyetPhieu, string user);
     }
 }
