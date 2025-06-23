@@ -36,3 +36,38 @@ body {
   display: inline-block;
   margin-right: 6px;
 }
+
+.status-badge2 {
+  padding-left: 0.75rem;
+  padding-right: 0.75rem;
+  padding-top: 0.25rem;
+  padding-bottom: 0.25rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.status-pending {
+  background-color: #fef3c7;
+  color: #92400e;
+}
+
+.status-approved {
+  background-color: #d1fae5;
+  color: #065f46;
+}
+
+.status-rejected {
+  background-color: #fecaca;
+  color: #991b1b;
+}
+
+.status-processing {
+  background-color: #dbeafe;
+  color: #1e3a8a;
+}
+
+.status-completed {
+  background-color: #e0e7ff;
+  color: #3730a3;
+}

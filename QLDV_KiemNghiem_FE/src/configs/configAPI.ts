@@ -16,7 +16,10 @@ _APIInstance.interceptors.request.use(
   async (config: any) => {
     const token_guest = Cookies.get(EKey.TOKEN_GUEST);
     const token = Cookies.get(EKey.TOKEN);
-    if (token_guest || token) {
+    if (token_guest) {
+      config.headers.Authorization = `Bearer ${token_guest}`;
+    }
+    if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
     return config;

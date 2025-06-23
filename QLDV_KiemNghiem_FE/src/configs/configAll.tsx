@@ -82,8 +82,145 @@ const trangThaiMap: Record<string, TrangThai> = {
   },
 };
 
+const trangThaiMauMap: Record<string, TrangThai> = {
+  1: {
+    text: "Chờ phân công",
+    bgColor: "bg-yellow-100",
+    textColor: "text-yellow-800",
+  },
+  2: {
+    text: "Đang kiểm nghiệm",
+    bgColor: "bg-purple-100",
+    textColor: "text-purple-800",
+  },
+  3: {
+    text: "Đã bị huỷ bởi khoa chuyên môn",
+    bgColor: "bg-red-100",
+    textColor: "text-red-800",
+  },
+  4: {
+    text: "Đã bị huỷ bởi khách",
+    bgColor: "bg-indigo-100",
+    textColor: "text-indigo-800",
+  },
+  5: {
+    text: "Đã hoàn thành",
+    bgColor: "bg-green-100",
+    textColor: "text-green-800",
+  },
+};
+
+const trangThaiChiTietPhieuDeXuatPhongBan: Record<string, TrangThai> = {
+  0: {
+    text: "Khách hàng đã hủy",
+    bgColor: "bg-gray-100",
+    textColor: "text-gray-800",
+  },
+  1: {
+    text: "Phòng ban từ chối – chờ BLĐ duyệt",
+    bgColor: "bg-yellow-100",
+    textColor: "text-yellow-800",
+  },
+  2: {
+    text: "Chờ phòng ban duyệt",
+    bgColor: "bg-blue-100",
+    textColor: "text-blue-800",
+  },
+  3: {
+    text: "Đã duyệt – đang kiểm nghiệm",
+    bgColor: "bg-purple-100",
+    textColor: "text-purple-800",
+  },
+  4: {
+    text: "Phòng ban từ chối – chờ phân công lại",
+    bgColor: "bg-orange-100",
+    textColor: "text-orange-800",
+  },
+  5: {
+    text: "Hủy do không có phòng ban tiếp nhận",
+    bgColor: "bg-red-100",
+    textColor: "text-red-800",
+  },
+};
+
+const trangThaiPhieuDeXuatPhongBan: Record<string, TrangThai> = {
+  0: {
+    text: "Khách hàng đã hủy",
+    bgColor: "bg-gray-100",
+    textColor: "text-gray-800",
+  },
+  1: {
+    text: "Phòng ban từ chối – chờ BLĐ duyệt",
+    bgColor: "bg-yellow-100",
+    textColor: "text-yellow-800",
+  },
+  2: {
+    text: "Chờ phòng ban duyệt",
+    bgColor: "bg-blue-100",
+    textColor: "text-blue-800",
+  },
+  3: {
+    text: "Đã duyệt – chờ kiểm nghiệm",
+    bgColor: "bg-purple-100",
+    textColor: "text-purple-800",
+  },
+  4: {
+    text: "Bị hủy – không có phòng ban tiếp nhận",
+    bgColor: "bg-red-100",
+    textColor: "text-red-800",
+  },
+};
+
 export function renderTrangThai(trangThaiId: string) {
   const trangThai = trangThaiMap[trangThaiId] || {
+    text: "Không xác định",
+    bgColor: "bg-gray-100",
+    textColor: "text-gray-800",
+  };
+
+  return (
+    <span
+      className={`inline-block px-2 py-1 text-xs font-medium rounded-full ${trangThai.bgColor} ${trangThai.textColor}`}
+    >
+      {trangThai.text}
+    </span>
+  );
+}
+
+export function renderTrangThaiMau(trangThaiId: string) {
+  const trangThai = trangThaiMauMap[trangThaiId] || {
+    text: "Không xác định",
+    bgColor: "bg-gray-100",
+    textColor: "text-gray-800",
+  };
+
+  return (
+    <span
+      className={`inline-block px-2 py-1 text-xs font-medium rounded-full ${trangThai.bgColor} ${trangThai.textColor}`}
+    >
+      {trangThai.text}
+    </span>
+  );
+}
+
+export function renderTrangThaiChiTietPhieuDeXuatPhongBan(trangThaiId: string) {
+  const trangThai = trangThaiChiTietPhieuDeXuatPhongBan[trangThaiId] || {
+    text: "Không xác định",
+    bgColor: "bg-gray-100",
+    textColor: "text-gray-800",
+  };
+
+  return (
+    <span
+      className={`inline-block px-2 py-1 text-xs font-medium rounded-full ${trangThai.bgColor} ${trangThai.textColor}`}
+    >
+      {trangThai.text}
+    </span>
+  );
+}
+
+export function renderTrangThaiPhieuDeXuatPhongBan(trangThaiId: string) {
+  const trangThai = trangThaiPhieuDeXuatPhongBan[trangThaiId] || {
     text: "Không xác định",
     bgColor: "bg-gray-100",
     textColor: "text-gray-800",
@@ -107,4 +244,9 @@ export const formatDate = (dateString: any) => {
     hour: "2-digit",
     minute: "2-digit",
   });
+};
+
+export const formatDateNotTime = (dateString: any) => {
+  const date = new Date(dateString).toLocaleDateString("vi-VN");
+  return date;
 };

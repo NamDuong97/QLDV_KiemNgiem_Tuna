@@ -10,7 +10,7 @@ const Notification = () => {
   //const token = Cookies.get(EKey.TOKEN);
   const connection = useSignalR();
   const { personnelInfo } = usePersonnel();
-  const [notifications, setNotifications] = useState<any>([]);
+  const [notifications, setNotifications] = useState<any>({});
   console.log("notifications", notifications);
 
   useEffect(() => {
@@ -75,20 +75,20 @@ const Notification = () => {
             console.log("SignalR Connected 1");
             connection.on("notifycation", (data: any) => {
               console.log("New notifycation:", data);
-              setNotifications((prev: any) => [...prev, data]);
+              setNotifications(data);
             });
 
             // Lắng nghe sự kiện receiveNotification
             console.log("SignalR Connected 2");
             connection.on("receiveNotification", (data: any) => {
               console.log("New receiveNotification:", data);
-              setNotifications((prev: any) => [...prev, data]);
+              setNotifications(data);
             });
 
             console.log("SignalR Connected 3");
             connection.on("notificationForPDXPB", (data: any) => {
               console.log("New notificationForPDXPB:", data);
-              setNotifications((prev: any) => [...prev, data]);
+              setNotifications(data);
             });
           })
           .catch((e: any) => console.error("Connection failed: ", e));

@@ -6,6 +6,7 @@ import accessServices from "../../../services/personnels/access";
 import { EKey } from "../../../constants/commons";
 import { isProd } from "../../../utils/env";
 import { PersonnelContext } from "../../../contexts/PersonelsProvider";
+import { APP_ROUTES } from "../../../constants/routers";
 
 interface Props {
   queryKey?: string;
@@ -34,6 +35,7 @@ export const useDangNhapNhanVien = (props: Props) => {
         });
         return;
       } else {
+        window.location.href = APP_ROUTES.TUNA_ADMIN.DASHBOARD.to;
         showNotification({ message: "Đăng nhập thành công", status: 200 });
         const { token, refreshToken, maId } = res.data;
         Cookies.set(EKey.TOKEN, token, {

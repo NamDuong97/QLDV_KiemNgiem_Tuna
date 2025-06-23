@@ -120,4 +120,5 @@ export interface MauPhanCong {
   soLuong: number;
   donViTinh: string;
   trangThaiPhanCong: string;
+  maPhieuDangKy: string;
 }

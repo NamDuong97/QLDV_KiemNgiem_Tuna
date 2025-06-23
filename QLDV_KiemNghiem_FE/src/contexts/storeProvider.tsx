@@ -1,9 +1,16 @@
-import { createContext, useState, useEffect, PropsWithChildren } from "react";
+import {
+  createContext,
+  useState,
+  useEffect,
+  PropsWithChildren,
+  useContext,
+} from "react";
 import accessServices from "../services/customers/accessService";
 import Cookies from "js-cookie";
 import { EKey } from "../constants/commons";
 
 export const StoreContext = createContext<any>(null);
+export const GuestInfor = () => useContext(StoreContext);
 
 export const StoreProvider = ({ children }: PropsWithChildren) => {
   const [userInfo, setUserInfo] = useState(null);
