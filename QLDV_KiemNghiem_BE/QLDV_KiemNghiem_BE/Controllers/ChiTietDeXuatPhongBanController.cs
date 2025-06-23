@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using QLDV_KiemNghiem_BE.DTO.RequestDto;
@@ -118,49 +119,28 @@ namespace QLDV_KiemNghiem_BE.Controllers
             return Ok(phieuDeXuat);
         }
 
+        [Authorize(Roles = "KHTH, BLD")]
         [HttpPut]
         [Route("cancelChiTietPhieuDeXuatPhongBansByKHTH")]
         public async Task<ActionResult> cancelChiTietPhieuDeXuatPhongBansByKHTH(CancelChiTietPhieuDeXuatPhongBanRequestDto cancelPhieu)
         {
             // Nếu 1 mẫu trong ChiTietPhieuDeXuatPhongBan bị all phòng ban từ chối thì KHTH sẽ gọi api cập nhật trạng thái, và báo cho kh
             var user = User.FindFirst(ClaimTypes.Email)?.Value.ToString() ?? "unknow";
-            var phieuDeXuat = await _service.ChiTietPhieuDeXuatPhongBan.CancelChiTietPhieuDeXuatPhongBansByKHTH(cancelPhieu, user);
+            bool ketqua = await _service.ChiTietPhieuDeXuatPhongBan.CancelChiTietPhieuDeXuatPhongBansByKHTH(cancelPhieu, user);
 
-            if (phieuDeXuat.KetQua)
+            if (ketqua)
             {
                 NotificationModel noti = new NotificationModel();
-                if (duyetPhieu.Action)
-                {
-                    // Action = true tức là BLD đồng ý cho phòng ban X từ chối mẫu - ChiTietPhieuDeXuatPhongBan
-                    // -> KHTH nhận thông báo tạo phân công mới cho phiếu này - mẫu này
-                    noti.Title = "BLD chấp nhận lý do từ chối tiếp nhận mẫu từ phòng ban - phân công lại mẫu này";
-                    noti.Message = $"Chi tiet phieu de xuat co maid {phieuDeXuat.MaPhieuDeXuat} da bi phong khoa tu choi tiep nhan, BLD da duyet. Vui long phan cong lai!";
-                    noti.CreatedAt = DateTime.Now;
-                }
-                else
-                {
-                    // Action = fasle tức là BLD không đồng ý cho phòng ban X từ chối mẫu - ChiTietPhieuDeXuatPhongBan
-                    // -> Phòng ban x bắt buộc nhận mẫu và kiểm nghiệm
-                    noti.Title = "BLD không chấp nhận lý do từ chối tiếp nhận mẫu từ phòng ban";
-                    noti.Message = $"Chi tiet phieu de xuat co maid {phieuDeXuat.MaPhieuDeXuat} da bi BLD bac bo tu choi, phong ban tiep tuc lam mau nay";
-                    noti.CreatedAt = DateTime.Now;
-                }
+                // Action = fasle tức là BLD không đồng ý cho phòng ban X từ chối mẫu - ChiTietPhieuDeXuatPhongBan
+                // -> Phòng ban x bắt buộc nhận mẫu và kiểm nghiệm
+                noti.Title = "Da huy mau thanh cong do khong phong ban nao chap nhan";
+                noti.Message = $"Nhan vien {user} da huy mau thanh cong, do mau nay cac phong ban tu choi tiep nhan";
+                noti.CreatedAt = DateTime.Now;
                 await _hubContext.Clients.Group("KHTH").SendAsync("receiveNotification", noti);
-                ParamGetUserIdNhanVien nhanVienParam = new ParamGetUserIdNhanVien()
-                {
-                    MaKhoa = duyetPhieu.MaKhoa,
-                    GetLeader = "1",
-                    GetEmployee = "0",
-                    GetBld = "0"
-                };
-                var userIds = await _service.NhanVien.GetUserIdOfEmployeeCustom(nhanVienParam);
-                foreach (var userId in userIds)
-                {
-                    await _hubContext.Clients.Group(userId).SendAsync("receiveNotification", noti);
-                }
+               
             }
-            _logger.LogDebug(phieuDeXuat.Message);
-            return Ok(phieuDeXuat);
+            _logger.LogDebug("Da huy mau kiem nghiem thanh cong");
+            return Ok();
         }
 
         [HttpGet]

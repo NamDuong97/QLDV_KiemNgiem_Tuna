@@ -187,8 +187,16 @@ namespace QLDV_KiemNghiem_BE.Services
         }
         public async Task<bool> CancelChiTietPhieuDeXuatPhongBansByKHTH(CancelChiTietPhieuDeXuatPhongBanRequestDto cancelPhieu, string user)
         {
-            await _repositoryManager.PhieuDeXuatPhongBan.ProcessUpdatePDXPBFromMauCancel(cancelPhieu.MaMau);
-            return true;    
+            try
+            {
+                await _repositoryManager.PhieuDeXuatPhongBan.ProcessUpdatePDXPBFromMauCancel(cancelPhieu.MaMau);
+                return true;
+            }
+            catch ( Exception ex)
+            {
+                Console.WriteLine($"Có lỗi xảy ra: {ex.Message}");
+                return false;
+            } 
         }
         public async Task<ResponseModel1<ChiTietPhieuDeXuatPhongBanDto>> CreateChiTietPhieuDeXuatPhongBanAsync(ChiTietPhieuDeXuatPhongBanDto ChiTietPhieuDeXuatPhongBanDto)
         {
