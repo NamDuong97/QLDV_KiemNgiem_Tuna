@@ -96,6 +96,9 @@ public partial class PhieuDangKyMau
 
     public int? TrangThaiPhanCong { get; set; }
 
+    [Column(TypeName = "datetime")]
+    public DateTime? NgayTraKetQua { get; set; }
+
     [InverseProperty("MaMauNavigation")]
     public virtual ICollection<ChiTietHoaDonThu> ChiTietHoaDonThus { get; set; } = new List<ChiTietHoaDonThu>();
 

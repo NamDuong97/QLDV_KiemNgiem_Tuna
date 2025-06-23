@@ -1,6 +1,4 @@
-﻿using System.Security.Claims;
-using System.Text.Json;
-using AutoMapper;
+﻿using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
@@ -12,6 +10,9 @@ using QLDV_KiemNghiem_BE.Interfaces.ManagerInterface;
 using QLDV_KiemNghiem_BE.Models;
 using QLDV_KiemNghiem_BE.RequestFeatures;
 using QLDV_KiemNghiem_BE.RequestFeatures.PagingRequest;
+using StackExchange.Redis;
+using System.Security.Claims;
+using System.Text.Json;
 
 namespace QLDV_KiemNghiem_BE.Controllers
 {
@@ -23,12 +24,15 @@ namespace QLDV_KiemNghiem_BE.Controllers
         private readonly ILogger<NhanVienController> _logger;
         private readonly IMapper _mapper;
         private readonly IDistributedCache _cache;
-        public NhanVienController(IServiceManager serviceManager, ILogger<NhanVienController> logger, IMapper mapper, IDistributedCache cache)
+        private readonly IConnectionMultiplexer _redis;
+        public NhanVienController(IServiceManager serviceManager, ILogger<NhanVienController> logger, IMapper mapper, IDistributedCache cache,
+           IConnectionMultiplexer redis)
         {
             _service = serviceManager;
             _logger = logger;
             _mapper = mapper;
             _cache = cache;
+            _redis = redis;
         }
 
         [HttpPost]
@@ -83,72 +87,93 @@ namespace QLDV_KiemNghiem_BE.Controllers
         [Route("getNhanVienAll")]
         public async Task<ActionResult> getNhanVienAll(NhanVienParam param)
         {
-            var version = await _cache.GetStringAsync("nhanvien:all:version") ?? "v1";
-            var cacheKey = $"nhanvien:all:{version}:{JsonConvert.SerializeObject(param)}";
-            var cached = await _cache.GetStringAsync(cacheKey);
-            // Neu co cache
-            if (!string.IsNullOrEmpty(cached))
+            if(_redis.IsConnected)
             {
-                var cachedResult = JsonConvert.DeserializeObject<CachedResponse<IEnumerable<NhanVienDto>>>(cached);
-
-                // Thêm lại header từ cache
-                foreach (var header in cachedResult?.Headers)
+                var version = await _cache.GetStringAsync("nhanvien:all:version") ?? "v1";
+                var cacheKey = $"nhanvien:all:{version}:{JsonConvert.SerializeObject(param)}";
+                var cached = await _cache.GetStringAsync(cacheKey);
+                // Neu co cache
+                if (!string.IsNullOrEmpty(cached))
                 {
-                    Response.Headers[header.Key] = header.Value.ToString();
+                    var cachedResult = JsonConvert.DeserializeObject<CachedResponse<IEnumerable<NhanVienDto>>>(cached);
+
+                    // Thêm lại header từ cache
+                    foreach (var header in cachedResult?.Headers)
+                    {
+                        Response.Headers[header.Key] = header.Value.ToString();
+                    }
+                    return Ok(cachedResult.Data);
                 }
-                return Ok(cachedResult.Data);
+                else
+                {
+                    // Nếu không có cache thì lấy dữ liệu từ BD
+                    var result = await _service.NhanVien.GetNhanViensAllAsync(param, false);
+                    // Lưu lại cả header và body
+                    var headers = new Dictionary<string, string>
+                    {
+                        { "X-Pagination", System.Text.Json.JsonSerializer.Serialize(result.pagi) }
+                    };
+                    // Chuẩn bị dữ liệu để lưu vào redis
+                    var cacheObj = new CachedResponse<IEnumerable<NhanVienDto>>
+                    {
+                        Data = result.datas,
+                        Headers = headers
+                    };
+                    // Lưu dữ liệu vào redis
+                    await _cache.SetStringAsync(cacheKey, JsonConvert.SerializeObject(cacheObj), new DistributedCacheEntryOptions
+                    {
+                        AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(5)
+                    });
+
+                    Response.Headers.Append("X-Pagination", System.Text.Json.JsonSerializer.Serialize(result.pagi));
+                    _logger.LogDebug("get all nhan vien");
+                    return Ok(result.datas);
+                }
             }
-
-            // Nếu không có cache thì lấy dữ liệu từ BD
-            var result = await _service.NhanVien.GetNhanViensAllAsync(param, false);
-            // Lưu lại cả header và body
-            var headers = new Dictionary<string, string>
+            else
             {
-                { "X-Pagination", System.Text.Json.JsonSerializer.Serialize(result.pagi) }
-            };
-            // Chuẩn bị dữ liệu để lưu vào redis
-            var cacheObj = new CachedResponse<IEnumerable<NhanVienDto>>
-            {
-                Data = result.datas,
-                Headers = headers
-            };
-            // Lưu dữ liệu vào redis
-            await _cache.SetStringAsync(cacheKey, JsonConvert.SerializeObject(cacheObj), new DistributedCacheEntryOptions
-            {
-                AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(5)
-            });
-
-            Response.Headers.Append("X-Pagination", System.Text.Json.JsonSerializer.Serialize(result.pagi));
-            _logger.LogDebug("get all nhan vien");
-            return Ok(result.datas);
+                var result = await _service.NhanVien.GetNhanViensAllAsync(param, false);
+                Response.Headers.Append("X-Pagination", System.Text.Json.JsonSerializer.Serialize(result.pagi));
+                _logger.LogDebug("get all nhan vien");
+                return Ok(result.datas);
+            }
         }
 
         [HttpGet]
         [Route("getNhanVienByID")]
         public async Task<ActionResult> getNhanVienByID(string maNhanVien)
         {
-            // Kiểm tra xem trong cache co lưu chưa, nếu có thì trả về
-            var cacheKey = $"nhanvien:{maNhanVien}";
-            var cacheData = await _cache.GetStringAsync(cacheKey);
-            if (!string.IsNullOrEmpty(cacheData))
+            if (_redis.IsConnected)
             {
-                var cached = JsonConvert.DeserializeObject<CachedResponse<NhanVienDto>>(cacheData);
-                return Ok(cached.Data);
-            }
+                // Kiểm tra xem trong cache co lưu chưa, nếu có thì trả về
+                var cacheKey = $"nhanvien:{maNhanVien}";
+                var cacheData = await _cache.GetStringAsync(cacheKey);
+                if (!string.IsNullOrEmpty(cacheData))
+                {
+                    var cached = JsonConvert.DeserializeObject<CachedResponse<NhanVienDto>>(cacheData);
+                    return Ok(cached.Data);
+                }
 
-            // Ngược lại nếu cache chưa có thì tiến hành lưu redis và trả về từ BD
-            var result = await _service.NhanVien.FindNhanVienAsync(maNhanVien);
-            var cacheObj = new CachedResponse<NhanVienDto>
+                // Ngược lại nếu cache chưa có thì tiến hành lưu redis và trả về từ BD
+                var result = await _service.NhanVien.FindNhanVienAsync(maNhanVien);
+                var cacheObj = new CachedResponse<NhanVienDto>
+                {
+                    Data = result
+                };
+                // Lưu dữ liệu vào redis
+                await _cache.SetStringAsync(cacheKey, JsonConvert.SerializeObject(cacheObj), new DistributedCacheEntryOptions
+                {
+                    AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(5)
+                });
+                _logger.LogDebug("lay nhan vien can tim: " + maNhanVien);
+                return Ok(result);
+            }
+            else
             {
-                Data = result
-            };
-            // Lưu dữ liệu vào redis
-            await _cache.SetStringAsync(cacheKey, JsonConvert.SerializeObject(cacheObj), new DistributedCacheEntryOptions
-            {
-                AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(5)
-            });
-            _logger.LogDebug("lay nhan vien can tim: " + maNhanVien);
-            return Ok(result);
+                var result = await _service.NhanVien.FindNhanVienAsync(maNhanVien);
+                _logger.LogDebug("lay nhan vien can tim: " + maNhanVien);
+                return Ok(result);
+            }
         }
 
         [HttpPost]
@@ -167,19 +192,22 @@ namespace QLDV_KiemNghiem_BE.Controllers
             ResponseModel1<NhanVienDto> create = await _service.NhanVien.CreateNhanVienAsync(NhanVienDto);
             if (create.KetQua)
             {
-                var cacheKey = $"nhanvien:{create?.Data?.MaId}";
-                var cacheObj = new CachedResponse<NhanVienDto>
+                if(_redis.IsConnected)
                 {
-                    Data = create?.Data
-                };
-                // Lưu dữ liệu vào redis khachhang
-                await _cache.SetStringAsync(cacheKey, JsonConvert.SerializeObject(cacheObj), new DistributedCacheEntryOptions
-                {
-                    AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(5)
-                });
-                // Cap nhat version moi cho cache redis nhanvien:all
-                await _cache.SetStringAsync("nhanvien:all:version", $"v{DateTime.UtcNow.Ticks}");
-
+                    // Neu co ket noi thi moi them vao redis
+                    var cacheKey = $"nhanvien:{create?.Data?.MaId}";
+                    var cacheObj = new CachedResponse<NhanVienDto>
+                    {
+                        Data = create?.Data
+                    };
+                    // Lưu dữ liệu vào redis khachhang
+                    await _cache.SetStringAsync(cacheKey, JsonConvert.SerializeObject(cacheObj), new DistributedCacheEntryOptions
+                    {
+                        AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(5)
+                    });
+                    // Cap nhat version moi cho cache redis nhanvien:all
+                    await _cache.SetStringAsync("nhanvien:all:version", $"v{DateTime.UtcNow.Ticks}");
+                }
                 _logger.LogDebug(create.Message);
                 return Ok(create.Data);
             }

@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using QLDV_KiemNghiem_BE.DTO.ResponseDto;
 using QLDV_KiemNghiem_BE.Models;
 using QLDV_KiemNghiem_BE.RequestFeatures;
 
@@ -13,7 +14,7 @@ namespace QLDV_KiemNghiem_BE.Data
         public virtual DbSet<CheckAllSamplesApproved_PDXPB> CheckAllSamplesApproved_PDXPBs { get; set; }
         public virtual DbSet<CheckAllSamplesCancel_PDXPB> CheckAllSamplesCancel_PDXPBs { get; set; }
         public virtual DbSet<CheckPhanCongAllMauInPDK> CheckPhanCongAllMauInPDKs { get; set; }
-
+        public virtual DbSet<PhieuDangKyMauProcedure> PhieuDangKyMauProcedures { get; set; }
         partial void OnModelCreatingPartial(ModelBuilder modelBuilder)
         {
        
@@ -24,6 +25,7 @@ namespace QLDV_KiemNghiem_BE.Data
             modelBuilder.Entity<CheckAllSamplesApproved_PDXPB>().HasNoKey();
             modelBuilder.Entity<CheckAllSamplesCancel_PDXPB>().HasNoKey();
             modelBuilder.Entity<CheckPhanCongAllMauInPDK>().HasNoKey();
+            modelBuilder.Entity<PhieuDangKyMauProcedure>().HasNoKey();
         }
     }
 

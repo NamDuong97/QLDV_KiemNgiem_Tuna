@@ -23,14 +23,13 @@ namespace QLDV_KiemNghiem_BE.Repositories
         {
             if(tracking)
             {
-                return await _context.PhieuDeXuatPhongBans.FindAsync(maPhieuDeXuatPhongBan);
+                return await _context.PhieuDeXuatPhongBans.Include(it => it.ChiTietPhieuDeXuatPhongBans).FirstOrDefaultAsync(item => item.MaId == maPhieuDeXuatPhongBan);
             }
             else
             {
-                return await _context.PhieuDeXuatPhongBans.AsNoTracking().SingleOrDefaultAsync(item => item.MaId == maPhieuDeXuatPhongBan);
+                return await _context.PhieuDeXuatPhongBans.Include(it => it.ChiTietPhieuDeXuatPhongBans).AsNoTracking().FirstOrDefaultAsync(item => item.MaId == maPhieuDeXuatPhongBan);
             }
         }
-        
         public void CreatePhieuDeXuatPhongBanAsync(PhieuDeXuatPhongBan PhieuDeXuatPhongBan)
         {
             _context.PhieuDeXuatPhongBans.Add(PhieuDeXuatPhongBan);

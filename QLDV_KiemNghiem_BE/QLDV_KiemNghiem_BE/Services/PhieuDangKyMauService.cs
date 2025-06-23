@@ -3,6 +3,9 @@ using QLDV_KiemNghiem_BE.DTO.ResponseDto;
 using QLDV_KiemNghiem_BE.Interfaces;
 using QLDV_KiemNghiem_BE.Interfaces.ManagerInterface;
 using QLDV_KiemNghiem_BE.Models;
+using QLDV_KiemNghiem_BE.RequestFeatures;
+using QLDV_KiemNghiem_BE.RequestFeatures.PagingRequest;
+using QLDV_KiemNghiem_BE.Shared;
 
 namespace QLDV_KiemNghiem_BE.Services
 {
@@ -15,17 +18,17 @@ namespace QLDV_KiemNghiem_BE.Services
             _repositoryManager = repositoryManager;
             _mapper = mapper;
         }
-        public async Task<IEnumerable<PhieuDangKyMauDto>> GetPhieuDangKyMauAllAsync()
+        public async Task<(IEnumerable<PhieuDangKyMauProcedureDto> datas, Pagination pagi)> GetPhieuDangKyMauAllAsync(PhieuDangKyMauParam param)
         {
-            List<PhieuDangKyMauDto> PhieuDangKyMauDtos = new List<PhieuDangKyMauDto>();
-            var PhieuDangKyMauDomains = await _repositoryManager.PhieuDangKyMau.GetPhieuDangKyMauAllAsync();
+            List<PhieuDangKyMauProcedureDto> PhieuDangKyMauDtos = new List<PhieuDangKyMauProcedureDto>();
+            var PhieuDangKyMauDomains = await _repositoryManager.PhieuDangKyMau.GetPhieuDangKyMauAllAsync(param);
             foreach (var PhieuDangKyMau in PhieuDangKyMauDomains)
             {
-                var PhieuDangKyMauDto = _mapper.Map<PhieuDangKyMauDto>(PhieuDangKyMau);
+                var PhieuDangKyMauDto = _mapper.Map<PhieuDangKyMauProcedureDto>(PhieuDangKyMau);
                 PhieuDangKyMauDto.PhieuDangKyMauHinhAnhs = _mapper.Map<List<PhieuDangKyMauHinhAnhDto>>(PhieuDangKyMau.PhieuDangKyMauHinhAnhs);
                 PhieuDangKyMauDtos.Add(PhieuDangKyMauDto);
             }
-            return PhieuDangKyMauDtos;
+            return ( datas : PhieuDangKyMauDtos,  pagi : PhieuDangKyMauDomains.Pagination);
         }
         public async Task<PhieuDangKyMauDto?> GetPhieuDangKyMauAsync(string maPhieuDangKyMau)
         {
@@ -35,13 +38,37 @@ namespace QLDV_KiemNghiem_BE.Services
             result.PhieuDangKyMauHinhAnhs = _mapper.Map<List<PhieuDangKyMauHinhAnhDto>>(PhieuDangKyMauDomain?.PhieuDangKyMauHinhAnhs);
             return result;
         }
-        public async Task<bool> CreatePhieuDangKyMauAsync(PhieuDangKyMauDto PhieuDangKyMauDto)
+        public async Task<ResponseModel1<PhieuDangKyMauDto>> CreatePhieuDangKyMauAsync(PhieuDangKyMauDto PhieuDangKyMauDto, string user)
         {
             // Khoi tao 1 ob PhieuDangKyMauDomain moi kem ID tu dong tang
+            if(PhieuDangKyMauDto == null)
+            {
+                return new ResponseModel1<PhieuDangKyMauDto>
+                {
+                    KetQua = false,
+                    Message = "Thieu du lieu dau vao!"
+                };
+            }
+
+            // Kiem tra xem voi phieu dang ky nay, da co ton tai mau nay chua
+            var checkExistMau = await _repositoryManager.PhieuDangKyMau.FindPhieuDangKyMauByPhieuDangKyAndMaDmMauAsync(PhieuDangKyMauDto.MaPhieuDangKy, PhieuDangKyMauDto.MaDmMau, false);
+            if(checkExistMau!= null)
+            {
+                return new ResponseModel1<PhieuDangKyMauDto>
+                {
+                    KetQua = false,
+                    Message = $"Mau them vo da ton tai trong phieu dang ky {PhieuDangKyMauDto.MaPhieuDangKy} nay roi, vui long kiem tra lai!"
+                };
+            }
+
             PhieuDangKyMau PhieuDangKyMauDomain = new PhieuDangKyMau();
             PhieuDangKyMauDomain = _mapper.Map<PhieuDangKyMau>(PhieuDangKyMauDto);
             PhieuDangKyMauDomain.MaId = Guid.NewGuid().ToString();
+            PhieuDangKyMauDomain.NgayTao = DateTime.Now;
+            PhieuDangKyMauDomain.NguoiTao = user;
+
             _repositoryManager.PhieuDangKyMau.CreatePhieuDangKyMauAsync(PhieuDangKyMauDomain);
+
             // kiem tra neu co hinh anh gui len hay k
             if (PhieuDangKyMauDto.PhieuDangKyMauHinhAnhs.Count() > 0)
             {
@@ -52,8 +79,14 @@ namespace QLDV_KiemNghiem_BE.Services
                     _repositoryManager.PhieuDangKyMauHinhAnh.CreatePhieuDangKyMauHinhAnhAsync(PhieuDangKyMauHinhAnh);
                 }
             }
-            bool check =  await _repositoryManager.SaveChangesAsync();    
-            return check;
+            bool check =  await _repositoryManager.SaveChangesAsync();
+            var dataReturn = _mapper.Map<PhieuDangKyMauDto>(PhieuDangKyMauDomain);
+            return  new ResponseModel1<PhieuDangKyMauDto>
+            {
+                KetQua = true,
+                Message = "Thieu du lieu dau vao!",
+                Data = dataReturn
+            }; 
         }
         public async Task<bool> UpdatePhieuDangKyMauAsync(PhieuDangKyMauDto PhieuDangKyMauDto)
         {
