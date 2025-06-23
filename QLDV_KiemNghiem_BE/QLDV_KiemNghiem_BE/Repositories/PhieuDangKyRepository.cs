@@ -6,6 +6,7 @@ using QLDV_KiemNghiem_BE.DTO;
 using QLDV_KiemNghiem_BE.Interfaces;
 using QLDV_KiemNghiem_BE.Models;
 using QLDV_KiemNghiem_BE.RequestFeatures;
+using QLDV_KiemNghiem_BE.RequestFeatures.PagingRequest;
 using System;
 using System.Linq;
 using static System.Runtime.InteropServices.JavaScript.JSType;
@@ -22,10 +23,11 @@ namespace QLDV_KiemNghiem_BE.Repositories
             _context = context;
             _mapper = mapper;
         }
-        public async Task<IEnumerable<PhieuDangKy>> GetPhieuDangKiesAllAsync(string maKH = "", string trangThaiID = "", string from = "", string to = "")
+        public async Task<IEnumerable<PhieuDangKy>> GetPhieuDangKiesAllAsync(PhieuDangKyParam pr)
         {
             var result = await _context.PhieuDangKies
-                .FromSqlRaw("exec layPhieuDangKyTheoBoLoc @maKH = {0}, @trangThaiID = {1}, @timeFrom = {2}, @timeTo = {3}", maKH, trangThaiID, from, to)
+                .FromSqlRaw("exec layPhieuDangKyTheoBoLoc @maKH = {0}, @trangThaiID = {1}, @timeFrom = {2}, @timeTo = {3}, @manvDuyet ={4}, @mabldDuyet ={5}",
+                pr.MaKH, pr.MaTrangThaiID, pr.TimeFrom, pr.TimeTo, pr.ManvDuyet, pr.MaBldDuyet)
                 .ToListAsync();
 
             foreach (var item in result)

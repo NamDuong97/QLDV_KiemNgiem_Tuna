@@ -1,6 +1,9 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Distributed;
+using Newtonsoft.Json;
 using QLDV_KiemNghiem_BE.Data;
 using QLDV_KiemNghiem_BE.DTO.ResponseDto;
 using QLDV_KiemNghiem_BE.Interfaces;
@@ -8,6 +11,8 @@ using QLDV_KiemNghiem_BE.Interfaces.ManagerInterface;
 using QLDV_KiemNghiem_BE.Models;
 using QLDV_KiemNghiem_BE.Repositories;
 using QLDV_KiemNghiem_BE.RequestFeatures;
+using QLDV_KiemNghiem_BE.RequestFeatures.PagingRequest;
+using StackExchange.Redis;
 using System;
 
 namespace QLDV_KiemNghiem_BE.Services
@@ -17,22 +22,22 @@ namespace QLDV_KiemNghiem_BE.Services
         private readonly DataContext _context;
         private readonly IRepositoryManager _repositoryManager;
         private IMapper _mapper;
-        public PhieuDangKyService(IRepositoryManager repositoryManager, IMapper mapper, DataContext dataContext)
+        private readonly IConnectionMultiplexer _redis;
+        private readonly IDistributedCache _cache;
+        public PhieuDangKyService(IRepositoryManager repositoryManager, IMapper mapper, DataContext dataContext, IConnectionMultiplexer redis, IDistributedCache cache)
         {
             _context = dataContext;
             _repositoryManager = repositoryManager;
             _mapper = mapper;
+            _redis = redis;
+            _cache = cache;
         }
         public async Task<IEnumerable<PhieuDangKyDto>> GetPhieuDangKiesAllAsync(PhieuDangKyParam phieuDangKyParam)
         {
             string makh, trangthaiID, from, to;
             DateTime temp = DateTime.Now;
             List<PhieuDangKyDto> phieuDangKyDtos = new List<PhieuDangKyDto>(); // lưu những phiếu đăng ký đã chuyển sang Dto
-            from = phieuDangKyParam.TimeFrom == "" ? "" : DateTime.TryParse(phieuDangKyParam.TimeFrom, out temp) ? phieuDangKyParam.TimeFrom : "";
-            to = phieuDangKyParam.TimeTo == "" ? "" : DateTime.TryParse(phieuDangKyParam.TimeTo, out temp) ? phieuDangKyParam.TimeTo : "";
-            makh = phieuDangKyParam.MaKH;
-            trangthaiID = phieuDangKyParam.TrangThaiID;
-            var phieuDangKies = await _repositoryManager.PhieuDangKy.GetPhieuDangKiesAllAsync(makh, trangthaiID, from, to); // lấy ra các phiếu đăng ký domain
+            var phieuDangKies = await _repositoryManager.PhieuDangKy.GetPhieuDangKiesAllAsync(phieuDangKyParam); // lấy ra các phiếu đăng ký domain
             foreach (var item in phieuDangKies)
             {
                 List<PhieuDangKyMauDto> mauDtos = new List<PhieuDangKyMauDto>(); // lưu những mẫu đã chuyển sang Dto
@@ -184,7 +189,25 @@ namespace QLDV_KiemNghiem_BE.Services
             var phieuDangKyReturnDto = _mapper.Map<PhieuDangKyDto>(phieuDangKyDomain);
             phieuDangKyReturnDto.Maus = _mapper.Map<List<PhieuDangKyMauDto>>(phieuDangKyMauDomains);
             phieuDangKyReturnDto.PhieuDangKyPhuLieuHoaChats = _mapper.Map<List<PhieuDangKyPhuLieuHoaChatDto>>(phieuDangKyPhuLieuHoaChatDomains);
-
+            // Them du lieu vao cache
+            if (_redis.IsConnected)
+            {
+                foreach(var item in phieuDangKyReturnDto.Maus)
+                {
+                    var cacheKey = $"phieudangkymau:{item?.MaId}";
+                    var cacheObj = new CachedResponse<PhieuDangKyMauDto>
+                    {
+                        Data = item
+                    };
+                    // Lưu dữ liệu vào redis phieudangkymau
+                    await _cache.SetStringAsync(cacheKey, JsonConvert.SerializeObject(cacheObj), new DistributedCacheEntryOptions
+                    {
+                        AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(5)
+                    });
+                    // Cap nhat version moi cho cache redis phieudangkymau:all
+                    await _cache.SetStringAsync("phieudangkymau:all:version", $"v{DateTime.UtcNow.Ticks}");
+                } 
+            }
             return new ResponseModel1<PhieuDangKyDto>
             {
                 KetQua = check,
@@ -488,7 +511,7 @@ namespace QLDV_KiemNghiem_BE.Services
                 };
             }
         }
-        public async Task<ResponReviewPhieuDangKy> ReviewPhieuDangKyByBLD(RequestReviewPhieuDangKy duyetPhieu, string user,string userId)
+        public async Task<ResponReviewPhieuDangKy> ReviewPhieuDangKyByBLD(RequestReviewPhieuDangKy duyetPhieu, string user, string userId)
         {
             if (duyetPhieu == null || duyetPhieu.MaPhieuDangKy == "")
             {

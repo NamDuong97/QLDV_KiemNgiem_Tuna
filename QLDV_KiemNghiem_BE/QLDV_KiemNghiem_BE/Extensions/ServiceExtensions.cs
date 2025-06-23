@@ -22,7 +22,7 @@ namespace QLDV_KiemNghiem_BE.Extensions
                  new RateLimitRule
                  {
                     Endpoint = "*:/api/khachhang",
-                    Limit = 3,
+                    Limit = 10,
                     Period = "1m"
                  },
                  new RateLimitRule
@@ -50,6 +50,12 @@ namespace QLDV_KiemNghiem_BE.Extensions
                 {
                     policy.RequireAuthenticatedUser();
                     policy.RequireClaim("Role", "Admin");
+                });
+
+                option.AddPolicy("KTSA", policy =>
+                {
+                    policy.RequireAuthenticatedUser();
+                    policy.RequireClaim("Role", "KT,SALE");
                 });
             });
         }
