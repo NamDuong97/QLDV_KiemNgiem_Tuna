@@ -30,10 +30,7 @@ namespace QLDV_KiemNghiem_BE.Repositories
                 return await _context.PhieuDeXuatPhongBans.AsNoTracking().SingleOrDefaultAsync(item => item.MaId == maPhieuDeXuatPhongBan);
             }
         }
-        public async Task ProcessUpdatePDXPBFromMauCancel(string maMau)
-        {
-            await _context.Database.ExecuteSqlRawAsync("exec sp_ProcessUpdatePDXPBFromMauCancel @maMau", maMau);
-        }
+        
         public void CreatePhieuDeXuatPhongBanAsync(PhieuDeXuatPhongBan PhieuDeXuatPhongBan)
         {
             _context.PhieuDeXuatPhongBans.Add(PhieuDeXuatPhongBan);

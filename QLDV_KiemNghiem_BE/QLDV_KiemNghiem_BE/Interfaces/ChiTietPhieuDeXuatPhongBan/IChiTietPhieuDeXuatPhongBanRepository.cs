@@ -10,6 +10,7 @@ namespace QLDV_KiemNghiem_BE.Interfaces
         Task<List<ChiTietPhieuDeXuatPhongBan>?> FindChiTietPhieuDeXuatPhongBanByMaMauAsync(string maMau, bool tracking);
         void CreateChiTietPhieuDeXuatPhongBanAsync(ChiTietPhieuDeXuatPhongBan ChiTietPhieuDeXuatPhongBan);
         Task<int> CheckAllSamplesApproved_PDXPB(string maPDXPB, string maCTDXPB);
+        Task ProcessUpdatePDXPBFromMauCancel(string maMau, string user, string userId);
         Task<int> CheckAllSamplesCancel_PDXPB(string maPDXPB, string maCTDXPB);
         Task<List<ChiTietPhieuDeXuatPhongBan>?> CheckSampleAssignedToDepartment(CheckSampleAssignedToDepartmentModel checkSample);
         void UpdateChiTietPhieuDeXuatPhongBanAsync(ChiTietPhieuDeXuatPhongBan ChiTietPhieuDeXuatPhongBan);

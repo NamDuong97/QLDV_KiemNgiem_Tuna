@@ -48,6 +48,10 @@ namespace QLDV_KiemNghiem_BE.Repositories
             .FirstOrDefaultAsync();
             return result?.CheckAllSamplesCancel ?? 0;
         }
+        public async Task ProcessUpdatePDXPBFromMauCancel(string maMau, string user, string userId)
+        {
+            await _context.Database.ExecuteSqlRawAsync("exec sp_ProcessUpdatePDXPBFromMauCancel @maMau = {0}, @user = {1}, @userId ={2}", maMau, user, userId);
+        }
         public async Task<List<ChiTietPhieuDeXuatPhongBan>?> CheckSampleAssignedToDepartment(CheckSampleAssignedToDepartmentModel checkSample)
         {
             var result = await _context.ChiTietPhieuDeXuatPhongBans.

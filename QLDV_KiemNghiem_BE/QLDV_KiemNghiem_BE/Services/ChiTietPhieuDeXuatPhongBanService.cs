@@ -185,9 +185,9 @@ namespace QLDV_KiemNghiem_BE.Services
                 };
             }
         }
-        public async Task<bool> CancelChiTietPhieuDeXuatPhongBansByKHTH(CancelChiTietPhieuDeXuatPhongBanRequestDto cancelPhieu, string user)
+        public async Task<bool> CancelChiTietPhieuDeXuatPhongBansByKHTH(CancelChiTietPhieuDeXuatPhongBanRequestDto cancelPhieu, string user, string userId)
         {
-            await _repositoryManager.PhieuDeXuatPhongBan.ProcessUpdatePDXPBFromMauCancel(cancelPhieu.MaMau);
+            await _repositoryManager.ChiTietPhieuDeXuatPhongBan.ProcessUpdatePDXPBFromMauCancel(cancelPhieu.MaMau, user, userId);
             return true;    
         }
         public async Task<ResponseModel1<ChiTietPhieuDeXuatPhongBanDto>> CreateChiTietPhieuDeXuatPhongBanAsync(ChiTietPhieuDeXuatPhongBanDto ChiTietPhieuDeXuatPhongBanDto)
