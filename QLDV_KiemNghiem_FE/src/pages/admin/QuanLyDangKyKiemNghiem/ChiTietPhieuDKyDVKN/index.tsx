@@ -2,9 +2,7 @@ import { Box, Dialog, Skeleton } from "@mui/material";
 import { useContext, useState } from "react";
 import DetailMaus from "./Detail-Maus";
 import DetailPLHCs from "./Detail-PLHC";
-import {
-  xemChitietPhieuDKKM,
-} from "../../../../hooks/personnels/quanLyPhieuDKKM";
+import { xemChitietPhieuDKKM } from "../../../../hooks/personnels/quanLyPhieuDKKM";
 import { PersonnelContext } from "../../../../contexts/PersonelsProvider";
 import { IoMdClose } from "react-icons/io";
 import DoneAllIcon from "@mui/icons-material/DoneAll";
@@ -241,7 +239,7 @@ const ChiTietPhieuDKyDVKN = (props: Props) => {
       case 2: {
         return (
           <Box className="overflow-y-auto h-[579px]">
-            <DetailMaus dataMaus={data?.maus} isLoading={isLoading} />;
+            <DetailMaus dataMaus={data?.maus} isLoading={isLoading} />
           </Box>
         );
       }

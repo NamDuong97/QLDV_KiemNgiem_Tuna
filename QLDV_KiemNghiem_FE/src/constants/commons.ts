@@ -22,6 +22,7 @@ export const API = {
         "/api/PhieuPhieuDeXuatPhongBan/getPhieuPhieuDeXuatPhongBanAll",
       GET_PHAN_CONG_KHOA_CHUYEN_MON_BY_ID:
         "/api/PhieuPhieuDeXuatPhongBan/getPhieuPhieuDeXuatPhongBanByID?maPhieuPhieuDeXuatPhongBan=",
+      GET_DANH_SACH_MAU_All: "/api/PhieuDangKyMau/getPhieuDangKyMauAll",
     },
   },
   CUSTOMER: {

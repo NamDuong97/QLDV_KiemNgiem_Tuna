@@ -84,7 +84,7 @@ const FormGhiChuDuyet = (props: Props) => {
       message: data.ghiChu,
       action: true,
     };
-    if (roll === "roll") mutateNhanVien(params);
+    if (roll === "KHTH") mutateNhanVien(params);
     mutateBLD(params);
   };
   useEffect(() => {

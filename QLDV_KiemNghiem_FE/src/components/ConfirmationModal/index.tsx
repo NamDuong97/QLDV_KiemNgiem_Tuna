@@ -10,8 +10,6 @@ interface Props {
   type: any;
 }
 
-const handleType = {};
-
 const ConfirmationModal = (props: Props) => {
   const { isOpen, onClose, onConfirm, title, message, type } = props;
 

@@ -38,4 +38,18 @@ export default class phanCongKhoaServices {
       return err;
     }
   }
+
+  static async getAllDanhSachMau(params: any) {
+    try {
+      const response = await _APIInstance.get(
+        API.ADMIN.PHIEU_PHIEU_DE_XUAT_PHONG_BAN.GET_DANH_SACH_MAU_All,
+        {
+          params,
+        }
+      );
+      return response;
+    } catch (err: any) {
+      return err;
+    }
+  }
 }

@@ -442,7 +442,7 @@ namespace QLDV_KiemNghiem_BE.Services
             }
             return await _repositoryManager.PhieuDangKy.DuTinhThoiGianKiemNghiem(maDmMau, maTieuChuan);
         }
-        public async Task<ResponReviewPhieuDangKy> ReviewPhieuDangKyByKHDT(RequestReviewPhieuDangKy duyetPhieu,  string user)
+        public async Task<ResponReviewPhieuDangKy> ReviewPhieuDangKyByKHDT(RequestReviewPhieuDangKy duyetPhieu,  string user, string userId)
         {
             if (duyetPhieu == null || duyetPhieu.MaPhieuDangKy == "")
             {
@@ -467,7 +467,7 @@ namespace QLDV_KiemNghiem_BE.Services
                 } 
                 checkExistsPhieuDangKy.NgaySua = DateTime.Now;
                 checkExistsPhieuDangKy.NoiDungDuyetSoBo = duyetPhieu.Message;
-                checkExistsPhieuDangKy.ManvSoDuyet = user;
+                checkExistsPhieuDangKy.ManvSoDuyet = userId;
                 checkExistsPhieuDangKy.NguoiSua = user;
                 _repositoryManager.PhieuDangKy.UpdatePhieuDangKyAsync(checkExistsPhieuDangKy);
                 bool check = await _repositoryManager.SaveChangesAsync();
@@ -488,7 +488,7 @@ namespace QLDV_KiemNghiem_BE.Services
                 };
             }
         }
-        public async Task<ResponReviewPhieuDangKy> ReviewPhieuDangKyByBLD(RequestReviewPhieuDangKy duyetPhieu, string user)
+        public async Task<ResponReviewPhieuDangKy> ReviewPhieuDangKyByBLD(RequestReviewPhieuDangKy duyetPhieu, string user,string userId)
         {
             if (duyetPhieu == null || duyetPhieu.MaPhieuDangKy == "")
             {
@@ -508,7 +508,7 @@ namespace QLDV_KiemNghiem_BE.Services
                 else
                     checkExistsPhieuDangKy.TrangThaiId = "TT04";
                 checkExistsPhieuDangKy.NoiDungTongDuyet = duyetPhieu.Message;
-                checkExistsPhieuDangKy.MaBldduyet = user;
+                checkExistsPhieuDangKy.MaBldduyet = userId;
                 checkExistsPhieuDangKy.NgaySua = DateTime.Now;
                 checkExistsPhieuDangKy.NguoiSua = user;
                 _repositoryManager.PhieuDangKy.UpdatePhieuDangKyAsync(checkExistsPhieuDangKy);
@@ -530,7 +530,7 @@ namespace QLDV_KiemNghiem_BE.Services
                 };
             }
         }
-        public async Task<ResponseUndoReviewPhieuDangKy> UndoReviewPhieuDangKyByBLD(RequestUndoReviewPhieuDangKy duyetPhieu, string user)
+        public async Task<ResponseUndoReviewPhieuDangKy> UndoReviewPhieuDangKyByBLD(RequestUndoReviewPhieuDangKy duyetPhieu, string user, string userId)
         {
             if (duyetPhieu == null || duyetPhieu.MaPhieuDangKy == "")
             {
@@ -545,7 +545,7 @@ namespace QLDV_KiemNghiem_BE.Services
             var checkExistsPhieuDangKy = await _repositoryManager.PhieuDangKy.CheckExistPhieuDangKyAsync(duyetPhieu.MaPhieuDangKy, true);
             if (checkExistsPhieuDangKy != null)
             {
-                if (duyetPhieu.MaTrangThaiPDK != "TT04")
+                if (checkExistsPhieuDangKy.TrangThaiId != "TT04")
                     // Neu phieu co trang thai khong phai tu choi, thi dao nguoc thanh tu choi
                     checkExistsPhieuDangKy.TrangThaiId = "TT04";
                 else
@@ -553,7 +553,7 @@ namespace QLDV_KiemNghiem_BE.Services
                     checkExistsPhieuDangKy.TrangThaiId = "TT05";
 
                 checkExistsPhieuDangKy.NoiDungTongDuyet = duyetPhieu.Message;
-                checkExistsPhieuDangKy.MaBldduyet = user;
+                checkExistsPhieuDangKy.MaBldduyet = userId;
                 checkExistsPhieuDangKy.NgaySua = DateTime.Now;
                 checkExistsPhieuDangKy.NguoiSua = user;
                 _repositoryManager.PhieuDangKy.UpdatePhieuDangKyAsync(checkExistsPhieuDangKy);

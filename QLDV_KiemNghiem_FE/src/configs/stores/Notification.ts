@@ -11,8 +11,6 @@ const Notification = () => {
   const connection = useSignalR();
   const { personnelInfo } = usePersonnel();
   const [notifications, setNotifications] = useState<any>({});
-  console.log("notifications", notifications);
-
   useEffect(() => {
     if (
       personnelInfo !== null &&

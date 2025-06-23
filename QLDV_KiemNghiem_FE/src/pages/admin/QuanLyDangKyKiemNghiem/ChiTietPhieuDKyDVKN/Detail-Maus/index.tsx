@@ -23,7 +23,9 @@ const DetailMaus = (props: Props) => {
 
   return (
     <div>
-      <Maus currentItems={currentItems[0]} isLoading={isLoading} />
+      {currentItems?.map((item: any, index: any) => (
+        <Maus key={index} currentItems={item} isLoading={isLoading} />
+      ))}
       <Box className="px-4 pb-4 pt-2 flex justify-center">
         <Pagination
           count={totalPages}

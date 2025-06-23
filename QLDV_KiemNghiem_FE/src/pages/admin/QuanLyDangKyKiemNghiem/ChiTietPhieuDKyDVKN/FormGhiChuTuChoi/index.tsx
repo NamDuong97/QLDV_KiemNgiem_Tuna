@@ -62,9 +62,18 @@ const FormGhiChuTuChoi = (props: Props) => {
       message: data.ghiChu,
       action: false,
     };
-    if (roll === "roll") mutateNhanVien(params);
-    mutateBLD(params);
+    setIsParam(params);
+    setIsOpenConfirmationModal(true);
+    handleClose();
   };
+
+  const onConfirm = () => {
+    if (roll === "KHTH") mutateNhanVien(isParam);
+    mutateBLD(isParam);
+  };
+
+  console.log("isparam", isParam);
+
   useEffect(() => {
     reset({
       ghiChu: "",

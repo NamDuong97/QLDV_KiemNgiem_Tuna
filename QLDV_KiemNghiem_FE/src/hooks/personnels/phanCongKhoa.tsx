@@ -46,3 +46,16 @@ export const getPhanCongKhoaCMByID = (props: Props) => {
     staleTime: Infinity,
   });
 };
+
+export const getAllDanhSachMau = (props: Props) => {
+  const { queryKey, params } = props;
+  return useQuery({
+    queryKey: [queryKey, params],
+    queryFn: async () => {
+      const response = await phanCongKhoaServices.getAllDanhSachMau(params);
+      return response?.data;
+    },
+    refetchOnWindowFocus: false,
+    staleTime: Infinity,
+  });
+};

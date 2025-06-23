@@ -1,10 +1,11 @@
 import { AnimatePresence, motion } from "framer-motion";
 import SampleList from "./SampleList";
 import "./style.module.scss";
-import { xemChitietPhieuDKKM } from "../../../../hooks/personnels/quanLyPhieuDKKM";
 import { queryKhoaAll } from "../../../../hooks/personnels/queryKhoa";
 import Card from "./Card";
-import { AlertTriangle, Clipboard } from "react-feather";
+import { AlertTriangle, Clipboard, Info } from "react-feather";
+import { getAllDanhSachMau } from "../../../../hooks/personnels/phanCongKhoa";
+import { FaMicroscope } from "react-icons/fa";
 
 const colorPresets = [
   "bg-red-100 text-red-800 border-red-200 hover:bg-red-200",
@@ -17,12 +18,9 @@ const colorPresets = [
 ];
 
 const CardMau = () => {
-  const sessionId = sessionStorage.getItem("phan-cong");
-  const ID = sessionId ? JSON.parse(sessionId) : "";
-
-  const { data, isLoading } = xemChitietPhieuDKKM({
-    queryKey: "ChitietPhieuDKKM",
-    params: ID,
+  const { data, isLoading } = getAllDanhSachMau({
+    queryKey: "AllDanhSachMau",
+    params: {},
   });
 
   const { data: dataKhoaAll } = queryKhoaAll({
@@ -48,9 +46,9 @@ const CardMau = () => {
         transition={{ duration: 0.5 }}
         className="grid gap-4"
       >
-        <div className="grid gap-6 grid-cols-3">
+        <div className="grid gap-6 grid-cols-4">
           <Card
-            title="Tổng mẫu đang chờ phân công"
+            title="Mẫu đang chờ phân công"
             value={data?.maus?.length || 0}
             icon={<Clipboard className="w-6 h-6" />}
             isLoading={isLoading}
@@ -58,12 +56,28 @@ const CardMau = () => {
             textColor="text-indigo-600"
           />
           <Card
-            title="Tổng mẫu đẫ bị từ chối phân công trước đó"
+            title="Mẫu đã bị từ chối bỏi phòng ban"
             value={data?.length || 0}
             isLoading={isLoading}
             icon={<AlertTriangle className="w-6 h-6" />}
             bgColor="bg-red-100"
             textColor="text-red-600"
+          />
+          <Card
+            title="Mẫu đang kiểm nghiệm"
+            value={data?.length || 0}
+            isLoading={isLoading}
+            icon={<FaMicroscope className="w-6 h-6" />}
+            bgColor="bg-yellow-100"
+            textColor="text-yellow-600"
+          />
+          <Card
+            title="Mẫu đã hoàn thành"
+            value={data?.length || 0}
+            isLoading={isLoading}
+            icon={<Info className="w-6 h-6" />}
+            bgColor="bg-green-100"
+            textColor="text-green-600"
           />
         </div>
         <SampleList

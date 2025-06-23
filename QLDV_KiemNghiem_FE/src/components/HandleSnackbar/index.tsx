@@ -2,9 +2,18 @@ import { Snackbar } from "@mui/material";
 import { RiErrorWarningLine } from "react-icons/ri";
 import { IoClose } from "react-icons/io5";
 import { useStoreNotification } from "../../configs/stores/useStoreNotification";
+import { useEffect } from "react";
 
 const HandleSnackbar = () => {
   const { message, status, open, hideNotification } = useStoreNotification();
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      hideNotification(); // Gọi ở đây, sau khi đã set xong
+    }, 100);
+
+    return () => clearTimeout(timer); // cleanup nếu component bị unmount sớm
+  }, []);
 
   return (
     <>
