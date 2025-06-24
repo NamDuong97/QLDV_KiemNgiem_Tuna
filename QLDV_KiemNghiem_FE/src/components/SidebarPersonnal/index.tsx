@@ -39,11 +39,17 @@ import { role } from "../../configs/parseJwt";
 import { FaFileInvoiceDollar, FaFlask } from "react-icons/fa6";
 import { FaChartLine } from "react-icons/fa";
 import { HiClipboardDocumentList } from "react-icons/hi2";
+import { getChucVuByID } from "../../hooks/personnels/queryChucVu";
 
 const SidebarPersonnal = () => {
   const navigate = useNavigate();
   const pathname = useLocation().pathname;
   const { personnelInfo, logout } = usePersonnel();
+
+  const { data } = getChucVuByID({
+    queryKey: "getChucVuByID",
+    params: personnelInfo?.maChucVu,
+  });
 
   const handleRedirect = (value?: string) => {
     switch (value) {
@@ -301,11 +307,11 @@ const SidebarPersonnal = () => {
                 }}
                 className={clsx(
                   "flex items-center space-x-2 sidebar-link px-4 py-3 text-gray-700 rounded-lg",
-                  {
-                    "text-indigo-600 active":
-                      pathname.split("/")[2] ===
-                      APP_ROUTES.TUNA_ADMIN.DASHBOARD.to.split("/")[2],
-                  }
+                  // {
+                  //   "text-indigo-600 active":
+                  //     pathname.split("/")[2] ===
+                  //     APP_ROUTES.TUNA_ADMIN.DASHBOARD.to.split("/")[2],
+                  // }
                 )}
               >
                 <span className="w-5">
@@ -325,11 +331,11 @@ const SidebarPersonnal = () => {
                 }}
                 className={clsx(
                   "flex items-center space-x-2 sidebar-link px-4 py-3 text-gray-700 rounded-lg",
-                  {
-                    "text-indigo-600 active":
-                      pathname.split("/")[2] ===
-                      APP_ROUTES.TUNA_ADMIN.DASHBOARD.to.split("/")[2],
-                  }
+                  // {
+                  //   "text-indigo-600 active":
+                  //     pathname.split("/")[2] ===
+                  //     APP_ROUTES.TUNA_ADMIN.DASHBOARD.to.split("/")[2],
+                  // }
                 )}
               >
                 <span className="w-5">
@@ -349,11 +355,11 @@ const SidebarPersonnal = () => {
                 }}
                 className={clsx(
                   "flex items-center space-x-2 sidebar-link px-4 py-3 text-gray-700 rounded-lg",
-                  {
-                    "text-indigo-600 active":
-                      pathname.split("/")[2] ===
-                      APP_ROUTES.TUNA_ADMIN.DASHBOARD.to.split("/")[2],
-                  }
+                  // {
+                  //   "text-indigo-600 active":
+                  //     pathname.split("/")[2] ===
+                  //     APP_ROUTES.TUNA_ADMIN.DASHBOARD.to.split("/")[2],
+                  // }
                 )}
               >
                 <span className="w-5">
@@ -373,11 +379,11 @@ const SidebarPersonnal = () => {
                 }}
                 className={clsx(
                   "flex items-center space-x-2 sidebar-link px-4 py-3 text-gray-700 rounded-lg",
-                  {
-                    "text-indigo-600 active":
-                      pathname.split("/")[2] ===
-                      APP_ROUTES.TUNA_ADMIN.DASHBOARD.to.split("/")[2],
-                  }
+                  // {
+                  //   "text-indigo-600 active":
+                  //     pathname.split("/")[2] ===
+                  //     APP_ROUTES.TUNA_ADMIN.DASHBOARD.to.split("/")[2],
+                  // }
                 )}
               >
                 <span className="w-5">
@@ -397,11 +403,11 @@ const SidebarPersonnal = () => {
                 }}
                 className={clsx(
                   "flex items-center space-x-2 sidebar-link px-4 py-3 text-gray-700 rounded-lg",
-                  {
-                    "text-indigo-600 active":
-                      pathname.split("/")[2] ===
-                      APP_ROUTES.TUNA_ADMIN.DASHBOARD.to.split("/")[2],
-                  }
+                  // {
+                  //   "text-indigo-600 active":
+                  //     pathname.split("/")[2] ===
+                  //     APP_ROUTES.TUNA_ADMIN.DASHBOARD.to.split("/")[2],
+                  // }
                 )}
               >
                 <span className="w-5">
@@ -421,11 +427,11 @@ const SidebarPersonnal = () => {
                 }}
                 className={clsx(
                   "flex items-center space-x-2 sidebar-link px-4 py-3 text-gray-700 rounded-lg",
-                  {
-                    "text-indigo-600 active":
-                      pathname.split("/")[2] ===
-                      APP_ROUTES.TUNA_ADMIN.DASHBOARD.to.split("/")[2],
-                  }
+                  // {
+                  //   "text-indigo-600 active":
+                  //     pathname.split("/")[2] ===
+                  //     APP_ROUTES.TUNA_ADMIN.DASHBOARD.to.split("/")[2],
+                  // }
                 )}
               >
                 <span className="w-5">
@@ -445,11 +451,11 @@ const SidebarPersonnal = () => {
                 }}
                 className={clsx(
                   "flex items-center space-x-2 sidebar-link px-4 py-3 text-gray-700 rounded-lg",
-                  {
-                    "text-indigo-600 active":
-                      pathname.split("/")[2] ===
-                      APP_ROUTES.TUNA_ADMIN.DASHBOARD.to.split("/")[2],
-                  }
+                  // {
+                  //   "text-indigo-600 active":
+                  //     pathname.split("/")[2] ===
+                  //     APP_ROUTES.TUNA_ADMIN.DASHBOARD.to.split("/")[2],
+                  // }
                 )}
               >
                 <span className="w-5">
@@ -496,7 +502,7 @@ const SidebarPersonnal = () => {
             <p className="text-sm font-medium text-gray-700">
               {personnelInfo?.hoTen}
             </p>
-            <p className="text-xs text-gray-500">Quản trị viên</p>
+            <p className="text-xs text-gray-500">{data?.tenChucVu}</p>
           </div>
         </div>
       </div>

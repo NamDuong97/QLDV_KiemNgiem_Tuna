@@ -3,6 +3,7 @@ export const API = {
     DANG_NHAP: "/api/nhanvien/loginNhanVien",
     NHAN_VIEN: {
       GET_INFOR_NHAN_VIEN: "/api/nhanvien/getNhanVienByID",
+      GET_NHAN_VIEN_BY_ID: "/api/nhanvien/getNhanVienByID",
       GET_NHAN_VIEN_ALL: "/api/nhanvien/getNhanVienByID",
     },
     PHIEU_DKY_DVKM: {
@@ -23,6 +24,12 @@ export const API = {
       GET_PHAN_CONG_KHOA_CHUYEN_MON_BY_ID:
         "/api/PhieuPhieuDeXuatPhongBan/getPhieuPhieuDeXuatPhongBanByID?maPhieuPhieuDeXuatPhongBan=",
       GET_DANH_SACH_MAU_All: "/api/PhieuDangKyMau/getPhieuDangKyMauAll",
+    },
+    CHUC_VU: {
+      GET_CHUC_VU_BY_ID: "/api/ChucVu/getChucVuByID",
+    },
+    MAUS: {
+      GET_MAU_ALL: "/api/PhieuDangKyMau/getPhieuDangKyMauAll",
     },
   },
   CUSTOMER: {

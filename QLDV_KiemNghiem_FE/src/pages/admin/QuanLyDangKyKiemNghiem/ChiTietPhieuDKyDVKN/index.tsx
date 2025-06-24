@@ -36,7 +36,6 @@ const ChiTietPhieuDKyDVKN = (props: Props) => {
     queryKey: "getInforNhanVien",
     params: data?.manvSoDuyet,
   });
-  console.log("{data?}", data, dataNhanVien);
 
   const handleClosePopup = async () => {
     await handleClose();

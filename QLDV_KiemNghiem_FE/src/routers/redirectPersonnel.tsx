@@ -1,8 +1,5 @@
 import { ReactNode } from "react";
 import { Navigate, useLocation } from "react-router";
-import { APP_ROUTES } from "../constants/routers";
-import Cookies from "js-cookie";
-import { EKey } from "../constants/commons";
 import { usePersonnel } from "../contexts/PersonelsProvider";
 
 interface RedirectPersonnelProps {
@@ -23,8 +20,6 @@ const RedirectPersonnel = ({
   const location = useLocation();
   const guard = routeGuards[location.pathname];
   const { isLoginPersonnel, isLoadingAuth } = usePersonnel();
-  console.log("isLoginPersonnel", isLoginPersonnel);
-  console.log("isLoadingAuth", isLoadingAuth);
 
   const passedSessionGuard = guard
     ? !!sessionStorage.getItem(guard.sessionKey)

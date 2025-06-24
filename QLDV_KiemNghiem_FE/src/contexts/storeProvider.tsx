@@ -50,9 +50,9 @@ export const StoreProvider = ({ children }: PropsWithChildren) => {
       try {
         const res = await accessServices.getInforUser();
         if (res.status === 200) {
-          sessionStorage.setItem("id", JSON.stringify(res.data.data.maId));
+          sessionStorage.setItem("id", JSON.stringify(res?.data?.data?.maId));
         }
-        setUserInfo(res.data.data);
+        setUserInfo(res?.data?.data);
         setIsLogin(true);
       } catch (err) {
         console.log("err", err);

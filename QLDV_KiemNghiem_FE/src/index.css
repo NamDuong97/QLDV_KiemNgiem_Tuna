@@ -71,3 +71,49 @@ body {
   background-color: #e0e7ff;
   color: #3730a3;
 }
+
+@keyframes slideIn {
+  0% {
+    transform: translateX(420px);
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideOut {
+  0% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(420px);
+    opacity: 0;
+  }
+}
+
+.notification-popup {
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1),
+    0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+.progress-bar {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 3px;
+  background-color: #3b82f6;
+  width: 100%;
+  animation: progress 5s linear forwards;
+}
+
+@keyframes progress {
+  0% {
+    width: 100%;
+  }
+  100% {
+    width: 0%;
+  }
+}

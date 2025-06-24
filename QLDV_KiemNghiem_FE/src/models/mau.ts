@@ -3,6 +3,7 @@ export interface Anh {
   ten?: string;
   size?: string;
   type?: string;
+  note?: string;
 }
 
 export interface FormMau {

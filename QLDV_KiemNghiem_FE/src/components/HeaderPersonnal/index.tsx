@@ -91,7 +91,12 @@ const HeaderPersonnal = () => {
           )}
         </button>
       </div>
-      <Notification isOpen={isOpen} setIsOpen={setIsOpen} setNotifications={setNotifications} notifications={notifications}/>
+      <Notification
+        isOpen={isOpen}
+        setIsOpen={setIsOpen}
+        setNotifications={setNotifications}
+        notifications={notifications}
+      />
     </header>
   );
 };

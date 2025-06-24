@@ -110,7 +110,7 @@ const FormGhiChuDuyet = (props: Props) => {
       </h4>
       <div>
         <textarea
-          className="w-full border border-gray-300 rounded-lg p-3 min-h-[106px] max-h-[106px] focus-within:outline-1 focus-within:border focus-within:border-blue-300 h-"
+          className="w-full border border-gray-300 rounded-lg p-3 min-h-[106px] max-h-[106px] focus-within:outline-1 focus-within:border focus-within:border-blue-300"
           rows={3}
           {...register("ghiChu")}
           placeholder="Nhập ghi chú..."

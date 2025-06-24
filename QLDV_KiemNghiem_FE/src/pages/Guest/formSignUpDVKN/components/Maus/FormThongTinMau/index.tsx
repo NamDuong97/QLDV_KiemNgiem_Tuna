@@ -312,6 +312,8 @@ const FormThongTinMau = (props: FormThongTinMauProps) => {
     ).maId;
     const dataImage: any[] = [];
 
+    console.log("data", data);
+
     data.phieuDangKyMauHinhAnhs.map((item) =>
       dataImage.push({
         maId: "",
@@ -319,7 +321,7 @@ const FormThongTinMau = (props: FormThongTinMauProps) => {
         ten: item.ten,
         dinhDang: item.type,
         base64: item.base64,
-        ghiChu: "",
+        ghiChu: item.note,
         loaiAnh: "",
         trangThai: "",
         nguoiTao: userInfo.maId,
