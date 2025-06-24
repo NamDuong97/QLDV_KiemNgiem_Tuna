@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using QLDV_KiemNghiem_BE.Data;
 using QLDV_KiemNghiem_BE.Interfaces;
 using QLDV_KiemNghiem_BE.Models;
+using System.Diagnostics.Eventing.Reader;
 
 namespace QLDV_KiemNghiem_BE.Repositories
 {
@@ -23,6 +24,18 @@ namespace QLDV_KiemNghiem_BE.Repositories
         public async Task<IEnumerable<PhieuDangKyPhuLieuHoaChat>> GetPhieuDangKyPhuLieuHoaChatByPhieuDangKyAsync(string maPhieuDangKy)
         {
             return await _context.PhieuDangKyPhuLieuHoaChats.Where(item => item.MaPhieuDangKy == maPhieuDangKy).ToListAsync();
+        }
+
+        public async Task<PhieuDangKyPhuLieuHoaChat?> FindPhieuDangKyPhuLieuHoaChatAsync(string maPDKPLHC, bool tracking)
+        {
+            if (tracking)
+            {
+                return await _context.PhieuDangKyPhuLieuHoaChats.FirstOrDefaultAsync(it => it.MaId == maPDKPLHC);
+            }
+            else
+            {
+                return await _context.PhieuDangKyPhuLieuHoaChats.AsNoTracking().FirstOrDefaultAsync(it => it.MaId == maPDKPLHC);
+            }
         }
         public async Task CreatePhieuDangKyPhuLieuHoaChatAsync(PhieuDangKyPhuLieuHoaChat phieuDangKyPhuLieuHoaChat)
         {

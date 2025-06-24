@@ -3,7 +3,9 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Distributed;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
+using QLDV_KiemNghiem_BE.DTO.RequestDto;
 using QLDV_KiemNghiem_BE.DTO.ResponseDto;
 using QLDV_KiemNghiem_BE.Interfaces.ManagerInterface;
 using QLDV_KiemNghiem_BE.Models;
@@ -195,6 +197,33 @@ namespace QLDV_KiemNghiem_BE.Controllers
             else
             {
                 _logger.LogDebug("Cap nhat mau that bai, hoac mau chua ton tai");
+                return BadRequest();
+            }
+        }
+
+        [HttpPut]
+        [Route("cancelPhieuDangKyMau")]
+        public async Task<ActionResult> cancelPhieuDangKyMau(PhieuDangKyMauRequestCancelDto MauDto)
+        {
+            if (!ModelState.IsValid)
+            {
+                var errors = ModelState.Values
+                .SelectMany(v => v.Errors)
+                .Select(e => e.ErrorMessage)
+                .ToList();
+                _logger.LogError("Loi validate tham so dau vao");
+                return BadRequest(new { Errors = errors });
+            }
+            var user = User.FindFirst(ClaimTypes.Email)?.Value.ToString() ?? "unknow";
+            PhieuDangKyMauResponseCancelDto cancel = await _service.PhieuDangKyMau.CancelPhieuDangKyMau(MauDto, user);
+            if (cancel.KetQua)
+            {
+                _logger.LogDebug(cancel.Message);
+                return Ok(cancel);
+            }
+            else
+            {
+                _logger.LogDebug(cancel.Message);
                 return BadRequest();
             }
         }

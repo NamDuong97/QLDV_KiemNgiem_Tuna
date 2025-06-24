@@ -25,18 +25,6 @@ public partial class ChiTietPhieuDeXuatPhongBan
     public string? GhiChu { get; set; }
 
     [Column(TypeName = "datetime")]
-    public DateTime? NgayTao { get; set; }
-
-    [StringLength(50)]
-    public string? NguoiTao { get; set; }
-
-    [StringLength(50)]
-    public string? NguoiSua { get; set; }
-
-    [Column(TypeName = "datetime")]
-    public DateTime? NgaySua { get; set; }
-
-    [Column(TypeName = "datetime")]
     public DateTime? NgayTuChoi { get; set; }
 
     [StringLength(500)]
@@ -51,6 +39,8 @@ public partial class ChiTietPhieuDeXuatPhongBan
     public int? TrangThai { get; set; }
 
     public string? YeuCauKiemNghiem { get; set; }
+
+    public bool? Active { get; set; }
 
     [ForeignKey("MaPdkMau")]
     [InverseProperty("ChiTietPhieuDeXuatPhongBans")]

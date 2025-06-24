@@ -163,7 +163,7 @@ namespace QLDV_KiemNghiem_BE.Controllers
                 await _hubContext.Clients.Group("KHTH").SendAsync("receiveNotification", noti);
 
                 // Them hoa don sau khi them phieu dang ky
-                ResponseModel1<HoaDonThuDto> hoaDonThu =  await _service.HoaDonThu.CreateHoaDonThuByPhieuDangKyAsync(phieuDangKy?.Data);
+                ResponseModel1<HoaDonThuDto> hoaDonThu =  await _service.HoaDonThu.CreateHoaDonThuByPhieuDangKyAsync(phieuDangKy?.Data, user);
                 _logger.LogDebug("Tao phieu dang ky thanh cong");
                 return Ok(new { phieuDangKy = phieuDangKy.Data, hoaDon = hoaDonThu.Data});
             }
@@ -207,25 +207,17 @@ namespace QLDV_KiemNghiem_BE.Controllers
         [Route("deletePhieuDangKy")]
         public async Task<ActionResult> deletePhieuDangKy(string maPhieuDangKy)
         {
-            var checkExists = await _service.PhieuDangKy.CheckExistPhieuDangKyAsync(maPhieuDangKy, false);
-            if (checkExists != null)
+            var user = User.FindFirst(ClaimTypes.Email)?.Value.ToString() ?? "unknow";
+            ResponseModel1<PhieuDangKyDto> delete = await _service.PhieuDangKy.DeletePhieuDangKyAsync(maPhieuDangKy, user);
+            if (delete.KetQua)
             {
-                bool delete = await _service.PhieuDangKy.DeletePhieuDangKyAsync(checkExists);
-                if (delete)
-                {
-                    _logger.LogDebug("Huy phieu dang ky thanh cong");
-                    return Ok(new {message = "Huy phieu dang ky thanh cong" });
-                }
-                else
-                {
-                    _logger.LogDebug("Cap nhat phieu dang ky that bai");
-                    return BadRequest(new { message = "Huy phieu dang ky that bai, vui long thu lai" });
-                }
+                _logger.LogDebug(delete.Message);
+                return Ok(delete);
             }
             else
             {
-                _logger.LogDebug("Phieu dang ky khong ton tai");
-                return BadRequest(new { message = "Phieu dang ky khong ton tai" });
+                _logger.LogDebug(delete.Message);
+                return BadRequest(delete);
             }
         }
 

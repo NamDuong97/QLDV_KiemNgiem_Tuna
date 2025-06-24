@@ -12,7 +12,7 @@ namespace QLDV_KiemNghiem_BE.Interfaces
         Task<IEnumerable<HoaDonThuDto>> GetHoaDonThuOfCustomer(string maKH);
         Task<HoaDonThuDto?> FindHoaDonThuAsync(string maHoaDonThu);
         Task<ResponseModel1<HoaDonThuDto>> CreateHoaDonThuAsync(HoaDonThuDto hoaDonThuDto, string user);
-        Task<ResponseModel1<HoaDonThuDto>> CreateHoaDonThuByPhieuDangKyAsync(PhieuDangKyDto phieuDangKy);
+        Task<ResponseModel1<HoaDonThuDto>> CreateHoaDonThuByPhieuDangKyAsync(PhieuDangKyDto phieuDangKy, string user);
         Task<ResponseModel1<HoaDonThuDto>> UpdateHoaDonThuAsync(HoaDonThuDto HoaDonThuDto, string user);
         Task<ResponseModel1<HoaDonThuDto>> UpdateHoaDonThuByMaPhieuDangKyAsync(string maPhieuDangKy);
         Task<ResponseModel1<string>> DeleteHoaDonThuAsync(string maHoaDonThu, string user);

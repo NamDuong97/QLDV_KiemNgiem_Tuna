@@ -12,7 +12,7 @@ namespace QLDV_KiemNghiem_BE.Interfaces
         Task<PhieuDangKyDto?> FindPhieuDangKyAsync(string maPhieuDangKy);
         Task<ResponseModel1<PhieuDangKyDto>> CreatePhieuDangKyAsync(PhieuDangKyDto phieuDangKyDto, string user);
         Task<ResponseModel1<PhieuDangKyDto>> UpdatePhieuDangKyAsync(PhieuDangKyDto phieuDangKyDto, string user);
-        Task<bool> DeletePhieuDangKyAsync(PhieuDangKy phieuDangKy);
+        Task<ResponseModel1<PhieuDangKyDto>> DeletePhieuDangKyAsync(string maPhieuDangKy, string user);
         Task<PhieuDangKy?> CheckExistPhieuDangKyAsync(string id, bool tracking);
         Task<int> DuTinhThoiGianKiemNghiem(string maDmMau, string maTieuChuan);
         Task<ResponReviewPhieuDangKy> ReviewPhieuDangKyByKHDT(RequestReviewPhieuDangKy duyetPhieu, string user, string userId);

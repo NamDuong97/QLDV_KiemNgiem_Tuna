@@ -30,19 +30,28 @@ namespace QLDV_KiemNghiem_BE.Services
             return result;
         }
       
-        public async Task<bool> CreateChiTietHoaDonThuAsync(ChiTietHoaDonThuDto ChiTietHoaDonThuDto)
+        public async Task<bool> CreateChiTietHoaDonThuAsync(ChiTietHoaDonThuDto ChiTietHoaDonThuDto, string user)
         {
             if (ChiTietHoaDonThuDto == null) return false;
 
             var ChiTietHoaDonThuDomain = _mapper.Map<ChiTietHoaDonThu>(ChiTietHoaDonThuDto);
             ChiTietHoaDonThuDomain.MaId = Guid.NewGuid().ToString();
-            ChiTietHoaDonThuDomain.NgayTao = DateTime.Now;
 
-            _repositoryManager.ChiTietHoaDonThu.CreateChiTietHoaDonThuAsync(ChiTietHoaDonThuDomain);
+            var checkExistsHoaDon = await _repositoryManager.HoaDonThu.FindHoaDonThuAsync(ChiTietHoaDonThuDto.MaHd, true);
+            if(checkExistsHoaDon== null)
+            {
+                return false;
+            }
+            checkExistsHoaDon.NgaySua = DateTime.Now;
+            checkExistsHoaDon.NguoiSua = user;
+
+            await _repositoryManager.ChiTietHoaDonThu.CreateChiTietHoaDonThuAsync(ChiTietHoaDonThuDomain);
+            _repositoryManager.HoaDonThu.UpdateHoaDonThuAsync(checkExistsHoaDon);
+
             bool check = await _repositoryManager.SaveChangesAsync();
             return check;
         }
-        public async Task<bool> UpdateChiTietHoaDonThuAsync(ChiTietHoaDonThuDto ChiTietHoaDonThuDto)
+        public async Task<bool> UpdateChiTietHoaDonThuAsync(ChiTietHoaDonThuDto ChiTietHoaDonThuDto, string user)
         {
             if (ChiTietHoaDonThuDto == null) return false;
             var ChiTietHoaDonThuCheck = await _repositoryManager.ChiTietHoaDonThu.FindChiTietHoaDonThuAsync(ChiTietHoaDonThuDto.MaId);
@@ -50,23 +59,43 @@ namespace QLDV_KiemNghiem_BE.Services
             {
                 return false;
             }
+
+            var checkExistsHoaDon = await _repositoryManager.HoaDonThu.FindHoaDonThuAsync(ChiTietHoaDonThuDto.MaHd, true);
+            if (checkExistsHoaDon == null)
+            {
+                return false;
+            }
+
+            checkExistsHoaDon.NgaySua = DateTime.Now;
+            checkExistsHoaDon.NguoiSua = user;
             var ChiTietHoaDonThuDomain = _mapper.Map<ChiTietHoaDonThu>(ChiTietHoaDonThuDto);
-            ChiTietHoaDonThuDomain.NgaySua = DateTime.Now;
             _repositoryManager.ChiTietHoaDonThu.UpdateChiTietHoaDonThuAsync(ChiTietHoaDonThuDomain);
+            _repositoryManager.HoaDonThu.UpdateHoaDonThuAsync(checkExistsHoaDon);
+
             bool check = await _repositoryManager.SaveChangesAsync();
             return check;
         }
-        public async Task<bool> DeleteChiTietHoaDonThuAsync(ChiTietHoaDonThu ChiTietHoaDonThu)
+        public async Task<bool> DeleteChiTietHoaDonThuAsync(string MaChiTietHoaDonThu, string user)
         {
-            if (ChiTietHoaDonThu == null) return false;
+            if (MaChiTietHoaDonThu == null || MaChiTietHoaDonThu== "") return false;
             else
             {
-                var ChiTietHoaDonThuDomain = await _repositoryManager.ChiTietHoaDonThu.FindChiTietHoaDonThuAsync(ChiTietHoaDonThu.MaId);
+                var ChiTietHoaDonThuDomain = await _repositoryManager.ChiTietHoaDonThu.FindChiTietHoaDonThuAsync(MaChiTietHoaDonThu);
                 if (ChiTietHoaDonThuDomain == null)
                 {
                     return false;
                 }
+
+                var checkExistsHoaDon = await _repositoryManager.HoaDonThu.FindHoaDonThuAsync(ChiTietHoaDonThuDomain.MaHd, true);
+                if (checkExistsHoaDon == null)
+                {
+                    return false;
+                }
+                checkExistsHoaDon.NgaySua = DateTime.Now;
+                checkExistsHoaDon.NguoiSua = user;
+
                 _repositoryManager.ChiTietHoaDonThu.DeleteChiTietHoaDonThuAsync(ChiTietHoaDonThuDomain);
+                _repositoryManager.HoaDonThu.UpdateHoaDonThuAsync(checkExistsHoaDon);
                 bool check = await _repositoryManager.SaveChangesAsync();
                 return check;
             }

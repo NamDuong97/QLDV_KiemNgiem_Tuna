@@ -7,6 +7,7 @@ using QLDV_KiemNghiem_BE.HubsRealTime;
 using QLDV_KiemNghiem_BE.Interfaces;
 using QLDV_KiemNghiem_BE.Interfaces.ManagerInterface;
 using QLDV_KiemNghiem_BE.Models;
+using QLDV_KiemNghiem_BE.Repositories;
 using QLDV_KiemNghiem_BE.RequestFeatures;
 
 namespace QLDV_KiemNghiem_BE.Services
@@ -93,8 +94,21 @@ namespace QLDV_KiemNghiem_BE.Services
                     checkExistsChiTietPhieuDXPB.ManvTuChoi = userId;  
                 }
 
-               
+                var checkPDXPB = await _repositoryManager.PhieuDeXuatPhongBan.FindPhieuDeXuatPhongBanAsync(checkExistsChiTietPhieuDXPB.MaPhieuDeXuat, true);
+                if(checkPDXPB== null) {
+                    return new ResponseReviewPhieuDeXuatPhongBan
+                    {
+                        MaId = duyetPhieu.MaId,
+                        Message = "Phieu de xuat phong ban khong ton tai, vui long kiem tra lai!",
+                        KetQua = false
+                    };
+                }
+                checkPDXPB.NgaySua = DateTime.Now;
+                checkPDXPB.NguoiSua = user; 
+
                 _repositoryManager.ChiTietPhieuDeXuatPhongBan.UpdateChiTietPhieuDeXuatPhongBanAsync(checkExistsChiTietPhieuDXPB);
+                _repositoryManager.PhieuDeXuatPhongBan.UpdatePhieuDeXuatPhongBanAsync(checkPDXPB);
+
                 bool check = await _repositoryManager.SaveChangesAsync();
 
                 return new ResponseReviewPhieuDeXuatPhongBan
@@ -166,9 +180,21 @@ namespace QLDV_KiemNghiem_BE.Services
                     }
                 }
 
-                checkExistsChiTietPhieuDXPB.NgaySua = DateTime.Now;
-                checkExistsChiTietPhieuDXPB.NguoiSua = user;
+                var checkExistPDXPB = await _repositoryManager.PhieuDeXuatPhongBan.FindPhieuDeXuatPhongBanAsync(checkExistsChiTietPhieuDXPB.MaPhieuDeXuat, true);
+                if (checkExistPDXPB == null)
+                {
+                    return new ResponseReviewPhieuDeXuatPhongBan
+                    {
+                        MaId = duyetPhieu.MaId,
+                        Message = "Phieu de xuat phong ban khong ton tai, vui long kiem tra!",
+                        KetQua = false
+                    };
+                }
+                checkExistPDXPB.NgaySua = DateTime.Now;
+                checkExistPDXPB.NguoiSua = user;
+
                 _repositoryManager.ChiTietPhieuDeXuatPhongBan.UpdateChiTietPhieuDeXuatPhongBanAsync(checkExistsChiTietPhieuDXPB);
+                _repositoryManager.PhieuDeXuatPhongBan.UpdatePhieuDeXuatPhongBanAsync(checkExistPDXPB);
                 bool check = await _repositoryManager.SaveChangesAsync();
                 return new ResponseReviewPhieuDeXuatPhongBan
                 {
@@ -200,7 +226,7 @@ namespace QLDV_KiemNghiem_BE.Services
                 return false;
             } 
         }
-        public async Task<ResponseModel1<ChiTietPhieuDeXuatPhongBanDto>> CreateChiTietPhieuDeXuatPhongBanAsync(ChiTietPhieuDeXuatPhongBanDto ChiTietPhieuDeXuatPhongBanDto)
+        public async Task<ResponseModel1<ChiTietPhieuDeXuatPhongBanDto>> CreateChiTietPhieuDeXuatPhongBanAsync(ChiTietPhieuDeXuatPhongBanDto ChiTietPhieuDeXuatPhongBanDto, string user)
         {
             if (ChiTietPhieuDeXuatPhongBanDto == null) return new ResponseModel1<ChiTietPhieuDeXuatPhongBanDto>
             {
@@ -217,11 +243,23 @@ namespace QLDV_KiemNghiem_BE.Services
                 Data = null
             };
 
+            var checkExistPDXPB = await _repositoryManager.PhieuDeXuatPhongBan.FindPhieuDeXuatPhongBanAsync(ChiTietPhieuDeXuatPhongBanDto.MaPhieuDeXuat, true);
+            if (checkExistPDXPB == null)
+            {
+                return new ResponseModel1<ChiTietPhieuDeXuatPhongBanDto>
+                {
+                    Message = "Phieu de xuat phong ban khong ton tai, vui long kiem tra!",
+                    KetQua = false
+                };
+            }
+            checkExistPDXPB.NgaySua = DateTime.Now;
+            checkExistPDXPB.NguoiSua = user;
+
             var ChiTietPhieuDeXuatPhongBanDomain = _mapper.Map<ChiTietPhieuDeXuatPhongBan>(ChiTietPhieuDeXuatPhongBanDto);
             ChiTietPhieuDeXuatPhongBanDomain.MaId = Guid.NewGuid().ToString();
-            ChiTietPhieuDeXuatPhongBanDomain.NgayTao = DateTime.Now;
-
             _repositoryManager.ChiTietPhieuDeXuatPhongBan.CreateChiTietPhieuDeXuatPhongBanAsync(ChiTietPhieuDeXuatPhongBanDomain);
+            _repositoryManager.PhieuDeXuatPhongBan.UpdatePhieuDeXuatPhongBanAsync(checkExistPDXPB);
+
             bool check = await _repositoryManager.SaveChangesAsync();
             var ChiTietPhieuDeXuatPhongBanReturnDto = _mapper.Map<ChiTietPhieuDeXuatPhongBanDto>(ChiTietPhieuDeXuatPhongBanDomain);
 
@@ -232,7 +270,7 @@ namespace QLDV_KiemNghiem_BE.Services
                 Data = ChiTietPhieuDeXuatPhongBanReturnDto
             };
         }
-        public async Task<ResponseModel1<ChiTietPhieuDeXuatPhongBanDto>> UpdateChiTietPhieuDeXuatPhongBanAsync(ChiTietPhieuDeXuatPhongBanDto ChiTietPhieuDeXuatPhongBanDto)
+        public async Task<ResponseModel1<ChiTietPhieuDeXuatPhongBanDto>> UpdateChiTietPhieuDeXuatPhongBanAsync(ChiTietPhieuDeXuatPhongBanDto ChiTietPhieuDeXuatPhongBanDto, string user)
         {
             if (ChiTietPhieuDeXuatPhongBanDto == null || ChiTietPhieuDeXuatPhongBanDto.MaId == null || ChiTietPhieuDeXuatPhongBanDto.MaId == "") return new ResponseModel1<ChiTietPhieuDeXuatPhongBanDto>
             {
@@ -251,10 +289,23 @@ namespace QLDV_KiemNghiem_BE.Services
                     Data = null
                 };
             }
+
+            var checkExistPDXPB = await _repositoryManager.PhieuDeXuatPhongBan.FindPhieuDeXuatPhongBanAsync(ChiTietPhieuDeXuatPhongBanDto.MaPhieuDeXuat, true);
+            if (checkExistPDXPB == null)
+            {
+                return new ResponseModel1<ChiTietPhieuDeXuatPhongBanDto>
+                {
+                    Message = "Phieu de xuat phong ban khong ton tai, vui long kiem tra!",
+                    KetQua = false
+                };
+            }
+            checkExistPDXPB.NgaySua = DateTime.Now;
+            checkExistPDXPB.NguoiSua = user;
+
             var ChiTietPhieuDeXuatPhongBanDomain = _mapper.Map<ChiTietPhieuDeXuatPhongBan>(ChiTietPhieuDeXuatPhongBanDto);
-            ChiTietPhieuDeXuatPhongBanDomain.NgaySua = DateTime.Now;
-            ChiTietPhieuDeXuatPhongBanDomain.NguoiSua = "admin";
             _repositoryManager.ChiTietPhieuDeXuatPhongBan.UpdateChiTietPhieuDeXuatPhongBanAsync(ChiTietPhieuDeXuatPhongBanDomain);
+            _repositoryManager.PhieuDeXuatPhongBan.UpdatePhieuDeXuatPhongBanAsync(checkExistPDXPB);
+
             bool check = await _repositoryManager.SaveChangesAsync();
             var ChiTietPhieuDeXuatPhongBanReturnDto = _mapper.Map<ChiTietPhieuDeXuatPhongBanDto>(ChiTietPhieuDeXuatPhongBanDomain);
             return new ResponseModel1<ChiTietPhieuDeXuatPhongBanDto>

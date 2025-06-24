@@ -76,8 +76,6 @@ namespace QLDV_KiemNghiem_BE.Services
                     GhiChu = item.GhiChu,
                     NgayThucHienKiemNghiem = item.NgayThucHienKiemNghiem,
                     TrangThai = 2,
-                    NgayTao = DateTime.Now,
-                    NguoiTao = user
                 };
                 listMau += item.MaPdkMau + " ";
 
@@ -157,8 +155,6 @@ namespace QLDV_KiemNghiem_BE.Services
                         ChiTietPhieuDeXuatPhongBan chiTiet = new ChiTietPhieuDeXuatPhongBan()
                         {
                             MaId = Guid.NewGuid().ToString(),
-                            NgayTao = DateTime.Now,
-                            NguoiTao = user,
                             MaPhieuDeXuat = PhieuDeXuatPhongBanCheck.MaId,
                             MaPdkMau = item.MaPdkMau,
                             GhiChu = item.GhiChu,
@@ -183,9 +179,7 @@ namespace QLDV_KiemNghiem_BE.Services
                             chiTietPhieuDeXuatPhongBanCheck.NgayTuChoi = PublicFunction.IsValidDateTime(item.NgayTuChoi) ? item.NgayTuChoi : chiTietPhieuDeXuatPhongBanCheck.NgayTuChoi;
                             chiTietPhieuDeXuatPhongBanCheck.NgayThucHienKiemNghiem = PublicFunction.IsValidDateTime(item.NgayThucHienKiemNghiem) ? item.NgayThucHienKiemNghiem : chiTietPhieuDeXuatPhongBanCheck.NgayThucHienKiemNghiem;
                             chiTietPhieuDeXuatPhongBanCheck.TrangThai =  chiTietPhieuDeXuatPhongBanCheck.TrangThai;
-                            chiTietPhieuDeXuatPhongBanCheck.NgaySua = DateTime.Now;
-                            chiTietPhieuDeXuatPhongBanCheck.NguoiSua = user;
-
+                          
                             _repositoryManager.ChiTietPhieuDeXuatPhongBan.UpdateChiTietPhieuDeXuatPhongBanAsync(chiTietPhieuDeXuatPhongBanCheck);
                             var returnData = _mapper.Map<ChiTietPhieuDeXuatPhongBanDto>(chiTietPhieuDeXuatPhongBanCheck);
                             chiTietPhieuDeXuatPhongBanDtos.Add(returnData);

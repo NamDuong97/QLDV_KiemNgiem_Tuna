@@ -18,18 +18,6 @@ namespace QLDV_KiemNghiem_BE.DTO.ResponseDto
         public string? GhiChu { get; set; }
 
         [Column(TypeName = "datetime")]
-        public DateTime? NgayTao { get; set; }
-
-        [StringLength(50)]
-        public string? NguoiTao { get; set; }
-
-        [StringLength(50)]
-        public string? NguoiSua { get; set; }
-
-        [Column(TypeName = "datetime")]
-        public DateTime? NgaySua { get; set; }
-
-        [Column(TypeName = "datetime")]
         public DateTime? NgayTuChoi { get; set; }
 
         [StringLength(500)]

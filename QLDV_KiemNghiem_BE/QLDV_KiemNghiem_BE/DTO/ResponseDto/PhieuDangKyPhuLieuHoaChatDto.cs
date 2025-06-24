@@ -37,18 +37,6 @@ namespace QLDV_KiemNghiem_BE.DTO.ResponseDto
         [StringLength(50, ErrorMessage = "Số lô tối đa 50 ký tự")]
         public string? SoLo { get; set; }
 
-        [StringLength(50, ErrorMessage = "Người tạo tối đa 50 ký tự")]
-        public string? NguoiTao { get; set; }
-
-        [StringLength(50, ErrorMessage = "Người sửa tối đa 50 ký tự")]
-        public string? NguoiSua { get; set; }
-
-        [DataType(DataType.DateTime, ErrorMessage = "Ngày tạo không hợp lệ")]
-        public DateTime? NgayTao { get; set; }
-
-        [DataType(DataType.DateTime, ErrorMessage = "Ngày sửa không hợp lệ")]
-        public DateTime? NgaySua { get; set; }
-
         public bool IsDel { get; set; }
 
     }

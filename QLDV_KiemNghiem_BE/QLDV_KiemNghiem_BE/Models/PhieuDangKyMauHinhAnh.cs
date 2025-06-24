@@ -31,18 +31,6 @@ public partial class PhieuDangKyMauHinhAnh
 
     public bool? TrangThai { get; set; }
 
-    [StringLength(50)]
-    public string? NguoiTao { get; set; }
-
-    [StringLength(50)]
-    public string? NguoiSua { get; set; }
-
-    [Column(TypeName = "datetime")]
-    public DateTime? NgayTao { get; set; }
-
-    [Column(TypeName = "datetime")]
-    public DateTime? NgaySua { get; set; }
-
     [Column("Path_Img")]
     [StringLength(500)]
     public string? PathImg { get; set; }
