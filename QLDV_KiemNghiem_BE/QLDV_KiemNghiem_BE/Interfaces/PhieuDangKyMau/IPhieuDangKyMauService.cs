@@ -1,4 +1,5 @@
-﻿using QLDV_KiemNghiem_BE.DTO.ResponseDto;
+﻿using QLDV_KiemNghiem_BE.DTO.RequestDto;
+using QLDV_KiemNghiem_BE.DTO.ResponseDto;
 using QLDV_KiemNghiem_BE.Models;
 using QLDV_KiemNghiem_BE.RequestFeatures;
 using QLDV_KiemNghiem_BE.RequestFeatures.PagingRequest;
@@ -11,7 +12,7 @@ namespace QLDV_KiemNghiem_BE.Interfaces
         Task<(IEnumerable<PhieuDangKyMauProcedureDto> datas, Pagination pagi)> GetPhieuDangKyMauAllAsync(PhieuDangKyMauParam param);
         Task<PhieuDangKyMauDto?> GetPhieuDangKyMauAsync(string maPhieuDangKyMau);
         Task<ResponseModel1<PhieuDangKyMauDto>> CreatePhieuDangKyMauAsync(PhieuDangKyMauDto PhieuDangKyMau, string user);
-
+        Task<PhieuDangKyMauResponseCancelDto> CancelPhieuDangKyMau(PhieuDangKyMauRequestCancelDto mauDto, string user);
         Task<bool> UpdatePhieuDangKyMauAsync(PhieuDangKyMauDto PhieuDangKyMau);
         Task<bool> DeletePhieuDangKyMauAsync(string maPhieuDangKyMau);
     }

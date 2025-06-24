@@ -49,6 +49,8 @@ public partial class PhieuDeXuatPhongBan
     [Column(TypeName = "datetime")]
     public DateTime? NgaySua { get; set; }
 
+    public bool? Active { get; set; }
+
     [InverseProperty("MaPhieuDeXuatNavigation")]
     public virtual ICollection<ChiTietPhieuDeXuatPhongBan> ChiTietPhieuDeXuatPhongBans { get; set; } = new List<ChiTietPhieuDeXuatPhongBan>();
 

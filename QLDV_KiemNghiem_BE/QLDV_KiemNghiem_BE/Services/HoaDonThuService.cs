@@ -104,7 +104,7 @@ namespace QLDV_KiemNghiem_BE.Services
                 Data = hoaDonThuReturn
             };
         }
-        public async Task<ResponseModel1<HoaDonThuDto>> CreateHoaDonThuByPhieuDangKyAsync(PhieuDangKyDto phieuDangKy)
+        public async Task<ResponseModel1<HoaDonThuDto>> CreateHoaDonThuByPhieuDangKyAsync(PhieuDangKyDto phieuDangKy, string user)
         {
             decimal tongTien = 0;
             List<ChiTietHoaDonThuDto> chiTietHoaDonThuDtos = new List<ChiTietHoaDonThuDto>();
@@ -118,7 +118,7 @@ namespace QLDV_KiemNghiem_BE.Services
                 GhiChu = "Tao hoa don thanh toan cho phieu dang ky" + phieuDangKy.SoDkpt,
                 TrangThai = true,
                 NgayTao = DateTime.Now,
-                NguoiTao = "admin",
+                NguoiTao = user,
                 SoDkpt = phieuDangKy.SoDkpt
             };
             // Them chi tiet hoa don thu cho hoa don moi tao
@@ -132,8 +132,6 @@ namespace QLDV_KiemNghiem_BE.Services
                     ThanhTien = await _repositoryManager.HoaDonThu.GetToTalMoneyOfMau(mau.MaDmMau, mau.MaTieuChuan, mau.MaLoaiDv),
                     GhiChu = "Hoa don cho mau" + mau.MaId,
                     TrangThai = true,
-                    NgayTao = DateTime.Now,
-                    NguoiTao = "admin"
                 };
                 tongTien += (decimal)chiTietHoaDonThu.ThanhTien;
                 await _repositoryManager.ChiTietHoaDonThu.CreateChiTietHoaDonThuAsync(chiTietHoaDonThu);

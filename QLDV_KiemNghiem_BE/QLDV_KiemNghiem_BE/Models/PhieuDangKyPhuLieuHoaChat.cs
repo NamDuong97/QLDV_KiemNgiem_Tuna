@@ -45,18 +45,6 @@ public partial class PhieuDangKyPhuLieuHoaChat
     [StringLength(50)]
     public string? SoLo { get; set; }
 
-    [StringLength(50)]
-    public string? NguoiTao { get; set; }
-
-    [StringLength(50)]
-    public string? NguoiSua { get; set; }
-
-    [Column(TypeName = "datetime")]
-    public DateTime? NgayTao { get; set; }
-
-    [Column(TypeName = "datetime")]
-    public DateTime? NgaySua { get; set; }
-
     public bool? IsDel { get; set; }
 
     [ForeignKey("MaPlhc")]

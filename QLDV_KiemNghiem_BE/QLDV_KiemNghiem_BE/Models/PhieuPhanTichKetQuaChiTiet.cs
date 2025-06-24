@@ -35,18 +35,6 @@ public partial class PhieuPhanTichKetQuaChiTiet
     [StringLength(100)]
     public string? TrangThai { get; set; }
 
-    [Column(TypeName = "datetime")]
-    public DateTime? NgayTao { get; set; }
-
-    [StringLength(50)]
-    public string? NguoiTao { get; set; }
-
-    [StringLength(50)]
-    public string? NguoiSua { get; set; }
-
-    [Column(TypeName = "datetime")]
-    public DateTime? NgaySua { get; set; }
-
     [StringLength(200)]
     public string? MucChatLuong { get; set; }
 

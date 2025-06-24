@@ -4,6 +4,7 @@ using QLDV_KiemNghiem_BE.Models;
 using QLDV_KiemNghiem_BE.Interfaces;
 using QLDV_KiemNghiem_BE.RequestFeatures;
 using QLDV_KiemNghiem_BE.DTO.ResponseDto;
+using Microsoft.VisualBasic;
 
 namespace QLDV_KiemNghiem_BE.Services
 {
@@ -46,11 +47,24 @@ namespace QLDV_KiemNghiem_BE.Services
                 Data = null
             };
 
+            var checkExistPhieuPhanTichKetQua = await _repositoryManager.PhieuPhanTichKetQua.FindPhieuPhanTichKetQuaAsync(checkExistsByID.MaPhieuKetQua);
+            if (checkExistPhieuPhanTichKetQua==null)
+            {
+                return new ResponseModel1<PhieuPhanTichKetQuaChiTietDto>
+                {
+                    KetQua = false,
+                    Message = "Phieu phan tich ket qua khong ton tai!",
+                    Data = null
+                };
+            }
+            checkExistPhieuPhanTichKetQua.NgaySua = DateTime.Now;
+            checkExistPhieuPhanTichKetQua.NguoiSua = "admin";
+
             var PhieuPhanTichKetQuaChiTietDomain = _mapper.Map<PhieuPhanTichKetQuaChiTiet>(PhieuPhanTichKetQuaChiTietDto);
             PhieuPhanTichKetQuaChiTietDomain.MaId = Guid.NewGuid().ToString();
-            PhieuPhanTichKetQuaChiTietDomain.NgayTao = DateTime.Now;
-
             _repositoryManager.PhieuPhanTichKetQuaChiTiet.CreatePhieuPhanTichKetQuaChiTietAsync(PhieuPhanTichKetQuaChiTietDomain);
+            _repositoryManager.PhieuPhanTichKetQua.CreatePhieuPhanTichKetQuaAsync(checkExistPhieuPhanTichKetQua);
+
             bool check = await _repositoryManager.SaveChangesAsync();
             var PhieuPhanTichKetQuaChiTietReturnDto = _mapper.Map<PhieuPhanTichKetQuaChiTietDto>(PhieuPhanTichKetQuaChiTietDomain);
 
@@ -80,10 +94,24 @@ namespace QLDV_KiemNghiem_BE.Services
                     Data = null
                 };
             }
+
+            var checkExistPhieuPhanTichKetQua = await _repositoryManager.PhieuPhanTichKetQua.FindPhieuPhanTichKetQuaAsync(PhieuPhanTichKetQuaChiTietCheck.MaPhieuKetQua);
+            if (checkExistPhieuPhanTichKetQua == null)
+            {
+                return new ResponseModel1<PhieuPhanTichKetQuaChiTietDto>
+                {
+                    KetQua = false,
+                    Message = "Phieu phan tich ket qua khong ton tai!",
+                    Data = null
+                };
+            }
+            checkExistPhieuPhanTichKetQua.NgaySua = DateTime.Now;
+            checkExistPhieuPhanTichKetQua.NguoiSua = "admin";
+
             var PhieuPhanTichKetQuaChiTietDomain = _mapper.Map<PhieuPhanTichKetQuaChiTiet>(PhieuPhanTichKetQuaChiTietDto);
-            PhieuPhanTichKetQuaChiTietDomain.NgaySua = DateTime.Now;
-            PhieuPhanTichKetQuaChiTietDomain.NguoiSua = "admin";
             _repositoryManager.PhieuPhanTichKetQuaChiTiet.UpdatePhieuPhanTichKetQuaChiTietAsync(PhieuPhanTichKetQuaChiTietDomain);
+            _repositoryManager.PhieuPhanTichKetQua.UpdatePhieuPhanTichKetQuaAsync(checkExistPhieuPhanTichKetQua);
+
             bool check = await _repositoryManager.SaveChangesAsync();
             var PhieuPhanTichKetQuaChiTietReturnDto = _mapper.Map<PhieuPhanTichKetQuaChiTietDto>(PhieuPhanTichKetQuaChiTietDomain);
             return new ResponseModel1<PhieuPhanTichKetQuaChiTietDto>

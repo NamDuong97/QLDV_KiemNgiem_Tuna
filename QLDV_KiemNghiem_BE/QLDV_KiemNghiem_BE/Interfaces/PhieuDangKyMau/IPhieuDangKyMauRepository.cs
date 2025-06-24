@@ -12,6 +12,7 @@ namespace QLDV_KiemNghiem_BE.Interfaces
         Task<PhieuDangKyMau?> GetPhieuDangKyMauAsync(string maPhieuDangKyMau);
         Task<PhieuDangKyMau?> FindPhieuDangKyMauAsync(string maPhieuDangKyMau);
         Task<PhieuDangKyMau?> FindPhieuDangKyMauByPhieuDangKyAndMaDmMauAsync(string maPhieuDangKy, string maDmMau, bool c);
+        Task ProcessUpdateStatusObjecRelative(string maMau, int TypeCancel);
         Task<int> CheckPhanCongAllMauInPDK(string maId, string maPhieuDangKy);
         Task CreatePhieuDangKyMauAsync(PhieuDangKyMau PhieuDangKyMau);
         void UpdatePhieuDangKyMauAsync(PhieuDangKyMau PhieuDangKyMau);

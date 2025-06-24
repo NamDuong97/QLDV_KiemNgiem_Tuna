@@ -66,18 +66,6 @@ public partial class PhieuDangKyMau
     [StringLength(50)]
     public string? GhiChu { get; set; }
 
-    [StringLength(50)]
-    public string? NguoiTao { get; set; }
-
-    [StringLength(50)]
-    public string? NguoiSua { get; set; }
-
-    [Column(TypeName = "datetime")]
-    public DateTime? NgayTao { get; set; }
-
-    [Column(TypeName = "datetime")]
-    public DateTime? NgaySua { get; set; }
-
     public int? ThoiGianTieuChuan { get; set; }
 
     [Column("MaPDK_Mau")]
@@ -98,6 +86,11 @@ public partial class PhieuDangKyMau
 
     [Column(TypeName = "datetime")]
     public DateTime? NgayTraKetQua { get; set; }
+
+    public bool? TrangThai { get; set; }
+
+    [StringLength(500)]
+    public string? LyDoHuyMau { get; set; }
 
     [InverseProperty("MaMauNavigation")]
     public virtual ICollection<ChiTietHoaDonThu> ChiTietHoaDonThus { get; set; } = new List<ChiTietHoaDonThu>();

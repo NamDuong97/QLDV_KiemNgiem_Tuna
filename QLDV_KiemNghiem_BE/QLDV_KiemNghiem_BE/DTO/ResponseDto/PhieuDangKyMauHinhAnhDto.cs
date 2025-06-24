@@ -18,14 +18,6 @@ namespace QLDV_KiemNghiem_BE.DTO.ResponseDto
 
         public bool? TrangThai { get; set; }
 
-        public string? NguoiTao { get; set; }
-
-        public string? NguoiSua { get; set; }
-
-        public DateTime? NgayTao { get; set; }
-
-        public DateTime? NgaySua { get; set; }
-
         public bool IsDel { get; set; }
     }
 }
