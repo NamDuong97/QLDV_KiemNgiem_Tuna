@@ -13,7 +13,7 @@ namespace QLDV_KiemNghiem_BE.Interfaces
         Task<PhieuDangKyMauDto?> GetPhieuDangKyMauAsync(string maPhieuDangKyMau);
         Task<ResponseModel1<PhieuDangKyMauDto>> CreatePhieuDangKyMauAsync(PhieuDangKyMauDto PhieuDangKyMau, string user);
         Task<PhieuDangKyMauResponseCancelDto> CancelPhieuDangKyMau(PhieuDangKyMauRequestCancelDto mauDto, string user);
-        Task<bool> UpdatePhieuDangKyMauAsync(PhieuDangKyMauDto PhieuDangKyMau);
-        Task<bool> DeletePhieuDangKyMauAsync(string maPhieuDangKyMau);
+        Task<ResponseModel1<PhieuDangKyMauDto>> UpdatePhieuDangKyMauAsync(PhieuDangKyMauDto PhieuDangKyMau, string user);
+        Task<bool> DeletePhieuDangKyMauAsync(string maPhieuDangKyMau, string user);
     }
 }

@@ -4,6 +4,8 @@ using QLDV_KiemNghiem_BE.Interfaces;
 using QLDV_KiemNghiem_BE.Interfaces.ManagerInterface;
 using QLDV_KiemNghiem_BE.Models;
 using QLDV_KiemNghiem_BE.RequestFeatures;
+using QLDV_KiemNghiem_BE.RequestFeatures.PagingRequest;
+using QLDV_KiemNghiem_BE.Shared;
 
 namespace QLDV_KiemNghiem_BE.Services
 {
@@ -17,15 +19,24 @@ namespace QLDV_KiemNghiem_BE.Services
             _repositoryManager = repositoryManager;
             _mapper = mapper;
         }
-        public async Task<IEnumerable<PhieuDangKyPhuLieuHoaChat>> GetPhieuDangKyPhuLieuHoaChatAllAsync()
+        public async Task<(IEnumerable<PhieuDangKyPhuLieuHoaChatDto> datas, Pagination pagi)> GetPhieuDangKyPhuLieuHoaChatAllAsync(PhieuDangKyPhuLieuHoaChatParam param)
         {
-           return await _repositoryManager.PhieuDangKyPhuLieuHoaChat.GetPhieuDangKyPhuLieuHoaChatAllAsync();
+           var result = await _repositoryManager.PhieuDangKyPhuLieuHoaChat.GetPhieuDangKyPhuLieuHoaChatAllAsync(param);
+            var dataReturn = _mapper.Map<List<PhieuDangKyPhuLieuHoaChatDto>>(result);
+            return (datas: dataReturn, pagi: result.Pagination);
         }
         public async Task<List<PhieuDangKyPhuLieuHoaChatDto>?> GetPhieuDangKyPhuLieuHoaChatByPhieuDangKyAsync(string maPhieuDangKy)
         {
             if (maPhieuDangKy == null || maPhieuDangKy == "") return null;
             var phieuDangKyPhuLieuHoaChats = await _repositoryManager.PhieuDangKyPhuLieuHoaChat.GetPhieuDangKyPhuLieuHoaChatByPhieuDangKyAsync(maPhieuDangKy);
             var result = _mapper.Map<List<PhieuDangKyPhuLieuHoaChatDto>>(phieuDangKyPhuLieuHoaChats);
+            return result;
+        }
+        public async Task<PhieuDangKyPhuLieuHoaChatDto?> GetPhieuDangKyPhuLieuHoaChatAsync(string maPDKPLHC)
+        {
+            if (maPDKPLHC == null || maPDKPLHC == "") return null;
+            var phieuDangKyPhuLieuHoaChats = await _repositoryManager.PhieuDangKyPhuLieuHoaChat.GetPhieuDangKyPhuLieuHoaChatAsync(maPDKPLHC, false);
+            var result = _mapper.Map<PhieuDangKyPhuLieuHoaChatDto>(phieuDangKyPhuLieuHoaChats);
             return result;
         }
         public async Task<ResponseModel1<PhieuDangKyPhuLieuHoaChatDto>> CreatePhieuDangKyPhuLieuHoaChatAsync(PhieuDangKyPhuLieuHoaChatDto phieuDangKyPhuLieuHoaChat, string user)
@@ -57,7 +68,6 @@ namespace QLDV_KiemNghiem_BE.Services
                 Data = dataReturn
             };
         }
-
         public async Task<ResponseModel1<PhieuDangKyPhuLieuHoaChatDto>> UpdatePhieuDangKyPhuLieuHoaChatAsync(PhieuDangKyPhuLieuHoaChatDto phieuDangKyPhuLieuHoaChat, string user)
         {
             if(phieuDangKyPhuLieuHoaChat== null || phieuDangKyPhuLieuHoaChat.MaId == null || phieuDangKyPhuLieuHoaChat.MaId == "")
@@ -105,9 +115,22 @@ namespace QLDV_KiemNghiem_BE.Services
                 Data = dataReturn
             };
         }
-        public async Task<bool> DeletePhieuDangKyPhuLieuHoaChatAsync(PhieuDangKyPhuLieuHoaChat phieuDangKyPhuLieuHoaChat)
+        public async Task<bool> DeletePhieuDangKyPhuLieuHoaChatAsync(string maPhieuDangKyPhuLieuHoaChat, string user)
         {
-            _repositoryManager.PhieuDangKyPhuLieuHoaChat.DeletePhieuDangKyPhuLieuHoaChatAsync(phieuDangKyPhuLieuHoaChat);
+            var checkPDKPLHC = await _repositoryManager.PhieuDangKyPhuLieuHoaChat.FindPhieuDangKyPhuLieuHoaChatAsync(maPhieuDangKyPhuLieuHoaChat, true);
+            if(checkPDKPLHC == null)
+            {
+                return false;
+            }
+            var checkExistsPDK = await _repositoryManager.PhieuDangKy.FindPhieuDangKyAsync(checkPDKPLHC?.MaPhieuDangKy ?? "");
+            if (checkExistsPDK == null)
+            {
+                return false;
+            }
+            checkExistsPDK.NgaySua = DateTime.Now;
+            checkExistsPDK.NguoiSua = user;
+            _repositoryManager.PhieuDangKyPhuLieuHoaChat.DeletePhieuDangKyPhuLieuHoaChatAsync(checkPDKPLHC);
+            _repositoryManager.PhieuDangKy.DeletePhieuDangKyAsync(checkExistsPDK);
             bool check = await _repositoryManager.SaveChangesAsync();
             return check;
         }

@@ -188,16 +188,17 @@ namespace QLDV_KiemNghiem_BE.Controllers
                 _logger.LogError("Loi validate tham so dau vao");
                 return BadRequest(new { Errors = errors });
             }
-            bool update = await _service.PhieuDangKyMau.UpdatePhieuDangKyMauAsync(MauDto);
-            if (update)
+            var user = User.FindFirst(ClaimTypes.Email)?.Value.ToString() ?? "unknow";
+            ResponseModel1<PhieuDangKyMauDto> update = await _service.PhieuDangKyMau.UpdatePhieuDangKyMauAsync(MauDto, user);
+            if (update.KetQua)
             {
-                _logger.LogDebug("Cap nhat phieu dang ky thanh cong");
-                return Ok(MauDto);
+                _logger.LogDebug(update.Message);
+                return Ok(update);
             }
             else
             {
-                _logger.LogDebug("Cap nhat mau that bai, hoac mau chua ton tai");
-                return BadRequest();
+                _logger.LogDebug(update.Message);
+                return BadRequest(update);
             }
         }
 
@@ -230,29 +231,20 @@ namespace QLDV_KiemNghiem_BE.Controllers
 
         [HttpDelete]
         [Route("deletePhieuDangKyMau")]
-        public async Task<ActionResult> deletePhieuDangKyMau(PhieuDangKyMau Mau)
-        {
-            var checkExists = await _service.PhieuDangKyMau.GetPhieuDangKyMauAsync(Mau.MaId);
-            if (checkExists != null)
+        public async Task<ActionResult> deletePhieuDangKyMau(string  maMau)
+        { 
+            var user = User.FindFirst(ClaimTypes.Email)?.Value.ToString() ?? "unknow";
+            bool delete = await _service.PhieuDangKyMau.DeletePhieuDangKyMauAsync(maMau, user);
+            if (delete)
             {
-                bool delete = await _service.PhieuDangKyMau.DeletePhieuDangKyMauAsync(Mau.MaId);
-                if (delete)
-                {
-                    _logger.LogDebug("Cap nhat phieu dang ky thanh cong");
-                    return Ok(Mau);
-                }
-                else
-                {
-                    _logger.LogDebug("Cap nhat phieu dang ky that bai");
-                    return BadRequest();
-                }
+                _logger.LogDebug("Xoa mau thanh cong");
+                return Ok();
             }
             else
             {
-                _logger.LogDebug("Phieu dang ky khong ton tai");
+                _logger.LogDebug("Xoa mau that bai");
                 return BadRequest();
             }
         }
-    
     }
 }

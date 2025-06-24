@@ -3,6 +3,8 @@ using Microsoft.EntityFrameworkCore;
 using QLDV_KiemNghiem_BE.Data;
 using QLDV_KiemNghiem_BE.Interfaces;
 using QLDV_KiemNghiem_BE.Models;
+using QLDV_KiemNghiem_BE.RequestFeatures.PagingRequest;
+using QLDV_KiemNghiem_BE.Shared;
 using System.Diagnostics.Eventing.Reader;
 
 namespace QLDV_KiemNghiem_BE.Repositories
@@ -16,16 +18,27 @@ namespace QLDV_KiemNghiem_BE.Repositories
             _context = context;
             _mapper = mapper;   
         }
-        public async Task<IEnumerable<PhieuDangKyPhuLieuHoaChat>> GetPhieuDangKyPhuLieuHoaChatAllAsync()
+        public async Task<PagedList<PhieuDangKyPhuLieuHoaChat>> GetPhieuDangKyPhuLieuHoaChatAllAsync(PhieuDangKyPhuLieuHoaChatParam param)
         {
-            return await _context.PhieuDangKyPhuLieuHoaChats.ToListAsync(); 
+            var result = await _context.PhieuDangKyPhuLieuHoaChats.ToListAsync();
+            return PagedList<PhieuDangKyPhuLieuHoaChat>.ToPagedList(result, param.PageNumber, param.PageSize);
         }
 
         public async Task<IEnumerable<PhieuDangKyPhuLieuHoaChat>> GetPhieuDangKyPhuLieuHoaChatByPhieuDangKyAsync(string maPhieuDangKy)
         {
             return await _context.PhieuDangKyPhuLieuHoaChats.Where(item => item.MaPhieuDangKy == maPhieuDangKy).ToListAsync();
         }
-
+        public async Task<PhieuDangKyPhuLieuHoaChat?> GetPhieuDangKyPhuLieuHoaChatAsync(string maPDKPLHC, bool tracking)
+        {
+            if(tracking)
+            {
+                return await _context.PhieuDangKyPhuLieuHoaChats.FirstOrDefaultAsync(it => it.MaId == maPDKPLHC);
+            }
+            else
+            {
+                return await _context.PhieuDangKyPhuLieuHoaChats.AsNoTracking().FirstOrDefaultAsync(it => it.MaId == maPDKPLHC);
+            }
+        }
         public async Task<PhieuDangKyPhuLieuHoaChat?> FindPhieuDangKyPhuLieuHoaChatAsync(string maPDKPLHC, bool tracking)
         {
             if (tracking)
