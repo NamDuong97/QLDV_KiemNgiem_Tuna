@@ -30,8 +30,17 @@ namespace QLDV_KiemNghiem_BE.DTO.ResponseDto
 
         public int? TrangThai { get; set; }
 
+        public DateTime? NgayTao { get; set; }
+
+        [StringLength(50)]
+        public string? NguoiTao { get; set; }
+
+        [StringLength(50)]
+        public string? NguoiSua { get; set; }
+
+        [Column(TypeName = "datetime")]
+        public DateTime? NgaySua { get; set; }
+
         public List<ChiTietPhieuDeXuatPhongBanDto> ChiTietPhieuDeXuatPhongBans { get; set; } = new List<ChiTietPhieuDeXuatPhongBanDto>();
-
-
     }
 }

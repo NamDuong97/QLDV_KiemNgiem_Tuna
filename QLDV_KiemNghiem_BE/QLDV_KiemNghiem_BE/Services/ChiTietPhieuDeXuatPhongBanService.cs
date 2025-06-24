@@ -35,9 +35,9 @@ namespace QLDV_KiemNghiem_BE.Services
             var result = _mapper.Map<ChiTietPhieuDeXuatPhongBanDto>(ChiTietPhieuDeXuatPhongBanDomain);
             return result;
         }
-        public async Task<ResponseReviewPhieuDeXuatPhongBan> ReviewPhieuDeXuatPhongBanByPhongKhoa(RequestReviewPhieuDeXuatPhongBan duyetPhieu, string user)
+        public async Task<ResponseReviewPhieuDeXuatPhongBan> ReviewPhieuDeXuatPhongBanByPhongKhoa(RequestReviewPhieuDeXuatPhongBan duyetPhieu, string user, string userId)
         {
-            if (duyetPhieu == null || duyetPhieu.MaPhieuDeXuat == "")
+            if (duyetPhieu == null || duyetPhieu.MaId == "")
             {
                 return new ResponseReviewPhieuDeXuatPhongBan
                 {
@@ -45,19 +45,21 @@ namespace QLDV_KiemNghiem_BE.Services
                     Message = "Thieu du lieu dau vao!",
                 };
             }
-            var checkExistsChiTietPhieuDXPB = await _repositoryManager.ChiTietPhieuDeXuatPhongBan.FindChiTietPhieuDeXuatPhongBanAsync(duyetPhieu.MaPhieuDeXuat, true);
+            var checkExistsChiTietPhieuDXPB = await _repositoryManager.ChiTietPhieuDeXuatPhongBan.FindChiTietPhieuDeXuatPhongBanAsync(duyetPhieu.MaId, true);
             if (checkExistsChiTietPhieuDXPB != null)
             {
                 if (duyetPhieu.Action)
                 {
                     // Nếu action = true thì tức là phòng khoa đã đồng ý phân công mẫu này. BLĐ không cần duyệt nữa.
                     checkExistsChiTietPhieuDXPB.TrangThai = 3;
+                    checkExistsChiTietPhieuDXPB.ManvTuChoi = userId;
+
                     // Kiểm tra xem các mẫu trong phiếu đề xuất này đã được phân công và chấp nhận hết chưa -> cập nhật trạng thái của bảng PhieuDeXuatPhanCong
-                    var checkAllSamplesApproved_PDXPB = await _repositoryManager.ChiTietPhieuDeXuatPhongBan.CheckAllSamplesApproved_PDXPB(duyetPhieu.MaPhieuDeXuat, duyetPhieu.MaId);
+                    var checkAllSamplesApproved_PDXPB = await _repositoryManager.ChiTietPhieuDeXuatPhongBan.CheckAllSamplesApproved_PDXPB(checkExistsChiTietPhieuDXPB.MaPhieuDeXuat, duyetPhieu.MaId);
                     if(checkAllSamplesApproved_PDXPB == 1)
                     {
                         // Da duyet het mau trong phieu de xuat nay cap nhat trang thai cho phieu de xuat
-                        var phieuDeXuat = await _repositoryManager.PhieuDeXuatPhongBan.FindPhieuDeXuatPhongBanAsync(duyetPhieu.MaPhieuDeXuat, true);
+                        var phieuDeXuat = await _repositoryManager.PhieuDeXuatPhongBan.FindPhieuDeXuatPhongBanAsync(checkExistsChiTietPhieuDXPB.MaPhieuDeXuat, true);
                         if (phieuDeXuat != null)
                         {
                             phieuDeXuat.TrangThai = 3;
@@ -88,16 +90,16 @@ namespace QLDV_KiemNghiem_BE.Services
                     // nguoc lai thi trang thai la bi phong KHDT tu choi duyet, thi cho BLD quyet dinh
                     checkExistsChiTietPhieuDXPB.TrangThai = 1;
                     checkExistsChiTietPhieuDXPB.LyDoTuChoi = duyetPhieu.Message;
-                    checkExistsChiTietPhieuDXPB.ManvTuChoi = duyetPhieu.MaId;
+                    checkExistsChiTietPhieuDXPB.ManvTuChoi = userId;  
                 }
 
-                checkExistsChiTietPhieuDXPB.NgaySua = DateTime.Now;
-                checkExistsChiTietPhieuDXPB.NguoiSua = user;
+               
                 _repositoryManager.ChiTietPhieuDeXuatPhongBan.UpdateChiTietPhieuDeXuatPhongBanAsync(checkExistsChiTietPhieuDXPB);
                 bool check = await _repositoryManager.SaveChangesAsync();
+
                 return new ResponseReviewPhieuDeXuatPhongBan
                 {
-                    MaPhieuDeXuat = duyetPhieu.MaPhieuDeXuat,
+                    MaId = duyetPhieu.MaId,
                     Message = check ? "Xu ly duyet phieu de xuat phong ban thanh cong!" : "Xu ly duyet phieu de xuat phong ban that bai vui long thu lai!",
                     KetQua = check
                 };
@@ -108,13 +110,13 @@ namespace QLDV_KiemNghiem_BE.Services
                 {
                     KetQua = false,
                     Message = "Chi tiet phieu de xuat phong ban khong ton tai",
-                    MaPhieuDeXuat = duyetPhieu.MaPhieuDeXuat,
+                    MaId = duyetPhieu.MaId,
                 };
             }
         }
-        public async Task<ResponseReviewPhieuDeXuatPhongBan> ReviewPhieuDeXuatPhongBanByBLD(RequestReviewPhieuDeXuatPhongBan duyetPhieu, string user)
+        public async Task<ResponseReviewPhieuDeXuatPhongBan> ReviewPhieuDeXuatPhongBanByBLD(RequestReviewPhieuDeXuatPhongBan duyetPhieu, string user, string userId)
         {
-            if (duyetPhieu == null || duyetPhieu.MaPhieuDeXuat == "")
+            if (duyetPhieu == null || duyetPhieu.MaId == "")
             {
                 return new ResponseReviewPhieuDeXuatPhongBan
                 {
@@ -122,7 +124,7 @@ namespace QLDV_KiemNghiem_BE.Services
                     Message = "Thieu du lieu dau vao!",
                 };
             }
-            var checkExistsChiTietPhieuDXPB = await _repositoryManager.ChiTietPhieuDeXuatPhongBan.FindChiTietPhieuDeXuatPhongBanAsync(duyetPhieu.MaPhieuDeXuat, true);
+            var checkExistsChiTietPhieuDXPB = await _repositoryManager.ChiTietPhieuDeXuatPhongBan.FindChiTietPhieuDeXuatPhongBanAsync(duyetPhieu.MaId, true);
             if (checkExistsChiTietPhieuDXPB != null)
             {
                 if (duyetPhieu.Action)
@@ -170,7 +172,7 @@ namespace QLDV_KiemNghiem_BE.Services
                 bool check = await _repositoryManager.SaveChangesAsync();
                 return new ResponseReviewPhieuDeXuatPhongBan
                 {
-                    MaPhieuDeXuat = duyetPhieu.MaPhieuDeXuat,
+                    MaId = duyetPhieu.MaId,
                     Message = check ? "Xu ly duyet phieu de xuat phong ban thanh cong!" : "Xu ly duyet phieu de xuat phong ban that bai vui long thu lai!",
                     KetQua = check
                 };
@@ -181,15 +183,15 @@ namespace QLDV_KiemNghiem_BE.Services
                 {
                     KetQua = false,
                     Message = "Chi tiet phieu de xuat phong ban khong ton tai",
-                    MaPhieuDeXuat = duyetPhieu.MaPhieuDeXuat,
+                    MaId = duyetPhieu.MaId,
                 };
             }
         }
-        public async Task<bool> CancelChiTietPhieuDeXuatPhongBansByKHTH(CancelChiTietPhieuDeXuatPhongBanRequestDto cancelPhieu, string user)
+        public async Task<bool> CancelChiTietPhieuDeXuatPhongBansByKHTH(CancelChiTietPhieuDeXuatPhongBanRequestDto cancelPhieu, string user, string userId)
         {
             try
             {
-                await _repositoryManager.PhieuDeXuatPhongBan.ProcessUpdatePDXPBFromMauCancel(cancelPhieu.MaMau);
+                await _repositoryManager.ChiTietPhieuDeXuatPhongBan.ProcessUpdatePDXPBFromMauCancel(cancelPhieu.MaMau, user, userId);
                 return true;
             }
             catch ( Exception ex)

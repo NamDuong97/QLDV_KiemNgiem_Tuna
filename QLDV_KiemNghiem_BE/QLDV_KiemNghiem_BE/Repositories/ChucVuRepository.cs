@@ -24,6 +24,12 @@ namespace QLDV_KiemNghiem_BE.Repositories
         {
             return await _context.ChucVus.FindAsync(maChucVu);
         }
+
+        public async Task<ChucVu?> FindChucVuByNameAsync(string tenChucVu)
+        {
+            return await _context.ChucVus.FirstOrDefaultAsync(it => it.TenChucVu.ToLower().Trim() == tenChucVu.ToLower().Trim());
+        }
+
         public void CreateChucVuAsync(ChucVu ChucVu)
         {
             _context.ChucVus.Add(ChucVu);
