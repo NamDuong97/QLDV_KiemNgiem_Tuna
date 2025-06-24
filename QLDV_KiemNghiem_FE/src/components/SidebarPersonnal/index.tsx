@@ -94,8 +94,6 @@ const SidebarPersonnal = () => {
     }
   };
 
-  console.log("danh-sach-phieu-cho-phan-cong", history);
-
   return (
     <div className="flex flex-col w-64 bg-white border-r border-gray-200">
       <div className="flex items-center justify-center h-16 border-b border-gray-200 ">

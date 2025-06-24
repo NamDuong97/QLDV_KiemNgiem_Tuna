@@ -1,18 +1,19 @@
-import { useMutation, useQueries, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import QuanlyPhieuDKYKNServices from "../../services/personnels/quanlyPhieuDKYKN";
 
 interface Props {
   queryKey: string;
   params?: any;
   onSettled?: any;
+  activeFilter?: any;
 }
 
 export const listPhieuDKKNAll = (props: Props) => {
-  const { queryKey } = props;
+  const { queryKey, params } = props;
   return useQuery({
-    queryKey: [queryKey],
+    queryKey: [queryKey, params],
     queryFn: async () => {
-      const response = await QuanlyPhieuDKYKNServices.listPhieuDKKNAll();
+      const response = await QuanlyPhieuDKYKNServices.quanLyPhieuDKKN(params);
       return response?.data;
     },
     refetchOnWindowFocus: false,
@@ -20,10 +21,10 @@ export const listPhieuDKKNAll = (props: Props) => {
   });
 };
 
-export const listPhieuDKKM_KHTH = (props: Props) => {
+export const listPhieuDKKM = (props: Props) => {
   const { queryKey, params } = props;
   return useQuery({
-    queryKey: [queryKey],
+    queryKey: [queryKey, params],
     queryFn: async () => {
       const response = await QuanlyPhieuDKYKNServices.quanLyPhieuDKKN(params);
       return response?.data;

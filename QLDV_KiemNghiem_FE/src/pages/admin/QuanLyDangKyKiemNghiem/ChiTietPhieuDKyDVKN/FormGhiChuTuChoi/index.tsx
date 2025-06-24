@@ -7,11 +7,13 @@ import {
   useDanhGiaBLD,
   useDanhGiaNhanVien,
 } from "../../../../../hooks/personnels/quanLyPhieuDKKM";
+import { role } from "../../../../../configs/parseJwt";
+import { keyTag } from "../../../../../models/Account-Customer";
 
 interface Props {
   id: any;
-  roll: any;
   handleClose: () => void;
+  closeGhiChu: () => void;
 }
 
 interface FormGhiChu {
@@ -19,11 +21,11 @@ interface FormGhiChu {
 }
 
 const FormGhiChuTuChoi = (props: Props) => {
-  const { id, roll, handleClose } = props;
+  const { id, handleClose, closeGhiChu } = props;
 
   let schema = useMemo(() => {
     return yup.object().shape({
-      ghiChu: yup.string().required("Yêu cầu nhập ghi chú"),
+      ghiChu: yup.string().required("Yêu cầu nhập lý do từ chối"),
     });
   }, []);
 
@@ -38,11 +40,21 @@ const FormGhiChuTuChoi = (props: Props) => {
   });
 
   const handleOnSettled = async (response: any) => {
-    await queryClient.refetchQueries({
-      queryKey: ["quanLyPhieuDKKM"],
-    });
+    await Promise.all([
+      queryClient.refetchQueries({
+        queryKey: ["listPhieuDKKM_KHTH"],
+      }),
+      queryClient.refetchQueries({
+        queryKey: ["listPhieuDKKM_BLD"],
+      }),
+      queryClient.refetchQueries({
+        queryKey: ["listPhieuDKKM_KHTH"],
+      }),
+      queryClient.refetchQueries({
+        queryKey: ["quanLyPhieuDKKMs_BLD"],
+      }),
+    ]);
     if (response.ketQua === true) {
-      reset({ ghiChu: "" });
       handleClose();
     }
   };
@@ -62,17 +74,9 @@ const FormGhiChuTuChoi = (props: Props) => {
       message: data.ghiChu,
       action: false,
     };
-    setIsParam(params);
-    setIsOpenConfirmationModal(true);
-    handleClose();
+    if (role === "KHTH") mutateNhanVien(params);
+    mutateBLD(params);
   };
-
-  const onConfirm = () => {
-    if (roll === "KHTH") mutateNhanVien(isParam);
-    mutateBLD(isParam);
-  };
-
-  console.log("isparam", isParam);
 
   useEffect(() => {
     reset({
@@ -82,13 +86,18 @@ const FormGhiChuTuChoi = (props: Props) => {
 
   return (
     <form onSubmit={handleSubmit(handleHuyPhieu)} className="space-y-2">
-      <h4 className="text-base/6 font-semibold text-gray-500">Ghi chú:</h4>
+      <h4 className="text-base/6 font-semibold text-gray-500">
+        Ghi chú{" "}
+        {role === "KHTH" && (
+          <span className="font-medium">(Từ chối không thể thu hồi)*</span>
+        )}
+      </h4>
       <div>
         <textarea
           className="w-full border border-gray-300 rounded-lg p-3 min-h-[106px] max-h-[106px] focus-within:outline-1 focus-within:border focus-within:border-blue-300 h-"
           rows={3}
           {...register("ghiChu")}
-          placeholder="Nhập ghi chú..."
+          placeholder="Nhập lý do từ chối..."
         />
         {errors.ghiChu?.message && (
           <p className="text-[#af1c10] !font-medium !text-sm/[140%]">
@@ -96,7 +105,16 @@ const FormGhiChuTuChoi = (props: Props) => {
           </p>
         )}
       </div>
-      <div className="flex justify-end">
+      <div className="flex justify-end gap-2">
+        {role === "KHTH" && (
+          <button
+            type="button"
+            onClick={closeGhiChu}
+            className="bg-yellow-100 hover:bg-yellow-200 cursor-pointer px-6 py-2 rounded-md"
+          >
+            <p className="text-sm font-medium text-yellow-700">Hủy</p>
+          </button>
+        )}
         <button className="bg-green-100 hover:bg-green-200 cursor-pointer px-6 py-2 rounded-md">
           <p className="text-sm font-medium text-green-700">Gửi</p>
         </button>

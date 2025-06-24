@@ -1,12 +1,12 @@
-import { MouseEvent, useEffect, useState } from "react";
-import PopupBoloc from "../../PopupBoloc";
+import { useEffect, useState } from "react";
+
 import {
-  listPhieuDKKM_KHTH,
+  listPhieuDKKM,
   listPhieuDKKNAll,
 } from "../../../../../hooks/personnels/quanLyPhieuDKKM";
-import { FaFilter, FaSortAmountDown, FaSortAmountUp } from "react-icons/fa";
+import { FaSortAmountDown, FaSortAmountUp } from "react-icons/fa";
 import TableQuanLyPhieuDKyDVHN from "../../Table";
-import { Button, Pagination } from "@mui/material";
+import { Pagination, TextField } from "@mui/material";
 import { keyTag } from "../../../../../models/Account-Customer";
 import InputSearch2 from "../../../../../components/InputSearch2";
 
@@ -20,6 +20,8 @@ import {
 import Card from "./Card";
 import removeVietnameseTones from "../../../../../configs/removeVietnameseTones";
 import SelectItemTrangThai from "./SelectItemTrangThai";
+import { maNhanVien } from "../../../../../configs/parseJwt";
+import { quanLyPhieuDKKMs } from "../../../../../hooks/personnels/Queries/quanLyPhieuDKKMs";
 
 interface Props {
   setOpenXemChiTiet: React.Dispatch<React.SetStateAction<boolean>>;
@@ -32,13 +34,96 @@ const KHTH = (props: Props) => {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectTrangThai, setSelectTrangThai] = useState("");
   const [isSortNew, setIsSortNew] = useState(false);
-  const { data, isLoading } = listPhieuDKKM_KHTH({
+  const [selectedDateFrom, setSelectedDateFrom] = useState("");
+  const [selectedDateTo, setSelectedDateTo] = useState("");
+
+  const handleChangeDateFrom = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSelectedDateFrom(event.target.value);
+  };
+  const handleChangeDateTo = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSelectedDateTo(event.target.value);
+  };
+
+  const { data, isLoading } = listPhieuDKKM({
     queryKey: "listPhieuDKKM_KHTH",
-    params: activeFilter ? "TT01" : undefined,
+    params: {
+      maTrangThaiID: "TT01",
+    },
   });
+  const { data: dataNhanVienDuyet, isLoading: isLoadingNhanVienDuyet } =
+    quanLyPhieuDKKMs({
+      queryKey: "quanLyPhieuDKKMs_KHTH",
+      paramsList:
+        selectedDateFrom && selectedDateTo
+          ? [
+              {
+                manvDuyet: maNhanVien,
+                maTrangThaiID: "TT02",
+                timeFrom: selectedDateFrom,
+                timeTo: selectedDateTo,
+              },
+              {
+                manvDuyet: maNhanVien,
+                maTrangThaiID: "TT03",
+                timeFrom: selectedDateFrom,
+                timeTo: selectedDateTo,
+              },
+            ]
+          : selectedDateFrom
+          ? [
+              {
+                manvDuyet: maNhanVien,
+                maTrangThaiID: "TT02",
+                timeFrom: selectedDateFrom,
+              },
+              {
+                manvDuyet: maNhanVien,
+                maTrangThaiID: "TT03",
+                timeFrom: selectedDateFrom,
+              },
+            ]
+          : selectedDateTo
+          ? [
+              {
+                manvDuyet: maNhanVien,
+                maTrangThaiID: "TT02",
+                timeTo: selectedDateTo,
+              },
+              {
+                manvDuyet: maNhanVien,
+                maTrangThaiID: "TT03",
+                timeTo: selectedDateTo,
+              },
+            ]
+          : [
+              {
+                manvDuyet: maNhanVien,
+                maTrangThaiID: "TT02",
+              },
+              {
+                manvDuyet: maNhanVien,
+                maTrangThaiID: "TT03",
+              },
+            ],
+    });
 
   const { data: dataAll, isLoading: isLoadingAll } = listPhieuDKKNAll({
     queryKey: "listPhieuDKKNAllKHTH",
+    params:
+      selectedDateFrom && selectedDateTo
+        ? {
+            timeFrom: selectedDateFrom,
+            timeTo: selectedDateTo,
+          }
+        : selectedDateFrom
+        ? {
+            timeFrom: selectedDateFrom,
+          }
+        : selectedDateTo
+        ? {
+            timeTo: selectedDateTo,
+          }
+        : undefined,
   });
 
   const dataShow: any = {
@@ -49,7 +134,7 @@ const KHTH = (props: Props) => {
         removeVietnameseTones(sample.nguoiGuiMau.toLowerCase()).includes(query);
       return matchesSearch;
     }),
-    [keyTag.Ban_Lanh_Dao_Duyet]: dataAll?.filter((sample: any) => {
+    [keyTag.Nhan_Vien_Duỵet]: dataNhanVienDuyet?.filter((sample: any) => {
       const query = removeVietnameseTones(searchQuery.toLowerCase());
       const matchesSearch =
         removeVietnameseTones(sample.soDkpt.toLowerCase()).includes(query) ||
@@ -124,14 +209,11 @@ const KHTH = (props: Props) => {
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
             <Card
               title="Tổng phiếu đã duyệt"
-              value={
-                dataAll?.filter((item: any) => item.trangThaiId === "TT02")
-                  ?.length
-              }
+              value={dataNhanVienDuyet?.length}
               icon={<Clipboard className="w-6 h-6" />}
               bgColor="bg-indigo-100"
               textColor="text-indigo-600"
-              isLoading={isLoading}
+              isLoading={isLoadingNhanVienDuyet}
             />
           </div>
         );
@@ -194,6 +276,8 @@ const KHTH = (props: Props) => {
     setCurrentPage(1);
     setSelectTrangThai("");
     setIsSortNew(false);
+    setSelectedDateFrom("");
+    setSelectedDateTo("");
   }, [activeFilter]);
 
   return (
@@ -208,6 +292,26 @@ const KHTH = (props: Props) => {
           />
         </div>
         <div className="flex space-x-4 items-center">
+          {(activeFilter === keyTag.Tat_Ca ||
+            activeFilter === keyTag.Nhan_Vien_Duỵet) && (
+            <div className="flex items-center gap-2">
+              <TextField
+                size="small"
+                variant="outlined"
+                type="date"
+                value={selectedDateFrom}
+                onChange={handleChangeDateFrom}
+              />
+              -{" "}
+              <TextField
+                size="small"
+                variant="outlined"
+                type="date"
+                value={selectedDateTo}
+                onChange={handleChangeDateTo}
+              />
+            </div>
+          )}
           <button
             onClick={() => setIsSortNew(!isSortNew)}
             type="button"
@@ -223,13 +327,14 @@ const KHTH = (props: Props) => {
               </span>
             )}
           </button>
-          {activeFilter === keyTag.Tat_Ca && (
+          {
             <SelectItemTrangThai
               title="Trạng thái"
               setItem={setSelectTrangThai}
               item={selectTrangThai}
+              activeFilter={activeFilter}
             />
-          )}
+          }
         </div>
       </div>
       <div className="bg-white rounded-lg shadow-sm border border-gray-100">
@@ -237,7 +342,11 @@ const KHTH = (props: Props) => {
           tableHead={tableHead}
           tableBody={currentItems}
           isLoading={
-            activeFilter === keyTag.Cho_Xu_Ly ? isLoading : isLoadingAll
+            activeFilter === keyTag.Cho_Xu_Ly
+              ? isLoading
+              : activeFilter === keyTag.Nhan_Vien_Duỵet
+              ? isLoadingNhanVienDuyet
+              : isLoadingAll
           }
           handleClickXemChiTiet={handleClickXemChiTiet}
         />

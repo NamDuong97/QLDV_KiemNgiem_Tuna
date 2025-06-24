@@ -144,7 +144,7 @@ const TableQuanLyPhieuDKyDVHN = (props: TableProps) => {
                 <TableCell align="center">
                   <Box className="flex gap-2 items-center justify-start">
                     <p className="text-base/4 font-medium text-gray-700">
-                      {formatDateNotTime(item?.ngayGiaoMau)}
+                      {formatDateNotTime(item?.ngayTao)}
                     </p>
                   </Box>
                 </TableCell>

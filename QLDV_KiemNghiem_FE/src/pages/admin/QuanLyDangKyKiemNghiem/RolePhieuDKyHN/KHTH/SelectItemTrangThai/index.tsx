@@ -3,15 +3,17 @@ import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
 import { useGetTrangThaiPhieuDkAll } from "../../../../../../hooks/customers/usePhieuDKyDVKN";
+import { keyTag } from "../../../../../../models/Account-Customer";
 
 interface Props {
   item?: any;
   setItem?: any;
   title?: any;
+  activeFilter?: string;
 }
 
 export default function SelectItemTrangThai(props: Props) {
-  const { item, setItem, title } = props;
+  const { item, setItem, title, activeFilter } = props;
 
   const { data } = useGetTrangThaiPhieuDkAll({
     queryKey: "TrangThaiPhieuDkAll",
@@ -20,6 +22,14 @@ export default function SelectItemTrangThai(props: Props) {
   const handleChange = (event: SelectChangeEvent) => {
     setItem(event.target.value as string);
   };
+
+  const dataSelect =
+    activeFilter === keyTag.Nhan_Vien_Duỵet
+      ? [
+          { maId: "TT02", tenTt: "Phòng KHĐT đã duyệt và chờ BLĐ xét duyệt" },
+          { maId: "TT03", tenTt: "Phòng KHĐT từ chối và chờ BLĐ quyết định" },
+        ]
+      : data;
 
   return (
     <Box
@@ -42,7 +52,7 @@ export default function SelectItemTrangThai(props: Props) {
           }}
         >
           <MenuItem value="">Tất cả {title}</MenuItem>
-          {data?.map((option: any, index: any) => (
+          {dataSelect?.map((option: any, index: any) => (
             <MenuItem key={index} value={option.maId}>
               {option.tenTt}
             </MenuItem>

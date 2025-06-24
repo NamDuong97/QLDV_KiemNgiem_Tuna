@@ -7,11 +7,12 @@ import {
   useDanhGiaBLD,
   useDanhGiaNhanVien,
 } from "../../../../../hooks/personnels/quanLyPhieuDKKM";
+import { role } from "../../../../../configs/parseJwt";
 
 interface Props {
   id: any;
-  roll: any;
   handleClose: () => void;
+  closeGhiChu: () => void;
 }
 
 interface FormGhiChu {
@@ -19,7 +20,7 @@ interface FormGhiChu {
 }
 
 const FormGhiChuDuyet = (props: Props) => {
-  const { id, roll, handleClose } = props;
+  const { id, handleClose, closeGhiChu } = props;
 
   let schema = useMemo(() => {
     return yup.object().shape({
@@ -46,6 +47,9 @@ const FormGhiChuDuyet = (props: Props) => {
         queryKey: ["listPhieuDKKM_BLD"],
       }),
       queryClient.refetchQueries({
+        queryKey: ["quanLyPhieuDKKMs_BLD"],
+      }),
+      queryClient.refetchQueries({
         queryKey: ["listPhieuDKKNAll"],
       }),
       queryClient.refetchQueries({
@@ -61,6 +65,9 @@ const FormGhiChuDuyet = (props: Props) => {
     await Promise.all([
       queryClient.refetchQueries({
         queryKey: ["listPhieuDKKM_KHTH"],
+      }),
+      queryClient.refetchQueries({
+        queryKey: ["quanLyPhieuDKKMs_KHTH"],
       }),
       queryClient.refetchQueries({
         queryKey: ["listPhieuDKKNAllKHTH"],
@@ -84,7 +91,7 @@ const FormGhiChuDuyet = (props: Props) => {
       message: data.ghiChu,
       action: true,
     };
-    if (roll === "KHTH") mutateNhanVien(params);
+    if (role === "KHTH") mutateNhanVien(params);
     mutateBLD(params);
   };
   useEffect(() => {
@@ -95,7 +102,12 @@ const FormGhiChuDuyet = (props: Props) => {
 
   return (
     <form onSubmit={handleSubmit(handleDuyet)} className="space-y-2">
-      <h4 className="text-base/6 font-semibold text-gray-500">Ghi chú:</h4>
+      <h4 className="text-base/6 font-semibold text-gray-500">
+        Ghi chú{" "}
+        {role === "KHTH" && (
+          <span className="font-medium">(Duyệt không thể thu hồi)*</span>
+        )}
+      </h4>
       <div>
         <textarea
           className="w-full border border-gray-300 rounded-lg p-3 min-h-[106px] max-h-[106px] focus-within:outline-1 focus-within:border focus-within:border-blue-300 h-"
@@ -109,7 +121,16 @@ const FormGhiChuDuyet = (props: Props) => {
           </p>
         )}
       </div>
-      <div className="flex justify-end">
+      <div className="flex justify-end gap-2">
+        {role === "KHTH" && (
+          <button
+            type="button"
+            onClick={closeGhiChu}
+            className="bg-yellow-100 hover:bg-yellow-200 cursor-pointer px-6 py-2 rounded-md"
+          >
+            <p className="text-sm font-medium text-yellow-700">Hủy</p>
+          </button>
+        )}
         <button className="bg-green-100 hover:bg-green-200 cursor-pointer px-6 py-2 rounded-md">
           <p className="text-sm font-medium text-green-700">Gửi</p>
         </button>

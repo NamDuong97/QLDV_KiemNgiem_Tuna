@@ -2,21 +2,11 @@ import _APIInstance from "../../configs/configAPI";
 import { API } from "../../constants/commons";
 
 export default class QuanlyPhieuDKYKNServices {
-  static async listPhieuDKKNAll() {
-    try {
-      const response = await _APIInstance.get(
-        API.ADMIN.PHIEU_DKY_DVKM.QUAN_LY_PHIEU_DKY_DVKM
-      );
-      return response;
-    } catch (err: any) {
-      return err;
-    }
-  }
-
   static async quanLyPhieuDKKN(params: any) {
     try {
       const response = await _APIInstance.get(
-        `${API.ADMIN.PHIEU_DKY_DVKM.QUAN_LY_PHIEU_DKY_DVKM}?trangThaiID=${params}`
+        API.ADMIN.PHIEU_DKY_DVKM.QUAN_LY_PHIEU_DKY_DVKM,
+        { params }
       );
       return response;
     } catch (err: any) {

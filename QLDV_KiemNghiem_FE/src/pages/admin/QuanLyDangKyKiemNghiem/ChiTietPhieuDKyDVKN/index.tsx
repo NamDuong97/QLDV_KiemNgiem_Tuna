@@ -1,9 +1,8 @@
 import { Box, Dialog, Skeleton } from "@mui/material";
-import { useContext, useState } from "react";
+import { useState } from "react";
 import DetailMaus from "./Detail-Maus";
 import DetailPLHCs from "./Detail-PLHC";
 import { xemChitietPhieuDKKM } from "../../../../hooks/personnels/quanLyPhieuDKKM";
-import { PersonnelContext } from "../../../../contexts/PersonelsProvider";
 import { IoMdClose } from "react-icons/io";
 import DoneAllIcon from "@mui/icons-material/DoneAll";
 import SmsFailedIcon from "@mui/icons-material/SmsFailed";
@@ -12,6 +11,7 @@ import { role } from "../../../../configs/parseJwt";
 import FormGhiChuTuChoi from "./FormGhiChuTuChoi";
 import FormGhiChuDuyet from "./FormGhiChuDuyet";
 import { keyTag } from "../../../../models/Account-Customer";
+import { getInforNhanVien } from "../../../../hooks/personnels/access/useAccess";
 
 interface Props {
   open: boolean;
@@ -24,7 +24,6 @@ const ChiTietPhieuDKyDVKN = (props: Props) => {
   const [isTag, setIsTag] = useState(1);
   const [isGhiChuTuChoi, setIsGhiChuTuChoi] = useState(false);
   const [isGhiChuDuyet, setIsGhiChuDuyet] = useState(false);
-  const { personnelInfo } = useContext(PersonnelContext);
   const dataSession = sessionStorage.getItem("phieu-DKKN-xem-chi-tiet");
   const id = dataSession ? JSON.parse(dataSession) : "";
 
@@ -32,6 +31,12 @@ const ChiTietPhieuDKyDVKN = (props: Props) => {
     queryKey: "xemChitietPhieuDKKM",
     params: id,
   });
+
+  const { data: dataNhanVien } = getInforNhanVien({
+    queryKey: "getInforNhanVien",
+    params: data?.manvSoDuyet,
+  });
+  console.log("{data?}", data, dataNhanVien);
 
   const handleClosePopup = async () => {
     await handleClose();
@@ -69,7 +74,7 @@ const ChiTietPhieuDKyDVKN = (props: Props) => {
                   {isGhiChuDuyet && (
                     <FormGhiChuDuyet
                       id={id}
-                      roll={personnelInfo?.maLoaiTk}
+                      closeGhiChu={() => setIsGhiChuDuyet(false)}
                       handleClose={handleClosePopup}
                     />
                   )}
@@ -96,8 +101,8 @@ const ChiTietPhieuDKyDVKN = (props: Props) => {
                   {isGhiChuTuChoi && (
                     <FormGhiChuTuChoi
                       id={id}
-                      roll={personnelInfo?.maLoaiTk}
                       handleClose={handleClosePopup}
+                      closeGhiChu={() => setIsGhiChuTuChoi(false)}
                     />
                   )}
                 </div>
@@ -134,7 +139,7 @@ const ChiTietPhieuDKyDVKN = (props: Props) => {
                   {isGhiChuDuyet && (
                     <FormGhiChuDuyet
                       id={id}
-                      roll={personnelInfo?.maLoaiTk}
+                      closeGhiChu={() => setIsGhiChuDuyet(false)}
                       handleClose={handleClosePopup}
                     />
                   )}
@@ -161,67 +166,8 @@ const ChiTietPhieuDKyDVKN = (props: Props) => {
                   {isGhiChuTuChoi && (
                     <FormGhiChuTuChoi
                       id={id}
-                      roll={personnelInfo?.maLoaiTk}
                       handleClose={handleClosePopup}
-                    />
-                  )}
-                </div>
-              </div>
-            );
-          case "TT03":
-            return (
-              <div className="p-5 space-y-4">
-                <div className="space-y-2">
-                  <div className="flex items-center">
-                    <div className="flex-shrink-0">
-                      <div className="h-8 w-8 rounded-full bg-blue-100 flex items-center justify-center">
-                        <DoneAllIcon className="text-blue-500" />
-                      </div>
-                    </div>
-                    <button
-                      onClick={() => {
-                        setIsGhiChuDuyet(true);
-                        setIsGhiChuTuChoi(false);
-                      }}
-                      className="ml-4 bg-blue-100 hover:bg-blue-200 cursor-pointer px-4 py-2 rounded-md"
-                    >
-                      <p className="text-sm font-medium text-blue-700">
-                        Duyệt phiếu
-                      </p>
-                    </button>
-                  </div>
-                  {isGhiChuDuyet && (
-                    <FormGhiChuDuyet
-                      id={id}
-                      roll={personnelInfo?.maLoaiTk}
-                      handleClose={handleClosePopup}
-                    />
-                  )}
-                </div>
-                <div className="space-y-2">
-                  <div className="flex items-center">
-                    <div className="flex-shrink-0">
-                      <div className="h-8 w-8 rounded-full bg-yellow-100 flex items-center justify-center">
-                        <SmsFailedIcon className="text-yellow-500" />
-                      </div>
-                    </div>
-                    <button
-                      onClick={() => {
-                        setIsGhiChuTuChoi(true);
-                        setIsGhiChuDuyet(false);
-                      }}
-                      className="ml-4 bg-yellow-100 hover:bg-yellow-200 cursor-pointer px-4 py-2 rounded-md"
-                    >
-                      <p className="text-sm font-medium text-yellow-700">
-                        Từ chối
-                      </p>
-                    </button>
-                  </div>
-                  {isGhiChuTuChoi && (
-                    <FormGhiChuTuChoi
-                      id={id}
-                      roll={personnelInfo?.maLoaiTk}
-                      handleClose={handleClosePopup}
+                      closeGhiChu={() => setIsGhiChuTuChoi(false)}
                     />
                   )}
                 </div>
@@ -237,10 +183,14 @@ const ChiTietPhieuDKyDVKN = (props: Props) => {
   const handleShowByTag = () => {
     switch (isTag) {
       case 2: {
-        return (
+        return data?.maus?.length > 0 ? (
           <Box className="overflow-y-auto h-[579px]">
-            <DetailMaus dataMaus={data?.maus} isLoading={isLoading} />
+            <DetailMaus dataMaus={data?.maus} isLoading={isLoading} />{" "}
           </Box>
+        ) : (
+          <div className="text-center p-5">
+            <p className="text-base/6 text-gray-500">Không có dữ liệu</p>
+          </div>
         );
       }
       case 3: {
@@ -400,18 +350,20 @@ const ChiTietPhieuDKyDVKN = (props: Props) => {
                       )}
                     </div>
                   </div>
-                  <div>
-                    <label className="block text-xs text-gray-500">
-                      Địa chỉ giao mẫu
-                    </label>
-                    {isLoading ? (
-                      <Skeleton variant="rounded" width={100} height={20} />
-                    ) : (
-                      <p className="font-medium text-gray-900">
-                        {data?.diaChiGiaoMau}
-                      </p>
-                    )}
-                  </div>
+                  {data?.diaChiGiaoMau && (
+                    <div>
+                      <label className="block text-xs text-gray-500">
+                        Địa chỉ giao mẫu
+                      </label>
+                      {isLoading ? (
+                        <Skeleton variant="rounded" width={100} height={20} />
+                      ) : (
+                        <p className="font-medium text-gray-900">
+                          {data?.diaChiGiaoMau}
+                        </p>
+                      )}
+                    </div>
+                  )}
                 </div>
               </div>
 
@@ -481,6 +433,33 @@ const ChiTietPhieuDKyDVKN = (props: Props) => {
                   </div>
                 </div>
               </div>
+              {data?.noiDungDuyetSoBo && (
+                <div className="col-span-full">
+                  <label className="text-sm/6 text-gray-500">
+                    {role === "BLD"
+                      ? `Nhân viên ${dataNhanVien?.hoTen} đánh
+                    giá phiếu`
+                      : "Ghi chú đánh giá phiếu"}
+                  </label>
+                  <div className="bg-gray-50 p-4 rounded-lg">
+                    <p className="text-gray-700 font-semibold">
+                      {data?.noiDungDuyetSoBo}
+                    </p>
+                  </div>
+                </div>
+              )}
+              {role === "BLD" && data?.noiDungTongDuyet && (
+                <div className="col-span-full">
+                  <label className="text-sm/6 text-gray-500">
+                    Ghi chú đánh giá phiếu
+                  </label>
+                  <div className="bg-gray-50 p-4 rounded-lg">
+                    <p className="text-gray-700 font-semibold">
+                      {data?.noiDungTongDuyet}
+                    </p>
+                  </div>
+                </div>
+              )}
             </div>
           </Box>
         );
@@ -546,9 +525,7 @@ const ChiTietPhieuDKyDVKN = (props: Props) => {
                 <span className="absolute bottom-0 left-0 w-full h-0.5 bg-indigo-600"></span>
               )}
             </div>
-            {(activeFilter === keyTag.Cho_Xu_Ly ||
-              activeFilter === keyTag.Ban_Lanh_Dao_Duyet ||
-              activeFilter === keyTag.Nhan_Vien_Duỵet) && (
+            {activeFilter === keyTag.Cho_Xu_Ly && (
               <div
                 className={`px-6 py-4 w-full text-center cursor-pointer text-base font-[550] relative ${
                   isTag === 4 ? "text-indigo-600" : "text-gray-500"

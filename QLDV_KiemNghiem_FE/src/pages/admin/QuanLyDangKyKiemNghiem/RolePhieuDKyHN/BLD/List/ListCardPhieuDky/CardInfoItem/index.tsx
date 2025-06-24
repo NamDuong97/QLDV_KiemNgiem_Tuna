@@ -1,4 +1,4 @@
-import { Calendar, CheckCircle, User } from "react-feather";
+import { Calendar, CheckCircle, MessageSquare, User } from "react-feather";
 import { HiOutlineOfficeBuilding } from "react-icons/hi";
 
 interface Props {
@@ -16,6 +16,7 @@ const CardInfoItem = (props: Props) => {
       <HiOutlineOfficeBuilding className="h-5 w-5 text-gray-400 mr-2" />
     ),
     result: <CheckCircle className="h-5 w-5 text-gray-400 mr-2" />,
+    note: <MessageSquare className="h-5 w-5 text-gray-400 mr-2" />,
   };
 
   return (

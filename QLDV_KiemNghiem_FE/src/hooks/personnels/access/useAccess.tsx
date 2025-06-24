@@ -1,4 +1,4 @@
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import Cookies from "js-cookie";
 import { useContext } from "react";
 import { useStoreNotification } from "../../../configs/stores/useStoreNotification";
@@ -11,6 +11,7 @@ import { APP_ROUTES } from "../../../constants/routers";
 interface Props {
   queryKey?: string;
   onSettled?: (response: any) => void;
+  params?: any;
 }
 
 export const useDangNhapNhanVien = (props: Props) => {
@@ -88,3 +89,15 @@ export const useDangNhapNhanVien = (props: Props) => {
 //     onSettled: onSettled,
 //   });
 // };
+
+export const getInforNhanVien = (props: Props) => {
+  const { queryKey, params } = props;
+  return useQuery({
+    queryKey: [queryKey, params],
+    queryFn: async () => {
+      const response = await accessServices.getInforNhanVien(params);
+      return response?.data;
+    },
+    refetchOnWindowFocus: false,
+  });
+};

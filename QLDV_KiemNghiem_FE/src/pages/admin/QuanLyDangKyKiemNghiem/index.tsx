@@ -7,13 +7,6 @@ import KHTH from "./RolePhieuDKyHN/KHTH";
 import BLD from "./RolePhieuDKyHN/BLD";
 import { Align } from "../../../models/Table";
 import { role } from "../../../configs/parseJwt";
-import ConfirmationModal from "../../../components/ConfirmationModal";
-import { TypeConformation } from "../../../constants/typeConfirmation";
-import { queryClient } from "../../../lib/reactQuery";
-import {
-  useDanhGiaBLD,
-  useDanhGiaNhanVien,
-} from "../../../hooks/personnels/quanLyPhieuDKKM";
 
 const tableHead = [
   {
@@ -64,38 +57,12 @@ const QuanLyPhieuDKyDVHN = () => {
   const [activeFilter, setActiveFilter] = useState(keyTag.Cho_Xu_Ly);
 
   const [openXemChiTiet, setOpenXemChiTiet] = useState(false);
-  const [isOpenConfirmationModal, setIsOpenConfirmationModal] = useState(false);
-  const [isParam, setIsParam] = useState<any>(null);
 
   const handleCloseXemChiTiet = () => {
     setOpenXemChiTiet(false);
     sessionStorage.removeItem("phieu-DKKN-xem-chi-tiet");
   };
 
-  const handleOnSettled = async (response: any) => {
-    await queryClient.refetchQueries({
-      queryKey: ["quanLyPhieuDKKM"],
-    });
-    if (response.ketQua === true) {
-      handleCloseXemChiTiet();
-    }
-  };
-  const { mutate: mutateBLD } = useDanhGiaBLD({
-    queryKey: "useDanhGiaBLD",
-    onSettled: handleOnSettled,
-  });
-
-  const { mutate: mutateNhanVien } = useDanhGiaNhanVien({
-    queryKey: "DanhGiaNhanVienTuChoi",
-    onSettled: handleOnSettled,
-  });
-
-  const onConfirm = () => {
-    if (role === "KHTH") mutateNhanVien(isParam);
-    mutateBLD(isParam);
-  };
-
-  console.log("isparam", isParam);
 
   const handleShowTag = () => {
     switch (role) {
@@ -205,17 +172,6 @@ const QuanLyPhieuDKyDVHN = () => {
         open={openXemChiTiet}
         handleClose={handleCloseXemChiTiet}
         activeFilter={activeFilter}
-      />
-      <ConfirmationModal
-        isOpen={isOpenConfirmationModal}
-        onClose={() => {
-          setIsOpenConfirmationModal(false);
-          setIsParam(null);
-        }}
-        type={TypeConformation.Warning}
-        onConfirm={onConfirm}
-        title="Xác nhận từ chối?"
-        message="Bạn có chắc chắn từ chối không?"
       />
     </motion.div>
   );
