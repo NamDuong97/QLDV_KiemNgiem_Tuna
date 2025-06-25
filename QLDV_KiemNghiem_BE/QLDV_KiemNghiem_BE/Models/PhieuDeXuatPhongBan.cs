@@ -52,10 +52,6 @@ public partial class PhieuDeXuatPhongBan
     [InverseProperty("PhieuDeXuatPhongBans")]
     public virtual Khoa MaKhoaTiepNhanNavigation { get; set; } = null!;
 
-    [ForeignKey("MaPhieuDangKy")]
-    [InverseProperty("PhieuDeXuatPhongBans")]
-    public virtual PhieuDangKy MaPhieuDangKyNavigation { get; set; } = null!;
-
     [ForeignKey("ManvDeXuat")]
     [InverseProperty("PhieuDeXuatPhongBanManvDeXuatNavigations")]
     public virtual NhanVien? ManvDeXuatNavigation { get; set; }

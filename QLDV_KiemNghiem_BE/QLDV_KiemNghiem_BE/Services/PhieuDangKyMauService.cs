@@ -41,11 +41,11 @@ namespace QLDV_KiemNghiem_BE.Services
             result.PhieuDangKyMauHinhAnhs = _mapper.Map<List<PhieuDangKyMauHinhAnhDto>>(PhieuDangKyMauDomain?.PhieuDangKyMauHinhAnhs);
             return result;
         }
-        public async Task<PhieuDangKyMauResponseCancelDto> CancelPhieuDangKyMau(PhieuDangKyMauRequestCancelDto mauDto, string user)
+        public async Task<ResponseModel1<PhieuDangKyMauDto>> CancelPhieuDangKyMau(PhieuDangKyMauRequestCancelDto mauDto, string user)
         {
             if(mauDto == null || mauDto.MaId == null || mauDto.MaId == "")
             {
-                return new PhieuDangKyMauResponseCancelDto
+                return new ResponseModel1<PhieuDangKyMauDto>
                 {
                     KetQua = false,
                     Message = "Thieu du lieu dau vao!"
@@ -56,7 +56,7 @@ namespace QLDV_KiemNghiem_BE.Services
             
             if (checkExist== null)
             {
-                return new PhieuDangKyMauResponseCancelDto
+                return new ResponseModel1<PhieuDangKyMauDto>
                 {
                     KetQua = false,
                     Message = "Mau khong ton tai!"
@@ -66,7 +66,7 @@ namespace QLDV_KiemNghiem_BE.Services
             var checkExistPhieuDangKy = await _repositoryManager.PhieuDangKy.FindPhieuDangKyAsync(checkExist.MaPhieuDangKy);
             if (checkExistPhieuDangKy == null)
             {
-                return new PhieuDangKyMauResponseCancelDto
+                return new ResponseModel1<PhieuDangKyMauDto>
                 {
                     KetQua = false,
                     Message = "Phieu dang ky chua mau nay khong ton tai, vui long kiem tra!"
@@ -83,12 +83,12 @@ namespace QLDV_KiemNghiem_BE.Services
             _repositoryManager.PhieuDangKy.UpdatePhieuDangKyAsync(checkExistPhieuDangKy);
             await _repositoryManager.PhieuDangKyMau.ProcessUpdateStatusObjecRelative(mauDto.MaId, mauDto.TypeCancel);
             await _repositoryManager.SaveChangesAsync();
-        
-            return new PhieuDangKyMauResponseCancelDto
+            var dataReturn = _mapper.Map<PhieuDangKyMauDto>(checkExist);
+            return new ResponseModel1<PhieuDangKyMauDto>
             {
                 KetQua = true,
                 Message = "Huy mau thanh cong!",
-                MaId = mauDto.MaId
+                Data = dataReturn
             };
         }
         public async Task<ResponseModel1<PhieuDangKyMauDto>> CreatePhieuDangKyMauAsync(PhieuDangKyMauDto PhieuDangKyMauDto, string user)

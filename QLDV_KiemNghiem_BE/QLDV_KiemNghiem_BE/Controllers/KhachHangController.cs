@@ -14,6 +14,7 @@ using QLDV_KiemNghiem_BE.Interfaces.Redis;
 using QLDV_KiemNghiem_BE.Services;
 using QLDV_KiemNghiem_BE.DTO.ResponseDto;
 using QLDV_KiemNghiem_BE.DTO.RequestDto;
+using StackExchange.Redis;
 
 namespace QLDV_KiemNghiem_BE.Controllers
 {
@@ -25,15 +26,15 @@ namespace QLDV_KiemNghiem_BE.Controllers
         private readonly ILogger<KhachHangController> _logger;
         private readonly IMapper _mapper;
         private readonly IDistributedCache _cache;
-        private readonly IRedisService _redisService;
+        private readonly IConnectionMultiplexer _redis;
 
-        public KhachHangController(IServiceManager serviceManager, ILogger<KhachHangController> logger, IMapper mapper, IDistributedCache cache, IRedisService redisService)
+        public KhachHangController(IServiceManager serviceManager, ILogger<KhachHangController> logger, IMapper mapper, IDistributedCache cache, IConnectionMultiplexer redis)
         {
             _service = serviceManager;
             _logger = logger;
             _mapper = mapper;
             _cache = cache;
-            _redisService = redisService;
+            _redis = redis;
         }
 
         //[Authorize(Roles = "BLD,KYT,KHTH")]
@@ -41,44 +42,53 @@ namespace QLDV_KiemNghiem_BE.Controllers
         [Route("getKhachHangAll")]
         public async Task<ActionResult> getKhachHangAll(KhachHangParam param)
         {
-            var version = await _cache.GetStringAsync("khachhang:all:version") ?? "v1";
-            var cacheKey = $"khachhang:all:{version}:{JsonConvert.SerializeObject(param)}";
-            var cached = await _cache.GetStringAsync(cacheKey);
-            // Neu co cache
-            if (!string.IsNullOrEmpty(cached))
+            if (_redis.IsConnected)
             {
-                var cachedResult = JsonConvert.DeserializeObject<CachedResponse<IEnumerable<KhachHangReturnDto>>>(cached);
+                var version = await _cache.GetStringAsync("khachhang:all:version") ?? "v1";
+                var cacheKey = $"khachhang:all:{version}:{JsonConvert.SerializeObject(param)}";
+                var cached = await _cache.GetStringAsync(cacheKey);
+                // Neu co cache
+                if (!string.IsNullOrEmpty(cached))
+                {
+                    var cachedResult = JsonConvert.DeserializeObject<CachedResponse<IEnumerable<KhachHangReturnDto>>>(cached);
 
-                // Thêm lại header từ cache
-                foreach (var header in cachedResult?.Headers)
-                { 
-                    Response.Headers[header.Key] = header.Value.ToString();
+                    // Thêm lại header từ cache
+                    foreach (var header in cachedResult?.Headers)
+                    { 
+                        Response.Headers[header.Key] = header.Value.ToString();
+                    }
+                    return Ok(cachedResult.Data);
                 }
-                return Ok(cachedResult.Data);
-            }
-
-            // Nếu không có cache thì lấy dữ liệu từ BD
-            var result = await _service.KhachHang.GetKhachHangsAllAsync(param, false);
-            // Lưu lại cả header và body
-            var headers = new Dictionary<string, string>
-            {
-                { "X-Pagination", System.Text.Json.JsonSerializer.Serialize(result.pagi) }
-            };
-            // Chuẩn bị dữ liệu để lưu vào redis
-            var cacheObj = new CachedResponse<IEnumerable<KhachHangReturnDto>>
-            {
-                Data = result.datas,
-                Headers = headers
-            };
-            // Lưu dữ liệu vào redis
-            await _cache.SetStringAsync(cacheKey,JsonConvert.SerializeObject(cacheObj), new DistributedCacheEntryOptions
-            {
+                // Nếu không có cache thì lấy dữ liệu từ BD
+                var result = await _service.KhachHang.GetKhachHangsAllAsync(param, false);
+                // Lưu lại cả header và body
+                var headers = new Dictionary<string, string>
+                {
+                    { "X-Pagination", System.Text.Json.JsonSerializer.Serialize(result.pagi) }
+                };
+                // Chuẩn bị dữ liệu để lưu vào redis
+                var cacheObj = new CachedResponse<IEnumerable<KhachHangReturnDto>>
+                {
+                    Data = result.datas,
+                    Headers = headers
+                };
+                // Lưu dữ liệu vào redis
+                await _cache.SetStringAsync(cacheKey, JsonConvert.SerializeObject(cacheObj), new DistributedCacheEntryOptions
+                {
                     AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(5)
-            });
+                });
 
-            Response.Headers.Append("X-Pagination", System.Text.Json.JsonSerializer.Serialize(result.pagi));
-            _logger.LogDebug("get all khach hang");
-            return Ok(result.datas);
+                Response.Headers.Append("X-Pagination", System.Text.Json.JsonSerializer.Serialize(result.pagi));
+                _logger.LogDebug("get all khach hang");
+                return Ok(result.datas);
+            }
+            else
+            {
+                var result = await _service.KhachHang.GetKhachHangsAllAsync(param, false);
+                Response.Headers.Append("X-Pagination", System.Text.Json.JsonSerializer.Serialize(result.pagi));
+                _logger.LogDebug("get all khach hang");
+                return Ok(result.datas);
+            }
         }
 
         //[Authorize(Roles = "BLD,KYT,KHTH")]
@@ -86,28 +96,37 @@ namespace QLDV_KiemNghiem_BE.Controllers
         [Route("getKhachHangByID")]
         public async Task<ActionResult> getKhachHangByID(string maKhachHang)
         {
-            // Kiểm tra xem trong cache co lưu chưa, nếu có thì trả về
-            var cacheKey = $"khachhang:{maKhachHang}";
-            var cacheData = await _cache.GetStringAsync(cacheKey);
-            if (!string.IsNullOrEmpty(cacheData))
+            if (_redis.IsConnected)
             {
-                var cached = JsonConvert.DeserializeObject<CachedResponse<KhachHangDto>>(cacheData);
-                 return Ok(cached.Data);
-            }
+                // Kiểm tra xem trong cache co lưu chưa, nếu có thì trả về
+                var cacheKey = $"khachhang:{maKhachHang}";
+                var cacheData = await _cache.GetStringAsync(cacheKey);
+                if (!string.IsNullOrEmpty(cacheData))
+                {
+                    var cached = JsonConvert.DeserializeObject<CachedResponse<KhachHangDto>>(cacheData);
+                    return Ok(cached.Data);
+                }
 
-            // Ngược lại nếu cache chưa có thì tiến hành lưu redis và trả về từ BD
-            var result = await _service.KhachHang.FindKhachHangByNhanVienAsync(maKhachHang);
-            var cacheObj = new CachedResponse<KhachHangDto>
+                // Ngược lại nếu cache chưa có thì tiến hành lưu redis và trả về từ BD
+                var result = await _service.KhachHang.FindKhachHangByNhanVienAsync(maKhachHang);
+                var cacheObj = new CachedResponse<KhachHangDto>
+                {
+                    Data = result
+                };
+                // Lưu dữ liệu vào redis
+                await _cache.SetStringAsync(cacheKey, JsonConvert.SerializeObject(cacheObj), new DistributedCacheEntryOptions
+                {
+                    AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(5)
+                });
+                _logger.LogDebug("lay khach hang can tim: " + maKhachHang);
+                return Ok(result);
+            }
+            else
             {
-                Data = result
-            };
-            // Lưu dữ liệu vào redis
-            await _cache.SetStringAsync(cacheKey, JsonConvert.SerializeObject(cacheObj), new DistributedCacheEntryOptions
-            {
-                AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(5)
-            });
-            _logger.LogDebug("lay khach hang can tim: " + maKhachHang);
-            return Ok(result);
+                var result = await _service.KhachHang.FindKhachHangByNhanVienAsync(maKhachHang);
+                _logger.LogDebug("lay khach hang can tim: " + maKhachHang);
+                return Ok(result);
+            }
         }
 
         [Authorize(Roles = "KH")]
@@ -259,20 +278,23 @@ namespace QLDV_KiemNghiem_BE.Controllers
             ResponseModel1<KhachHangDto> create = await _service.KhachHang.CreateKhachHangAsync(KhachHangDto);
             if (create.KetQua)
             {
-                var cacheKey = $"khachhang:{create?.Data?.MaId}";
-                var cacheObj = new CachedResponse<KhachHangDto>
+                if (_redis.IsConnected)
                 {
-                    Data = create?.Data
-                };
-                // Lưu dữ liệu vào redis khachhang
-                await _cache.SetStringAsync(cacheKey, JsonConvert.SerializeObject(cacheObj), new DistributedCacheEntryOptions
-                {
-                    AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(5)
-                });
-                // Cap nhat version moi cho cache redis khachhang:all
-                await _cache.SetStringAsync("khachhang:all:version", $"v{DateTime.UtcNow.Ticks}");
-                _logger.LogDebug(create.Message);
-                return Ok(create.Data);
+                    var cacheKey = $"khachhang:{create?.Data?.MaId}";
+                    var cacheObj = new CachedResponse<KhachHangDto>
+                    {
+                        Data = create?.Data
+                    };
+                    // Lưu dữ liệu vào redis khachhang
+                    await _cache.SetStringAsync(cacheKey, JsonConvert.SerializeObject(cacheObj), new DistributedCacheEntryOptions
+                    {
+                        AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(5)
+                    });
+                    // Cap nhat version moi cho cache redis khachhang:all
+                    await _cache.SetStringAsync("khachhang:all:version", $"v{DateTime.UtcNow.Ticks}");
+                }
+                _logger.LogDebug(create?.Message);
+                return Ok(create?.Data);
             }
             else
             {
@@ -321,21 +343,23 @@ namespace QLDV_KiemNghiem_BE.Controllers
                 _logger.LogError("Loi validate tham so dau vao");
                 return BadRequest(new { Errors = errors });
             }
-            string nameUser = User.FindFirst(ClaimTypes.Email)?.Value.ToString();
+            string nameUser = User.FindFirst(ClaimTypes.Email)?.Value.ToString() ?? "unknow";
             ResponseModel1<KhachHangDto> update = await _service.KhachHang.UpdateKhachHangAsync(KhachHangDto, nameUser);
             if (update.KetQua)
             {
-                // Xoa cache cu da co tren redis, va cap nhat du lieu moi cho cache khachhang
-                await _cache.RemoveAsync($"khachhang:{update?.Data.MaId}");
-                await _cache.SetStringAsync($"khachhang:{update?.Data.MaId}", JsonConvert.SerializeObject(update.Data), new DistributedCacheEntryOptions
+                if (_redis.IsConnected)
                 {
-                    AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(5)
-                });
-                // Cap nhat version moi cho cache redis khachhang:all
-                await _cache.SetStringAsync("khachhang:all:version", $"v{DateTime.UtcNow.Ticks}");
-
-                _logger.LogDebug(update.Message);
-                return Ok(update.Data);
+                    // Xoa cache cu da co tren redis, va cap nhat du lieu moi cho cache khachhang
+                    await _cache.RemoveAsync($"khachhang:{update?.Data?.MaId}");
+                    await _cache.SetStringAsync($"khachhang:{update?.Data?.MaId}", JsonConvert.SerializeObject(update?.Data), new DistributedCacheEntryOptions
+                    {
+                        AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(5)
+                    });
+                    // Cap nhat version moi cho cache redis khachhang:all
+                    await _cache.SetStringAsync("khachhang:all:version", $"v{DateTime.UtcNow.Ticks}");
+                }
+                _logger.LogDebug(update?.Message);
+                return Ok(update?.Data);
             }
             else
             {
@@ -353,10 +377,12 @@ namespace QLDV_KiemNghiem_BE.Controllers
             bool delete = await _service.KhachHang.DeleteKhachHangAsync(maKhachHang, nameUser);
             if (delete)
             {
-                await _cache.RemoveAsync($"khachhang:{maKhachHang}");
-                // Cap nhat version moi cho cache redis khachhang:all
-                await _cache.SetStringAsync("khachhang:all:version", $"v{DateTime.UtcNow.Ticks}");
-
+                if (_redis.IsConnected)
+                {
+                    await _cache.RemoveAsync($"khachhang:{maKhachHang}");
+                    // Cap nhat version moi cho cache redis khachhang:all
+                    await _cache.SetStringAsync("khachhang:all:version", $"v{DateTime.UtcNow.Ticks}");
+                }
                 _logger.LogDebug("Xoa khach hang thanh cong");
                 return Ok("Xoa khach hang thanh cong");
             }

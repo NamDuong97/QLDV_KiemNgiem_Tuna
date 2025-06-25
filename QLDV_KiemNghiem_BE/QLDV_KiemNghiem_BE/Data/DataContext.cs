@@ -434,10 +434,6 @@ public partial class DataContext : DbContext
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("Fk_PhieuDeXuatPhongBan_Khoa_TiepNhan");
 
-            entity.HasOne(d => d.MaPhieuDangKyNavigation).WithMany(p => p.PhieuDeXuatPhongBans)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("Fk_PhieuDeXuatPhongBan_PhieuDangKy");
-
             entity.HasOne(d => d.ManvDeXuatNavigation).WithMany(p => p.PhieuDeXuatPhongBanManvDeXuatNavigations).HasConstraintName("Fk_PhieuDeXuatPhongBan_NhanVien_DeXuat");
 
             entity.HasOne(d => d.ManvTiepNhanNavigation).WithMany(p => p.PhieuDeXuatPhongBanManvTiepNhanNavigations).HasConstraintName("Fk_PhieuDeXuatPhongBan_NhanVien_TiepNhan");

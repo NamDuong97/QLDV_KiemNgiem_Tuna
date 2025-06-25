@@ -109,9 +109,6 @@ public partial class PhieuDangKy
     [InverseProperty("MaPhieuDangKyNavigation")]
     public virtual ICollection<PhieuDangKyMau> PhieuDangKyMaus { get; set; } = new List<PhieuDangKyMau>();
 
-    [InverseProperty("MaPhieuDangKyNavigation")]
-    public virtual ICollection<PhieuDeXuatPhongBan> PhieuDeXuatPhongBans { get; set; } = new List<PhieuDeXuatPhongBan>();
-
     [ForeignKey("TrangThaiId")]
     [InverseProperty("PhieuDangKies")]
     public virtual TrangThaiPhieuDk? TrangThai { get; set; }
