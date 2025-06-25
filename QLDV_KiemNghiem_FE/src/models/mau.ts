@@ -3,7 +3,7 @@ export interface Anh {
   ten?: string;
   size?: string;
   type?: string;
-  note?: string;
+  ghiChu?: string;
 }
 
 export interface FormMau {
@@ -122,4 +122,5 @@ export interface MauPhanCong {
   donViTinh: string;
   trangThaiPhanCong: string;
   maPhieuDangKy: string;
+  maLoaiMau: string;
 }

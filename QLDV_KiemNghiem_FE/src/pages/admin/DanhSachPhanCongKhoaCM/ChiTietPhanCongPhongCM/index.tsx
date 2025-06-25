@@ -12,7 +12,6 @@ const ChiTietPhanCongPhongCM = () => {
     queryKey: "ChitietPhieuDKKM",
     params: ID,
   });
-  console.log("datađas", data);
 
   return (
     <AnimatePresence mode="wait">

@@ -15,12 +15,12 @@ const Notification: React.FC<NotificationComponentProps> = ({
   useEffect(() => {
     const element = notificationRef.current;
     if (element) {
-      element.style.animation = "slideIn 0.5s ease-out forwards";
+      element.style.animation = "slideIn 1s ease-out forwards";
     }
 
     return () => {
       if (element) {
-        element.style.animation = "slideOut 0.5s ease-in forwards";
+        element.style.animation = "slideOut 1s ease-in forwards";
       }
     };
   }, []);
@@ -28,7 +28,7 @@ const Notification: React.FC<NotificationComponentProps> = ({
   const handleClose = () => {
     const element = notificationRef.current;
     if (element) {
-      element.style.animation = "slideOut 0.5s ease-in forwards";
+      element.style.animation = "slideOut 1s ease-in forwards";
       setTimeout(() => {
         removeNotification(notification.id);
       }, 5000);

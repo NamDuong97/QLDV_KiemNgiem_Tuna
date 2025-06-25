@@ -119,12 +119,14 @@ const RegistrationDetails = (props: Props) => {
                 <Skeleton variant="rounded" width={100} height={20} />
               ) : (
                 <p className="font-medium text-gray-900">
-                  {formatDate(data?.thoiGianGiaoMau)}
+                  {formatDate(data?.ngayTao)}
                 </p>
               )}
             </div>
             <div>
-              <label className="block text-sm/6 text-gray-500">Trạng thái</label>
+              <label className="block text-sm/6 text-gray-500">
+                Trạng thái
+              </label>
               {isLoading ? (
                 <Skeleton variant="rounded" width={100} height={20} />
               ) : (

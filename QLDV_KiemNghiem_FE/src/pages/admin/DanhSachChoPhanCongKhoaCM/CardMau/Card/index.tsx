@@ -6,7 +6,7 @@ export interface CardProps {
   icon: React.ReactNode;
   bgColor: string;
   textColor: string;
-  isLoading: boolean;
+  isLoading?: boolean;
 }
 
 const Card = ({

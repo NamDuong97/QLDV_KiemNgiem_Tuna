@@ -16,9 +16,9 @@ _APIInstance.interceptors.request.use(
   async (config: any) => {
     const token = Cookies.get(EKey.TOKEN);
     const tokenGuest = Cookies.get(EKey.TOKEN_GUEST);
-    const currentUrl = window.location.href;
-
-    const isTunaRoute = currentUrl.startsWith("http://localhost:5175/tuna");
+    const url = new URL(window.location.href);
+    const isTunaRoute =
+      url.pathname === "/tuna" || url.pathname.startsWith("/tuna/");
 
     if (isTunaRoute) {
       if (token) {
@@ -29,7 +29,6 @@ _APIInstance.interceptors.request.use(
         config.headers.Authorization = `Bearer ${tokenGuest}`;
       }
     }
-
     return config;
   },
   (error) => Promise.reject(error)

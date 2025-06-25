@@ -1,9 +1,9 @@
 import { Dialog } from "@mui/material";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { MauPhanCong } from "../../../../../models/mau";
 import yup from "../../../../../configs/yup.custom";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
 // import { queryClient } from "../../../../lib/reactQuery";
 // import { createPhieuPhanCongKhoa } from "../../../../hooks/personnels/phanCongKhoa";
 import { maNhanVien } from "../../../../../configs/parseJwt";
@@ -18,72 +18,96 @@ interface Props {
 }
 interface FormPhanCong {
   ghiChu: {
-    [tenMau: string]: string;
+    [tenMau: string]: {
+      noiDung: string;
+      ngayThucHienKiemNghiem: string;
+    };
   };
   thoiGianGiaoMau: string;
 }
 
 const AssignmentModal = (props: Props) => {
-  const {
-    isOpen,
-    onClose,
-    selectedSamples,
-    departments,
-    // samples,
-    // setSamples,
-    // setSuccessMessage,
-    // setShowSuccessMessage,
-  } = props;
+  const { isOpen, onClose, selectedSamples, departments } = props;
   const [selectedDepartment, setSelectedDepartment] = useState(null);
+  const [timeGiaoMau, setTimeGiaoMau] = useState<any>(null);
 
   // Handle department selection
   const handleDepartmentSelect = (departmentId: any) => {
     setSelectedDepartment(departmentId);
   };
 
-  const shema = yup.object().shape({
-    ghiChu: yup.object(),
-    thoiGianGiaoMau: yup
-      .string()
-      .required("Yêu cầu chọn Thời Gian Giao Mẫu")
-      .test(
-        "Thời gian giao mẫu phải lớn hơn thời điểm hiện tại.",
-        "Thời gian giao mẫu phải lớn hơn thời điểm hiện tại.",
-        (value: any) => {
-          const namHienTai = new Date().getFullYear();
-          const ngayHienTai = new Date().getDate();
-          const thangHienTai = new Date().getMonth() + 1;
-          return value.split("-")[0] >= namHienTai &&
-            value.split("-")[1] >= thangHienTai &&
-            value.split("-")[2] > ngayHienTai
-            ? true
-            : false;
-        }
-      )
-      .test(
-        "Thời gian giao mẫu không được vượt quá 7 ngày",
-        "Thời gian giao mẫu không được vượt quá 7 ngày",
-        (value: any) => {
-          const namHienTai = new Date().getFullYear();
-          const ngayHienTai = new Date().getDate();
-          const thangHienTai = new Date().getMonth() + 1;
-          return value.split("-")[0] >= namHienTai &&
-            value.split("-")[1] >= thangHienTai &&
-            value.split("-")[2] <= ngayHienTai + 7
-            ? true
-            : false;
-        }
-      ),
-  });
+  const sampleList = selectedSamples?.map((sample: any) => sample.tenMau);
+
+  const buildGhiChuSchema = (
+    listTenMau: string[],
+    thoiGianGiaoMau?: string
+  ) => {
+    const shape: Record<string, yup.ObjectSchema<any>> = {};
+    listTenMau?.forEach((tenMau) => {
+      shape[tenMau] = yup.object().shape({
+        noiDung: yup.string().required(`Nhập ghi chú cho ${tenMau}`),
+        ngayThucHienKiemNghiem: yup
+          .string()
+          .required(`Chọn ngày cho ${tenMau}`)
+          .test(
+            "is-date",
+            "Ngày không hợp lệ",
+            (value) => !isNaN(Date.parse(value || ""))
+          )
+          .test(
+            "is-after-giao-mau",
+            "Thời gian thực hiện phải sau thời gian giao mẫu",
+            function (value) {
+              if (!value || !thoiGianGiaoMau) return true;
+              return new Date(value) > new Date(thoiGianGiaoMau);
+            }
+          ),
+      });
+    });
+    return yup.object().shape(shape);
+  };
+  const shema = useMemo(() => {
+    return yup.object().shape({
+      thoiGianGiaoMau: yup
+        .string()
+        .required("Yêu cầu chọn Thời Gian Giao Mẫu")
+        .test(
+          "Thời gian giao mẫu phải lớn hơn thời điểm hiện tại.",
+          "Thời gian giao mẫu phải lớn hơn thời điểm hiện tại.",
+          (value) => {
+            if (!value) return false;
+            const now = new Date();
+            const date = new Date(value);
+            return date > now;
+          }
+        )
+        .test(
+          "Thời gian giao mẫu không được vượt quá 7 ngày",
+          "Thời gian giao mẫu không được vượt quá 7 ngày",
+          (value) => {
+            if (!value) return false;
+            const now = new Date();
+            const date = new Date(value);
+            const diff =
+              (date.getTime() - now.getTime()) / (1000 * 60 * 60 * 24);
+            return diff <= 7;
+          }
+        ),
+      ghiChu: buildGhiChuSchema(sampleList, timeGiaoMau || undefined),
+    });
+  }, [timeGiaoMau, sampleList]);
 
   const {
     reset,
     register,
     handleSubmit,
+    control,
     formState: { errors },
   } = useForm({
     resolver: yupResolver<FormPhanCong>(shema),
   });
+
+  const thoiGianGiaoMau = useWatch({ control, name: "thoiGianGiaoMau" });
 
   // const handleSettled = async () => {
   //   await queryClient.refetchQueries({ queryKey: ["ChitietPhieuDKKM"] });
@@ -105,14 +129,14 @@ const AssignmentModal = (props: Props) => {
     console.log("department", department);
 
     const maus = selectedSamples?.map((sample: any) => ({
-      tenMau: sample.tenMau,
-      ghiChu: data.ghiChu?.[sample.tenMau] || "",
+      maPdkMau: sample.maId,
+      ghiChu: data.ghiChu?.[sample.tenMau]?.noiDung || "",
+      ngayThucHienKiemNghiem:
+        data.ghiChu?.[sample.tenMau]?.ngayThucHienKiemNghiem || "",
     }));
     const phanCong = {
-      tenKH: "",
-      maKhoa: selectedDepartment,
+      maKhoaTiepNhan: selectedDepartment,
       maNVDeXuat: maNhanVien,
-      maNVTiepNhan: "",
       thoiGianGiaoMau: data.thoiGianGiaoMau,
       maus,
     };
@@ -151,6 +175,12 @@ const AssignmentModal = (props: Props) => {
     });
   }, []);
 
+  useEffect(() => {
+    setTimeGiaoMau(thoiGianGiaoMau);
+  }, [thoiGianGiaoMau]);
+  console.log("error", errors);
+  console.log("selectedSamples", selectedSamples);
+
   return (
     <Dialog open={isOpen} onClose={onClose} maxWidth="xl">
       <form
@@ -183,33 +213,8 @@ const AssignmentModal = (props: Props) => {
         </div>
 
         {/* Modal content */}
-        <div className="flex-grow overflow-y-auto p-6">
-          <div className="mb-6">
-            <h4 className="text-sm font-medium text-gray-700 mb-2">
-              Đã chọn {selectedSamples?.length} mẫu
-            </h4>
-            <div className="bg-gray-50 p-3 rounded-lg">
-              <ul className="list-disc pl-5 space-y-1">
-                {selectedSamples?.map((sample: any) => (
-                  <li key={sample.maId} className="text-sm text-gray-600">
-                    <p>
-                      {sample.tenMau}
-                      <span className="text-gray-400">({sample.soLo})</span>
-                    </p>
-                    <div>
-                      <textarea
-                        placeholder="Ghi chú..."
-                        {...register(`ghiChu.${sample.tenMau}` as const)}
-                        className="border border-gray-200 p-2 rounded w-full max-h-20 min-h-20 focus-within:outline-1 focus-within:border focus-within:!border-blue-500"
-                      />
-                    </div>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </div>
-
-          <div className="mb-4 flex space-x-2 items-center">
+        <div className="flex-grow overflow-y-auto p-6 space-y-6">
+          <div className="flex space-x-2 items-center">
             <label className="text-sm font-medium text-gray-700">
               Chọn thời gian giao mẫu *
             </label>
@@ -218,11 +223,70 @@ const AssignmentModal = (props: Props) => {
               {...register("thoiGianGiaoMau")}
               className="cursor-pointer py-1 px-4 border border-gray-300 rounded"
             />
-            {
-              errors.thoiGianGiaoMau?.message && <p className="text-xs/4 font-medium text-red-600">{errors.thoiGianGiaoMau?.message}</p>
-            }
+            {errors.thoiGianGiaoMau?.message && (
+              <p className="text-xs/4 font-medium text-red-600">
+                {errors.thoiGianGiaoMau?.message}
+              </p>
+            )}
           </div>
+          <div>
+            <h4 className="text-sm font-medium text-gray-700 mb-2">
+              Đã chọn {selectedSamples?.length} mẫu
+            </h4>
 
+            <ul className="space-y-4">
+              {selectedSamples?.map((sample: any) => (
+                <li
+                  key={sample.maId}
+                  className="text-sm text-gray-600 bg-blue-50 p-3 rounded-lg"
+                >
+                  <p className="text-gray-700">
+                    {sample.tenMau}
+                    <span className="text-gray-400">({sample.soLo})</span>
+                  </p>
+                  <div>
+                    <div className="mb-4">
+                      <textarea
+                        placeholder="Ghi chú..."
+                        {...register(
+                          `ghiChu.${sample.tenMau}.noiDung` as const
+                        )}
+                        className="border border-gray-200 p-2 rounded w-full max-h-20 min-h-20 focus-within:outline-1 focus-within:border focus-within:!border-blue-500"
+                      />
+                      {errors?.ghiChu?.[sample.tenMau]?.noiDung && (
+                        <p className="text-xs/4 font-medium text-red-600 mt-1">
+                          {errors.ghiChu[sample.tenMau]?.noiDung?.message}
+                        </p>
+                      )}
+                    </div>
+                    <div className="mb-4">
+                      <div className="flex space-x-2 items-center">
+                        <label className="text-sm font-medium text-gray-700">
+                          Chọn thời gian thực hiện *
+                        </label>
+                        <input
+                          type="date"
+                          {...register(
+                            `ghiChu.${sample.tenMau}.ngayThucHienKiemNghiem`
+                          )}
+                          className="cursor-pointer py-1 px-4 border border-gray-300 rounded"
+                        />
+                      </div>
+                      {errors?.ghiChu?.[sample.tenMau]
+                        ?.ngayThucHienKiemNghiem && (
+                        <p className="text-xs/4 font-medium text-red-600 mt-1">
+                          {
+                            errors.ghiChu[sample.tenMau]?.ngayThucHienKiemNghiem
+                              ?.message
+                          }
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </div>
           <div>
             <h4 className="text-sm font-medium text-gray-700 mb-4">
               Chọn phòng ban *

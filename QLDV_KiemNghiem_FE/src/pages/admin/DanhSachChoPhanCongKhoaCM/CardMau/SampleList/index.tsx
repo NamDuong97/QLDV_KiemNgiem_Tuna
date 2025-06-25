@@ -3,14 +3,16 @@ import SampleCard from "../SampleCard";
 import AssignmentModal from "../AssignmentModal";
 import InputSearch2 from "../../../../../components/InputSearch2";
 import { MauPhanCong } from "../../../../../models/mau";
-import { Pagination } from "@mui/material";
+import { Pagination, Skeleton } from "@mui/material";
 import ChiTietPhieuDKyDVKN from "../../ChiTietPhieuDKyDVKN";
 import removeVietnameseTones from "../../../../../configs/removeVietnameseTones";
+import { getAllDanhSachMau } from "../../../../../hooks/personnels/phanCongKhoa";
+import SelectItemLoaiMau from "./SelectItemLoaiMau";
+import { FileMinus } from "react-feather";
+import AssignmentDeleteModal from "../AssignmentDeleteModal";
 
 interface Props {
   departments: any;
-  data: any;
-  isLoading: boolean;
 }
 
 function convertToMauPhanCong(data: any): MauPhanCong {
@@ -27,38 +29,57 @@ function convertToMauPhanCong(data: any): MauPhanCong {
     donViTinh: data.donViTinh,
     trangThaiPhanCong: data.trangThaiPhanCong,
     maPhieuDangKy: data.maPhieuDangKy,
+    maLoaiMau: data.maLoaiMau,
   };
 }
 
 const SampleList = (props: Props) => {
-  const { departments, data, isLoading } = props;
+  const { departments } = props;
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage] = useState(12);
 
+  const [selectLoaiMau, setSelectLoaiMau] = useState("");
+  const params: any = {
+    pageNumber: currentPage,
+    pageSize: itemsPerPage,
+    trangThaiPhanCong: 1,
+  };
+
+  if (selectLoaiMau !== "") {
+    params.maLoaiMau = selectLoaiMau;
+  }
+  const { data, isLoading } = getAllDanhSachMau({
+    queryKey: "AllDanhSachMau",
+    params: params,
+  });
+  const pagination = data?.pagination;
   const [samples, setSamples] = useState<MauPhanCong[]>(
-    data?.maus.map(convertToMauPhanCong) || []
+    data?.data?.map(convertToMauPhanCong) || []
   );
+
   const [selectedSamples, setSelectedSamples] = useState<any[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
 
   const [isAssignModalOpen, setIsAssignModalOpen] = useState(false);
+  const [isAssignmentDeleteModalOpen, setIsAssignmentDeleteModalOpen] =
+    useState(false);
   const filteredSamples: any = samples?.filter((sample: any) => {
     const query = removeVietnameseTones(searchQuery.toLowerCase());
-    const matchesSearch =
-      removeVietnameseTones(sample.maId.toLowerCase()).includes(query) ||
-      removeVietnameseTones(sample.tenMau.toLowerCase()).includes(query);
+    const matchesSearch = removeVietnameseTones(
+      sample.tenMau.toLowerCase()
+    ).includes(query);
     return matchesSearch;
   });
 
-  const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage] = useState(12);
-  const indexOfLastItem = currentPage * itemsPerPage;
-  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentItems = filteredSamples?.slice(
-    indexOfFirstItem,
-    indexOfLastItem
-  );
-  const totalPages = Math.ceil(
-    filteredSamples && filteredSamples?.length / itemsPerPage
-  );
+  // const indexOfLastItem = currentPage * itemsPerPage;
+  // const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  // const currentItems = filteredSamples?.slice(
+  //   indexOfFirstItem,
+  //   indexOfLastItem
+  // );
+  // const totalPages = Math.ceil(
+  //   filteredSamples && filteredSamples?.length / itemsPerPage
+  // );
   const [openXemChiTiet, setOpenXemChiTiet] = useState(false);
 
   const handleCloseXemChiTiet = () => {
@@ -98,14 +119,14 @@ const SampleList = (props: Props) => {
   // Handle assignment submission
 
   useEffect(() => {
-    setSamples(data?.maus.map(convertToMauPhanCong));
+    setSamples(data?.data?.map(convertToMauPhanCong));
   }, [data]);
 
   return (
     <div>
       <div className="bg-white shadow-sm rounded-lg overflow-hidden">
         <div className="px-6 py-4 flex justify-between border-b border-gray-200">
-          <div className="flex items-center justify-between w-3xl">
+          <div className="flex items-center justify-between w-lg">
             <InputSearch2
               placeholder="Tìm kiếm mẫu..."
               value={searchQuery}
@@ -113,10 +134,22 @@ const SampleList = (props: Props) => {
             />
           </div>
           <div className="flex space-x-2">
+            <SelectItemLoaiMau
+              title="loại mẫu"
+              setItem={setSelectLoaiMau}
+              item={selectLoaiMau}
+            />
+            <button
+              onClick={() => setIsAssignmentDeleteModalOpen(true)}
+              className="inline-flex gap-1 items-center justify-center cursor-pointer px-3 py-1.5 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+            >
+              <FileMinus className="w-4 h-4" />
+              Hủy mẫu
+            </button>
             {selectedSamples.length > 0 && (
               <button
                 onClick={() => setIsAssignModalOpen(true)}
-                className="inline-flex items-center px-3 py-1.5 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                className="inline-flex cursor-pointer items-center px-3 py-1.5 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -190,43 +223,55 @@ const SampleList = (props: Props) => {
                 Không tìm thấy mẫu nào phù hợp
               </p>
             </div>
-          ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {currentItems
-                ?.filter((item: any) => !item.trangThaiPhanCong)
-                ?.map((sample: any) => (
-                  <SampleCard
-                    key={sample.maId}
-                    sample={sample}
-                    isSelected={selectedSamples.includes(sample.maId)}
-                    onSelect={toggleSampleSelection}
-                    isLoading={isLoading}
-                    handleOpenChiTiet={() => setOpenXemChiTiet(true)}
-                  />
-                ))}
+          ) : isLoading ? (
+            <div className="grid grid-cols-3 gap-4">
+              <Skeleton variant="rounded" width={468} height={252} />
+              <Skeleton variant="rounded" width={468} height={252} />
+              <Skeleton variant="rounded" width={468} height={252} />
             </div>
+          ) : (
+            <>
+              <div className="grid grid-cols-3 gap-4">
+                {filteredSamples
+                  ?.filter(
+                    (item: any) =>
+                      item.trangThaiPhanCong === 1 ||
+                      item.trangThaiPhanCong === 3
+                  )
+                  ?.map((sample: any) => (
+                    <SampleCard
+                      key={sample.maId}
+                      sample={sample}
+                      isSelected={selectedSamples.includes(sample.maId)}
+                      onSelect={toggleSampleSelection}
+                      isLoading={isLoading}
+                      handleOpenChiTiet={() => setOpenXemChiTiet(true)}
+                    />
+                  ))}
+              </div>
+              <div className="p-4 flex justify-center">
+                <Pagination
+                  count={pagination?.TotalPages}
+                  page={currentPage}
+                  onChange={handlePageChange}
+                  variant="outlined"
+                  shape="rounded"
+                  color="primary"
+                  sx={{
+                    '[aria-label="Go to next page"],[aria-label="Go to previous page"]':
+                      {
+                        backgroundColor: "#1976d21f",
+                        border: "1px solid #1976d280",
+                        color: "#1976d2",
+                      },
+                    ".MuiPagination-ul": {
+                      justifyContent: "center",
+                    },
+                  }}
+                />
+              </div>
+            </>
           )}
-          <div className="p-4 flex justify-center">
-            <Pagination
-              count={totalPages}
-              page={currentPage}
-              onChange={handlePageChange}
-              variant="outlined"
-              shape="rounded"
-              color="primary"
-              sx={{
-                '[aria-label="Go to next page"],[aria-label="Go to previous page"]':
-                  {
-                    backgroundColor: "#1976d21f",
-                    border: "1px solid #1976d280",
-                    color: "#1976d2",
-                  },
-                ".MuiPagination-ul": {
-                  justifyContent: "center",
-                },
-              }}
-            />
-          </div>
         </div>
       </div>
 
@@ -239,6 +284,11 @@ const SampleList = (props: Props) => {
         departments={departments}
         samples={samples}
         setSamples={setSamples}
+      />
+      <AssignmentDeleteModal
+        isOpen={isAssignmentDeleteModalOpen}
+        onClose={() => setIsAssignmentDeleteModalOpen(false)}
+        data={data?.data}
       />
       <ChiTietPhieuDKyDVKN
         open={openXemChiTiet}

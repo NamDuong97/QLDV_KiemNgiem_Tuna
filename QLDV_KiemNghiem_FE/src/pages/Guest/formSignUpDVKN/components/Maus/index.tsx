@@ -69,9 +69,7 @@ const Maus = (props: MausProps) => {
 
   const totalPages = Math.ceil(tableBody && tableBody.length / itemsPerPage);
 
-  const handlePageChange = (event: any, value: number) => {
-    console.log("event", event);
-
+  const handlePageChange = (_: any, value: number) => {
     setCurrentPage(value);
   };
 

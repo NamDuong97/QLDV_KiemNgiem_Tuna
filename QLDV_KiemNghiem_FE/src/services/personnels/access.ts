@@ -3,14 +3,10 @@ import { API } from "../../constants/commons";
 
 export default class accessServices {
   static async loginPersonnel(params: any) {
-    try {
-      const response = await _APIInstance.post(API.ADMIN.DANG_NHAP, params, {
-        headers: { "Content-Type": "application/json" },
-      });
-      return response;
-    } catch (err: any) {
-      return err;
-    }
+    const response = await _APIInstance.post(API.ADMIN.DANG_NHAP, params, {
+      headers: { "Content-Type": "application/json" },
+    });
+    return response;
   }
   static async getInforNhanVien(params: any) {
     try {

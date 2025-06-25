@@ -53,7 +53,9 @@ export const getAllDanhSachMau = (props: Props) => {
     queryKey: [queryKey, params],
     queryFn: async () => {
       const response = await phanCongKhoaServices.getAllDanhSachMau(params);
-      return response?.data;
+      const paginationRaw = response.headers["x-pagination"];
+      const pagination = paginationRaw ? JSON.parse(paginationRaw) : null;
+      return { data: response?.data, pagination };
     },
     refetchOnWindowFocus: false,
     staleTime: Infinity,

@@ -20,7 +20,7 @@ const RedirectPersonnel = ({
   const location = useLocation();
   const guard = routeGuards[location.pathname];
   const { isLoginPersonnel, isLoadingAuth } = usePersonnel();
-
+  
   const passedSessionGuard = guard
     ? !!sessionStorage.getItem(guard.sessionKey)
     : true;

@@ -2,8 +2,10 @@ import { Outlet } from "react-router";
 import SidebarPersonnal from "../../components/SidebarPersonnal";
 import HeaderPersonnal from "../../components/HeaderPersonnal";
 import ThemeRegistry from "../../configs/ThemeRegistry";
+import ToastNotification from "../../configs/stores/Notification";
 
 export const MainLayout = () => {
+  ToastNotification();
   return (
     <ThemeRegistry>
       <div className="flex h-screen bg-gray-50">

@@ -8,10 +8,10 @@ import { StoreProvider } from "./contexts/storeProvider";
 import { SignalRProvider } from "./contexts/SignalRProvider";
 import { useLocation } from "react-router";
 import { NotificationProvider } from "./contexts/NotificationContext";
+import NotificationContainer from "./components/NotificationComponent/NotificationContainer";
 
 function App() {
   const isAdmin = useLocation().pathname.startsWith("/tuna");
-
   return (
     <QueryClientProvider client={queryClient}>
       <NotificationProvider>
@@ -28,6 +28,7 @@ function App() {
             </StoreProvider>
           </SignalRProvider>
         )}
+        <NotificationContainer />
         <HandleSnackbar />
       </NotificationProvider>
     </QueryClientProvider>

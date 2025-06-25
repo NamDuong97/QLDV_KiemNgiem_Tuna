@@ -95,5 +95,4 @@ const ToastNotification = () => {
     }
   }, [connection]);
 };
-
 export default ToastNotification;

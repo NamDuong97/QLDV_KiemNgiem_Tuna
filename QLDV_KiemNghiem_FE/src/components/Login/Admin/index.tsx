@@ -1,9 +1,7 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useEffect, useMemo } from "react";
 import { useForm } from "react-hook-form";
-import { useNavigate } from "react-router";
 import yup from "../../../configs/yup.custom";
-import { APP_ROUTES } from "../../../constants/routers";
 import { image } from "../../../constants/image";
 import { useDangNhapNhanVien } from "../../../hooks/personnels/access/useAccess";
 import { queryClient } from "../../../lib/reactQuery";

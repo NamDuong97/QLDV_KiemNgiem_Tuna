@@ -1,14 +1,14 @@
-import { Skeleton } from "@mui/material";
 import {
   useGetLoaiDichVuAll,
   useGetTieuChuanAll,
 } from "../../../../../hooks/customers/usePhieuDKyDVKN";
+import { renderTrangThaiMau } from "../../../../../configs/configAll";
+import { queryLoaiMauByID } from "../../../../../hooks/personnels/queryMau";
 
 const SampleCard = ({
   sample,
   isSelected,
   onSelect,
-  isLoading,
   handleOpenChiTiet,
 }: any) => {
   const { data: dataTC } = useGetTieuChuanAll({
@@ -17,6 +17,11 @@ const SampleCard = ({
   const { data: dataLDV } = useGetLoaiDichVuAll({
     queryKey: "LoaiDichVuAll",
   });
+  const { data: dataLoaiMau } = queryLoaiMauByID({
+    queryKey: "LoaiMauByID",
+    params: sample.maLoaiMau,
+  });
+
   const dataTieuChuan: any = dataTC;
   const dataLoaiDV: any = dataLDV;
 
@@ -34,7 +39,6 @@ const SampleCard = ({
     sessionStorage.setItem("phieu-xem-chi-tiet", JSON.stringify(id));
     handleOpenChiTiet();
   };
-  console.log("sample", sample);
 
   return (
     <div
@@ -44,19 +48,10 @@ const SampleCard = ({
     >
       <div className="p-4">
         <div className="flex justify-between items-start mb-3">
-          {isLoading ? (
-            <div>
-              <Skeleton variant="text" width={200} height={20} />
-              <Skeleton variant="text" width={60} height={20} />
-            </div>
-          ) : (
-            <div>
-              <h3 className="font-medium text-gray-900 mb-1">
-                {sample.tenMau}
-              </h3>
-              <p className="text-sm text-gray-500">{sample.soLo}</p>
-            </div>
-          )}
+          <div>
+            <h3 className="font-medium text-gray-900 mb-1">{sample.tenMau}</h3>
+            <p className="text-sm text-gray-500">{sample.soLo}</p>
+          </div>
 
           <input
             type="checkbox"
@@ -67,61 +62,36 @@ const SampleCard = ({
           />
         </div>
 
-        {isLoading ? (
-          <div className="text-sm text-gray-600 mb-3 space-y-2">
-            <Skeleton variant="text" width={123} height={20} />
-            <Skeleton variant="text" width={200} height={20} />
-          </div>
-        ) : (
-          <div className="text-sm text-gray-600 mb-3 space-y-2">
-            <p>
-              {`Tiêu Chuẩn:
+        <div className="text-sm text-gray-600 mb-3 space-y-2">
+          <p>
+            {`Tiêu Chuẩn:
               ${
                 dataTieuChuan?.find(
                   (item: any) => item.maId === sample?.tenTieuChuan
-                ).tenTieuChuan
+                )?.tenTieuChuan
               }`}
-            </p>
-            <p>
-              {`Dịch vụ:
+          </p>
+          <p>
+            {`Dịch vụ:
               ${
                 dataLoaiDV?.find(
                   (item: any) =>
                     sample?.tenDichVu && item.maLoaiDv === sample?.tenDichVu
-                ).tenDichVu
+                )?.tenDichVu
               }`}
-            </p>
-          </div>
-        )}
-
-        {isLoading ? (
-          <div className="text-sm text-gray-600 mb-3 flex justify-between items-center">
-            <Skeleton variant="text" width={123} height={20} />
-            <Skeleton variant="text" width={200} height={20} />
-          </div>
-        ) : (
-          <div className="text-sm text-gray-600 mb-3 flex justify-between items-center">
-            <p>Số lượng: {`${sample.soLuong} ${sample.donViTinh}`}</p>
-            <p>hạn sử dụng: {formatDate(sample.hanSuDung)}</p>
-          </div>
-        )}
-
-        {isLoading ? (
-          <div className="text-sm text-gray-600 mb-3 flex justify-between items-center">
-            <Skeleton variant="text" width={200} height={20} />
-            <Skeleton variant="text" width={100} height={20} />
-          </div>
-        ) : (
-          <div className="text-sm text-gray-600 mb-3 flex justify-between items-center">
-            <p>Ngày sản xuất: {formatDate(sample.ngaySanXuat)}</p>
-          </div>
-        )}
-        <div className="text-sm text-gray-600 mb-3 flex justify-between items-center">
-          <p
-            className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800`}
-          >
-            Chờ phân công
           </p>
+        </div>
+
+        <div className="text-sm text-gray-600 mb-3 flex justify-between items-center">
+          <p>Số lượng: {`${sample.soLuong} ${sample.donViTinh}`}</p>
+          <p>hạn sử dụng: {formatDate(sample.hanSuDung)}</p>
+        </div>
+        <div className="text-sm text-gray-600 mb-3 flex justify-between items-center">
+          <p>Ngày sản xuất: {formatDate(sample.ngaySanXuat)}</p>
+          <p>Loại mẫu: {dataLoaiMau?.tenLoaiMau}</p>
+        </div>
+        <div className="text-sm text-gray-600 mb-3 flex justify-between items-center">
+          {renderTrangThaiMau(sample.trangThaiPhanCong)}
           <p
             onClick={() => handleXemChiTiet(sample.maPhieuDangKy)}
             className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-sm font-medium hover:underline text-blue-600`}

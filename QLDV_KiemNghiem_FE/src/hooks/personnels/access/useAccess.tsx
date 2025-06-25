@@ -24,6 +24,7 @@ export const useDangNhapNhanVien = (props: Props) => {
     mutationKey: [queryKey],
     mutationFn: async (params: any) => {
       const response = await accessServices.loginPersonnel(params);
+
       return response;
     },
     onSuccess: (res: any) => {
@@ -35,30 +36,31 @@ export const useDangNhapNhanVien = (props: Props) => {
           status: status,
         });
         return;
-      } else {
-        window.location.href = APP_ROUTES.TUNA_ADMIN.DASHBOARD.to;
-        showNotification({ message: "Đăng nhập thành công", status: 200 });
-        const { token, refreshToken, maId } = res.data;
-        Cookies.set(EKey.TOKEN, token, {
-          expires: 2,
-          sameSite: "Strict",
-          secure: isProd(),
-        });
-        Cookies.set(EKey.REFRESH_TOKEN, refreshToken, {
-          expires: 2,
-          sameSite: "Strict",
-          secure: isProd(),
-        });
-        Cookies.set(EKey.ID, maId, {
-          expires: 2,
-          sameSite: "Strict",
-          secure: isProd(),
-        });
-        setIsMaID(maId);
       }
+      const { token, refreshToken, maId } = res.data;
+      Cookies.set(EKey.TOKEN, token, {
+        expires: 2,
+        sameSite: "Strict",
+        secure: isProd(),
+      });
+      Cookies.set(EKey.REFRESH_TOKEN, refreshToken, {
+        expires: 2,
+        sameSite: "Strict",
+        secure: isProd(),
+      });
+      Cookies.set(EKey.ID, maId, {
+        expires: 2,
+        sameSite: "Strict",
+        secure: isProd(),
+      });
+      setIsMaID(maId);
+      showNotification({ message: "Đăng nhập thành công", status: 200 });
+      window.location.href = APP_ROUTES.TUNA_ADMIN.DASHBOARD.to;
     },
-    onError: (errors: any) => {
-      return errors;
+    onError: (err: any) => {
+      const msg =
+        err?.response?.data?.message || "Đăng nhập thất bại. Vui lòng thử lại.";
+      showNotification({ message: msg, status: err?.response?.status || 500 });
     },
     onSettled: onSettled,
   });

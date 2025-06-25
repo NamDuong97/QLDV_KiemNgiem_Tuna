@@ -2,22 +2,12 @@ import { Box } from "@mui/material";
 import Tables from "./Table";
 import { Dispatch, useCallback, useEffect, useState } from "react";
 import { useDropzone } from "react-dropzone";
-import { Align } from "../../../../../../../../../models/Table";
 
 interface Props {
   errorsMessage?: any;
   setListImage: Dispatch<any>;
   listImage: any;
 }
-
-const tableHead = [
-  {
-    id: "image",
-    sort: false,
-    label: "Ảnh",
-    align: Align.Center,
-  },
-];
 
 const ListImage = (props: Props) => {
   const { errorsMessage, setListImage, listImage } = props;
@@ -47,6 +37,7 @@ const ListImage = (props: Props) => {
               lastModified: file.lastModified,
               base64: imgData,
               type: file.type,
+              ghiChu: "",
             };
             setListImage((prev: any[]) => [...prev, newImage]);
             setErrorIsTrungLap(false);
@@ -60,6 +51,13 @@ const ListImage = (props: Props) => {
     [listImage]
   );
 
+  const handleChangeNote = (name: string, noteValue: string) => {
+    const updated = listImage.map((item: any) =>
+      item.ten === name ? { ...item, ghiChu: noteValue } : item
+    );
+    setListImage(updated);
+  };
+
   const { getRootProps, getInputProps } = useDropzone({ onDrop });
 
   const handeleRemoveImage = () => {
@@ -71,7 +69,8 @@ const ListImage = (props: Props) => {
           subitem.ten === item.ten &&
           subitem.size === item.size &&
           subitem.lastModified === item.lastModified &&
-          subitem.type=== item.type,
+          subitem.type === item.type &&
+          subitem.ghiChu === item.ghiChu
       );
     });
     setListImage(updatedImages);
@@ -108,11 +107,11 @@ const ListImage = (props: Props) => {
       </Box>
 
       <Tables
-        tableHead={tableHead}
         setListImage={setListImage}
         setSelectedRow={setSelectedRow}
         selectedRow={selectedRow}
         listImage={listImage}
+        handleChangeNote={handleChangeNote}
       />
       {listImage?.length >= 5 && (
         <p className="text-[#af1c10] text-lg/6">

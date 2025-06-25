@@ -92,7 +92,7 @@ const FormGhiChuDuyet = (props: Props) => {
       action: true,
     };
     if (role === "KHTH") mutateNhanVien(params);
-    mutateBLD(params);
+    else mutateBLD(params);
   };
   useEffect(() => {
     reset({

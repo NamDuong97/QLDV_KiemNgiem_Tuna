@@ -101,7 +101,7 @@ const Maus = (props: MausProps) => {
                 {
                   dataTieuChuan?.find(
                     (item: any) => item.maId === currentItems?.maTieuChuan
-                  ).tenTieuChuan
+                  )?.tenTieuChuan
                 }
               </p>
             </div>
@@ -112,7 +112,7 @@ const Maus = (props: MausProps) => {
                 {
                   dataLoaiDV?.find(
                     (item: any) => item.maLoaiDv === currentItems?.loaiDv
-                  ).tenDichVu
+                  )?.tenDichVu
                 }
               </p>
             </div>

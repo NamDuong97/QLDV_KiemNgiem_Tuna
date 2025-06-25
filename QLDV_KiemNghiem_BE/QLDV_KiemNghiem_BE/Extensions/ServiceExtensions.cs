@@ -119,7 +119,8 @@ namespace QLDV_KiemNghiem_BE.Extensions
                     policy.WithOrigins("http://localhost:5175")
                             .AllowAnyHeader()
                             .AllowAnyMethod()
-                            .AllowCredentials(); // cho phép hub realtime kết nối
+                            .AllowCredentials() // cho phép hub realtime kết nối
+                            .WithExposedHeaders("X-Pagination"); // Cho phép truy cập header này từ trình duyệt
                 });
             });
         }

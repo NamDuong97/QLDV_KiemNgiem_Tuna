@@ -1,15 +1,5 @@
-import {
-  Box,
-  Paper,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-} from "@mui/material";
+import { Box } from "@mui/material";
 import { Dispatch, SetStateAction } from "react";
-import { Align, TableHeader } from "../../../../../../../../models/Table";
 
 interface TableProps {
   setListImage: Dispatch<SetStateAction<any>>;
@@ -35,18 +25,6 @@ const Tables = (props: TableProps) => {
     setListImage(tempCheckbox);
     setSelectedRow(selectedRow === name ? null : name);
   };
-
-  const handleAlign = (align: string) => {
-    switch (align) {
-      case Align.Center:
-        return "justify-center";
-      case Align.Left:
-        return "justify-start";
-      case Align.Right:
-        return "justify-end";
-    }
-  };
-  console.log("listImage", listImage);
 
   return (
     <Box className="space-y-4">
@@ -86,8 +64,10 @@ const Tables = (props: TableProps) => {
           </Box>
         ))
       ) : (
-        <Box className={`flex items-center justify-center`}>
-          <p className="text-lg/4 font-medium">Không có Ảnh</p>
+        <Box
+          className={`flex items-center justify-center border border-solid border-gray-300 rounded-md h-[120px]`}
+        >
+          <p className="text-lg/4 font-medium text-gray-500">Không có Ảnh</p>
         </Box>
       )}
     </Box>

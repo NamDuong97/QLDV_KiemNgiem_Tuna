@@ -30,6 +30,9 @@ export const API = {
     },
     MAUS: {
       GET_MAU_ALL: "/api/PhieuDangKyMau/getPhieuDangKyMauAll",
+      GET_LOAI_MAU_ALL: "/api/LoaiMau/getLoaiMauAll",
+      GET_LOAI_MAU_BY_ID: "/api/LoaiMau/getLoaiMau",
+      HUY_MAU: "/api/PhieuDangKyMau/cancelPhieuDangKyMau",
     },
   },
   CUSTOMER: {

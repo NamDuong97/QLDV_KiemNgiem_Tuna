@@ -74,6 +74,7 @@ namespace QLDV_KiemNghiem_BE.Services
 
             checkExist.TrangThai = false;
             checkExist.TrangThaiPhanCong = mauDto.TypeCancel == 3 ? 3 : 4;
+            checkExist.LyDoHuyMau = mauDto.Message;
             checkExistPhieuDangKy.NguoiSua = user;
             checkExistPhieuDangKy.NgaySua = DateTime.Now;
             _repositoryManager.PhieuDangKyMau.UpdatePhieuDangKyMauAsync(checkExist);
