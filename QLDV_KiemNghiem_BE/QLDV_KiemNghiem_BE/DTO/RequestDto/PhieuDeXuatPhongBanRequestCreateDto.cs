@@ -6,12 +6,6 @@ namespace QLDV_KiemNghiem_BE.DTO.RequestDto
 {
     public class PhieuDeXuatPhongBanRequestCreateDto
     {
-        [StringLength(50, ErrorMessage = "Mã phiếu đăng ký không được vượt quá 50 ký tự.")]
-        public string MaPhieuDangKy { get; set; } = null!;
-
-        [StringLength(100, ErrorMessage = "Tên khách hàng không được vượt quá 100 ký tự.")]
-        public string? TenKhachHang { get; set; }
-
         [Required(ErrorMessage = "Mã khoa tiếp nhận là bắt buộc.")]
         [StringLength(50, ErrorMessage = "Mã khoa tiếp nhận không được vượt quá 50 ký tự.")]
         public string MaKhoaTiepNhan { get; set; } = null!;
