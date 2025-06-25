@@ -18,12 +18,6 @@ public partial class PhieuDeXuatPhongBan
     public string? MaPhieuDeXuat { get; set; }
 
     [StringLength(50)]
-    public string MaPhieuDangKy { get; set; } = null!;
-
-    [StringLength(200)]
-    public string? TenKhachHang { get; set; }
-
-    [StringLength(50)]
     public string MaKhoaTiepNhan { get; set; } = null!;
 
     [StringLength(50)]

@@ -58,8 +58,6 @@ namespace QLDV_KiemNghiem_BE.Services
                 MaPhieuDeXuat = "PDXPB_" + PublicFunction.getTimeSystem(),
                 NgayTao = DateTime.Now,
                 NguoiTao = user,
-                MaPhieuDangKy = PhieuDeXuatPhongBanDto.MaPhieuDangKy,
-                TenKhachHang = PhieuDeXuatPhongBanDto.TenKhachHang,
                 MaKhoaTiepNhan = PhieuDeXuatPhongBanDto.MaKhoaTiepNhan,
                 ManvDeXuat = PhieuDeXuatPhongBanDto.ManvDeXuat,
                 ThoiGianGiaoMau = PhieuDeXuatPhongBanDto.ThoiGianGiaoMau,
@@ -137,7 +135,6 @@ namespace QLDV_KiemNghiem_BE.Services
             }
 
             PhieuDeXuatPhongBanCheck.MaPhieuDeXuat = !string.IsNullOrEmpty(PhieuDeXuatPhongBanDto.MaPhieuDeXuat) ? PhieuDeXuatPhongBanDto.MaPhieuDeXuat : PhieuDeXuatPhongBanCheck.MaPhieuDeXuat;
-            PhieuDeXuatPhongBanCheck.TenKhachHang = !string.IsNullOrEmpty(PhieuDeXuatPhongBanDto.TenKhachHang) ? PhieuDeXuatPhongBanDto.TenKhachHang : PhieuDeXuatPhongBanCheck.TenKhachHang;
             PhieuDeXuatPhongBanCheck.MaKhoaTiepNhan = !string.IsNullOrEmpty(PhieuDeXuatPhongBanDto.MaKhoaTiepNhan) ? PhieuDeXuatPhongBanDto.MaKhoaTiepNhan : PhieuDeXuatPhongBanCheck.MaKhoaTiepNhan;
             PhieuDeXuatPhongBanCheck.ManvDeXuat = !string.IsNullOrEmpty(PhieuDeXuatPhongBanDto.ManvDeXuat) ? PhieuDeXuatPhongBanDto.ManvDeXuat : PhieuDeXuatPhongBanCheck.ManvDeXuat;
             PhieuDeXuatPhongBanCheck.ManvTiepNhan = !string.IsNullOrEmpty(PhieuDeXuatPhongBanDto.ManvTiepNhan) ? PhieuDeXuatPhongBanDto.ManvTiepNhan : PhieuDeXuatPhongBanCheck.ManvTiepNhan;

@@ -56,7 +56,7 @@ namespace QLDV_KiemNghiem_BE.Repositories
 
         public async Task ProcessUpdateStatusObjecRelative (string maMau, int TypeCancel)
         {
-            await _context.Database.ExecuteSqlRawAsync("exec sp_ProcessUpdateStatusObjecRelativeFromCancelMau @maMau = {0}", maMau);
+            await _context.Database.ExecuteSqlRawAsync("exec sp_ProcessUpdateStatusObjecRelativeFromCancelMau @maMau = {0}, @typeCancel = {1}", maMau, TypeCancel);
         }
         public async Task<PhieuDangKyMau?> FindPhieuDangKyMauAsync(string maPhieuDangKyMau)
         {
