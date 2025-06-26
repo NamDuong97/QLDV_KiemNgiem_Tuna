@@ -38,7 +38,10 @@ namespace QLDV_KiemNghiem_BE.Repositories
         {
             return await _context.PhieuDangKyMaus.Include(item => item.PhieuDangKyMauHinhAnhs).Where(item => item.MaId == maPhieuDangKyMau).SingleOrDefaultAsync();
         }
-
+        public PhieuDangKyMauThongKeDto? GetPhieuDangKyMauThongKe()
+        {
+            return _context.PhieuDangKyMauThongKeDtos.FromSqlRaw("exec sp_ThongKePhieuDangKyMau").AsEnumerable().FirstOrDefault();
+        }
         public async Task<PhieuDangKyMau?> FindPhieuDangKyMauByPhieuDangKyAndMaDmMauAsync(string maPhieuDangKy, string maDmMau, bool tracking)
         {
             if(tracking)

@@ -1,9 +1,10 @@
-﻿using System.Text;
-using AspNetCoreRateLimit;
+﻿using AspNetCoreRateLimit;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using System.Security.Claims;
+using System.Text;
 
 namespace QLDV_KiemNghiem_BE.Extensions
 {
@@ -49,37 +50,54 @@ namespace QLDV_KiemNghiem_BE.Extensions
                 option.AddPolicy("KYTOnly", policy =>
                 {
                     policy.RequireAuthenticatedUser();
-                    policy.RequireClaim("Role", "KYT,KYT_L,KYT_P");
+                    policy.RequireClaim(ClaimTypes.Role, "KYT", "BLD_L", "KYT_P");
                 });
-
                 option.AddPolicy("BLDOnly", policy =>
                 {
                     policy.RequireAuthenticatedUser();
-                    policy.RequireClaim("Role", "BLD_L,BLD_NL,BLD_TC,BLD_KN");
+                    policy.RequireClaim(ClaimTypes.Role, "BLD_KN", "BLD_L", "BLD_NL", "BLD_TC");
                 });
-
                 option.AddPolicy("KNOnly", policy =>
                 {
                     policy.RequireAuthenticatedUser();
-                    policy.RequireClaim("Role", "KN,KN_L,KN_P");
+                    policy.RequireClaim(ClaimTypes.Role, "KN", "KN_L", "KN_P");
                 });
-
                 option.AddPolicy("KHTHOnly", policy =>
                 {
                     policy.RequireAuthenticatedUser();
-                    policy.RequireClaim("Role", "KHTH,KHTH_L,KHTH_P");
+                    policy.RequireClaim(ClaimTypes.Role, "KHTH", "KHTH_L", "KHTH_P");
                 });
-
                 option.AddPolicy("VTOnly", policy =>
                 {
                     policy.RequireAuthenticatedUser();
-                    policy.RequireClaim("Role", "VT,VT_L,VT_P");
+                    policy.RequireClaim(ClaimTypes.Role, "VT", "VT_L", "VT_P");
+                    
                 });
-
                 option.AddPolicy("KETOnly", policy =>
                 {
                     policy.RequireAuthenticatedUser();
-                    policy.RequireClaim("Role", "KET,KET_L,KET_P");
+                    policy.RequireClaim(ClaimTypes.Role, "KET", "KET_L", "KET_P");
+                });
+                option.AddPolicy("KHTH_BLD_KN", policy =>
+                {
+                    policy.RequireAuthenticatedUser();
+                    policy.RequireClaim(ClaimTypes.Role, "KET", "KET_L", "KET_P", "BLD_L", "BLD_KN", "BLD_NL", "BLD_TC",
+                        "KN", "KN_L", "KN_P");
+                });
+                option.AddPolicy("BLD_KYT", policy =>
+                {
+                    policy.RequireAuthenticatedUser();
+                    policy.RequireClaim(ClaimTypes.Role, "KYT", "KYT_L", "KYT_P", "BLD_L", "BLD_KN", "BLD_NL", "BLD_TC");
+                });
+                option.AddPolicy("BLD_KET", policy =>
+                {
+                    policy.RequireAuthenticatedUser();
+                    policy.RequireClaim(ClaimTypes.Role, "KET", "KET_L", "KET_P", "BLD_L", "BLD_KN", "BLD_NL", "BLD_TC");
+                });
+                option.AddPolicy("BLD_VT", policy =>
+                {
+                    policy.RequireAuthenticatedUser();
+                    policy.RequireClaim(ClaimTypes.Role, "VT", "VT_L", "VT_P", "BLD_L", "BLD_KN", "BLD_NL", "BLD_TC");
                 });
             });
         }

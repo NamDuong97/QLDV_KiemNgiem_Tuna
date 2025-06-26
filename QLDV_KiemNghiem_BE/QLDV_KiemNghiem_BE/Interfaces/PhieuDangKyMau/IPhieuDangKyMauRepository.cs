@@ -10,6 +10,7 @@ namespace QLDV_KiemNghiem_BE.Interfaces
     {
         Task<PagedList<PhieuDangKyMauProcedure>> GetPhieuDangKyMauAllAsync(PhieuDangKyMauParam param);
         Task<PhieuDangKyMau?> GetPhieuDangKyMauAsync(string maPhieuDangKyMau);
+        PhieuDangKyMauThongKeDto? GetPhieuDangKyMauThongKe();
         Task<PhieuDangKyMau?> FindPhieuDangKyMauAsync(string maPhieuDangKyMau);
         Task<PhieuDangKyMau?> FindPhieuDangKyMauByPhieuDangKyAndMaDmMauAsync(string maPhieuDangKy, string maDmMau, bool c);
         Task ProcessUpdateStatusObjecRelative(string maMau, int TypeCancel);
