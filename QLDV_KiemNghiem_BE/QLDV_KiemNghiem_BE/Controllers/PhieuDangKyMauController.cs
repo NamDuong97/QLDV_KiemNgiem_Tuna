@@ -13,6 +13,7 @@ using QLDV_KiemNghiem_BE.RequestFeatures;
 using QLDV_KiemNghiem_BE.RequestFeatures.PagingRequest;
 using StackExchange.Redis;
 using System.Security.Claims;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace QLDV_KiemNghiem_BE.Controllers
 {
@@ -192,7 +193,18 @@ namespace QLDV_KiemNghiem_BE.Controllers
             ResponseModel1<PhieuDangKyMauDto> update = await _service.PhieuDangKyMau.UpdatePhieuDangKyMauAsync(MauDto, user);
             if (update.KetQua)
             {
-                _logger.LogDebug(update.Message);
+                if (_redis.IsConnected)
+                {
+                    // Xoa cache cu da co tren redis, va cap nhat du lieu moi cho cache phieudangkymau
+                    await _cache.RemoveAsync($"phieudangkymau:{update?.Data?.MaId}");
+                    await _cache.SetStringAsync($"phieudangkymau:{update?.Data?.MaId}", JsonConvert.SerializeObject(update?.Data), new DistributedCacheEntryOptions
+                    {
+                        AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(5)
+                    });
+                    // Cap nhat version moi cho cache redis phieudangkymau:all
+                    await _cache.SetStringAsync("phieudangkymau:all:version", $"v{DateTime.UtcNow.Ticks}");
+                }
+                _logger.LogDebug(update?.Message);
                 return Ok(update);
             }
             else
@@ -216,10 +228,21 @@ namespace QLDV_KiemNghiem_BE.Controllers
                 return BadRequest(new { Errors = errors });
             }
             var user = User.FindFirst(ClaimTypes.Email)?.Value.ToString() ?? "unknow";
-            PhieuDangKyMauResponseCancelDto cancel = await _service.PhieuDangKyMau.CancelPhieuDangKyMau(MauDto, user);
+            ResponseModel1<PhieuDangKyMauDto> cancel = await _service.PhieuDangKyMau.CancelPhieuDangKyMau(MauDto, user);
             if (cancel.KetQua)
             {
-                _logger.LogDebug(cancel.Message);
+                if (_redis.IsConnected)
+                {
+                    // Xoa cache cu da co tren redis, va cap nhat du lieu moi cho cache phieudangkymau
+                    await _cache.RemoveAsync($"phieudangkymau:{cancel?.Data?.MaId}");
+                    await _cache.SetStringAsync($"phieudangkymau:{cancel?.Data?.MaId}", JsonConvert.SerializeObject(cancel?.Data), new DistributedCacheEntryOptions
+                    {
+                        AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(5)
+                    });
+                    // Cap nhat version moi cho cache redis phieudangkymau:all
+                    await _cache.SetStringAsync("phieudangkymau:all:version", $"v{DateTime.UtcNow.Ticks}");
+                }
+                _logger.LogDebug(cancel?.Message);
                 return Ok(cancel);
             }
             else
@@ -237,6 +260,12 @@ namespace QLDV_KiemNghiem_BE.Controllers
             bool delete = await _service.PhieuDangKyMau.DeletePhieuDangKyMauAsync(maMau, user);
             if (delete)
             {
+                if (_redis.IsConnected)
+                {
+                    await _cache.RemoveAsync($"phieudangkymau:{maMau}");
+                    // Cap nhat version moi cho cache redis phieudangkymau:all
+                    await _cache.SetStringAsync("phieudangkymau:all:version", $"v{DateTime.UtcNow.Ticks}");
+                }
                 _logger.LogDebug("Xoa mau thanh cong");
                 return Ok();
             }
