@@ -1,5 +1,4 @@
-﻿using System.Security.Claims;
-using AutoMapper;
+﻿using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using QLDV_KiemNghiem_BE.DTO.RequestDto;
@@ -7,6 +6,8 @@ using QLDV_KiemNghiem_BE.DTO.ResponseDto;
 using QLDV_KiemNghiem_BE.Interfaces.ManagerInterface;
 using QLDV_KiemNghiem_BE.Models;
 using QLDV_KiemNghiem_BE.RequestFeatures;
+using QLDV_KiemNghiem_BE.RequestFeatures.PagingRequest;
+using System.Security.Claims;
 
 namespace QLDV_KiemNghiem_BE.Controllers
 {
@@ -26,11 +27,12 @@ namespace QLDV_KiemNghiem_BE.Controllers
 
         [HttpGet]
         [Route("getPhieuPhieuDeXuatPhongBanAll")]
-        public async Task<ActionResult> getPhieuPhieuDeXuatPhongBanAll()
+        public async Task<ActionResult> getPhieuPhieuDeXuatPhongBanAll([FromQuery]PhieuDeXuatPhongBanParam param)
         {
-            var result = await _service.PhieuDeXuatPhongBan.GetPhieuDeXuatPhongBansAllAsync();
+            var result = await _service.PhieuDeXuatPhongBan.GetPhieuDeXuatPhongBansAllAsync(param);
+            Response.Headers.Append("X-Pagination", System.Text.Json.JsonSerializer.Serialize(result.pagi));
             _logger.LogDebug("get toan bo de xuat phong ban");
-            return Ok(result);
+            return Ok(result.datas);
         }
 
         [HttpGet]

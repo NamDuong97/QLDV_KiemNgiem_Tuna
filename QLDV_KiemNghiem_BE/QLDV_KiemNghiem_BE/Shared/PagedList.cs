@@ -17,9 +17,15 @@
             AddRange(items);
         }
 
-        public static PagedList<T> ToPagedList(IEnumerable<T> source, int pageNumber, int pageSize)
+        public static PagedList<T> ToPagedList(IEnumerable<T> source, int pageNumber, int pageSize, bool getAll)
         {
             var count = source.Count();
+            // Nếu người dùng không truyền giá trị của pageNumber và pageSize thì lấy toàn bộ 
+            if (getAll)
+            {
+                return new PagedList<T>(source.ToList(), count, 1, count, 1);
+            }
+
             var toTalPages = (int)Math.Ceiling(count / (double)pageSize);
             // Nếu pageNumber mà ng dùng gọi lớn hơn số page mà kết quả trả về thì sẽ lấy page cuối cùng trả ra kết quả
             var items = pageNumber > toTalPages ? source.Skip((toTalPages - 1) * pageSize).Take(pageSize).ToList() :

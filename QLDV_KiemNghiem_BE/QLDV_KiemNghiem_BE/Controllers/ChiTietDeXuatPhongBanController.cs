@@ -38,7 +38,7 @@ namespace QLDV_KiemNghiem_BE.Controllers
             return Ok(result);
         }
 
-        [Authorize(Roles ="KHTH")]
+        [Authorize(Roles = "KN_L,KN_P")]
         [HttpPut]
         [Route("reviewChiTietPhieuDeXuatPhongBanByPhongKhoa")]
         public async Task<ActionResult> reviewChiTietPhieuDeXuatPhongBanByPhongKhoa(RequestReviewPhieuDeXuatPhongBan duyetPhieu)
@@ -77,7 +77,7 @@ namespace QLDV_KiemNghiem_BE.Controllers
             return Ok(phieuDeXuat);
         }
 
-        [Authorize(Roles = "BLD")]
+        [Authorize(Policy = "BLDOnly")]
         [HttpPut]
         [Route("reviewChiTietPhieuDeXuatPhongBanByBLD")]
         public async Task<ActionResult> reviewChiTietPhieuDeXuatPhongBanByBLD(RequestReviewPhieuDeXuatPhongBan duyetPhieu)
@@ -122,27 +122,6 @@ namespace QLDV_KiemNghiem_BE.Controllers
             _logger.LogDebug(phieuDeXuat.Message);
             return Ok(phieuDeXuat);
         }
-
-        //[Authorize(Roles = "KHTH, BLD")]
-        //[HttpPut]
-        //[Route("cancelChiTietPhieuDeXuatPhongBansByKHTH")]
-        //public async Task<ActionResult> cancelChiTietPhieuDeXuatPhongBansByKHTH(CancelChiTietPhieuDeXuatPhongBanRequestDto cancelPhieu)
-        //{
-        //    // Nếu 1 mẫu trong ChiTietPhieuDeXuatPhongBan bị all phòng ban từ chối thì KHTH sẽ gọi api cập nhật trạng thái, và báo cho kh
-        //    var user = User.FindFirst(ClaimTypes.Email)?.Value.ToString() ?? "unknow";
-        //    var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value.ToString() ?? "unknow";
-        //    var phieuDeXuat = await _service.ChiTietPhieuDeXuatPhongBan.CancelChiTietPhieuDeXuatPhongBansByKHTH(cancelPhieu, user, userId);
-        //    if (phieuDeXuat)
-        //    {
-        //        NotificationModel noti = new NotificationModel();
-        //        noti.Title = $"Huy phan cong mau {cancelPhieu.MaMau}, do khong phong khoa nao tiep nhan";
-        //        noti.Message = $"Huy phan cong mau {cancelPhieu.MaMau}, do khong phong khoa nao tiep nhan";
-        //        noti.CreatedAt = DateTime.Now;
-        //        await _hubContext.Clients.Group("BLD").SendAsync("receiveNotification", noti);
-        //    }
-        //    _logger.LogDebug($"Huy phan cong mau {cancelPhieu.MaMau}");
-        //    return Ok();
-        //}
 
         [HttpGet]
         [Route("getChiTietPhieuDeXuatPhongBanByID")]

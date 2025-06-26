@@ -3,6 +3,8 @@ using Microsoft.EntityFrameworkCore;
 using QLDV_KiemNghiem_BE.Data;
 using QLDV_KiemNghiem_BE.Interfaces;
 using QLDV_KiemNghiem_BE.Models;
+using QLDV_KiemNghiem_BE.RequestFeatures.PagingRequest;
+using QLDV_KiemNghiem_BE.Shared;
 
 namespace QLDV_KiemNghiem_BE.Repositories
 {
@@ -15,9 +17,10 @@ namespace QLDV_KiemNghiem_BE.Repositories
             _context = context;
             _mapper = mapper;
         }
-        public async Task<IEnumerable<PhieuDeXuatPhongBan>> GetPhieuDeXuatPhongBansAllAsync()
+        public async Task<PagedList<PhieuDeXuatPhongBan>> GetPhieuDeXuatPhongBansAllAsync(PhieuDeXuatPhongBanParam param)
         {
-            return await _context.PhieuDeXuatPhongBans.ToListAsync();
+            var result = await _context.PhieuDeXuatPhongBans.Include(it => it.ChiTietPhieuDeXuatPhongBans).ToListAsync();
+            return PagedList<PhieuDeXuatPhongBan>.ToPagedList(result, param.PageNumber, param.PageSize, param.GetAll);
         }
         public async Task<PhieuDeXuatPhongBan?> FindPhieuDeXuatPhongBanAsync(string maPhieuDeXuatPhongBan, bool tracking)
         {

@@ -31,7 +31,7 @@ namespace QLDV_KiemNghiem_BE.Repositories
                 item.PhieuDangKyMauHinhAnhs = await _context.PhieuDangKyMauHinhAnhs.Where(it => it.MaMau == item.MaId).ToListAsync();
             }
 
-            return PagedList<PhieuDangKyMauProcedure>.ToPagedList(result, param.PageNumber, param.PageSize);
+            return PagedList<PhieuDangKyMauProcedure>.ToPagedList(result, param.PageNumber, param.PageSize, param.GetAll);
         }
 
         public async Task<PhieuDangKyMau?> GetPhieuDangKyMauAsync(string maPhieuDangKyMau)

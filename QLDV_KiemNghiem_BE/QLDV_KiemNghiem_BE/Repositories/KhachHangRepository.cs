@@ -24,12 +24,12 @@ namespace QLDV_KiemNghiem_BE.Repositories
             if (tracking)
             {
                 var result =  await _context.KhachHangs.ToListAsync();
-                return PagedList<KhachHang>.ToPagedList(result, param.PageNumber, param.PageSize);
+                return PagedList<KhachHang>.ToPagedList(result, param.PageNumber, param.PageSize, param.GetAll);
             }
             else
             {
                 var result =  await _context.KhachHangs.AsNoTracking().ToListAsync();
-                return PagedList<KhachHang>.ToPagedList(result, param.PageNumber, param.PageSize);
+                return PagedList<KhachHang>.ToPagedList(result, param.PageNumber, param.PageSize, param.GetAll);
             }
         }
         public async Task<KhachHang?> GetKhacHangByEmailAsync(string email, bool tracking)

@@ -53,15 +53,17 @@ namespace QLDV_KiemNghiem_BE.Repositories
         {
             await _context.Database.ExecuteSqlRawAsync("exec sp_ProcessUpdatePDXPBFromMauCancel @maMau = {0}, @user = {1}, @userId ={2}", maMau, user, userId);
         }
-        public async Task ProcessReviewChiTietDeXuatPhongBanByPB(string maCTPDXPB, string maMau, bool action, string user, string content, string userId)
+        public async Task<int>ProcessReviewChiTietDeXuatPhongBanByPB(string maCTPDXPB, string maMau, bool action, string user, string content, string userId)
         {
-            await _context.Database.ExecuteSqlRawAsync("exec sp_ProcessReviewChiTietDeXuatPhongBanByPB @maCTDXPB = { 0}, @maMau = { 1}, @action ={ 2}, @user ={3}, @noidungduyet={4}, @manvDuyet={5}"
+            int rowsAffected = await _context.Database.ExecuteSqlRawAsync("exec sp_ProcessReviewChiTietDeXuatPhongBanByPB @maCTDXPB = {0}, @maMau = {1}, @action ={2}, @user ={3}, @noidungduyet={4}, @manvDuyet={5}"
             , maCTPDXPB, maMau, action, user, content, userId);
+            return rowsAffected;
         }
-        public async Task ProcessReviewChiTietDeXuatPhongBanByBLD(string maCTPDXPB, string maMau, bool action, string user, string userId)
+        public async Task<int> ProcessReviewChiTietDeXuatPhongBanByBLD(string maCTPDXPB, string maMau, bool action, string user, string userId)
         {
-            await _context.Database.ExecuteSqlRawAsync("exec sp_ProcessReviewChiTietDeXuatPhongBanByBLD @maCTDXPB = { 0}, @maMau = { 1}, @action ={ 2}, @user ={3}, @manvDuyet={5}"
+            int rowsAffected = await _context.Database.ExecuteSqlRawAsync("exec sp_ProcessReviewChiTietDeXuatPhongBanByBLD @maCTDXPB = {0}, @maMau = {1}, @action ={2}, @user ={3}, @manvDuyet={4}"
           , maCTPDXPB, maMau, action, user, userId);
+            return rowsAffected;
         }
         public async Task<List<ChiTietPhieuDeXuatPhongBan>?> CheckSampleAssignedToDepartment(CheckSampleAssignedToDepartmentModel checkSample)
         {

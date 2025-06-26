@@ -21,7 +21,7 @@ namespace QLDV_KiemNghiem_BE.Repositories
         public async Task<PagedList<PhieuDangKyPhuLieuHoaChat>> GetPhieuDangKyPhuLieuHoaChatAllAsync(PhieuDangKyPhuLieuHoaChatParam param)
         {
             var result = await _context.PhieuDangKyPhuLieuHoaChats.ToListAsync();
-            return PagedList<PhieuDangKyPhuLieuHoaChat>.ToPagedList(result, param.PageNumber, param.PageSize);
+            return PagedList<PhieuDangKyPhuLieuHoaChat>.ToPagedList(result, param.PageNumber, param.PageSize, param.GetAll);
         }
 
         public async Task<IEnumerable<PhieuDangKyPhuLieuHoaChat>> GetPhieuDangKyPhuLieuHoaChatByPhieuDangKyAsync(string maPhieuDangKy)
