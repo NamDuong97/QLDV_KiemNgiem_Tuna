@@ -41,6 +41,10 @@ namespace QLDV_KiemNghiem_BE.Services
             result.PhieuDangKyMauHinhAnhs = _mapper.Map<List<PhieuDangKyMauHinhAnhDto>>(PhieuDangKyMauDomain?.PhieuDangKyMauHinhAnhs);
             return result;
         }
+        public PhieuDangKyMauThongKeDto? GetPhieuDangKyMauThongKe()
+        {
+            return _repositoryManager.PhieuDangKyMau.GetPhieuDangKyMauThongKe();
+        }
         public async Task<ResponseModel1<PhieuDangKyMauDto>> CancelPhieuDangKyMau(PhieuDangKyMauRequestCancelDto mauDto, string user)
         {
             if(mauDto == null || mauDto.MaId == null || mauDto.MaId == "")

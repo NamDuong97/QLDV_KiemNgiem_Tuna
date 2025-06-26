@@ -54,6 +54,9 @@ public partial class PhieuLuuMau
     [Column(TypeName = "datetime")]
     public DateTime? HanSuDung { get; set; }
 
+    [StringLength(500)]
+    public string? TenMau { get; set; }
+
     [ForeignKey("MaPdkMau")]
     [InverseProperty("PhieuLuuMaus")]
     public virtual PhieuDangKyMau? MaPdkMauNavigation { get; set; }

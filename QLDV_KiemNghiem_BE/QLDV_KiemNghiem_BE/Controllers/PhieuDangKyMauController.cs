@@ -36,6 +36,7 @@ namespace QLDV_KiemNghiem_BE.Controllers
             _redis = redis;
         }
 
+        [Authorize(Policy = "KHTH_BLD_KN")]
         [HttpGet]
         [Route("getPhieuDangKyMauAll")]
         public async Task<ActionResult> getPhieuDangKyMauAll([FromQuery]PhieuDangKyMauParam param)
@@ -89,6 +90,7 @@ namespace QLDV_KiemNghiem_BE.Controllers
             }
         }
 
+        [Authorize(Policy = "KHTH_BLD_KN")]
         [HttpGet]
         [Route("getPhieuDangKyMau")]
         public async Task<ActionResult> getPhieuDangKyMau(string maMau)
@@ -130,6 +132,17 @@ namespace QLDV_KiemNghiem_BE.Controllers
             }
         }
 
+        [Authorize(Policy = "KHTH_BLD_KN")]
+        [HttpGet]
+        [Route("getPhieuDangKyMauThongKe")]
+        public ActionResult getPhieuDangKyMauThongKe()
+        {
+            var result = _service.PhieuDangKyMau.GetPhieuDangKyMauThongKe();
+            _logger.LogDebug($"get thong ke mau thanh cong");
+            return Ok(result);
+        }
+
+        [Authorize(Policy = "KHTHOnly")]
         [HttpPost]
         [Route("createPhieuDangKyMau")]
         public async Task<ActionResult> createPhieuDangKyMau(PhieuDangKyMauDto mauDto)
@@ -177,6 +190,7 @@ namespace QLDV_KiemNghiem_BE.Controllers
             }
         }
 
+        [Authorize(Policy = "KHTHOnly")]
         [HttpPut]
         [Route("updatePhieuDangKyMau")]
         public async Task<ActionResult> updatePhieuDangKyMau(PhieuDangKyMauDto MauDto)
@@ -216,6 +230,7 @@ namespace QLDV_KiemNghiem_BE.Controllers
         }
 
         [Authorize(Policy = "KHTHOnly")]
+        [Authorize(Policy = "KHTHOnly")]
         [HttpPut]
         [Route("cancelPhieuDangKyMau")]
         public async Task<ActionResult> cancelPhieuDangKyMau(PhieuDangKyMauRequestCancelDto MauDto)
@@ -254,6 +269,7 @@ namespace QLDV_KiemNghiem_BE.Controllers
             }
         }
 
+        [Authorize(Policy = "KHTHOnly")]
         [HttpDelete]
         [Route("deletePhieuDangKyMau")]
         public async Task<ActionResult> deletePhieuDangKyMau(string  maMau)
