@@ -31,9 +31,9 @@ export const tableDataMauLuu: any = [
 
 const tableHead = [
   {
-    id: "soLo",
+    id: "maPhieuLuu",
     sort: false,
-    label: "Số lô",
+    label: "Mã phiếu lưu",
     align: Align.Left,
   },
   {
@@ -60,7 +60,12 @@ const tableHead = [
     label: "Lưu đến ngày",
     align: Align.Left,
   },
-
+  {
+    id: "hanSD",
+    sort: false,
+    label: "Hạn sử dụng",
+    align: Align.Left,
+  },
   {
     id: "trangThai",
     sort: false,

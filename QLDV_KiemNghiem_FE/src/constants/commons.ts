@@ -42,6 +42,12 @@ export const API = {
       GET_LOAI_MAU_BY_ID: "/api/LoaiMau/getLoaiMau",
       HUY_MAU: "/api/PhieuDangKyMau/cancelPhieuDangKyMau",
     },
+    MAUS_LUU: {
+      GET_MAUS_LUU_ALL: "/api/PhieuLuuMau/getPhieuLuuMauAll",
+      GET_MAUS_LUU_BY_ID: "/api/PhieuLuuMau/getPhieuLuuMauByID",
+      CREATE_MAUS_LUU: "/api/PhieuLuuMau/createPhieuLuuMau",
+      UPDATE_MAUS_LUU: "/api/PhieuLuuMau/createPhieuLuuMau",
+    },
   },
   CUSTOMER: {
     PHIEU_DANG_KY_DICH_VU_KIEM_NGHIEM: {

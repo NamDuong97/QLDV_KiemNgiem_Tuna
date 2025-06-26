@@ -3,11 +3,13 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
 import yup from "../../../../../../configs/yup.custom";
 import { queryClient } from "../../../../../../lib/reactQuery";
+import { usePersonnel } from "../../../../../../contexts/PersonelsProvider";
+import { useStoreNotification } from "../../../../../../configs/stores/useStoreNotification";
+import { useTruongPhongDuyet } from "../../../../../../hooks/personnels/phanCongKhoa";
 
 interface Props {
-  id?: any;
-  roll?: any;
-  handleHuyTuChoi: () => void;
+  ChiTietID?: any;
+  handleCloseTuChoi: () => void;
 }
 
 interface FormGhiChu {
@@ -15,7 +17,7 @@ interface FormGhiChu {
 }
 
 const FormGhiChuTuChoi = (props: Props) => {
-  const { id, handleHuyTuChoi, } = props;
+  const { ChiTietID, handleCloseTuChoi } = props;
 
   let schema = useMemo(() => {
     return yup.object().shape({
@@ -33,17 +35,45 @@ const FormGhiChuTuChoi = (props: Props) => {
     mode: "onChange",
   });
 
+  const { personnelInfo } = usePersonnel();
+  const handleOnSettled = async (response: any) => {
+    // if (response.ketQua === true) {
+
+    // }
+    await queryClient.refetchQueries({
+      queryKey: ["ChitietPhieuDKKM"],
+    });
+  };
+  const showNotification = useStoreNotification(
+    (state: any) => state.showNotification
+  );
+
+  const { mutate: mutate } = useTruongPhongDuyet({
+    queryKey: "useTruongPhongDuyet",
+    onSettled: handleOnSettled,
+    onSuccess: (res: any) => {
+      // const { ketQua, message } = res;
+      // if (ketQua !== true) {
+      //   showNotification({
+      //     message: message || "Thao tác thất bại. Vui lòng thử lại.",
+      //     ketQua: ketQua,
+      //   });
+      //   return;
+      // }
+      showNotification({ message: "Thao tác thành công", status: 200 });
+      handleCloseTuChoi();
+    },
+  });
 
   const handleHuyPhieu = (data: FormGhiChu) => {
-    console.log("data", data);
-
     const params = {
-      maPhieuDangKy: id,
       message: data.ghiChu,
       action: false,
+      maId: ChiTietID,
+      maKhoa: personnelInfo?.maKhoa,
     };
-    // if (roll === "roll") mutateNhanVien(params);
-    // mutateBLD(params);
+    mutate(params);
+    console.log("params", params);
   };
 
   useEffect(() => {
@@ -71,7 +101,7 @@ const FormGhiChuTuChoi = (props: Props) => {
       <div className="flex justify-end gap-4">
         <button
           type="button"
-          onClick={handleHuyTuChoi}
+          onClick={handleCloseTuChoi}
           className="bg-yellow-100 hover:bg-yellow-200 cursor-pointer px-6 py-2 rounded-md"
         >
           <p className="text-sm font-medium text-yellow-700">Hủy</p>

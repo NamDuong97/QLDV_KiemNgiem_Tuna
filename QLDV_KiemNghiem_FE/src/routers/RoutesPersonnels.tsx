@@ -78,7 +78,15 @@ const RoutesPersonnels = () => {
             path={
               APP_ROUTES.TUNA_ADMIN.DANH_SACH_PHAN_CONG_KHOA_CM.xem_chi_tiet
             }
-            element={<ChiTietPhanCongPhongCM />}
+            element={
+              <RedirectPersonnel
+                pathRedirect={
+                  APP_ROUTES.TUNA_ADMIN.DANH_SACH_PHAN_CONG_KHOA_CM.to
+                }
+              >
+                <ChiTietPhanCongPhongCM />
+              </RedirectPersonnel>
+            }
           />
           <Route
             path={

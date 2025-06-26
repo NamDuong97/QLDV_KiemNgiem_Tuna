@@ -55,7 +55,7 @@ namespace QLDV_KiemNghiem_BE.Repositories
         }
         public async Task ProcessReviewChiTietDeXuatPhongBanByPB(string maCTPDXPB, string maMau, bool action, string user, string content, string userId)
         {
-            await _context.Database.ExecuteSqlRawAsync("exec sp_ProcessReviewChiTietDeXuatPhongBanByPB @maCTDXPB = { 0}, @maMau = { 1}, @action ={ 2}, @user ={3}, @noidungduyet={4}, @manvDuyet={5}"
+            await _context.Database.ExecuteSqlRawAsync("exec sp_ProcessReviewChiTietDeXuatPhongBanByPB @maCTDXPB = {0}, @maMau = {1}, @action ={2}, @user ={3}, @noidungduyet={4}, @manvDuyet={5}"
             , maCTPDXPB, maMau, action, user, content, userId);
         }
         public async Task ProcessReviewChiTietDeXuatPhongBanByBLD(string maCTPDXPB, string maMau, bool action, string user, string userId)

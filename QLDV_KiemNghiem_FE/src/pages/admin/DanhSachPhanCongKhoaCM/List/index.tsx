@@ -29,7 +29,6 @@ const DanhSach = (props: Props) => {
   const { data, isLoading } = getPhanCongKhoaCMAll({
     queryKey: "getPhanCongKhoaCMAll",
   });
-  console.log("personnelInfo", personnelInfo);
 
   const [searchQuery, setSearchQuery] = useState("");
   const [selectTrangThai, setSelectTrangThai] = useState("");
@@ -45,23 +44,31 @@ const DanhSach = (props: Props) => {
       const query = removeVietnameseTones(searchQuery.toLowerCase());
       const matchesSearch =
         sample?.maPhieuDeXuat?.toLowerCase().includes(query) ||
-        removeVietnameseTones(sample?.tenKhachHang?.toLowerCase()).includes(
+        removeVietnameseTones(sample?.maPhieuDeXuat?.toLowerCase()).includes(
           query
         );
       return matchesSearch;
     });
+
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(10);
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentItems = filteredSamples?.slice(
-    indexOfFirstItem,
-    indexOfLastItem
-  );
+  const currentItems = filteredSamples
+    ?.filter((item: any) =>
+      selectTrangThai
+        ? item.trangThai === selectTrangThai
+        : selectTrangThai === ""
+        ? item
+        : null
+    )
+    ?.sort((a: any, b: any) =>
+      isSortNew
+        ? new Date(a.ngayTao).getTime() - new Date(b.ngayTao).getTime()
+        : new Date(b.ngayTao).getTime() - new Date(a.ngayTao).getTime()
+    )
+    ?.slice(indexOfFirstItem, indexOfLastItem);
   const totalPages = Math.ceil(data && data?.length / itemsPerPage);
-  const [anchorElPopupBoloc, setAnchorElPopupBoloc] =
-    useState<HTMLButtonElement | null>(null);
-  const openPopupBoloc = Boolean(anchorElPopupBoloc);
 
   const handlePageChange = (_: any, value: number) => {
     setCurrentPage(value);
@@ -71,16 +78,12 @@ const DanhSach = (props: Props) => {
     setSearchQuery(e.target.value);
   };
 
-  const handleClosePopupBoloc = () => {
-    setAnchorElPopupBoloc(null);
-  };
-
   return (
     <>
       <div className="grid gap-6 grid-cols-4">
         <Card
           title="Tổng phiếu phân công"
-          value={data?.length || 0}
+          value={filteredSamples?.length || 0}
           icon={<Clipboard className="w-6 h-6" />}
           trend="up"
           trendValue="12%"
@@ -89,45 +92,11 @@ const DanhSach = (props: Props) => {
           bgColor="bg-indigo-100"
           textColor="text-indigo-600"
         />
-
-        <Card
-          title="Đã hoàn thành"
-          value="876"
-          icon={<CheckCircle className="w-6 h-6" />}
-          trend="up"
-          trendValue="8%"
-          isLoading={isLoading}
-          trendIcon={<TrendingUp className="inline w-4 h-4 mr-1" />}
-          bgColor="bg-green-100"
-          textColor="text-green-600"
-        />
-        <Card
-          title="Đang xử lý"
-          value="328"
-          icon={<Clock className="w-6 h-6" />}
-          trend="up"
-          trendValue="5%"
-          isLoading={isLoading}
-          trendIcon={<TrendingUp className="inline w-4 h-4 mr-1" />}
-          bgColor="bg-yellow-100"
-          textColor="text-yellow-600"
-        />
-        <Card
-          title="Không đạt"
-          value="80"
-          icon={<AlertTriangle className="w-6 h-6" />}
-          trend="down"
-          isLoading={isLoading}
-          trendValue="3%"
-          trendIcon={<TrendingDown className="inline w-4 h-4 mr-1" />}
-          bgColor="bg-red-100"
-          textColor="text-red-600"
-        />
       </div>
       <div className="p-4 bg-white rounded-lg shadow-sm border border-gray-100 gap-2 flex justify-between">
         <div className="flex gap-4 w-2xl">
           <InputSearch2
-            placeholder="Tìm kiếm số lô hoặc mẫu kiểm nghiệm..."
+            placeholder="Tìm kiếm mã phiếu đề xuất..."
             value={searchQuery}
             onChange={handleSearchChange}
           />

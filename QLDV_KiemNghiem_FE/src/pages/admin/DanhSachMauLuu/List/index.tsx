@@ -2,17 +2,19 @@ import { useState } from "react";
 import { FaSortAmountDown, FaSortAmountUp } from "react-icons/fa";
 import TableQuanLyPhieuDKyDVHN from "../Table";
 import { Pagination } from "@mui/material";
-import { CheckCircle, Clipboard, Clock, FilePlus } from "react-feather";
+import { Clipboard, FilePlus } from "react-feather";
 import Card from "./Card";
 import InputSearch2 from "../../../../components/InputSearch2";
 import SelectItemTrangThai from "./SelectItemTrangThai";
 import removeVietnameseTones from "../../../../configs/removeVietnameseTones";
-import { ImWarning } from "react-icons/im";
 import { tableDataMauLuu } from "..";
 import { useNavigate } from "react-router";
 import { APP_ROUTES } from "../../../../constants/routers";
 import ChiTietMauLuu from "../ChiTietMauLuu";
 import SuaMauLuu from "../SuaMauLuu";
+import { queryMauLuuAll } from "../../../../hooks/personnels/queryMauLuu";
+import { usePersonnel } from "../../../../contexts/PersonelsProvider";
+import { role } from "../../../../configs/parseJwt";
 
 interface Props {
   tableHead: any;
@@ -21,24 +23,48 @@ interface Props {
 const DanhSach = (props: Props) => {
   const { tableHead } = props;
   const navigate = useNavigate();
+  const { personnelInfo } = usePersonnel();
+
+  const { data, isLoading } = queryMauLuuAll({
+    queryKey: "queryMauLuuAll",
+  });
+
   const [searchQuery, setSearchQuery] = useState("");
   const [selectTrangThai, setSelectTrangThai] = useState("");
   const [isSortNew, setIsSortNew] = useState(false);
-  const filteredSamples: any = tableDataMauLuu?.filter((sample: any) => {
-    const query = removeVietnameseTones(searchQuery.toLowerCase());
-    const matchesSearch =
-      sample?.soLo?.toLowerCase().includes(query) ||
-      removeVietnameseTones(sample?.mau?.toLowerCase()).includes(query);
-    return matchesSearch;
-  });
+  const filteredSamples: any = data
+    ?.filter((item: any) =>
+      personnelInfo?.maChucVu === "CV01" && role !== "BLD"
+        ? item.manvLuu.toLowerCase() === personnelInfo?.maId.toLowerCase()
+        : item
+    )
+    ?.filter((sample: any) => {
+      const query = removeVietnameseTones(searchQuery.toLowerCase());
+      const matchesSearch =
+        sample?.maPhieuLuu?.toLowerCase().includes(query) ||
+        removeVietnameseTones(sample?.mau?.toLowerCase()).includes(query);
+      return matchesSearch;
+    });
+console.log('filteredSamples',filteredSamples);
+
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(10);
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentItems = filteredSamples?.slice(
-    indexOfFirstItem,
-    indexOfLastItem
-  );
+  const currentItems = filteredSamples
+    ?.filter((item: any) =>
+      selectTrangThai
+        ? item.trangThai === selectTrangThai
+        : selectTrangThai === ""
+        ? item
+        : null
+    )
+    ?.sort((a: any, b: any) =>
+      isSortNew
+        ? new Date(a.ngayTao).getTime() - new Date(b.ngayTao).getTime()
+        : new Date(b.ngayTao).getTime() - new Date(a.ngayTao).getTime()
+    )
+    ?.slice(indexOfFirstItem, indexOfLastItem);
   const totalPages = Math.ceil(
     tableDataMauLuu && tableDataMauLuu?.length / itemsPerPage
   );
@@ -64,40 +90,15 @@ const DanhSach = (props: Props) => {
           title="Tổng mẫu kiểm nghiệm"
           value={tableDataMauLuu?.length || 0}
           icon={<Clipboard className="w-6 h-6" />}
-          // isLoading={isLoading}
+          isLoading={isLoading}
           bgColor="bg-indigo-100"
           textColor="text-indigo-600"
-        />
-
-        <Card
-          title="Số mẫu đã hoàn thành"
-          value="876"
-          icon={<CheckCircle className="w-6 h-6" />}
-          // isLoading={isLoading}
-          bgColor="bg-green-100"
-          textColor="text-green-600"
-        />
-        <Card
-          title="Số mẫu đang xử lý"
-          value="328"
-          icon={<Clock className="w-6 h-6" />}
-          // isLoading={isLoading}
-          bgColor="bg-yellow-100"
-          textColor="text-yellow-600"
-        />
-        <Card
-          title="Số mẫu chưa được phân công"
-          value="80"
-          icon={<ImWarning className="w-6 h-6" />}
-          // isLoading={isLoading}
-          bgColor="bg-red-100"
-          textColor="text-red-600"
         />
       </div>
       <div className="p-4 bg-white rounded-lg shadow-sm border border-gray-100 gap-2 flex justify-between">
         <div className="flex gap-4 w-2xl">
           <InputSearch2
-            placeholder="Tìm kiếm số đăng ký phân tích hoặc người gửi mẫu..."
+            placeholder="Tìm kiếm mã phiếu lưu hoặc mẫu kiểm nghiệm..."
             value={searchQuery}
             onChange={handleSearchChange}
           />
@@ -140,7 +141,7 @@ const DanhSach = (props: Props) => {
         <TableQuanLyPhieuDKyDVHN
           tableHead={tableHead}
           tableBody={currentItems}
-          // isLoading={isLoading}
+          isLoading={isLoading}
           handleOpenChiTiet={() => setOpenXemChiTiet(true)}
           handleOpenSuaMauLuu={() => setOpenSuaMauLuu(true)}
         />

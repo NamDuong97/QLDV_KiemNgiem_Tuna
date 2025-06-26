@@ -14,7 +14,10 @@ import { FaEdit, FaEye } from "react-icons/fa";
 import { queryKhoaAll } from "../../../../hooks/personnels/queryKhoa";
 import { useNavigate } from "react-router";
 import { APP_ROUTES } from "../../../../constants/routers";
-import { renderTrangThaiPhieuDeXuatPhongBan } from "../../../../configs/configAll";
+import {
+  formatDate,
+  renderTrangThaiPhieuDeXuatPhongBan,
+} from "../../../../configs/configAll";
 import { role } from "../../../../configs/parseJwt";
 
 interface TableProps {
@@ -139,7 +142,7 @@ const TableQuanLyPhieuDKyDVHN = (props: TableProps) => {
                 <TableCell align="center">
                   <Box className="flex gap-2 items-center justify-start">
                     <p className="text-base/4 font-medium text-gray-700">
-                      {item?.thoiGianGiaoMau}
+                      {formatDate(item?.thoiGianGiaoMau)}
                     </p>
                   </Box>
                 </TableCell>
@@ -164,7 +167,7 @@ const TableQuanLyPhieuDKyDVHN = (props: TableProps) => {
                 <TableCell align="center">
                   <Box className="flex gap-2 items-center justify-start">
                     <p className="text-xs/4 font-medium inline-block px-2 py-1 rounded-full bg-red-100 text-red-800">
-                     còn 2 mẫu chưa duyệt
+                      còn 2 mẫu chưa duyệt
                     </p>
                   </Box>
                 </TableCell>

@@ -1,6 +1,7 @@
 import { ReactNode } from "react";
 import { Navigate, useLocation } from "react-router";
 import { usePersonnel } from "../contexts/PersonelsProvider";
+import { APP_ROUTES } from "../constants/routers";
 
 interface RedirectPersonnelProps {
   children: ReactNode;
@@ -8,9 +9,9 @@ interface RedirectPersonnelProps {
 }
 
 const routeGuards: Record<string, { sessionKey: string }> = {
-  // [APP_ROUTES.TUNA_CUSTOMER.EDIT_PHIEU_DKY_DVKN.to]: {
-  //   sessionKey: "sua-phieuDky",
-  // },
+  [APP_ROUTES.TUNA_ADMIN.DANH_SACH_PHAN_CONG_KHOA_CM.xem_chi_tiet]: {
+    sessionKey: "chi-tiet-phan-cong",
+  },
 };
 
 const RedirectPersonnel = ({
@@ -20,7 +21,7 @@ const RedirectPersonnel = ({
   const location = useLocation();
   const guard = routeGuards[location.pathname];
   const { isLoginPersonnel, isLoadingAuth } = usePersonnel();
-  
+
   const passedSessionGuard = guard
     ? !!sessionStorage.getItem(guard.sessionKey)
     : true;

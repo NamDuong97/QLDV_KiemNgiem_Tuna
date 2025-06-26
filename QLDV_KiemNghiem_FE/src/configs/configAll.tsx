@@ -127,7 +127,7 @@ const trangThaiChiTietPhieuDeXuatPhongBan: Record<string, TrangThai> = {
     textColor: "text-blue-800",
   },
   3: {
-    text: "Đã duyệt – đang kiểm nghiệm",
+    text: "Đã duyệt",
     bgColor: "bg-purple-100",
     textColor: "text-purple-800",
   },
@@ -239,4 +239,10 @@ export const formatDate = (dateString: any) => {
 export const formatDateNotTime = (dateString: any) => {
   const date = new Date(dateString).toLocaleDateString("vi-VN");
   return date;
+};
+
+export const formatDateNotTime2 = (date?: string | Date) => {
+  if (!date) return undefined;
+  const d = new Date(date);
+  return d.toISOString().split("T")[0];
 };

@@ -7,15 +7,54 @@ import {
   renderTrangThaiChiTietPhieuDeXuatPhongBan,
 } from "../../../../../configs/configAll";
 import ImageGallery from "../../../../../components/ImageGallery";
-import FormGhiChuDuyet from "./FormGhiChuDuyet";
+import { queryClient } from "../../../../../lib/reactQuery";
+import { useStoreNotification } from "../../../../../configs/stores/useStoreNotification";
+import { useTruongPhongDuyet } from "../../../../../hooks/personnels/phanCongKhoa";
+import { usePersonnel } from "../../../../../contexts/PersonelsProvider";
 
 const SampleCard = ({ sample, onImageClick, handleTuChoi, index }: any) => {
   const [isTuchoi, setisTuchoi] = useState(false);
-  const [isDuyet, setisDuyet] = useState(false);
   const { data: dataMau } = queryMauByID({
     queryKey: "queryMauByID",
     params: sample?.maPdkMau,
   });
+  const { personnelInfo } = usePersonnel();
+  const handleOnSettled = async (response: any) => {
+    // if (response.ketQua === true) {
+
+    // }
+    await queryClient.refetchQueries({
+      queryKey: ["ChitietPhieuDKKM"],
+    });
+  };
+  const showNotification = useStoreNotification(
+    (state: any) => state.showNotification
+  );
+
+  const { mutate: mutate } = useTruongPhongDuyet({
+    queryKey: "useTruongPhongDuyet",
+    onSettled: handleOnSettled,
+    onSuccess: (res: any) => {
+      const { ketQua, message } = res;
+      if (ketQua !== true) {
+        showNotification({
+          message: message || "Thao tác thất bại. Vui lòng thử lại.",
+          ketQua: ketQua,
+        });
+        return;
+      }
+      showNotification({ message: "Thao tác thành công", status: 200 });
+    },
+  });
+
+  const handleDuyet = () => {
+    const params = {
+      action: true,
+      maId: sample?.maId,
+      maKhoa: personnelInfo?.maKhoa,
+    };
+    mutate(params);
+  };
 
   return (
     <div className="sample-card bg-white p-4 border border-gray-200 rounded-lg transition-all ease-in-out duration-500 hover:shadow-[0_4px_6px_rgba(0,0,0,0.1)]">
@@ -157,17 +196,15 @@ const SampleCard = ({ sample, onImageClick, handleTuChoi, index }: any) => {
       {role !== "BLD" &&
         role !== "KHTH" &&
         (isTuchoi ? (
-          <FormGhiChuTuChoi handleHuyTuChoi={() => setisTuchoi(false)} />
-        ) : isDuyet ? (
-          <FormGhiChuDuyet
-            handleCloseDuyet={() => setisDuyet(false)}
-            id={sample?.maId}
+          <FormGhiChuTuChoi
+            handleCloseTuChoi={() => setisTuchoi(false)}
+            ChiTietID={sample?.maId}
           />
         ) : (
           sample.trangThai === 2 && (
             <div className="mt-4 flex justify-end space-x-2">
               <button
-                onClick={() => setisDuyet(true)}
+                onClick={handleDuyet}
                 className="bg-green-600 hover:bg-green-700 text-white px-3 py-1.5 rounded-md text-sm cursor-pointer"
               >
                 <i className="fas fa-check mr-1"></i> Nhận mẫu

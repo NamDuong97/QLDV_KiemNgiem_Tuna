@@ -4,6 +4,11 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { formatDateNotTime } from "../../../../../../configs/configAll";
+import { IoClose } from "react-icons/io5";
+import { usePersonnel } from "../../../../../../contexts/PersonelsProvider";
+import { createMauLuu } from "../../../../../../hooks/personnels/queryMauLuu";
+import { useStoreNotification } from "../../../../../../configs/stores/useStoreNotification";
+import { queryClient } from "../../../../../../lib/reactQuery";
 
 interface Props {
   samples: any[];
@@ -42,6 +47,7 @@ const schema = yup.object().shape({
 
 const AssignmentModal = (props: Props) => {
   const { isOpen, onClose, selectedSamples } = props;
+  const { personnelInfo } = usePersonnel();
 
   const {
     reset,
@@ -51,6 +57,50 @@ const AssignmentModal = (props: Props) => {
   } = useForm<FormTaoPhieu>({
     resolver: yupResolver(schema),
   });
+
+  const handleOnSettled = async (response: any) => {
+    // if (response.ketQua === true) {
+
+    // }
+    await queryClient.refetchQueries({
+      queryKey: ["ChitietPhieuDKKM"],
+    });
+  };
+  const showNotification = useStoreNotification(
+    (state: any) => state.showNotification
+  );
+
+  const { mutate } = createMauLuu({
+    queryKey: "createMauLuu",
+    onSettled: handleOnSettled,
+    onSuccess: (res: any) => {
+      const { ketQua, message } = res;
+      if (ketQua !== true) {
+        showNotification({
+          message: message || "Tạo phiếu thất bại. Vui lòng thử lại.",
+          ketQua: ketQua,
+        });
+        return;
+      }
+      showNotification({ message: "Tạo phiếu thành công", status: 200 });
+      onClose();
+    },
+  });
+
+  const handleAssignSubmit = (data: FormTaoPhieu) => {
+    const dataTao = {
+      tenMau: selectedSamples?.name,
+      soLuong: data.soLuong,
+      donViTinh: data.donViTinh,
+      thoiGianLuu: formatDateNotTime(data.thoiGianLuu),
+      luuDenNgay: formatDateNotTime(data.luuDenNgay),
+      hanSuDung: "",
+      manvLuu: personnelInfo?.maId,
+    };
+
+    console.log("Submitted data:", dataTao);
+    // mutate(dataTao);
+  };
 
   useEffect(() => {
     if (isOpen) {
@@ -63,20 +113,6 @@ const AssignmentModal = (props: Props) => {
     }
   }, [isOpen]);
 
-  const handleAssignSubmit = (data: FormTaoPhieu) => {
-    const dataTao = {
-      tenMau: selectedSamples?.name,
-      soLuong: data.soLuong,
-      donViTinh: data.donViTinh,
-      thoiGianLuu: formatDateNotTime(data.thoiGianLuu),
-      luuDenNgay: formatDateNotTime(data.luuDenNgay),
-    };
-
-    console.log("Submitted data:", dataTao);
-
-    // onClose();
-  };
-
   return (
     <Dialog open={isOpen} onClose={onClose} maxWidth="md">
       <form
@@ -88,9 +124,9 @@ const AssignmentModal = (props: Props) => {
           <button
             type="button"
             onClick={onClose}
-            className="text-gray-400 hover:text-gray-500"
+            className="text-gray-400 hover:text-gray-500 p-1 rounded-full cursor-pointer hover:bg-gray-300"
           >
-            ✕
+            <IoClose className="w-5 h-5" />
           </button>
         </div>
 
@@ -172,12 +208,12 @@ const AssignmentModal = (props: Props) => {
           <button
             type="button"
             onClick={onClose}
-            className="px-4 py-2 border border-gray-300 rounded-md text-sm text-gray-700 bg-white hover:bg-gray-50"
+            className="px-4 py-2 border border-gray-300 rounded-md text-sm text-gray-700 bg-white hover:bg-gray-50 cursor-pointer"
           >
             Hủy
           </button>
           <button
-            className={`px-4 py-2 rounded-md text-sm text-white bg-blue-600 hover:bg-blue-700`}
+            className={`px-4 py-2 rounded-md text-sm text-white bg-blue-600 hover:bg-blue-700 cursor-pointer`}
           >
             Tạo phiếu
           </button>

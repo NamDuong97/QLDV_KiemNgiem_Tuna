@@ -1,4 +1,6 @@
-import { Box, Dialog, Skeleton } from "@mui/material";
+import { Dialog, Skeleton } from "@mui/material";
+import { getMauLuuByID } from "../../../../hooks/personnels/queryMauLuu";
+import { formatDate } from "../../../../configs/configAll";
 
 interface Props {
   open: boolean;
@@ -7,46 +9,51 @@ interface Props {
 
 const ChiTietMauLuu = (props: Props) => {
   const { open, handleClose } = props;
-  // const dataSession = sessionStorage.getItem("phieu-xem-chi-tiet");
-  // const id = dataSession ? JSON.parse(dataSession) : "";
+  const dataSession = sessionStorage.getItem("chi-tiet-mau-luu");
+  const id = dataSession ? JSON.parse(dataSession) : "";
 
-  // const { data, isLoading } = xemChitietPhieuDKKM({
-  //   queryKey: "xemChitietPhieuDKKM",
-  //   params: id,
-  // });
+  const { data, isLoading } = getMauLuuByID({
+    queryKey: "getMauLuuByID",
+    params: id,
+  });
+  const handleClosePopup = () => {
+    sessionStorage.removeItem("chi-tiet-mau-luu");
+    handleClose();
+  };
+  console.log("chi-tiet-mau-luu", data);
 
   return (
     <Dialog
       open={open}
       maxWidth="xl"
-      onClose={handleClose}
+      onClose={handleClosePopup}
       sx={{
         ".MuiPaper-root": {
           borderRadius: 2,
         },
       }}
     >
-      <div className="bg-white max-w-lg w-full">
+      <div className="bg-white w-2xl">
         <div className="px-6 py-4 border-b border-gray-200 flex justify-between items-center">
           <h3 className="text-lg font-medium text-gray-900">
             Chi tiết mẫu lưu
           </h3>
           <button
             id="closeViewModal"
-            onClick={handleClose}
-            className="text-gray-400 hover:text-gray-500 cursor-pointer"
+            onClick={handleClosePopup}
+            className="text-gray-400 hover:text-gray-500 cursor-pointer p-1 hover:bg-gray-300 rounded-full"
           >
             <svg
-              className="h-6 w-6"
+              className="h-5 w-5"
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
             >
               <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
                 d="M6 18L18 6M6 6l12 12"
               />
             </svg>
@@ -58,61 +65,111 @@ const ChiTietMauLuu = (props: Props) => {
               <h4 className="text-sm font-medium text-gray-500 mb-1">
                 Tên mẫu
               </h4>
-              <p id="viewSampleName" className="text-sm text-gray-900">
-                Mẫu nước uống đóng chai
-              </p>
+              {isLoading ? (
+                <Skeleton variant="rounded" width={100} height={20} />
+              ) : (
+                <p id="viewSampleName" className="text-sm text-gray-900">
+                  {data?.maPdkMau}
+                </p>
+              )}
             </div>
             <div>
-              <h4 className="text-sm font-medium text-gray-500 mb-1">Số lô</h4>
-              <p id="viewLotNumber" className="text-sm text-gray-900">
-                LO-12345
-              </p>
+              <h4 className="text-sm font-medium text-gray-500 mb-1">
+                Mã phiếu lưu
+              </h4>
+              {isLoading ? (
+                <Skeleton variant="rounded" width={100} height={20} />
+              ) : (
+                <p id="viewSampleName" className="text-sm text-gray-900">
+                  {data?.maPhieuLuu}
+                </p>
+              )}
             </div>
             <div>
               <h4 className="text-sm font-medium text-gray-500 mb-1">
                 Khối lượng mẫu lưu
               </h4>
-              <p id="viewSampleWeight" className="text-sm text-gray-900">
-                2 chai
-              </p>
+              {isLoading ? (
+                <Skeleton variant="rounded" width={100} height={20} />
+              ) : (
+                <p id="viewSampleName" className="text-sm text-gray-900">
+                  {`${data?.soLuong} ${data?.donViTinh}`}
+                </p>
+              )}
             </div>
             <div>
               <h4 className="text-sm font-medium text-gray-500 mb-1">
                 Thời gian lưu
               </h4>
-              <p id="viewExpiryDate" className="text-sm text-gray-900">
-                10/05/2024
-              </p>
+              {isLoading ? (
+                <Skeleton variant="rounded" width={100} height={20} />
+              ) : (
+                <p id="viewSampleName" className="text-sm text-gray-900">
+                  {formatDate(data?.thoiGianLuu)}
+                </p>
+              )}
             </div>
             <div>
               <h4 className="text-sm font-medium text-gray-500 mb-1">
                 Lưu đến ngày
               </h4>
-              <p id="viewExpiryDate" className="text-sm text-gray-900">
-                12/05/2024
-              </p>
+              {isLoading ? (
+                <Skeleton variant="rounded" width={100} height={20} />
+              ) : (
+                <p id="viewSampleName" className="text-sm text-gray-900">
+                  {formatDate(data?.luuDenNgay)}
+                </p>
+              )}
             </div>
             <div>
               <h4 className="text-sm font-medium text-gray-500 mb-1">
-                Điều kiện bảo quản
+                Hạn sử dụng
               </h4>
-              <p id="viewStorageCondition" className="text-sm text-gray-900">
-                Nhiệt độ phòng, tránh ánh nắng trực tiếp
-              </p>
+              {isLoading ? (
+                <Skeleton variant="rounded" width={100} height={20} />
+              ) : (
+                <p id="viewSampleName" className="text-sm text-gray-900">
+                  {formatDate(data?.luuDenNgay)}
+                </p>
+              )}
             </div>
             <div>
               <h4 className="text-sm font-medium text-gray-500 mb-1">
                 Tên người lưu mẫu
               </h4>
-              <p id="viewPersonName" className="text-sm text-gray-900">
-                Nguyễn Văn A
-              </p>
+              {isLoading ? (
+                <Skeleton variant="rounded" width={100} height={20} />
+              ) : (
+                <p id="viewSampleName" className="text-sm text-gray-900">
+                  {data?.manvLuu}
+                </p>
+              )}
+            </div>
+            <div>
+              <h4 className="text-sm font-medium text-gray-500 mb-1">
+                Trạng thái
+              </h4>
+              {isLoading ? (
+                <Skeleton variant="rounded" width={100} height={20} />
+              ) : data?.trangThai === "1" ? (
+                <p
+                  className={`inline-block px-2 py-1 text-xs font-medium rounded-full bg-green-100 text-green-800`}
+                >
+                  Đã lưu
+                </p>
+              ) : (
+                <p
+                  className={`inline-block px-2 py-1 text-xs font-medium rounded-full bg-yellow-100 text-yellow-800`}
+                >
+                  Đã hủy
+                </p>
+              )}
             </div>
           </div>
         </div>
         <div className="px-6 py-4 border-t border-gray-200 flex justify-end">
           <button
-            onClick={handleClose}
+            onClick={handleClosePopup}
             className="cursor-pointer px-4 py-2 bg-blue-600 border border-transparent rounded-md text-sm font-medium text-white hover:bg-blue-700 focus:outline-none"
           >
             Đóng

@@ -3,9 +3,12 @@ import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
-import { formatDateNotTime } from "../../../../configs/configAll";
+import {
+  formatDateNotTime,
+  formatDateNotTime2,
+} from "../../../../configs/configAll";
 import { IoClose } from "react-icons/io5";
-import { Save } from "react-feather";
+import { getMauLuuByID } from "../../../../hooks/personnels/queryMauLuu";
 
 interface Props {
   isOpen: boolean;
@@ -16,33 +19,56 @@ interface Props {
 interface FormTaoPhieu {
   soLuong: number;
   donViTinh: string;
-  thoiGianLuu: Date;
-  luuDenNgay: Date;
+  thoiGianLuu: string;
+  luuDenNgay: string;
 }
 
 const today = new Date();
 today.setHours(0, 0, 0, 0);
 
-const schema = yup.object().shape({
-  soLuong: yup
-    .number()
-    .required("Vui lòng nhập số lượng")
-    .min(1, "Số lượng phải lớn hơn 0"),
-  donViTinh: yup.string().required("Vui lòng nhập đơn vị tính"),
-  thoiGianLuu: yup
-    .date()
-    .typeError("Vui lòng chọn thời gian lưu")
-    .required("Vui lòng chọn thời gian lưu")
-    .min(today, "Thời gian lưu phải từ hôm nay trở đi"),
-  luuDenNgay: yup
-    .date()
-    .typeError("Vui lòng chọn ngày lưu đến")
-    .required("Vui lòng chọn ngày lưu đến")
-    .min(yup.ref("thoiGianLuu"), "Ngày lưu đến phải sau thời gian lưu"),
-});
-
 const SuaMauLuu = (props: Props) => {
   const { isOpen, onClose, selectedSamples } = props;
+  const dataSession = sessionStorage.getItem("chi-tiet-mau-luu-sua");
+  const id = dataSession ? JSON.parse(dataSession) : "";
+
+  const { data } = getMauLuuByID({
+    queryKey: "getMauLuuByID",
+    params: id,
+  });
+
+  const schema = yup.object().shape({
+    soLuong: yup
+      .number()
+      .required("Vui lòng nhập số lượng")
+      .min(1, "Số lượng phải lớn hơn 0"),
+    donViTinh: yup.string().required("Vui lòng nhập đơn vị tính"),
+    thoiGianLuu: yup
+      .string()
+      .required("Vui lòng chọn thời gian lưu")
+      .test(
+        "is-valid-date",
+        "Thời gian lưu phải từ ngày lưu trước đó trở đi",
+        function (value) {
+          if (!value) return false;
+          const date: any = formatDateNotTime2(value);
+          const thoiGianLuu: any = formatDateNotTime2(data?.thoiGianLuu);
+          return date >= thoiGianLuu;
+        }
+      ),
+
+    luuDenNgay: yup
+      .string()
+      .required("Vui lòng chọn ngày lưu đến")
+      .test(
+        "is-after-thoiGianLuu",
+        "Ngày lưu đến phải sau thời gian lưu",
+        function (value) {
+          const { thoiGianLuu } = this.parent;
+          if (!value || !thoiGianLuu) return false;
+          return new Date(value) > new Date(thoiGianLuu);
+        }
+      ),
+  });
 
   const {
     reset,
@@ -55,14 +81,23 @@ const SuaMauLuu = (props: Props) => {
 
   useEffect(() => {
     if (isOpen) {
-      reset({
-        soLuong: 0,
-        donViTinh: "",
-        thoiGianLuu: undefined,
-        luuDenNgay: undefined,
-      });
+      if (data) {
+        reset({
+          soLuong: data?.soLuong ?? 0,
+          donViTinh: data?.donViTinh ?? "",
+          thoiGianLuu: formatDateNotTime2(data?.thoiGianLuu) || undefined,
+          luuDenNgay: formatDateNotTime2(data?.luuDenNgay) || undefined,
+        });
+      } else {
+        reset({
+          soLuong: 0,
+          donViTinh: "",
+          thoiGianLuu: undefined,
+          luuDenNgay: undefined,
+        });
+      }
     }
-  }, [isOpen]);
+  }, [isOpen, data]);
 
   const handleAssignSubmit = (data: FormTaoPhieu) => {
     const dataTao = {
