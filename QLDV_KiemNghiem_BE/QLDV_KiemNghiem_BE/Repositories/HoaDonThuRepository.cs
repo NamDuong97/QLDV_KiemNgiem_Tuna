@@ -34,7 +34,7 @@ namespace QLDV_KiemNghiem_BE.Repositories
                     await _context.Entry(item).Collection(p => p.ChiTietHoaDonThus).Query().LoadAsync();
                     await _context.Entry(item).Collection(p => p.HoaDonThuBoSungs).Query().LoadAsync();
                 }
-                return PagedList<HoaDonThu>.ToPagedList(result, param.PageNumber, param.PageSize);
+                return PagedList<HoaDonThu>.ToPagedList(result, param.PageNumber, param.PageSize, param.GetAll);
             }
             else
             {
@@ -49,7 +49,7 @@ namespace QLDV_KiemNghiem_BE.Repositories
                     await _context.Entry(item).Collection(p => p.ChiTietHoaDonThus).Query().LoadAsync();
                     await _context.Entry(item).Collection(p => p.HoaDonThuBoSungs).Query().Include(a => a.ChiTietHoaDonThuBoSungs).LoadAsync();
                 }
-                return PagedList<HoaDonThu>.ToPagedList(result, param.PageNumber, param.PageSize);
+                return PagedList<HoaDonThu>.ToPagedList(result, param.PageNumber, param.PageSize, param.GetAll);
             }
         }
         public async Task<IEnumerable<HoaDonThu>> GetHoaDonThuOfCustomer(string maKH)

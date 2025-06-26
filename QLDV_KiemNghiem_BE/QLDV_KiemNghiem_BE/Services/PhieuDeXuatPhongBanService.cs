@@ -10,6 +10,7 @@ using QLDV_KiemNghiem_BE.Interfaces.ManagerInterface;
 using QLDV_KiemNghiem_BE.Models;
 using QLDV_KiemNghiem_BE.RequestFeatures;
 using QLDV_KiemNghiem_BE.RequestFeatures.PagingRequest;
+using QLDV_KiemNghiem_BE.Shared;
 using StackExchange.Redis;
 
 namespace QLDV_KiemNghiem_BE.Services
@@ -27,11 +28,11 @@ namespace QLDV_KiemNghiem_BE.Services
             _context = context;
             _hubContext = hubContext;
         }
-        public async Task<IEnumerable<PhieuDeXuatPhongBanDto>> GetPhieuDeXuatPhongBansAllAsync()
+        public async Task<(IEnumerable<PhieuDeXuatPhongBanDto> datas, Pagination pagi)> GetPhieuDeXuatPhongBansAllAsync(PhieuDeXuatPhongBanParam param)
         {
-            var PhieuDeXuatPhongBanDomains = await _repositoryManager.PhieuDeXuatPhongBan.GetPhieuDeXuatPhongBansAllAsync();
+            var PhieuDeXuatPhongBanDomains = await _repositoryManager.PhieuDeXuatPhongBan.GetPhieuDeXuatPhongBansAllAsync(param);
             var result = _mapper.Map<IEnumerable<PhieuDeXuatPhongBanDto>>(PhieuDeXuatPhongBanDomains);
-            return result;
+            return (datas : result, pagi : PhieuDeXuatPhongBanDomains.Pagination);
         }
         public async Task<PhieuDeXuatPhongBanDto?> FindPhieuDeXuatPhongBanAsync(string maPhieuDeXuatPhongBan)
         {

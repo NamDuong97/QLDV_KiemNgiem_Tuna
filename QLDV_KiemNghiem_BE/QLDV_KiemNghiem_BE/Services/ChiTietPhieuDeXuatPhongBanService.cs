@@ -50,9 +50,9 @@ namespace QLDV_KiemNghiem_BE.Services
             if (checkExistsChiTietPhieuDXPB != null)
             {
 
-                await _repositoryManager.ChiTietPhieuDeXuatPhongBan.ProcessReviewChiTietDeXuatPhongBanByPB(checkExistsChiTietPhieuDXPB.MaId, checkExistsChiTietPhieuDXPB?.MaPdkMau,
+                int numRow = await _repositoryManager.ChiTietPhieuDeXuatPhongBan.ProcessReviewChiTietDeXuatPhongBanByPB(checkExistsChiTietPhieuDXPB.MaId, checkExistsChiTietPhieuDXPB?.MaPdkMau,
                   duyetPhieu.Action, user, duyetPhieu.Message, userId);
-                bool check = await _repositoryManager.SaveChangesAsync();
+                bool check = numRow > 0? true : false;
 
                 return new ResponseReviewPhieuDeXuatPhongBan
                 {
@@ -85,9 +85,9 @@ namespace QLDV_KiemNghiem_BE.Services
             if (checkExistsChiTietPhieuDXPB != null)
             {
 
-                await _repositoryManager.ChiTietPhieuDeXuatPhongBan.ProcessReviewChiTietDeXuatPhongBanByBLD(checkExistsChiTietPhieuDXPB.MaId, checkExistsChiTietPhieuDXPB.MaPdkMau,
+                int numRow = await _repositoryManager.ChiTietPhieuDeXuatPhongBan.ProcessReviewChiTietDeXuatPhongBanByBLD(checkExistsChiTietPhieuDXPB.MaId, checkExistsChiTietPhieuDXPB.MaPdkMau,
                     duyetPhieu.Action, user, userId);
-                bool check = await _repositoryManager.SaveChangesAsync();
+                bool check = numRow > 0 ? true : false;
                 return new ResponseReviewPhieuDeXuatPhongBan
                 {
                     MaId = duyetPhieu.MaId,

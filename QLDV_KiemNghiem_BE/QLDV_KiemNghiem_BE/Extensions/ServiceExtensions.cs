@@ -46,16 +46,40 @@ namespace QLDV_KiemNghiem_BE.Extensions
         {
             services.AddAuthorization(option =>
             {
-                option.AddPolicy("AdminOnly", policy =>
+                option.AddPolicy("KYTOnly", policy =>
                 {
                     policy.RequireAuthenticatedUser();
-                    policy.RequireClaim("Role", "Admin");
+                    policy.RequireClaim("Role", "KYT,KYT_L,KYT_P");
                 });
 
-                option.AddPolicy("KTSA", policy =>
+                option.AddPolicy("BLDOnly", policy =>
                 {
                     policy.RequireAuthenticatedUser();
-                    policy.RequireClaim("Role", "KT,SALE");
+                    policy.RequireClaim("Role", "BLD_L,BLD_NL,BLD_TC,BLD_KN");
+                });
+
+                option.AddPolicy("KNOnly", policy =>
+                {
+                    policy.RequireAuthenticatedUser();
+                    policy.RequireClaim("Role", "KN,KN_L,KN_P");
+                });
+
+                option.AddPolicy("KHTHOnly", policy =>
+                {
+                    policy.RequireAuthenticatedUser();
+                    policy.RequireClaim("Role", "KHTH,KHTH_L,KHTH_P");
+                });
+
+                option.AddPolicy("VTOnly", policy =>
+                {
+                    policy.RequireAuthenticatedUser();
+                    policy.RequireClaim("Role", "VT,VT_L,VT_P");
+                });
+
+                option.AddPolicy("KETOnly", policy =>
+                {
+                    policy.RequireAuthenticatedUser();
+                    policy.RequireClaim("Role", "KET,KET_L,KET_P");
                 });
             });
         }

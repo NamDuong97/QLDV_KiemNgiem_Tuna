@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
@@ -214,6 +215,7 @@ namespace QLDV_KiemNghiem_BE.Controllers
             }
         }
 
+        [Authorize(Policy = "KHTHOnly")]
         [HttpPut]
         [Route("cancelPhieuDangKyMau")]
         public async Task<ActionResult> cancelPhieuDangKyMau(PhieuDangKyMauRequestCancelDto MauDto)

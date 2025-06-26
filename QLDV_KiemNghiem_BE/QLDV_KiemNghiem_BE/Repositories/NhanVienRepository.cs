@@ -28,7 +28,7 @@ namespace QLDV_KiemNghiem_BE.Repositories
                 nhanVienParam.HoTen, nhanVienParam.MaKhoa, nhanVienParam.MaBoPhan, nhanVienParam.MaChucVu, nhanVienParam.TrangThai).
                 ToListAsync();
                 _context.Attach(result);
-                return PagedList<NhanVienProcedure>.ToPagedList(result, nhanVienParam.PageNumber, nhanVienParam.PageSize);
+                return PagedList<NhanVienProcedure>.ToPagedList(result, nhanVienParam.PageNumber, nhanVienParam.PageSize, nhanVienParam.GetAll);
             }
             else
             {
@@ -36,7 +36,7 @@ namespace QLDV_KiemNghiem_BE.Repositories
                 nhanVienParam.HoTen, nhanVienParam.MaKhoa, nhanVienParam.MaBoPhan, nhanVienParam.MaChucVu, nhanVienParam.TrangThai).
                 ToListAsync();
               
-                return PagedList<NhanVienProcedure>.ToPagedList(result, nhanVienParam.PageNumber, nhanVienParam.PageSize);
+                return PagedList<NhanVienProcedure>.ToPagedList(result, nhanVienParam.PageNumber, nhanVienParam.PageSize, nhanVienParam.GetAll);
             }
         }
 
