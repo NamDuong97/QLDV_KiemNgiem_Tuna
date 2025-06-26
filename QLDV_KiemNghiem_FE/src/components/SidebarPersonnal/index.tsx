@@ -40,6 +40,7 @@ import { FaFileInvoiceDollar, FaFlask } from "react-icons/fa6";
 import { FaChartLine } from "react-icons/fa";
 import { HiClipboardDocumentList } from "react-icons/hi2";
 import { getChucVuByID } from "../../hooks/personnels/queryChucVu";
+import { getRoleGroup } from "../../configs/Role";
 
 const SidebarPersonnal = () => {
   const navigate = useNavigate();
@@ -134,7 +135,7 @@ const SidebarPersonnal = () => {
               </p>
             </div>
             <div className="flex flex-col space-y-1">
-              {(role === "KHTH" || role === "BLD") && (
+              {(getRoleGroup(role) === "KHTH" || getRoleGroup(role) === "BLD") && (
                 <>
                   <button
                     onClick={() => {

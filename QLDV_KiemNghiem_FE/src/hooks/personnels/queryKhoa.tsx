@@ -29,5 +29,6 @@ export const getKhoaByID = (props: Props) => {
       return response?.data;
     },
     refetchOnWindowFocus: false,
+    enabled: !!params,
   });
 };

@@ -9,10 +9,14 @@ import {
 import ImageGallery from "../../../../../components/ImageGallery";
 import { queryClient } from "../../../../../lib/reactQuery";
 import { useStoreNotification } from "../../../../../configs/stores/useStoreNotification";
-import { useTruongPhongDuyet } from "../../../../../hooks/personnels/phanCongKhoa";
+import {
+  useBLDDuyet,
+  useTruongPhongDuyet,
+} from "../../../../../hooks/personnels/phanCongKhoa";
 import { usePersonnel } from "../../../../../contexts/PersonelsProvider";
+import { getRoleGroup } from "../../../../../configs/Role";
 
-const SampleCard = ({ sample, onImageClick, handleTuChoi, index }: any) => {
+const SampleCard = ({ sample, onImageClick, index }: any) => {
   const [isTuchoi, setisTuchoi] = useState(false);
   const { data: dataMau } = queryMauByID({
     queryKey: "queryMauByID",
@@ -20,12 +24,11 @@ const SampleCard = ({ sample, onImageClick, handleTuChoi, index }: any) => {
   });
   const { personnelInfo } = usePersonnel();
   const handleOnSettled = async (response: any) => {
-    // if (response.ketQua === true) {
-
-    // }
-    await queryClient.refetchQueries({
-      queryKey: ["ChitietPhieuDKKM"],
-    });
+    if (response.ketQua === true) {
+      await queryClient.refetchQueries({
+        queryKey: ["ChitietPhieuDKKM"],
+      });
+    }
   };
   const showNotification = useStoreNotification(
     (state: any) => state.showNotification
@@ -47,6 +50,22 @@ const SampleCard = ({ sample, onImageClick, handleTuChoi, index }: any) => {
     },
   });
 
+  const { mutate: mutateBLD } = useBLDDuyet({
+    queryKey: "useBLDDuyet",
+    onSettled: handleOnSettled,
+    onSuccess: (res: any) => {
+      const { ketQua, message } = res;
+      if (ketQua !== true) {
+        showNotification({
+          message: message || "Thao tác thất bại. Vui lòng thử lại.",
+          ketQua: ketQua,
+        });
+        return;
+      }
+      showNotification({ message: "Thao tác thành công", status: 200 });
+    },
+  });
+
   const handleDuyet = () => {
     const params = {
       action: true,
@@ -54,6 +73,14 @@ const SampleCard = ({ sample, onImageClick, handleTuChoi, index }: any) => {
       maKhoa: personnelInfo?.maKhoa,
     };
     mutate(params);
+  };
+
+  const handleBLDDuyet = () => {
+    const params = {
+      action: true,
+      maId: sample?.maId,
+    };
+    mutateBLD(params);
   };
 
   return (
@@ -155,7 +182,7 @@ const SampleCard = ({ sample, onImageClick, handleTuChoi, index }: any) => {
       </div>
 
       {sample.trangThai === 1 && (
-        <div className="mt-4 flex justify-between bg-red-50 border-l-4 border-red-400 p-3">
+        <div className="mt-4 bg-red-50 border-l-4 border-red-400 p-3">
           <div className="flex">
             <div className="flex-shrink-0">
               <svg
@@ -173,18 +200,26 @@ const SampleCard = ({ sample, onImageClick, handleTuChoi, index }: any) => {
             </div>
             <div className="ml-3">
               <p className="text-sm text-red-700">
-                <span className="font-medium">Lý do từ chối:</span>{" "}
+                <span className="font-medium">Lý do từ chối:</span>
                 {sample.lyDoTuChoi}
               </p>
             </div>
           </div>
-          {role === "BLD" && (
+          {getRoleGroup(role) === "BLD" && isTuchoi ? (
+            <FormGhiChuTuChoi
+              handleCloseTuChoi={() => setisTuchoi(false)}
+              ChiTietID={sample?.maId}
+            />
+          ) : (
             <div className="mt-4 flex justify-end space-x-2">
-              <button className="bg-green-600 hover:bg-green-700 text-white px-3 py-1.5 rounded-md text-sm cursor-pointer">
+              <button
+                onClick={handleBLDDuyet}
+                className="bg-green-600 hover:bg-green-700 text-white px-3 py-1.5 rounded-md text-sm cursor-pointer"
+              >
                 <i className="fas fa-check mr-1"></i> Chấp nhận
               </button>
               <button
-                onClick={handleTuChoi}
+                onClick={() => setisTuchoi(true)}
                 className="bg-red-600 hover:bg-red-700 text-white px-3 py-1.5 rounded-md text-sm cursor-pointer"
               >
                 <i className="fas fa-times mr-1"></i> Từ chối
@@ -193,8 +228,8 @@ const SampleCard = ({ sample, onImageClick, handleTuChoi, index }: any) => {
           )}
         </div>
       )}
-      {role !== "BLD" &&
-        role !== "KHTH" &&
+      {getRoleGroup(role) !== "BLD" &&
+        getRoleGroup(role) !== "KHTH" &&
         (isTuchoi ? (
           <FormGhiChuTuChoi
             handleCloseTuChoi={() => setisTuchoi(false)}

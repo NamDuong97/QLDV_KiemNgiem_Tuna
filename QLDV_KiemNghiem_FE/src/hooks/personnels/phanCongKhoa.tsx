@@ -26,15 +26,16 @@ export const createPhieuPhanCongKhoa = (props: Props) => {
 };
 
 export const getPhanCongKhoaCMAll = (props: Props) => {
-  const { queryKey } = props;
+  const { queryKey, params } = props;
   return useQuery({
     queryKey: [queryKey],
     queryFn: async () => {
-      const response = await phanCongKhoaServices.getPhanCongKhoaCMAll();
+      const response = await phanCongKhoaServices.getPhanCongKhoaCMAll(params);
       return response?.data;
     },
     refetchOnWindowFocus: false,
     staleTime: Infinity,
+    enabled: !!params,
   });
 };
 
@@ -48,6 +49,7 @@ export const getPhanCongKhoaCMByID = (props: Props) => {
     },
     refetchOnWindowFocus: false,
     staleTime: Infinity,
+    enabled: !!params,
   });
 };
 
@@ -63,6 +65,7 @@ export const getAllDanhSachMau = (props: Props) => {
     },
     refetchOnWindowFocus: false,
     staleTime: Infinity,
+    enabled: !!params,
   });
 };
 

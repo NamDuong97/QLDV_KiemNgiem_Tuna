@@ -7,6 +7,7 @@ import KHTH from "./RolePhieuDKyHN/KHTH";
 import BLD from "./RolePhieuDKyHN/BLD";
 import { Align } from "../../../models/Table";
 import { role } from "../../../configs/parseJwt";
+import { getRoleGroup } from "../../../configs/Role";
 
 const tableHead = [
   {
@@ -155,7 +156,7 @@ const QuanLyPhieuDKyDVHN = () => {
       </div>
 
       <div className="bg-white p-4 rounded-lg shadow-sm">{handleShowTag()}</div>
-      {role === "BLD" ? (
+      {getRoleGroup(role) === "BLD" ? (
         <BLD
           setOpenXemChiTiet={setOpenXemChiTiet}
           tableHead={tableHead}

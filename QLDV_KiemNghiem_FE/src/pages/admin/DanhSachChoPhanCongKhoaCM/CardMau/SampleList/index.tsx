@@ -30,6 +30,7 @@ function convertToMauPhanCong(data: any): MauPhanCong {
     trangThaiPhanCong: data.trangThaiPhanCong,
     maPhieuDangKy: data.maPhieuDangKy,
     maLoaiMau: data.maLoaiMau,
+    thoiGianTieuChuan: data.thoiGianTieuChuan,
   };
 }
 
@@ -57,29 +58,23 @@ const SampleList = (props: Props) => {
     data?.data?.map(convertToMauPhanCong) || []
   );
 
+  console.log("samplessamples?.data", samples);
+
   const [selectedSamples, setSelectedSamples] = useState<any[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
 
   const [isAssignModalOpen, setIsAssignModalOpen] = useState(false);
   const [isAssignmentDeleteModalOpen, setIsAssignmentDeleteModalOpen] =
     useState(false);
-  const filteredSamples: any = samples?.filter((sample: any) => {
-    const query = removeVietnameseTones(searchQuery.toLowerCase());
-    const matchesSearch = removeVietnameseTones(
-      sample.tenMau.toLowerCase()
-    ).includes(query);
-    return matchesSearch;
-  });
-
-  // const indexOfLastItem = currentPage * itemsPerPage;
-  // const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  // const currentItems = filteredSamples?.slice(
-  //   indexOfFirstItem,
-  //   indexOfLastItem
-  // );
-  // const totalPages = Math.ceil(
-  //   filteredSamples && filteredSamples?.length / itemsPerPage
-  // );
+  const filteredSamples: any = samples
+    ?.sort((a: any, b: any) => a.thoiGianTieuChuan - b.thoiGianTieuChuan)
+    ?.filter((sample: any) => {
+      const query = removeVietnameseTones(searchQuery.toLowerCase());
+      const matchesSearch = removeVietnameseTones(
+        sample.tenMau.toLowerCase()
+      ).includes(query);
+      return matchesSearch;
+    });
   const [openXemChiTiet, setOpenXemChiTiet] = useState(false);
 
   const handleCloseXemChiTiet = () => {

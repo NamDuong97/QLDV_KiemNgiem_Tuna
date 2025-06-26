@@ -5,7 +5,12 @@ import yup from "../../../../../../configs/yup.custom";
 import { queryClient } from "../../../../../../lib/reactQuery";
 import { usePersonnel } from "../../../../../../contexts/PersonelsProvider";
 import { useStoreNotification } from "../../../../../../configs/stores/useStoreNotification";
-import { useTruongPhongDuyet } from "../../../../../../hooks/personnels/phanCongKhoa";
+import {
+  useBLDDuyet,
+  useTruongPhongDuyet,
+} from "../../../../../../hooks/personnels/phanCongKhoa";
+import { getRoleGroup } from "../../../../../../configs/Role";
+import { role } from "../../../../../../configs/parseJwt";
 
 interface Props {
   ChiTietID?: any;
@@ -37,12 +42,11 @@ const FormGhiChuTuChoi = (props: Props) => {
 
   const { personnelInfo } = usePersonnel();
   const handleOnSettled = async (response: any) => {
-    // if (response.ketQua === true) {
-
-    // }
-    await queryClient.refetchQueries({
-      queryKey: ["ChitietPhieuDKKM"],
-    });
+    if (response.ketQua === true) {
+      await queryClient.refetchQueries({
+        queryKey: ["ChitietPhieuDKKM"],
+      });
+    }
   };
   const showNotification = useStoreNotification(
     (state: any) => state.showNotification
@@ -52,28 +56,52 @@ const FormGhiChuTuChoi = (props: Props) => {
     queryKey: "useTruongPhongDuyet",
     onSettled: handleOnSettled,
     onSuccess: (res: any) => {
-      // const { ketQua, message } = res;
-      // if (ketQua !== true) {
-      //   showNotification({
-      //     message: message || "Thao tác thất bại. Vui lòng thử lại.",
-      //     ketQua: ketQua,
-      //   });
-      //   return;
-      // }
+      const { ketQua, message } = res;
+      if (ketQua !== true) {
+        showNotification({
+          message: message || "Thao tác thất bại. Vui lòng thử lại.",
+          ketQua: ketQua,
+        });
+        return;
+      }
       showNotification({ message: "Thao tác thành công", status: 200 });
       handleCloseTuChoi();
     },
   });
 
+  const { mutate: mutateBLD } = useBLDDuyet({
+    queryKey: "useBLDDuyet",
+    onSettled: handleOnSettled,
+    onSuccess: (res: any) => {
+      const { ketQua, message } = res;
+      if (ketQua !== true) {
+        showNotification({
+          message: message || "Thao tác thất bại. Vui lòng thử lại.",
+          ketQua: ketQua,
+        });
+        return;
+      }
+      showNotification({ message: "Thao tác thành công", status: 200 });
+    },
+  });
+
   const handleHuyPhieu = (data: FormGhiChu) => {
-    const params = {
-      message: data.ghiChu,
-      action: false,
-      maId: ChiTietID,
-      maKhoa: personnelInfo?.maKhoa,
-    };
-    mutate(params);
-    console.log("params", params);
+    if (getRoleGroup(role) === "BLD") {
+      const paramsBLD = {
+        action: false,
+        maId: ChiTietID,
+        message: data.ghiChu,
+      };
+      mutateBLD(paramsBLD);
+    } else {
+      const params = {
+        message: data.ghiChu,
+        action: false,
+        maId: ChiTietID,
+        maKhoa: personnelInfo?.maKhoa,
+      };
+      mutate(params);
+    }
   };
 
   useEffect(() => {
@@ -81,6 +109,8 @@ const FormGhiChuTuChoi = (props: Props) => {
       ghiChu: "",
     });
   }, []);
+
+  console.log("getRoleGroup(role)", getRoleGroup(role));
 
   return (
     <form onSubmit={handleSubmit(handleHuyPhieu)} className="space-y-2">

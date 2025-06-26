@@ -1,8 +1,6 @@
 import { useState } from "react";
 import SampleCard from "../SampleCard";
 import ImageModal from "../ImageModal";
-import ConfirmationModal from "../../../../../components/ConfirmationModal";
-import { TypeConformation } from "../../../../../constants/typeConfirmation";
 
 interface Props {
   data: any;
@@ -10,10 +8,9 @@ interface Props {
 }
 
 const SampleList = (props: Props) => {
-  const { data, isLoading } = props;
+  const { data } = props;
   const [selectedImage, setSelectedImage] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isOpenConfirmation, setisOpenConfirmation] = useState(false);
 
   const handleImageClick = (image: any) => {
     setSelectedImage(image);
@@ -58,7 +55,6 @@ const SampleList = (props: Props) => {
                   index={index}
                   sample={sample}
                   onImageClick={handleImageClick}
-                  handleTuChoi={() => setisOpenConfirmation(true)}
                 />
               ))}
             </div>
@@ -69,14 +65,6 @@ const SampleList = (props: Props) => {
         isOpen={isModalOpen}
         onClose={handleCloseModal}
         imageModal={selectedImage}
-      />
-      <ConfirmationModal
-        isOpen={isOpenConfirmation}
-        onClose={() => setisOpenConfirmation(false)}
-        title="Thông báo"
-        message="Bạn có chắc chắn từ chối không?"
-        onConfirm={() => setisOpenConfirmation(false)}
-        type={TypeConformation.Error}
       />
     </div>
   );

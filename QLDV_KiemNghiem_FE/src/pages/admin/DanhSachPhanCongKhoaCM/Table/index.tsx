@@ -19,6 +19,7 @@ import {
   renderTrangThaiPhieuDeXuatPhongBan,
 } from "../../../../configs/configAll";
 import { role } from "../../../../configs/parseJwt";
+import { getRoleGroup } from "../../../../configs/Role";
 
 interface TableProps {
   tableBody: any[];
@@ -201,7 +202,7 @@ const TableQuanLyPhieuDKyDVHN = (props: TableProps) => {
                         <FaEye className="w-5 h-5" />
                       </button>
                     </Tooltip>
-                    {(role === "KHTH" || role === "BLD") && (
+                    {(getRoleGroup(role) === "KHTH" || getRoleGroup(role) === "BLD") && (
                       <Tooltip
                         title="Sửa phân công"
                         slotProps={{

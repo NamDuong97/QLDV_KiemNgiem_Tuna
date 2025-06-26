@@ -1,6 +1,9 @@
 import { Skeleton } from "@mui/material";
 import { IoIosArrowBack } from "react-icons/io";
-import { formatDate, renderTrangThai } from "../../../../../configs/configAll";
+import {
+  formatDate,
+  renderTrangThaiPhieuDeXuatPhongBan,
+} from "../../../../../configs/configAll";
 import { queryKhoaAll } from "../../../../../hooks/personnels/queryKhoa";
 import { useNavigate } from "react-router";
 import { APP_ROUTES } from "../../../../../constants/routers";
@@ -20,6 +23,7 @@ const RegistrationDetails = (props: Props) => {
     queryKey: "getInforNhanVien",
     params: data?.manvDeXuat,
   });
+  console.log("data", data);
 
   const navigate = useNavigate();
   const datadataKhoa: any = dataKhoaAll;
@@ -127,7 +131,7 @@ const RegistrationDetails = (props: Props) => {
                 <Skeleton variant="rounded" width={100} height={20} />
               ) : (
                 <p className="font-medium text-gray-900">
-                  {renderTrangThai(data?.trangThai)}
+                  {renderTrangThaiPhieuDeXuatPhongBan(data?.trangThai)}
                 </p>
               )}
             </div>

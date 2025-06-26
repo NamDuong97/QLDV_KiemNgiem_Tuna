@@ -13,6 +13,7 @@ import FormGhiChuDuyet from "./FormGhiChuDuyet";
 import { keyTag } from "../../../../models/Account-Customer";
 import { getInforNhanVien } from "../../../../hooks/personnels/access/useAccess";
 import FormGhiChuHoanTac from "./FormGhiChuHoanTac";
+import { getRoleGroup } from "../../../../configs/Role";
 
 interface Props {
   open: boolean;
@@ -488,7 +489,7 @@ const ChiTietPhieuDKyDVKN = (props: Props) => {
               {data?.noiDungDuyetSoBo && (
                 <div className="col-span-full">
                   <label className="text-sm/6 text-gray-500">
-                    {role === "BLD"
+                    {getRoleGroup(role) === "BLD"
                       ? `Nhân viên ${dataNhanVien?.hoTen} đánh
                     giá phiếu`
                       : "Ghi chú đánh giá phiếu"}
@@ -500,7 +501,7 @@ const ChiTietPhieuDKyDVKN = (props: Props) => {
                   </div>
                 </div>
               )}
-              {role === "BLD" && data?.noiDungTongDuyet && (
+              {getRoleGroup(role) === "BLD" && data?.noiDungTongDuyet && (
                 <div className="col-span-full">
                   <label className="text-sm/6 text-gray-500">
                     Ghi chú đánh giá phiếu

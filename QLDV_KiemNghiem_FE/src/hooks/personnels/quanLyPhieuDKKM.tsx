@@ -20,6 +20,7 @@ export const listPhieuDKKNAll = (props: Props) => {
     },
     refetchOnWindowFocus: false,
     staleTime: Infinity,
+    enabled: !!params,
   });
 };
 
@@ -33,6 +34,7 @@ export const listPhieuDKKM = (props: Props) => {
     },
     refetchOnWindowFocus: false,
     staleTime: Infinity,
+    enabled: !!params,
   });
 };
 

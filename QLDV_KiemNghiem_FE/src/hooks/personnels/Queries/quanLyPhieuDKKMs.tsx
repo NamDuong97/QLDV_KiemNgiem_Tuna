@@ -18,6 +18,7 @@ export const quanLyPhieuDKKMs = (props: Props) => {
       refetchOnWindowFocus: false,
       staleTime: Infinity,
       cacheTime: Infinity,
+      enabled: !!params,
     })),
   });
   const data = results.flatMap((q) => q.data ?? []);

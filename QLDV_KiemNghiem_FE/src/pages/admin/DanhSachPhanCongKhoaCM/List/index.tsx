@@ -2,14 +2,7 @@ import { useState } from "react";
 import { FaSortAmountDown, FaSortAmountUp } from "react-icons/fa";
 import TableQuanLyPhieuDKyDVHN from "../Table";
 import { Pagination } from "@mui/material";
-import {
-  AlertTriangle,
-  CheckCircle,
-  Clipboard,
-  Clock,
-  TrendingDown,
-  TrendingUp,
-} from "react-feather";
+import { Clipboard, TrendingUp } from "react-feather";
 import Card from "./Card";
 import InputSearch2 from "../../../../components/InputSearch2";
 import { getPhanCongKhoaCMAll } from "../../../../hooks/personnels/phanCongKhoa";
@@ -18,6 +11,7 @@ import removeVietnameseTones from "../../../../configs/removeVietnameseTones";
 import SelectItemKhoa from "./SelectItemKhoa";
 import { usePersonnel } from "../../../../contexts/PersonelsProvider";
 import { role } from "../../../../configs/parseJwt";
+import { getRoleGroup } from "../../../../configs/Role";
 
 interface Props {
   tableHead: any;
@@ -28,6 +22,7 @@ const DanhSach = (props: Props) => {
   const { personnelInfo } = usePersonnel();
   const { data, isLoading } = getPhanCongKhoaCMAll({
     queryKey: "getPhanCongKhoaCMAll",
+    params: true,
   });
 
   const [searchQuery, setSearchQuery] = useState("");
@@ -36,7 +31,7 @@ const DanhSach = (props: Props) => {
   const [isSortNew, setIsSortNew] = useState(false);
   const filteredSamples: any = data
     ?.filter((item: any) =>
-      personnelInfo?.maChucVu === "CV01"
+      getRoleGroup(role) === "KN"
         ? item.maKhoaTiepNhan === personnelInfo?.maKhoa
         : item
     )
@@ -77,6 +72,7 @@ const DanhSach = (props: Props) => {
   const handleSearchChange = (e: any) => {
     setSearchQuery(e.target.value);
   };
+console.log('currentItems',currentItems);
 
   return (
     <>
@@ -117,7 +113,7 @@ const DanhSach = (props: Props) => {
               </span>
             )}
           </button>
-          {(role === "BLD" || role === "KHTH") && (
+          {(getRoleGroup(role) === "BLD" || getRoleGroup(role) === "KHTH") && (
             <SelectItemKhoa
               title="Khoa"
               setItem={setSelectKhoa}

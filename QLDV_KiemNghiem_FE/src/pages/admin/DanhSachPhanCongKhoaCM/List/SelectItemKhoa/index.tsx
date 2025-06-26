@@ -21,8 +21,6 @@ export default function SelectItemKhoa(props: Props) {
     setItem(event.target.value as string);
   };
 
-  console.log("data", data);
-
   return (
     <Box
       sx={{ minWidth: 300, maxWidth: 300, ".MuiSelect-select": { padding: 1 } }}

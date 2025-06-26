@@ -32,6 +32,7 @@ export const queryLoaiMauByID = (props: Props) => {
     },
     refetchOnWindowFocus: false,
     staleTime: Infinity,
+    enabled: !!params,
   });
 };
 

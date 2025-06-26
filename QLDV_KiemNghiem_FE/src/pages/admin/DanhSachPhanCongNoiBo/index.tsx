@@ -4,6 +4,7 @@ import { Share } from "react-feather";
 import { useState } from "react";
 import PhanCong from "./PhanCong";
 import DanhSach from "./DanhSach";
+import { role } from "../../../configs/parseJwt";
 
 export const tagPhanCong = {
   Phan_Cong: "Phân công",
@@ -12,6 +13,10 @@ export const tagPhanCong = {
 
 const DanhSachPhanCongNoiBo = () => {
   const [isTag, setIsTag] = useState(tagPhanCong.Phan_Cong);
+
+  console.log('role', role);
+  
+
   return (
     <motion.div
       key="DanhSachMauLuu"

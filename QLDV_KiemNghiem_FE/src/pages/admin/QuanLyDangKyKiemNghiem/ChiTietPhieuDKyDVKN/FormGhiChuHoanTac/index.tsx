@@ -10,6 +10,7 @@ import {
 } from "../../../../../hooks/personnels/quanLyPhieuDKKM";
 import { role } from "../../../../../configs/parseJwt";
 import { useStoreNotification } from "../../../../../configs/stores/useStoreNotification";
+import { getRoleGroup } from "../../../../../configs/Role";
 
 interface Props {
   id: any;
@@ -87,7 +88,7 @@ const FormGhiChuHoanTac = (props: Props) => {
     <form onSubmit={handleSubmit(handleDuyet)} className="space-y-2">
       <h4 className="text-base/6 font-semibold text-gray-500">
         Ghi chú{" "}
-        {role === "KHTH" && (
+        {getRoleGroup(role) === "KHTH" && (
           <span className="font-medium">(Duyệt không thể thu hồi)*</span>
         )}
       </h4>
@@ -105,7 +106,7 @@ const FormGhiChuHoanTac = (props: Props) => {
         )}
       </div>
       <div className="flex justify-end gap-2">
-        {role === "KHTH" && (
+        {getRoleGroup(role) === "KHTH" && (
           <button
             type="button"
             onClick={closeGhiChu}

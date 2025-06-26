@@ -123,4 +123,5 @@ export interface MauPhanCong {
   trangThaiPhanCong: string;
   maPhieuDangKy: string;
   maLoaiMau: string;
+  thoiGianTieuChuan: number;
 }

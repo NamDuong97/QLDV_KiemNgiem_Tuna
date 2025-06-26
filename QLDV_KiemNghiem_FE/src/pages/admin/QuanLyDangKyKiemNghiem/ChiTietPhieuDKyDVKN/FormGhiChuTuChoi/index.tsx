@@ -8,7 +8,7 @@ import {
   useDanhGiaNhanVien,
 } from "../../../../../hooks/personnels/quanLyPhieuDKKM";
 import { role } from "../../../../../configs/parseJwt";
-import { keyTag } from "../../../../../models/Account-Customer";
+import { getRoleGroup } from "../../../../../configs/Role";
 
 interface Props {
   id: any;
@@ -74,7 +74,7 @@ const FormGhiChuTuChoi = (props: Props) => {
       message: data.ghiChu,
       action: false,
     };
-    if (role === "KHTH") mutateNhanVien(params);
+    if (getRoleGroup(role) === "KHTH") mutateNhanVien(params);
     mutateBLD(params);
   };
 
@@ -88,7 +88,7 @@ const FormGhiChuTuChoi = (props: Props) => {
     <form onSubmit={handleSubmit(handleHuyPhieu)} className="space-y-2">
       <h4 className="text-base/6 font-semibold text-gray-500">
         Ghi chú{" "}
-        {role === "KHTH" && (
+        {getRoleGroup(role) === "KHTH" && (
           <span className="font-medium">(Từ chối không thể thu hồi)*</span>
         )}
       </h4>
@@ -106,7 +106,7 @@ const FormGhiChuTuChoi = (props: Props) => {
         )}
       </div>
       <div className="flex justify-end gap-2">
-        {role === "KHTH" && (
+        {getRoleGroup(role) === "KHTH" && (
           <button
             type="button"
             onClick={closeGhiChu}
