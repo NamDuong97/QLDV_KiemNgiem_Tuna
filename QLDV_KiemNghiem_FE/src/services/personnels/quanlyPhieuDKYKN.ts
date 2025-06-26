@@ -52,4 +52,17 @@ export default class QuanlyPhieuDKYKNServices {
       return err;
     }
   }
+  static async UndoDanhGiaBLD(params: any) {
+    // Vừa chạy cho lý do từ chối vừa chạy cho duyệt phiếu đăng ký
+    try {
+      const response = await _APIInstance.put(
+        API.ADMIN.PHIEU_DKY_DVKM.UNDO_DANH_GIA_BLD,
+        params,
+        { headers: { "Content-Type": "application/json" } }
+      );
+      return response?.data;
+    } catch (err: any) {
+      return err;
+    }
+  }
 }

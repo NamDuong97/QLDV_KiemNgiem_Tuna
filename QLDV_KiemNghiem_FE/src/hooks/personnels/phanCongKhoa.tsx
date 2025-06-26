@@ -5,10 +5,12 @@ interface Props {
   queryKey: string;
   params?: any;
   onSettled?: any;
+  onSuccess?: any;
+  onError?: any;
 }
 
 export const createPhieuPhanCongKhoa = (props: Props) => {
-  const { queryKey, onSettled } = props;
+  const { queryKey, onSettled, onSuccess, onError } = props;
   return useMutation({
     mutationKey: [queryKey],
     mutationFn: async (params: any) => {
@@ -17,6 +19,8 @@ export const createPhieuPhanCongKhoa = (props: Props) => {
       );
       return response;
     },
+    onSuccess: onSuccess,
+    onError: onError,
     onSettled: onSettled,
   });
 };
@@ -59,5 +63,33 @@ export const getAllDanhSachMau = (props: Props) => {
     },
     refetchOnWindowFocus: false,
     staleTime: Infinity,
+  });
+};
+
+export const useTruongPhongDuyet = (props: Props) => {
+  const { queryKey, onSettled, onSuccess, onError } = props;
+  return useMutation({
+    mutationKey: [queryKey],
+    mutationFn: async (params: any) => {
+      const response = await phanCongKhoaServices.truongPhongDuyet(params);
+      return response;
+    },
+    onSuccess: onSuccess,
+    onError: onError,
+    onSettled: onSettled,
+  });
+};
+
+export const useBLDDuyet = (props: Props) => {
+  const { queryKey, onSettled, onSuccess, onError } = props;
+  return useMutation({
+    mutationKey: [queryKey],
+    mutationFn: async (params: any) => {
+      const response = await phanCongKhoaServices.BLDDuyet(params);
+      return response;
+    },
+    onSuccess: onSuccess,
+    onError: onError,
+    onSettled: onSettled,
   });
 };

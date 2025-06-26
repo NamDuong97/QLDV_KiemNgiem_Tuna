@@ -1,10 +1,19 @@
-const ImageModal = ({ isOpen, image, onClose }: any) => {
+import { Dialog } from "@mui/material";
+import { image } from "../../../../../constants/image";
+
+const ImageModal = ({ isOpen, imageModal, onClose }: any) => {
   if (!isOpen) return null;
 
   return (
-    <div
-      className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4"
+    <Dialog
+      open={isOpen}
+      onClose={onClose}
       onClick={onClose}
+      sx={{
+        ".MuiPaper-root": {
+          borderRadius: 4,
+        },
+      }}
     >
       <div
         className="bg-white rounded-lg max-w-3xl w-full p-4"
@@ -14,7 +23,7 @@ const ImageModal = ({ isOpen, image, onClose }: any) => {
           <h3 className="text-lg font-medium text-gray-900">Xem ảnh mẫu</h3>
           <button
             onClick={onClose}
-            className="text-gray-400 hover:text-gray-500"
+            className="text-gray-400 hover:text-gray-500 p-1 rounded-full hover:bg-gray-300 cursor-pointer"
           >
             <svg
               className="h-6 w-6"
@@ -34,13 +43,13 @@ const ImageModal = ({ isOpen, image, onClose }: any) => {
         </div>
         <div className="flex justify-center">
           <img
-            src={image?.url || "/placeholder-image.png"}
+            src={imageModal?.url || image.imageTunaLogo}
             alt="Ảnh mẫu"
             className="max-h-[70vh] max-w-full object-contain"
           />
         </div>
       </div>
-    </div>
+    </Dialog>
   );
 };
 

@@ -52,4 +52,32 @@ export default class phanCongKhoaServices {
       return err;
     }
   }
+
+  static async truongPhongDuyet(params: any) {
+    // Vừa chạy cho lý do vừa chạy cho duyệt
+    try {
+      const response = await _APIInstance.put(
+        API.ADMIN.CHI_TIET_PHAN_CONG_KHOA.TRUONG_PHONG_DUYET_MAUS,
+        params,
+        { headers: { "Content-Type": "application/json" } }
+      );
+      return response?.data;
+    } catch (err: any) {
+      return err;
+    }
+  }
+
+  static async BLDDuyet(params: any) {
+    // Vừa chạy cho lý do vừa chạy cho duyệt
+    try {
+      const response = await _APIInstance.put(
+        API.ADMIN.CHI_TIET_PHAN_CONG_KHOA.BLD_DUYET_MAUS,
+        params,
+        { headers: { "Content-Type": "application/json" } }
+      );
+      return response?.data;
+    } catch (err: any) {
+      return err;
+    }
+  }
 }

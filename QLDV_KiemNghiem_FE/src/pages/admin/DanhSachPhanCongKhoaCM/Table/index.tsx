@@ -14,7 +14,7 @@ import { FaEdit, FaEye } from "react-icons/fa";
 import { queryKhoaAll } from "../../../../hooks/personnels/queryKhoa";
 import { useNavigate } from "react-router";
 import { APP_ROUTES } from "../../../../constants/routers";
-import { renderTrangThai } from "../../../../configs/configAll";
+import { renderTrangThaiPhieuDeXuatPhongBan } from "../../../../configs/configAll";
 import { role } from "../../../../configs/parseJwt";
 
 interface TableProps {
@@ -93,22 +93,27 @@ const TableQuanLyPhieuDKyDVHN = (props: TableProps) => {
                 </div>
               </TableCell>
               <TableCell align="center">
-                <div className="flex justify-center">
+                <div className="flex justify-start">
                   <Skeleton variant="rounded" width={210} height={30} />
                 </div>
               </TableCell>
               <TableCell align="center">
-                <div className="flex justify-center">
+                <div className="flex justify-start">
                   <Skeleton variant="rounded" width={210} height={30} />
                 </div>
               </TableCell>
               <TableCell align="center">
-                <div className="flex justify-center">
+                <div className="flex justify-start">
                   <Skeleton variant="rounded" width={210} height={30} />
                 </div>
               </TableCell>
               <TableCell align="center" className="!py-3">
-                <div className="flex justify-center">
+                <div className="flex justify-start">
+                  <Skeleton variant="rounded" width={210} height={30} />
+                </div>
+              </TableCell>
+              <TableCell align="center" className="!py-3">
+                <div className="flex justify-start">
                   <Skeleton variant="rounded" width={210} height={30} />
                 </div>
               </TableCell>
@@ -128,13 +133,6 @@ const TableQuanLyPhieuDKyDVHN = (props: TableProps) => {
                       onClick={() => handleRedirectChiTiet(item?.maId)}
                     >
                       {item?.maPhieuDeXuat}
-                    </p>
-                  </Box>
-                </TableCell>
-                <TableCell align="center">
-                  <Box className="flex gap-2 items-center justify-start">
-                    <p className="text-base/4 font-medium text-gray-700">
-                      {item?.tenKhachHang}
                     </p>
                   </Box>
                 </TableCell>
@@ -165,7 +163,14 @@ const TableQuanLyPhieuDKyDVHN = (props: TableProps) => {
                 </TableCell>
                 <TableCell align="center">
                   <Box className="flex gap-2 items-center justify-start">
-                    {renderTrangThai(item?.trangThai)}
+                    <p className="text-xs/4 font-medium inline-block px-2 py-1 rounded-full bg-red-100 text-red-800">
+                     còn 2 mẫu chưa duyệt
+                    </p>
+                  </Box>
+                </TableCell>
+                <TableCell align="center">
+                  <Box className="flex gap-2 items-center justify-start">
+                    {renderTrangThaiPhieuDeXuatPhongBan(item?.trangThai)}
                   </Box>
                 </TableCell>
                 <TableCell align="center" className="!py-3">

@@ -4,9 +4,11 @@ import { MauPhanCong } from "../../../../../models/mau";
 import yup from "../../../../../configs/yup.custom";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm, useWatch } from "react-hook-form";
-// import { queryClient } from "../../../../lib/reactQuery";
-// import { createPhieuPhanCongKhoa } from "../../../../hooks/personnels/phanCongKhoa";
 import { maNhanVien } from "../../../../../configs/parseJwt";
+import { createPhieuPhanCongKhoa } from "../../../../../hooks/personnels/phanCongKhoa";
+import { queryClient } from "../../../../../lib/reactQuery";
+import { useStoreNotification } from "../../../../../configs/stores/useStoreNotification";
+import { formatDateNotTime } from "../../../../../configs/configAll";
 
 interface Props {
   samples: MauPhanCong[];
@@ -56,10 +58,13 @@ const AssignmentModal = (props: Props) => {
           )
           .test(
             "is-after-giao-mau",
-            "Thời gian thực hiện phải sau thời gian giao mẫu",
+            "Thời gian thực hiện phải tính từ thời gian giao mẫu trở đi",
             function (value) {
               if (!value || !thoiGianGiaoMau) return true;
-              return new Date(value) > new Date(thoiGianGiaoMau);
+              return (
+                formatDateNotTime(new Date(value)) >=
+                formatDateNotTime(new Date(thoiGianGiaoMau))
+              );
             }
           ),
       });
@@ -72,13 +77,13 @@ const AssignmentModal = (props: Props) => {
         .string()
         .required("Yêu cầu chọn Thời Gian Giao Mẫu")
         .test(
-          "Thời gian giao mẫu phải lớn hơn thời điểm hiện tại.",
-          "Thời gian giao mẫu phải lớn hơn thời điểm hiện tại.",
+          "Thời gian giao mẫu phải từ thời điểm hiện tại trở đi",
+          "Thời gian giao mẫu phải từ thời điểm hiện tại trở đi",
           (value) => {
             if (!value) return false;
-            const now = new Date();
-            const date = new Date(value);
-            return date > now;
+            const now = formatDateNotTime(new Date());
+            const date = formatDateNotTime(new Date(value));
+            return now <= date;
           }
         )
         .test(
@@ -109,63 +114,57 @@ const AssignmentModal = (props: Props) => {
 
   const thoiGianGiaoMau = useWatch({ control, name: "thoiGianGiaoMau" });
 
-  // const handleSettled = async () => {
-  //   await queryClient.refetchQueries({ queryKey: ["ChitietPhieuDKKM"] });
-  // };
+  const showNotification = useStoreNotification(
+    (state: any) => state.showNotification
+  );
 
-  // const { mutate } = createPhieuPhanCongKhoa({
-  //   queryKey: "createPhieuPhanCongKhoa",
-  //   onSettled: handleSettled,
-  // });
+  const handleSettled = async () => {
+    await queryClient.refetchQueries({ queryKey: ["AllDanhSachMau"] });
+  };
+
+  const { mutate } = createPhieuPhanCongKhoa({
+    queryKey: "createPhieuPhanCongKhoa",
+    onSuccess: (res: any) => {
+      const { status, response } = res;
+      if (status !== 200) {
+        showNotification({
+          message:
+            response?.data?.message ||
+            "Phân công mẫu cho phòng ban thất bại. Vui lòng thử lại.",
+          status: status,
+        });
+        return;
+      }
+      showNotification({
+        message: "Phân công mẫu cho phòng ban thành công",
+        status: 200,
+      });
+      onClose();
+    },
+    onError: (err: any) => {
+      const msg =
+        err?.response?.data?.message ||
+        "Phân công mẫu cho phòng ban thất bại. Vui lòng thử lại.";
+      showNotification({ message: msg, status: err?.response?.status || 500 });
+    },
+    onSettled: handleSettled,
+  });
 
   const handleAssignSubmit = (data: FormPhanCong) => {
-    if (!selectedDepartment || selectedSamples.length === 0) {
-      return;
-    }
-
-    const department = departments.find(
-      (dept: any) => dept.id === selectedDepartment
-    );
-    console.log("department", department);
-
-    const maus = selectedSamples?.map((sample: any) => ({
+    const chiTietPhieuDeXuatPhongBans = selectedSamples?.map((sample: any) => ({
       maPdkMau: sample.maId,
       ghiChu: data.ghiChu?.[sample.tenMau]?.noiDung || "",
       ngayThucHienKiemNghiem:
         data.ghiChu?.[sample.tenMau]?.ngayThucHienKiemNghiem || "",
+      maPhieuDeXuat: "",
     }));
     const phanCong = {
       maKhoaTiepNhan: selectedDepartment,
       maNVDeXuat: maNhanVien,
       thoiGianGiaoMau: data.thoiGianGiaoMau,
-      maus,
+      chiTietPhieuDeXuatPhongBans,
     };
-    console.log("phanCong", phanCong);
-
-    // const updatedSamples = samples.map((sample: MauPhanCong) => {
-    //   if (selectedSamples.includes(sample.maId as string)) {
-    //     return {
-    //       ...sample,
-    //       assignedDepartment: department,
-    //       status: "Đã phân công",
-    //     };
-    //   }
-    //   return sample;
-    // });
-    // console.log("updatedSamples", updatedSamples);
-
-    // setSamples(updatedSamples);
-    // setSuccessMessage(
-    //   `Đã phân công ${selectedSamples.length} mẫu cho ${department.name}`
-    // );
-
-    // setShowSuccessMessage(true);
-    // onClose();
-
-    // // Hide success message after 3 seconds
-    // setTimeout(() => {
-    //   setShowSuccessMessage(false);
-    // }, 3000);
+    mutate(phanCong);
   };
 
   useEffect(() => {
@@ -178,8 +177,6 @@ const AssignmentModal = (props: Props) => {
   useEffect(() => {
     setTimeGiaoMau(thoiGianGiaoMau);
   }, [thoiGianGiaoMau]);
-  console.log("error", errors);
-  console.log("selectedSamples", selectedSamples);
 
   return (
     <Dialog open={isOpen} onClose={onClose} maxWidth="xl">

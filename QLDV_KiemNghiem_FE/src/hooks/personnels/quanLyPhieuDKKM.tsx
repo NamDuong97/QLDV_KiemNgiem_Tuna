@@ -6,6 +6,8 @@ interface Props {
   params?: any;
   onSettled?: any;
   activeFilter?: any;
+  onSuccess?: any;
+  onError?: any;
 }
 
 export const listPhieuDKKNAll = (props: Props) => {
@@ -46,7 +48,6 @@ export const xemChitietPhieuDKKM = (props: Props) => {
     },
     refetchOnWindowFocus: false,
     enabled: !!params,
-    staleTime: Infinity,
   });
 };
 
@@ -70,6 +71,20 @@ export const useDanhGiaBLD = (props: Props) => {
       const response = await QuanlyPhieuDKYKNServices.DanhGiaBLD(params);
       return response;
     },
+    onSettled: onSettled,
+  });
+};
+
+export const useUndoDanhGiaBLD = (props: Props) => {
+  const { queryKey, onSettled, onSuccess, onError } = props;
+  return useMutation({
+    mutationKey: [queryKey],
+    mutationFn: async (params: any) => {
+      const response = await QuanlyPhieuDKYKNServices.UndoDanhGiaBLD(params);
+      return response;
+    },
+    onSuccess: onSuccess,
+    onError: onError,
     onSettled: onSettled,
   });
 };

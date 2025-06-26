@@ -4,6 +4,7 @@ import { formatDate, renderTrangThai } from "../../../../../configs/configAll";
 import { queryKhoaAll } from "../../../../../hooks/personnels/queryKhoa";
 import { useNavigate } from "react-router";
 import { APP_ROUTES } from "../../../../../constants/routers";
+import { getInforNhanVien } from "../../../../../hooks/personnels/access/useAccess";
 
 interface Props {
   data: any;
@@ -15,6 +16,11 @@ const RegistrationDetails = (props: Props) => {
   const { data: dataKhoaAll } = queryKhoaAll({
     queryKey: "queryKhoaAll",
   });
+  const { data: dataNhanVien } = getInforNhanVien({
+    queryKey: "getInforNhanVien",
+    params: data?.manvDeXuat,
+  });
+
   const navigate = useNavigate();
   const datadataKhoa: any = dataKhoaAll;
 
@@ -58,18 +64,6 @@ const RegistrationDetails = (props: Props) => {
             </div>
             <div>
               <label className="block text-sm/6 text-gray-500">
-                Tên khách hàng
-              </label>
-              {isLoading ? (
-                <Skeleton variant="rounded" width={100} height={20} />
-              ) : (
-                <p className="font-medium text-gray-900">
-                  {data?.tenKhachHang}
-                </p>
-              )}
-            </div>
-            <div>
-              <label className="block text-sm/6 text-gray-500">
                 Khoa tiếp nhận
               </label>
               {isLoading ? (
@@ -91,7 +85,9 @@ const RegistrationDetails = (props: Props) => {
               {isLoading ? (
                 <Skeleton variant="rounded" width={100} height={20} />
               ) : (
-                <p className="font-medium text-gray-900">{data?.manvDeXuat}</p>
+                <p className="font-medium text-gray-900">
+                  {dataNhanVien?.hoTen}
+                </p>
               )}
             </div>
           </div>

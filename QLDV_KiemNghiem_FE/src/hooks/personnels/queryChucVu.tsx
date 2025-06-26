@@ -17,5 +17,6 @@ export const getChucVuByID = (props: Props) => {
     },
     refetchOnWindowFocus: false,
     staleTime: Infinity,
+    enabled: !!params,
   });
 };

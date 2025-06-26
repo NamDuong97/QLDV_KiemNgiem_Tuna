@@ -68,7 +68,6 @@ const AssignmentDeleteModal = (props: Props) => {
       typeCancel: selectTrangThai,
     };
     mutate(param);
-    console.log("param", param);
   };
 
   return (

@@ -13,6 +13,16 @@ export default class mauServices {
       return err;
     }
   }
+  static async getMauByID(param: any) {
+    try {
+      const response = await _APIInstance.get(
+        `${API.ADMIN.MAUS.GET_MAU_BY_ID}?maMau=${param}`
+      );
+      return response;
+    } catch (err: any) {
+      return err;
+    }
+  }
   static async getLoaiMauAll() {
     try {
       const response = await _APIInstance.get(API.ADMIN.MAUS.GET_LOAI_MAU_ALL);

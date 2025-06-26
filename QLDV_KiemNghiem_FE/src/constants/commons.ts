@@ -8,9 +8,10 @@ export const API = {
     },
     PHIEU_DKY_DVKM: {
       QUAN_LY_PHIEU_DKY_DVKM: "/api/phieudangky/getPhieuDangKyAll",
-      XEM_CHI_TIET: "/api/phieudangky/findPhieuDangKy?maPhieuDangKy=",
+      XEM_CHI_TIET: "/api/PhieuDangKy/findPhieuDangKy?maPhieuDangKy=",
       DANH_GIA_NHANVIEN: "/api/PhieuDangKy/reviewPhieuDangKyByKHDT",
       DANH_GIA_BLD: "/api/PhieuDangKy/reviewPhieuDangKyByBLD",
+      UNDO_DANH_GIA_BLD: "/api/PhieuDangKy/undoReviewPhieuDangKyByBLD",
     },
     KHOA: {
       GET_KHOA_ALL: "/api/Khoa/getKhoaAll",
@@ -25,11 +26,18 @@ export const API = {
         "/api/PhieuPhieuDeXuatPhongBan/getPhieuPhieuDeXuatPhongBanByID?maPhieuPhieuDeXuatPhongBan=",
       GET_DANH_SACH_MAU_All: "/api/PhieuDangKyMau/getPhieuDangKyMauAll",
     },
+    CHI_TIET_PHAN_CONG_KHOA: {
+      TRUONG_PHONG_DUYET_MAUS:
+        "/api/ChiTietPhieuDeXuatPhongBan/reviewChiTietPhieuDeXuatPhongBanByPhongKhoa",
+      BLD_DUYET_MAUS:
+        "/api/ChiTietPhieuDeXuatPhongBan/reviewChiTietPhieuDeXuatPhongBanByBLD",
+    },
     CHUC_VU: {
       GET_CHUC_VU_BY_ID: "/api/ChucVu/getChucVuByID",
     },
     MAUS: {
       GET_MAU_ALL: "/api/PhieuDangKyMau/getPhieuDangKyMauAll",
+      GET_MAU_BY_ID: "/api/PhieuDangKyMau/getPhieuDangKyMau",
       GET_LOAI_MAU_ALL: "/api/LoaiMau/getLoaiMauAll",
       GET_LOAI_MAU_BY_ID: "/api/LoaiMau/getLoaiMau",
       HUY_MAU: "/api/PhieuDangKyMau/cancelPhieuDangKyMau",

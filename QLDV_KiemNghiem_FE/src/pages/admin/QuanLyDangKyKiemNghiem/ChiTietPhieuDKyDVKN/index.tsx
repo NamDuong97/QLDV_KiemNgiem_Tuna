@@ -12,6 +12,7 @@ import FormGhiChuTuChoi from "./FormGhiChuTuChoi";
 import FormGhiChuDuyet from "./FormGhiChuDuyet";
 import { keyTag } from "../../../../models/Account-Customer";
 import { getInforNhanVien } from "../../../../hooks/personnels/access/useAccess";
+import FormGhiChuHoanTac from "./FormGhiChuHoanTac";
 
 interface Props {
   open: boolean;
@@ -24,6 +25,7 @@ const ChiTietPhieuDKyDVKN = (props: Props) => {
   const [isTag, setIsTag] = useState(1);
   const [isGhiChuTuChoi, setIsGhiChuTuChoi] = useState(false);
   const [isGhiChuDuyet, setIsGhiChuDuyet] = useState(false);
+  const [isGhiChuHoanTac, setIsGhiChuHoanTac] = useState(false);
   const dataSession = sessionStorage.getItem("phieu-DKKN-xem-chi-tiet");
   const id = dataSession ? JSON.parse(dataSession) : "";
 
@@ -31,6 +33,8 @@ const ChiTietPhieuDKyDVKN = (props: Props) => {
     queryKey: "xemChitietPhieuDKKM",
     params: id,
   });
+
+  console.log("data", data);
 
   const { data: dataNhanVien } = getInforNhanVien({
     queryKey: "getInforNhanVien",
@@ -202,6 +206,55 @@ const ChiTietPhieuDKyDVKN = (props: Props) => {
       }
       case 4: {
         return handleButton();
+      }
+      case 5: {
+        return (
+          <div className="p-5 space-y-4">
+            {data?.trangThaiId === "TT04" ? (
+              <div className="flex items-center">
+                <div className="flex-shrink-0">
+                  <div className="h-8 w-8 rounded-full bg-blue-100 flex items-center justify-center">
+                    <DoneAllIcon className="text-blue-500" />
+                  </div>
+                </div>
+                <button
+                  onClick={() => {
+                    setIsGhiChuHoanTac(true);
+                  }}
+                  className="ml-4 bg-blue-100 hover:bg-blue-200 cursor-pointer px-4 py-2 rounded-md"
+                >
+                  <p className="text-sm font-medium text-blue-700">
+                    Duyệt phiếu
+                  </p>
+                </button>
+              </div>
+            ) : (
+              <div className="flex items-center">
+                <div className="flex-shrink-0">
+                  <div className="h-8 w-8 rounded-full bg-yellow-100 flex items-center justify-center">
+                    <SmsFailedIcon className="text-yellow-500" />
+                  </div>
+                </div>
+                <button
+                  onClick={() => {
+                    setIsGhiChuHoanTac(true);
+                  }}
+                  className="ml-4 bg-yellow-100 hover:bg-yellow-200 cursor-pointer px-4 py-2 rounded-md"
+                >
+                  <p className="text-sm font-medium text-yellow-700">Từ chối</p>
+                </button>
+              </div>
+            )}
+            {isGhiChuHoanTac && (
+              <FormGhiChuHoanTac
+                id={id}
+                closeGhiChu={() => setIsGhiChuHoanTac(false)}
+                handleClose={handleClosePopup}
+                trangThaiID={data?.trangThaiId}
+              />
+            )}
+          </div>
+        );
       }
       default: {
         return isLoading ? (
@@ -533,6 +586,19 @@ const ChiTietPhieuDKyDVKN = (props: Props) => {
               >
                 Duyệt
                 {isTag === 4 && (
+                  <span className="absolute bottom-0 left-0 w-full h-0.5 bg-indigo-600"></span>
+                )}
+              </div>
+            )}
+            {activeFilter === keyTag.Ban_Lanh_Dao_Duyet && (
+              <div
+                className={`px-6 py-4 w-full text-center cursor-pointer text-base font-[550] relative ${
+                  isTag === 5 ? "text-indigo-600" : "text-gray-500"
+                }`}
+                onClick={() => setIsTag(5)}
+              >
+                Hoàn tác phiếu
+                {isTag === 5 && (
                   <span className="absolute bottom-0 left-0 w-full h-0.5 bg-indigo-600"></span>
                 )}
               </div>

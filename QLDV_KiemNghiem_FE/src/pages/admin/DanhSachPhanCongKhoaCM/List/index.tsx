@@ -15,6 +15,9 @@ import InputSearch2 from "../../../../components/InputSearch2";
 import { getPhanCongKhoaCMAll } from "../../../../hooks/personnels/phanCongKhoa";
 import SelectItemTrangThai from "./SelectItemTrangThai";
 import removeVietnameseTones from "../../../../configs/removeVietnameseTones";
+import SelectItemKhoa from "./SelectItemKhoa";
+import { usePersonnel } from "../../../../contexts/PersonelsProvider";
+import { role } from "../../../../configs/parseJwt";
 
 interface Props {
   tableHead: any;
@@ -22,21 +25,31 @@ interface Props {
 
 const DanhSach = (props: Props) => {
   const { tableHead } = props;
+  const { personnelInfo } = usePersonnel();
   const { data, isLoading } = getPhanCongKhoaCMAll({
     queryKey: "getPhanCongKhoaCMAll",
   });
+  console.log("personnelInfo", personnelInfo);
+
   const [searchQuery, setSearchQuery] = useState("");
   const [selectTrangThai, setSelectTrangThai] = useState("");
+  const [selectKhoa, setSelectKhoa] = useState("");
   const [isSortNew, setIsSortNew] = useState(false);
-  const filteredSamples: any = data?.filter((sample: any) => {
-    const query = removeVietnameseTones(searchQuery.toLowerCase());
-    const matchesSearch =
-      sample?.maPhieuDeXuat?.toLowerCase().includes(query) ||
-      removeVietnameseTones(sample?.tenKhachHang?.toLowerCase()).includes(
-        query
-      );
-    return matchesSearch;
-  });
+  const filteredSamples: any = data
+    ?.filter((item: any) =>
+      personnelInfo?.maChucVu === "CV01"
+        ? item.maKhoaTiepNhan === personnelInfo?.maKhoa
+        : item
+    )
+    ?.filter((sample: any) => {
+      const query = removeVietnameseTones(searchQuery.toLowerCase());
+      const matchesSearch =
+        sample?.maPhieuDeXuat?.toLowerCase().includes(query) ||
+        removeVietnameseTones(sample?.tenKhachHang?.toLowerCase()).includes(
+          query
+        );
+      return matchesSearch;
+    });
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(10);
   const indexOfLastItem = currentPage * itemsPerPage;
@@ -135,6 +148,13 @@ const DanhSach = (props: Props) => {
               </span>
             )}
           </button>
+          {(role === "BLD" || role === "KHTH") && (
+            <SelectItemKhoa
+              title="Khoa"
+              setItem={setSelectKhoa}
+              item={selectKhoa}
+            />
+          )}
           <SelectItemTrangThai
             title="Trạng thái"
             setItem={setSelectTrangThai}

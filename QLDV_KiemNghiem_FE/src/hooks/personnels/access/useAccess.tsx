@@ -95,11 +95,12 @@ export const useDangNhapNhanVien = (props: Props) => {
 export const getInforNhanVien = (props: Props) => {
   const { queryKey, params } = props;
   return useQuery({
-    queryKey: [queryKey, params],
+    queryKey: [queryKey],
     queryFn: async () => {
       const response = await accessServices.getInforNhanVien(params);
       return response?.data;
     },
     refetchOnWindowFocus: false,
+    enabled: !!params,
   });
 };

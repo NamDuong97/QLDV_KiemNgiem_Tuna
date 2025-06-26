@@ -10,12 +10,6 @@ const tableHead = [
     align: Align.Left,
   },
   {
-    id: "tenKH",
-    sort: false,
-    label: "Tên Khách Hàng",
-    align: Align.Left,
-  },
-  {
     id: "timeGiaoMau",
     sort: false,
     label: "Thời gian giao mẫu",
@@ -31,6 +25,12 @@ const tableHead = [
     id: "maKhoa",
     sort: false,
     label: "Khoa Tiếp nhận",
+    align: Align.Left,
+  },
+  {
+    id: "mauChuaDuyet",
+    sort: false,
+    label: "Số mẫu chưa duyệt",
     align: Align.Left,
   },
   {

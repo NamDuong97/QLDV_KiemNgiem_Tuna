@@ -2,24 +2,28 @@ import { useEffect, useMemo } from "react";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
 import yup from "../../../../../../configs/yup.custom";
+import { useStoreNotification } from "../../../../../../configs/stores/useStoreNotification";
 import { queryClient } from "../../../../../../lib/reactQuery";
+import { useTruongPhongDuyet } from "../../../../../../hooks/personnels/phanCongKhoa";
+import { usePersonnel } from "../../../../../../contexts/PersonelsProvider";
 
 interface Props {
   id?: any;
-  roll?: any;
-  handleHuyTuChoi: () => void;
+  handleCloseDuyet: () => void;
 }
 
 interface FormGhiChu {
   ghiChu: string;
 }
 
-const FormGhiChuTuChoi = (props: Props) => {
-  const { id, handleHuyTuChoi, } = props;
+const FormGhiChuDuyet = (props: Props) => {
+  const { id, handleCloseDuyet } = props;
+
+  const { personnelInfo } = usePersonnel();
 
   let schema = useMemo(() => {
     return yup.object().shape({
-      ghiChu: yup.string().required("Yêu cầu nhập lý do từ chối"),
+      ghiChu: yup.string().required("Yêu cầu nhập lý do duyệt"),
     });
   }, []);
 
@@ -33,17 +37,42 @@ const FormGhiChuTuChoi = (props: Props) => {
     mode: "onChange",
   });
 
+  const handleOnSettled = async (response: any) => {
+    if (response.ketQua === true) {
+      await queryClient.refetchQueries({
+        queryKey: ["quanLyPhieuDKKMs_BLD"],
+      });
+    }
+  };
+  const showNotification = useStoreNotification(
+    (state: any) => state.showNotification
+  );
 
-  const handleHuyPhieu = (data: FormGhiChu) => {
-    console.log("data", data);
+  const { mutate } = useTruongPhongDuyet({
+    queryKey: "useTruongPhongDuyet",
+    onSuccess: (res: any) => {
+      const { ketQua, message } = res;
+      if (ketQua !== true) {
+        showNotification({
+          message: message || "Duyệt mẫu thất bại. Vui lòng thử lại.",
+          ketQua: ketQua,
+        });
+        return;
+      }
+      showNotification({ message: "Duyệt mẫu thành công", status: 200 });
+    },
+    onSettled: handleOnSettled,
+  });
 
+  const handleTruongPhongDuyet = (data: FormGhiChu) => {
     const params = {
-      maPhieuDangKy: id,
       message: data.ghiChu,
-      action: false,
+      action: true,
+      maId: id,
+      maKhoa: personnelInfo?.maKhoa,
     };
-    // if (roll === "roll") mutateNhanVien(params);
-    // mutateBLD(params);
+    mutate(params);
+    console.log("handleTruongPhongDuyet", params);
   };
 
   useEffect(() => {
@@ -53,14 +82,14 @@ const FormGhiChuTuChoi = (props: Props) => {
   }, []);
 
   return (
-    <form onSubmit={handleSubmit(handleHuyPhieu)} className="space-y-2">
+    <form onSubmit={handleSubmit(handleTruongPhongDuyet)} className="space-y-2">
       <h4 className="text-base/6 font-semibold text-gray-500">Ghi chú:</h4>
       <div>
         <textarea
           className="w-full border border-gray-300 rounded-lg p-3 min-h-[106px] max-h-[106px] focus-within:outline-1 focus-within:border focus-within:border-blue-300 h-"
           rows={3}
           {...register("ghiChu")}
-          placeholder="Nhập lý do từ chối..."
+          placeholder="Nhập lý do duyệt..."
         />
         {errors.ghiChu?.message && (
           <p className="text-[#af1c10] !font-medium !text-sm/[140%]">
@@ -71,7 +100,7 @@ const FormGhiChuTuChoi = (props: Props) => {
       <div className="flex justify-end gap-4">
         <button
           type="button"
-          onClick={handleHuyTuChoi}
+          onClick={handleCloseDuyet}
           className="bg-yellow-100 hover:bg-yellow-200 cursor-pointer px-6 py-2 rounded-md"
         >
           <p className="text-sm font-medium text-yellow-700">Hủy</p>
@@ -84,4 +113,4 @@ const FormGhiChuTuChoi = (props: Props) => {
   );
 };
 
-export default FormGhiChuTuChoi;
+export default FormGhiChuDuyet;

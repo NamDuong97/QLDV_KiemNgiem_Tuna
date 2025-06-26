@@ -16,6 +16,7 @@ export const queryKhoaAll = (props: Props) => {
       return response?.data;
     },
     refetchOnWindowFocus: false,
+    staleTime: Infinity,
   });
 };
 

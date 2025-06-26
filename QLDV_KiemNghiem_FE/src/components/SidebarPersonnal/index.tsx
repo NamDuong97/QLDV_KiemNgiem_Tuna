@@ -134,63 +134,93 @@ const SidebarPersonnal = () => {
               </p>
             </div>
             <div className="flex flex-col space-y-1">
-              <button
-                onClick={() => {
-                  handleRedirect(PhieuDKyDVKNManager);
-                }}
-                className={clsx(
-                  "flex items-center space-x-2 sidebar-link px-4 py-3 text-gray-700 rounded-lg",
-                  {
-                    "text-indigo-600 active":
-                      pathname.split("/")[2] ===
-                      APP_ROUTES.TUNA_ADMIN.QUAN_LY_PHIEU_DANG_KY_DICH_VU_KIEM_NGHIEM.to.split(
-                        "/"
-                      )[2],
-                  }
-                )}
-              >
-                <span className="w-5">
-                  <Clipboard
-                    className={clsx("w-5 h-5 text-gray-500", {
-                      "text-indigo-600":
-                        pathname.split("/")[2] ===
-                        APP_ROUTES.TUNA_ADMIN.QUAN_LY_PHIEU_DANG_KY_DICH_VU_KIEM_NGHIEM.to.split(
-                          "/"
-                        )[2],
-                    })}
-                  />
-                </span>
-                <span className="text-start">Phiếu kiểm nghiệm</span>
-              </button>
               {(role === "KHTH" || role === "BLD") && (
-                <button
-                  onClick={() => {
-                    handleRedirect(phanCongKhoaCM);
-                  }}
-                  className={clsx(
-                    "flex items-start space-x-2 sidebar-link px-4 py-3 text-gray-700 rounded-lg",
-                    {
-                      "text-indigo-600 active":
-                        pathname.split("/")[2] ===
-                        APP_ROUTES.TUNA_ADMIN.PHAN_CONG_PHONG_CHUYEN_MON.list.split(
-                          "/"
-                        )[2],
-                    }
-                  )}
-                >
-                  <span className="w-5">
-                    <MdAssignmentInd
-                      className={clsx("w-5 h-5 text-gray-500", {
-                        "text-indigo-600":
+                <>
+                  <button
+                    onClick={() => {
+                      handleRedirect(PhieuDKyDVKNManager);
+                    }}
+                    className={clsx(
+                      "flex items-center space-x-2 sidebar-link px-4 py-3 text-gray-700 rounded-lg",
+                      {
+                        "text-indigo-600 active":
+                          pathname.split("/")[2] ===
+                          APP_ROUTES.TUNA_ADMIN.QUAN_LY_PHIEU_DANG_KY_DICH_VU_KIEM_NGHIEM.to.split(
+                            "/"
+                          )[2],
+                      }
+                    )}
+                  >
+                    <span className="w-5">
+                      <Clipboard
+                        className={clsx("w-5 h-5 text-gray-500", {
+                          "text-indigo-600":
+                            pathname.split("/")[2] ===
+                            APP_ROUTES.TUNA_ADMIN.QUAN_LY_PHIEU_DANG_KY_DICH_VU_KIEM_NGHIEM.to.split(
+                              "/"
+                            )[2],
+                        })}
+                      />
+                    </span>
+                    <span className="text-start">Phiếu kiểm nghiệm</span>
+                  </button>
+                  <button
+                    onClick={() => {
+                      handleRedirect(phanCongKhoaCM);
+                    }}
+                    className={clsx(
+                      "flex items-start space-x-2 sidebar-link px-4 py-3 text-gray-700 rounded-lg",
+                      {
+                        "text-indigo-600 active":
                           pathname.split("/")[2] ===
                           APP_ROUTES.TUNA_ADMIN.PHAN_CONG_PHONG_CHUYEN_MON.list.split(
                             "/"
                           )[2],
-                      })}
-                    />
-                  </span>
-                  <span className="text-start">Phân công Khoa chuyên môn</span>
-                </button>
+                      }
+                    )}
+                  >
+                    <span className="w-5">
+                      <MdAssignmentInd
+                        className={clsx("w-5 h-5 text-gray-500", {
+                          "text-indigo-600":
+                            pathname.split("/")[2] ===
+                            APP_ROUTES.TUNA_ADMIN.PHAN_CONG_PHONG_CHUYEN_MON.list.split(
+                              "/"
+                            )[2],
+                        })}
+                      />
+                    </span>
+                    <span className="text-start">
+                      Phân công Khoa chuyên môn
+                    </span>
+                  </button>
+                  <button
+                    onClick={() => {
+                      handleRedirect(quanLyMau);
+                    }}
+                    className={clsx(
+                      "flex items-center space-x-2 sidebar-link px-4 py-3 text-gray-700 rounded-lg",
+                      {
+                        "text-indigo-600 active":
+                          pathname.split("/")[2] ===
+                          APP_ROUTES.TUNA_ADMIN.DANH_SACH_MAU.to.split("/")[2],
+                      }
+                    )}
+                  >
+                    <span className="w-5">
+                      <FaFlask
+                        className={clsx("w-5 h-5 text-gray-500", {
+                          "text-indigo-600":
+                            pathname.split("/")[2] ===
+                            APP_ROUTES.TUNA_ADMIN.DANH_SACH_MAU.to.split(
+                              "/"
+                            )[2],
+                        })}
+                      />
+                    </span>
+                    <span className="text-start">Danh sách mẫu</span>
+                  </button>
+                </>
               )}
 
               <button
@@ -221,30 +251,7 @@ const SidebarPersonnal = () => {
                 </span>
                 <span className="text-start">Danh sách phân công khoa</span>
               </button>
-              <button
-                onClick={() => {
-                  handleRedirect(quanLyMau);
-                }}
-                className={clsx(
-                  "flex items-center space-x-2 sidebar-link px-4 py-3 text-gray-700 rounded-lg",
-                  {
-                    "text-indigo-600 active":
-                      pathname.split("/")[2] ===
-                      APP_ROUTES.TUNA_ADMIN.DANH_SACH_MAU.to.split("/")[2],
-                  }
-                )}
-              >
-                <span className="w-5">
-                  <FaFlask
-                    className={clsx("w-5 h-5 text-gray-500", {
-                      "text-indigo-600":
-                        pathname.split("/")[2] ===
-                        APP_ROUTES.TUNA_ADMIN.DANH_SACH_MAU.to.split("/")[2],
-                    })}
-                  />
-                </span>
-                <span className="text-start">Danh sách mẫu</span>
-              </button>
+
               <button
                 onClick={() => {
                   handleRedirect(quanLyLuuMau);
@@ -306,7 +313,7 @@ const SidebarPersonnal = () => {
                   handleRedirect(quanLyPhanCongNoiBo);
                 }}
                 className={clsx(
-                  "flex items-center space-x-2 sidebar-link px-4 py-3 text-gray-700 rounded-lg",
+                  "flex items-center space-x-2 sidebar-link px-4 py-3 text-gray-700 rounded-lg"
                   // {
                   //   "text-indigo-600 active":
                   //     pathname.split("/")[2] ===
@@ -330,7 +337,7 @@ const SidebarPersonnal = () => {
                   handleRedirect(quanLyPhanCongNoiBo);
                 }}
                 className={clsx(
-                  "flex items-center space-x-2 sidebar-link px-4 py-3 text-gray-700 rounded-lg",
+                  "flex items-center space-x-2 sidebar-link px-4 py-3 text-gray-700 rounded-lg"
                   // {
                   //   "text-indigo-600 active":
                   //     pathname.split("/")[2] ===
@@ -354,7 +361,7 @@ const SidebarPersonnal = () => {
                   handleRedirect(quanLyPhanCongNoiBo);
                 }}
                 className={clsx(
-                  "flex items-center space-x-2 sidebar-link px-4 py-3 text-gray-700 rounded-lg",
+                  "flex items-center space-x-2 sidebar-link px-4 py-3 text-gray-700 rounded-lg"
                   // {
                   //   "text-indigo-600 active":
                   //     pathname.split("/")[2] ===
@@ -378,7 +385,7 @@ const SidebarPersonnal = () => {
                   handleRedirect(quanLyPhanCongNoiBo);
                 }}
                 className={clsx(
-                  "flex items-center space-x-2 sidebar-link px-4 py-3 text-gray-700 rounded-lg",
+                  "flex items-center space-x-2 sidebar-link px-4 py-3 text-gray-700 rounded-lg"
                   // {
                   //   "text-indigo-600 active":
                   //     pathname.split("/")[2] ===
@@ -402,7 +409,7 @@ const SidebarPersonnal = () => {
                   handleRedirect(quanLyPhanCongNoiBo);
                 }}
                 className={clsx(
-                  "flex items-center space-x-2 sidebar-link px-4 py-3 text-gray-700 rounded-lg",
+                  "flex items-center space-x-2 sidebar-link px-4 py-3 text-gray-700 rounded-lg"
                   // {
                   //   "text-indigo-600 active":
                   //     pathname.split("/")[2] ===
@@ -426,7 +433,7 @@ const SidebarPersonnal = () => {
                   handleRedirect(quanLyPhanCongNoiBo);
                 }}
                 className={clsx(
-                  "flex items-center space-x-2 sidebar-link px-4 py-3 text-gray-700 rounded-lg",
+                  "flex items-center space-x-2 sidebar-link px-4 py-3 text-gray-700 rounded-lg"
                   // {
                   //   "text-indigo-600 active":
                   //     pathname.split("/")[2] ===
@@ -450,7 +457,7 @@ const SidebarPersonnal = () => {
                   handleRedirect(quanLyPhanCongNoiBo);
                 }}
                 className={clsx(
-                  "flex items-center space-x-2 sidebar-link px-4 py-3 text-gray-700 rounded-lg",
+                  "flex items-center space-x-2 sidebar-link px-4 py-3 text-gray-700 rounded-lg"
                   // {
                   //   "text-indigo-600 active":
                   //     pathname.split("/")[2] ===

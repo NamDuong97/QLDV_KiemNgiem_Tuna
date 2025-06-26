@@ -35,6 +35,20 @@ export const queryLoaiMauByID = (props: Props) => {
   });
 };
 
+export const queryMauByID = (props: Props) => {
+  const { queryKey, params } = props;
+  return useQuery({
+    queryKey: [queryKey, params],
+    queryFn: async () => {
+      const response = await mauServices.getMauByID(params);
+      return response?.data;
+    },
+    refetchOnWindowFocus: false,
+    staleTime: Infinity,
+    enabled: !!params,
+  });
+};
+
 export const useHuyMau = (props: Props) => {
   const { queryKey, onSettled, onSuccess, onError } = props;
 

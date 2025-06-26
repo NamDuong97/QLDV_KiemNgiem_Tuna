@@ -145,29 +145,19 @@ const trangThaiChiTietPhieuDeXuatPhongBan: Record<string, TrangThai> = {
 
 const trangThaiPhieuDeXuatPhongBan: Record<string, TrangThai> = {
   0: {
-    text: "Khách hàng đã hủy",
-    bgColor: "bg-gray-100",
-    textColor: "text-gray-800",
-  },
-  1: {
-    text: "Phòng ban từ chối – chờ BLĐ duyệt",
+    text: "Đã Hủy",
     bgColor: "bg-yellow-100",
     textColor: "text-yellow-800",
   },
-  2: {
+  1: {
     text: "Chờ phòng ban duyệt",
     bgColor: "bg-blue-100",
     textColor: "text-blue-800",
   },
-  3: {
-    text: "Đã duyệt – chờ kiểm nghiệm",
-    bgColor: "bg-purple-100",
-    textColor: "text-purple-800",
-  },
-  4: {
-    text: "Bị hủy – không có phòng ban tiếp nhận",
-    bgColor: "bg-red-100",
-    textColor: "text-red-800",
+  2: {
+    text: "Đã duyệt",
+    bgColor: "bg-green-100",
+    textColor: "text-green-800",
   },
 };
 
