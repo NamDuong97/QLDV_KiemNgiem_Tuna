@@ -14,6 +14,7 @@ using QLDV_KiemNghiem_BE.RequestFeatures;
 using QLDV_KiemNghiem_BE.RequestFeatures.PagingRequest;
 using StackExchange.Redis;
 using System;
+using System.Threading.Channels;
 
 namespace QLDV_KiemNghiem_BE.Services
 {
@@ -142,7 +143,7 @@ namespace QLDV_KiemNghiem_BE.Services
                 mauDomain.MaId = Guid.NewGuid().ToString();
                 mauDomain.MaPhieuDangKy = phieuDangKyDomain.MaId;
                 mauDomain.MaPdkMau = PublicFunction.processString(mauDomain.TenMau ?? "unknow") + "_" + mauDomain.LoaiDv  + "_" + mauDomain.ThoiGianTieuChuan.ToString();
-                mauDomain.TrangThaiPhanCong = 1;
+                mauDomain.TrangThaiPhanCong = null;
                 mauDomain.TrangThai = true;
           
                 // Thêm hình ảnh vào CSDL
@@ -279,6 +280,13 @@ namespace QLDV_KiemNghiem_BE.Services
                            
                         }
                         _repositoryManager.PhieuDangKyMau.DeletePhieuDangKyMauAsync(checkExistsMau);
+                        // câp nhat vao redis
+                        if (_redis.IsConnected)
+                        {
+                            await _cache.RemoveAsync($"phieudangkymau:{mau.MaId}");
+                            // Cap nhat version moi cho cache redis phieudangkymau:all
+                            await _cache.SetStringAsync("phieudangkymau:all:version", $"v{DateTime.UtcNow.Ticks}");
+                        }
                     }
                     // Cap nhat mau va hinh anh lien quan
                     else
@@ -316,6 +324,20 @@ namespace QLDV_KiemNghiem_BE.Services
                         }
                         // mapping dữ liệu sang domain để cập nhật
                         _mapper.Map(mau, checkExistsMau);
+
+                        // cap nhat mau vao redis
+                        if (_redis.IsConnected)
+                        {
+                            // Xoa cache cu da co tren redis, va cap nhat du lieu moi cho cache phieudangkymau
+                            await _cache.RemoveAsync($"phieudangkymau:{mau?.MaId}");
+                            await _cache.SetStringAsync($"phieudangkymau:{mau?.MaId}", JsonConvert.SerializeObject(mau), new DistributedCacheEntryOptions
+                            {
+                                AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(5)
+                            });
+                            // Cap nhat version moi cho cache redis phieudangkymau:all
+                            await _cache.SetStringAsync("phieudangkymau:all:version", $"v{DateTime.UtcNow.Ticks}");
+                        }
+
                         // cap nhat chi tiet hoa don thu
                         if (hoaDonThu != null && hoaDonThu.MaId != null && hoaDonThu.MaId != "")
                         {
@@ -368,6 +390,23 @@ namespace QLDV_KiemNghiem_BE.Services
                     mauDoMain.PhieuDangKyMauHinhAnhs = phieuDangKyMauHinhAnhs1;
                     phieuDangKyMaus1.Add(mauDoMain);
                     phieuDangKyMauHinhAnhs1 = new List<PhieuDangKyMauHinhAnh>();
+
+                    // cap nhat vao redis
+                    if (_redis.IsConnected)
+                    {
+                        var cacheKey = $"phieudangkymau:{mau.MaId}";
+                        var cacheObj = new CachedResponse<PhieuDangKyMauDto>
+                        {
+                            Data = mau
+                        };
+                        // Lưu dữ liệu vào redis phieudangkymau
+                        await _cache.SetStringAsync(cacheKey, JsonConvert.SerializeObject(cacheObj), new DistributedCacheEntryOptions
+                        {
+                            AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(5)
+                        });
+                        // Cap nhat version moi cho cache redis phieudangkymau:all
+                        await _cache.SetStringAsync("phieudangkymau:all:version", $"v{DateTime.UtcNow.Ticks}");
+                    }
                 }
             }
             // Update Or Delete Plhc
@@ -536,6 +575,10 @@ namespace QLDV_KiemNghiem_BE.Services
                 checkExistsPhieuDangKy.NguoiSua = user;
                 _repositoryManager.PhieuDangKy.UpdatePhieuDangKyAsync(checkExistsPhieuDangKy);
                 bool check = await _repositoryManager.SaveChangesAsync();
+                if (check)
+                {
+                    await _repositoryManager.PhieuDangKyMau.ProcessUpdateStatusMauWhenBLDAction(checkExistsPhieuDangKy.MaId, checkExistsPhieuDangKy.TrangThaiId);
+                }
                 return new ResponReviewPhieuDangKy
                 {
                     MaPhieuDangKy = duyetPhieu.MaPhieuDangKy,
@@ -581,6 +624,10 @@ namespace QLDV_KiemNghiem_BE.Services
                 checkExistsPhieuDangKy.NguoiSua = user;
                 _repositoryManager.PhieuDangKy.UpdatePhieuDangKyAsync(checkExistsPhieuDangKy);
                 bool check = await _repositoryManager.SaveChangesAsync();
+                if (check)
+                {
+                    await _repositoryManager.PhieuDangKyMau.ProcessUpdateStatusMauWhenBLDAction(checkExistsPhieuDangKy.MaId, checkExistsPhieuDangKy.TrangThaiId);
+                }
                 return new ResponseUndoReviewPhieuDangKy
                 {
                     MaPhieuDangKy = duyetPhieu.MaPhieuDangKy,

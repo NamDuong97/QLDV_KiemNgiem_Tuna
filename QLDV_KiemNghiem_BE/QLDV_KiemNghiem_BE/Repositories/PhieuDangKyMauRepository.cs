@@ -63,6 +63,14 @@ namespace QLDV_KiemNghiem_BE.Repositories
             int rowCount =  await _context.Database.ExecuteSqlRawAsync("exec sp_ProcessUpdateStatusObjecRelativeFromCancelMau @maMau = {0}, @typeCancel = {1}, @massage ={2}, @user ={3}", maMau, typeCancel, message, user);
             return rowCount;    
         }
+
+        public async Task<int> ProcessUpdateStatusMauWhenBLDAction(string maPDK, string trangThaiId)
+        {
+            // Hàm này xử lý việc phòng KHTH muốn hủy mẫu do khách hủy hoặc k phòng ban nào làm
+            int rowCount = await _context.Database.ExecuteSqlRawAsync("exec sp_ProcessUpdateStatusMauWhenBLDAction @maPDK = {0}, @trangThaiId ={1}", maPDK, trangThaiId);
+            return rowCount;
+        }
+
         public async Task<PhieuDangKyMau?> FindPhieuDangKyMauAsync(string maPhieuDangKyMau)
         {
             return await _context.PhieuDangKyMaus.FindAsync(maPhieuDangKyMau);
