@@ -187,25 +187,25 @@ namespace QLDV_KiemNghiem_BE.Services
             var phieuDangKyReturnDto = _mapper.Map<PhieuDangKyDto>(phieuDangKyDomain);
             phieuDangKyReturnDto.Maus = _mapper.Map<List<PhieuDangKyMauDto>>(phieuDangKyMauDomains);
             phieuDangKyReturnDto.PhieuDangKyPhuLieuHoaChats = _mapper.Map<List<PhieuDangKyPhuLieuHoaChatDto>>(phieuDangKyPhuLieuHoaChatDomains);
-            // Them du lieu vao cache
-            if (_redis.IsConnected)
-            {
-                foreach (var item in phieuDangKyReturnDto.Maus)
-                {
-                    var cacheKey = $"phieudangkymau:{item?.MaId}";
-                    var cacheObj = new CachedResponse<PhieuDangKyMauDto>
-                    {
-                        Data = item
-                    };
-                    // Lưu dữ liệu vào redis phieudangkymau
-                    await _cache.SetStringAsync(cacheKey, JsonConvert.SerializeObject(cacheObj), new DistributedCacheEntryOptions
-                    {
-                        AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(5)
-                    });
-                    // Cap nhat version moi cho cache redis phieudangkymau:all
-                    await _cache.SetStringAsync("phieudangkymau:all:version", $"v{DateTime.UtcNow.Ticks}");
-                }
-            }
+            //// Them du lieu vao cache
+            //if (_redis.IsConnected)
+            //{
+            //    foreach (var item in phieuDangKyReturnDto.Maus)
+            //    {
+            //        var cacheKey = $"phieudangkymau:{item?.MaId}";
+            //        var cacheObj = new CachedResponse<PhieuDangKyMauDto>
+            //        {
+            //            Data = item
+            //        };
+            //        // Lưu dữ liệu vào redis phieudangkymau
+            //        await _cache.SetStringAsync(cacheKey, JsonConvert.SerializeObject(cacheObj), new DistributedCacheEntryOptions
+            //        {
+            //            AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(5)
+            //        });
+            //        // Cap nhat version moi cho cache redis phieudangkymau:all
+            //        await _cache.SetStringAsync("phieudangkymau:all:version", $"v{DateTime.UtcNow.Ticks}");
+            //    }
+            //}
             return new ResponseModel1<PhieuDangKyDto>
             {
                 KetQua = check,
@@ -281,12 +281,12 @@ namespace QLDV_KiemNghiem_BE.Services
                         }
                         _repositoryManager.PhieuDangKyMau.DeletePhieuDangKyMauAsync(checkExistsMau);
                         // câp nhat vao redis
-                        if (_redis.IsConnected)
-                        {
-                            await _cache.RemoveAsync($"phieudangkymau:{mau.MaId}");
-                            // Cap nhat version moi cho cache redis phieudangkymau:all
-                            await _cache.SetStringAsync("phieudangkymau:all:version", $"v{DateTime.UtcNow.Ticks}");
-                        }
+                        //if (_redis.IsConnected)
+                        //{
+                        //    await _cache.RemoveAsync($"phieudangkymau:{mau.MaId}");
+                        //    // Cap nhat version moi cho cache redis phieudangkymau:all
+                        //    await _cache.SetStringAsync("phieudangkymau:all:version", $"v{DateTime.UtcNow.Ticks}");
+                        //}
                     }
                     // Cap nhat mau va hinh anh lien quan
                     else
@@ -326,17 +326,17 @@ namespace QLDV_KiemNghiem_BE.Services
                         _mapper.Map(mau, checkExistsMau);
 
                         // cap nhat mau vao redis
-                        if (_redis.IsConnected)
-                        {
-                            // Xoa cache cu da co tren redis, va cap nhat du lieu moi cho cache phieudangkymau
-                            await _cache.RemoveAsync($"phieudangkymau:{mau?.MaId}");
-                            await _cache.SetStringAsync($"phieudangkymau:{mau?.MaId}", JsonConvert.SerializeObject(mau), new DistributedCacheEntryOptions
-                            {
-                                AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(5)
-                            });
-                            // Cap nhat version moi cho cache redis phieudangkymau:all
-                            await _cache.SetStringAsync("phieudangkymau:all:version", $"v{DateTime.UtcNow.Ticks}");
-                        }
+                        //if (_redis.IsConnected)
+                        //{
+                        //    // Xoa cache cu da co tren redis, va cap nhat du lieu moi cho cache phieudangkymau
+                        //    await _cache.RemoveAsync($"phieudangkymau:{mau?.MaId}");
+                        //    await _cache.SetStringAsync($"phieudangkymau:{mau?.MaId}", JsonConvert.SerializeObject(mau), new DistributedCacheEntryOptions
+                        //    {
+                        //        AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(5)
+                        //    });
+                        //    // Cap nhat version moi cho cache redis phieudangkymau:all
+                        //    await _cache.SetStringAsync("phieudangkymau:all:version", $"v{DateTime.UtcNow.Ticks}");
+                        //}
 
                         // cap nhat chi tiet hoa don thu
                         if (hoaDonThu != null && hoaDonThu.MaId != null && hoaDonThu.MaId != "")
@@ -391,22 +391,22 @@ namespace QLDV_KiemNghiem_BE.Services
                     phieuDangKyMaus1.Add(mauDoMain);
                     phieuDangKyMauHinhAnhs1 = new List<PhieuDangKyMauHinhAnh>();
 
-                    // cap nhat vao redis
-                    if (_redis.IsConnected)
-                    {
-                        var cacheKey = $"phieudangkymau:{mau.MaId}";
-                        var cacheObj = new CachedResponse<PhieuDangKyMauDto>
-                        {
-                            Data = mau
-                        };
-                        // Lưu dữ liệu vào redis phieudangkymau
-                        await _cache.SetStringAsync(cacheKey, JsonConvert.SerializeObject(cacheObj), new DistributedCacheEntryOptions
-                        {
-                            AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(5)
-                        });
-                        // Cap nhat version moi cho cache redis phieudangkymau:all
-                        await _cache.SetStringAsync("phieudangkymau:all:version", $"v{DateTime.UtcNow.Ticks}");
-                    }
+                    //// cap nhat vao redis
+                    //if (_redis.IsConnected)
+                    //{
+                    //    var cacheKey = $"phieudangkymau:{mau.MaId}";
+                    //    var cacheObj = new CachedResponse<PhieuDangKyMauDto>
+                    //    {
+                    //        Data = mau
+                    //    };
+                    //    // Lưu dữ liệu vào redis phieudangkymau
+                    //    await _cache.SetStringAsync(cacheKey, JsonConvert.SerializeObject(cacheObj), new DistributedCacheEntryOptions
+                    //    {
+                    //        AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(5)
+                    //    });
+                    //    // Cap nhat version moi cho cache redis phieudangkymau:all
+                    //    await _cache.SetStringAsync("phieudangkymau:all:version", $"v{DateTime.UtcNow.Ticks}");
+                    //}
                 }
             }
             // Update Or Delete Plhc

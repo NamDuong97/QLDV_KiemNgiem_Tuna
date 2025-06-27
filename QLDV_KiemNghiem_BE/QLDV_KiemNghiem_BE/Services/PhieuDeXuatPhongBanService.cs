@@ -145,25 +145,25 @@ namespace QLDV_KiemNghiem_BE.Services
             PhieuDeXuatPhongBanReturnDto.ChiTietPhieuDeXuatPhongBans = chiTietPhieuDeXuatPhongBanDtos;
 
             // Cập nhật redis cho phieudangky mau
-            foreach (var item in PhieuDeXuatPhongBanReturnDto.ChiTietPhieuDeXuatPhongBans)
-            {
-                var mau = await _repositoryManager.PhieuDangKyMau.FindPhieuDangKyMauAsync(item.MaPdkMau ?? "");
-                if (_redis.IsConnected && mau!= null)
-                {
-                    var cacheKey = $"phieudangkymau:{mau.MaId}";
-                    var cacheObj = new CachedResponse<PhieuDangKyMauDto>
-                    {
-                        Data = _mapper.Map<PhieuDangKyMauDto>(mau)
-                    };
-                    // Lưu dữ liệu vào redis phieudangkymau
-                    await _cache.SetStringAsync(cacheKey, JsonConvert.SerializeObject(cacheObj), new DistributedCacheEntryOptions
-                    {
-                        AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(5)
-                    });
-                    // Cap nhat version moi cho cache redis phieudangkymau:all
-                    await _cache.SetStringAsync("phieudangkymau:all:version", $"v{DateTime.UtcNow.Ticks}");
-                }
-            }
+            //foreach (var item in PhieuDeXuatPhongBanReturnDto.ChiTietPhieuDeXuatPhongBans)
+            //{
+            //    var mau = await _repositoryManager.PhieuDangKyMau.FindPhieuDangKyMauAsync(item.MaPdkMau ?? "");
+            //    if (_redis.IsConnected && mau!= null)
+            //    {
+            //        var cacheKey = $"phieudangkymau:{mau.MaId}";
+            //        var cacheObj = new CachedResponse<PhieuDangKyMauDto>
+            //        {
+            //            Data = _mapper.Map<PhieuDangKyMauDto>(mau)
+            //        };
+            //        // Lưu dữ liệu vào redis phieudangkymau
+            //        await _cache.SetStringAsync(cacheKey, JsonConvert.SerializeObject(cacheObj), new DistributedCacheEntryOptions
+            //        {
+            //            AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(5)
+            //        });
+            //        // Cap nhat version moi cho cache redis phieudangkymau:all
+            //        await _cache.SetStringAsync("phieudangkymau:all:version", $"v{DateTime.UtcNow.Ticks}");
+            //    }
+            //}
 
             return new ResponseModel1<PhieuDeXuatPhongBanDto>
             {
@@ -246,23 +246,23 @@ namespace QLDV_KiemNghiem_BE.Services
                             _repositoryManager.PhieuDeXuatPhongBan.UpdatePhieuDeXuatPhongBanAsync(phieuDeXuatPhongBan);
 
                             // Cập nhật redis cho phieudangkymau
-                            if (_redis.IsConnected)
-                            {
-                                var cacheKey = $"phieudangkymau:{mau?.MaId}";
-                                PhieuDangKyMauDto mauDto = new PhieuDangKyMauDto();
-                                _mapper.Map(mau, mauDto);
-                                var cacheObj = new CachedResponse<PhieuDangKyMauDto>
-                                {
-                                    Data = mauDto
-                                };
-                                // Lưu dữ liệu vào redis phieudangkymau
-                                await _cache.SetStringAsync(cacheKey, JsonConvert.SerializeObject(cacheObj), new DistributedCacheEntryOptions
-                                {
-                                    AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(5)
-                                });
-                                // Cap nhat version moi cho cache redis phieudangkymau:all
-                                await _cache.SetStringAsync("phieudangkymau:all:version", $"v{DateTime.UtcNow.Ticks}");
-                            }
+                            //if (_redis.IsConnected)
+                            //{
+                            //    var cacheKey = $"phieudangkymau:{mau?.MaId}";
+                            //    PhieuDangKyMauDto mauDto = new PhieuDangKyMauDto();
+                            //    _mapper.Map(mau, mauDto);
+                            //    var cacheObj = new CachedResponse<PhieuDangKyMauDto>
+                            //    {
+                            //        Data = mauDto
+                            //    };
+                            //    // Lưu dữ liệu vào redis phieudangkymau
+                            //    await _cache.SetStringAsync(cacheKey, JsonConvert.SerializeObject(cacheObj), new DistributedCacheEntryOptions
+                            //    {
+                            //        AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(5)
+                            //    });
+                            //    // Cap nhat version moi cho cache redis phieudangkymau:all
+                            //    await _cache.SetStringAsync("phieudangkymau:all:version", $"v{DateTime.UtcNow.Ticks}");
+                            //}
                         }
                     }
                     else
@@ -303,23 +303,23 @@ namespace QLDV_KiemNghiem_BE.Services
                                     _repositoryManager.PhieuDangKyMau.UpdatePhieuDangKyMauAsync(mau);
                                     _repositoryManager.PhieuDangKy.UpdatePhieuDangKyAsync(phieuDangKy);
                                     // nhật nhật redis cho mẫu
-                                    if (_redis.IsConnected)
-                                    {
-                                        PhieuDangKyMauDto mauDto = new PhieuDangKyMauDto();
-                                        _mapper.Map(mau, mauDto);
-                                        var cacheKey = $"phieudangkymau:{mauDto?.MaId}";
-                                        var cacheObj = new CachedResponse<PhieuDangKyMauDto>
-                                        {
-                                            Data = mauDto
-                                        };
-                                        // Lưu dữ liệu vào redis phieudangkymau
-                                        await _cache.SetStringAsync(cacheKey, JsonConvert.SerializeObject(cacheObj), new DistributedCacheEntryOptions
-                                        {
-                                            AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(5)
-                                        });
-                                        // Cap nhat version moi cho cache redis phieudangkymau:all
-                                        await _cache.SetStringAsync("phieudangkymau:all:version", $"v{DateTime.UtcNow.Ticks}");
-                                    }
+                                    //if (_redis.IsConnected)
+                                    //{
+                                    //    PhieuDangKyMauDto mauDto = new PhieuDangKyMauDto();
+                                    //    _mapper.Map(mau, mauDto);
+                                    //    var cacheKey = $"phieudangkymau:{mauDto?.MaId}";
+                                    //    var cacheObj = new CachedResponse<PhieuDangKyMauDto>
+                                    //    {
+                                    //        Data = mauDto
+                                    //    };
+                                    //    // Lưu dữ liệu vào redis phieudangkymau
+                                    //    await _cache.SetStringAsync(cacheKey, JsonConvert.SerializeObject(cacheObj), new DistributedCacheEntryOptions
+                                    //    {
+                                    //        AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(5)
+                                    //    });
+                                    //    // Cap nhat version moi cho cache redis phieudangkymau:all
+                                    //    await _cache.SetStringAsync("phieudangkymau:all:version", $"v{DateTime.UtcNow.Ticks}");
+                                    //}
                                 }
                                 // kiểm tra update phieudexuatphongban xem nó sẽ ở trạng thái đã duyệt hay bị hủy sau khi mất đi mẫu này
                                 await _repositoryManager.ChiTietPhieuDeXuatPhongBan.ProcessUpdatePDXPBFromMauCancel(chiTietPhieuDeXuatPhongBanCheck.MaId, chiTietPhieuDeXuatPhongBanCheck?.MaPhieuDeXuat?? "", chiTietPhieuDeXuatPhongBanCheck?.MaPdkMau ?? "", user);
