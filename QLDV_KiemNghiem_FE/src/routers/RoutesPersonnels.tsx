@@ -38,6 +38,13 @@ const DanhSachPhanCongNoiBo = lazy(
   () => import("../pages/Admin/DanhSachPhanCongNoiBo")
 );
 
+const DanhSachDuTru = lazy(() => import("../pages/Admin/DanhSachDuTru"));
+const DanhSachHoaDon = lazy(() => import("../pages/Admin/DanhSachHoaDon"));
+const DanhSachPhieuThu = lazy(() => import("../pages/Admin/DanhSachPhieuThu"));
+const DeNghiXuatKho = lazy(() => import("../pages/Admin/DeNghiXuatKho"));
+const MuaVatTu = lazy(() => import("../pages/Admin/MuaVatTu"));
+const PhanTichKetQua = lazy(() => import("../pages/Admin/PhanTichKetQua"));
+
 const RoutesPersonnels = () => {
   return (
     <Suspense>
@@ -110,6 +117,30 @@ const RoutesPersonnels = () => {
           <Route
             path={APP_ROUTES.TUNA_ADMIN.QUAN_LY_PHAN_CONG_NOI_BO.to}
             element={<DanhSachPhanCongNoiBo />}
+          />
+          <Route
+            path={APP_ROUTES.TUNA_ADMIN.QUAN_LY_PHIEU_DU_TRU.to}
+            element={<DanhSachDuTru />}
+          />
+          <Route
+            path={APP_ROUTES.TUNA_ADMIN.QUAN_LY_HOA_DON.to}
+            element={<DanhSachHoaDon />}
+          />
+          <Route
+            path={APP_ROUTES.TUNA_ADMIN.QUAN_LY_PHIEU_THU.to}
+            element={<DanhSachPhieuThu />}
+          />
+          <Route
+            path={APP_ROUTES.TUNA_ADMIN.QUAN_LY_PHIEU_XUAT_KHO.to}
+            element={<DeNghiXuatKho />}
+          />
+          <Route
+            path={APP_ROUTES.TUNA_ADMIN.QUAN_LY_PHIEU_MUA_VAT_TU.to}
+            element={<MuaVatTu />}
+          />
+          <Route
+            path={APP_ROUTES.TUNA_ADMIN.QUAN_LY_PHAN_TICH_KET_QUA.to}
+            element={<PhanTichKetQua />}
           />
         </Route>
 

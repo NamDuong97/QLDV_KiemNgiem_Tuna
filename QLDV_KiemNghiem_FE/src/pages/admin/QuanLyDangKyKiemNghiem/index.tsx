@@ -66,7 +66,7 @@ const QuanLyPhieuDKyDVHN = () => {
 
 
   const handleShowTag = () => {
-    switch (role) {
+    switch (getRoleGroup(role)) {
       case "BLD":
         return (
           <div className="flex flex-wrap gap-2">

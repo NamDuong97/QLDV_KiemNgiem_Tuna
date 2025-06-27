@@ -135,7 +135,8 @@ const SidebarPersonnal = () => {
               </p>
             </div>
             <div className="flex flex-col space-y-1">
-              {(getRoleGroup(role) === "KHTH" || getRoleGroup(role) === "BLD") && (
+              {(getRoleGroup(role) === "KHTH" ||
+                getRoleGroup(role) === "BLD") && (
                 <>
                   <button
                     onClick={() => {
@@ -311,15 +312,17 @@ const SidebarPersonnal = () => {
               </button>
               <button
                 onClick={() => {
-                  handleRedirect(quanLyPhanCongNoiBo);
+                  handleRedirect(quanLyPhieuDuTru);
                 }}
                 className={clsx(
-                  "flex items-center space-x-2 sidebar-link px-4 py-3 text-gray-700 rounded-lg"
-                  // {
-                  //   "text-indigo-600 active":
-                  //     pathname.split("/")[2] ===
-                  //     APP_ROUTES.TUNA_ADMIN.DASHBOARD.to.split("/")[2],
-                  // }
+                  "flex items-center space-x-2 sidebar-link px-4 py-3 text-gray-700 rounded-lg",
+                  {
+                    "text-indigo-600 active":
+                      pathname.split("/")[2] ===
+                      APP_ROUTES.TUNA_ADMIN.QUAN_LY_PHIEU_DU_TRU.to.split(
+                        "/"
+                      )[2],
+                  }
                 )}
               >
                 <span className="w-5">
@@ -327,7 +330,9 @@ const SidebarPersonnal = () => {
                     className={clsx("w-5 h-5 text-gray-500", {
                       "text-indigo-600":
                         pathname.split("/")[2] ===
-                        APP_ROUTES.TUNA_ADMIN.DASHBOARD.to.split("/")[2],
+                        APP_ROUTES.TUNA_ADMIN.QUAN_LY_PHIEU_DU_TRU.to.split(
+                          "/"
+                        )[2],
                     })}
                   />
                 </span>
@@ -335,15 +340,15 @@ const SidebarPersonnal = () => {
               </button>
               <button
                 onClick={() => {
-                  handleRedirect(quanLyPhanCongNoiBo);
+                  handleRedirect(quanLyHoaDonTrangAdmin);
                 }}
                 className={clsx(
-                  "flex items-center space-x-2 sidebar-link px-4 py-3 text-gray-700 rounded-lg"
-                  // {
-                  //   "text-indigo-600 active":
-                  //     pathname.split("/")[2] ===
-                  //     APP_ROUTES.TUNA_ADMIN.DASHBOARD.to.split("/")[2],
-                  // }
+                  "flex items-center space-x-2 sidebar-link px-4 py-3 text-gray-700 rounded-lg",
+                  {
+                    "text-indigo-600 active":
+                      pathname.split("/")[2] ===
+                      APP_ROUTES.TUNA_ADMIN.QUAN_LY_HOA_DON.to.split("/")[2],
+                  }
                 )}
               >
                 <span className="w-5">
@@ -351,7 +356,7 @@ const SidebarPersonnal = () => {
                     className={clsx("w-5 h-5 text-gray-500", {
                       "text-indigo-600":
                         pathname.split("/")[2] ===
-                        APP_ROUTES.TUNA_ADMIN.DASHBOARD.to.split("/")[2],
+                        APP_ROUTES.TUNA_ADMIN.QUAN_LY_HOA_DON.to.split("/")[2],
                     })}
                   />
                 </span>
@@ -359,39 +364,17 @@ const SidebarPersonnal = () => {
               </button>
               <button
                 onClick={() => {
-                  handleRedirect(quanLyPhanCongNoiBo);
+                  handleRedirect(quanLyPhieuPhanTichKetQua);
                 }}
                 className={clsx(
-                  "flex items-center space-x-2 sidebar-link px-4 py-3 text-gray-700 rounded-lg"
-                  // {
-                  //   "text-indigo-600 active":
-                  //     pathname.split("/")[2] ===
-                  //     APP_ROUTES.TUNA_ADMIN.DASHBOARD.to.split("/")[2],
-                  // }
-                )}
-              >
-                <span className="w-5">
-                  <FaFileInvoiceDollar
-                    className={clsx("w-5 h-5 text-gray-500", {
-                      "text-indigo-600":
-                        pathname.split("/")[2] ===
-                        APP_ROUTES.TUNA_ADMIN.DASHBOARD.to.split("/")[2],
-                    })}
-                  />
-                </span>
-                <span className="text-start">Hóa đơn bổ sung</span>
-              </button>
-              <button
-                onClick={() => {
-                  handleRedirect(quanLyPhanCongNoiBo);
-                }}
-                className={clsx(
-                  "flex items-center space-x-2 sidebar-link px-4 py-3 text-gray-700 rounded-lg"
-                  // {
-                  //   "text-indigo-600 active":
-                  //     pathname.split("/")[2] ===
-                  //     APP_ROUTES.TUNA_ADMIN.DASHBOARD.to.split("/")[2],
-                  // }
+                  "flex items-center space-x-2 sidebar-link px-4 py-3 text-gray-700 rounded-lg",
+                  {
+                    "text-indigo-600 active":
+                      pathname.split("/")[2] ===
+                      APP_ROUTES.TUNA_ADMIN.QUAN_LY_PHAN_TICH_KET_QUA.to.split(
+                        "/"
+                      )[2],
+                  }
                 )}
               >
                 <span className="w-5">
@@ -399,7 +382,9 @@ const SidebarPersonnal = () => {
                     className={clsx("w-5 h-5 text-gray-500", {
                       "text-indigo-600":
                         pathname.split("/")[2] ===
-                        APP_ROUTES.TUNA_ADMIN.DASHBOARD.to.split("/")[2],
+                        APP_ROUTES.TUNA_ADMIN.QUAN_LY_PHAN_TICH_KET_QUA.to.split(
+                          "/"
+                        )[2],
                     })}
                   />
                 </span>
@@ -407,15 +392,15 @@ const SidebarPersonnal = () => {
               </button>
               <button
                 onClick={() => {
-                  handleRedirect(quanLyPhanCongNoiBo);
+                  handleRedirect(quanLyPhieuThu);
                 }}
                 className={clsx(
-                  "flex items-center space-x-2 sidebar-link px-4 py-3 text-gray-700 rounded-lg"
-                  // {
-                  //   "text-indigo-600 active":
-                  //     pathname.split("/")[2] ===
-                  //     APP_ROUTES.TUNA_ADMIN.DASHBOARD.to.split("/")[2],
-                  // }
+                  "flex items-center space-x-2 sidebar-link px-4 py-3 text-gray-700 rounded-lg",
+                  {
+                    "text-indigo-600 active":
+                      pathname.split("/")[2] ===
+                      APP_ROUTES.TUNA_ADMIN.QUAN_LY_PHIEU_THU.to.split("/")[2],
+                  }
                 )}
               >
                 <span className="w-5">
@@ -423,7 +408,9 @@ const SidebarPersonnal = () => {
                     className={clsx("w-5 h-5 text-gray-500", {
                       "text-indigo-600":
                         pathname.split("/")[2] ===
-                        APP_ROUTES.TUNA_ADMIN.DASHBOARD.to.split("/")[2],
+                        APP_ROUTES.TUNA_ADMIN.QUAN_LY_PHIEU_THU.to.split(
+                          "/"
+                        )[2],
                     })}
                   />
                 </span>
@@ -431,15 +418,17 @@ const SidebarPersonnal = () => {
               </button>
               <button
                 onClick={() => {
-                  handleRedirect(quanLyPhanCongNoiBo);
+                  handleRedirect(quanLyPhieuXuatKho);
                 }}
                 className={clsx(
-                  "flex items-center space-x-2 sidebar-link px-4 py-3 text-gray-700 rounded-lg"
-                  // {
-                  //   "text-indigo-600 active":
-                  //     pathname.split("/")[2] ===
-                  //     APP_ROUTES.TUNA_ADMIN.DASHBOARD.to.split("/")[2],
-                  // }
+                  "flex items-center space-x-2 sidebar-link px-4 py-3 text-gray-700 rounded-lg",
+                  {
+                    "text-indigo-600 active":
+                      pathname.split("/")[2] ===
+                      APP_ROUTES.TUNA_ADMIN.QUAN_LY_PHIEU_XUAT_KHO.to.split(
+                        "/"
+                      )[2],
+                  }
                 )}
               >
                 <span className="w-5">
@@ -447,7 +436,9 @@ const SidebarPersonnal = () => {
                     className={clsx("w-5 h-5 text-gray-500", {
                       "text-indigo-600":
                         pathname.split("/")[2] ===
-                        APP_ROUTES.TUNA_ADMIN.DASHBOARD.to.split("/")[2],
+                        APP_ROUTES.TUNA_ADMIN.QUAN_LY_PHIEU_XUAT_KHO.to.split(
+                          "/"
+                        )[2],
                     })}
                   />
                 </span>
@@ -455,15 +446,17 @@ const SidebarPersonnal = () => {
               </button>
               <button
                 onClick={() => {
-                  handleRedirect(quanLyPhanCongNoiBo);
+                  handleRedirect(quanLyPhieuMuaVatTu);
                 }}
                 className={clsx(
-                  "flex items-center space-x-2 sidebar-link px-4 py-3 text-gray-700 rounded-lg"
-                  // {
-                  //   "text-indigo-600 active":
-                  //     pathname.split("/")[2] ===
-                  //     APP_ROUTES.TUNA_ADMIN.DASHBOARD.to.split("/")[2],
-                  // }
+                  "flex items-center space-x-2 sidebar-link px-4 py-3 text-gray-700 rounded-lg",
+                  {
+                    "text-indigo-600 active":
+                      pathname.split("/")[2] ===
+                      APP_ROUTES.TUNA_ADMIN.QUAN_LY_PHIEU_MUA_VAT_TU.to.split(
+                        "/"
+                      )[2],
+                  }
                 )}
               >
                 <span className="w-5">
@@ -471,7 +464,9 @@ const SidebarPersonnal = () => {
                     className={clsx("w-5 h-5 text-gray-500", {
                       "text-indigo-600":
                         pathname.split("/")[2] ===
-                        APP_ROUTES.TUNA_ADMIN.DASHBOARD.to.split("/")[2],
+                        APP_ROUTES.TUNA_ADMIN.QUAN_LY_PHIEU_MUA_VAT_TU.to.split(
+                          "/"
+                        )[2],
                     })}
                   />
                 </span>

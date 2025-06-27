@@ -58,8 +58,6 @@ const SampleList = (props: Props) => {
     data?.data?.map(convertToMauPhanCong) || []
   );
 
-  console.log("samplessamples?.data", samples);
-
   const [selectedSamples, setSelectedSamples] = useState<any[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
 

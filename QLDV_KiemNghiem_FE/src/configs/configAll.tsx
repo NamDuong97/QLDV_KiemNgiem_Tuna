@@ -108,6 +108,11 @@ const trangThaiMauMap: Record<string, TrangThai> = {
     bgColor: "bg-green-100",
     textColor: "text-green-800",
   },
+  6: {
+    text: "Đã phân công chờ duyệt",
+    bgColor: "bg-blue-100",
+    textColor: "text-blue-800",
+  },
 };
 
 const trangThaiChiTietPhieuDeXuatPhongBan: Record<string, TrangThai> = {

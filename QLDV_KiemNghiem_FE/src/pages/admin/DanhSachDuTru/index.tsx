@@ -1,41 +1,214 @@
 import { motion } from "motion/react";
-import TagPhanCong from "./TagPhanCong";
-import { Share } from "react-feather";
+import { Clipboard, FilePlus } from "react-feather";
+import Card from "./Card";
+import InputSearch2 from "../../../components/InputSearch2";
 import { useState } from "react";
-import PhanCong from "./PhanCong";
+import { FaSortAmountDown, FaSortAmountUp } from "react-icons/fa";
+import SelectItemTrangThai from "./SelectItemTrangThai";
+import { getRoleGroup } from "../../../configs/Role";
+import { role } from "../../../configs/parseJwt";
+import SelectItemKhoa from "./SelectItemKhoa";
+import SelectItemThoiGian from "./SelectItemThoiGian";
 import DanhSach from "./DanhSach";
+import removeVietnameseTones from "../../../configs/removeVietnameseTones";
 
-export const tagPhanCong = {
-  Phan_Cong: "Phân công",
-  Danh_Sach: "Danh sách",
-};
+interface ChiTietDuTru {
+  DonViTinh: string;
+  SoLuong: number;
+  GhiChu: string;
+  TrangThai: string;
+  MaDM_PLHC: string;
+}
 
-const DanhSachPhanCongNoiBo = () => {
-  const [isTag, setIsTag] = useState(tagPhanCong.Phan_Cong);
+export interface PhieuDuTru {
+  MaPhieuDuTru: string;
+  ManvLapPhieu: string;
+  MaPDK_Mau: string;
+  NgayLap: string;
+  MaKhoa: string;
+  TrangThai: string;
+  NguoiSua: string;
+  NgaySua: string;
+  ChiTietDuTru: ChiTietDuTru[];
+}
+
+const dataDuTru = [
+  {
+    MaPhieuDuTru: "PDT001",
+    ManvLapPhieu: "NV001",
+    MaPDK_Mau: "PDKM001",
+    NgayLap: "2025-06-25",
+    MaKhoa: "KH01",
+    TrangThai: "Chờ duyệt",
+    NguoiSua: "NV002",
+    NgaySua: "2025-06-26",
+    ChiTietDuTru: [
+      {
+        DonViTinh: "Hộp",
+        SoLuong: 10,
+        GhiChu: "Dùng cho xét nghiệm máu",
+        TrangThai: "Đang xử lý",
+        MaDM_PLHC: "DMHC001",
+      },
+      {
+        DonViTinh: "Chai",
+        SoLuong: 5,
+        GhiChu: "Dùng cho mẫu nước tiểu",
+        TrangThai: "Đang xử lý",
+        MaDM_PLHC: "DMHC002",
+      },
+    ],
+  },
+  {
+    MaPhieuDuTru: "PDT002",
+    ManvLapPhieu: "NV003",
+    MaPDK_Mau: "PDKM002",
+    NgayLap: "2025-06-24",
+    MaKhoa: "KH02",
+    TrangThai: "Đã duyệt",
+    NguoiSua: "NV001",
+    NgaySua: "2025-06-25",
+    ChiTietDuTru: [
+      {
+        DonViTinh: "Túi",
+        SoLuong: 20,
+        GhiChu: "Bao bì đóng gói mẫu",
+        TrangThai: "Đã duyệt",
+        MaDM_PLHC: "DMHC005",
+      },
+    ],
+  },
+  {
+    MaPhieuDuTru: "PDT003",
+    ManvLapPhieu: "NV002",
+    MaPDK_Mau: "PDKM003",
+    NgayLap: "2025-06-23",
+    MaKhoa: "KH01",
+    TrangThai: "Đã hủy",
+    NguoiSua: "NV003",
+    NgaySua: "2025-06-24",
+    ChiTietDuTru: [
+      {
+        DonViTinh: "Ống",
+        SoLuong: 15,
+        GhiChu: "Không đạt yêu cầu chất lượng",
+        TrangThai: "Đã hủy",
+        MaDM_PLHC: "DMHC003",
+      },
+    ],
+  },
+];
+
+const DanhSachDuTru = () => {
+  const [selectTrangThai, setSelectTrangThai] = useState("");
+  const [isSortNew, setIsSortNew] = useState(false);
+  const [selectKhoa, setSelectKhoa] = useState("");
+  const [selectThoiGian, setSelectThoiGian] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
+  const filteredSamples: any = dataDuTru?.filter((sample: any) => {
+    const query = removeVietnameseTones(searchQuery.toLowerCase());
+    const matchesSearch =
+      removeVietnameseTones(sample.MaPhieuDuTru.toLowerCase()).includes(
+        query
+      ) ||
+      removeVietnameseTones(sample.MaPDK_Mau.toLowerCase()).includes(query);
+    return matchesSearch;
+  });
+  const handleSearchChange = (e: any) => {
+    setSearchQuery(e.target.value);
+  };
+
   return (
     <motion.div
       key="DanhSachMauLuu"
       initial={{ x: 0, opacity: 0 }}
       animate={{ x: 0, opacity: 1 }}
       exit={{ x: 0, opacity: 0 }}
-      transition={{ duration: 0.7 }}
+      transition={{ duration: 0.5 }}
       className="px-10 space-y-6 bg-blue-50 p-6 h-screen"
     >
-      <div>
-        <h1 className="text-2xl capitalize font-semibold text-gray-800 flex gap-1 items-center">
-          <span className="p-1 rounded bg-blue-100">
-            <Share className="w-6 h-6 text-indigo-600" />
-          </span>
-          Phân công nội bộ
-        </h1>
+      <div className="flex justify-between items-center">
+        <div>
+          <h1 className="text-2xl capitalize font-semibold text-gray-800 flex gap-1 items-center">
+            Danh sách phiếu Dự trù
+          </h1>
+          <p className="text-sm/6 capitalize font-medium text-gray-600 flex gap-1 items-center">
+            Quản lý các phiếu dự trù phụ liệu hóa chất
+          </p>
+        </div>
       </div>
-      <div className="bg-white p-4 rounded-lg shadow-sm">
-        <TagPhanCong setIsTag={setIsTag} isTag={isTag} />
+      <div className="grid gap-6 grid-cols-4">
+        <Card
+          title="Tổng phiếu dự trù"
+          value="2"
+          icon={<Clipboard className="w-6 h-6" />}
+          // isLoading={isLoading}
+          bgColor="bg-indigo-100"
+          textColor="text-indigo-600"
+        />
       </div>
-      {isTag === tagPhanCong.Phan_Cong && <PhanCong />}
-      {isTag === tagPhanCong.Danh_Sach && <DanhSach />}
+      <div className="p-4 bg-white rounded-lg shadow-sm border border-gray-100 gap-2 space-y-4">
+        <div className="flex justify-between items-center">
+          <div className="flex gap-4 w-3xl">
+            <InputSearch2
+              placeholder="Tìm kiếm mã phiếu hoặc mẫu kiểm nghiệm..."
+              value={searchQuery}
+              onChange={handleSearchChange}
+            />
+          </div>
+          <div className="flex justify-between items-center gap-4">
+            {(getRoleGroup(role) === "BLD" ||
+              getRoleGroup(role) === "KHTH") && (
+              <SelectItemKhoa
+                title="Khoa"
+                setItem={setSelectKhoa}
+                item={selectKhoa}
+              />
+            )}
+            <button
+              // onClick={() => setIsSortNew(!isSortNew)}
+              type="button"
+              className="btn btn-outline-primary border border-gray-300 py-[6px] px-2 rounded cursor-pointer hover:bg-blue-50"
+            >
+              {isSortNew ? (
+                <span className="flex items-center gap-2 text-gray-800">
+                  <FaSortAmountUp /> Cũ Nhất
+                </span>
+              ) : (
+                <span className="flex items-center gap-2 text-gray-800">
+                  <FaSortAmountDown /> Mới nhất
+                </span>
+              )}
+            </button>
+            <button
+              // onClick={() =>
+              //   navigate(
+              //     APP_ROUTES.TUNA_ADMIN.QUAN_LY_PHIEU_LUU_MAU.create_mau_luu
+              //   )
+              // }
+              type="button"
+              className="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg flex items-center transition-all gap-1 cursor-pointer"
+            >
+              <FilePlus className="w-5 h-5" /> Tạo phiếu
+            </button>
+          </div>
+        </div>
+        <div className="flex space-x-4 items-center">
+          <SelectItemTrangThai
+            title="Trạng thái"
+            setItem={setSelectTrangThai}
+            item={selectTrangThai}
+          />
+          <SelectItemThoiGian
+            title="thời gian"
+            setItem={setSelectThoiGian}
+            item={selectThoiGian}
+          />
+        </div>
+      </div>
+      <DanhSach dataDuTru={filteredSamples} />
     </motion.div>
   );
 };
 
-export default DanhSachPhanCongNoiBo;
+export default DanhSachDuTru;
