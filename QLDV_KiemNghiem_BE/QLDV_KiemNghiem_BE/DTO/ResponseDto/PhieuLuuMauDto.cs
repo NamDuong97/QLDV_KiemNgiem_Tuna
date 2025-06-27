@@ -31,5 +31,11 @@ namespace QLDV_KiemNghiem_BE.DTO.ResponseDto
 
         [StringLength(100)]
         public string? TrangThai { get; set; }
+
+        [Column(TypeName = "datetime")]
+        public DateTime? HanSuDung { get; set; }
+
+        [StringLength(500)]
+        public string? TenMau { get; set; }
     }
 }
