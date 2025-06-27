@@ -123,7 +123,7 @@ const KHTH = (props: Props) => {
         ? {
             timeTo: selectedDateTo,
           }
-        : undefined,
+        : { getAll: true },
   });
 
   const dataShow: any = {

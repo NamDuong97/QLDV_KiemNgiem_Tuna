@@ -3,6 +3,7 @@ import {
   useGetLoaiDichVuAll,
   useGetTieuChuanAll,
 } from "../../../../../../hooks/customers/usePhieuDKyDVKN";
+import { renderTrangThaiMau } from "../../../../../../configs/configAll";
 
 interface MausProps {
   currentItems: any;
@@ -191,6 +192,12 @@ const Maus = (props: MausProps) => {
                   ? "Có xuất kết quả"
                   : "Không xuất kết quả"}
               </p>
+            </div>
+            <div className="grid">
+              <label className="text-sm/6 text-gray-500">
+                Trạng thái phân công
+              </label>
+              <div> {renderTrangThaiMau(currentItems?.trangThaiPhanCong)}</div>
             </div>
             <div className="col-span-2">
               <label className="text-sm/6 text-gray-500">

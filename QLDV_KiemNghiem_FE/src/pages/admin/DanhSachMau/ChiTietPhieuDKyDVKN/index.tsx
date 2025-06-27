@@ -14,7 +14,7 @@ interface Props {
 const ChiTietPhieuDKyDVKN = (props: Props) => {
   const { open, handleClose } = props;
   const [isTag, setIsTag] = useState(1);
-  const dataSession = sessionStorage.getItem("phieu-xem-chi-tiet");
+  const dataSession = sessionStorage.getItem("chi-tiet-mau-kiem-nghiem");
   const id = dataSession ? JSON.parse(dataSession) : "";
 
   const { data, isLoading } = xemChitietPhieuDKKM({

@@ -16,15 +16,9 @@ const tableHead = [
     align: Align.Left,
   },
   {
-    id: "tenDVKN",
+    id: "loaiMau",
     sort: false,
-    label: "Tên dịch vụ kiểm nghiệm",
-    align: Align.Left,
-  },
-  {
-    id: "TCAD",
-    sort: false,
-    label: "Tiêu chuẩn áp dụng",
+    label: "Loại mẫu",
     align: Align.Left,
   },
   {
@@ -49,7 +43,7 @@ const tableHead = [
   {
     id: "trangThai",
     sort: false,
-    label: "Trạng thái",
+    label: "Trạng thái phân công",
     align: Align.Left,
   },
   {

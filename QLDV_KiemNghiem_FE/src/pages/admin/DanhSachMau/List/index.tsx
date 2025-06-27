@@ -10,51 +10,26 @@ import SelectItemTrangThai from "./SelectItemTrangThai";
 import removeVietnameseTones from "../../../../configs/removeVietnameseTones";
 import { ImWarning } from "react-icons/im";
 import ChiTietPhieuDKyDVKN from "../ChiTietPhieuDKyDVKN";
+import { getAllDanhSachMau } from "../../../../hooks/personnels/phanCongKhoa";
+import SelectItemLoaiMau from "./SelectItemLoaiMau";
 
 interface Props {
   tableHead: any;
 }
 
-const data: any = [
-  {
-    soLo: "LO-12345",
-    mau: "Viên nang cứng màu trắng",
-    tenDVKN: "Kiểm nghiệm vi sinh",
-    TCAD: "TCVN 6096:2004",
-    soLuong: "5 chai",
-    ngaySanXuat: "10/05/2023",
-    hanSD: "10/05/2024",
-    trangThai: 1,
-  },
-  {
-    soLo: "LO-12346",
-    mau: "Dung dịch màu vàng nhạt",
-    tenDVKN: "Kiểm nghiệm kim loại nặng",
-    TCAD: "TCVN 7054:2002",
-    soLuong: "3 chai",
-    ngaySanXuat: "01/06/2023",
-    hanSD: "01/06/2025",
-    trangThai: 2,
-  },
-  {
-    soLo: "LO-12347",
-    mau: "Bột mịn màu trắng",
-    tenDVKN: "Kiểm nghiệm độ ẩm và vi sinh",
-    TCAD: "ISO 7218:2007",
-    soLuong: "10 gói",
-    ngaySanXuat: "15/03/2023",
-    hanSD: "15/03/2024",
-    trangThai: 3,
-  },
-];
-
 const DanhSach = (props: Props) => {
   const { tableHead } = props;
-  // const { data, isLoading } = getPhanCongKhoaCMAll({
-  //   queryKey: "getPhanCongKhoaCMAll",
-  // });
+  const { data: dataMau, isLoading } = getAllDanhSachMau({
+    queryKey: "AllDanhSachMau",
+    params: { getAll: true },
+  });
+  const [selectLoaiMau, setSelectLoaiMau] = useState("");
+  let data: any = dataMau?.data?.filter((item: any) =>
+    selectLoaiMau !== "" ? item.maLoaiMau === selectLoaiMau : item
+  );
   const [searchQuery, setSearchQuery] = useState("");
   const [selectTrangThai, setSelectTrangThai] = useState("");
+
   const [isSortNew, setIsSortNew] = useState(false);
   const filteredSamples: any = data?.filter((sample: any) => {
     const query = removeVietnameseTones(searchQuery.toLowerCase());
@@ -67,10 +42,16 @@ const DanhSach = (props: Props) => {
   const [itemsPerPage] = useState(10);
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentItems = filteredSamples?.slice(
-    indexOfFirstItem,
-    indexOfLastItem
-  );
+  console.log("selectLoaiMau", selectLoaiMau);
+
+  const currentItems = filteredSamples
+    ?.sort((a: any, b: any) =>
+      isSortNew
+        ? new Date(a.hanSuDung).getTime() - new Date(b.hanSuDung).getTime()
+        : new Date(b.hanSuDung).getTime() - new Date(a.hanSuDung).getTime()
+    )
+    ?.slice(indexOfFirstItem, indexOfLastItem);
+
   const totalPages = Math.ceil(data && data?.length / itemsPerPage);
   const [openXemChiTiet, setOpenXemChiTiet] = useState(false);
 
@@ -137,16 +118,15 @@ const DanhSach = (props: Props) => {
             type="button"
             className="btn btn-outline-primary border border-gray-300 py-[6px] px-2 rounded cursor-pointer hover:bg-blue-50"
           >
-            {isSortNew ? (
-              <span className="flex items-center gap-2 text-gray-800">
-                <FaSortAmountUp /> Cũ Nhất
-              </span>
-            ) : (
-              <span className="flex items-center gap-2 text-gray-800">
-                <FaSortAmountDown /> Mới nhất
-              </span>
-            )}
+            <span className="flex items-center gap-2 text-gray-800">
+              {isSortNew ? <FaSortAmountUp /> : <FaSortAmountDown />}Hạn sử dụng
+            </span>
           </button>
+          <SelectItemLoaiMau
+            title="loại mẫu"
+            setItem={setSelectLoaiMau}
+            item={selectLoaiMau}
+          />
           <SelectItemTrangThai
             title="Trạng thái"
             setItem={setSelectTrangThai}
@@ -158,7 +138,7 @@ const DanhSach = (props: Props) => {
         <TableQuanLyPhieuDKyDVHN
           tableHead={tableHead}
           tableBody={currentItems}
-          // isLoading={isLoading}
+          isLoading={isLoading}
           handleOpenChiTiet={() => setOpenXemChiTiet(true)}
         />
         {currentItems?.length > 0 && (

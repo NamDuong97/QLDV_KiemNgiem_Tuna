@@ -11,7 +11,7 @@ import {
 } from "@mui/material";
 import { Align } from "../../../../models/Table";
 import { FaEye } from "react-icons/fa";
-import { renderTrangThaiMau } from "../../../../configs/configAll";
+import { formatDate, renderTrangThaiMau } from "../../../../configs/configAll";
 
 interface TableProps {
   tableBody: any[];
@@ -70,34 +70,49 @@ const TableQuanLyPhieuDKyDVHN = (props: TableProps) => {
             >
               <TableCell align="left">
                 <div className="flex justify-start">
-                  <Skeleton variant="rounded" width={210} height={30} />
+                  <Skeleton variant="rounded" width={150} height={30} />
                 </div>
               </TableCell>
               <TableCell align="center">
                 <div className="flex justify-center">
-                  <Skeleton variant="rounded" width={210} height={30} />
+                  <Skeleton variant="rounded" width={150} height={30} />
                 </div>
               </TableCell>
               <TableCell align="center">
                 <div className="flex justify-center">
-                  <Skeleton variant="rounded" width={210} height={30} />
+                  <Skeleton variant="rounded" width={150} height={30} />
                 </div>
               </TableCell>
               <TableCell align="center">
                 <div className="flex justify-center">
-                  <Skeleton variant="rounded" width={210} height={30} />
+                  <Skeleton variant="rounded" width={150} height={30} />
                 </div>
               </TableCell>
               <TableCell align="center" className="!py-3">
                 <div className="flex justify-center">
-                  <Skeleton variant="rounded" width={210} height={30} />
+                  <Skeleton variant="rounded" width={150} height={30} />
+                </div>
+              </TableCell>{" "}
+              <TableCell align="center" className="!py-3">
+                <div className="flex justify-center">
+                  <Skeleton variant="rounded" width={150} height={30} />
+                </div>
+              </TableCell>{" "}
+              <TableCell align="center" className="!py-3">
+                <div className="flex justify-center">
+                  <Skeleton variant="rounded" width={150} height={30} />
+                </div>
+              </TableCell>{" "}
+              <TableCell align="center" className="!py-3">
+                <div className="flex justify-center">
+                  <Skeleton variant="rounded" width={150} height={30} />
                 </div>
               </TableCell>
             </TableRow>
           ) : tableBody?.length > 0 ? (
-            tableBody?.map((item) => (
+            tableBody?.map((item: any, index: any) => (
               <TableRow
-                key={item.maId}
+                key={index}
                 sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                 hover={true}
                 className="cursor-pointer"
@@ -106,7 +121,7 @@ const TableQuanLyPhieuDKyDVHN = (props: TableProps) => {
                   <Box className="flex gap-2 items-center justify-start">
                     <p
                       className="text-base/4 font-medium cursor-pointer text-blue-700 hover:underline"
-                      onClick={() => handleRedirectChiTiet(item?.soLo)}
+                      onClick={() => handleRedirectChiTiet(item?.maPhieuDangKy)}
                     >
                       {item?.soLo}
                     </p>
@@ -115,49 +130,42 @@ const TableQuanLyPhieuDKyDVHN = (props: TableProps) => {
                 <TableCell align="center">
                   <Box className="flex gap-2 items-center justify-start">
                     <p className="text-base/4 font-medium text-gray-700">
-                      {item?.mau}
+                      {item?.tenMau}
                     </p>
                   </Box>
                 </TableCell>
                 <TableCell align="center">
                   <Box className="flex gap-2 items-center justify-start">
                     <p className="text-base/4 font-medium text-gray-700">
-                      {item?.tenDVKN}
+                      {item?.tenLoaiMau}
                     </p>
                   </Box>
                 </TableCell>
                 <TableCell align="center">
                   <Box className="flex gap-2 items-center justify-start">
                     <p className="text-base/4 font-medium text-gray-700">
-                      {item?.TCAD}
+                      {`${item?.soLuong} ${item?.donViTinh}`}
                     </p>
                   </Box>
                 </TableCell>
                 <TableCell align="center">
                   <Box className="flex gap-2 items-center justify-start">
                     <p className="text-base/4 font-medium text-gray-700">
-                      {item?.soLuong}
+                      {formatDate(item?.ngaySanXuat)}
                     </p>
                   </Box>
                 </TableCell>
                 <TableCell align="center">
                   <Box className="flex gap-2 items-center justify-start">
                     <p className="text-base/4 font-medium text-gray-700">
-                      {item?.ngaySanXuat}
+                      {formatDate(item?.hanSuDung)}
                     </p>
                   </Box>
                 </TableCell>
                 <TableCell align="center">
                   <Box className="flex gap-2 items-center justify-start">
                     <p className="text-base/4 font-medium text-gray-700">
-                      {item?.hanSD}
-                    </p>
-                  </Box>
-                </TableCell>
-                <TableCell align="center">
-                  <Box className="flex gap-2 items-center justify-start">
-                    <p className="text-base/4 font-medium text-gray-700">
-                      {renderTrangThaiMau(item?.trangThai)}
+                      {renderTrangThaiMau(item?.trangThaiPhanCong)}
                     </p>
                   </Box>
                 </TableCell>
@@ -180,7 +188,7 @@ const TableQuanLyPhieuDKyDVHN = (props: TableProps) => {
                       disableInteractive
                     >
                       <button
-                        onClick={() => handleRedirectChiTiet(item?.maId)}
+                        onClick={() => handleRedirectChiTiet(item?.maPhieuDangKy)}
                         className="text-blue-700 font-medium text-sm/6 cursor-pointer flex gap-2 items-center"
                       >
                         <FaEye className="w-5 h-5" /> Xem chi tiết

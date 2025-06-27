@@ -113,7 +113,7 @@ const BLD = (props: Props) => {
         ? {
             timeTo: selectedDateTo,
           }
-        : undefined,
+        : { getAll: true },
   });
   const [searchQuery, setSearchQuery] = useState("");
   const [selectTrangThai, setSelectTrangThai] = useState("");

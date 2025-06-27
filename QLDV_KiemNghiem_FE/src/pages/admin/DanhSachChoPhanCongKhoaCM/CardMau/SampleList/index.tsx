@@ -225,22 +225,16 @@ const SampleList = (props: Props) => {
           ) : (
             <>
               <div className="grid grid-cols-3 gap-4">
-                {filteredSamples
-                  ?.filter(
-                    (item: any) =>
-                      item.trangThaiPhanCong === 1 ||
-                      item.trangThaiPhanCong === 3
-                  )
-                  ?.map((sample: any) => (
-                    <SampleCard
-                      key={sample.maId}
-                      sample={sample}
-                      isSelected={selectedSamples.includes(sample.maId)}
-                      onSelect={toggleSampleSelection}
-                      isLoading={isLoading}
-                      handleOpenChiTiet={() => setOpenXemChiTiet(true)}
-                    />
-                  ))}
+                {filteredSamples?.map((sample: any) => (
+                  <SampleCard
+                    key={sample.maId}
+                    sample={sample}
+                    isSelected={selectedSamples.includes(sample.maId)}
+                    onSelect={toggleSampleSelection}
+                    isLoading={isLoading}
+                    handleOpenChiTiet={() => setOpenXemChiTiet(true)}
+                  />
+                ))}
               </div>
               <div className="p-4 flex justify-center">
                 <Pagination
