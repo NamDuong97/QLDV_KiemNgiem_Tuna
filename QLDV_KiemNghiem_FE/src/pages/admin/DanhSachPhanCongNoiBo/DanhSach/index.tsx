@@ -126,6 +126,24 @@ const DanhSach = (props: Props) => {
     return matchesSearch;
   });
 
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage] = useState(10);
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+
+  const currentItems = filteredSamples
+    ?.sort((a: any, b: any) =>
+      isSortNew
+        ? new Date(a.hanSuDung).getTime() - new Date(b.hanSuDung).getTime()
+        : new Date(b.hanSuDung).getTime() - new Date(a.hanSuDung).getTime()
+    )
+    ?.slice(indexOfFirstItem, indexOfLastItem);
+
+  const totalPages = Math.ceil(data && data?.length / itemsPerPage);
+  const handlePageChange = (_: any, value: number) => {
+    setCurrentPage(value);
+  };
+
   const handleSearchChange = (e: any) => {
     setSearchQuery(e.target.value);
   };
@@ -186,16 +204,19 @@ const DanhSach = (props: Props) => {
                     {assignment.maPdkMau}
                   </h3>
 
-                  <div className="flex items-center mb-4 p-3 bg-gray-50 rounded-lg">
-                    <div
-                      className={`avatar w-10 h-10 rounded-full bg-yellow-500 flex items-center justify-center text-white font-medium`}
-                    >
-                      A
-                    </div>
-                    <div className="ml-3">
-                      <p className="text-sm font-medium text-gray-800">
-                        nguyễn văn a
-                      </p>
+                  <div className="bg-blue-50 rounded-xl p-4 mb-6">
+                    <p className="text-xs text-gray-500 mb-2">Phân công cho</p>
+                    <div className="flex items-center">
+                      <div
+                        className={`avatar w-10 h-10 rounded-full bg-blue-600 flex items-center justify-center text-white font-medium`}
+                      >
+                        C
+                      </div>
+                      <div className="ml-3">
+                        <p className="text-sm font-medium text-gray-800">
+                          Nguyễn C
+                        </p>
+                      </div>
                     </div>
                   </div>
 
@@ -206,6 +227,12 @@ const DanhSach = (props: Props) => {
                         {formatDateNotTime(assignment.thoiGianPhanCong)}
                       </p>
                     </div>
+                    <div>
+                      <p className="text-xs text-gray-500">Người phân công</p>
+                      <p className="text-sm font-medium text-gray-700">
+                        Nguyễn Văn A
+                      </p>
+                    </div>
                   </div>
                   <div className="grid gap-x-4 gap-y-2 mb-4">
                     <div>
@@ -213,15 +240,6 @@ const DanhSach = (props: Props) => {
                       <p className="text-sm font-medium text-gray-700">
                         {formatDate(assignment.lamTu)} -{" "}
                         {formatDate(assignment.lamToi)}
-                      </p>
-                    </div>
-                  </div>
-
-                  <div className="grid gap-x-4 gap-y-2 mb-4">
-                    <div>
-                      <p className="text-xs text-gray-500">Người phân công</p>
-                      <p className="text-sm font-medium text-gray-700">
-                        Nguyễn Văn A
                       </p>
                     </div>
                   </div>
@@ -332,9 +350,9 @@ const DanhSach = (props: Props) => {
                             fill="currentColor"
                           >
                             <path
-                              fill-rule="evenodd"
+                              fillRule="evenodd"
                               d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z"
-                              clip-rule="evenodd"
+                              clipRule="evenodd"
                             />
                           </svg>
                         </button>
@@ -356,9 +374,9 @@ const DanhSach = (props: Props) => {
               fill="currentColor"
             >
               <path
-                fill-rule="evenodd"
+                fillRule="evenodd"
                 d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-3a1 1 0 00-.867.5 1 1 0 11-1.731-1A3 3 0 0113 8a3.001 3.001 0 01-2 2.83V11a1 1 0 11-2 0v-1a1 1 0 011-1 1 1 0 100-2zm0 8a1 1 0 100-2 1 1 0 000 2z"
-                clip-rule="evenodd"
+                clipRule="evenodd"
               />
             </svg>
           </div>

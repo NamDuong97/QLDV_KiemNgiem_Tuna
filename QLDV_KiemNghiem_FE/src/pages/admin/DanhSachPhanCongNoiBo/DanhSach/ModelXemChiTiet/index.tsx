@@ -1,6 +1,9 @@
-import { Dialog } from "@mui/material";
+import { Dialog, Skeleton } from "@mui/material";
 import { dsMauDaPhanCong } from "..";
-import { formatDateNotTime } from "../../../../../configs/configAll";
+import {
+  formatDate,
+  formatDateNotTime,
+} from "../../../../../configs/configAll";
 import { queryPhanCongNoiBoByID } from "../../../../../hooks/personnels/queryPhanCongNoiBo";
 
 interface Props {
@@ -33,7 +36,7 @@ const ModelXemChiTiet = (props: Props) => {
     <Dialog
       open={open}
       onClose={handleClose}
-      maxWidth="sm"
+      maxWidth="lg"
       fullWidth
       sx={{
         ".MuiPaper-root": {
@@ -68,31 +71,41 @@ const ModelXemChiTiet = (props: Props) => {
         </div>
         <div className="p-6">
           <div className="mb-6">
-            <div className="flex items-center mb-2">
-              <span className="text-sm font-medium text-indigo-600 bg-indigo-50 px-2.5 py-1 rounded-md">
-                fsdfsdf
-              </span>
-              <span className="ml-2 text-xs font-medium text-gray-500 bg-gray-100 px-2.5 py-1 rounded-full">
-                fsdfsdf
+            <div className="flex items-center justify-between mb-2">
+              <h4 className="font-medium text-gray-800 text-lg mb-3">Mẫu A</h4>
+              <span className="ml-2 text-xs font-medium text-blue-600 bg-blue-50 px-2.5 py-1 rounded-full">
+                Đã duyệt
               </span>
             </div>
-            <h4 className="font-medium text-gray-800 text-lg mb-3">sdfsdf</h4>
+
             <div className="grid grid-cols-2 gap-x-4 gap-y-2 mb-4">
               <div>
-                <p className="text-xs text-gray-500">Tiêu chuẩn áp dụng</p>
-                <p className="text-sm font-medium text-gray-700">sfdsd</p>
+                <p className="text-xs text-gray-500">Thời gian làm</p>
+                {isLoading ? (
+                  <Skeleton variant="rounded" width={250} height={20} />
+                ) : (
+                  <p className="text-sm font-medium text-gray-700">
+                    {formatDate(data?.lamTu)} - {formatDate(data?.lamToi)}
+                  </p>
+                )}
               </div>
               <div>
-                <p className="text-xs text-gray-500">Dịch vụ kiểm nghiệm</p>
-                <p className="text-sm font-medium text-gray-700">sdfsd</p>
+                <p className="text-xs text-gray-500">Thời gian phân công</p>
+                <p className="text-sm font-medium text-gray-700">
+                  {formatDate(data?.thoiGianPhanCong)}
+                </p>
               </div>
               <div>
-                <p className="text-xs text-gray-500">Số lô</p>
-                <p className="text-sm font-medium text-gray-700">sdfsdf</p>
+                <p className="text-xs text-gray-500">Nhân viên xử lý</p>
+                <p className="text-sm font-medium text-gray-700">
+                  {data.manvXyLy}
+                </p>
               </div>
               <div>
-                <p className="text-xs text-gray-500">Số lượng</p>
-                <p className="text-sm font-medium text-gray-700">sdfsdf</p>
+                <p className="text-xs text-gray-500">Nhân viên phân công</p>
+                <p className="text-sm font-medium text-gray-700">
+                  {data?.tennvPhanCong}
+                </p>
               </div>
             </div>
           </div>
@@ -105,24 +118,18 @@ const ModelXemChiTiet = (props: Props) => {
                 C
               </div>
               <div className="ml-3">
-                <p className="text-sm font-medium text-gray-800">
-                  Nguyễn C
-                </p>
+                <p className="text-sm font-medium text-gray-800">Nguyễn C</p>
               </div>
             </div>
           </div>
           <div className="grid grid-cols-2 gap-4 mb-6">
             <div className="bg-gray-50 rounded-xl p-4">
               <p className="text-xs text-gray-500 mb-1">Ngày phân công</p>
-              <p className="text-sm font-medium text-gray-800">
-               fdfd
-              </p>
+              <p className="text-sm font-medium text-gray-800">fdfd</p>
             </div>
             <div className="bg-gray-50 rounded-xl p-4">
               <p className="text-xs text-gray-500 mb-1">Hạn sử dụng mẫu</p>
-              <p className="text-sm font-medium text-gray-800">
-              dfdf
-              </p>
+              <p className="text-sm font-medium text-gray-800">dfdf</p>
             </div>
           </div>
           {/* $
