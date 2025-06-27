@@ -143,6 +143,7 @@ namespace QLDV_KiemNghiem_BE.Services
                 mauDomain.MaPhieuDangKy = phieuDangKyDomain.MaId;
                 mauDomain.MaPdkMau = PublicFunction.processString(mauDomain.TenMau ?? "unknow") + "_" + mauDomain.LoaiDv  + "_" + mauDomain.ThoiGianTieuChuan.ToString();
                 mauDomain.TrangThaiPhanCong = 1;
+                mauDomain.TrangThai = true;
           
                 // Thêm hình ảnh vào CSDL
                 Console.WriteLine("So luong hinh anh trong mau: " + mau.PhieuDangKyMauHinhAnhs.Count);
@@ -186,24 +187,24 @@ namespace QLDV_KiemNghiem_BE.Services
             phieuDangKyReturnDto.Maus = _mapper.Map<List<PhieuDangKyMauDto>>(phieuDangKyMauDomains);
             phieuDangKyReturnDto.PhieuDangKyPhuLieuHoaChats = _mapper.Map<List<PhieuDangKyPhuLieuHoaChatDto>>(phieuDangKyPhuLieuHoaChatDomains);
             // Them du lieu vao cache
-            //if (_redis.IsConnected)
-            //{
-            //    foreach(var item in phieuDangKyReturnDto.Maus)
-            //    {
-            //        var cacheKey = $"phieudangkymau:{item?.MaId}";
-            //        var cacheObj = new CachedResponse<PhieuDangKyMauDto>
-            //        {
-            //            Data = item
-            //        };
-            //        // Lưu dữ liệu vào redis phieudangkymau
-            //        await _cache.SetStringAsync(cacheKey, JsonConvert.SerializeObject(cacheObj), new DistributedCacheEntryOptions
-            //        {
-            //            AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(5)
-            //        });
-            //        // Cap nhat version moi cho cache redis phieudangkymau:all
-            //        await _cache.SetStringAsync("phieudangkymau:all:version", $"v{DateTime.UtcNow.Ticks}");
-            //    } 
-            //}
+            if (_redis.IsConnected)
+            {
+                foreach (var item in phieuDangKyReturnDto.Maus)
+                {
+                    var cacheKey = $"phieudangkymau:{item?.MaId}";
+                    var cacheObj = new CachedResponse<PhieuDangKyMauDto>
+                    {
+                        Data = item
+                    };
+                    // Lưu dữ liệu vào redis phieudangkymau
+                    await _cache.SetStringAsync(cacheKey, JsonConvert.SerializeObject(cacheObj), new DistributedCacheEntryOptions
+                    {
+                        AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(5)
+                    });
+                    // Cap nhat version moi cho cache redis phieudangkymau:all
+                    await _cache.SetStringAsync("phieudangkymau:all:version", $"v{DateTime.UtcNow.Ticks}");
+                }
+            }
             return new ResponseModel1<PhieuDangKyDto>
             {
                 KetQua = check,

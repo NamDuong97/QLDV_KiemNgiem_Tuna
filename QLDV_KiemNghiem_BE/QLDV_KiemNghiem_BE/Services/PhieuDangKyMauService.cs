@@ -77,16 +77,8 @@ namespace QLDV_KiemNghiem_BE.Services
                 };
             }
 
-            checkExist.TrangThai = false;
-            checkExist.TrangThaiPhanCong = mauDto.TypeCancel == 3 ? 3 : 4;
-            checkExist.LyDoHuyMau = mauDto.Message;
+            await _repositoryManager.PhieuDangKyMau.ProcessUpdateStatusObjecRelative(mauDto.MaId, mauDto.TypeCancel, mauDto.Message, user);
 
-            checkExistPhieuDangKy.NguoiSua = user;
-            checkExistPhieuDangKy.NgaySua = DateTime.Now;
-            _repositoryManager.PhieuDangKyMau.UpdatePhieuDangKyMauAsync(checkExist);
-            _repositoryManager.PhieuDangKy.UpdatePhieuDangKyAsync(checkExistPhieuDangKy);
-            await _repositoryManager.PhieuDangKyMau.ProcessUpdateStatusObjecRelative(mauDto.MaId, mauDto.TypeCancel);
-            await _repositoryManager.SaveChangesAsync();
             var dataReturn = _mapper.Map<PhieuDangKyMauDto>(checkExist);
             return new ResponseModel1<PhieuDangKyMauDto>
             {
