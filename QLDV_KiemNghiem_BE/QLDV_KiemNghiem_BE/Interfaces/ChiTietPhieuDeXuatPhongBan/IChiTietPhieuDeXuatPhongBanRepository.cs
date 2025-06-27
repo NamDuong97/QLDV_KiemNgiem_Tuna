@@ -10,7 +10,7 @@ namespace QLDV_KiemNghiem_BE.Interfaces
         Task<List<ChiTietPhieuDeXuatPhongBan>?> FindChiTietPhieuDeXuatPhongBanByMaMauAsync(string maMau, bool tracking);
         void CreateChiTietPhieuDeXuatPhongBanAsync(ChiTietPhieuDeXuatPhongBan ChiTietPhieuDeXuatPhongBan);
         Task<int> CheckAllSamplesApproved_PDXPB(string maPDXPB, string maCTDXPB);
-        Task ProcessUpdatePDXPBFromMauCancel(string maMau, string user, string userId);
+        Task ProcessUpdatePDXPBFromMauCancel(string maCTDXPB, string maPDXPB, string maMau, string user);
         Task<int>ProcessReviewChiTietDeXuatPhongBanByPB(string maCTPDXPB, string maMau, bool action, string user, string content, string userId);
         Task<int> ProcessReviewChiTietDeXuatPhongBanByBLD(string maCTPDXPB, string maMau, bool action, string user, string userId);
         Task<int> CheckAllSamplesCancel_PDXPB(string maPDXPB, string maCTDXPB);

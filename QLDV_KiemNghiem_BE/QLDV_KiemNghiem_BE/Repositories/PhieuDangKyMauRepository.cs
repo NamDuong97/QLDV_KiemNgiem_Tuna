@@ -59,6 +59,7 @@ namespace QLDV_KiemNghiem_BE.Repositories
 
         public async Task<int> ProcessUpdateStatusObjecRelative (string maMau, int typeCancel, string message, string user)
         {
+            // Hàm này xử lý việc phòng KHTH muốn hủy mẫu do khách hủy hoặc k phòng ban nào làm
             int rowCount =  await _context.Database.ExecuteSqlRawAsync("exec sp_ProcessUpdateStatusObjecRelativeFromCancelMau @maMau = {0}, @typeCancel = {1}, @massage ={2}, @user ={3}", maMau, typeCancel, message, user);
             return rowCount;    
         }

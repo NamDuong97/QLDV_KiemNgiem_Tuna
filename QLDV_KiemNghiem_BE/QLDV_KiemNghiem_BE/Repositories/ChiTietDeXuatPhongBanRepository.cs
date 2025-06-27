@@ -49,9 +49,10 @@ namespace QLDV_KiemNghiem_BE.Repositories
             .FirstOrDefaultAsync();
             return result?.CheckAllSamplesCancel ?? 0;
         }
-        public async Task ProcessUpdatePDXPBFromMauCancel(string maMau, string user, string userId)
+        public async Task ProcessUpdatePDXPBFromMauCancel(string maCTDXPB, string maPDXPB, string maMau, string user)
         {
-            await _context.Database.ExecuteSqlRawAsync("exec sp_ProcessUpdatePDXPBFromMauCancel @maMau = {0}, @user = {1}, @userId ={2}", maMau, user, userId);
+            // hàm này xử lý kiểm tra phieudexuatphongban đã duyệt hoặc đã hủy hết chưa, khi mà mẫu này bị KHTH, BLĐ phân công cho khoa khác
+            await _context.Database.ExecuteSqlRawAsync("exec sp_ProcessUpdatePDXPBFromMauCancel @maMau = {0}, @user = {1}, @userId ={2}", maMau, user);
         }
         public async Task<int>ProcessReviewChiTietDeXuatPhongBanByPB(string maCTPDXPB, string maMau, bool action, string user, string content, string userId)
         {

@@ -85,7 +85,8 @@ namespace QLDV_KiemNghiem_BE.Controllers
                 return BadRequest(new { Errors = errors });
             }
             var user = User.FindFirst(ClaimTypes.Email)?.Value.ToString() ?? "unknow";
-            ResponseModel1<PhieuDeXuatPhongBanDto> update = await _service.PhieuDeXuatPhongBan.UpdatePhieuDeXuatPhongBanAsync(PhieuDeXuatPhongBanDto, user);
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value.ToString() ?? null;
+            ResponseModel1<PhieuDeXuatPhongBanDto> update = await _service.PhieuDeXuatPhongBan.UpdatePhieuDeXuatPhongBanAsync(PhieuDeXuatPhongBanDto, user, userId);
             if (update.KetQua)
             {
                 _logger.LogDebug(update.Message);
