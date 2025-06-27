@@ -1,8 +1,7 @@
 import { Dialog } from "@mui/material";
 import { dsMauDaPhanCong } from "..";
-import clsx from "clsx";
-import classes from "./style.module.scss";
 import { formatDateNotTime } from "../../../../../configs/configAll";
+import { queryPhanCongNoiBoByID } from "../../../../../hooks/personnels/queryPhanCongNoiBo";
 
 interface Props {
   open: boolean;
@@ -23,7 +22,12 @@ export const employees = [
 
 const ModelXemChiTiet = (props: Props) => {
   const { open, handleClose, dataID, handleOpenModelSua } = props;
-  const sample = dsMauDaPhanCong.find((s) => s.maId === dataID);
+  const { data, isLoading } = queryPhanCongNoiBoByID({
+    queryKey: "queryPhanCongNoiBoByID",
+    params: dataID,
+  });
+
+  console.log("data", data);
 
   return (
     <Dialog
@@ -54,9 +58,9 @@ const ModelXemChiTiet = (props: Props) => {
                 fill="currentColor"
               >
                 <path
-                  fill-rule="evenodd"
+                  fillRule="evenodd"
                   d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
-                  clip-rule="evenodd"
+                  clipRule="evenodd"
                 />
               </svg>
             </button>
@@ -66,39 +70,29 @@ const ModelXemChiTiet = (props: Props) => {
           <div className="mb-6">
             <div className="flex items-center mb-2">
               <span className="text-sm font-medium text-indigo-600 bg-indigo-50 px-2.5 py-1 rounded-md">
-                {sample?.maId}
+                fsdfsdf
               </span>
               <span className="ml-2 text-xs font-medium text-gray-500 bg-gray-100 px-2.5 py-1 rounded-full">
-                {sample?.maPhieuDangKy}
+                fsdfsdf
               </span>
             </div>
-            <h4 className="font-medium text-gray-800 text-lg mb-3">
-              {sample?.tenMau}
-            </h4>
+            <h4 className="font-medium text-gray-800 text-lg mb-3">sdfsdf</h4>
             <div className="grid grid-cols-2 gap-x-4 gap-y-2 mb-4">
               <div>
                 <p className="text-xs text-gray-500">Tiêu chuẩn áp dụng</p>
-                <p className="text-sm font-medium text-gray-700">
-                  {sample?.tenTieuChuan}
-                </p>
+                <p className="text-sm font-medium text-gray-700">sfdsd</p>
               </div>
               <div>
                 <p className="text-xs text-gray-500">Dịch vụ kiểm nghiệm</p>
-                <p className="text-sm font-medium text-gray-700">
-                  {sample?.tenDichVu}
-                </p>
+                <p className="text-sm font-medium text-gray-700">sdfsd</p>
               </div>
               <div>
                 <p className="text-xs text-gray-500">Số lô</p>
-                <p className="text-sm font-medium text-gray-700">
-                  {sample?.soLo}
-                </p>
+                <p className="text-sm font-medium text-gray-700">sdfsdf</p>
               </div>
               <div>
                 <p className="text-xs text-gray-500">Số lượng</p>
-                <p className="text-sm font-medium text-gray-700">
-                  {sample?.soLuong} {sample?.donViTinh}
-                </p>
+                <p className="text-sm font-medium text-gray-700">sdfsdf</p>
               </div>
             </div>
           </div>
@@ -106,13 +100,13 @@ const ModelXemChiTiet = (props: Props) => {
             <p className="text-xs text-gray-500 mb-2">Phân công cho</p>
             <div className="flex items-center">
               <div
-                className={`avatar w-10 h-10 rounded-full ${sample?.nhanVienThucHien.color} flex items-center justify-center text-white font-medium`}
+                className={`avatar w-10 h-10 rounded-full bg-blue-600 flex items-center justify-center text-white font-medium`}
               >
-                {sample?.nhanVienThucHien.avatar}
+                C
               </div>
               <div className="ml-3">
                 <p className="text-sm font-medium text-gray-800">
-                  {sample?.nhanVienThucHien.name}
+                  Nguyễn C
                 </p>
               </div>
             </div>
@@ -121,13 +115,13 @@ const ModelXemChiTiet = (props: Props) => {
             <div className="bg-gray-50 rounded-xl p-4">
               <p className="text-xs text-gray-500 mb-1">Ngày phân công</p>
               <p className="text-sm font-medium text-gray-800">
-                {formatDateNotTime(sample?.ngayPhanCong)}
+               fdfd
               </p>
             </div>
             <div className="bg-gray-50 rounded-xl p-4">
               <p className="text-xs text-gray-500 mb-1">Hạn sử dụng mẫu</p>
               <p className="text-sm font-medium text-gray-800">
-                {formatDateNotTime(sample?.hanSuDung)}
+              dfdf
               </p>
             </div>
           </div>

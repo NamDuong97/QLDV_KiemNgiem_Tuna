@@ -51,4 +51,13 @@ export default class mauServices {
       return err;
     }
   }
+
+  static async getThongKe() {
+    try {
+      const response = await _APIInstance.get(API.ADMIN.MAUS.THONG_KE_MAUS);
+      return response;
+    } catch (err: any) {
+      return err;
+    }
+  }
 }

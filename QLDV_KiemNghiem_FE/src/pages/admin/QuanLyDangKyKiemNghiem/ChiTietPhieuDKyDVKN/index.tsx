@@ -50,7 +50,7 @@ const ChiTietPhieuDKyDVKN = (props: Props) => {
   };
 
   const handleButton = () => {
-    switch (role as string) {
+    switch (getRoleGroup(role) as string) {
       case "KHTH": {
         switch (data?.trangThaiId as string) {
           case "TT01":

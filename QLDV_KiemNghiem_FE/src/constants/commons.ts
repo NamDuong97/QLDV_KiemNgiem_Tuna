@@ -41,12 +41,17 @@ export const API = {
       GET_LOAI_MAU_ALL: "/api/LoaiMau/getLoaiMauAll",
       GET_LOAI_MAU_BY_ID: "/api/LoaiMau/getLoaiMau",
       HUY_MAU: "/api/PhieuDangKyMau/cancelPhieuDangKyMau",
+      THONG_KE_MAUS: "/api/PhieuDangKyMau/getPhieuDangKyMauThongKe",
     },
     MAUS_LUU: {
       GET_MAUS_LUU_ALL: "/api/PhieuLuuMau/getPhieuLuuMauAll",
       GET_MAUS_LUU_BY_ID: "/api/PhieuLuuMau/getPhieuLuuMauByID",
       CREATE_MAUS_LUU: "/api/PhieuLuuMau/createPhieuLuuMau",
       UPDATE_MAUS_LUU: "/api/PhieuLuuMau/createPhieuLuuMau",
+    },
+    PHAN_CONG_NOI_BO: {
+      GET_ALL: "/api/PhanCongNoiBo/getPhanCongNoiBoAll",
+      GET_BY_ID: "/api/PhanCongNoiBo/getPhanCongNoiBoByID",
     },
   },
   CUSTOMER: {

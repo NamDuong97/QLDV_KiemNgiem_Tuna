@@ -25,9 +25,14 @@ const SampleCard = ({ sample, onImageClick, index }: any) => {
   const { personnelInfo } = usePersonnel();
   const handleOnSettled = async (response: any) => {
     if (response.ketQua === true) {
-      await queryClient.refetchQueries({
-        queryKey: ["ChitietPhieuDKKM"],
-      });
+      await Promise.all([
+        queryClient.refetchQueries({
+          queryKey: ["ChitietPhieuDKKM"],
+        }),
+        queryClient.refetchQueries({
+          queryKey: ["getPhanCongKhoaCMAll"],
+        }),
+      ]);
     }
   };
   const showNotification = useStoreNotification(
@@ -205,27 +210,28 @@ const SampleCard = ({ sample, onImageClick, index }: any) => {
               </p>
             </div>
           </div>
-          {getRoleGroup(role) === "BLD" && isTuchoi ? (
-            <FormGhiChuTuChoi
-              handleCloseTuChoi={() => setisTuchoi(false)}
-              ChiTietID={sample?.maId}
-            />
-          ) : (
-            <div className="mt-4 flex justify-end space-x-2">
-              <button
-                onClick={handleBLDDuyet}
-                className="bg-green-600 hover:bg-green-700 text-white px-3 py-1.5 rounded-md text-sm cursor-pointer"
-              >
-                <i className="fas fa-check mr-1"></i> Chấp nhận
-              </button>
-              <button
-                onClick={() => setisTuchoi(true)}
-                className="bg-red-600 hover:bg-red-700 text-white px-3 py-1.5 rounded-md text-sm cursor-pointer"
-              >
-                <i className="fas fa-times mr-1"></i> Từ chối
-              </button>
-            </div>
-          )}
+          {getRoleGroup(role) === "BLD" &&
+            (isTuchoi ? (
+              <FormGhiChuTuChoi
+                handleCloseTuChoi={() => setisTuchoi(false)}
+                ChiTietID={sample?.maId}
+              />
+            ) : (
+              <div className="mt-4 flex justify-end space-x-2">
+                <button
+                  onClick={handleBLDDuyet}
+                  className="bg-green-600 hover:bg-green-700 text-white px-3 py-1.5 rounded-md text-sm cursor-pointer"
+                >
+                  <i className="fas fa-check mr-1"></i> Chấp nhận
+                </button>
+                <button
+                  onClick={() => setisTuchoi(true)}
+                  className="bg-red-600 hover:bg-red-700 text-white px-3 py-1.5 rounded-md text-sm cursor-pointer"
+                >
+                  <i className="fas fa-times mr-1"></i> Từ chối
+                </button>
+              </div>
+            ))}
         </div>
       )}
       {getRoleGroup(role) !== "BLD" &&

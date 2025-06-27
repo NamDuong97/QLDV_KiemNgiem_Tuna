@@ -71,7 +71,7 @@ namespace QLDV_KiemNghiem_BE.Controllers
             return Ok(phieuDangKys);
         }
 
-        [Authorize(Roles = "BLD")]
+        //[Authorize(Roles = "BLD")]
         [HttpPut]
         [Route("reviewPhieuDangKyByBLD")]
         public async Task<ActionResult> reviewPhieuDangKyByBLD(RequestReviewPhieuDangKy duyetPhieu)

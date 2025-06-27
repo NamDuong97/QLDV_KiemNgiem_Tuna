@@ -92,17 +92,17 @@ const TableQuanLyPhieuDKyDVHN = (props: TableProps) => {
                 <div className="flex justify-center">
                   <Skeleton variant="rounded" width={150} height={30} />
                 </div>
-              </TableCell>{" "}
+              </TableCell>
               <TableCell align="center" className="!py-3">
                 <div className="flex justify-center">
                   <Skeleton variant="rounded" width={150} height={30} />
                 </div>
-              </TableCell>{" "}
+              </TableCell>
               <TableCell align="center" className="!py-3">
                 <div className="flex justify-center">
                   <Skeleton variant="rounded" width={150} height={30} />
                 </div>
-              </TableCell>{" "}
+              </TableCell>
               <TableCell align="center" className="!py-3">
                 <div className="flex justify-center">
                   <Skeleton variant="rounded" width={150} height={30} />
@@ -188,7 +188,9 @@ const TableQuanLyPhieuDKyDVHN = (props: TableProps) => {
                       disableInteractive
                     >
                       <button
-                        onClick={() => handleRedirectChiTiet(item?.maPhieuDangKy)}
+                        onClick={() =>
+                          handleRedirectChiTiet(item?.maPhieuDangKy)
+                        }
                         className="text-blue-700 font-medium text-sm/6 cursor-pointer flex gap-2 items-center"
                       >
                         <FaEye className="w-5 h-5" /> Xem chi tiết

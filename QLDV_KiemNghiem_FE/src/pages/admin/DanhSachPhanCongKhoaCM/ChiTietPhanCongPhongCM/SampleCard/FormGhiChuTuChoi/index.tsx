@@ -43,9 +43,14 @@ const FormGhiChuTuChoi = (props: Props) => {
   const { personnelInfo } = usePersonnel();
   const handleOnSettled = async (response: any) => {
     if (response.ketQua === true) {
-      await queryClient.refetchQueries({
-        queryKey: ["ChitietPhieuDKKM"],
-      });
+      await Promise.all([
+        queryClient.refetchQueries({
+          queryKey: ["ChitietPhieuDKKM"],
+        }),
+        queryClient.refetchQueries({
+          queryKey: ["getPhanCongKhoaCMAll"],
+        }),
+      ]);
     }
   };
   const showNotification = useStoreNotification(

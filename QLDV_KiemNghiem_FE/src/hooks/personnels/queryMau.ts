@@ -64,3 +64,16 @@ export const useHuyMau = (props: Props) => {
     onSettled: onSettled,
   });
 };
+
+export const queryThongKe = (props: Props) => {
+  const { queryKey } = props;
+  return useQuery({
+    queryKey: [queryKey],
+    queryFn: async () => {
+      const response = await mauServices.getThongKe();
+      return response?.data;
+    },
+    refetchOnWindowFocus: false,
+    staleTime: Infinity,
+  });
+};

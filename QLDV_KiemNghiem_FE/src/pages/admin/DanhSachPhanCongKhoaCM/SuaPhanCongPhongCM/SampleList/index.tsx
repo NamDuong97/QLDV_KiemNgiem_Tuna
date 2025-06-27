@@ -2,103 +2,17 @@ interface Props {
   data: any;
   isLoading: boolean;
 }
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import SampleCard from "../SampleCard";
-import { MauPhanCong } from "../../../../../models/mau";
 import InputSearch2 from "../../../../../components/InputSearch2";
 import { AiFillDelete } from "react-icons/ai";
 
-const assignments = [
-  {
-    id: 1,
-    code: "PĐX001",
-    registrationCode: "PĐK001",
-    customerName: "Công ty TNHH ABC",
-    proposedBy: "Nguyễn Văn A",
-    sampleDeliveryTime: "15/05/2023 10:30",
-    assignmentDate: "16/05/2023",
-    status: "Chờ xử lý",
-    samples: [
-      {
-        maId: 1,
-        tenMau: "Mẫu nước uống đóng chai",
-        tenTieuChuan: "TCVN 6096:2004",
-        tenDichVu: "Kiểm nghiệm vi sinh",
-        soLo: "LO-12345",
-        donViSanXuat: "Công ty TNHH ABC",
-        ngaySanXuat: "10/05/2023",
-        hanSuDung: "10/05/2024",
-        soLuong: "5",
-        donViTinh: "Chai",
-        trangThaiPhanCong: "Đã phân công",
-        maPhieuDangKy: "JDFGDFGDFG",
-      },
-      {
-        maId: 2,
-        tenMau: "Mẫu nước uống đóng chai 2",
-        tenTieuChuan: "TCVN 6096:2004",
-        tenDichVu: "Kiểm nghiệm vi sinh",
-        soLo: "LO-12345",
-        donViSanXuat: "Công ty TNHH ABC",
-        ngaySanXuat: "10/05/2023",
-        hanSuDung: "10/05/2024",
-        soLuong: "5",
-        donViTinh: "Chai",
-        trangThaiPhanCong: "Đã phân công",
-        maPhieuDangKy: "JDFGDFGDFG",
-      },
-      {
-        maId: 3,
-        tenMau: "Mẫu nước uống đóng chai 3",
-        tenTieuChuan: "TCVN 6096:2004",
-        tenDichVu: "Kiểm nghiệm vi sinh",
-        soLo: "LO-12345",
-        donViSanXuat: "Công ty TNHH ABC",
-        ngaySanXuat: "10/05/2023",
-        hanSuDung: "10/05/2024",
-        soLuong: "5",
-        donViTinh: "Chai",
-        trangThaiPhanCong: "Đã phân công",
-        maPhieuDangKy: "JDFGDFGDFG",
-      },
-    ],
-  },
-];
-
-function convertToMauPhanCong(data: any): MauPhanCong {
-  return {
-    maId: data.maId,
-    tenMau: data.tenMau,
-    tenTieuChuan: data.maTieuChuan,
-    tenDichVu: data.loaiDv,
-    soLo: data.soLo,
-    donViSanXuat: data.donViSanXuat,
-    ngaySanXuat: data.ngaySanXuat,
-    hanSuDung: data.hanSuDung,
-    soLuong: data.soLuong,
-    donViTinh: data.donViTinh,
-    trangThaiPhanCong: data.trangThaiPhanCong,
-    maPhieuDangKy: data.maPhieuDangKy,
-  };
-}
-
 const SampleList = (props: Props) => {
   const { data, isLoading } = props;
-  console.log("assignments[1]?.samples", assignments[0]?.samples);
   const [isPhanCong, setisPhanCong] = useState(false);
-  const [samples, setSamples] = useState<MauPhanCong[]>(
-    assignments[0]?.samples?.map(convertToMauPhanCong) || []
-  );
   const [selectedSamples, setSelectedSamples] = useState<any[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
-  const filteredSamples: any = samples?.filter((sample: any) => {
-    // Filter by search query
-    const matchesSearch = sample.tenMau
-      .toLowerCase()
-      .includes(searchQuery.toLowerCase());
-    return matchesSearch;
-  });
-  console.log("filteredSamples", filteredSamples);
+
 
   // Handle sample selection
   const toggleSampleSelection = (sampleId: never) => {
@@ -114,10 +28,10 @@ const SampleList = (props: Props) => {
 
   // Handle select all samples
   const handleSelectAll = () => {
-    if (selectedSamples.length === filteredSamples.length) {
+    if (selectedSamples.length === data.length) {
       setSelectedSamples([]);
     } else {
-      setSelectedSamples(filteredSamples.map((sample: any) => sample.maId));
+      setSelectedSamples(data.map((sample: any) => sample.maId));
     }
   };
 
@@ -125,12 +39,6 @@ const SampleList = (props: Props) => {
   const handleSearchChange = (e: any) => {
     setSearchQuery(e.target.value);
   };
-
-  // Handle assignment submission
-
-  useEffect(() => {
-    setSamples(assignments[0]?.samples?.map(convertToMauPhanCong));
-  }, [data]);
 
   return (
     <div>
@@ -176,13 +84,6 @@ const SampleList = (props: Props) => {
           <>
             <div className="px-6 py-4 border-b border-gray-200">
               <div className="flex flex-col md:flex-row md:items-center md:justify-between space-y-4 md:space-y-0">
-                <div className="w-full md:w-1/3">
-                  <InputSearch2
-                    placeholder="Tìm kiếm mẫu..."
-                    value={searchQuery}
-                    onChange={handleSearchChange}
-                  />
-                </div>
                 <div className="flex space-x-2">
                   {selectedSamples.length > 0 && (
                     <button
@@ -217,8 +118,8 @@ const SampleList = (props: Props) => {
                     type="checkbox"
                     id="select-all"
                     checked={
-                      selectedSamples?.length === filteredSamples?.length &&
-                      filteredSamples?.length > 0
+                      selectedSamples?.length === data?.length &&
+                      data?.length > 0
                     }
                     onChange={handleSelectAll}
                     className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
@@ -229,9 +130,8 @@ const SampleList = (props: Props) => {
                   >
                     Chọn tất cả (
                     {
-                      filteredSamples?.filter(
-                        (item: any) => !item.trangThaiPhanCong
-                      )?.length
+                      data?.filter((item: any) => !item.trangThaiPhanCong)
+                        ?.length
                     }
                     )
                   </label>
@@ -241,7 +141,7 @@ const SampleList = (props: Props) => {
                 </div>
               </div>
 
-              {filteredSamples?.length === 0 ? (
+              {data?.length === 0 ? (
                 <div className="text-center py-8">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -263,9 +163,9 @@ const SampleList = (props: Props) => {
                 </div>
               ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                  {filteredSamples?.map((sample: any) => (
+                  {data?.map((sample: any, index: any) => (
                     <SampleCard
-                      key={sample.maId}
+                      key={index}
                       sample={sample}
                       isSelected={selectedSamples.includes(sample.maId)}
                       onSelect={toggleSampleSelection}
@@ -308,8 +208,8 @@ const SampleList = (props: Props) => {
                     type="checkbox"
                     id="select-all"
                     checked={
-                      selectedSamples?.length === filteredSamples?.length &&
-                      filteredSamples?.length > 0
+                      selectedSamples?.length === data?.length &&
+                      data?.length > 0
                     }
                     onChange={handleSelectAll}
                     className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
@@ -320,9 +220,8 @@ const SampleList = (props: Props) => {
                   >
                     Chọn tất cả (
                     {
-                      filteredSamples?.filter(
-                        (item: any) => !item.trangThaiPhanCong
-                      )?.length
+                      data?.filter((item: any) => !item.trangThaiPhanCong)
+                        ?.length
                     }
                     )
                   </label>
@@ -332,7 +231,7 @@ const SampleList = (props: Props) => {
                 </div>
               </div>
 
-              {filteredSamples?.length === 0 ? (
+              {data?.length === 0 ? (
                 <div className="text-center py-8">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -354,7 +253,7 @@ const SampleList = (props: Props) => {
                 </div>
               ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                  {filteredSamples?.map((sample: any) => (
+                  {data?.map((sample: any) => (
                     <SampleCard
                       key={sample.maId}
                       sample={sample}

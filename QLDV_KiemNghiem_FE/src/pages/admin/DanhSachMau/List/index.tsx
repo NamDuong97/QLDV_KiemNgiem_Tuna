@@ -1,8 +1,8 @@
 import { useState } from "react";
-import { FaSortAmountDown, FaSortAmountUp } from "react-icons/fa";
+import { FaMicroscope, FaSortAmountDown, FaSortAmountUp } from "react-icons/fa";
 import TableQuanLyPhieuDKyDVHN from "../Table";
 import { Pagination } from "@mui/material";
-import { CheckCircle, Clipboard, Clock } from "react-feather";
+import { CheckCircle, Clipboard, Clock, User } from "react-feather";
 import Card from "./Card";
 import InputSearch2 from "../../../../components/InputSearch2";
 // import { getPhanCongKhoaCMAll } from "../../../../hooks/personnels/phanCongKhoa";
@@ -12,6 +12,7 @@ import { ImWarning } from "react-icons/im";
 import ChiTietPhieuDKyDVKN from "../ChiTietPhieuDKyDVKN";
 import { getAllDanhSachMau } from "../../../../hooks/personnels/phanCongKhoa";
 import SelectItemLoaiMau from "./SelectItemLoaiMau";
+import { queryThongKe } from "../../../../hooks/personnels/queryMau";
 
 interface Props {
   tableHead: any;
@@ -19,16 +20,24 @@ interface Props {
 
 const DanhSach = (props: Props) => {
   const { tableHead } = props;
+  const [selectTrangThai, setSelectTrangThai] = useState("");
   const { data: dataMau, isLoading } = getAllDanhSachMau({
     queryKey: "AllDanhSachMau",
-    params: { getAll: true },
+    params:
+      selectTrangThai !== ""
+        ? { getAll: true, trangThaiPhanCong: selectTrangThai }
+        : { getAll: true },
   });
+  const { data: dataThongKe, isLoading: isLoadingThongKe } = queryThongKe({
+    queryKey: "queryThongKe",
+  });
+
   const [selectLoaiMau, setSelectLoaiMau] = useState("");
+
   let data: any = dataMau?.data?.filter((item: any) =>
     selectLoaiMau !== "" ? item.maLoaiMau === selectLoaiMau : item
   );
   const [searchQuery, setSearchQuery] = useState("");
-  const [selectTrangThai, setSelectTrangThai] = useState("");
 
   const [isSortNew, setIsSortNew] = useState(false);
   const filteredSamples: any = data?.filter((sample: any) => {
@@ -42,7 +51,6 @@ const DanhSach = (props: Props) => {
   const [itemsPerPage] = useState(10);
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  console.log("selectLoaiMau", selectLoaiMau);
 
   const currentItems = filteredSamples
     ?.sort((a: any, b: any) =>
@@ -74,37 +82,53 @@ const DanhSach = (props: Props) => {
           title="Tổng mẫu kiểm nghiệm"
           value={data?.length || 0}
           icon={<Clipboard className="w-6 h-6" />}
-          // isLoading={isLoading}
+          isLoading={isLoading}
           bgColor="bg-indigo-100"
           textColor="text-indigo-600"
         />
 
         <Card
           title="Số mẫu đã hoàn thành"
-          value="876"
+          value={dataThongKe?.mauHoanThanh}
           icon={<CheckCircle className="w-6 h-6" />}
-          // isLoading={isLoading}
+          isLoading={isLoadingThongKe}
           bgColor="bg-green-100"
           textColor="text-green-600"
         />
         <Card
-          title="Số mẫu đang xử lý"
-          value="328"
+          title="Số mẫu đang kiểm nghiệm"
+          value={dataThongKe?.mauDangKiemNghiem}
           icon={<Clock className="w-6 h-6" />}
-          // isLoading={isLoading}
+          isLoading={isLoadingThongKe}
           bgColor="bg-yellow-100"
           textColor="text-yellow-600"
         />
         <Card
           title="Số mẫu chưa được phân công"
-          value="80"
+          value={dataThongKe?.mauChoPhanCong}
           icon={<ImWarning className="w-6 h-6" />}
-          // isLoading={isLoading}
+          isLoading={isLoadingThongKe}
           bgColor="bg-red-100"
           textColor="text-red-600"
         />
+        <Card
+          title="Số mẫu hủy bởi khách hàng"
+          value={dataThongKe?.mauHuyBoiKhach}
+          icon={<User className="w-6 h-6" />}
+          isLoading={isLoadingThongKe}
+          bgColor="bg-purple-100"
+          textColor="text-purple-600"
+        />
+        <Card
+          title="Số mẫu hủy bởi phòng khoa"
+          value={dataThongKe?.mauHuyBoiPhongKhoa}
+          icon={<FaMicroscope className="w-6 h-6" />}
+          isLoading={isLoadingThongKe}
+          bgColor="bg-[#FFECCC]"
+          textColor="text-[#FF9587]"
+        />
       </div>
-      <div className="p-4 bg-white rounded-lg shadow-sm border border-gray-100 gap-2 flex justify-between">
+      <div className="p-4 bg-white rounded-lg shadow-sm border border-gray-100  gap-2 flex justify-between">
         <div className="flex gap-4 w-2xl">
           <InputSearch2
             placeholder="Tìm kiếm số đăng ký phân tích hoặc người gửi mẫu..."

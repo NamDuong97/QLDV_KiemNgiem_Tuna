@@ -168,7 +168,11 @@ const TableQuanLyPhieuDKyDVHN = (props: TableProps) => {
                 <TableCell align="center">
                   <Box className="flex gap-2 items-center justify-start">
                     <p className="text-xs/4 font-medium inline-block px-2 py-1 rounded-full bg-red-100 text-red-800">
-                      còn 2 mẫu chưa duyệt
+                      Còn{" "}
+                      {item?.chiTietPhieuDeXuatPhongBans.filter(
+                        (item: any) => item.trangThai === 2
+                      ).length}{" "}
+                      mẫu chưa duyệt
                     </p>
                   </Box>
                 </TableCell>
@@ -202,7 +206,8 @@ const TableQuanLyPhieuDKyDVHN = (props: TableProps) => {
                         <FaEye className="w-5 h-5" />
                       </button>
                     </Tooltip>
-                    {(getRoleGroup(role) === "KHTH" || getRoleGroup(role) === "BLD") && (
+                    {(getRoleGroup(role) === "KHTH" ||
+                      getRoleGroup(role) === "BLD") && (
                       <Tooltip
                         title="Sửa phân công"
                         slotProps={{

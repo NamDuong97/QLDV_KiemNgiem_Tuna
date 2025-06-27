@@ -4,6 +4,7 @@ import "./style.module.scss";
 import { queryKhoaAll } from "../../../../hooks/personnels/queryKhoa";
 import Card from "./Card";
 import { AlertTriangle, Clipboard } from "react-feather";
+import { queryThongKe } from "../../../../hooks/personnels/queryMau";
 
 export const colorPresets = [
   "bg-red-100 text-red-800 border-red-200 hover:bg-red-200",
@@ -29,6 +30,10 @@ const CardMau = () => {
         color: colorPresets[index % colorPresets.length],
       })) || [];
 
+  const { data: dataThongKe, isLoading: isLoadingThongKe } = queryThongKe({
+    queryKey: "queryThongKe",
+  });
+
   return (
     <AnimatePresence mode="wait">
       <motion.div
@@ -42,16 +47,16 @@ const CardMau = () => {
         <div className="grid gap-6 grid-cols-4">
           <Card
             title="Mẫu đang chờ phân công"
-            value="12"
+            value={dataThongKe?.mauChoPhanCong}
             icon={<Clipboard className="w-6 h-6" />}
-            //isLoading={isLoading}
+            isLoading={isLoadingThongKe}
             bgColor="bg-indigo-100"
             textColor="text-indigo-600"
           />
           <Card
             title="Mẫu đã bị từ chối bỏi phòng ban"
-            value="12"
-            // isLoading={isLoading}
+            value={dataThongKe?.mauHuyBoiPhongKhoa}
+            isLoading={isLoadingThongKe}
             icon={<AlertTriangle className="w-6 h-6" />}
             bgColor="bg-red-100"
             textColor="text-red-600"

@@ -1,18 +1,31 @@
 import { Skeleton } from "@mui/material";
-// import {
-//   useGetLoaiDichVuAll,
-//   useGetTieuChuanAll,
-// } from "../../../../../hooks/customers/usePhieuDKyDVKN";
+import { queryMauByID } from "../../../../../hooks/personnels/queryMau";
+import {
+  useGetLoaiDichVuAll,
+  useGetTieuChuanAll,
+} from "../../../../../hooks/customers/usePhieuDKyDVKN";
 
 const SampleCard = ({ sample, isSelected, onSelect, isLoading }: any) => {
-  // const { data: dataTC } = useGetTieuChuanAll({
-  //   queryKey: "TieuChuanAll",
-  // });
-  // const { data: dataLDV } = useGetLoaiDichVuAll({
-  //   queryKey: "LoaiDichVuAll",
-  // });
-  // const dataTieuChuan: any = dataTC;
-  // const dataLoaiDV: any = dataLDV;
+  const { data: dataTC } = useGetTieuChuanAll({
+    queryKey: "TieuChuanAll",
+  });
+  const { data: dataLDV } = useGetLoaiDichVuAll({
+    queryKey: "LoaiDichVuAll",
+  });
+  const dataTieuChuan: any = dataTC;
+  const dataLoaiDV: any = dataLDV;
+
+  const { data: dataMau } = queryMauByID({
+    queryKey: "queryMauByID",
+    params: sample?.maPdkMau,
+  });
+
+  console.log(
+    "data?.maPdkMau",
+    dataLoaiDV?.find(
+      (item: any) => dataMau?.loaiDv && item.maLoaiDv === dataMau?.loaiDv
+    )?.tenDichVu
+  );
 
   const formatDate = (dateString: any) => {
     const date = new Date(dateString);
@@ -30,7 +43,7 @@ const SampleCard = ({ sample, isSelected, onSelect, isLoading }: any) => {
       className={`border rounded-lg overflow-hidden sample-card transition-all cursor-pointer ${
         isSelected ? "border-blue-500 bg-blue-50" : "border-gray-200"
       }`}
-      onClick={() => onSelect(sample.maId)}
+      onClick={() => onSelect(dataMau?.maId)}
     >
       <div className="p-4">
         <div className="flex justify-between items-start mb-3">
@@ -42,9 +55,9 @@ const SampleCard = ({ sample, isSelected, onSelect, isLoading }: any) => {
           ) : (
             <div>
               <h3 className="font-medium text-gray-900 mb-1">
-                {sample.tenMau}
+                {dataMau?.tenMau}
               </h3>
-              <p className="text-sm text-gray-500">{sample.soLo}</p>
+              <p className="text-sm text-gray-500">{dataMau?.soLo}</p>
             </div>
           )}
 
@@ -52,7 +65,7 @@ const SampleCard = ({ sample, isSelected, onSelect, isLoading }: any) => {
             type="checkbox"
             checked={isSelected}
             onChange={() => {}}
-            onClick={() => onSelect(sample.maId)}
+            onClick={() => onSelect(dataMau?.maId)}
             className="h-5 w-5 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
           />
         </div>
@@ -67,20 +80,17 @@ const SampleCard = ({ sample, isSelected, onSelect, isLoading }: any) => {
             <p>
               {`Tiêu Chuẩn:
               ${
-                // dataTieuChuan?.find(
-                //   (item: any) => item.maId === sample?.tenTieuChuan
-                // ).tenTieuChuan
-                sample?.tenTieuChuan
+                dataTieuChuan?.find(
+                  (item: any) => item.maId === dataMau?.maTieuChuan
+                )?.tenTieuChuan
               }`}
             </p>
             <p>
               {`Dịch vụ:
               ${
-                // dataLoaiDV?.find(
-                //   (item: any) =>
-                //     sample?.tenDichVu && item.maLoaiDv === sample?.tenDichVu
-                // ).tenDichVu
-                sample?.tenDichVu
+                dataLoaiDV?.find(
+                  (item: any) => item.maLoaiDv === dataMau?.loaiDv
+                )?.tenDichVu
               }`}
             </p>
           </div>
@@ -93,8 +103,8 @@ const SampleCard = ({ sample, isSelected, onSelect, isLoading }: any) => {
           </div>
         ) : (
           <div className="text-sm text-gray-600 mb-3 flex justify-between items-center">
-            <p>Số lượng: {`${sample.soLuong} ${sample.donViTinh}`}</p>
-            <p>hạn sử dụng: {formatDate(sample.hanSuDung)}</p>
+            <p>Số lượng: {`${dataMau?.soLuong} ${dataMau?.donViTinh}`}</p>
+            <p>hạn sử dụng: {formatDate(dataMau?.hanSuDung)}</p>
           </div>
         )}
 
@@ -113,7 +123,7 @@ const SampleCard = ({ sample, isSelected, onSelect, isLoading }: any) => {
           </div>
         ) : (
           <div className="text-sm text-gray-600 mb-3 flex justify-between items-center">
-            <p>Ngày sản xuất: {formatDate(sample.ngaySanXuat)}</p>
+            <p>Ngày sản xuất: {formatDate(dataMau?.ngaySanXuat)}</p>
             <span
               className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800`}
             >

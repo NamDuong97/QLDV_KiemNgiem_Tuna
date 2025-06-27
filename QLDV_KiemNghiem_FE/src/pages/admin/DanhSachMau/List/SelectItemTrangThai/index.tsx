@@ -9,6 +9,33 @@ interface Props {
   title?: any;
 }
 
+const data = [
+  {
+    maTrangThai: 1,
+    tenTrangThai: "Chờ phân công",
+  },
+  {
+    maTrangThai: 2,
+    tenTrangThai: "Đang kiểm nghiệm",
+  },
+  {
+    maTrangThai: 3,
+    tenTrangThai: "Đã bị huỷ bởi khoa chuyên môn",
+  },
+  {
+    maTrangThai: 4,
+    tenTrangThai: "Đã bị huỷ bởi khách",
+  },
+  {
+    maTrangThai: 5,
+    tenTrangThai: "Đã hoàn thành",
+  },
+  {
+    maTrangThai: 6,
+    tenTrangThai: "Đã phân công chờ duyệt",
+  },
+];
+
 export default function SelectItemTrangThai(props: Props) {
   const { item, setItem, title } = props;
 
@@ -37,11 +64,11 @@ export default function SelectItemTrangThai(props: Props) {
           }}
         >
           <MenuItem value="">Tất cả {title}</MenuItem>
-          {/* {data?.map((option: any, index: any) => (
-            <MenuItem key={index} value={option.maId}>
-              {option.tenTt}
+          {data?.map((option: any, index: any) => (
+            <MenuItem key={index} value={option.maTrangThai}>
+              {option.tenTrangThai}
             </MenuItem>
-          ))} */}
+          ))}
         </Select>
       </FormControl>
     </Box>
