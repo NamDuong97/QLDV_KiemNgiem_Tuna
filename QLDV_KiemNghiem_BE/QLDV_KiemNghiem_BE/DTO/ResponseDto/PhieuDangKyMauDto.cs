@@ -76,6 +76,11 @@ namespace QLDV_KiemNghiem_BE.DTO.ResponseDto
 
         public int? TrangThaiPhanCong { get; set; }
 
+        [Column("NgayNhanMau_PLHC", TypeName = "datetime")]
+        public DateTime? NgayNhanMauPlhc { get; set; }
+
+        [Column("NgayTraKetQua", TypeName = "datetime")]
+        public DateTime? NgayTraKetQua { get; set; }
         public bool IsDel { get; set; } = false;
         public bool? TrangThai { get; set; }
 

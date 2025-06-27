@@ -36,11 +36,7 @@ public partial class PhanCongNoiBo
     [StringLength(200)]
     public string? TennvPhanCong { get; set; }
 
-    [Column(TypeName = "datetime")]
-    public DateTime? ThoiGianPhanCong { get; set; }
-
-    [StringLength(100)]
-    public string? TrangThai { get; set; }
+    public bool? TrangThai { get; set; }
 
     [Column(TypeName = "datetime")]
     public DateTime? NgayTao { get; set; }
@@ -53,6 +49,15 @@ public partial class PhanCongNoiBo
 
     [Column(TypeName = "datetime")]
     public DateTime? NgaySua { get; set; }
+
+    [StringLength(200)]
+    public string? TennvXuly { get; set; }
+
+    [StringLength(200)]
+    public string? TenMau { get; set; }
+
+    [Column(TypeName = "datetime")]
+    public DateTime? NgayTraKetQua { get; set; }
 
     [InverseProperty("MaPhanCongNoiBoNavigation")]
     public virtual ICollection<LichSuPhanCong> LichSuPhanCongs { get; set; } = new List<LichSuPhanCong>();
