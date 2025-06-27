@@ -95,7 +95,7 @@ namespace QLDV_KiemNghiem_BE.Controllers
             return Ok(phieuDangKys);
         }
 
-        [Authorize(Roles = "BLD")]
+        //[Authorize(Roles = "BLD")]
         [HttpPut]
         [Route("undoReviewPhieuDangKyByBLD")]
         public async Task<ActionResult> undoReviewPhieuDangKyByBLD(RequestUndoReviewPhieuDangKy duyetPhieu)

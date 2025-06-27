@@ -17,7 +17,7 @@ namespace QLDV_KiemNghiem_BE.Extensions
                 new RateLimitRule
                 {
                     Endpoint = "*",
-                    Limit = 200,
+                    Limit = 700,
                     Period = "1h"
                 },
                  new RateLimitRule
