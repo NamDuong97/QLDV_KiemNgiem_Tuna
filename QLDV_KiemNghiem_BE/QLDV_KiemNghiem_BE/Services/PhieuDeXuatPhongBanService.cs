@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.VisualBasic;
 using QLDV_KiemNghiem_BE.Data;
 using QLDV_KiemNghiem_BE.DTO.RequestDto;
 using QLDV_KiemNghiem_BE.DTO.ResponseDto;
@@ -62,7 +63,7 @@ namespace QLDV_KiemNghiem_BE.Services
                 MaKhoaTiepNhan = PhieuDeXuatPhongBanDto.MaKhoaTiepNhan,
                 ManvDeXuat = PhieuDeXuatPhongBanDto.ManvDeXuat,
                 ThoiGianGiaoMau = PhieuDeXuatPhongBanDto.ThoiGianGiaoMau,
-                TrangThai = 2
+                TrangThai = 1
             };
 
             foreach (var item in PhieuDeXuatPhongBanDto.ChiTietPhieuDeXuatPhongBans)
@@ -78,6 +79,33 @@ namespace QLDV_KiemNghiem_BE.Services
                 };
                 listMau += item.MaPdkMau + " ";
 
+                // Cập nhật trạng thái của phieudangkymau
+                var mau = await _repositoryManager.PhieuDangKyMau.FindPhieuDangKyMauAsync(item.MaPdkMau);
+                if(mau == null)
+                {
+                    return new ResponseModel1<PhieuDeXuatPhongBanDto>
+                    {
+                        KetQua = false,
+                        Message = $"Mau {item.MaPdkMau} khog ton tai, vui long kiem tra lai!",
+                        Data = null
+                    };
+                }
+                mau.TrangThaiPhanCong = 6;
+                // Cập nhật phiếu đăng ký liên quan mẫu này
+                var phieuDangKy = await _repositoryManager.PhieuDangKy.FindPhieuDangKyAsync(mau.MaPhieuDangKy);
+                if(phieuDangKy == null)
+                {
+                    return new ResponseModel1<PhieuDeXuatPhongBanDto>
+                    {
+                        KetQua = false,
+                        Message = $"Phieu dang ky {mau.MaPhieuDangKy} khog ton tai, vui long kiem tra lai!",
+                        Data = null
+                    };
+                }
+                phieuDangKy.NgaySua = DateTime.Now;
+                phieuDangKy.NguoiSua = user;
+                _repositoryManager.PhieuDangKyMau.UpdatePhieuDangKyMauAsync(mau);
+                _repositoryManager.PhieuDangKy.UpdatePhieuDangKyAsync(phieuDangKy);
                 _repositoryManager.ChiTietPhieuDeXuatPhongBan.CreateChiTietPhieuDeXuatPhongBanAsync(chiTietPhieuDeXuatPhongBan);
                 var returnData1 = _mapper.Map<ChiTietPhieuDeXuatPhongBanDto>(chiTietPhieuDeXuatPhongBan);
                 chiTietPhieuDeXuatPhongBanDtos.Add(returnData1);
