@@ -105,19 +105,19 @@ namespace QLDV_KiemNghiem_BE.Services
                 };
             }
         }
-        public async Task<bool> CancelChiTietPhieuDeXuatPhongBansByKHTH(CancelChiTietPhieuDeXuatPhongBanRequestDto cancelPhieu, string user, string userId)
-        {
-            try
-            {
-                await _repositoryManager.ChiTietPhieuDeXuatPhongBan.ProcessUpdatePDXPBFromMauCancel(cancelPhieu.MaMau, user, userId);
-                return true;
-            }
-            catch ( Exception ex)
-            {
-                Console.WriteLine($"Có lỗi xảy ra: {ex.Message}");
-                return false;
-            } 
-        }
+        //public async Task<bool> CancelChiTietPhieuDeXuatPhongBansByKHTH(CancelChiTietPhieuDeXuatPhongBanRequestDto cancelPhieu, string user, string userId)
+        //{
+        //    try
+        //    {
+        //        await _repositoryManager.ChiTietPhieuDeXuatPhongBan.ProcessUpdatePDXPBFromMauCancel(cancelPhieu.MaMau, user, userId);
+        //        return true;
+        //    }
+        //    catch ( Exception ex)
+        //    {
+        //        Console.WriteLine($"Có lỗi xảy ra: {ex.Message}");
+        //        return false;
+        //    } 
+        //}
         public async Task<ResponseModel1<ChiTietPhieuDeXuatPhongBanDto>> CreateChiTietPhieuDeXuatPhongBanAsync(ChiTietPhieuDeXuatPhongBanDto ChiTietPhieuDeXuatPhongBanDto, string user)
         {
             if (ChiTietPhieuDeXuatPhongBanDto == null) return new ResponseModel1<ChiTietPhieuDeXuatPhongBanDto>

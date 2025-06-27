@@ -73,7 +73,7 @@ namespace QLDV_KiemNghiem_BE.Services
             _trangThaiPhieuDkService = new Lazy<ITrangThaiPhieuDkService>(() => new TrangThaiPhieuDkService(repositoryManager, mapper));
             _hoaDonThuService = new Lazy<IHoaDonThuService>(() => new HoaDonThuService(repositoryManager, mapper));
             _chiTietHoaDonThuService = new Lazy<IChiTietHoaDonThuService>(() => new ChiTietHoaDonThuService(repositoryManager, mapper));
-            _phieuDeXuatPhongBan = new Lazy<IPhieuDeXuatPhongBanService>(() => new PhieuDeXuatPhongBanService(repositoryManager, mapper, dataContext, hubContext));
+            _phieuDeXuatPhongBan = new Lazy<IPhieuDeXuatPhongBanService>(() => new PhieuDeXuatPhongBanService(repositoryManager, mapper, dataContext, hubContext, cache, redis));
             _phanCongNoiBoService = new Lazy<IPhanCongNoiBoService>(() => new PhanCongNoiBoService(repositoryManager, mapper));
             _phieuDuTruService = new Lazy<IPhieuDuTruService>(() => new PhieuDuTruService(repositoryManager, mapper));
             _phieuLuuMauService = new Lazy<IPhieuLuuMauService>(() => new PhieuLuuMauService(repositoryManager, mapper));
