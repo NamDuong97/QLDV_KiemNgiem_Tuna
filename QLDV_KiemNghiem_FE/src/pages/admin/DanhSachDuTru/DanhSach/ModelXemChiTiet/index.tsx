@@ -1,6 +1,5 @@
 import { Dialog } from "@mui/material";
 import { formatDateNotTime } from "../../../../../configs/configAll";
-import { dsMauDaPhanCong } from "../../../DanhSachPhanCongNoiBo/DanhSach";
 
 interface Props {
   open: boolean;
@@ -21,7 +20,7 @@ export const employees = [
 
 const ModelXemChiTiet = (props: Props) => {
   const { open, handleClose, dataID, handleOpenModelSua } = props;
-  const sample = dsMauDaPhanCong.find((s) => s.maId === dataID);
+  const sample: any = [];
 
   return (
     <Dialog
@@ -104,13 +103,13 @@ const ModelXemChiTiet = (props: Props) => {
             <p className="text-xs text-gray-500 mb-2">Phân công cho</p>
             <div className="flex items-center">
               <div
-                className={`avatar w-10 h-10 rounded-full ${sample?.nhanVienThucHien.color} flex items-center justify-center text-white font-medium`}
+                className={`avatar w-10 h-10 rounded-full flex items-center justify-center text-white font-medium`}
               >
-                {sample?.nhanVienThucHien.avatar}
+                
               </div>
               <div className="ml-3">
                 <p className="text-sm font-medium text-gray-800">
-                  {sample?.nhanVienThucHien.name}
+                 
                 </p>
               </div>
             </div>

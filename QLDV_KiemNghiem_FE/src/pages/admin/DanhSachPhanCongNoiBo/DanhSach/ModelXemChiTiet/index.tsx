@@ -1,10 +1,10 @@
 import { Dialog, Skeleton } from "@mui/material";
-import { dsMauDaPhanCong } from "..";
 import {
   formatDate,
   formatDateNotTime,
 } from "../../../../../configs/configAll";
 import { queryPhanCongNoiBoByID } from "../../../../../hooks/personnels/queryPhanCongNoiBo";
+import ImageGallery from "../../../../../components/ImageGallery";
 
 interface Props {
   open: boolean;
@@ -29,8 +29,6 @@ const ModelXemChiTiet = (props: Props) => {
     queryKey: "queryPhanCongNoiBoByID",
     params: dataID,
   });
-
-  console.log("data", data);
 
   return (
     <Dialog
@@ -71,14 +69,10 @@ const ModelXemChiTiet = (props: Props) => {
         </div>
         <div className="p-6">
           <div className="mb-6">
-            <div className="flex items-center justify-between mb-2">
-              <h4 className="font-medium text-gray-800 text-lg mb-3">Mẫu A</h4>
-              <span className="ml-2 text-xs font-medium text-blue-600 bg-blue-50 px-2.5 py-1 rounded-full">
-                Đã duyệt
-              </span>
-            </div>
-
-            <div className="grid grid-cols-2 gap-x-4 gap-y-2 mb-4">
+            <h3 className="text-gray-500 font-semibold text-sm/6">
+              Thông tin phân công
+            </h3>
+            <div className="grid grid-cols-4 gap-x-4 gap-y-2 mb-4">
               <div>
                 <p className="text-xs text-gray-500">Thời gian làm</p>
                 {isLoading ? (
@@ -98,7 +92,7 @@ const ModelXemChiTiet = (props: Props) => {
               <div>
                 <p className="text-xs text-gray-500">Nhân viên xử lý</p>
                 <p className="text-sm font-medium text-gray-700">
-                  {data.manvXyLy}
+                  {data?.manvXyLy}
                 </p>
               </div>
               <div>
@@ -107,40 +101,103 @@ const ModelXemChiTiet = (props: Props) => {
                   {data?.tennvPhanCong}
                 </p>
               </div>
-            </div>
-          </div>
-          <div className="bg-gray-50 rounded-xl p-4 mb-6">
-            <p className="text-xs text-gray-500 mb-2">Phân công cho</p>
-            <div className="flex items-center">
-              <div
-                className={`avatar w-10 h-10 rounded-full bg-blue-600 flex items-center justify-center text-white font-medium`}
-              >
-                C
+              <div>
+                <p className="text-xs text-gray-500">Trạng thái phân công</p>
+                <span className="text-sm font-medium text-blue-600 bg-blue-50 px-2.5 py-1 rounded-full">
+                  Đã duyệt
+                </span>
               </div>
-              <div className="ml-3">
-                <p className="text-sm font-medium text-gray-800">Nguyễn C</p>
+              <div>
+                <p className="text-xs text-gray-500">Phân công cho</p>
+                <span className="text-sm font-medium text-red-600">
+                  Nguyễn thị C
+                </span>
               </div>
             </div>
           </div>
-          <div className="grid grid-cols-2 gap-4 mb-6">
-            <div className="bg-gray-50 rounded-xl p-4">
-              <p className="text-xs text-gray-500 mb-1">Ngày phân công</p>
-              <p className="text-sm font-medium text-gray-800">fdfd</p>
+          <div>
+            <h3 className="text-gray-500 font-semibold text-sm/6">
+              Thông tin mẫu phân công
+            </h3>
+          </div>
+          <div className="grid grid-cols-4 gap-4">
+            <div>
+              <p className="text-xs text-gray-500">Tên mẫu</p>
+              <p className="text-sm">sdfdsf</p>
             </div>
-            <div className="bg-gray-50 rounded-xl p-4">
-              <p className="text-xs text-gray-500 mb-1">Hạn sử dụng mẫu</p>
-              <p className="text-sm font-medium text-gray-800">dfdf</p>
+            <div>
+              <p className="text-xs text-gray-500">Tiêu chuẩn</p>
+              <p className="text-sm">sdfdsf</p>
+            </div>
+            <div>
+              <p className="text-xs text-gray-500">Dịch vụ</p>
+              <p className="text-sm">sdfds</p>
+            </div>
+            <div>
+              <p className="text-xs text-gray-500">Số lô</p>
+              <p className="text-sm">sdf</p>
+            </div>
+            <div>
+              <p className="text-xs text-gray-500">Ngày sản xuất</p>
+              <p className="text-sm">sdfsdf</p>
+            </div>
+            <div>
+              <p className="text-xs text-gray-500">Thời gian hoàn thành</p>
+              <p className="text-sm">sdfsd ngày</p>
+            </div>
+            <div>
+              <p className="text-xs text-gray-500">Ngày dự kiến trả kết quả</p>
+              <p className="text-sm">sdfsdfds</p>
+            </div>
+            <div>
+              <p className="text-xs text-gray-500">Hạn sử dụng</p>
+              <p className="text-sm">sdfsdf</p>
+            </div>
+            <div>
+              <p className="text-xs text-gray-500">Số lượng</p>
+              <p className="text-sm">sdfsdf</p>
+            </div>
+            <div>
+              <p className="text-xs text-gray-500">Điều kiện bảo quản</p>
+              <p className="text-sm">sdfsdf</p>
+            </div>
+            <div>
+              <p className="text-xs text-gray-500">Đơn vị sản xuất</p>
+              <p className="text-sm">sdf</p>
+            </div>
+            <div>
+              <p className="text-xs text-gray-500">Tình trạng mẫu</p>
+              <p className="text-sm">sdfsdf</p>
+            </div>
+            <div>
+              <p className="text-xs text-gray-500">Lưu mẫu</p>
+              <p className="text-sm">sdfsdfds</p>
+            </div>
+            <div>
+              <p className="text-xs text-gray-500">Xuất kết quả</p>
+              <p className="text-sm">sdfsdfd</p>
             </div>
           </div>
-          {/* $
-          {assignment.notes
-            ? `
-                            <div className="mb-6">
-                                <p className="text-xs text-gray-500 mb-1">Ghi chú</p>
-                                <p className="text-sm text-gray-700 bg-gray-50 rounded-xl p-4">${assignment.notes}</p>
-                            </div>
-                        `
-            : ""} */}
+
+          <div className="mt-3">
+            <p className="text-xs text-gray-500">Yêu cầu kiểm nghiệm</p>
+            <p className="text-sm p-2 bg-blue-50 rounded">sdfsdfds</p>
+          </div>
+
+          <div className="mt-3">
+            <p className="text-xs text-gray-500">Ghi chú khách hàng</p>
+            <p className="text-sm p-2 bg-blue-50 rounded">sdfsdf</p>
+          </div>
+
+          <div className="mt-3">
+            <p className="text-xs text-gray-500">Ghi chú</p>
+            <p className="text-sm p-2 bg-blue-50 rounded">sdfsdfsd</p>
+          </div>
+
+          <div className="mt-3">
+            <p className="text-xs text-gray-500">Ảnh mẫu</p>
+            <ImageGallery images={[]} />
+          </div>
           <div className="flex justify-end space-x-3">
             <button
               onClick={handleClose}

@@ -1,6 +1,12 @@
 import { image } from "../../constants/image";
 
-const ImageGallery = ({ images, onImageClick }: any) => {
+interface Props {
+  images: any;
+  onImageClick?: any;
+}
+
+const ImageGallery = (props: Props) => {
+  const { images, onImageClick } = props;
 
   return (
     <div className="grid grid-cols-5 gap-2">

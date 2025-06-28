@@ -150,13 +150,6 @@ const TableQuanLyPhieuDKyDVHN = (props: TableProps) => {
                 <TableCell align="center">
                   <Box className="flex gap-2 items-center justify-start">
                     <p className="text-base/4 font-medium text-gray-700">
-                      {item?.manvDeXuat}
-                    </p>
-                  </Box>
-                </TableCell>
-                <TableCell align="center">
-                  <Box className="flex gap-2 items-center justify-start">
-                    <p className="text-base/4 font-medium text-gray-700">
                       {
                         dataKhoa?.find(
                           (Khoa: any) => Khoa?.maId === item?.maKhoaTiepNhan
@@ -168,11 +161,26 @@ const TableQuanLyPhieuDKyDVHN = (props: TableProps) => {
                 <TableCell align="center">
                   <Box className="flex gap-2 items-center justify-start">
                     <p className="text-xs/4 font-medium inline-block px-2 py-1 rounded-full bg-red-100 text-red-800">
-                      Còn{" "}
-                      {item?.chiTietPhieuDeXuatPhongBans.filter(
-                        (item: any) => item.trangThai === 2
-                      ).length}{" "}
-                      mẫu chưa duyệt
+                      {`Còn
+                      ${
+                        item?.chiTietPhieuDeXuatPhongBans.filter(
+                          (item: any) => item.trangThai === 1
+                        ).length
+                      }
+                      mẫu chờ hủy`}
+                    </p>
+                  </Box>
+                </TableCell>
+                <TableCell align="center">
+                  <Box className="flex gap-2 items-center justify-start">
+                    <p className="text-xs/4 font-medium inline-block px-2 py-1 rounded-full bg-red-100 text-red-800">
+                      {`Còn
+                      ${
+                        item?.chiTietPhieuDeXuatPhongBans.filter(
+                          (item: any) => item.trangThai === 2
+                        ).length
+                      }
+                      mẫu chưa duyệt`}
                     </p>
                   </Box>
                 </TableCell>

@@ -184,6 +184,19 @@ const trangThaiPhanCongNoiBo: Record<string, TrangThai> = {
   },
 };
 
+export const getStatusClass = (status: any) => {
+  switch (status) {
+    case "Hoàn thành":
+      return "bg-green-100 text-green-800";
+    case "Đang kiểm tra":
+      return "bg-blue-100 text-blue-800";
+    case "Đang xử lý":
+      return "bg-yellow-100 text-yellow-800";
+    default:
+      return "bg-gray-100 text-gray-800";
+  }
+};
+
 export function renderTrangThai(trangThaiId: string) {
   const trangThai = trangThaiMap[trangThaiId] || {
     text: "Không xác định",
@@ -284,4 +297,32 @@ export const formatDateNotTime2 = (date?: string | Date) => {
   if (!date) return undefined;
   const d = new Date(date);
   return d.toISOString().split("T")[0];
+};
+
+export const getQualityClass = (quality: any) => {
+  switch (quality) {
+    case "Đạt":
+      return "bg-green-100 text-green-800";
+    case "Không đạt":
+      return "bg-red-100 text-red-800";
+    case "Cần kiểm tra lại":
+      return "bg-yellow-100 text-yellow-800";
+    case "Chưa xác định":
+      return "bg-gray-100 text-gray-800";
+    default:
+      return "bg-gray-100 text-gray-800";
+  }
+};
+
+export const getStatusIcon = (status: any) => {
+  switch (status) {
+    case "Hoàn thành":
+      return "✅";
+    case "Đang kiểm tra":
+      return "🔍";
+    case "Đang xử lý":
+      return "⏳";
+    default:
+      return "📋";
+  }
 };

@@ -7,7 +7,6 @@ import ModelXemChiTiet from "./ModelXemChiTiet";
 import ModelSua from "./ModelSua";
 import ConfirmationModal from "../../../../components/ConfirmationModal";
 import { TypeConformation } from "../../../../constants/typeConfirmation";
-import removeVietnameseTones from "../../../../configs/removeVietnameseTones";
 import { PhieuDuTru } from "..";
 
 interface Props {

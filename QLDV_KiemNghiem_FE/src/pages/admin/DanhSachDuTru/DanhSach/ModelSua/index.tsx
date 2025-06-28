@@ -2,7 +2,6 @@ import { Dialog } from "@mui/material";
 import { useState } from "react";
 import clsx from "clsx";
 import classes from "./style.module.scss";
-import { dsMauDaPhanCong } from "../../../DanhSachPhanCongNoiBo/DanhSach";
 
 interface Props {
   open: boolean;
@@ -22,7 +21,7 @@ export const employees = [
 
 const ModelSua = (props: Props) => {
   const { open, handleClose, dataID } = props;
-  const sample = dsMauDaPhanCong.find((s) => s.maId === dataID);
+  const sample: any = [];
   const [saveID, setSaveID] = useState("");
 
   return (

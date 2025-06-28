@@ -15,16 +15,17 @@ const tableHead = [
     label: "Thời gian giao mẫu",
     align: Align.Left,
   },
-  {
-    id: "maNV",
-    sort: false,
-    label: "Nhân viên đề xuất",
-    align: Align.Left,
-  },
+
   {
     id: "maKhoa",
     sort: false,
     label: "Khoa Tiếp nhận",
+    align: Align.Left,
+  },
+  {
+    id: "Sốmẫuchờhủy",
+    sort: false,
+    label: "Số mẫu chờ hủy",
     align: Align.Left,
   },
   {

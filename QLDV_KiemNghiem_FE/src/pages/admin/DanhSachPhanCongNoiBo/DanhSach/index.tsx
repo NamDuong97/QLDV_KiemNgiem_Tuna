@@ -15,6 +15,9 @@ import ConfirmationModal from "../../../../components/ConfirmationModal";
 import { TypeConformation } from "../../../../constants/typeConfirmation";
 import removeVietnameseTones from "../../../../configs/removeVietnameseTones";
 import { queryPhanCongNoiBoAll } from "../../../../hooks/personnels/queryPhanCongNoiBo";
+import SelectItemTrangThai from "./SelectItemTrangThai";
+import { MdSwapHoriz } from "react-icons/md";
+import ModelPhanCongLai from "./ModelPhanCongLai";
 
 interface NhanVienThucHien {
   name: string;
@@ -38,69 +41,6 @@ interface MauPhanCong {
   nhanVienThucHien?: NhanVienThucHien;
 }
 
-export const dsMauDaPhanCong = [
-  {
-    maId: "M001",
-    tenMau: "Paracetamol 500mg",
-    tenTieuChuan: "Dược điển Việt Nam V",
-    tenDichVu: "Kiểm nghiệm định tính",
-    soLo: "LOP20240501",
-    donViSanXuat: "CTCP Dược Hậu Giang",
-    ngaySanXuat: "2024-05-01",
-    hanSuDung: "2026-05-01",
-    soLuong: 100,
-    donViTinh: "viên",
-    trangThaiPhanCong: "Chưa phân công",
-    maPhieuDangKy: "PDK-202405-001",
-    ngayPhanCong: "2026-05-01",
-    nhanVienThucHien: {
-      name: "Nguyễn Văn A",
-      avatar: "A",
-      color: "bg-blue-500",
-    },
-  },
-  {
-    maId: "M002",
-    tenMau: "Vitamin C 100mg",
-    tenTieuChuan: "Dược điển Mỹ USP 43",
-    tenDichVu: "Phân tích định lượng",
-    soLo: "VTM20240320",
-    donViSanXuat: "CT TNHH Dược Phẩm ABC",
-    ngaySanXuat: "2024-03-20",
-    hanSuDung: "2025-09-20",
-    soLuong: 200,
-    donViTinh: "viên nén",
-    trangThaiPhanCong: "Chưa phân công",
-    maPhieuDangKy: "PDK-202403-002",
-    ngayPhanCong: "2026-05-01",
-    nhanVienThucHien: {
-      name: "Trần Thị B",
-      avatar: "B",
-      color: "bg-green-500",
-    },
-  },
-  {
-    maId: "M003",
-    tenMau: "Dung dịch NaCl 0.9%",
-    tenTieuChuan: "Dược điển Châu Âu Ph.Eur",
-    tenDichVu: "Kiểm tra độ vô trùng",
-    soLo: "NACL20240610",
-    donViSanXuat: "Xí nghiệp Dược phẩm TW25",
-    ngaySanXuat: "2024-06-10",
-    hanSuDung: "2026-06-10",
-    soLuong: 50,
-    donViTinh: "chai",
-    trangThaiPhanCong: "Chưa phân công",
-    maPhieuDangKy: "PDK-202406-003",
-    ngayPhanCong: "2026-05-01",
-    nhanVienThucHien: {
-      name: "Lê Văn C",
-      avatar: "C",
-      color: "bg-yellow-500",
-    },
-  },
-];
-
 interface Props {
   handleTaoPhanCong: () => void;
 }
@@ -112,8 +52,10 @@ const DanhSach = (props: Props) => {
   });
   console.log("dataALL", data);
   const [isSortNew, setIsSortNew] = useState(false);
+  const [selectTrangThai, setSelectTrangThai] = useState("");
   const [openModelXemChiTiet, setOpenModelXemChiTiet] = useState(false);
   const [openModelSua, setOpenModelSua] = useState(false);
+  const [openModelPhanCongLai, setOpenModelPhanCongLai] = useState(false);
   const [openModelXoa, setOpenModelXoa] = useState(false);
   const [saveID, setSaveID] = useState("");
 
@@ -134,8 +76,10 @@ const DanhSach = (props: Props) => {
   const currentItems = filteredSamples
     ?.sort((a: any, b: any) =>
       isSortNew
-        ? new Date(a.hanSuDung).getTime() - new Date(b.hanSuDung).getTime()
-        : new Date(b.hanSuDung).getTime() - new Date(a.hanSuDung).getTime()
+        ? new Date(a.ngayPhanCong).getTime() -
+          new Date(b.ngayPhanCong).getTime()
+        : new Date(b.ngayPhanCong).getTime() -
+          new Date(a.ngayPhanCong).getTime()
     )
     ?.slice(indexOfFirstItem, indexOfLastItem);
 
@@ -169,19 +113,19 @@ const DanhSach = (props: Props) => {
             type="button"
             className="btn btn-outline-primary border border-gray-300 py-[6px] px-2 rounded cursor-pointer hover:bg-blue-50"
           >
-            {isSortNew ? (
-              <span className="flex items-center gap-2 text-gray-800">
-                <FaSortAmountUp /> Cũ Nhất
-              </span>
-            ) : (
-              <span className="flex items-center gap-2 text-gray-800">
-                <FaSortAmountDown /> Mới nhất
-              </span>
-            )}
+            <span className="flex items-center gap-2 text-gray-800">
+              {isSortNew ? <FaSortAmountUp /> : <FaSortAmountDown />}Ngày phân
+              công
+            </span>
           </button>
+          <SelectItemTrangThai
+            title="Trạng thái"
+            setItem={setSelectTrangThai}
+            item={selectTrangThai}
+          />
         </div>
       </div>
-      {filteredSamples?.length > 0 ? (
+      {currentItems?.length > 0 ? (
         <div className="grid grid-cols-3 gap-6">
           {isLoading ? (
             <>
@@ -190,7 +134,7 @@ const DanhSach = (props: Props) => {
               <Skeleton variant="rounded" width={479} height={357} />
             </>
           ) : (
-            filteredSamples?.map((assignment: any, index: any) => (
+            currentItems?.map((assignment: any, index: any) => (
               <div
                 key={index}
                 className={clsx(
@@ -321,7 +265,7 @@ const DanhSach = (props: Props) => {
                         </button>
                       </Tooltip>
                       <Tooltip
-                        title="Xóa"
+                        title="Hủy"
                         slotProps={{
                           popper: {
                             modifiers: [
@@ -355,6 +299,32 @@ const DanhSach = (props: Props) => {
                               clipRule="evenodd"
                             />
                           </svg>
+                        </button>
+                      </Tooltip>
+                      <Tooltip
+                        title="Phân công lại"
+                        slotProps={{
+                          popper: {
+                            modifiers: [
+                              {
+                                name: "offset",
+                                options: {
+                                  offset: [0, -14],
+                                },
+                              },
+                            ],
+                          },
+                        }}
+                        disableInteractive
+                      >
+                        <button
+                          onClick={() => {
+                            setSaveID(assignment.maId);
+                            setOpenModelPhanCongLai(true);
+                          }}
+                          className="p-1.5 text-red-600 hover:bg-red-50 rounded transition-colors cursor-pointer"
+                        >
+                          <MdSwapHoriz className="w-4 h-4" />
                         </button>
                       </Tooltip>
                     </div>
@@ -396,9 +366,9 @@ const DanhSach = (props: Props) => {
       )}
       <div className="p-4 flex justify-center">
         <Pagination
-          count={2}
-          // page={currentPage}
-          // onChange={handlePageChange}
+          count={totalPages}
+          page={currentPage}
+          onChange={handlePageChange}
           variant="outlined"
           shape="rounded"
           color="primary"
@@ -426,12 +396,17 @@ const DanhSach = (props: Props) => {
         handleClose={() => setOpenModelSua(false)}
         dataID={saveID}
       />
+      <ModelPhanCongLai
+        open={openModelPhanCongLai}
+        handleClose={() => setOpenModelPhanCongLai(false)}
+        dataID={saveID}
+      />
       <ConfirmationModal
         isOpen={openModelXoa}
         onClose={() => setOpenModelXoa(false)}
         onConfirm={() => setOpenModelXoa(false)}
-        title={"Xác nhận xóa?"}
-        message={"Bạn có chắc chắn muốn xóa?"}
+        title={"Xác nhận hủy?"}
+        message={"Bạn có chắc chắn muốn hủy?"}
         type={TypeConformation.Error}
       />
     </>

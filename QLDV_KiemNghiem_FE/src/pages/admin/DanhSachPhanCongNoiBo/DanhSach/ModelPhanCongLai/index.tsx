@@ -19,7 +19,7 @@ export const employees = [
   { id: 7, name: "Hoàng Văn G", avatar: "G", color: "bg-teal-500" },
 ];
 
-const ModelSua = (props: Props) => {
+const ModelPhanCongLai = (props: Props) => {
   const { open, handleClose, dataID } = props;
   const sample: any = [];
   const [saveID, setSaveID] = useState("");
@@ -40,7 +40,7 @@ const ModelSua = (props: Props) => {
         <div className="px-6 py-4 border-b border-gray-100">
           <div className="flex justify-between items-center">
             <h3 className="text-lg font-semibold text-gray-800">
-              Sửa phân công
+              Phân công lại
             </h3>
             <button
               onClick={handleClose}
@@ -69,19 +69,45 @@ const ModelSua = (props: Props) => {
           </div>
 
           <div>
-            <label className="text-sm font-medium text-gray-700">
-              Thời gian phân công *
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Chọn nhân viên phân công
             </label>
-            <input
-              type="date"
-              //   {...register("thoiGianLuu")}
-              className="w-full py-1 px-4 border border-gray-300 rounded"
-            />
-            {/* {errors.thoiGianLuu && (
-              <p className="text-xs text-red-600">
-                {errors.thoiGianLuu.message}
-              </p>
-            )} */}
+            <div
+              className={clsx(
+                "space-y-2 max-h-40 overflow-y-auto pr-1",
+                classes.scrollbar_thin
+              )}
+            >
+              {employees.length > 0 ? (
+                employees.map((employee: any) => (
+                  <div
+                    className={clsx(
+                      "flex items-center p-3 hover:bg-gray-50 rounded-xl cursor-pointer",
+                      {
+                        "border-indigo-200 border bg-indigo-50":
+                          employee.id === saveID,
+                      }
+                    )}
+                    onClick={() => setSaveID(employee.id)}
+                  >
+                    <div
+                      className={`avatar w-10 h-10 rounded-full ${employee.color} flex items-center justify-center text-white font-medium`}
+                    >
+                      {employee.avatar}
+                    </div>
+                    <div className="ml-3">
+                      <p className="text-sm font-medium text-gray-800">
+                        {employee.name}
+                      </p>
+                    </div>
+                  </div>
+                ))
+              ) : (
+                <div className="p-4 text-center text-gray-500 bg-gray-50 rounded-lg">
+                  Không tìm thấy nhân viên phù hợp với dịch vụ kiểm nghiệm này
+                </div>
+              )}
+            </div>
           </div>
 
           <div>
@@ -111,6 +137,7 @@ const ModelSua = (props: Props) => {
                 {errors.luuDenNgay.message}
               </p>
             )} */}
+            
           </div>
 
           <div className="flex justify-end space-x-3">
@@ -130,4 +157,4 @@ const ModelSua = (props: Props) => {
   );
 };
 
-export default ModelSua;
+export default ModelPhanCongLai;

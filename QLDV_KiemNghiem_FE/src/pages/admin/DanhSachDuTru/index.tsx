@@ -8,7 +8,6 @@ import SelectItemTrangThai from "./SelectItemTrangThai";
 import { getRoleGroup } from "../../../configs/Role";
 import { role } from "../../../configs/parseJwt";
 import SelectItemKhoa from "./SelectItemKhoa";
-import SelectItemThoiGian from "./SelectItemThoiGian";
 import DanhSach from "./DanhSach";
 import removeVietnameseTones from "../../../configs/removeVietnameseTones";
 
@@ -47,14 +46,14 @@ const dataDuTru = [
         DonViTinh: "Hộp",
         SoLuong: 10,
         GhiChu: "Dùng cho xét nghiệm máu",
-        TrangThai: "Đang xử lý",
+        TrangThai: "Chờ duyệt",
         MaDM_PLHC: "DMHC001",
       },
       {
         DonViTinh: "Chai",
         SoLuong: 5,
         GhiChu: "Dùng cho mẫu nước tiểu",
-        TrangThai: "Đang xử lý",
+        TrangThai: "Chờ duyệt",
         MaDM_PLHC: "DMHC002",
       },
     ],
@@ -103,7 +102,6 @@ const DanhSachDuTru = () => {
   const [selectTrangThai, setSelectTrangThai] = useState("");
   const [isSortNew, setIsSortNew] = useState(false);
   const [selectKhoa, setSelectKhoa] = useState("");
-  const [selectThoiGian, setSelectThoiGian] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
   const filteredSamples: any = dataDuTru?.filter((sample: any) => {
     const query = removeVietnameseTones(searchQuery.toLowerCase());
@@ -149,7 +147,7 @@ const DanhSachDuTru = () => {
       </div>
       <div className="p-4 bg-white rounded-lg shadow-sm border border-gray-100 gap-2 space-y-4">
         <div className="flex justify-between items-center">
-          <div className="flex gap-4 w-3xl">
+          <div className="flex gap-4 w-md">
             <InputSearch2
               placeholder="Tìm kiếm mã phiếu hoặc mẫu kiểm nghiệm..."
               value={searchQuery}
@@ -165,6 +163,11 @@ const DanhSachDuTru = () => {
                 item={selectKhoa}
               />
             )}
+            <SelectItemTrangThai
+            title="Trạng thái"
+            setItem={setSelectTrangThai}
+            item={selectTrangThai}
+          />
             <button
               // onClick={() => setIsSortNew(!isSortNew)}
               type="button"
@@ -192,18 +195,6 @@ const DanhSachDuTru = () => {
               <FilePlus className="w-5 h-5" /> Tạo phiếu
             </button>
           </div>
-        </div>
-        <div className="flex space-x-4 items-center">
-          <SelectItemTrangThai
-            title="Trạng thái"
-            setItem={setSelectTrangThai}
-            item={selectTrangThai}
-          />
-          <SelectItemThoiGian
-            title="thời gian"
-            setItem={setSelectThoiGian}
-            item={selectThoiGian}
-          />
         </div>
       </div>
       <DanhSach dataDuTru={filteredSamples} />

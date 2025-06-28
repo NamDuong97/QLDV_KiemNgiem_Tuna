@@ -61,10 +61,13 @@ const AssignmentModal = (props: Props) => {
             "Thời gian thực hiện phải tính từ thời gian giao mẫu trở đi",
             function (value) {
               if (!value || !thoiGianGiaoMau) return true;
-              return (
-                formatDateNotTime(new Date(value)) >=
-                formatDateNotTime(new Date(thoiGianGiaoMau))
-              );
+              const thucHien = new Date(value);
+              const giaoMau = new Date(thoiGianGiaoMau);
+
+              thucHien.setHours(0, 0, 0, 0);
+              giaoMau.setHours(0, 0, 0, 0);
+
+              return thucHien.getTime() >= giaoMau.getTime();
             }
           ),
       });
@@ -81,9 +84,15 @@ const AssignmentModal = (props: Props) => {
           "Thời gian giao mẫu phải từ thời điểm hiện tại trở đi",
           (value) => {
             if (!value) return false;
-            const now = formatDateNotTime(new Date());
-            const date = formatDateNotTime(new Date(value));
-            return now <= date;
+            const now = new Date();
+            const inputDate = new Date(value);
+
+            // Xóa thời gian để chỉ so sánh theo ngày
+            now.setHours(0, 0, 0, 0);
+            inputDate.setHours(0, 0, 0, 0);
+            console.log("now <= date", now <= inputDate, now, inputDate);
+
+            return now <= inputDate;
           }
         )
         .test(

@@ -18,7 +18,7 @@ const TagPhanCong = (props: Props) => {
         }`}
         onClick={() => setIsTag(tagPhanCong.Phan_Cong)}
       >
-        Phân công
+        Phân công nhân viên
       </button>
       <button
         className={`px-3 py-1.5 cursor-pointer text-sm font-medium rounded-md ${
@@ -28,7 +28,7 @@ const TagPhanCong = (props: Props) => {
         }`}
         onClick={() => setIsTag(tagPhanCong.Danh_Sach)}
       >
-        Danh Sách
+        Danh Sách phân công
       </button>
     </div>
   );

@@ -9,26 +9,22 @@ interface Props {
   title?: any;
 }
 
-const dataThoiGian = [
+const dataTrangThai = [
   {
-    maId: "1",
-    name: "Hôm nay",
+    maId: 0,
+    tenTt: "Đã Hủy ",
   },
   {
-    maId: "2",
-    name: "Tuần này",
+    maId: 1,
+    tenTt: "Chờ phòng ban duyệt",
   },
   {
-    maId: "3",
-    name: "Tháng này",
-  },
-  {
-    maId: "4",
-    name: "Năm này",
+    maId: 2,
+    tenTt: "Đã duyệt",
   },
 ];
 
-export default function SelectItemThoiGian(props: Props) {
+export default function SelectItemTrangThai(props: Props) {
   const { item, setItem, title } = props;
 
   const handleChange = (event: SelectChangeEvent) => {
@@ -56,9 +52,9 @@ export default function SelectItemThoiGian(props: Props) {
           }}
         >
           <MenuItem value="">Tất cả {title}</MenuItem>
-          {dataThoiGian?.map((option: any, index: any) => (
+          {dataTrangThai?.map((option: any, index: any) => (
             <MenuItem key={index} value={option.maId}>
-              {option.name}
+              {option.tenTt}
             </MenuItem>
           ))}
         </Select>
