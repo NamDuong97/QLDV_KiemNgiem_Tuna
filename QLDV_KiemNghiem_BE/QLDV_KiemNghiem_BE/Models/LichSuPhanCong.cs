@@ -53,6 +53,15 @@ public partial class LichSuPhanCong
     [Column(TypeName = "datetime")]
     public DateTime? NgaySua { get; set; }
 
+    [StringLength(500)]
+    public string? LyDoPhanCongLai { get; set; }
+
+    [StringLength(200)]
+    public string? TennvCu { get; set; }
+
+    [StringLength(200)]
+    public string? TennvMoi { get; set; }
+
     [ForeignKey("MaPhanCongNoiBo")]
     [InverseProperty("LichSuPhanCongs")]
     public virtual PhanCongNoiBo? MaPhanCongNoiBoNavigation { get; set; }

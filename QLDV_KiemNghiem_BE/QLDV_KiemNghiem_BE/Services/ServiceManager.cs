@@ -46,7 +46,7 @@ namespace QLDV_KiemNghiem_BE.Services
         private readonly Lazy<IPhieuPhanTichKetQuaChiTietService> _phieuPhanTichKetQuaChiTietService;
         private readonly Lazy<IPhieuThuService> _phieuThuService;
         private readonly Lazy<IChiTietPhieuDeXuatPhongBanService> _chiTietPhieuDeXuatPhongBanService;
-       
+        private readonly Lazy<ILichSuPhanCongService> _lichSuPhanCongService;
 
         public ServiceManager(IRepositoryManager repositoryManager, IMapper mapper, DataContext dataContext, IEmailService emailService, ITokenService tokenService, IConfiguration configuration,
             IHubContext<NotificationHub> hubContext, IConnectionMultiplexer redis, IDistributedCache cache)
@@ -85,6 +85,7 @@ namespace QLDV_KiemNghiem_BE.Services
             _phieuPhanTichKetQuaChiTietService = new Lazy<IPhieuPhanTichKetQuaChiTietService>(() => new PhieuPhanTichKetQuaChiTietService(repositoryManager, mapper));
             _phieuThuService = new Lazy<IPhieuThuService>(() => new PhieuThuService(repositoryManager, mapper));
             _chiTietPhieuDeXuatPhongBanService = new Lazy<IChiTietPhieuDeXuatPhongBanService>(() => new ChiTietPhieuDeXuatPhongBanService(repositoryManager, mapper, hubContext));
+            _lichSuPhanCongService = new Lazy<ILichSuPhanCongService>(() => new LichSuPhanCongService(repositoryManager, mapper));
         }
 
         //public IEmailService Email => _email.Value;
@@ -118,6 +119,7 @@ namespace QLDV_KiemNghiem_BE.Services
         public IPhieuPhanTichKetQuaChiTietService PhieuPhanTichKetQuaChiTiet => _phieuPhanTichKetQuaChiTietService.Value;
         public IPhieuThuService PhieuThu => _phieuThuService.Value;
         public IChiTietPhieuDeXuatPhongBanService ChiTietPhieuDeXuatPhongBan => _chiTietPhieuDeXuatPhongBanService.Value;
-        
+        public ILichSuPhanCongService LichSuPhanCong => _lichSuPhanCongService.Value;
+
     }
 }
