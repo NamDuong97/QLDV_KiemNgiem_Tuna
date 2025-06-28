@@ -133,7 +133,7 @@ const TableQuanLyPhieuDKyDVHN = (props: TableProps) => {
                   <Box className="flex gap-2 items-center justify-start">
                     <p
                       className="text-base/4 font-medium cursor-pointer text-blue-700 hover:underline"
-                      onClick={() => handleRedirectChiTiet(item?.soLo)}
+                      onClick={() => handleRedirectChiTiet(item?.maId)}
                     >
                       {item?.maPhieuLuu}
                     </p>
@@ -142,7 +142,7 @@ const TableQuanLyPhieuDKyDVHN = (props: TableProps) => {
                 <TableCell align="center">
                   <Box className="flex gap-2 items-center justify-start">
                     <p className="text-base/4 font-medium text-gray-700">
-                      {item?.maPdkMau}
+                      {item?.tenMau}
                     </p>
                   </Box>
                 </TableCell>
@@ -170,7 +170,7 @@ const TableQuanLyPhieuDKyDVHN = (props: TableProps) => {
                 <TableCell align="center">
                   <Box className="flex gap-2 items-center justify-start">
                     <p className="text-base/4 font-medium text-gray-700">
-                      {formatDate(item?.luuDenNgay)}
+                      {formatDate(item?.hanSuDung)}
                     </p>
                   </Box>
                 </TableCell>

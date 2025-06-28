@@ -1,13 +1,13 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import SampleCard from "../SampleCard";
 import AssignmentModal from "../AssignmentModal";
 import InputSearch2 from "../../../../../../components/InputSearch2";
-import { MauPhanCong } from "../../../../../../models/mau";
 import { Pagination } from "@mui/material";
 import ChiTietPhieuDKyDVKN from "../../../ChiTietMauLuu";
 import removeVietnameseTones from "../../../../../../configs/removeVietnameseTones";
 import { Sample } from "..";
-import clsx from "clsx";
+import ChiTietMau from "../../../ChiTietMau";
+import { set } from "react-hook-form";
 
 interface Props {
   departments: any;
@@ -50,7 +50,7 @@ interface Props {
 // }
 
 const SampleList = (props: Props) => {
-  const { departments, data, isLoading } = props;
+  const { data, isLoading } = props;
 
   const [samples, setSamples] = useState<Sample[]>(data);
   const [selectedSamples, setSelectedSamples] = useState<any>(null);
@@ -77,6 +77,7 @@ const SampleList = (props: Props) => {
     filteredSamples && filteredSamples?.length / itemsPerPage
   );
   const [openXemChiTiet, setOpenXemChiTiet] = useState(false);
+  const [openXemChiTietMau, setOpenXemChiTietMau] = useState(false);
 
   const handleCloseXemChiTiet = () => {
     setOpenXemChiTiet(false);
@@ -180,7 +181,7 @@ const SampleList = (props: Props) => {
                     isSelected={selectedSamples}
                     onSelect={hanldeSelectedSamples}
                     isLoading={isLoading}
-                    handleOpenChiTiet={() => setOpenXemChiTiet(true)}
+                    handleOpenChiTiet={() => setOpenXemChiTietMau(true)}
                   />
                 ))}
             </div>
@@ -220,6 +221,10 @@ const SampleList = (props: Props) => {
       <ChiTietPhieuDKyDVKN
         open={openXemChiTiet}
         handleClose={handleCloseXemChiTiet}
+      />
+      <ChiTietMau
+        open={openXemChiTietMau}
+        handleClose={() => setOpenXemChiTietMau(false)}
       />
     </div>
   );

@@ -15,3 +15,22 @@
 .scrollbar_thin::-webkit-scrollbar-thumb:hover {
   background: #a1a1a1;
 }
+
+.timeline-container {
+  position: relative;
+}
+
+.timeline-container::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 19px;
+  height: 100%;
+  width: 2px;
+  background-color: #e5e7eb;
+}
+
+.timeline-dot {
+  position: relative;
+  z-index: 1;
+}

@@ -1,5 +1,5 @@
 import { Dialog } from "@mui/material";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
@@ -30,6 +30,7 @@ today.setHours(0, 0, 0, 0);
 const schema = yup.object().shape({
   soLuong: yup
     .number()
+    .typeError("Vui lòng nhập số lượng")
     .required("Vui lòng nhập số lượng")
     .min(1, "Số lượng phải lớn hơn 0"),
   donViTinh: yup.string().required("Vui lòng nhập đơn vị tính"),
@@ -42,7 +43,10 @@ const schema = yup.object().shape({
     .date()
     .typeError("Vui lòng chọn ngày lưu đến")
     .required("Vui lòng chọn ngày lưu đến")
-    .min(yup.ref("thoiGianLuu"), "Ngày lưu đến phải sau thời gian lưu"),
+    .min(
+      yup.ref("thoiGianLuu"),
+      "Ngày lưu đến phải tính từ thời gian lưu trở đi"
+    ),
 });
 
 const AssignmentModal = (props: Props) => {
@@ -90,6 +94,7 @@ const AssignmentModal = (props: Props) => {
   const handleAssignSubmit = (data: FormTaoPhieu) => {
     const dataTao = {
       tenMau: selectedSamples?.name,
+      maPdkMau: selectedSamples?.id,
       soLuong: data.soLuong,
       donViTinh: data.donViTinh,
       thoiGianLuu: formatDateNotTime(data.thoiGianLuu),

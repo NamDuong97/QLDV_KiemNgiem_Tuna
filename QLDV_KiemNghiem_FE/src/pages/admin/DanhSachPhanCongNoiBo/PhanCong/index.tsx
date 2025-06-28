@@ -6,65 +6,39 @@ import classes from "./style.module.scss";
 import clsx from "clsx";
 import ModelPhanCong from "./ModelPhanCong";
 import removeVietnameseTones from "../../../../configs/removeVietnameseTones";
+import { getAllDanhSachMau } from "../../../../hooks/personnels/phanCongKhoa";
+import { usePersonnel } from "../../../../contexts/PersonelsProvider";
+import { useGetLoaiDichVuAll } from "../../../../hooks/customers/usePhieuDKyDVKN";
 
-export const dsMauPhanCong = [
-  {
-    maId: "M001",
-    tenMau: "Paracetamol 500mg",
-    tenTieuChuan: "Dược điển Việt Nam V",
-    tenDichVu: "Kiểm nghiệm định tính",
-    soLo: "LOP20240501",
-    donViSanXuat: "CTCP Dược Hậu Giang",
-    ngaySanXuat: "2024-05-01",
-    hanSuDung: "2026-05-01",
-    soLuong: 100,
-    donViTinh: "viên",
-    trangThaiPhanCong: "Chưa phân công",
-    maPhieuDangKy: "PDK-202405-001",
-  },
-  {
-    maId: "M002",
-    tenMau: "Vitamin C 100mg",
-    tenTieuChuan: "Dược điển Mỹ USP 43",
-    tenDichVu: "Phân tích định lượng",
-    soLo: "VTM20240320",
-    donViSanXuat: "CT TNHH Dược Phẩm ABC",
-    ngaySanXuat: "2024-03-20",
-    hanSuDung: "2025-09-20",
-    soLuong: 200,
-    donViTinh: "viên nén",
-    trangThaiPhanCong: "Chưa phân công",
-    maPhieuDangKy: "PDK-202403-002",
-  },
-  {
-    maId: "M003",
-    tenMau: "Dung dịch NaCl 0.9%",
-    tenTieuChuan: "Dược điển Châu Âu Ph.Eur",
-    tenDichVu: "Kiểm tra độ vô trùng",
-    soLo: "NACL20240610",
-    donViSanXuat: "Xí nghiệp Dược phẩm TW25",
-    ngaySanXuat: "2024-06-10",
-    hanSuDung: "2026-06-10",
-    soLuong: 50,
-    donViTinh: "chai",
-    trangThaiPhanCong: "Chưa phân công",
-    maPhieuDangKy: "PDK-202406-003",
-  },
-];
-
-const PhanCong = () => {
+const PhanCong = ({ handleDanhSachPhanCong }: any) => {
   const [isSortNew, setIsSortNew] = useState(false);
   const [openModelPhanCong, setOpenModelPhanCong] = useState(false);
+  const { personnelInfo } = usePersonnel();
+  const { data } = getAllDanhSachMau({
+    queryKey: "DanhSachMau",
+    params: {
+      getAll: true,
+      maKhoa: personnelInfo?.maKhoa,
+      trangThaiPhanCong: 2,
+    },
+  });
+  const { data: dataLoaiDV } = useGetLoaiDichVuAll({
+    queryKey: "LoaiDichVuAll",
+  });
+  const dataLDV: any = dataLoaiDV;
+  console.log("data", data);
+  console.log("data");
+
   const [saveID, setSaveID] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
-  const filteredSamples: any = dsMauPhanCong?.filter((sample: any) => {
+  const filteredSamples: any = data?.data?.filter((sample: any) => {
     const query = removeVietnameseTones(searchQuery.toLowerCase());
     const matchesSearch =
       removeVietnameseTones(sample.tenTieuChuan.toLowerCase()).includes(
         query
       ) ||
       removeVietnameseTones(sample.tenMau.toLowerCase()).includes(query) ||
-      removeVietnameseTones(sample.tenDichVu.toLowerCase()).includes(query);
+      removeVietnameseTones(sample.tenLoaiMau.toLowerCase()).includes(query);
     return matchesSearch;
   });
 
@@ -101,7 +75,7 @@ const PhanCong = () => {
         </div>
       </div>
       <div className="grid grid-cols-3 gap-6">
-        {filteredSamples.map((sample: any, index: any) => (
+        {filteredSamples?.map((sample: any, index: any) => (
           <div
             key={index}
             className={clsx(
@@ -109,26 +83,17 @@ const PhanCong = () => {
               classes.sample_item,
               classes.glass_card
             )}
-            // style={{ ".animation-delay": `${index * 0.05}s` }}
           >
             <div className="p-5">
               <div className="flex justify-between items-start mb-4">
-                <div className="flex items-center">
-                  <span className="text-sm font-medium text-indigo-600 bg-indigo-50 px-2.5 py-1 rounded-md">
-                    {sample.maId}
+                <div className="flex items-center gap-2">
+                  <span className="text-xs font-medium text-gray-600">
+                    Mã Mẫu:
                   </span>
-                  <span className="ml-2 text-xs font-medium text-gray-500 bg-gray-100 px-2.5 py-1 rounded-full">
-                    {sample.maPhieuDangKy}
+                  <span className="text-sm font-medium text-indigo-600">
+                    {sample.maPdkMau}
                   </span>
                 </div>
-                <span
-                  className={clsx(
-                    "text-xs font-medium text-red-600 bg-red-50 px-2.5 py-1 rounded-full",
-                    classes.status_badge
-                  )}
-                >
-                  {sample.trangThaiPhanCong}
-                </span>
               </div>
 
               <h3 className="font-semibold text-gray-800 text-lg mb-3">
@@ -142,10 +107,13 @@ const PhanCong = () => {
                     {sample.tenTieuChuan}
                   </p>
                 </div>
-                <div>
+                <div className="col-span-2">
                   <p className="text-xs text-gray-500">Dịch vụ kiểm nghiệm</p>
                   <p className="text-sm font-medium text-gray-700">
-                    {sample.tenDichVu}
+                    {
+                      dataLDV?.find((item: any) => item.maLoaiDv === "DVG03-90")
+                        ?.tenDichVu
+                    }
                   </p>
                 </div>
                 <div>
@@ -206,46 +174,44 @@ const PhanCong = () => {
             </div>
           </div>
         ))}
-
-        {dsMauPhanCong.length === 0 ? (
-          <div className="col-span-1 lg:col-span-2">
-            <div className="glass-card rounded-xl p-8 text-center">
-              <div className="w-16 h-16 mx-auto bg-indigo-100 rounded-full flex items-center justify-center">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-8 w-8 text-indigo-600"
-                  viewBox="0 0 20 20"
-                  fill="currentColor"
-                >
-                  <path
-                    fill-rule="evenodd"
-                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                    clip-rule="evenodd"
-                  />
-                </svg>
-              </div>
-              <h3 className="mt-4 text-lg font-medium text-gray-800">
-                Tất cả mẫu đã được phân công
-              </h3>
-              <p className="mt-2 text-gray-500">
-                Không còn mẫu nào chưa được phân công
-              </p>
-              <button
-                // onclick="showAssignmentsList()"
-                className="mt-4 px-4 py-2 text-sm font-medium text-indigo-600 bg-indigo-50 rounded-lg hover:bg-indigo-100 transition-all"
-              >
-                Xem danh sách phân công
-              </button>
-            </div>
-          </div>
-        ) : (
-          ""
-        )}
       </div>
+      {filteredSamples?.length === 0 ? (
+        <div className="glass-card rounded-xl p-8 text-center">
+          <div className="w-16 h-16 mx-auto bg-indigo-100 rounded-full flex items-center justify-center">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-8 w-8 text-indigo-600"
+              viewBox="0 0 20 20"
+              fill="currentColor"
+            >
+              <path
+                fillRule="evenodd"
+                d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                clipRule="evenodd"
+              />
+            </svg>
+          </div>
+          <h3 className="mt-4 text-lg font-medium text-gray-800">
+            Tất cả mẫu đã được phân công
+          </h3>
+          <p className="mt-2 text-gray-500">
+            Không còn mẫu nào chưa được phân công
+          </p>
+          <button
+            onClick={handleDanhSachPhanCong}
+            className="cursor-pointer mt-4 px-4 py-2 text-sm font-medium text-indigo-600 bg-indigo-50 rounded-lg hover:bg-indigo-100 transition-all"
+          >
+            Xem danh sách phân công
+          </button>
+        </div>
+      ) : null}
+
       <ModelPhanCong
         open={openModelPhanCong}
         handleClose={() => setOpenModelPhanCong(false)}
         dataID={saveID}
+        maKhoa={personnelInfo?.maKhoa}
+        manv={personnelInfo?.maId}
       />
     </>
   );

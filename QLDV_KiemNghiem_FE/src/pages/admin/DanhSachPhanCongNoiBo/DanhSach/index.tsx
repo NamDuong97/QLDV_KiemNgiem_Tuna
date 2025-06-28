@@ -18,28 +18,9 @@ import { queryPhanCongNoiBoAll } from "../../../../hooks/personnels/queryPhanCon
 import SelectItemTrangThai from "./SelectItemTrangThai";
 import { MdSwapHoriz } from "react-icons/md";
 import ModelPhanCongLai from "./ModelPhanCongLai";
-
-interface NhanVienThucHien {
-  name: string;
-  avatar: string;
-  color: string;
-}
-interface MauPhanCong {
-  maId: string;
-  tenMau: string;
-  tenTieuChuan: string;
-  tenDichVu: string;
-  soLo: string;
-  donViSanXuat: string;
-  ngaySanXuat: string;
-  hanSuDung: string;
-  soLuong: number;
-  donViTinh: string;
-  trangThaiPhanCong: string;
-  maPhieuDangKy: string;
-  ngayPhanCong?: string;
-  nhanVienThucHien?: NhanVienThucHien;
-}
+import { role } from "../../../../configs/parseJwt";
+import { getRoleGroup } from "../../../../configs/Role";
+import SelectItemKhoa from "./SelectItemKhoa";
 
 interface Props {
   handleTaoPhanCong: () => void;
@@ -50,8 +31,9 @@ const DanhSach = (props: Props) => {
   const { data, isLoading } = queryPhanCongNoiBoAll({
     queryKey: "queryPhanCongNoiBoAll",
   });
-  console.log("dataALL", data);
+
   const [isSortNew, setIsSortNew] = useState(false);
+  const [selectKhoa, setSelectKhoa] = useState("");
   const [selectTrangThai, setSelectTrangThai] = useState("");
   const [openModelXemChiTiet, setOpenModelXemChiTiet] = useState(false);
   const [openModelSua, setOpenModelSua] = useState(false);
@@ -100,7 +82,7 @@ const DanhSach = (props: Props) => {
   return (
     <>
       <div className="p-4 bg-white rounded-lg shadow-sm border border-gray-100 gap-2 flex justify-between">
-        <div className="flex gap-4 w-2xl">
+        <div className="flex gap-4 w-lg">
           <InputSearch2
             placeholder="Tìm kiếm tên mẫu hoặc tên nhân viên xử lý..."
             value={searchQuery}
@@ -118,6 +100,13 @@ const DanhSach = (props: Props) => {
               công
             </span>
           </button>
+          {getRoleGroup(role) === "BLD" && (
+            <SelectItemKhoa
+              title="Khoa"
+              setItem={setSelectKhoa}
+              item={selectKhoa}
+            />
+          )}
           <SelectItemTrangThai
             title="Trạng thái"
             setItem={setSelectTrangThai}
@@ -231,102 +220,106 @@ const DanhSach = (props: Props) => {
                           </svg>
                         </button>
                       </Tooltip>
-                      <Tooltip
-                        title="Sửa"
-                        slotProps={{
-                          popper: {
-                            modifiers: [
-                              {
-                                name: "offset",
-                                options: {
-                                  offset: [0, -14],
-                                },
+                      {getRoleGroup(role) === "KN" && (
+                        <>
+                          <Tooltip
+                            title="Sửa"
+                            slotProps={{
+                              popper: {
+                                modifiers: [
+                                  {
+                                    name: "offset",
+                                    options: {
+                                      offset: [0, -14],
+                                    },
+                                  },
+                                ],
                               },
-                            ],
-                          },
-                        }}
-                        disableInteractive
-                      >
-                        <button
-                          onClick={() => {
-                            setSaveID(assignment.maId);
-                            setOpenModelSua(true);
-                          }}
-                          className="p-1.5 text-yellow-600 hover:bg-yellow-50 rounded transition-colors cursor-pointer"
-                        >
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            className="h-4 w-4"
-                            viewBox="0 0 20 20"
-                            fill="currentColor"
+                            }}
+                            disableInteractive
                           >
-                            <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
-                          </svg>
-                        </button>
-                      </Tooltip>
-                      <Tooltip
-                        title="Hủy"
-                        slotProps={{
-                          popper: {
-                            modifiers: [
-                              {
-                                name: "offset",
-                                options: {
-                                  offset: [0, -14],
-                                },
+                            <button
+                              onClick={() => {
+                                setSaveID(assignment.maId);
+                                setOpenModelSua(true);
+                              }}
+                              className="p-1.5 text-yellow-600 hover:bg-yellow-50 rounded transition-colors cursor-pointer"
+                            >
+                              <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                className="h-4 w-4"
+                                viewBox="0 0 20 20"
+                                fill="currentColor"
+                              >
+                                <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
+                              </svg>
+                            </button>
+                          </Tooltip>
+                          <Tooltip
+                            title="Hủy"
+                            slotProps={{
+                              popper: {
+                                modifiers: [
+                                  {
+                                    name: "offset",
+                                    options: {
+                                      offset: [0, -14],
+                                    },
+                                  },
+                                ],
                               },
-                            ],
-                          },
-                        }}
-                        disableInteractive
-                      >
-                        <button
-                          onClick={() => {
-                            setSaveID(assignment.maId);
-                            setOpenModelXoa(true);
-                          }}
-                          className="p-1.5 text-red-600 hover:bg-red-50 rounded transition-colors cursor-pointer"
-                        >
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            className="h-4 w-4 mr-1"
-                            viewBox="0 0 20 20"
-                            fill="currentColor"
+                            }}
+                            disableInteractive
                           >
-                            <path
-                              fillRule="evenodd"
-                              d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z"
-                              clipRule="evenodd"
-                            />
-                          </svg>
-                        </button>
-                      </Tooltip>
-                      <Tooltip
-                        title="Phân công lại"
-                        slotProps={{
-                          popper: {
-                            modifiers: [
-                              {
-                                name: "offset",
-                                options: {
-                                  offset: [0, -14],
-                                },
+                            <button
+                              onClick={() => {
+                                setSaveID(assignment.maId);
+                                setOpenModelXoa(true);
+                              }}
+                              className="p-1.5 text-red-600 hover:bg-red-50 rounded transition-colors cursor-pointer"
+                            >
+                              <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                className="h-4 w-4 mr-1"
+                                viewBox="0 0 20 20"
+                                fill="currentColor"
+                              >
+                                <path
+                                  fillRule="evenodd"
+                                  d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z"
+                                  clipRule="evenodd"
+                                />
+                              </svg>
+                            </button>
+                          </Tooltip>
+                          <Tooltip
+                            title="Phân công lại"
+                            slotProps={{
+                              popper: {
+                                modifiers: [
+                                  {
+                                    name: "offset",
+                                    options: {
+                                      offset: [0, -14],
+                                    },
+                                  },
+                                ],
                               },
-                            ],
-                          },
-                        }}
-                        disableInteractive
-                      >
-                        <button
-                          onClick={() => {
-                            setSaveID(assignment.maId);
-                            setOpenModelPhanCongLai(true);
-                          }}
-                          className="p-1.5 text-red-600 hover:bg-red-50 rounded transition-colors cursor-pointer"
-                        >
-                          <MdSwapHoriz className="w-4 h-4" />
-                        </button>
-                      </Tooltip>
+                            }}
+                            disableInteractive
+                          >
+                            <button
+                              onClick={() => {
+                                setSaveID(assignment.maId);
+                                setOpenModelPhanCongLai(true);
+                              }}
+                              className="p-1.5 text-red-600 hover:bg-red-50 rounded transition-colors cursor-pointer"
+                            >
+                              <MdSwapHoriz className="w-4 h-4" />
+                            </button>
+                          </Tooltip>
+                        </>
+                      )}
                     </div>
                   </div>
                 </div>

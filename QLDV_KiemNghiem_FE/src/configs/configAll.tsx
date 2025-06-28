@@ -296,7 +296,7 @@ export const formatDateNotTime = (dateString: any) => {
 export const formatDateNotTime2 = (date?: string | Date) => {
   if (!date) return undefined;
   const d = new Date(date);
-  return d.toISOString().split("T")[0];
+  return d.toLocaleDateString("sv-SE");
 };
 
 export const getQualityClass = (quality: any) => {

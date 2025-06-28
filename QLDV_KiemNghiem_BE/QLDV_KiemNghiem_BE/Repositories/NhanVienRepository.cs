@@ -24,7 +24,7 @@ namespace QLDV_KiemNghiem_BE.Repositories
             if(tracking)
             {
                 var result = await _context.NhanVienProcedures.
-                FromSqlRaw("exec layNhanVienTheoBoLoc @hoTen = N{0}, @maKhoa ={1}, @maBoPhan = {2}, @maChucVu = {3}, @trangThai = {4}",
+                FromSqlRaw("exec layNhanVienTheoBoLoc @hoTen = {0}, @maKhoa ={1}, @maBoPhan = {2}, @maChucVu = {3}, @trangThai = {4}",
                 nhanVienParam.HoTen, nhanVienParam.MaKhoa, nhanVienParam.MaBoPhan, nhanVienParam.MaChucVu, nhanVienParam.TrangThai).
                 ToListAsync();
                 _context.Attach(result);
@@ -32,10 +32,9 @@ namespace QLDV_KiemNghiem_BE.Repositories
             }
             else
             {
-                var result = await _context.NhanVienProcedures.FromSqlRaw("exec layNhanVienTheoBoLoc @hoTen = N{0}, @maKhoa ={1}, @maBoPhan = {2}, @maChucVu = {3}, @trangThai = {4}",
-                nhanVienParam.HoTen, nhanVienParam.MaKhoa, nhanVienParam.MaBoPhan, nhanVienParam.MaChucVu, nhanVienParam.TrangThai).
+                var result = await _context.NhanVienProcedures.FromSqlRaw("exec layNhanVienTheoBoLoc @hoTen = {0}, @maKhoa ={1}, @maBoPhan = {2}, @maChucVu = {3}, @trangThai = {4}",
+                nhanVienParam.HoTen ?? "", nhanVienParam.MaKhoa ?? "", nhanVienParam.MaBoPhan ?? "", nhanVienParam.MaChucVu ?? "", nhanVienParam?.TrangThai ?? true).
                 ToListAsync();
-              
                 return PagedList<NhanVienProcedure>.ToPagedList(result, nhanVienParam.PageNumber, nhanVienParam.PageSize, nhanVienParam.GetAll);
             }
         }

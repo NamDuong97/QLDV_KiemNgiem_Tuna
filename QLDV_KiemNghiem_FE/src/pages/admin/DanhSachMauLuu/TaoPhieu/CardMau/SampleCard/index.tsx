@@ -31,15 +31,16 @@ const SampleCard = ({
     });
   };
   const handleXemChiTiet = (id: any) => {
-    sessionStorage.setItem("phieu-xem-chi-tiet", JSON.stringify(id));
+    // sessionStorage.setItem("chi-tiet-mau", JSON.stringify(id));
     handleOpenChiTiet();
   };
-  console.log("sample", sample);
 
   return (
     <div
       className={`border rounded-lg overflow-hidden sample-card transition-all cursor-pointer ${
-        isSelected === sample.id? "border-blue-500 bg-blue-50" : "border-gray-200"
+        isSelected === sample.id
+          ? "border-blue-500 bg-blue-50"
+          : "border-gray-200"
       }`}
     >
       <div className="p-4">
@@ -72,23 +73,14 @@ const SampleCard = ({
           </div>
         ) : (
           <div className="text-sm text-gray-600 mb-3 space-y-2">
-            <p>Loại mẫu: {sample.type}</p>
-            <p>Ưu tiên: {sample.priority}</p>
-            <p>Ngày nhận: {formatDate(sample.receivedDate)}</p>
-            <p>
-              Bệnh nhân: {sample.patientName} ({sample.patientId})
-            </p>
+            <p>Tiêu chuẩn: {sample.type}</p>
+            <p>Dịch vụ: {sample.priority}</p>
+            <div className="flex justify-between items-center">
+              <p>Số lượng: {formatDate(sample.receivedDate)}</p>
+              <p>hạn sử dụng: {formatDate(sample.receivedDate)}</p>
+            </div>
           </div>
         )}
-
-        {isLoading ? (
-          <Skeleton variant="text" width={300} height={20} />
-        ) : (
-          <p className="text-sm text-gray-600 italic mb-3">
-            {sample.description}
-          </p>
-        )}
-
         {isLoading ? (
           <div className="text-sm text-gray-600 mb-3 flex justify-between items-center">
             <Skeleton variant="text" width={200} height={20} />
@@ -97,6 +89,7 @@ const SampleCard = ({
         ) : (
           <div className="text-sm text-gray-600 mb-3 flex justify-between items-center">
             <p>Ngày sản xuất: {formatDate(sample.ngaySanXuat)}</p>
+            <p>Loại mẫu: Dược Phẩm</p>
           </div>
         )}
         <div className="text-sm text-gray-600 mb-3 flex justify-between items-center">

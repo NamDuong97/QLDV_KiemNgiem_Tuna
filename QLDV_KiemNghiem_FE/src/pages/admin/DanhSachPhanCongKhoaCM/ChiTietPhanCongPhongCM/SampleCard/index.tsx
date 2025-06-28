@@ -15,6 +15,7 @@ import {
 } from "../../../../../hooks/personnels/phanCongKhoa";
 import { usePersonnel } from "../../../../../contexts/PersonelsProvider";
 import { getRoleGroup } from "../../../../../configs/Role";
+import { useGetTieuChuanAll } from "../../../../../hooks/customers/usePhieuDKyDVKN";
 
 const SampleCard = ({ sample, onImageClick, index }: any) => {
   const [isTuchoi, setisTuchoi] = useState(false);
@@ -23,6 +24,16 @@ const SampleCard = ({ sample, onImageClick, index }: any) => {
     params: sample?.maPdkMau,
   });
   const { personnelInfo } = usePersonnel();
+
+  const { data: dataTieuChuan } = useGetTieuChuanAll({
+    queryKey: "TieuChuanAll",
+  });
+  const { data: dataLoaiDV } = useGetTieuChuanAll({
+    queryKey: "LoaiDichVuAll",
+  });
+  const dataTC: any = dataTieuChuan;
+  const dataLDV: any = dataLoaiDV;
+
   const handleOnSettled = async (response: any) => {
     if (response.ketQua === true) {
       await Promise.all([
@@ -103,11 +114,21 @@ const SampleCard = ({ sample, onImageClick, index }: any) => {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-3">
         <div>
           <p className="text-xs text-gray-500">Tiêu chuẩn</p>
-          <p className="text-sm">{dataMau?.maTieuChuan}</p>
+          <p className="text-sm">
+            {
+              dataTC?.find((item: any) => item.maId === dataMau?.maTieuChuan)
+                ?.tenTieuChuan
+            }
+          </p>
         </div>
         <div>
           <p className="text-xs text-gray-500">Dịch vụ</p>
-          <p className="text-sm">{dataMau?.loaiDv}</p>
+          <p className="text-sm">
+            {
+              dataLDV?.find((item: any) => item.maLoaiDv === dataMau?.loaiDv)
+                ?.tenDichVu
+            }
+          </p>
         </div>
         <div>
           <p className="text-xs text-gray-500">Số lô</p>

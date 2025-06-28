@@ -2,32 +2,6 @@ import { motion } from "motion/react";
 import { Align } from "../../../models/Table";
 import DanhSach from "./List";
 
-export const tableDataMauLuu: any = [
-  {
-    soLo: "LO-12345",
-    mau: "Mẫu nước uống đóng chai",
-    soLuong: "500ml x 5",
-    ThoiGianLuu: "15/05/2023 10:30",
-    LuuDenNgay: "10/05/2024",
-    trangThai: "Đang lưu",
-  },
-  {
-    soLo: "LO-12346",
-    mau: "Mẫu nước khoáng",
-    soLuong: "330ml x 10",
-    ThoiGianLuu: "16/05/2023 09:15",
-    LuuDenNgay: "15/06/2024",
-    trangThai: "Đang lưu",
-  },
-  {
-    soLo: "LO-12347",
-    mau: "Mẫu nước tinh khiết",
-    soLuong: "1000ml x 3",
-    ThoiGianLuu: "17/05/2023 14:45",
-    LuuDenNgay: "20/04/2024",
-    trangThai: "Đang lưu",
-  },
-];
 
 const tableHead = [
   {

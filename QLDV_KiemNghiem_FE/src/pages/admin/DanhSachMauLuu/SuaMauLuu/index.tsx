@@ -9,11 +9,11 @@ import {
 } from "../../../../configs/configAll";
 import { IoClose } from "react-icons/io5";
 import { getMauLuuByID } from "../../../../hooks/personnels/queryMauLuu";
+import { getInforNhanVien } from "../../../../hooks/personnels/access/useAccess";
 
 interface Props {
   isOpen: boolean;
   onClose: () => void;
-  selectedSamples?: any; // mảng mẫu
 }
 
 interface FormTaoPhieu {
@@ -27,13 +27,18 @@ const today = new Date();
 today.setHours(0, 0, 0, 0);
 
 const SuaMauLuu = (props: Props) => {
-  const { isOpen, onClose, selectedSamples } = props;
+  const { isOpen, onClose } = props;
   const dataSession = sessionStorage.getItem("chi-tiet-mau-luu-sua");
   const id = dataSession ? JSON.parse(dataSession) : "";
 
   const { data } = getMauLuuByID({
     queryKey: "getMauLuuByID",
     params: id,
+  });
+
+  const { data: dataNhanVien } = getInforNhanVien({
+    queryKey: "getInforNhanVien",
+    params: data?.manvLuu,
   });
 
   const schema = yup.object().shape({
@@ -61,11 +66,11 @@ const SuaMauLuu = (props: Props) => {
       .required("Vui lòng chọn ngày lưu đến")
       .test(
         "is-after-thoiGianLuu",
-        "Ngày lưu đến phải sau thời gian lưu",
+        "Ngày lưu đến được tính từ thời gian lưu trở đi",
         function (value) {
           const { thoiGianLuu } = this.parent;
           if (!value || !thoiGianLuu) return false;
-          return new Date(value) > new Date(thoiGianLuu);
+          return new Date(value) >= new Date(thoiGianLuu);
         }
       ),
   });
@@ -99,13 +104,16 @@ const SuaMauLuu = (props: Props) => {
     }
   }, [isOpen, data]);
 
-  const handleAssignSubmit = (data: FormTaoPhieu) => {
+  const handleAssignSubmit = (dataForm: FormTaoPhieu) => {
     const dataTao = {
-      tenMau: selectedSamples?.name,
-      soLuong: data.soLuong,
-      donViTinh: data.donViTinh,
-      thoiGianLuu: formatDateNotTime(data.thoiGianLuu),
-      luuDenNgay: formatDateNotTime(data.luuDenNgay),
+      maId: data?.maId,
+      maPdkMau: data?.maPdkMau,
+      maPhieuLuu: data?.maPhieuLuu,
+      tenMau: data?.tenMau,
+      soLuong: dataForm.soLuong,
+      donViTinh: dataForm.donViTinh,
+      thoiGianLuu: formatDateNotTime(dataForm.thoiGianLuu),
+      luuDenNgay: formatDateNotTime(dataForm.luuDenNgay),
     };
 
     console.log("Submitted data:", dataTao);
@@ -131,20 +139,22 @@ const SuaMauLuu = (props: Props) => {
         </div>
 
         <div className="p-6 space-y-4">
-          <div className="">
-            <p className="text-sm font-medium text-gray-700">Tên mẫu đã chọn</p>
+          <div className="flex space-x-2 items-center">
+            <p className="text-sm font-medium text-gray-700">
+              Tên mẫu đã chọn:
+            </p>
             <p
               className={`inline-block px-2 py-1 text-sm font-medium rounded-md bg-green-100 text-green-800`}
             >
-              mẫu 001
+              {data?.tenMau}
             </p>
           </div>
 
-          <div className="flex space-x-2">
+          <div className="flex space-x-2 items-center">
             <label className="text-sm font-medium text-gray-700">
-              Nhân viên lưu
+              Nhân viên lưu:
             </label>
-            <p className="text-sm text-purple-600">Nguyễn Văn A</p>
+            <p className="text-sm text-purple-600">{dataNhanVien?.hoTen}</p>
           </div>
 
           <div>

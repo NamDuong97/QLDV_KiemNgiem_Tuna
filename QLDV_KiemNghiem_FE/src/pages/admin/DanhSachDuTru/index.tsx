@@ -1,28 +1,23 @@
 import { motion } from "motion/react";
-import { Clipboard, FilePlus } from "react-feather";
-import Card from "./Card";
-import InputSearch2 from "../../../components/InputSearch2";
+import ShowDetail from "./ShowDetail";
+import Create from "./Create";
+import List from "./List";
+import Edit from "./Edit";
 import { useState } from "react";
-import { FaSortAmountDown, FaSortAmountUp } from "react-icons/fa";
-import SelectItemTrangThai from "./SelectItemTrangThai";
-import { getRoleGroup } from "../../../configs/Role";
-import { role } from "../../../configs/parseJwt";
-import SelectItemKhoa from "./SelectItemKhoa";
-import DanhSach from "./DanhSach";
-import removeVietnameseTones from "../../../configs/removeVietnameseTones";
+import Tag from "./Tag";
 
 interface ChiTietDuTru {
   DonViTinh: string;
   SoLuong: number;
   GhiChu: string;
   TrangThai: string;
-  MaDM_PLHC: string;
+  Ten_PLHC: string;
 }
 
 export interface PhieuDuTru {
   MaPhieuDuTru: string;
   ManvLapPhieu: string;
-  MaPDK_Mau: string;
+  Ten_Mau: string;
   NgayLap: string;
   MaKhoa: string;
   TrangThai: string;
@@ -31,91 +26,157 @@ export interface PhieuDuTru {
   ChiTietDuTru: ChiTietDuTru[];
 }
 
-const dataDuTru = [
-  {
+export const sampleData: any = {
+  PDT001: {
     MaPhieuDuTru: "PDT001",
-    ManvLapPhieu: "NV001",
-    MaPDK_Mau: "PDKM001",
-    NgayLap: "2025-06-25",
-    MaKhoa: "KH01",
-    TrangThai: "Chờ duyệt",
-    NguoiSua: "NV002",
-    NgaySua: "2025-06-26",
-    ChiTietDuTru: [
-      {
-        DonViTinh: "Hộp",
-        SoLuong: 10,
-        GhiChu: "Dùng cho xét nghiệm máu",
-        TrangThai: "Chờ duyệt",
-        MaDM_PLHC: "DMHC001",
-      },
+    ManvLapPhieu: "NV123",
+    Ten_Mau: "PDK456",
+    NgayLap: "2025-06-27",
+    MaKhoa: "KHOA01",
+    TrangThai: "Đang xử lý",
+    ChiTietPhieuDuTru: [
       {
         DonViTinh: "Chai",
+        SoLuong: 10,
+        GhiChu: "Sử dụng cho xét nghiệm X",
+        Ten_PLHC: "HC001",
+      },
+      {
+        DonViTinh: "Hộp",
         SoLuong: 5,
-        GhiChu: "Dùng cho mẫu nước tiểu",
-        TrangThai: "Chờ duyệt",
-        MaDM_PLHC: "DMHC002",
+        GhiChu: "Dùng cho kiểm nghiệm Y",
+        Ten_PLHC: "HC002",
       },
     ],
   },
-  {
+  PDT002: {
     MaPhieuDuTru: "PDT002",
-    ManvLapPhieu: "NV003",
-    MaPDK_Mau: "PDKM002",
-    NgayLap: "2025-06-24",
-    MaKhoa: "KH02",
-    TrangThai: "Đã duyệt",
-    NguoiSua: "NV001",
-    NgaySua: "2025-06-25",
-    ChiTietDuTru: [
+    ManvLapPhieu: "NV123",
+    Ten_Mau: "PDK456",
+    NgayLap: "2025-06-27",
+    MaKhoa: "KHOA01",
+    TrangThai: "Đang xử lý",
+    ChiTietPhieuDuTru: [
       {
-        DonViTinh: "Túi",
-        SoLuong: 20,
-        GhiChu: "Bao bì đóng gói mẫu",
-        TrangThai: "Đã duyệt",
-        MaDM_PLHC: "DMHC005",
+        DonViTinh: "Chai",
+        SoLuong: 10,
+        GhiChu: "Sử dụng cho xét nghiệm X ",
+        Ten_PLHC: "HC001",
+      },
+      {
+        DonViTinh: "Hộp",
+        SoLuong: 5,
+        GhiChu: "Dùng cho kiểm nghiệm Y",
+        Ten_PLHC: "HC002",
       },
     ],
   },
-  {
+  PDT003: {
     MaPhieuDuTru: "PDT003",
-    ManvLapPhieu: "NV002",
-    MaPDK_Mau: "PDKM003",
-    NgayLap: "2025-06-23",
-    MaKhoa: "KH01",
-    TrangThai: "Đã hủy",
-    NguoiSua: "NV003",
-    NgaySua: "2025-06-24",
-    ChiTietDuTru: [
+    ManvLapPhieu: "NV123",
+    Ten_Mau: "PDK456",
+    NgayLap: "2025-06-27",
+    MaKhoa: "KHOA01",
+    TrangThai: "Đang xử lý",
+    ChiTietPhieuDuTru: [
       {
-        DonViTinh: "Ống",
-        SoLuong: 15,
-        GhiChu: "Không đạt yêu cầu chất lượng",
-        TrangThai: "Đã hủy",
-        MaDM_PLHC: "DMHC003",
+        DonViTinh: "Chai",
+        SoLuong: 10,
+        GhiChu: "Sử dụng cho xét nghiệm X",
+        Ten_PLHC: "HC001",
+      },
+      {
+        DonViTinh: "Hộp",
+        SoLuong: 5,
+        GhiChu: "Dùng cho kiểm nghiệm Y",
+        Ten_PLHC: "HC002",
       },
     ],
   },
+};
+
+export const employees = [
+  { id: "NV001", name: "Nguyễn Văn A" },
+  { id: "NV002", name: "Trần Thị B" },
+  { id: "NV003", name: "Lê Văn C" },
+  { id: "NV004", name: "Phạm Văn D" },
+  { id: "NV005", name: "Hoàng Thị E" },
+];
+
+export const departments = [
+  { id: "K001", name: "Khoa Hóa học" },
+  { id: "K002", name: "Khoa Vi sinh" },
+  { id: "K003", name: "Khoa Sinh học phân tử" },
 ];
 
 const DanhSachDuTru = () => {
-  const [selectTrangThai, setSelectTrangThai] = useState("");
-  const [isSortNew, setIsSortNew] = useState(false);
-  const [selectKhoa, setSelectKhoa] = useState("");
-  const [searchQuery, setSearchQuery] = useState("");
-  const filteredSamples: any = dataDuTru?.filter((sample: any) => {
-    const query = removeVietnameseTones(searchQuery.toLowerCase());
-    const matchesSearch =
-      removeVietnameseTones(sample.MaPhieuDuTru.toLowerCase()).includes(
-        query
-      ) ||
-      removeVietnameseTones(sample.MaPDK_Mau.toLowerCase()).includes(query);
-    return matchesSearch;
-  });
-  const handleSearchChange = (e: any) => {
-    setSearchQuery(e.target.value);
+  const [activeView, setActiveView] = useState("list");
+  const [selectedResultId, setSelectedResultId] = useState(null);
+
+  const handleTabChange = (tab: any) => {
+    setActiveView(tab);
+    setSelectedResultId(null);
   };
 
+  const handleViewResult = (id: any) => {
+    setSelectedResultId(id);
+    setActiveView("detail");
+  };
+
+  const handleEditResult = (id: any) => {
+    setSelectedResultId(id);
+    setActiveView("edit");
+  };
+
+  const handleSaveResult = (result: any) => {
+    console.log("Saving result:", result);
+    alert("Đã lưu phiếu phân tích thành công!");
+    setActiveView("list");
+  };
+
+  const handleCancel = () => {
+    setActiveView("list");
+    setSelectedResultId(null);
+  };
+
+  const renderContent = () => {
+    switch (activeView) {
+      case "list":
+        return (
+          <List
+            onView={handleViewResult}
+            onEdit={handleEditResult}
+            handleTag={() => setActiveView("create")}
+          />
+        );
+      case "create":
+        return <Create onCancel={handleCancel} onSave={handleSaveResult} />;
+      case "detail":
+        return (
+          <ShowDetail
+            resultId={selectedResultId}
+            onEdit={handleEditResult}
+            onBack={handleCancel}
+          />
+        );
+      case "edit":
+        return (
+          <Edit
+            resultId={selectedResultId}
+            onSave={handleSaveResult}
+            onCancel={handleCancel}
+          />
+        );
+      default:
+        return (
+          <List
+            onView={handleViewResult}
+            onEdit={handleEditResult}
+            handleTag={() => setActiveView("create")}
+          />
+        );
+    }
+  };
   return (
     <motion.div
       key="DanhSachMauLuu"
@@ -135,69 +196,10 @@ const DanhSachDuTru = () => {
           </p>
         </div>
       </div>
-      <div className="grid gap-6 grid-cols-4">
-        <Card
-          title="Tổng phiếu dự trù"
-          value="2"
-          icon={<Clipboard className="w-6 h-6" />}
-          // isLoading={isLoading}
-          bgColor="bg-indigo-100"
-          textColor="text-indigo-600"
-        />
-      </div>
-      <div className="p-4 bg-white rounded-lg shadow-sm border border-gray-100 gap-2 space-y-4">
-        <div className="flex justify-between items-center">
-          <div className="flex gap-4 w-md">
-            <InputSearch2
-              placeholder="Tìm kiếm mã phiếu hoặc mẫu kiểm nghiệm..."
-              value={searchQuery}
-              onChange={handleSearchChange}
-            />
-          </div>
-          <div className="flex justify-between items-center gap-4">
-            {(getRoleGroup(role) === "BLD" ||
-              getRoleGroup(role) === "KHTH") && (
-              <SelectItemKhoa
-                title="Khoa"
-                setItem={setSelectKhoa}
-                item={selectKhoa}
-              />
-            )}
-            <SelectItemTrangThai
-            title="Trạng thái"
-            setItem={setSelectTrangThai}
-            item={selectTrangThai}
-          />
-            <button
-              // onClick={() => setIsSortNew(!isSortNew)}
-              type="button"
-              className="btn btn-outline-primary border border-gray-300 py-[6px] px-2 rounded cursor-pointer hover:bg-blue-50"
-            >
-              {isSortNew ? (
-                <span className="flex items-center gap-2 text-gray-800">
-                  <FaSortAmountUp /> Cũ Nhất
-                </span>
-              ) : (
-                <span className="flex items-center gap-2 text-gray-800">
-                  <FaSortAmountDown /> Mới nhất
-                </span>
-              )}
-            </button>
-            <button
-              // onClick={() =>
-              //   navigate(
-              //     APP_ROUTES.TUNA_ADMIN.QUAN_LY_PHIEU_LUU_MAU.create_mau_luu
-              //   )
-              // }
-              type="button"
-              className="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg flex items-center transition-all gap-1 cursor-pointer"
-            >
-              <FilePlus className="w-5 h-5" /> Tạo phiếu
-            </button>
-          </div>
-        </div>
-      </div>
-      <DanhSach dataDuTru={filteredSamples} />
+      {(activeView === "list" || activeView === "create") && (
+        <Tag activeTab={activeView} onTabChange={handleTabChange} />
+      )}
+      <div className="fade-in">{renderContent()}</div>
     </motion.div>
   );
 };

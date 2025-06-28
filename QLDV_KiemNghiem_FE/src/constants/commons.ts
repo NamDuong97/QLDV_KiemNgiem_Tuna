@@ -4,7 +4,7 @@ export const API = {
     NHAN_VIEN: {
       GET_INFOR_NHAN_VIEN: "/api/nhanvien/getNhanVienByID",
       GET_NHAN_VIEN_BY_ID: "/api/nhanvien/getNhanVienByID",
-      GET_NHAN_VIEN_ALL: "/api/nhanvien/getNhanVienByID",
+      GET_NHAN_VIEN_ALL: "/api/NhanVien/getNhanVienAll",
     },
     PHIEU_DKY_DVKM: {
       QUAN_LY_PHIEU_DKY_DVKM: "/api/phieudangky/getPhieuDangKyAll",

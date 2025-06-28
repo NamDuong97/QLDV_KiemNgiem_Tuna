@@ -1,29 +1,115 @@
 import { Dialog } from "@mui/material";
-import { dsMauPhanCong } from "..";
 import { useState } from "react";
 import clsx from "clsx";
 import classes from "./style.module.scss";
+import { queryMauByID } from "../../../../../hooks/personnels/queryMau";
+import {
+  useGetLoaiDichVuAll,
+  useGetTieuChuanAll,
+} from "../../../../../hooks/customers/usePhieuDKyDVKN";
+import { queryNhanVienALL } from "../../../../../hooks/personnels/queryNhanVien";
+import { ListColors } from "../../../../../constants/colors";
+import yup from "../../../../../configs/yup.custom";
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { formatDateNotTime } from "../../../../../configs/configAll";
 
 interface Props {
   open: boolean;
   handleClose: () => void;
   dataID: any;
+  maKhoa: any;
+  manv: string;
 }
 
-export const employees = [
-  { id: 1, name: "Nguyễn Văn A", avatar: "A", color: "bg-blue-500" },
-  { id: 2, name: "Trần Thị B", avatar: "B", color: "bg-green-500" },
-  { id: 3, name: "Lê Văn C", avatar: "C", color: "bg-yellow-500" },
-  { id: 4, name: "Phạm Thị D", avatar: "D", color: "bg-pink-500" },
-  { id: 5, name: "Đặng Văn E", avatar: "E", color: "bg-red-500" },
-  { id: 6, name: "Võ Thị F", avatar: "F", color: "bg-purple-500" },
-  { id: 7, name: "Hoàng Văn G", avatar: "G", color: "bg-teal-500" },
-];
+interface FormPhanCong {
+  manvXyLy?: string | undefined;
+  lamTu: Date;
+  lamToi: Date;
+  thoiGianPhanCong: Date;
+}
 
 const ModelPhanCong = (props: Props) => {
-  const { open, handleClose, dataID } = props;
-  const sample = dsMauPhanCong.find((s) => s.maId === dataID);
-  const [saveID, setSaveID] = useState("");
+  const { open, handleClose, dataID, maKhoa, manv } = props;
+
+  const { data } = queryMauByID({
+    queryKey: "mauByID",
+    params: dataID,
+  });
+  const { data: employees } = queryNhanVienALL({
+    queryKey: "NhanVienAll",
+    params: { getAll: true, maKhoa: maKhoa },
+  });
+
+  const sample = data;
+
+  const [NhanVienID, setNhanVienID] = useState("");
+  const { data: dataTieuChuan } = useGetTieuChuanAll({
+    queryKey: "TieuChuanAll",
+  });
+  const { data: dataLoaiDV } = useGetLoaiDichVuAll({
+    queryKey: "LoaiDichVuAll",
+  });
+  const dataLDV: any = dataLoaiDV;
+  const dataTC: any = dataTieuChuan;
+
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  const nhanVienSchema = yup.object().shape({
+    manvXyLy: yup
+      .string()
+      .test(
+        "required-when-nhanvienid",
+        "Vui lòng chọn nhân viên xử lý",
+        function (value) {
+          if (NhanVienID) {
+            return true;
+          } else return !!value;
+        }
+      ),
+    lamTu: yup
+      .date()
+      .typeError("Vui lòng chọn ngày bắt đầu")
+      .required("Vui lòng chọn ngày bắt đầu")
+      .min(today, "Ngày bắt đầu phải tính từ hôm nay trở đi"),
+    lamToi: yup
+      .date()
+      .typeError("Vui lòng chọn ngày kết thúc")
+      .required("Vui lòng chọn ngày kết thúc")
+      .min(yup.ref("lamTu"), "Ngày kết thúc phải sau ngày bắt đầu"),
+    thoiGianPhanCong: yup
+      .date()
+      .typeError("Vui lòng chọn thời gian phân công")
+      .required("Vui lòng chọn thời gian phân công")
+      .min(today, "Thời gian phân công phải tính từ hôm nay trở đi"),
+  });
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    resolver: yupResolver<FormPhanCong>(nhanVienSchema),
+    defaultValues: {
+      manvXyLy: "",
+      lamTu: undefined,
+      lamToi: undefined,
+      thoiGianPhanCong: undefined,
+    },
+  });
+
+  const onSubmit = (data: FormPhanCong) => {
+    const params = {
+      manvXyLy: data.manvXyLy || NhanVienID,
+      lamTu: formatDateNotTime(data.lamTu),
+      lamToi: formatDateNotTime(data.lamToi),
+      thoiGianPhanCong: formatDateNotTime(data.thoiGianPhanCong),
+      maPdkMau: sample?.maPdkMau,
+      manvPhanCong: manv,
+    };
+    console.log("Submitted Data:", params);
+  };
 
   return (
     <Dialog
@@ -54,24 +140,24 @@ const ModelPhanCong = (props: Props) => {
                 fill="currentColor"
               >
                 <path
-                  fill-rule="evenodd"
+                  fillRule="evenodd"
                   d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
-                  clip-rule="evenodd"
+                  clipRule="evenodd"
                 />
               </svg>
             </button>
           </div>
         </div>
-        <div className="p-6 space-y-6">
+        <form onSubmit={handleSubmit(onSubmit)} className="p-6 space-y-6">
           <div className="mb-6">
             <div className="flex justify-between items-start mb-2">
               <div>
-                <div className="flex items-center mb-1">
-                  <span className="text-sm font-medium text-indigo-600 bg-indigo-50 px-2.5 py-1 rounded-md">
-                    {sample?.maId}
+                <div className="flex items-center gap-2">
+                  <span className="text-xs font-medium text-gray-600">
+                    Mã Mẫu:
                   </span>
-                  <span className="ml-2 text-xs font-medium text-gray-500 bg-gray-100 px-2.5 py-1 rounded-full">
-                    {sample?.maPhieuDangKy}
+                  <span className="text-sm font-medium text-indigo-600">
+                    {sample?.maPdkMau}
                   </span>
                 </div>
                 <h4 className="font-medium text-gray-800 text-lg">
@@ -80,9 +166,21 @@ const ModelPhanCong = (props: Props) => {
               </div>
             </div>
             <div className="mt-3 p-3 bg-gray-50 rounded-lg">
+              <p className="text-xs text-gray-500 mb-1">Tiêu chuẩn</p>
+              <p className="text-sm font-medium text-gray-700">
+                {
+                  dataTC?.find((item: any) => item.maId === sample?.maTieuChuan)
+                    ?.tenTieuChuan
+                }
+              </p>
+            </div>
+            <div className="mt-3 p-3 bg-gray-50 rounded-lg">
               <p className="text-xs text-gray-500 mb-1">Dịch vụ kiểm nghiệm</p>
               <p className="text-sm font-medium text-gray-700">
-                {sample?.tenDichVu}
+                {
+                  dataLDV?.find((item: any) => item.maLoaiDv === sample?.loaiDv)
+                    ?.tenDichVu
+                }
               </p>
             </div>
           </div>
@@ -97,36 +195,46 @@ const ModelPhanCong = (props: Props) => {
                 classes.scrollbar_thin
               )}
             >
-              {employees.length > 0 ? (
-                employees.map((employee: any) => (
-                  <div
-                    className={clsx(
-                      "flex items-center p-3 hover:bg-gray-50 rounded-xl cursor-pointer",
-                      {
-                        "border-indigo-200 border bg-indigo-50":
-                          employee.id === saveID,
-                      }
-                    )}
-                    onClick={() => setSaveID(employee.id)}
-                  >
+              {employees?.length > 0 ? (
+                employees?.map((employee: any, index: any) => {
+                  const avatarColor = ListColors[index % ListColors.length];
+
+                  return (
                     <div
-                      className={`avatar w-10 h-10 rounded-full ${employee.color} flex items-center justify-center text-white font-medium`}
+                      key={index}
+                      className={clsx(
+                        "flex items-center p-3 hover:bg-gray-50 rounded-xl cursor-pointer",
+                        {
+                          "border-indigo-200 border bg-indigo-50":
+                            employee?.maId === NhanVienID,
+                        }
+                      )}
+                      onClick={() => setNhanVienID(employee?.maId)}
                     >
-                      {employee.avatar}
+                      <div
+                        className={`avatar w-10 h-10 rounded-full ${avatarColor} flex items-center justify-center text-white font-medium`}
+                      >
+                        {employee.hoTen.trim().split(" ").pop()}
+                      </div>
+                      <div className="ml-3">
+                        <p className="text-sm font-medium text-gray-800">
+                          {employee.hoTen}
+                        </p>
+                      </div>
                     </div>
-                    <div className="ml-3">
-                      <p className="text-sm font-medium text-gray-800">
-                        {employee.name}
-                      </p>
-                    </div>
-                  </div>
-                ))
+                  );
+                })
               ) : (
                 <div className="p-4 text-center text-gray-500 bg-gray-50 rounded-lg">
                   Không tìm thấy nhân viên phù hợp với dịch vụ kiểm nghiệm này
                 </div>
               )}
             </div>
+            {errors.manvXyLy && (
+              <p className="text-xs text-red-600 mt-1">
+                {errors.manvXyLy.message}
+              </p>
+            )}
           </div>
           <div>
             <label className="text-sm font-medium text-gray-700">
@@ -134,14 +242,14 @@ const ModelPhanCong = (props: Props) => {
             </label>
             <input
               type="date"
-              //   {...register("thoiGianLuu")}
+              {...register("thoiGianPhanCong")}
               className="w-full py-1 px-4 border border-gray-300 rounded"
             />
-            {/* {errors.thoiGianLuu && (
+            {errors.thoiGianPhanCong?.message && (
               <p className="text-xs text-red-600">
-                {errors.thoiGianLuu.message}
+                {errors.thoiGianPhanCong.message}
               </p>
-            )} */}
+            )}
           </div>
 
           <div>
@@ -151,40 +259,34 @@ const ModelPhanCong = (props: Props) => {
             <div className="flex items-center gap-2">
               <input
                 type="date"
-                // {...register("luuDenNgay")}
+                {...register("lamTu")}
                 className="w-full py-1 px-4 border border-gray-300 rounded"
               />
               <span> - </span>
               <input
                 type="date"
-                // {...register("luuDenNgay")}
+                {...register("lamToi")}
                 className="w-full py-1 px-4 border border-gray-300 rounded"
               />
             </div>
-            {/* {errors.luuDenNgay && (
-              <p className="text-xs text-red-600">
-                {errors.luuDenNgay.message}
-              </p>
-            )} */}
-            {/* {errors.luuDenNgay && (
-              <p className="text-xs text-red-600">
-                {errors.luuDenNgay.message}
-              </p>
-            )} */}
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                {errors.lamTu && (
+                  <p className="text-xs text-red-600">{errors.lamTu.message}</p>
+                )}
+              </div>
+              <div>
+                {errors.lamToi && (
+                  <p className="text-xs text-red-600 ml-2">
+                    {errors.lamToi.message}
+                  </p>
+                )}
+              </div>
+            </div>
           </div>
-          <div className="mb-6">
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Ghi chú (tùy chọn)
-            </label>
-            <textarea
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
-              rows={2}
-              placeholder="Thêm ghi chú cho phân công này..."
-            ></textarea>
-          </div>
-
           <div className="flex justify-end space-x-3">
             <button
+              type="button"
               onClick={handleClose}
               className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors cursor-pointer"
             >
@@ -194,7 +296,7 @@ const ModelPhanCong = (props: Props) => {
               Xác nhận
             </button>
           </div>
-        </div>
+        </form>
       </div>
     </Dialog>
   );

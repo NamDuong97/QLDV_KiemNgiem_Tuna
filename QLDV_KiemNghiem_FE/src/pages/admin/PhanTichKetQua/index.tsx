@@ -2,7 +2,6 @@ import { motion } from "motion/react";
 import { useState } from "react";
 import List from "./List";
 import Create from "./Create";
-import Detail from "./Detail";
 import Tag from "./Tag";
 import ShowDetail from "./ShowDetail";
 import Edit from "./Edit";
@@ -160,7 +159,7 @@ const PhanTichKetQua = () => {
 
   return (
     <motion.div
-      key="DanhSachMauLuu"
+      key="PhanTichKetQua"
       initial={{ x: 0, opacity: 0 }}
       animate={{ x: 0, opacity: 1 }}
       exit={{ x: 0, opacity: 0 }}
@@ -177,12 +176,10 @@ const PhanTichKetQua = () => {
           </p>
         </div>
       </div>
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {(activeView === "list" || activeView === "create") && (
-          <Tag activeTab={activeView} onTabChange={handleTabChange} />
-        )}
-        <div className="fade-in">{renderContent()}</div>
-      </div>
+      {(activeView === "list" || activeView === "create") && (
+        <Tag activeTab={activeView} onTabChange={handleTabChange} />
+      )}
+      <div className="fade-in">{renderContent()}</div>
     </motion.div>
   );
 };

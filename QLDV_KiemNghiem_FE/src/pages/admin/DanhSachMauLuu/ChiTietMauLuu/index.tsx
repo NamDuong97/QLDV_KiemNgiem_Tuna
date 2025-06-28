@@ -1,6 +1,7 @@
 import { Dialog, Skeleton } from "@mui/material";
 import { getMauLuuByID } from "../../../../hooks/personnels/queryMauLuu";
 import { formatDate } from "../../../../configs/configAll";
+import { getInforNhanVien } from "../../../../hooks/personnels/access/useAccess";
 
 interface Props {
   open: boolean;
@@ -16,11 +17,16 @@ const ChiTietMauLuu = (props: Props) => {
     queryKey: "getMauLuuByID",
     params: id,
   });
+
+  const { data: dataNhanVien } = getInforNhanVien({
+    queryKey: "getInforNhanVien",
+    params: data?.manvLuu,
+  });
+
   const handleClosePopup = () => {
     sessionStorage.removeItem("chi-tiet-mau-luu");
     handleClose();
   };
-  console.log("chi-tiet-mau-luu", data);
 
   return (
     <Dialog
@@ -69,7 +75,7 @@ const ChiTietMauLuu = (props: Props) => {
                 <Skeleton variant="rounded" width={100} height={20} />
               ) : (
                 <p id="viewSampleName" className="text-sm text-gray-900">
-                  {data?.maPdkMau}
+                  {data?.tenMau}
                 </p>
               )}
             </div>
@@ -105,22 +111,12 @@ const ChiTietMauLuu = (props: Props) => {
                 <Skeleton variant="rounded" width={100} height={20} />
               ) : (
                 <p id="viewSampleName" className="text-sm text-gray-900">
-                  {formatDate(data?.thoiGianLuu)}
-                </p>
-              )}
-            </div>
-            <div>
-              <h4 className="text-sm font-medium text-gray-500 mb-1">
-                Lưu đến ngày
-              </h4>
-              {isLoading ? (
-                <Skeleton variant="rounded" width={100} height={20} />
-              ) : (
-                <p id="viewSampleName" className="text-sm text-gray-900">
+                  {formatDate(data?.thoiGianLuu)} -{" "}
                   {formatDate(data?.luuDenNgay)}
                 </p>
               )}
             </div>
+
             <div>
               <h4 className="text-sm font-medium text-gray-500 mb-1">
                 Hạn sử dụng
@@ -129,7 +125,7 @@ const ChiTietMauLuu = (props: Props) => {
                 <Skeleton variant="rounded" width={100} height={20} />
               ) : (
                 <p id="viewSampleName" className="text-sm text-gray-900">
-                  {formatDate(data?.luuDenNgay)}
+                  {formatDate(data?.hanSuDung)}
                 </p>
               )}
             </div>
@@ -141,7 +137,7 @@ const ChiTietMauLuu = (props: Props) => {
                 <Skeleton variant="rounded" width={100} height={20} />
               ) : (
                 <p id="viewSampleName" className="text-sm text-gray-900">
-                  {data?.manvLuu}
+                  {dataNhanVien?.hoTen}
                 </p>
               )}
             </div>

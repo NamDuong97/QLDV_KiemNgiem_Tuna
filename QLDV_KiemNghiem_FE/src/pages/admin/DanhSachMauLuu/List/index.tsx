@@ -7,7 +7,6 @@ import Card from "./Card";
 import InputSearch2 from "../../../../components/InputSearch2";
 import SelectItemTrangThai from "./SelectItemTrangThai";
 import removeVietnameseTones from "../../../../configs/removeVietnameseTones";
-import { tableDataMauLuu } from "..";
 import { useNavigate } from "react-router";
 import { APP_ROUTES } from "../../../../constants/routers";
 import ChiTietMauLuu from "../ChiTietMauLuu";
@@ -42,10 +41,10 @@ const DanhSach = (props: Props) => {
       const query = removeVietnameseTones(searchQuery.toLowerCase());
       const matchesSearch =
         sample?.maPhieuLuu?.toLowerCase().includes(query) ||
-        removeVietnameseTones(sample?.mau?.toLowerCase()).includes(query);
+        removeVietnameseTones(sample?.tenMau?.toLowerCase()).includes(query);
       return matchesSearch;
     });
-console.log('filteredSamples',filteredSamples);
+  console.log("filteredSamples", filteredSamples);
 
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(10);
@@ -65,9 +64,7 @@ console.log('filteredSamples',filteredSamples);
         : new Date(b.ngayTao).getTime() - new Date(a.ngayTao).getTime()
     )
     ?.slice(indexOfFirstItem, indexOfLastItem);
-  const totalPages = Math.ceil(
-    tableDataMauLuu && tableDataMauLuu?.length / itemsPerPage
-  );
+  const totalPages = Math.ceil(data && data?.length / itemsPerPage);
   const [openXemChiTiet, setOpenXemChiTiet] = useState(false);
   const [openSuaMauLuu, setOpenSuaMauLuu] = useState(false);
 
@@ -88,7 +85,7 @@ console.log('filteredSamples',filteredSamples);
       <div className="grid gap-6 grid-cols-4">
         <Card
           title="Tổng mẫu kiểm nghiệm"
-          value={tableDataMauLuu?.length || 0}
+          value={data?.length || 0}
           icon={<Clipboard className="w-6 h-6" />}
           isLoading={isLoading}
           bgColor="bg-indigo-100"
@@ -176,9 +173,6 @@ console.log('filteredSamples',filteredSamples);
       <SuaMauLuu
         isOpen={openSuaMauLuu}
         onClose={() => setOpenSuaMauLuu(false)}
-        // selectedSamples={samples?.find(
-        //   (sample: any) => sample.id === selectedSamples
-        // )}
       />
     </>
   );
