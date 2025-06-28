@@ -84,13 +84,16 @@ public partial class PhieuDangKyMau
 
     public int? TrangThaiPhanCong { get; set; }
 
-    [Column(TypeName = "datetime")]
-    public DateTime? NgayTraKetQua { get; set; }
+    [Column("NgayNhanMau_PLHC", TypeName = "datetime")]
+    public DateTime? NgayNhanMauPlhc { get; set; }
 
     public bool? TrangThai { get; set; }
 
     [StringLength(500)]
     public string? LyDoHuyMau { get; set; }
+
+    [Column(TypeName = "datetime")]
+    public DateTime? NgayTraKetQua { get; set; }
 
     [InverseProperty("MaMauNavigation")]
     public virtual ICollection<ChiTietHoaDonThu> ChiTietHoaDonThus { get; set; } = new List<ChiTietHoaDonThu>();
