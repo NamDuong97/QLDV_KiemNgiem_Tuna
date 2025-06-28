@@ -135,9 +135,33 @@ namespace QLDV_KiemNghiem_BE.DTO.AutoMapper
                   .ForAllMembers(opts => opts.Condition((src, dest, srcMember) =>
                     srcMember != null && (!(srcMember is string str) || !string.IsNullOrWhiteSpace(str))));
 
-            CreateMap<PhanCongNoiBo, PhanCongNoiBoDto>().ReverseMap().ForMember(dest => dest.MaId, opt => opt.Ignore())
+            CreateMap<PhanCongNoiBo, PhanCongNoiBoDto>().ReverseMap()
                   .ForAllMembers(opts => opts.Condition((src, dest, srcMember) =>
                     srcMember != null && (!(srcMember is string str) || !string.IsNullOrWhiteSpace(str))));
+
+            CreateMap<PhanCongNoiBoRequestCreateDto, PhanCongNoiBo>().ReverseMap()
+                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) =>
+                   srcMember != null && (!(srcMember is string str) || !string.IsNullOrWhiteSpace(str))));
+
+            CreateMap<PhanCongNoiBoRequestUpdateDto, PhanCongNoiBo>().ReverseMap()
+                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) =>
+                   srcMember != null && (!(srcMember is string str) || !string.IsNullOrWhiteSpace(str))));
+
+            CreateMap<ReassignPhanCongNoiBoRequestUpdateDto, PhanCongNoiBo>().ReverseMap()
+                .ForAllMembers(opts => opts.Condition((src, dest, srcMember) =>
+                  srcMember != null && (!(srcMember is string str) || !string.IsNullOrWhiteSpace(str))));
+
+            CreateMap<LichSuPhanCong, LichSuPhanCongDto>().ReverseMap()
+                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) =>
+                   srcMember != null && (!(srcMember is string str) || !string.IsNullOrWhiteSpace(str))));
+
+            CreateMap<LichSuPhanCongRequestCreateDto, LichSuPhanCong>().ReverseMap()
+               .ForAllMembers(opts => opts.Condition((src, dest, srcMember) =>
+                 srcMember != null && (!(srcMember is string str) || !string.IsNullOrWhiteSpace(str))));
+
+            CreateMap<LichSuPhanCongRequestUpdateDto, LichSuPhanCong>().ReverseMap()
+                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) =>
+                   srcMember != null && (!(srcMember is string str) || !string.IsNullOrWhiteSpace(str))));
 
             CreateMap<PhieuDuTru, PhieuDuTruDto>().ReverseMap().ForMember(dest => dest.MaId, opt => opt.Ignore())
                   .ForAllMembers(opts => opts.Condition((src, dest, srcMember) =>

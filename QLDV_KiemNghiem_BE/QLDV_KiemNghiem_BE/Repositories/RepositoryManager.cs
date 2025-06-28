@@ -38,11 +38,11 @@ namespace QLDV_KiemNghiem_BE.Repositories
         private readonly Lazy<IPhieuPhanTichKetQuaChiTietRepository> _phieuPhanTichKetQuaChiTiet;
         private readonly Lazy<IPhieuThuRepository> _phieuThu;
         private readonly Lazy<IChiTietPhieuDeXuatPhongBanRepository> _chiTietPhieuDeXuatPhongBan;
+        private readonly Lazy<ILichSuPhanCongRepository> _lichSuPhanCong;
         public RepositoryManager(DataContext dataContext, IMapper mapper)
         {
             _context = dataContext;
             _phieuDangKy = new Lazy<IPhieuDangKyRepository>(() => new PhieuDangKyRepository(dataContext, mapper));
-
             _phieuDangKyMau = new Lazy<IPhieuDangKyMauRepository>(() => new PhieuDangKyMauRepository(dataContext, mapper));
             _phieuDangKyPhuLieuHoaChat = new Lazy<IPhieuDangKyPhuLieuHoaChatRepository>(() => new PhieuDangKyPhuLieuHoaChatRepository(dataContext, mapper));
             _dmPhuLieuHoaChat = new Lazy<IDmPhuLieuHoaChatRepository>(() => new DmPhuLieuHoaChatRepository(dataContext, mapper));
@@ -71,6 +71,7 @@ namespace QLDV_KiemNghiem_BE.Repositories
             _phieuPhanTichKetQuaChiTiet = new Lazy<IPhieuPhanTichKetQuaChiTietRepository>(() => new PhieuPhanTichKetQuaChiTietRepository(dataContext, mapper));
             _phieuThu = new Lazy<IPhieuThuRepository>(() => new PhieuThuRepository(dataContext, mapper));
             _chiTietPhieuDeXuatPhongBan = new Lazy<IChiTietPhieuDeXuatPhongBanRepository>(() => new ChiTietPhieuDeXuatPhongBanRepository(dataContext, mapper));
+            _lichSuPhanCong= new Lazy<ILichSuPhanCongRepository>(() => new LichSuPhanCongRepository(dataContext, mapper));
         }
 
         public IPhieuDangKyRepository PhieuDangKy => _phieuDangKy.Value;
@@ -102,6 +103,7 @@ namespace QLDV_KiemNghiem_BE.Repositories
         public IPhieuPhanTichKetQuaChiTietRepository PhieuPhanTichKetQuaChiTiet => _phieuPhanTichKetQuaChiTiet.Value;
         public IPhieuThuRepository PhieuThu => _phieuThu.Value;
         public IChiTietPhieuDeXuatPhongBanRepository ChiTietPhieuDeXuatPhongBan => _chiTietPhieuDeXuatPhongBan.Value;
+        public ILichSuPhanCongRepository LichSuPhanCong => _lichSuPhanCong.Value;
         public async Task<bool> SaveChangesAsync() => await _context.SaveChangesAsync() > 0;
     }
 }

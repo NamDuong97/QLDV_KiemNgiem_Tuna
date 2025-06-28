@@ -1,10 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
-using QLDV_KiemNghiem_BE.Models;
 
 namespace QLDV_KiemNghiem_BE.DTO.ResponseDto
 {
-    public class PhanCongNoiBoDto
+    public class LichSuPhanCongDto
     {
         public string MaId { get; set; } = null!;
 
@@ -12,11 +11,10 @@ namespace QLDV_KiemNghiem_BE.DTO.ResponseDto
         public string? MaPhanCongNoiBo { get; set; }
 
         [StringLength(50)]
-        public string? ManvXyLy { get; set; }
+        public string? ManvCu { get; set; }
 
-        [Column("MaPDK_Mau")]
         [StringLength(50)]
-        public string? MaPdkMau { get; set; }
+        public string? ManvMoi { get; set; }
 
         [Column(TypeName = "datetime")]
         public DateTime? LamTu { get; set; }
@@ -30,7 +28,11 @@ namespace QLDV_KiemNghiem_BE.DTO.ResponseDto
         [StringLength(200)]
         public string? TennvPhanCong { get; set; }
 
-        public bool? TrangThai { get; set; }
+        [Column(TypeName = "datetime")]
+        public DateTime? ThoiGianPhanCongLai { get; set; }
+
+        [StringLength(100)]
+        public string? TrangThai { get; set; }
 
         [Column(TypeName = "datetime")]
         public DateTime? NgayTao { get; set; }
@@ -44,15 +46,7 @@ namespace QLDV_KiemNghiem_BE.DTO.ResponseDto
         [Column(TypeName = "datetime")]
         public DateTime? NgaySua { get; set; }
 
-        [StringLength(200)]
-        public string? TennvXuly { get; set; }
-
-        [StringLength(200)]
-        public string? TenMau { get; set; }
-
-        [Column(TypeName = "datetime")]
-        public DateTime? NgayTraKetQua { get; set; }
-
-        public  ICollection<LichSuPhanCongDto> LichSuPhanCongs { get; set; } = new List<LichSuPhanCongDto>();
+        [StringLength(500)]
+        public string? LyDoPhanCongLai { get; set; }
     }
 }

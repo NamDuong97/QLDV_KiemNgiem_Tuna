@@ -1,10 +1,14 @@
-﻿using AutoMapper;
+﻿using System.Security.Claims;
+using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
+using QLDV_KiemNghiem_BE.DTO.RequestDto;
 using QLDV_KiemNghiem_BE.DTO.ResponseDto;
 using QLDV_KiemNghiem_BE.Interfaces.ManagerInterface;
 using QLDV_KiemNghiem_BE.Models;
 using QLDV_KiemNghiem_BE.RequestFeatures;
+using QLDV_KiemNghiem_BE.RequestFeatures.PagingRequest;
 
 namespace QLDV_KiemNghiem_BE.Controllers
 {
@@ -24,11 +28,12 @@ namespace QLDV_KiemNghiem_BE.Controllers
 
         [HttpGet]
         [Route("getPhanCongNoiBoAll")]
-        public async Task<ActionResult> getPhanCongNoiBoAll()
+        public async Task<ActionResult> getPhanCongNoiBoAll([FromQuery] PhanCongNoiBoParam param)
         {
-            var result = await _service.PhanCongNoiBo.GetPhanCongNoiBosAllAsync();
+            var result = await _service.PhanCongNoiBo.GetPhanCongNoiBosAllAsync(param);
+            Response.Headers.Append("X-Pagination", System.Text.Json.JsonSerializer.Serialize(result.pagi));
             _logger.LogDebug("get toan bo phan cong noi bo");
-            return Ok(result);
+            return Ok(result.datas);
         }
 
         [HttpGet]
@@ -42,7 +47,7 @@ namespace QLDV_KiemNghiem_BE.Controllers
 
         [HttpPost]
         [Route("createPhanCongNoiBo")]
-        public async Task<ActionResult> createPhanCongNoiBo(PhanCongNoiBoDto PhanCongNoiBoDto)
+        public async Task<ActionResult> createPhanCongNoiBo(PhanCongNoiBoRequestCreateDto PhanCongNoiBoDto)
         {
             if (!ModelState.IsValid)
             {
@@ -53,7 +58,9 @@ namespace QLDV_KiemNghiem_BE.Controllers
                 _logger.LogError("Loi validate tham so dau vao");
                 return BadRequest(new { Errors = errors });
             }
-            ResponseModel1<PhanCongNoiBoDto> create = await _service.PhanCongNoiBo.CreatePhanCongNoiBoAsync(PhanCongNoiBoDto);
+            var user = User.FindFirst(ClaimTypes.Email)?.Value.ToString() ?? "know";
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value.ToString() ?? null;
+            ResponseModel1<PhanCongNoiBoDto> create = await _service.PhanCongNoiBo.CreatePhanCongNoiBoAsync(PhanCongNoiBoDto,user, userId);
             if (create.KetQua)
             {
                 _logger.LogDebug(create.Message);
@@ -68,7 +75,7 @@ namespace QLDV_KiemNghiem_BE.Controllers
 
         [HttpPut]
         [Route("updatePhanCongNoiBo")]
-        public async Task<ActionResult> updatePhanCongNoiBo(PhanCongNoiBoDto PhanCongNoiBoDto)
+        public async Task<ActionResult> updatePhanCongNoiBo(PhanCongNoiBoRequestUpdateDto PhanCongNoiBoDto)
         {
             if (!ModelState.IsValid)
             {
@@ -79,7 +86,37 @@ namespace QLDV_KiemNghiem_BE.Controllers
                 _logger.LogError("Loi validate tham so dau vao");
                 return BadRequest(new { Errors = errors });
             }
-            ResponseModel1<PhanCongNoiBoDto> update = await _service.PhanCongNoiBo.UpdatePhanCongNoiBoAsync(PhanCongNoiBoDto);
+            var user = User.FindFirst(ClaimTypes.Email)?.Value.ToString() ?? "know";
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value.ToString() ?? null;
+            ResponseModel1<PhanCongNoiBoDto> update = await _service.PhanCongNoiBo.UpdatePhanCongNoiBoAsync(PhanCongNoiBoDto, user, userId);
+            if (update.KetQua)
+            {
+                _logger.LogDebug(update.Message);
+                return Ok(update.Data);
+            }
+            else
+            {
+                _logger.LogDebug(update.Message);
+                return BadRequest(update.Message);
+            }
+        }
+
+        [HttpPut]
+        [Route("reassignPhanCongNoiBo")]
+        public async Task<ActionResult> reassignPhanCongNoiBo(ReassignPhanCongNoiBoRequestUpdateDto PhanCongNoiBoDto)
+        {
+            if (!ModelState.IsValid)
+            {
+                var errors = ModelState.Values
+                .SelectMany(v => v.Errors)
+                .Select(e => e.ErrorMessage)
+                .ToList();
+                _logger.LogError("Loi validate tham so dau vao");
+                return BadRequest(new { Errors = errors });
+            }
+            var user = User.FindFirst(ClaimTypes.Email)?.Value.ToString() ?? "know";
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value.ToString() ?? null;
+            ResponseModel1<PhanCongNoiBoDto> update = await _service.PhanCongNoiBo.ReassignPhanCongNoiBo(PhanCongNoiBoDto, user, userId);
             if (update.KetQua)
             {
                 _logger.LogDebug(update.Message);
@@ -94,27 +131,20 @@ namespace QLDV_KiemNghiem_BE.Controllers
 
         [HttpDelete]
         [Route("deletePhanCongNoiBo")]
-        public async Task<ActionResult> deletePhanCongNoiBo(PhanCongNoiBo PhanCongNoiBo)
+        public async Task<ActionResult> deletePhanCongNoiBo(string maPhanCongNoiBo)
         {
-            var checkExists = await _service.PhanCongNoiBo.FindPhanCongNoiBoAsync(PhanCongNoiBo.MaId);
-            if (checkExists != null)
+            var user = User.FindFirst(ClaimTypes.Email)?.Value.ToString() ?? "know";
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value.ToString() ?? null;
+            ResponseModel1<PhanCongNoiBoDto> delete = await _service.PhanCongNoiBo.DeletePhanCongNoiBoAsync(maPhanCongNoiBo, user, userId);
+            if (delete.KetQua)
             {
-                bool delete = await _service.PhanCongNoiBo.DeletePhanCongNoiBoAsync(PhanCongNoiBo);
-                if (delete)
-                {
-                    _logger.LogDebug("Cap nhat phan cong noi bo thanh cong");
-                    return Ok(PhanCongNoiBo);
-                }
-                else
-                {
-                    _logger.LogDebug("Cap nhat phan cong noi bo that bai");
-                    return BadRequest();
-                }
+                _logger.LogDebug(delete.Message);
+                return Ok(delete);
             }
             else
             {
-                _logger.LogDebug("phan cong noi bo khong ton tai");
-                return BadRequest();
+                _logger.LogDebug(delete.Message);
+                return BadRequest(delete);
             }
         }
     }

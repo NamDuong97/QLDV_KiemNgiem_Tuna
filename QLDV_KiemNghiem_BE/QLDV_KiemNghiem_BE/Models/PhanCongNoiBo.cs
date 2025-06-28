@@ -27,9 +27,6 @@ public partial class PhanCongNoiBo
     [Column(TypeName = "datetime")]
     public DateTime? LamTu { get; set; }
 
-    [Column(TypeName = "datetime")]
-    public DateTime? LamToi { get; set; }
-
     [StringLength(50)]
     public string? ManvPhanCong { get; set; }
 
@@ -58,6 +55,9 @@ public partial class PhanCongNoiBo
 
     [Column(TypeName = "datetime")]
     public DateTime? NgayTraKetQua { get; set; }
+
+    [StringLength(500)]
+    public string? GhiChu { get; set; }
 
     [InverseProperty("MaPhanCongNoiBoNavigation")]
     public virtual ICollection<LichSuPhanCong> LichSuPhanCongs { get; set; } = new List<LichSuPhanCong>();

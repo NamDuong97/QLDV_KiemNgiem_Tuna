@@ -32,6 +32,7 @@ namespace QLDV_KiemNghiem_BE.Interfaces.ManagerInterface
         IPhieuPhanTichKetQuaChiTietRepository PhieuPhanTichKetQuaChiTiet { get; }
         IPhieuThuRepository PhieuThu { get; }
         IChiTietPhieuDeXuatPhongBanRepository ChiTietPhieuDeXuatPhongBan { get; }
+        ILichSuPhanCongRepository LichSuPhanCong { get; }   
         Task<bool> SaveChangesAsync();
     }
 }
