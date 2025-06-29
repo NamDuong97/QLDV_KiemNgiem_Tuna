@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
+using QLDV_KiemNghiem_BE.DTO.RequestDto;
 
 namespace QLDV_KiemNghiem_BE.DTO.ResponseDto
 {
@@ -24,5 +25,7 @@ namespace QLDV_KiemNghiem_BE.DTO.ResponseDto
         public string? MaKhoa { get; set; }
 
         public bool? TrangThai { get; set; }
+
+        public List<ChiTietPhieuDuTruDto> ChiTietPhieuDuTrus { get; set; } = new List<ChiTietPhieuDuTruDto>();
     }
 }

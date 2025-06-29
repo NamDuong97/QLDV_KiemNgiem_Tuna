@@ -35,9 +35,6 @@ public partial class LichSuPhanCong
     [StringLength(200)]
     public string? TennvPhanCong { get; set; }
 
-    [Column(TypeName = "datetime")]
-    public DateTime? ThoiGianPhanCongLai { get; set; }
-
     [StringLength(100)]
     public string? TrangThai { get; set; }
 

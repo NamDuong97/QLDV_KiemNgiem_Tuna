@@ -6,7 +6,8 @@ namespace QLDV_KiemNghiem_BE.Interfaces
     public interface IPhieuDuTruRepository
     {
         Task<IEnumerable<PhieuDuTru>> GetPhieuDuTrusAllAsync();
-        Task<PhieuDuTru?> FindPhieuDuTruAsync(string maPhieuDuTru);
+        Task<PhieuDuTru?> FindPhieuDuTruAsync(string maPhieuDuTru, bool track);
+        Task<PhieuDuTru?> FindPhieuDuTrusAsync(string maPhieuDuTru, bool track);
         void CreatePhieuDuTruAsync(PhieuDuTru PhieuDuTru);
         void UpdatePhieuDuTruAsync(PhieuDuTru PhieuDuTru);
         void DeletePhieuDuTruAsync(PhieuDuTru PhieuDuTru);

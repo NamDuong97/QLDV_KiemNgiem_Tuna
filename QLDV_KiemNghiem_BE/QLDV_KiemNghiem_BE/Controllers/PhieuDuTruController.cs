@@ -1,6 +1,8 @@
-﻿using AutoMapper;
+﻿using System.Security.Claims;
+using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using QLDV_KiemNghiem_BE.DTO.RequestDto;
 using QLDV_KiemNghiem_BE.DTO.ResponseDto;
 using QLDV_KiemNghiem_BE.Interfaces.ManagerInterface;
 using QLDV_KiemNghiem_BE.Models;
@@ -42,7 +44,7 @@ namespace QLDV_KiemNghiem_BE.Controllers
 
         [HttpPost]
         [Route("createPhieuDuTru")]
-        public async Task<ActionResult> createPhieuDuTru(PhieuDuTruDto PhieuDuTruDto)
+        public async Task<ActionResult> createPhieuDuTru(PhieuDuTruRequestCreateDto PhieuDuTruDto)
         {
             if (!ModelState.IsValid)
             {
@@ -53,7 +55,9 @@ namespace QLDV_KiemNghiem_BE.Controllers
                 _logger.LogError("Loi validate tham so dau vao");
                 return BadRequest(new { Errors = errors });
             }
-            ResponseModel1<PhieuDuTruDto> create = await _service.PhieuDuTru.CreatePhieuDuTruAsync(PhieuDuTruDto);
+            var user = User.FindFirst(ClaimTypes.Email)?.Value.ToString() ?? "know";
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value.ToString() ?? null;
+            ResponseModel1<PhieuDuTruDto> create = await _service.PhieuDuTru.CreatePhieuDuTruAsync(PhieuDuTruDto, user, userId);
             if (create.KetQua)
             {
                 _logger.LogDebug(create.Message);
@@ -68,7 +72,7 @@ namespace QLDV_KiemNghiem_BE.Controllers
 
         [HttpPut]
         [Route("updatePhieuDuTru")]
-        public async Task<ActionResult> updatePhieuDuTru(PhieuDuTruDto PhieuDuTruDto)
+        public async Task<ActionResult> updatePhieuDuTru([FromBody] PhieuDuTruRequestUpdateDto PhieuDuTruDto)
         {
             if (!ModelState.IsValid)
             {
@@ -79,7 +83,9 @@ namespace QLDV_KiemNghiem_BE.Controllers
                 _logger.LogError("Loi validate tham so dau vao");
                 return BadRequest(new { Errors = errors });
             }
-            ResponseModel1<PhieuDuTruDto> update = await _service.PhieuDuTru.UpdatePhieuDuTruAsync(PhieuDuTruDto);
+            var user = User.FindFirst(ClaimTypes.Email)?.Value.ToString() ?? "know";
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value.ToString() ?? null;
+            ResponseModel1<PhieuDuTruDto> update = await _service.PhieuDuTru.UpdatePhieuDuTruAsync(PhieuDuTruDto, user, userId);
             if (update.KetQua)
             {
                 _logger.LogDebug(update.Message);
@@ -94,27 +100,20 @@ namespace QLDV_KiemNghiem_BE.Controllers
 
         [HttpDelete]
         [Route("deletePhieuDuTru")]
-        public async Task<ActionResult> deletePhieuDuTru(PhieuDuTru PhieuDuTru)
+        public async Task<ActionResult> deletePhieuDuTru(string PhieuDuTru)
         {
-            var checkExists = await _service.PhieuDuTru.FindPhieuDuTruAsync(PhieuDuTru.MaId);
-            if (checkExists != null)
+            var user = User.FindFirst(ClaimTypes.Email)?.Value.ToString() ?? "know";
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value.ToString() ?? null;
+            ResponseModel1<PhieuDuTruDto> delete = await _service.PhieuDuTru.DeletePhieuDuTruAsync(PhieuDuTru, user, userId);
+            if (delete.KetQua)
             {
-                bool delete = await _service.PhieuDuTru.DeletePhieuDuTruAsync(PhieuDuTru);
-                if (delete)
-                {
-                    _logger.LogDebug("Cap nhat phieu du tru thanh cong");
-                    return Ok(PhieuDuTru);
-                }
-                else
-                {
-                    _logger.LogDebug("Cap nhat phieu du tru that bai");
-                    return BadRequest();
-                }
+                _logger.LogDebug(delete.Message);
+                return Ok(delete);
             }
             else
             {
-                _logger.LogDebug("phieu du tru khong ton tai");
-                return BadRequest();
+                _logger.LogDebug(delete.Message);
+                return BadRequest(delete);
             }
         }
     }

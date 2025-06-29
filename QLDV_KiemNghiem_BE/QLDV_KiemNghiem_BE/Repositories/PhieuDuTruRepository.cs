@@ -17,11 +17,29 @@ namespace QLDV_KiemNghiem_BE.Repositories
         }
         public async Task<IEnumerable<PhieuDuTru>> GetPhieuDuTrusAllAsync()
         {
-            return await _context.PhieuDuTrus.ToListAsync();
+            return await _context.PhieuDuTrus.Include(p => p.ChiTietPhieuDuTrus).ToListAsync();
         }
-        public async Task<PhieuDuTru?> FindPhieuDuTruAsync(string maPhieuDuTru)
+        public async Task<PhieuDuTru?> FindPhieuDuTrusAsync(string maPhieuDuTru, bool track)
         {
-            return await _context.PhieuDuTrus.FindAsync(maPhieuDuTru);
+            if (track)
+            {
+                return await _context.PhieuDuTrus.Include(it => it.ChiTietPhieuDuTrus).FirstOrDefaultAsync(it => it.MaId == maPhieuDuTru);
+            }
+            else
+            {
+                return await _context.PhieuDuTrus.AsNoTracking().Include(it => it.ChiTietPhieuDuTrus).FirstOrDefaultAsync(it => it.MaId == maPhieuDuTru);
+            }
+        }
+        public async Task<PhieuDuTru?> FindPhieuDuTruAsync(string maPhieuDuTru, bool track)
+        {
+            if (track)
+            {
+                return await _context.PhieuDuTrus.FirstOrDefaultAsync(it => it.MaId == maPhieuDuTru);
+            }
+            else
+            {
+                return await _context.PhieuDuTrus.AsNoTracking().FirstOrDefaultAsync(it => it.MaId == maPhieuDuTru);
+            }
         }
 
         public void CreatePhieuDuTruAsync(PhieuDuTru PhieuDuTru)
