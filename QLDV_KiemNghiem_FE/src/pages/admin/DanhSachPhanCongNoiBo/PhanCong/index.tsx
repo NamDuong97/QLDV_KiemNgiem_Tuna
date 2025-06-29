@@ -9,12 +9,13 @@ import removeVietnameseTones from "../../../../configs/removeVietnameseTones";
 import { getAllDanhSachMau } from "../../../../hooks/personnels/phanCongKhoa";
 import { usePersonnel } from "../../../../contexts/PersonelsProvider";
 import { useGetLoaiDichVuAll } from "../../../../hooks/customers/usePhieuDKyDVKN";
+import { Skeleton } from "@mui/material";
 
 const PhanCong = ({ handleDanhSachPhanCong }: any) => {
   const [isSortNew, setIsSortNew] = useState(false);
   const [openModelPhanCong, setOpenModelPhanCong] = useState(false);
   const { personnelInfo } = usePersonnel();
-  const { data } = getAllDanhSachMau({
+  const { data, isLoading } = getAllDanhSachMau({
     queryKey: "DanhSachMau",
     params: {
       getAll: true,
@@ -26,8 +27,6 @@ const PhanCong = ({ handleDanhSachPhanCong }: any) => {
     queryKey: "LoaiDichVuAll",
   });
   const dataLDV: any = dataLoaiDV;
-  console.log("data", data);
-  console.log("data");
 
   const [saveID, setSaveID] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
@@ -75,105 +74,120 @@ const PhanCong = ({ handleDanhSachPhanCong }: any) => {
         </div>
       </div>
       <div className="grid grid-cols-3 gap-6">
-        {filteredSamples?.map((sample: any, index: any) => (
-          <div
-            key={index}
-            className={clsx(
-              "rounded-xl overflow-hidden cursor-pointer",
-              classes.sample_item,
-              classes.glass_card
-            )}
-          >
-            <div className="p-5">
-              <div className="flex justify-between items-start mb-4">
-                <div className="flex items-center gap-2">
-                  <span className="text-xs font-medium text-gray-600">
-                    Mã Mẫu:
-                  </span>
-                  <span className="text-sm font-medium text-indigo-600">
-                    {sample.maPdkMau}
-                  </span>
+        {isLoading ? (
+          <>
+            <div>
+              <Skeleton variant="rounded" height={286} width={478} />
+            </div>
+            <div>
+              <Skeleton variant="rounded" height={286} width={478} />
+            </div>
+            <div>
+              <Skeleton variant="rounded" height={286} width={478} />
+            </div>
+          </>
+        ) : (
+          filteredSamples?.map((sample: any, index: any) => (
+            <div
+              key={index}
+              className={clsx(
+                "rounded-xl overflow-hidden cursor-pointer",
+                classes.sample_item,
+                classes.glass_card
+              )}
+            >
+              <div className="p-5">
+                <div className="flex justify-between items-start mb-4">
+                  <div className="flex items-center gap-2">
+                    <span className="text-xs font-medium text-gray-600">
+                      Mã Mẫu:
+                    </span>
+                    <span className="text-sm font-medium text-indigo-600">
+                      {sample.maPdkMau}
+                    </span>
+                  </div>
                 </div>
-              </div>
 
-              <h3 className="font-semibold text-gray-800 text-lg mb-3">
-                {sample.tenMau}
-              </h3>
+                <h3 className="font-semibold text-gray-800 text-lg mb-3">
+                  {sample.tenMau}
+                </h3>
 
-              <div className="grid grid-cols-2 gap-x-4 gap-y-2 mb-4">
-                <div>
-                  <p className="text-xs text-gray-500">Tiêu chuẩn áp dụng</p>
-                  <p className="text-sm font-medium text-gray-700">
-                    {sample.tenTieuChuan}
-                  </p>
+                <div className="grid grid-cols-2 gap-x-4 gap-y-2 mb-4">
+                  <div>
+                    <p className="text-xs text-gray-500">Tiêu chuẩn áp dụng</p>
+                    <p className="text-sm font-medium text-gray-700">
+                      {sample.tenTieuChuan}
+                    </p>
+                  </div>
+                  <div className="col-span-2">
+                    <p className="text-xs text-gray-500">Dịch vụ kiểm nghiệm</p>
+                    <p className="text-sm font-medium text-gray-700">
+                      {
+                        dataLDV?.find(
+                          (item: any) => item.maLoaiDv === "DVG03-90"
+                        )?.tenDichVu
+                      }
+                    </p>
+                  </div>
+                  <div>
+                    <p className="text-xs text-gray-500">Số lô</p>
+                    <p className="text-sm font-medium text-gray-700">
+                      {sample.soLo}
+                    </p>
+                  </div>
+                  <div>
+                    <p className="text-xs text-gray-500">Số lượng</p>
+                    <p className="text-sm font-medium text-gray-700">
+                      {sample.soLuong}
+                      {sample.donViTinh}
+                    </p>
+                  </div>
                 </div>
-                <div className="col-span-2">
-                  <p className="text-xs text-gray-500">Dịch vụ kiểm nghiệm</p>
-                  <p className="text-sm font-medium text-gray-700">
-                    {
-                      dataLDV?.find((item: any) => item.maLoaiDv === "DVG03-90")
-                        ?.tenDichVu
-                    }
-                  </p>
-                </div>
-                <div>
-                  <p className="text-xs text-gray-500">Số lô</p>
-                  <p className="text-sm font-medium text-gray-700">
-                    {sample.soLo}
-                  </p>
-                </div>
-                <div>
-                  <p className="text-xs text-gray-500">Số lượng</p>
-                  <p className="text-sm font-medium text-gray-700">
-                    {sample.soLuong}
-                    {sample.donViTinh}
-                  </p>
-                </div>
-              </div>
 
-              <div className="flex items-center justify-between pt-3 border-t border-gray-100">
-                <div className="flex items-center text-gray-500 text-sm">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="h-4 w-4 mr-1"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
+                <div className="flex items-center justify-between pt-3 border-t border-gray-100">
+                  <div className="flex items-center text-gray-500 text-sm">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="h-4 w-4 mr-1"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                      />
+                    </svg>
+                    <span>HSD: {formatDate(sample.hanSuDung)}</span>
+                  </div>
+                  <button
+                    onClick={() => {
+                      setSaveID(sample?.maId);
+                      setOpenModelPhanCong(true);
+                    }}
+                    className="flex items-center text-sm font-medium text-indigo-600 hover:text-indigo-800 transition-colors cursor-pointer hover:underline"
                   >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                      d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-                    />
-                  </svg>
-                  <span>HSD: {formatDate(sample.hanSuDung)}</span>
+                    <span>Phân công</span>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="h-4 w-4 ml-1"
+                      viewBox="0 0 20 20"
+                      fill="currentColor"
+                    >
+                      <path
+                        fillRule="evenodd"
+                        d="M12.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-2.293-2.293a1 1 0 010-1.414z"
+                        clipRule="evenodd"
+                      />
+                    </svg>
+                  </button>
                 </div>
-                <button
-                  onClick={() => {
-                    setSaveID(sample?.maId);
-                    setOpenModelPhanCong(true);
-                  }}
-                  className="flex items-center text-sm font-medium text-indigo-600 hover:text-indigo-800 transition-colors cursor-pointer hover:underline"
-                >
-                  <span>Phân công</span>
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="h-4 w-4 ml-1"
-                    viewBox="0 0 20 20"
-                    fill="currentColor"
-                  >
-                    <path
-                      fillRule="evenodd"
-                      d="M12.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-2.293-2.293a1 1 0 010-1.414z"
-                      clipRule="evenodd"
-                    />
-                  </svg>
-                </button>
               </div>
             </div>
-          </div>
-        ))}
+          ))
+        )}
       </div>
       {filteredSamples?.length === 0 ? (
         <div className="glass-card rounded-xl p-8 text-center">
@@ -212,6 +226,7 @@ const PhanCong = ({ handleDanhSachPhanCong }: any) => {
         dataID={saveID}
         maKhoa={personnelInfo?.maKhoa}
         manv={personnelInfo?.maId}
+        hoTenNVPC={personnelInfo?.hoTen}
       />
     </>
   );

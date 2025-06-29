@@ -1,15 +1,17 @@
 import { motion } from "motion/react";
 import TagPhanCong from "./TagPhanCong";
-import { Share } from "react-feather";
 import { useState } from "react";
 import PhanCong from "./PhanCong";
 import DanhSach from "./DanhSach";
 import { getRoleGroup } from "../../../configs/Role";
 import { role } from "../../../configs/parseJwt";
+import LichSuPhanCong from "./LichSuPhanCong";
+import clsx from "clsx";
 
 export const tagPhanCong = {
   Phan_Cong: "Phân công",
   Danh_Sach: "Danh sách",
+  Lich_Su_Phan_Cong: "Lịch sử phân công",
 };
 
 const DanhSachPhanCongNoiBo = () => {
@@ -21,13 +23,16 @@ const DanhSachPhanCongNoiBo = () => {
       animate={{ x: 0, opacity: 1 }}
       exit={{ x: 0, opacity: 0 }}
       transition={{ duration: 0.5 }}
-      className="px-10 space-y-6 bg-blue-50 p-6 h-screen"
+      className={clsx("px-10 space-y-6 bg-blue-50 p-6", {
+        "h-screen": tagPhanCong.Phan_Cong === isTag,
+      })}
     >
       <div>
         <h1 className="text-2xl capitalize font-semibold text-gray-800 flex gap-1 items-center">
           Phân công nội bộ
         </h1>
       </div>
+      
       {getRoleGroup(role) === "BLD" && (
         <motion.div
           key="DanhSach"
@@ -46,7 +51,7 @@ const DanhSachPhanCongNoiBo = () => {
           <div className="bg-white p-4 rounded-lg shadow-sm">
             <TagPhanCong setIsTag={setIsTag} isTag={isTag} />
           </div>
-          {isTag === tagPhanCong.Phan_Cong && (
+          {role !== "KN" && isTag === tagPhanCong.Phan_Cong && (
             <motion.div
               key="PhanCong"
               initial={{ y: 10, opacity: 0 }}
@@ -72,6 +77,18 @@ const DanhSachPhanCongNoiBo = () => {
               <DanhSach
                 handleTaoPhanCong={() => setIsTag(tagPhanCong.Phan_Cong)}
               />
+            </motion.div>
+          )}
+          {role !== "KN" && isTag === tagPhanCong.Lich_Su_Phan_Cong && (
+            <motion.div
+              key="PhanCong"
+              initial={{ y: 10, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              exit={{ y: -10, opacity: 0 }}
+              transition={{ duration: 0.2 }}
+              className="space-y-6"
+            >
+              <LichSuPhanCong />
             </motion.div>
           )}
         </>

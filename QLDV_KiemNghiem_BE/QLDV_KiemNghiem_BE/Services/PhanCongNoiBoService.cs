@@ -162,7 +162,6 @@ namespace QLDV_KiemNghiem_BE.Services
                     TennvPhanCong = PhanCongNoiBoDto.TennvPhanCong,
                     LyDoPhanCongLai = PhanCongNoiBoDto.LyDoPhanCongLai,
                     LamTu = PhanCongNoiBoDto.NvMoiLamTu,
-                    ThoiGianPhanCongLai = DateTime.Now,
                     TrangThai = "active",
                     NgayTao = DateTime.Now,
                     NguoiTao = user

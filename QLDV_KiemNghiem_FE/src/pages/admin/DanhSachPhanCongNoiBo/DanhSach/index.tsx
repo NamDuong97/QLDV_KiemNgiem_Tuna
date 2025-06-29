@@ -14,13 +14,20 @@ import ModelSua from "./ModelSua";
 import ConfirmationModal from "../../../../components/ConfirmationModal";
 import { TypeConformation } from "../../../../constants/typeConfirmation";
 import removeVietnameseTones from "../../../../configs/removeVietnameseTones";
-import { queryPhanCongNoiBoAll } from "../../../../hooks/personnels/queryPhanCongNoiBo";
+import {
+  queryHuyPhanCong,
+  queryPhanCongNoiBoAll,
+} from "../../../../hooks/personnels/queryPhanCongNoiBo";
 import SelectItemTrangThai from "./SelectItemTrangThai";
 import { MdSwapHoriz } from "react-icons/md";
 import ModelPhanCongLai from "./ModelPhanCongLai";
 import { role } from "../../../../configs/parseJwt";
 import { getRoleGroup } from "../../../../configs/Role";
 import SelectItemKhoa from "./SelectItemKhoa";
+import { queryNhanVienALL } from "../../../../hooks/personnels/queryNhanVien";
+import { ListColors } from "../../../../constants/colors";
+import { queryClient } from "../../../../lib/reactQuery";
+import { useStoreNotification } from "../../../../configs/stores/useStoreNotification";
 
 interface Props {
   handleTaoPhanCong: () => void;
@@ -30,6 +37,9 @@ const DanhSach = (props: Props) => {
   const { handleTaoPhanCong } = props;
   const { data, isLoading } = queryPhanCongNoiBoAll({
     queryKey: "queryPhanCongNoiBoAll",
+    params: {
+      getAll: true,
+    },
   });
 
   const [isSortNew, setIsSortNew] = useState(false);
@@ -45,27 +55,27 @@ const DanhSach = (props: Props) => {
   const filteredSamples: any = data?.filter((sample: any) => {
     const query = removeVietnameseTones(searchQuery.toLowerCase());
     const matchesSearch =
-      removeVietnameseTones(sample.maPdkMau.toLowerCase()).includes(query) ||
-      removeVietnameseTones(sample.manvXyLy.toLowerCase()).includes(query);
+      removeVietnameseTones(sample?.tenMau?.toLowerCase()).includes(query) ||
+      removeVietnameseTones(sample?.tennvXuly?.toLowerCase()).includes(query);
     return matchesSearch;
   });
 
   const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage] = useState(10);
+  const [itemsPerPage] = useState(9);
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
 
   const currentItems = filteredSamples
     ?.sort((a: any, b: any) =>
       isSortNew
-        ? new Date(a.ngayPhanCong).getTime() -
-          new Date(b.ngayPhanCong).getTime()
-        : new Date(b.ngayPhanCong).getTime() -
-          new Date(a.ngayPhanCong).getTime()
+        ? new Date(a.ngayTao).getTime() - new Date(b.ngayTao).getTime()
+        : new Date(b.ngayTao).getTime() - new Date(a.ngayTao).getTime()
     )
     ?.slice(indexOfFirstItem, indexOfLastItem);
 
-  const totalPages = Math.ceil(data && data?.length / itemsPerPage);
+  const totalPages = Math.ceil(
+    filteredSamples && filteredSamples?.length / itemsPerPage
+  );
   const handlePageChange = (_: any, value: number) => {
     setCurrentPage(value);
   };
@@ -79,6 +89,54 @@ const DanhSach = (props: Props) => {
     setOpenModelXemChiTiet(false);
     setOpenModelSua(true);
   };
+
+  const handleSettled = async (response: any) => {
+    if (response?.status === 200) {
+      await queryClient.refetchQueries({
+        queryKey: ["queryPhanCongNoiBoAll"],
+      });
+      setOpenModelXoa(false);
+    }
+  };
+  const showNotification = useStoreNotification(
+    (state: any) => state.showNotification
+  );
+
+  const { mutate } = queryHuyPhanCong({
+    queryKey: "queryHuyPhanCong",
+    onSuccess: (data: any) => {
+      console.log("Hủy thành công:", data);
+      if (data.status === 200) {
+        showNotification({
+          message: "Hủy thành công",
+          status: 200,
+        });
+        return;
+      } else {
+        showNotification({
+          message: "Hủy thất bại",
+          status: 500,
+        });
+      }
+    },
+    onError: (error: any) => {
+      console.log("error", error);
+
+      showNotification({
+        message: "Hủy thất bại",
+        status: 400,
+      });
+    },
+    onSettled: handleSettled,
+  });
+
+  const handeHuyPhanCong = () => {
+    const params = {
+      maPhanCongNoiBo: saveID,
+    };
+    mutate(params);
+  };
+
   return (
     <>
       <div className="p-4 bg-white rounded-lg shadow-sm border border-gray-100 gap-2 flex justify-between">
@@ -95,10 +153,16 @@ const DanhSach = (props: Props) => {
             type="button"
             className="btn btn-outline-primary border border-gray-300 py-[6px] px-2 rounded cursor-pointer hover:bg-blue-50"
           >
-            <span className="flex items-center gap-2 text-gray-800">
-              {isSortNew ? <FaSortAmountUp /> : <FaSortAmountDown />}Ngày phân
-              công
-            </span>
+            {isSortNew ? (
+              <span className="flex items-center gap-2 text-gray-800">
+                <FaSortAmountUp /> Cũ nhất
+              </span>
+            ) : (
+              <span className="flex items-center gap-2 text-gray-800">
+                <FaSortAmountDown />
+                Mới nhất
+              </span>
+            )}
           </button>
           {getRoleGroup(role) === "BLD" && (
             <SelectItemKhoa
@@ -123,208 +187,224 @@ const DanhSach = (props: Props) => {
               <Skeleton variant="rounded" width={479} height={357} />
             </>
           ) : (
-            currentItems?.map((assignment: any, index: any) => (
-              <div
-                key={index}
-                className={clsx(
-                  "rounded-xl overflow-hidden cursor-pointer",
-                  classes.sample_item,
-                  classes.glass_card
-                )}
-              >
-                <div className="p-5">
-                  <h3 className="font-semibold text-gray-800 text-lg mb-3">
-                    {assignment.maPdkMau}
-                  </h3>
+            currentItems?.map((assignment: any, index: any) => {
+              const avatarColor = ListColors[index % ListColors.length];
+              return (
+                <div
+                  key={index}
+                  className={clsx(
+                    "rounded-xl overflow-hidden cursor-pointer self-start",
+                    classes.sample_item,
+                    classes.glass_card
+                  )}
+                >
+                  <div className="p-5">
+                    <h3 className="font-semibold text-gray-800 text-lg mb-3">
+                      {assignment?.tenMau}
+                    </h3>
 
-                  <div className="bg-blue-50 rounded-xl p-4 mb-6">
-                    <p className="text-xs text-gray-500 mb-2">Phân công cho</p>
-                    <div className="flex items-center">
-                      <div
-                        className={`avatar w-10 h-10 rounded-full bg-blue-600 flex items-center justify-center text-white font-medium`}
-                      >
-                        C
+                    <div className="bg-blue-50 rounded-xl p-4 mb-6">
+                      <p className="text-xs text-gray-500 mb-2">
+                        Phân công cho
+                      </p>
+                      <div className="flex items-center">
+                        <div
+                          className={`avatar w-10 h-10 rounded-full ${avatarColor} flex items-center justify-center text-white font-medium`}
+                        >
+                          {assignment?.tennvXuly.trim().split(" ").pop()}
+                        </div>
+                        <div className="ml-3">
+                          <p className="text-sm font-medium text-gray-800">
+                            {assignment?.tennvXuly}
+                          </p>
+                        </div>
                       </div>
-                      <div className="ml-3">
-                        <p className="text-sm font-medium text-gray-800">
-                          Nguyễn C
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-x-4 gap-y-2 mb-4">
+                      <div>
+                        <p className="text-xs text-gray-500">Ngày phân công</p>
+                        <p className="text-sm font-medium text-gray-700">
+                          {formatDateNotTime(assignment.ngayTao)}
+                        </p>
+                      </div>
+                      <div>
+                        <p className="text-xs text-gray-500">Người phân công</p>
+                        <p className="text-sm font-medium text-gray-700">
+                          {assignment?.tennvPhanCong}
                         </p>
                       </div>
                     </div>
-                  </div>
+                    <div className="grid grid-cols-2 gap-x-4 gap-y-2 mb-4">
+                      <div>
+                        <p className="text-xs text-gray-500">Thời gian làm</p>
+                        <p className="text-sm font-medium text-gray-700">
+                          {formatDate(assignment.lamTu)}
+                        </p>
+                      </div>
+                      <div>
+                        <p className="text-xs text-gray-500">
+                          Thời gian trả kết quả
+                        </p>
+                        <p className="text-sm font-medium text-gray-700">
+                          {formatDate(assignment.ngayTraKetQua)}
+                        </p>
+                      </div>
+                    </div>
 
-                  <div className="grid grid-cols-2 gap-x-4 gap-y-2 mb-4">
-                    <div>
-                      <p className="text-xs text-gray-500">Ngày phân công</p>
-                      <p className="text-sm font-medium text-gray-700">
-                        {formatDateNotTime(assignment.thoiGianPhanCong)}
-                      </p>
-                    </div>
-                    <div>
-                      <p className="text-xs text-gray-500">Người phân công</p>
-                      <p className="text-sm font-medium text-gray-700">
-                        Nguyễn Văn A
-                      </p>
-                    </div>
-                  </div>
-                  <div className="grid gap-x-4 gap-y-2 mb-4">
-                    <div>
-                      <p className="text-xs text-gray-500">Thời gian làm</p>
-                      <p className="text-sm font-medium text-gray-700">
-                        {formatDate(assignment.lamTu)} -{" "}
-                        {formatDate(assignment.lamToi)}
-                      </p>
-                    </div>
-                  </div>
-
-                  <div className="flex items-center justify-between pt-3 border-t border-gray-100">
-                    <div className="flex items-center text-gray-500 text-sm">
-                      {renderTrangThaiPhanCongNoiBo(assignment?.trangThai)}
-                    </div>
-                    <div className="flex space-x-1">
-                      <Tooltip
-                        title="Xem chi tiết"
-                        slotProps={{
-                          popper: {
-                            modifiers: [
-                              {
-                                name: "offset",
-                                options: {
-                                  offset: [0, -14],
+                    <div className="flex items-center justify-between pt-3 border-t border-gray-100">
+                      <div className="flex items-center text-gray-500 text-sm">
+                        {renderTrangThaiPhanCongNoiBo(assignment?.trangThai)}
+                      </div>
+                      <div className="flex space-x-1">
+                        <Tooltip
+                          title="Xem chi tiết"
+                          slotProps={{
+                            popper: {
+                              modifiers: [
+                                {
+                                  name: "offset",
+                                  options: {
+                                    offset: [0, -14],
+                                  },
                                 },
-                              },
-                            ],
-                          },
-                        }}
-                        disableInteractive
-                      >
-                        <button
-                          onClick={() => {
-                            setSaveID(assignment.maId);
-                            setOpenModelXemChiTiet(true);
+                              ],
+                            },
                           }}
-                          className="p-1.5 text-indigo-600 hover:bg-indigo-50 rounded transition-colors cursor-pointer"
+                          disableInteractive
                         >
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            className="h-4 w-4 "
-                            viewBox="0 0 20 20"
-                            fill="currentColor"
-                          >
-                            <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
-                            <path
-                              fillRule="evenodd"
-                              d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z"
-                              clipRule="evenodd"
-                            />
-                          </svg>
-                        </button>
-                      </Tooltip>
-                      {getRoleGroup(role) === "KN" && (
-                        <>
-                          <Tooltip
-                            title="Sửa"
-                            slotProps={{
-                              popper: {
-                                modifiers: [
-                                  {
-                                    name: "offset",
-                                    options: {
-                                      offset: [0, -14],
-                                    },
-                                  },
-                                ],
-                              },
+                          <button
+                            onClick={() => {
+                              setSaveID(assignment.maId);
+                              setOpenModelXemChiTiet(true);
                             }}
-                            disableInteractive
+                            className="p-1.5 text-indigo-600 hover:bg-indigo-50 rounded transition-colors cursor-pointer"
                           >
-                            <button
-                              onClick={() => {
-                                setSaveID(assignment.maId);
-                                setOpenModelSua(true);
-                              }}
-                              className="p-1.5 text-yellow-600 hover:bg-yellow-50 rounded transition-colors cursor-pointer"
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              className="h-4 w-4 "
+                              viewBox="0 0 20 20"
+                              fill="currentColor"
                             >
-                              <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                className="h-4 w-4"
-                                viewBox="0 0 20 20"
-                                fill="currentColor"
-                              >
-                                <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
-                              </svg>
-                            </button>
-                          </Tooltip>
-                          <Tooltip
-                            title="Hủy"
-                            slotProps={{
-                              popper: {
-                                modifiers: [
-                                  {
-                                    name: "offset",
-                                    options: {
-                                      offset: [0, -14],
+                              <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
+                              <path
+                                fillRule="evenodd"
+                                d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z"
+                                clipRule="evenodd"
+                              />
+                            </svg>
+                          </button>
+                        </Tooltip>
+                        {getRoleGroup(role) === "KN" && (
+                          <>
+                            {assignment?.trangThai === true && (
+                              <>
+                                <Tooltip
+                                  title="Sửa"
+                                  slotProps={{
+                                    popper: {
+                                      modifiers: [
+                                        {
+                                          name: "offset",
+                                          options: {
+                                            offset: [0, -14],
+                                          },
+                                        },
+                                      ],
                                     },
-                                  },
-                                ],
-                              },
-                            }}
-                            disableInteractive
-                          >
-                            <button
-                              onClick={() => {
-                                setSaveID(assignment.maId);
-                                setOpenModelXoa(true);
-                              }}
-                              className="p-1.5 text-red-600 hover:bg-red-50 rounded transition-colors cursor-pointer"
-                            >
-                              <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                className="h-4 w-4 mr-1"
-                                viewBox="0 0 20 20"
-                                fill="currentColor"
-                              >
-                                <path
-                                  fillRule="evenodd"
-                                  d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z"
-                                  clipRule="evenodd"
-                                />
-                              </svg>
-                            </button>
-                          </Tooltip>
-                          <Tooltip
-                            title="Phân công lại"
-                            slotProps={{
-                              popper: {
-                                modifiers: [
-                                  {
-                                    name: "offset",
-                                    options: {
-                                      offset: [0, -14],
+                                  }}
+                                  disableInteractive
+                                >
+                                  <button
+                                    onClick={() => {
+                                      setSaveID(assignment.maId);
+                                      setOpenModelSua(true);
+                                    }}
+                                    className="p-1.5 text-yellow-600 hover:bg-yellow-50 rounded transition-colors cursor-pointer"
+                                  >
+                                    <svg
+                                      xmlns="http://www.w3.org/2000/svg"
+                                      className="h-4 w-4"
+                                      viewBox="0 0 20 20"
+                                      fill="currentColor"
+                                    >
+                                      <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
+                                    </svg>
+                                  </button>
+                                </Tooltip>
+                                <Tooltip
+                                  title="Hủy"
+                                  slotProps={{
+                                    popper: {
+                                      modifiers: [
+                                        {
+                                          name: "offset",
+                                          options: {
+                                            offset: [0, -14],
+                                          },
+                                        },
+                                      ],
                                     },
-                                  },
-                                ],
-                              },
-                            }}
-                            disableInteractive
-                          >
-                            <button
-                              onClick={() => {
-                                setSaveID(assignment.maId);
-                                setOpenModelPhanCongLai(true);
-                              }}
-                              className="p-1.5 text-red-600 hover:bg-red-50 rounded transition-colors cursor-pointer"
-                            >
-                              <MdSwapHoriz className="w-4 h-4" />
-                            </button>
-                          </Tooltip>
-                        </>
-                      )}
+                                  }}
+                                  disableInteractive
+                                >
+                                  <button
+                                    onClick={() => {
+                                      setSaveID(assignment.maId);
+                                      setOpenModelXoa(true);
+                                    }}
+                                    className="p-1.5 text-red-600 hover:bg-red-50 rounded transition-colors cursor-pointer"
+                                  >
+                                    <svg
+                                      xmlns="http://www.w3.org/2000/svg"
+                                      className="h-4 w-4 mr-1"
+                                      viewBox="0 0 20 20"
+                                      fill="currentColor"
+                                    >
+                                      <path
+                                        fillRule="evenodd"
+                                        d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z"
+                                        clipRule="evenodd"
+                                      />
+                                    </svg>
+                                  </button>
+                                </Tooltip>
+                                <Tooltip
+                                  title="Phân công lại"
+                                  slotProps={{
+                                    popper: {
+                                      modifiers: [
+                                        {
+                                          name: "offset",
+                                          options: {
+                                            offset: [0, -14],
+                                          },
+                                        },
+                                      ],
+                                    },
+                                  }}
+                                  disableInteractive
+                                >
+                                  <button
+                                    onClick={() => {
+                                      setSaveID(assignment.maId);
+                                      setOpenModelPhanCongLai(true);
+                                    }}
+                                    className="p-1.5 text-red-600 hover:bg-red-50 rounded transition-colors cursor-pointer"
+                                  >
+                                    <MdSwapHoriz className="w-4 h-4" />
+                                  </button>
+                                </Tooltip>
+                              </>
+                            )}
+                          </>
+                        )}
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
-            ))
+              );
+            })
           )}
         </div>
       ) : (
@@ -357,27 +437,29 @@ const DanhSach = (props: Props) => {
           </button>
         </div>
       )}
-      <div className="p-4 flex justify-center">
-        <Pagination
-          count={totalPages}
-          page={currentPage}
-          onChange={handlePageChange}
-          variant="outlined"
-          shape="rounded"
-          color="primary"
-          sx={{
-            '[aria-label="Go to next page"],[aria-label="Go to previous page"]':
-              {
-                backgroundColor: "#1976d21f",
-                border: "1px solid #1976d280",
-                color: "#1976d2",
+      {currentItems?.length > 0 && (
+        <div className="p-4 flex justify-center">
+          <Pagination
+            count={totalPages}
+            page={currentPage}
+            onChange={handlePageChange}
+            variant="outlined"
+            shape="rounded"
+            color="primary"
+            sx={{
+              '[aria-label="Go to next page"],[aria-label="Go to previous page"]':
+                {
+                  backgroundColor: "#1976d21f",
+                  border: "1px solid #1976d280",
+                  color: "#1976d2",
+                },
+              ".MuiPagination-ul": {
+                justifyContent: "center",
               },
-            ".MuiPagination-ul": {
-              justifyContent: "center",
-            },
-          }}
-        />
-      </div>
+            }}
+          />
+        </div>
+      )}
       <ModelXemChiTiet
         open={openModelXemChiTiet}
         handleClose={() => setOpenModelXemChiTiet(false)}
@@ -397,7 +479,7 @@ const DanhSach = (props: Props) => {
       <ConfirmationModal
         isOpen={openModelXoa}
         onClose={() => setOpenModelXoa(false)}
-        onConfirm={() => setOpenModelXoa(false)}
+        onConfirm={handeHuyPhanCong}
         title={"Xác nhận hủy?"}
         message={"Bạn có chắc chắn muốn hủy?"}
         type={TypeConformation.Error}

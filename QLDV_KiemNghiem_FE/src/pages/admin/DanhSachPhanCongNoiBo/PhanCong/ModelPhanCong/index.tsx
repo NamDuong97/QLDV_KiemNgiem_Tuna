@@ -3,16 +3,15 @@ import { useState } from "react";
 import clsx from "clsx";
 import classes from "./style.module.scss";
 import { queryMauByID } from "../../../../../hooks/personnels/queryMau";
-import {
-  useGetLoaiDichVuAll,
-  useGetTieuChuanAll,
-} from "../../../../../hooks/customers/usePhieuDKyDVKN";
 import { queryNhanVienALL } from "../../../../../hooks/personnels/queryNhanVien";
 import { ListColors } from "../../../../../constants/colors";
 import yup from "../../../../../configs/yup.custom";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { formatDateNotTime } from "../../../../../configs/configAll";
+import { queryCreatePhanCongNoiBo } from "../../../../../hooks/personnels/queryPhanCongNoiBo";
+import { queryClient } from "../../../../../lib/reactQuery";
+import { useStoreNotification } from "../../../../../configs/stores/useStoreNotification";
+import { formatDateNotTime2 } from "../../../../../configs/configAll";
 
 interface Props {
   open: boolean;
@@ -20,17 +19,18 @@ interface Props {
   dataID: any;
   maKhoa: any;
   manv: string;
+  hoTenNVPC: string;
 }
 
 interface FormPhanCong {
   manvXyLy?: string | undefined;
   lamTu: Date;
-  lamToi: Date;
-  thoiGianPhanCong: Date;
+  ngayTraKetQua: Date;
+  ghiChu: string;
 }
 
 const ModelPhanCong = (props: Props) => {
-  const { open, handleClose, dataID, maKhoa, manv } = props;
+  const { open, handleClose, dataID, maKhoa, manv, hoTenNVPC } = props;
 
   const { data } = queryMauByID({
     queryKey: "mauByID",
@@ -40,19 +40,8 @@ const ModelPhanCong = (props: Props) => {
     queryKey: "NhanVienAll",
     params: { getAll: true, maKhoa: maKhoa },
   });
-
   const sample = data;
-
   const [NhanVienID, setNhanVienID] = useState("");
-  const { data: dataTieuChuan } = useGetTieuChuanAll({
-    queryKey: "TieuChuanAll",
-  });
-  const { data: dataLoaiDV } = useGetLoaiDichVuAll({
-    queryKey: "LoaiDichVuAll",
-  });
-  const dataLDV: any = dataLoaiDV;
-  const dataTC: any = dataTieuChuan;
-
   const today = new Date();
   today.setHours(0, 0, 0, 0);
 
@@ -73,16 +62,15 @@ const ModelPhanCong = (props: Props) => {
       .typeError("Vui lòng chọn ngày bắt đầu")
       .required("Vui lòng chọn ngày bắt đầu")
       .min(today, "Ngày bắt đầu phải tính từ hôm nay trở đi"),
-    lamToi: yup
+    ngayTraKetQua: yup
       .date()
-      .typeError("Vui lòng chọn ngày kết thúc")
-      .required("Vui lòng chọn ngày kết thúc")
-      .min(yup.ref("lamTu"), "Ngày kết thúc phải sau ngày bắt đầu"),
-    thoiGianPhanCong: yup
-      .date()
-      .typeError("Vui lòng chọn thời gian phân công")
-      .required("Vui lòng chọn thời gian phân công")
-      .min(today, "Thời gian phân công phải tính từ hôm nay trở đi"),
+      .typeError("Vui lòng chọn ngày trả kết quả")
+      .required("Vui lòng chọn ngày trả kết quả")
+      .min(today, "Ngày trả kết quả phải tính từ hôm nay trở đi"),
+    ghiChu: yup
+      .string()
+      .required("Vui lòng nhập ghi chú")
+      .max(500, "Ghi chú không được quá 500 ký tự"),
   });
 
   const {
@@ -94,21 +82,67 @@ const ModelPhanCong = (props: Props) => {
     defaultValues: {
       manvXyLy: "",
       lamTu: undefined,
-      lamToi: undefined,
-      thoiGianPhanCong: undefined,
+      ngayTraKetQua: undefined,
+      ghiChu: "",
     },
   });
 
+  const handleSettled = async (response: any) => {
+    if (response?.status === 200) {
+      await queryClient.refetchQueries({
+        queryKey: ["DanhSachMau"],
+      });
+      handleClose();
+    }
+  };
+  const showNotification = useStoreNotification(
+    (state: any) => state.showNotification
+  );
+
+  const { mutate } = queryCreatePhanCongNoiBo({
+    queryKey: "createPhanCongNoiBo",
+    onSuccess: (data: any) => {
+      console.log("Phân công thành công:", data);
+      if (data.status === 200) {
+        showNotification({
+          message: "Phân công thành công",
+          status: 200,
+        });
+        return;
+      } else {
+        showNotification({
+          message: "Phân công thất bại",
+          status: 500,
+        });
+      }
+    },
+    onError: (error: any) => {
+      console.log("error", error);
+
+      showNotification({
+        message: "Phân công thất bại",
+        status: 400,
+      });
+    },
+    onSettled: handleSettled,
+  });
+
   const onSubmit = (data: FormPhanCong) => {
+    const tennvXuLy =
+      employees?.find((employee: any) => employee.maId === NhanVienID)?.hoTen ||
+      "";
     const params = {
-      manvXyLy: data.manvXyLy || NhanVienID,
-      lamTu: formatDateNotTime(data.lamTu),
-      lamToi: formatDateNotTime(data.lamToi),
-      thoiGianPhanCong: formatDateNotTime(data.thoiGianPhanCong),
-      maPdkMau: sample?.maPdkMau,
+      maPdkMau: sample?.maId,
+      tenMau: sample?.tenMau,
       manvPhanCong: manv,
+      tennvPhanCong: hoTenNVPC,
+      manvXyLy: data.manvXyLy || NhanVienID,
+      tennvXuLy: tennvXuLy,
+      lamTu: formatDateNotTime2(data.lamTu),
+      ngayTraKetQua: formatDateNotTime2(data.ngayTraKetQua),
+      ghiChu: data.ghiChu,
     };
-    console.log("Submitted Data:", params);
+    mutate(params);
   };
 
   return (
@@ -165,24 +199,6 @@ const ModelPhanCong = (props: Props) => {
                 </h4>
               </div>
             </div>
-            <div className="mt-3 p-3 bg-gray-50 rounded-lg">
-              <p className="text-xs text-gray-500 mb-1">Tiêu chuẩn</p>
-              <p className="text-sm font-medium text-gray-700">
-                {
-                  dataTC?.find((item: any) => item.maId === sample?.maTieuChuan)
-                    ?.tenTieuChuan
-                }
-              </p>
-            </div>
-            <div className="mt-3 p-3 bg-gray-50 rounded-lg">
-              <p className="text-xs text-gray-500 mb-1">Dịch vụ kiểm nghiệm</p>
-              <p className="text-sm font-medium text-gray-700">
-                {
-                  dataLDV?.find((item: any) => item.maLoaiDv === sample?.loaiDv)
-                    ?.tenDichVu
-                }
-              </p>
-            </div>
           </div>
 
           <div>
@@ -236,53 +252,53 @@ const ModelPhanCong = (props: Props) => {
               </p>
             )}
           </div>
-          <div>
-            <label className="text-sm font-medium text-gray-700">
-              Thời gian phân công *
-            </label>
-            <input
-              type="date"
-              {...register("thoiGianPhanCong")}
-              className="w-full py-1 px-4 border border-gray-300 rounded"
-            />
-            {errors.thoiGianPhanCong?.message && (
-              <p className="text-xs text-red-600">
-                {errors.thoiGianPhanCong.message}
-              </p>
-            )}
+          <div className="grid grid-cols-2 gap-6">
+            <div>
+              <label className="text-sm font-medium text-gray-700">
+                Thời gian thực hiện *
+              </label>
+              <div className="flex items-center gap-2">
+                <input
+                  type="date"
+                  {...register("lamTu")}
+                  className="w-full py-1 px-4 border border-gray-300 rounded"
+                />
+              </div>
+              {errors.lamTu && (
+                <p className="text-xs text-red-600">{errors.lamTu.message}</p>
+              )}
+            </div>
+            <div>
+              <label className="text-sm font-medium text-gray-700">
+                Thời gian trả kết quả *
+              </label>
+              <div className="flex items-center gap-2">
+                <input
+                  type="date"
+                  {...register("ngayTraKetQua")}
+                  className="w-full py-1 px-4 border border-gray-300 rounded"
+                />
+              </div>
+              {errors.ngayTraKetQua && (
+                <p className="text-xs text-red-600">
+                  {errors.ngayTraKetQua?.message}
+                </p>
+              )}
+            </div>
           </div>
-
           <div>
             <label className="text-sm font-medium text-gray-700">
-              Thời gian thực hiện *
+              Ghi chú *
             </label>
             <div className="flex items-center gap-2">
-              <input
-                type="date"
-                {...register("lamTu")}
-                className="w-full py-1 px-4 border border-gray-300 rounded"
-              />
-              <span> - </span>
-              <input
-                type="date"
-                {...register("lamToi")}
-                className="w-full py-1 px-4 border border-gray-300 rounded"
+              <textarea
+                {...register("ghiChu")}
+                className="w-full border p-2 max-h-32 min-h-32 border-gray-300 rounded"
               />
             </div>
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                {errors.lamTu && (
-                  <p className="text-xs text-red-600">{errors.lamTu.message}</p>
-                )}
-              </div>
-              <div>
-                {errors.lamToi && (
-                  <p className="text-xs text-red-600 ml-2">
-                    {errors.lamToi.message}
-                  </p>
-                )}
-              </div>
-            </div>
+            {errors.ghiChu && (
+              <p className="text-xs text-red-600">{errors.ghiChu?.message}</p>
+            )}
           </div>
           <div className="flex justify-end space-x-3">
             <button

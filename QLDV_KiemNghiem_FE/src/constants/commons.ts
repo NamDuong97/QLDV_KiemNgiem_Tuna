@@ -52,6 +52,11 @@ export const API = {
     PHAN_CONG_NOI_BO: {
       GET_ALL: "/api/PhanCongNoiBo/getPhanCongNoiBoAll",
       GET_BY_ID: "/api/PhanCongNoiBo/getPhanCongNoiBoByID",
+      CREATE: "/api/PhanCongNoiBo/createPhanCongNoiBo",
+      UPDATE: "/api/PhanCongNoiBo/updatePhanCongNoiBo",
+      PHAN_CONG_LAI: "/api/PhanCongNoiBo/reassignPhanCongNoiBo",
+      HUY_PHAN_CONG: "/api/PhanCongNoiBo/deletePhanCongNoiBo",
+      LICH_SU_PHAN_CONG: "/api/LichSuPhanCong/getLichSuPhanCongAll",
     },
   },
   CUSTOMER: {

@@ -1,20 +1,34 @@
 import { Dialog, Skeleton } from "@mui/material";
 import {
   formatDate,
-  formatDateNotTime,
+  renderTrangThaiPhanCongNoiBo,
 } from "../../../../../configs/configAll";
 import { queryPhanCongNoiBoByID } from "../../../../../hooks/personnels/queryPhanCongNoiBo";
 import ImageGallery from "../../../../../components/ImageGallery";
 import { getRoleGroup } from "../../../../../configs/Role";
 import { role } from "../../../../../configs/parseJwt";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Timeline from "./Timeline";
+import yup from "../../../../../configs/yup.custom";
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { usePersonnel } from "../../../../../contexts/PersonelsProvider";
 
 interface Props {
   open: boolean;
   handleClose: () => void;
   dataID: any;
   handleOpenModelSua: (id: string) => void;
+}
+
+interface FormGiaiDoanThucHien {
+  tenGiaiDoanThucHien: string;
+  ngayNhanMau: Date;
+  thoiGianThucHienFrom: Date;
+  thoiGianThucHienTo: Date;
+  tongThoiGianThucHien: number;
+  noiDungBaoCao: string;
+  ghiChu: string;
 }
 
 const timelineEvents = [
@@ -65,6 +79,109 @@ const ModelXemChiTiet = (props: Props) => {
     params: dataID,
   });
 
+  const [isChiTietTienDo, setisChiTietTienDo] = useState(false);
+  const [saveIdTienDo, setSaveIdTienDo] = useState(null);
+  const { personnelInfo } = usePersonnel();
+
+  const dataChiTietTienDo = timelineEvents.find(
+    (item: any) => item.title === saveIdTienDo
+  );
+
+  const schema = yup.object().shape({
+    tenGiaiDoanThucHien: yup
+      .string()
+      .required("Vui lòng nhập tên giai đoạn thực hiện")
+      .max(200, "Tên giai đoạn thực hiện không được vượt quá 200 ký tự"),
+
+    ngayNhanMau: yup
+      .date()
+      .transform((value, originalValue) =>
+        originalValue ? new Date(originalValue) : value
+      )
+      .typeError("Vui lòng chọn ngày nhận mẫu")
+      .required("Vui lòng chọn ngày nhận mẫu"),
+
+    thoiGianThucHienFrom: yup
+      .date()
+      .transform((value, originalValue) =>
+        originalValue ? new Date(originalValue) : value
+      )
+      .typeError("Vui lòng chọn thời gian bắt đầu")
+      .required("Vui lòng chọn thời gian bắt đầu"),
+
+    thoiGianThucHienTo: yup
+      .date()
+      .transform((value, originalValue) =>
+        originalValue ? new Date(originalValue) : value
+      )
+      .typeError("Vui lòng chọn thời gian kết thúc")
+      .min(yup.ref("thoiGianThucHienFrom"), "Kết thúc phải sau bắt đầu")
+      .required("Vui lòng chọn thời gian kết thúc"),
+
+    tongThoiGianThucHien: yup
+      .number()
+      .typeError("Vui lòng nhập tổng thời gian")
+      .positive("Tổng thời gian phải lớn hơn 0")
+      .required("Vui lòng nhập tổng thời gian"),
+
+    noiDungBaoCao: yup.string().required("Vui lòng nhập nội dung báo cáo"),
+
+    ghiChu: yup
+      .string()
+      .required("Vui lòng nhập ghi chú")
+      .max(500, "Ghi chú không được vượt quá 500 ký tự"),
+  });
+
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm<FormGiaiDoanThucHien>({
+    resolver: yupResolver(schema),
+  });
+
+  const onSubmit = (data: FormGiaiDoanThucHien) => {
+    const {
+      ngayNhanMau,
+      tenGiaiDoanThucHien,
+      thoiGianThucHienFrom,
+      thoiGianThucHienTo,
+      tongThoiGianThucHien,
+      noiDungBaoCao,
+      ghiChu,
+    } = data;
+
+    const params = {
+      ngayNhanMau: ngayNhanMau, // hoặc format bạn muốn
+      manvXuLy: personnelInfo?.maId,
+      tenGiaiDoanThucHien,
+      thoiGianTu: thoiGianThucHienFrom,
+      thoiGianDen: thoiGianThucHienTo,
+      tongThoiGianThucHien,
+      noiDungBaoCao,
+      ghiChu,
+    };
+    console.log("Data submit:", params);
+  };
+
+  const handleShowTienDo = (id: any) => {
+    setisChiTietTienDo(true);
+    setSaveIdTienDo(id);
+  };
+
+  useEffect(() => {
+    reset({
+      tenGiaiDoanThucHien: "",
+      ngayNhanMau: undefined,
+      thoiGianThucHienFrom: undefined,
+      thoiGianThucHienTo: undefined,
+      tongThoiGianThucHien: 0,
+      noiDungBaoCao: "",
+      ghiChu: "",
+    });
+  }, []);
+
   return (
     <Dialog
       open={open}
@@ -114,20 +231,20 @@ const ModelXemChiTiet = (props: Props) => {
                   <Skeleton variant="rounded" width={250} height={20} />
                 ) : (
                   <p className="text-base font-medium text-gray-700">
-                    {formatDate(data?.lamTu)} - {formatDate(data?.lamToi)}
+                    {formatDate(data?.lamTu)}
                   </p>
                 )}
               </div>
               <div>
                 <p className="text-sm text-gray-500">Thời gian phân công</p>
                 <p className="text-base font-medium text-gray-700">
-                  {formatDate(data?.thoiGianPhanCong)}
+                  {formatDate(data?.ngayTao)}
                 </p>
               </div>
               <div>
                 <p className="text-sm text-gray-500">Nhân viên xử lý</p>
                 <p className="text-base font-medium text-gray-700">
-                  {data?.manvXyLy}
+                  {data?.tennvXuly}
                 </p>
               </div>
               <div>
@@ -138,16 +255,22 @@ const ModelXemChiTiet = (props: Props) => {
               </div>
               <div>
                 <p className="text-sm text-gray-500">Trạng thái phân công</p>
-                <span className="text-base font-medium text-blue-600 bg-blue-50 px-2.5 py-1 rounded-full">
-                  Đã duyệt
-                </span>
+                {renderTrangThaiPhanCongNoiBo(data?.trangThai)}
               </div>
               <div>
-                <p className="text-sm text-gray-500">Phân công cho</p>
-                <span className="text-base font-medium text-red-600">
-                  Nguyễn thị C
-                </span>
+                <p className="text-sm text-gray-500"> Thời gian trả kết quả</p>
+                <p className="text-base font-medium text-gray-700">
+                  {formatDate(data?.ngayTraKetQua)}
+                </p>
               </div>
+              {data?.nguoiSua && (
+                <div>
+                  <p className="text-sm text-gray-500">Người sửa</p>
+                  <p className="text-base font-medium text-gray-700">
+                    {data?.nguoiSua} - {formatDate(data?.ngaySua)}
+                  </p>
+                </div>
+              )}
             </div>
           </div>
 
@@ -157,7 +280,10 @@ const ModelXemChiTiet = (props: Props) => {
               {isMau ? (
                 <span
                   className="font-medium text-sm/6 cursor-pointer hover:underline text-blue-600"
-                  onClick={() => setIsMau(false)}
+                  onClick={() => {
+                    setIsMau(false);
+                    setIsThem(false);
+                  }}
                 >
                   Thu gọn
                 </span>
@@ -260,126 +386,240 @@ const ModelXemChiTiet = (props: Props) => {
               </>
             )}
           </div>
-          <div className="">
+          <div className="mt-2">
             <h3 className="text-gray-500 font-semibold text-lg/6 flex items-center gap-2">
               Lịch sử tiến độ
-              {isThem ? (
-                <span
-                  className="font-medium text-sm/6 cursor-pointer hover:underline text-blue-600"
-                  onClick={() => setIsThem(false)}
-                >
-                  Hủy Tạo phiếu
-                </span>
-              ) : (
-                <span
-                  className="font-medium text-sm/6 cursor-pointer hover:underline text-blue-600"
-                  onClick={() => {
-                    setIsThem(true);
-                    setIsMau(false);
-                  }}
-                >
-                  Tạo phiếu tiến độ
-                </span>
-              )}
+              {data?.trangThai === true &&
+                !isChiTietTienDo &&
+                (isThem ? (
+                  <span
+                    className="font-medium text-sm/6 cursor-pointer hover:underline text-blue-600"
+                    onClick={() => setIsThem(false)}
+                  >
+                    Hủy Tạo phiếu
+                  </span>
+                ) : (
+                  <span
+                    className="font-medium text-sm/6 cursor-pointer hover:underline text-blue-600"
+                    onClick={() => {
+                      setIsThem(true);
+                      setIsMau(false);
+                    }}
+                  >
+                    Tạo phiếu tiến độ
+                  </span>
+                ))}
             </h3>
-            {isThem ? (
-              <>
-                <div className="grid grid-cols-4 gap-4">
+            {isChiTietTienDo ? (
+              <div className="mb-6">
+                <h3 className="text-gray-500 font-medium text-bâse/6">
+                  Thông tin giai đoạn {dataChiTietTienDo?.title}
+                </h3>
+                <div className="grid grid-cols-4 gap-x-4 gap-y-2 mb-4">
                   <div>
-                    <p className="text-xs text-gray-500">Tên mẫu</p>
-                    <p className="text-sm">sdfdsf</p>
+                    <p className="text-sm text-gray-500">Thời gian thực hiện</p>
+                    {isLoading ? (
+                      <Skeleton variant="rounded" width={250} height={20} />
+                    ) : (
+                      <p className="text-base font-medium text-gray-700">
+                        {dataChiTietTienDo?.time} - {dataChiTietTienDo?.time}
+                      </p>
+                    )}
                   </div>
                   <div>
-                    <p className="text-xs text-gray-500">Tiêu chuẩn</p>
-                    <p className="text-sm">sdfdsf</p>
-                  </div>
-                  <div>
-                    <p className="text-xs text-gray-500">Dịch vụ</p>
-                    <p className="text-sm">sdfds</p>
-                  </div>
-                  <div>
-                    <p className="text-xs text-gray-500">Số lô</p>
-                    <p className="text-sm">sdf</p>
-                  </div>
-                  <div>
-                    <p className="text-xs text-gray-500">Ngày sản xuất</p>
-                    <p className="text-sm">sdfsdf</p>
-                  </div>
-                  <div>
-                    <p className="text-xs text-gray-500">
-                      Thời gian hoàn thành
+                    <p className="text-sm text-gray-500">Thời gian nhận mẫu</p>
+                    <p className="text-base font-medium text-gray-700">
+                      {dataChiTietTienDo?.time}
                     </p>
-                    <p className="text-sm">sdfsd ngày</p>
                   </div>
                   <div>
-                    <p className="text-xs text-gray-500">
-                      Ngày dự kiến trả kết quả
+                    <p className="text-sm text-gray-500">Nhân viên xử lý</p>
+                    <p className="text-base font-medium text-gray-700">
+                      {data?.tennvXuly}
                     </p>
-                    <p className="text-sm">sdfsdfds</p>
                   </div>
                   <div>
-                    <p className="text-xs text-gray-500">Hạn sử dụng</p>
-                    <p className="text-sm">sdfsdf</p>
+                    <p className="text-sm text-gray-500">
+                      Tổng thời gian thực hiện
+                    </p>
+                    <p className="text-base font-medium text-gray-700">
+                      20 ngày
+                    </p>
                   </div>
-                  <div>
-                    <p className="text-xs text-gray-500">Số lượng</p>
-                    <p className="text-sm">sdfsdf</p>
+                  <div className="col-span-full">
+                    <p className="text-sm text-gray-500">Nội dung báo cáo</p>
+                    <p className="text-base font-medium text-gray-700">
+                      {dataChiTietTienDo?.description}
+                    </p>
                   </div>
-                  <div>
-                    <p className="text-xs text-gray-500">Điều kiện bảo quản</p>
-                    <p className="text-sm">sdfsdf</p>
-                  </div>
-                  <div>
-                    <p className="text-xs text-gray-500">Đơn vị sản xuất</p>
-                    <p className="text-sm">sdf</p>
-                  </div>
-                  <div>
-                    <p className="text-xs text-gray-500">Tình trạng mẫu</p>
-                    <p className="text-sm">sdfsdf</p>
-                  </div>
-                  <div>
-                    <p className="text-xs text-gray-500">Lưu mẫu</p>
-                    <p className="text-sm">sdfsdfds</p>
-                  </div>
-                  <div>
-                    <p className="text-xs text-gray-500">Xuất kết quả</p>
-                    <p className="text-sm">sdfsdfd</p>
+                  <div className="col-span-full">
+                    <p className="text-sm text-gray-500">Ghi chú</p>
+                    <p className="text-base font-medium text-gray-700">
+                      {dataChiTietTienDo?.description}
+                    </p>
                   </div>
                 </div>
-
-                <div className="mt-3">
-                  <p className="text-xs text-gray-500">Yêu cầu kiểm nghiệm</p>
-                  <p className="text-sm p-2 bg-blue-50 rounded">sdfsdfds</p>
+                <div className="flex justify-end">
+                  <button
+                    onClick={() => {
+                      setSaveIdTienDo(null);
+                      setisChiTietTienDo(false);
+                    }}
+                    className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors cursor-pointer"
+                  >
+                    Đóng
+                  </button>
                 </div>
-
-                <div className="mt-3">
-                  <p className="text-xs text-gray-500">Ghi chú khách hàng</p>
-                  <p className="text-sm p-2 bg-blue-50 rounded">sdfsdf</p>
+              </div>
+            ) : isThem ? (
+              <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="text-sm font-medium text-gray-700">
+                      Tên giai đoạn thực hiện *
+                    </label>
+                    <div className="flex items-center gap-2">
+                      <input
+                        {...register("tenGiaiDoanThucHien")}
+                        className="w-full py-1 px-1 border border-gray-300 rounded focus-within:outline-1 focus-within:border-blue-600"
+                      />
+                    </div>
+                    {errors.tenGiaiDoanThucHien && (
+                      <p className="text-xs text-red-600">
+                        {errors.tenGiaiDoanThucHien.message}
+                      </p>
+                    )}
+                  </div>
+                  <div>
+                    <label className="text-sm font-medium text-gray-700">
+                      Ngày nhận mẫu *
+                    </label>
+                    <div className="flex items-center gap-2">
+                      <input
+                        type="date"
+                        {...register("ngayNhanMau")}
+                        className="w-full py-1 px-1 border border-gray-300 rounded focus-within:outline-1 focus-within:border-blue-600"
+                      />
+                    </div>
+                    {errors.ngayNhanMau && (
+                      <p className="text-xs text-red-600">
+                        {errors.ngayNhanMau.message}
+                      </p>
+                    )}
+                  </div>
+                  <div>
+                    <label className="text-sm font-medium text-gray-700">
+                      Thời gian thực hiện *
+                    </label>
+                    <div className="flex items-center gap-2">
+                      <input
+                        type="date"
+                        {...register("thoiGianThucHienFrom")}
+                        className="w-full py-1 px-1 border border-gray-300 rounded focus-within:outline-1 focus-within:border-blue-600"
+                      />
+                      -
+                      <input
+                        type="date"
+                        {...register("thoiGianThucHienTo")}
+                        className="w-full py-1 px-1 border border-gray-300 rounded focus-within:outline-1 focus-within:border-blue-600"
+                      />
+                    </div>
+                    <div className="grid grid-cols-2 gap-2">
+                      <div>
+                        {errors.thoiGianThucHienFrom && (
+                          <p className="text-xs text-red-600">
+                            {errors.thoiGianThucHienFrom.message}
+                          </p>
+                        )}
+                      </div>
+                      <div className="ml-2">
+                        {errors.thoiGianThucHienTo && (
+                          <p className="text-xs text-red-600">
+                            {errors.thoiGianThucHienTo.message}
+                          </p>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                  <div>
+                    <label className="text-sm font-medium text-gray-700">
+                      Tổng thời gian thực hiện *
+                    </label>
+                    <div className="flex items-center gap-2">
+                      <input
+                        type="number"
+                        {...register("tongThoiGianThucHien")}
+                        className="w-full py-1 px-1 border border-gray-300 rounded focus-within:outline-1 focus-within:border-blue-600"
+                      />
+                    </div>
+                    {errors.tongThoiGianThucHien && (
+                      <p className="text-xs text-red-600">
+                        {errors.tongThoiGianThucHien.message}
+                      </p>
+                    )}
+                  </div>
                 </div>
-
-                <div className="mt-3">
-                  <p className="text-xs text-gray-500">Ghi chú</p>
-                  <p className="text-sm p-2 bg-blue-50 rounded">sdfsdfsd</p>
+                <div>
+                  <label className="text-sm font-medium text-gray-700">
+                    Nội dung báo cáo *
+                  </label>
+                  <div className="flex items-center gap-2">
+                    <textarea
+                      {...register("noiDungBaoCao")}
+                      className="w-full border p-2 max-h-20 min-h-20 border-gray-300 rounded focus-within:outline-1 focus-within:border-blue-600"
+                    />
+                  </div>
+                  {errors.noiDungBaoCao && (
+                    <p className="text-xs text-red-600">
+                      {errors.noiDungBaoCao.message}
+                    </p>
+                  )}
                 </div>
-
-                <div className="mt-3">
-                  <p className="text-xs text-gray-500">Ảnh mẫu</p>
-                  <ImageGallery images={[]} />
+                <div>
+                  <label className="text-sm font-medium text-gray-700">
+                    Ghi chú *
+                  </label>
+                  <div className="flex items-center gap-2">
+                    <textarea
+                      {...register("ghiChu")}
+                      className="w-full border p-2 max-h-20 min-h-20 border-gray-300 rounded focus-within:outline-1 focus-within:border-blue-600"
+                    />
+                  </div>
+                  {errors.ghiChu && (
+                    <p className="text-xs text-red-600">
+                      {errors.ghiChu.message}
+                    </p>
+                  )}
                 </div>
-              </>
+                <div className="flex justify-end space-x-3">
+                  <button
+                    type="button"
+                    onClick={() => setIsThem(false)}
+                    className="px-4 py-2 text-sm font-medium text-white bg-yellow-500 rounded-lg hover:bg-yellow-600 transition-colors cursor-pointer"
+                  >
+                    Hủy Tạo phiếu
+                  </button>
+                  <button className="px-4 py-2 text-sm font-medium text-white bg-green-500 rounded-lg hover:bg-green-700 transition-colors cursor-pointer">
+                    Tạo phiếu
+                  </button>
+                </div>
+              </form>
             ) : (
-              <Timeline events={timelineEvents} />
+              <Timeline
+                events={timelineEvents}
+                handleShowTienDo={handleShowTienDo}
+              />
             )}
           </div>
 
-          <div className="flex justify-end space-x-3">
+          <div className="flex justify-end space-x-3 mt-6 pt-6 border-t border-gray-300">
             <button
               onClick={handleClose}
               className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors cursor-pointer"
             >
               Đóng
             </button>
-            {getRoleGroup(role) === "KN" && (
+            {getRoleGroup(role) === "KN" && data?.trangThai === true && (
               <button
                 onClick={() => handleOpenModelSua(dataID)}
                 className="px-4 py-2 text-sm font-medium text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 transition-colors cursor-pointer"

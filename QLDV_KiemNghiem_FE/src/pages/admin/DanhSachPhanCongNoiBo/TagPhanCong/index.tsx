@@ -30,6 +30,16 @@ const TagPhanCong = (props: Props) => {
       >
         Danh Sách phân công
       </button>
+      <button
+        className={`px-3 py-1.5 cursor-pointer text-sm font-medium rounded-md ${
+          isTag === tagPhanCong.Lich_Su_Phan_Cong
+            ? "bg-indigo-100 text-indigo-800"
+            : "text-gray-600 hover:bg-gray-100"
+        }`}
+        onClick={() => setIsTag(tagPhanCong.Lich_Su_Phan_Cong)}
+      >
+        Lịch sử phân công
+      </button>
     </div>
   );
 };

@@ -167,18 +167,13 @@ const trangThaiPhieuDeXuatPhongBan: Record<string, TrangThai> = {
 };
 
 const trangThaiPhanCongNoiBo: Record<string, TrangThai> = {
-  0: {
+  false: {
     text: "Đã Hủy",
     bgColor: "bg-yellow-100",
     textColor: "text-yellow-800",
   },
-  1: {
-    text: "Chờ duyệt",
-    bgColor: "bg-blue-100",
-    textColor: "text-blue-800",
-  },
-  2: {
-    text: "Đã duyệt",
+  true: {
+    text: "Đã phân công",
     bgColor: "bg-green-100",
     textColor: "text-green-800",
   },
