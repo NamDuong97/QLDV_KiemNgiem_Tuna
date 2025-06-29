@@ -23,8 +23,8 @@ namespace QLDV_KiemNghiem_BE.Services
         {
             var result = await _context.PhanCongNoiBos.
                 FromSqlRaw("exec sp_getAllPhanCongNoiBoByBoLoc @manvPhanCong={0}, @manvXyLy = {1}, @status = {2}," +
-                "@ngayTraKetQuaFrom = {3}",
-                param.ManvPhanCong ?? "", param.ManvXuLy ?? "", param.TrangThai ?? "", param.NgayTraKetQuaFrom ?? "").ToListAsync();
+                "@ngayTraKetQuaFrom = {3}, @maKhoa = {4}",
+                param.ManvPhanCong ?? "", param.ManvXuLy ?? "", param.TrangThai ?? "", param.NgayTraKetQuaFrom ?? "", param.MaKhoa).ToListAsync();
 
             foreach (var item in result)
             {
