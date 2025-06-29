@@ -44,5 +44,6 @@ namespace QLDV_KiemNghiem_BE.DTO.ResponseDto
         public string? TrangThai { get; set; }
 
         public string? YeuCauKiemNghiem { get; set; }
+        public List<PhieuPhanTichKetQuaChiTietDto> phieuPhanTichKetQuaChiTietDtos { get; set; } = new List<PhieuPhanTichKetQuaChiTietDto>();
     }
 }

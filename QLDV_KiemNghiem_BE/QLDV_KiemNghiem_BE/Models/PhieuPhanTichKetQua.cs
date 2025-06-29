@@ -64,6 +64,9 @@ public partial class PhieuPhanTichKetQua
 
     public string? YeuCauKiemNghiem { get; set; }
 
+    [StringLength(50)]
+    public string? MabldDuyet { get; set; }
+
     [ForeignKey("MaKhoa")]
     [InverseProperty("PhieuPhanTichKetQuas")]
     public virtual Khoa? MaKhoaNavigation { get; set; }
@@ -71,6 +74,10 @@ public partial class PhieuPhanTichKetQua
     [ForeignKey("MaPdkMau")]
     [InverseProperty("PhieuPhanTichKetQuas")]
     public virtual PhieuDangKyMau? MaPdkMauNavigation { get; set; }
+
+    [ForeignKey("MabldDuyet")]
+    [InverseProperty("PhieuPhanTichKetQuaMabldDuyetNavigations")]
+    public virtual NhanVien? MabldDuyetNavigation { get; set; }
 
     [ForeignKey("ManvKiemTra")]
     [InverseProperty("PhieuPhanTichKetQuaManvKiemTraNavigations")]

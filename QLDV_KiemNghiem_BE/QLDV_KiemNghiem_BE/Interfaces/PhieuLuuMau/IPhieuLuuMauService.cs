@@ -1,4 +1,5 @@
-﻿using QLDV_KiemNghiem_BE.DTO.ResponseDto;
+﻿using QLDV_KiemNghiem_BE.DTO.RequestDto;
+using QLDV_KiemNghiem_BE.DTO.ResponseDto;
 using QLDV_KiemNghiem_BE.Models;
 using QLDV_KiemNghiem_BE.RequestFeatures;
 
@@ -8,8 +9,8 @@ namespace QLDV_KiemNghiem_BE.Interfaces
     {
         Task<IEnumerable<PhieuLuuMauDto>> GetPhieuLuuMausAllAsync();
         Task<PhieuLuuMauDto?> FindPhieuLuuMauAsync(string maPhieuLuuMau);
-        Task<ResponseModel1<PhieuLuuMauDto>> CreatePhieuLuuMauAsync(PhieuLuuMauDto PhieuLuuMauDto);
-        Task<ResponseModel1<PhieuLuuMauDto>> UpdatePhieuLuuMauAsync(PhieuLuuMauDto PhieuLuuMauDto);
-        Task<bool> DeletePhieuLuuMauAsync(PhieuLuuMau PhieuLuuMau);
+        Task<ResponseModel1<PhieuLuuMauDto>> CreatePhieuLuuMauAsync(PhieuLuuMauRequestCreateDto PhieuLuuMauDto, string user);
+        Task<ResponseModel1<PhieuLuuMauDto>> UpdatePhieuLuuMauAsync(PhieuLuuMauRequestUpdateDto PhieuLuuMauDto, string user);
+        Task<ResponseModel1<PhieuLuuMauDto>> DeletePhieuLuuMauAsync(string maPhieuLuuMau, string user, bool isDel);
     }
 }

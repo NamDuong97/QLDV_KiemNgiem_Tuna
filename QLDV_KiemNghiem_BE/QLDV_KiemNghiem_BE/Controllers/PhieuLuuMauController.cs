@@ -1,10 +1,13 @@
-﻿using AutoMapper;
+﻿using System.Security.Claims;
+using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using QLDV_KiemNghiem_BE.DTO.RequestDto;
 using QLDV_KiemNghiem_BE.DTO.ResponseDto;
 using QLDV_KiemNghiem_BE.Interfaces.ManagerInterface;
 using QLDV_KiemNghiem_BE.Models;
 using QLDV_KiemNghiem_BE.RequestFeatures;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace QLDV_KiemNghiem_BE.Controllers
 {
@@ -42,7 +45,7 @@ namespace QLDV_KiemNghiem_BE.Controllers
 
         [HttpPost]
         [Route("createPhieuLuuMau")]
-        public async Task<ActionResult> createPhieuLuuMau(PhieuLuuMauDto PhieuLuuMauDto)
+        public async Task<ActionResult> createPhieuLuuMau(PhieuLuuMauRequestCreateDto PhieuLuuMauDto)
         {
             if (!ModelState.IsValid)
             {
@@ -53,7 +56,8 @@ namespace QLDV_KiemNghiem_BE.Controllers
                 _logger.LogError("Loi validate tham so dau vao");
                 return BadRequest(new { Errors = errors });
             }
-            ResponseModel1<PhieuLuuMauDto> create = await _service.PhieuLuuMau.CreatePhieuLuuMauAsync(PhieuLuuMauDto);
+            var user = User.FindFirst(ClaimTypes.Email)?.Value.ToString() ?? "know"; 
+            ResponseModel1<PhieuLuuMauDto> create = await _service.PhieuLuuMau.CreatePhieuLuuMauAsync(PhieuLuuMauDto, user);
             if (create.KetQua)
             {
                 _logger.LogDebug(create.Message);
@@ -68,7 +72,7 @@ namespace QLDV_KiemNghiem_BE.Controllers
 
         [HttpPut]
         [Route("updatePhieuLuuMau")]
-        public async Task<ActionResult> updatePhieuLuuMau(PhieuLuuMauDto PhieuLuuMauDto)
+        public async Task<ActionResult> updatePhieuLuuMau(PhieuLuuMauRequestUpdateDto PhieuLuuMauDto)
         {
             if (!ModelState.IsValid)
             {
@@ -79,7 +83,8 @@ namespace QLDV_KiemNghiem_BE.Controllers
                 _logger.LogError("Loi validate tham so dau vao");
                 return BadRequest(new { Errors = errors });
             }
-            ResponseModel1<PhieuLuuMauDto> update = await _service.PhieuLuuMau.UpdatePhieuLuuMauAsync(PhieuLuuMauDto);
+            var user = User.FindFirst(ClaimTypes.Email)?.Value.ToString() ?? "know";
+            ResponseModel1<PhieuLuuMauDto> update = await _service.PhieuLuuMau.UpdatePhieuLuuMauAsync(PhieuLuuMauDto, user);
             if (update.KetQua)
             {
                 _logger.LogDebug(update.Message);
@@ -94,27 +99,19 @@ namespace QLDV_KiemNghiem_BE.Controllers
 
         [HttpDelete]
         [Route("deletePhieuLuuMau")]
-        public async Task<ActionResult> deletePhieuLuuMau(PhieuLuuMau PhieuLuuMau)
+        public async Task<ActionResult> deletePhieuLuuMau(string maPhieuLuuMau, bool isDel)
         {
-            var checkExists = await _service.PhieuLuuMau.FindPhieuLuuMauAsync(PhieuLuuMau.MaId);
-            if (checkExists != null)
+            var user = User.FindFirst(ClaimTypes.Email)?.Value.ToString() ?? "know";
+            ResponseModel1<PhieuLuuMauDto> delete = await _service.PhieuLuuMau.DeletePhieuLuuMauAsync(maPhieuLuuMau, user, isDel);
+            if (delete.KetQua)
             {
-                bool delete = await _service.PhieuLuuMau.DeletePhieuLuuMauAsync(PhieuLuuMau);
-                if (delete)
-                {
-                    _logger.LogDebug("Cap nhat phieu luu mau thanh cong");
-                    return Ok(PhieuLuuMau);
-                }
-                else
-                {
-                    _logger.LogDebug("Cap nhat phieu luu mau that bai");
-                    return BadRequest();
-                }
+                _logger.LogDebug(delete.Message);
+                return Ok(delete.Data);
             }
             else
             {
-                _logger.LogDebug("phieu luu mau khong ton tai");
-                return BadRequest();
+                _logger.LogDebug(delete.Message);
+                return BadRequest(delete.Message);
             }
         }
     }
