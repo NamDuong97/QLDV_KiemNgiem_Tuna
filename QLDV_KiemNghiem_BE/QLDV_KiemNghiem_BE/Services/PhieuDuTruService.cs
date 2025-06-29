@@ -4,6 +4,10 @@ using QLDV_KiemNghiem_BE.Models;
 using QLDV_KiemNghiem_BE.Interfaces;
 using QLDV_KiemNghiem_BE.RequestFeatures;
 using QLDV_KiemNghiem_BE.DTO.ResponseDto;
+using QLDV_KiemNghiem_BE.DTO.RequestDto;
+using Microsoft.AspNetCore.Routing.Template;
+using Microsoft.EntityFrameworkCore;
+using QLDV_KiemNghiem_BE.Data;
 
 namespace QLDV_KiemNghiem_BE.Services
 {
@@ -11,10 +15,12 @@ namespace QLDV_KiemNghiem_BE.Services
     {
         private readonly IRepositoryManager _repositoryManager;
         private readonly IMapper _mapper;
-        public PhieuDuTruService(IRepositoryManager repositoryManager, IMapper mapper)
+        private readonly DataContext _context;
+        public PhieuDuTruService(IRepositoryManager repositoryManager, IMapper mapper, DataContext context)
         {
             _repositoryManager = repositoryManager;
             _mapper = mapper;
+            _context = context;
         }
         public async Task<IEnumerable<PhieuDuTruDto>> GetPhieuDuTrusAllAsync()
         {
@@ -25,11 +31,11 @@ namespace QLDV_KiemNghiem_BE.Services
         public async Task<PhieuDuTruDto?> FindPhieuDuTruAsync(string maPhieuDuTru)
         {
             if (maPhieuDuTru == null || maPhieuDuTru == "") return null;
-            var PhieuDuTruDomain = await _repositoryManager.PhieuDuTru.FindPhieuDuTruAsync(maPhieuDuTru);
+            var PhieuDuTruDomain = await _repositoryManager.PhieuDuTru.FindPhieuDuTrusAsync(maPhieuDuTru, false);
             var result = _mapper.Map<PhieuDuTruDto>(PhieuDuTruDomain);
             return result;
         }
-        public async Task<ResponseModel1<PhieuDuTruDto>> CreatePhieuDuTruAsync(PhieuDuTruDto PhieuDuTruDto)
+        public async Task<ResponseModel1<PhieuDuTruDto>> CreatePhieuDuTruAsync(PhieuDuTruRequestCreateDto PhieuDuTruDto, string user, string userId)
         {
             if (PhieuDuTruDto == null) return new ResponseModel1<PhieuDuTruDto>
             {
@@ -37,22 +43,39 @@ namespace QLDV_KiemNghiem_BE.Services
                 Message = "Tham so gui len null vui long kiem tra lai!",
                 Data = null
             };
-
-            var checkExistsByID = await _repositoryManager.PhieuDuTru.FindPhieuDuTruAsync(PhieuDuTruDto.MaId);
-            if (checkExistsByID != null) return new ResponseModel1<PhieuDuTruDto>
+            PhieuDuTru phieuDuTru = new PhieuDuTru()
             {
-                KetQua = false,
-                Message = "Du lieu them vo da ton tai, vui long kiem tra lai",
-                Data = null
+                MaId = Guid.NewGuid().ToString(),
+                MaPhieuDuTru = "PDT_" + PublicFunction.getTimeSystem(),
+                ManvLapPhieu = PhieuDuTruDto.ManvLapPhieu,
+                MaPdkMau = PhieuDuTruDto.MaPdkMau,
+                NgayLap = DateTime.Now,
+                MaKhoa = PhieuDuTruDto.MaKhoa,
+                TrangThai =true,
+                GhiChu = PhieuDuTruDto.GhiChu
             };
 
-            var PhieuDuTruDomain = _mapper.Map<PhieuDuTru>(PhieuDuTruDto);
-            PhieuDuTruDomain.MaId = Guid.NewGuid().ToString();
-            PhieuDuTruDomain.NgayLap = DateTime.Now;
+            if(PhieuDuTruDto.ChiTietPhieuDuTrus!= null && PhieuDuTruDto.ChiTietPhieuDuTrus.Count() > 0)
+            {
+                foreach(var item in PhieuDuTruDto.ChiTietPhieuDuTrus)
+                {
+                    ChiTietPhieuDuTru chiTietPhieuDuTru = new ChiTietPhieuDuTru()
+                    {
+                        MaId = Guid.NewGuid().ToString(),
+                        MaPhieuDuTru = phieuDuTru.MaId,
+                        DonViTinh = item.DonViTinh,
+                        SoLuong = item.SoLuong,
+                        GhiChu =item.GhiChu,
+                        TrangThai = "active",
+                        MaDmPlhc = item.MaDmPlhc,
+                    };
+                    phieuDuTru.ChiTietPhieuDuTrus.Add(chiTietPhieuDuTru);
+                }
+            }
 
-            _repositoryManager.PhieuDuTru.CreatePhieuDuTruAsync(PhieuDuTruDomain);
+            _repositoryManager.PhieuDuTru.CreatePhieuDuTruAsync(phieuDuTru);
             bool check = await _repositoryManager.SaveChangesAsync();
-            var PhieuDuTruReturnDto = _mapper.Map<PhieuDuTruDto>(PhieuDuTruDomain);
+            var PhieuDuTruReturnDto = _mapper.Map<PhieuDuTruDto>(phieuDuTru);
 
             return new ResponseModel1<PhieuDuTruDto>
             {
@@ -61,8 +84,9 @@ namespace QLDV_KiemNghiem_BE.Services
                 Data = PhieuDuTruReturnDto
             };
         }
-        public async Task<ResponseModel1<PhieuDuTruDto>> UpdatePhieuDuTruAsync(PhieuDuTruDto PhieuDuTruDto)
+        public async Task<ResponseModel1<PhieuDuTruDto>> UpdatePhieuDuTruAsync(PhieuDuTruRequestUpdateDto PhieuDuTruDto, string user, string userId)
         {
+            List<ChiTietPhieuDuTru> chiTietPhieuDuTrus = new List<ChiTietPhieuDuTru>();
             if (PhieuDuTruDto == null || PhieuDuTruDto.MaId == null || PhieuDuTruDto.MaId == "") return new ResponseModel1<PhieuDuTruDto>
             {
                 KetQua = false,
@@ -70,7 +94,7 @@ namespace QLDV_KiemNghiem_BE.Services
                 Data = null
             };
 
-            var PhieuDuTruCheck = await _repositoryManager.PhieuDuTru.FindPhieuDuTruAsync(PhieuDuTruDto.MaId);
+            var PhieuDuTruCheck = await _repositoryManager.PhieuDuTru.FindPhieuDuTruAsync(PhieuDuTruDto.MaId, false);
             if (PhieuDuTruCheck == null)
             {
                 return new ResponseModel1<PhieuDuTruDto>
@@ -80,12 +104,61 @@ namespace QLDV_KiemNghiem_BE.Services
                     Data = null
                 };
             }
-            var PhieuDuTruDomain = _mapper.Map<PhieuDuTru>(PhieuDuTruDto);
-            PhieuDuTruDomain.NgaySua = DateTime.Now;
-            PhieuDuTruDomain.NguoiSua = "admin";
-            _repositoryManager.PhieuDuTru.UpdatePhieuDuTruAsync(PhieuDuTruDomain);
+            // Su dung mapper co theo keo theo cac thuoc tinh navigation bi theo doi 
+            PhieuDuTruCheck.MaPdkMau = PhieuDuTruDto.MaPdkMau;
+            PhieuDuTruCheck.MaKhoa = PhieuDuTruDto.MaKhoa;
+            PhieuDuTruCheck.GhiChu = PhieuDuTruDto.GhiChu;
+            PhieuDuTruCheck.NgaySua = DateTime.Now;
+            PhieuDuTruCheck.NguoiSua = user;
+
+            // Kiem tra cap nhat chitietphieudutru
+            if(PhieuDuTruDto.ChiTietPhieuDuTrus != null && PhieuDuTruDto.ChiTietPhieuDuTrus.Count() > 0)
+            {
+                foreach (var item in PhieuDuTruDto.ChiTietPhieuDuTrus)
+                {
+                    // Thêm mới
+                    if (string.IsNullOrEmpty(item.MaId))
+                    {
+                        var temp = new ChiTietPhieuDuTru
+                        {
+                            MaId = Guid.NewGuid().ToString(),
+                            MaPhieuDuTru = PhieuDuTruCheck.MaId,
+                            DonViTinh = item.DonViTinh,
+                            SoLuong = item.SoLuong,
+                            GhiChu = item.GhiChu,
+                            MaDmPlhc = item.MaDmPlhc,
+                        };
+                        _repositoryManager.ChiTietPhieuDuTru.CreateChiTietPhieuDuTru(temp);
+                        chiTietPhieuDuTrus.Add(temp);
+                    }
+                    else // xoa, sua
+                    {
+                        var existing = await _repositoryManager.ChiTietPhieuDuTru.FindChiTietPhieuDuTruByPDTAsync(PhieuDuTruDto.MaId, item.MaId, false);
+                        if (existing != null)
+                        {
+                            if (item.IsDel)
+                            {
+                                _repositoryManager.ChiTietPhieuDuTru.DeleteChiTietPhieuDuTruAsync(existing);
+                            }
+                            else
+                            {
+                                existing.DonViTinh = item.DonViTinh;
+                                existing.SoLuong = item.SoLuong;
+                                existing.GhiChu = item.GhiChu;
+                                existing.MaDmPlhc = item.MaDmPlhc;
+                                _repositoryManager.ChiTietPhieuDuTru.UpdateChiTietPhieuDuTruAsync(existing);
+                                chiTietPhieuDuTrus.Add(existing);
+                            }
+                        }
+                    }
+                }
+            }
+            _repositoryManager.PhieuDuTru.UpdatePhieuDuTruAsync(PhieuDuTruCheck);
+            _context.ChangeTracker.DetectChanges();
+            Console.WriteLine(_context.ChangeTracker.DebugView.LongView);
             bool check = await _repositoryManager.SaveChangesAsync();
-            var PhieuDuTruReturnDto = _mapper.Map<PhieuDuTruDto>(PhieuDuTruDomain);
+            var PhieuDuTruReturnDto = _mapper.Map<PhieuDuTruDto>(PhieuDuTruCheck);
+            PhieuDuTruReturnDto.ChiTietPhieuDuTrus = _mapper.Map<List<ChiTietPhieuDuTruDto>>(chiTietPhieuDuTrus);
             return new ResponseModel1<PhieuDuTruDto>
             {
                 KetQua = check,
@@ -93,20 +166,47 @@ namespace QLDV_KiemNghiem_BE.Services
                 Data = PhieuDuTruReturnDto
             };
         }
-        public async Task<bool> DeletePhieuDuTruAsync(PhieuDuTru PhieuDuTru)
+        public async Task<ResponseModel1<PhieuDuTruDto>> DeletePhieuDuTruAsync(string maPhieuDuTru, string user, string userId)
         {
-            if (PhieuDuTru == null) return false;
-            else
+            if (maPhieuDuTru == null) return new ResponseModel1<PhieuDuTruDto>
             {
-                var PhieuDuTruDomain = await _repositoryManager.PhieuDuTru.FindPhieuDuTruAsync(PhieuDuTru.MaId);
-                if (PhieuDuTruDomain == null)
+                KetQua = false,
+                Message = "Thieu du lieu dau vao, vui long kiem tra lai!",
+                Data = null
+            };
+           
+            var PhieuDuTruDomain = await _repositoryManager.PhieuDuTru.FindPhieuDuTruAsync(maPhieuDuTru, false);
+            if (PhieuDuTruDomain == null)
+            {
+                return new ResponseModel1<PhieuDuTruDto>
                 {
-                    return false;
-                }
-                _repositoryManager.PhieuDuTru.DeletePhieuDuTruAsync(PhieuDuTruDomain);
-                bool check = await _repositoryManager.SaveChangesAsync();
-                return check;
+                    KetQua = false,
+                    Message = "Phieu du tru khong ton tai, vui long kiem tra lai!",
+                    Data = null
+                };
             }
+            PhieuDuTruDomain.TrangThai = false;
+            PhieuDuTruDomain.NguoiSua = user;
+            PhieuDuTruDomain.NgaySua = DateTime.Now;
+
+            // Cap nhat trang thai cho chitietphieudutru
+            var chiTietPhieuDuTrus = await _repositoryManager.ChiTietPhieuDuTru.FindChiTietPhieuDuTruByPDTsAsync(maPhieuDuTru);
+            if(chiTietPhieuDuTrus!= null && chiTietPhieuDuTrus.Count() > 0)
+            {
+                foreach(var item in chiTietPhieuDuTrus)
+                {
+                    item.TrangThai = "no active";
+                    _repositoryManager.ChiTietPhieuDuTru.UpdateChiTietPhieuDuTruAsync(item);
+                }
+            }
+
+            _repositoryManager.PhieuDuTru.UpdatePhieuDuTruAsync(PhieuDuTruDomain);
+            bool check = await _repositoryManager.SaveChangesAsync();
+            return new ResponseModel1<PhieuDuTruDto>
+            {
+                KetQua = check,
+                Message = check ? "Xoa men phieu du tru thanh cong!": "Xoa men phieu du tru that bai!",
+            };
         }
     }
 }

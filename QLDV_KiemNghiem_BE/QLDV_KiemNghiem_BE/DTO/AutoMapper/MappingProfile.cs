@@ -170,7 +170,15 @@ namespace QLDV_KiemNghiem_BE.DTO.AutoMapper
                   .ForAllMembers(opts => opts.Condition((src, dest, srcMember) =>
                     srcMember != null && (!(srcMember is string str) || !string.IsNullOrWhiteSpace(str))));
 
-            CreateMap<PhieuLuuMau, PhieuLuuMauDto>().ReverseMap()
+            CreateMap<PhieuDuTruRequestCreateDto, PhieuDuTru>().ReverseMap()
+                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) =>
+                   srcMember != null && (!(srcMember is string str) || !string.IsNullOrWhiteSpace(str))));
+
+            CreateMap<PhieuDuTruRequestUpdateDto, PhieuDuTru>().ReverseMap()
+                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) =>
+                   srcMember != null && (!(srcMember is string str) || !string.IsNullOrWhiteSpace(str))));
+
+            CreateMap<PhieuLuuMau, PhieuLuuMauDto>().ReverseMap().ForMember(dest => dest.MaId, opt => opt.Ignore())
                   .ForAllMembers(opts => opts.Condition((src, dest, srcMember) =>
                     srcMember != null && (!(srcMember is string str) || !string.IsNullOrWhiteSpace(str))));
 
@@ -193,6 +201,18 @@ namespace QLDV_KiemNghiem_BE.DTO.AutoMapper
             CreateMap<PhieuTienDoLamViec, PhieuTienDoLamViecDto>().ReverseMap().ForMember(dest => dest.MaId, opt => opt.Ignore())
                   .ForAllMembers(opts => opts.Condition((src, dest, srcMember) =>
                     srcMember != null && (!(srcMember is string str) || !string.IsNullOrWhiteSpace(str))));
+
+            CreateMap<ChiTietPhieuDuTruRequestCreateDto, ChiTietPhieuDuTru>().ReverseMap()
+                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) =>
+                   srcMember != null && (!(srcMember is string str) || !string.IsNullOrWhiteSpace(str))));
+
+            CreateMap<ChiTietPhieuDuTruRequestUpdateDto, ChiTietPhieuDuTru>().ReverseMap()
+                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) =>
+                   srcMember != null && (!(srcMember is string str) || !string.IsNullOrWhiteSpace(str))));
+
+            CreateMap<ChiTietPhieuDuTruDto, ChiTietPhieuDuTru>().ReverseMap()
+                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) =>
+                   srcMember != null && (!(srcMember is string str) || !string.IsNullOrWhiteSpace(str))));
         }
     }
 }

@@ -30,7 +30,7 @@ namespace QLDV_KiemNghiem_BE.Repositories
         }
         public async Task<LichSuPhanCong?> FindLichSuPhanCongByPCHienTaiAsync(string maPhanCong, string manvXuLy, bool track)
         {
-            if(track)
+            if (track)
             {
                 return await _context.LichSuPhanCongs.Where(it => it.MaPhanCongNoiBo == maPhanCong && it.ManvMoi == manvXuLy).FirstOrDefaultAsync();
 

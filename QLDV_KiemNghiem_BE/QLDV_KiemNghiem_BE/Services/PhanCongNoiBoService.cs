@@ -58,11 +58,41 @@ namespace QLDV_KiemNghiem_BE.Services
                 ManvMoi = phanCongNoiBoDomain.ManvXyLy,
                 TennvMoi = phanCongNoiBoDomain.TennvXuly,
                 LamTu = phanCongNoiBoDomain.LamTu,
-                ManvPhanCong =  "NV009",
+                ManvPhanCong = userId ?? "NV009",
                 TennvPhanCong = phanCongNoiBoDomain.TennvPhanCong,
                 NgayTao = DateTime.Now,
                 NguoiTao = user,
             };
+
+            // Cập nhật trạng thái mẫu này là đã phân công nội bộ
+            var phieuDangKyMau = await _repositoryManager.PhieuDangKyMau.FindPhieuDangKyMauAsync(PhanCongNoiBoDto.MaPdkMau);
+            if(phieuDangKyMau== null)
+            {
+                return new ResponseModel1<PhanCongNoiBoDto>
+                {
+                    KetQua = false,
+                    Message = "Mau dang phan cong chua ton tai, vui long kiem tra lai!",
+                    Data = null
+                };
+            }
+            phieuDangKyMau.TrangThaiPhanCong = 7;
+
+            // Cập nhật ngay sua, nguoi sua cho phieu dang ky
+            var phieuDangKy = await _repositoryManager.PhieuDangKy.FindPhieuDangKyAsync(phieuDangKyMau?.MaPhieuDangKy ?? "");
+            if (phieuDangKy == null)
+            {
+                return new ResponseModel1<PhanCongNoiBoDto>
+                {
+                    KetQua = false,
+                    Message = "Phieu dang ky cua mau dang phan cong chua ton tai, vui long kiem tra lai!",
+                    Data = null
+                };
+            }
+            phieuDangKy.NgaySua = DateTime.Now;
+            phieuDangKy.NguoiSua = user;
+
+            _repositoryManager.PhieuDangKyMau.UpdatePhieuDangKyMauAsync(phieuDangKyMau);
+            _repositoryManager.PhieuDangKy.UpdatePhieuDangKyAsync(phieuDangKy);
             _repositoryManager.LichSuPhanCong.CreateLichSuPhanCongAsync(lichSuPhanCong);
             _repositoryManager.PhanCongNoiBo.CreatePhanCongNoiBoAsync(phanCongNoiBoDomain);
             bool check = await _repositoryManager.SaveChangesAsync();

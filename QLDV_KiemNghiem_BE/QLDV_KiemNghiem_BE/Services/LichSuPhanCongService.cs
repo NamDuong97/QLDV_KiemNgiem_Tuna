@@ -34,6 +34,14 @@ namespace QLDV_KiemNghiem_BE.Services
             var result = _mapper.Map<LichSuPhanCongDto>(LichSuPhanCongDomain);
             return result;
         }
+
+        public async Task<List<LichSuPhanCongDto>?> GetLichSuPhanCongByPCNB(string maPCNB)
+        {
+            var results = await _repositoryManager.LichSuPhanCong.FindLichSuPhanCongByPCNBAsync(maPCNB, false);
+            var data =  _mapper.Map<List<LichSuPhanCongDto>>(results);
+            return data;
+        }
+
         public async Task<ResponseModel1<LichSuPhanCongDto>> CreateLichSuPhanCongAsync(LichSuPhanCongRequestCreateDto LichSuPhanCongDto, string user, string userId)
         {
             if (LichSuPhanCongDto == null) return new ResponseModel1<LichSuPhanCongDto>

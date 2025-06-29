@@ -38,6 +38,9 @@ public partial class PhieuDuTru
     [Column(TypeName = "datetime")]
     public DateTime? NgaySua { get; set; }
 
+    [StringLength(500)]
+    public string? GhiChu { get; set; }
+
     [InverseProperty("MaPhieuDuTruNavigation")]
     public virtual ICollection<ChiTietPhieuDuTru> ChiTietPhieuDuTrus { get; set; } = new List<ChiTietPhieuDuTru>();
 
