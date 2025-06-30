@@ -1,9 +1,11 @@
 ﻿using AutoMapper;
+using QLDV_KiemNghiem_BE.DTO.ResponseDto;
+using QLDV_KiemNghiem_BE.Interfaces;
 using QLDV_KiemNghiem_BE.Interfaces.ManagerInterface;
 using QLDV_KiemNghiem_BE.Models;
-using QLDV_KiemNghiem_BE.Interfaces;
 using QLDV_KiemNghiem_BE.RequestFeatures;
-using QLDV_KiemNghiem_BE.DTO.ResponseDto;
+using QLDV_KiemNghiem_BE.RequestFeatures.PagingRequest;
+using QLDV_KiemNghiem_BE.Shared;
 
 namespace QLDV_KiemNghiem_BE.Services
 {
@@ -16,11 +18,18 @@ namespace QLDV_KiemNghiem_BE.Services
             _repositoryManager = repositoryManager;
             _mapper = mapper;
         }
-        public async Task<IEnumerable<PhieuTienDoLamViecDto>> GetPhieuTienDoLamViecsAllAsync()
+        public async Task<(IEnumerable<PhieuTienDoLamViecProcedureDto> datas, Pagination pagi)> GetPhieuTienDoLamViecAllAsync(PhieuTienDoLamViecParam param)
         {
-            var PhieuTienDoLamViecDomains = await _repositoryManager.PhieuTienDoLamViec.GetPhieuTienDoLamViecsAllAsync();
-            var result = _mapper.Map<IEnumerable<PhieuTienDoLamViecDto>>(PhieuTienDoLamViecDomains);
-            return result;
+            var phieuTienDoDomains = await _repositoryManager.PhieuTienDoLamViec.GetPhieuTienDoLamViecAllAsync(param);
+            var phieuTienDoDtos = _mapper.Map<List<PhieuTienDoLamViecProcedureDto>>(phieuTienDoDomains);
+            return (datas: phieuTienDoDtos, pagi: phieuTienDoDomains.Pagination);
+        }
+        public async Task<PhieuTienDoLamViecProcedureDto?> FindPhieuTienDoLamViecShowAsync(string maPhieuTienDoLamViec)
+        {
+            if (maPhieuTienDoLamViec == null || maPhieuTienDoLamViec == "") return null;
+            var PhieuTienDoLamViecDomain = await _repositoryManager.PhieuTienDoLamViec.FindPhieuTienDoLamViecShowAsync(maPhieuTienDoLamViec);
+            var result = _mapper.Map<PhieuTienDoLamViecProcedureDto>(PhieuTienDoLamViecDomain);
+            return null;
         }
         public async Task<PhieuTienDoLamViecDto?> FindPhieuTienDoLamViecAsync(string maPhieuTienDoLamViec)
         {

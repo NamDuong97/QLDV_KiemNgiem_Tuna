@@ -443,11 +443,16 @@ public partial class DataContext : DbContext
         {
             entity.HasKey(e => e.MaId).HasName("PK__PhieuDuT__2725BF40C5A4E3AD");
 
+            entity.Property(e => e.Active).HasDefaultValue(true);
+            entity.Property(e => e.TrangThai).HasDefaultValue(0);
+
             entity.HasOne(d => d.MaKhoaNavigation).WithMany(p => p.PhieuDuTrus).HasConstraintName("Fk_PhieuDuTru_Khoa");
 
             entity.HasOne(d => d.MaPdkMauNavigation).WithMany(p => p.PhieuDuTrus).HasConstraintName("Fk_PhieuDuTru_PhieuDangKy_Mau");
 
-            entity.HasOne(d => d.ManvLapPhieuNavigation).WithMany(p => p.PhieuDuTrus).HasConstraintName("Fk_PhieuDuTru_NhanVien_Lap");
+            entity.HasOne(d => d.ManvDuyetNavigation).WithMany(p => p.PhieuDuTruManvDuyetNavigations).HasConstraintName("fk_PhieuDuTru_NhanVien");
+
+            entity.HasOne(d => d.ManvLapPhieuNavigation).WithMany(p => p.PhieuDuTruManvLapPhieuNavigations).HasConstraintName("Fk_PhieuDuTru_NhanVien_Lap");
         });
 
         modelBuilder.Entity<PhieuLuuMau>(entity =>

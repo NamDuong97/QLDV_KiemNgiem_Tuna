@@ -36,7 +36,6 @@ namespace QLDV_KiemNghiem_BE.Services
             }
             return (datas: PhieuPhanTichKetQuaDtos, pagi: PhieuPhanTichKetQuaDomains.Pagination);
         }
-
         public async Task<PhieuPhanTichKetQuaProcedureDto?> FindPhieuPhanTichKetQuaAsync(string maPhieuPhanTichKetQua)
         {
             if (maPhieuPhanTichKetQua == null || maPhieuPhanTichKetQua == "") return null;

@@ -1,13 +1,15 @@
 ﻿using AutoMapper;
-using QLDV_KiemNghiem_BE.Interfaces.ManagerInterface;
-using QLDV_KiemNghiem_BE.Models;
-using QLDV_KiemNghiem_BE.Interfaces;
-using QLDV_KiemNghiem_BE.RequestFeatures;
-using QLDV_KiemNghiem_BE.DTO.ResponseDto;
-using QLDV_KiemNghiem_BE.DTO.RequestDto;
 using Microsoft.AspNetCore.Routing.Template;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using QLDV_KiemNghiem_BE.Data;
+using QLDV_KiemNghiem_BE.DTO.RequestDto;
+using QLDV_KiemNghiem_BE.DTO.ResponseDto;
+using QLDV_KiemNghiem_BE.HubsRealTime;
+using QLDV_KiemNghiem_BE.Interfaces;
+using QLDV_KiemNghiem_BE.Interfaces.ManagerInterface;
+using QLDV_KiemNghiem_BE.Models;
+using QLDV_KiemNghiem_BE.RequestFeatures;
 
 namespace QLDV_KiemNghiem_BE.Services
 {
@@ -16,11 +18,13 @@ namespace QLDV_KiemNghiem_BE.Services
         private readonly IRepositoryManager _repositoryManager;
         private readonly IMapper _mapper;
         private readonly DataContext _context;
-        public PhieuDuTruService(IRepositoryManager repositoryManager, IMapper mapper, DataContext context)
+        private readonly IHubContext<NotificationHub> _hubContext;
+        public PhieuDuTruService(IRepositoryManager repositoryManager, IMapper mapper, DataContext context, IHubContext<NotificationHub> hubContext)
         {
             _repositoryManager = repositoryManager;
             _mapper = mapper;
             _context = context;
+            _hubContext = hubContext;
         }
         public async Task<IEnumerable<PhieuDuTruDto>> GetPhieuDuTrusAllAsync()
         {
@@ -51,7 +55,6 @@ namespace QLDV_KiemNghiem_BE.Services
                 MaPdkMau = PhieuDuTruDto.MaPdkMau,
                 NgayLap = DateTime.Now,
                 MaKhoa = PhieuDuTruDto.MaKhoa,
-                TrangThai =true,
                 GhiChu = PhieuDuTruDto.GhiChu
             };
 
@@ -105,9 +108,8 @@ namespace QLDV_KiemNghiem_BE.Services
                 };
             }
             // Su dung mapper co theo keo theo cac thuoc tinh navigation bi theo doi 
-            PhieuDuTruCheck.MaPdkMau = PhieuDuTruDto.MaPdkMau;
-            PhieuDuTruCheck.MaKhoa = PhieuDuTruDto.MaKhoa;
-            PhieuDuTruCheck.GhiChu = PhieuDuTruDto.GhiChu;
+            PhieuDuTruCheck.GhiChu = string.IsNullOrEmpty(PhieuDuTruDto.GhiChu) ? PhieuDuTruCheck.GhiChu : PhieuDuTruDto.GhiChu;
+            PhieuDuTruCheck.NoiDungDuyet = string.IsNullOrEmpty(PhieuDuTruDto.NoiDungDuyet) ? PhieuDuTruCheck.NoiDungDuyet : PhieuDuTruDto.NoiDungDuyet;
             PhieuDuTruCheck.NgaySua = DateTime.Now;
             PhieuDuTruCheck.NguoiSua = user;
 
@@ -126,6 +128,7 @@ namespace QLDV_KiemNghiem_BE.Services
                             DonViTinh = item.DonViTinh,
                             SoLuong = item.SoLuong,
                             GhiChu = item.GhiChu,
+                            TrangThai = "active",
                             MaDmPlhc = item.MaDmPlhc,
                         };
                         _repositoryManager.ChiTietPhieuDuTru.CreateChiTietPhieuDuTru(temp);
@@ -142,10 +145,9 @@ namespace QLDV_KiemNghiem_BE.Services
                             }
                             else
                             {
-                                existing.DonViTinh = item.DonViTinh;
-                                existing.SoLuong = item.SoLuong;
-                                existing.GhiChu = item.GhiChu;
-                                existing.MaDmPlhc = item.MaDmPlhc;
+                                existing.DonViTinh = string.IsNullOrEmpty(item.DonViTinh) ? existing.DonViTinh: item.DonViTinh;
+                                existing.SoLuong = item.SoLuong > 0 ? existing.SoLuong : item.SoLuong;
+                                existing.GhiChu = string.IsNullOrEmpty(item.GhiChu) ? existing.GhiChu : item.GhiChu;
                                 _repositoryManager.ChiTietPhieuDuTru.UpdateChiTietPhieuDuTruAsync(existing);
                                 chiTietPhieuDuTrus.Add(existing);
                             }
@@ -159,6 +161,75 @@ namespace QLDV_KiemNghiem_BE.Services
             bool check = await _repositoryManager.SaveChangesAsync();
             var PhieuDuTruReturnDto = _mapper.Map<PhieuDuTruDto>(PhieuDuTruCheck);
             PhieuDuTruReturnDto.ChiTietPhieuDuTrus = _mapper.Map<List<ChiTietPhieuDuTruDto>>(chiTietPhieuDuTrus);
+            return new ResponseModel1<PhieuDuTruDto>
+            {
+                KetQua = check,
+                Message = check ? "Cap nhat thanh cong!" : "Cap nhat that bai",
+                Data = PhieuDuTruReturnDto
+            };
+        }
+        public async Task<ResponseModel1<PhieuDuTruDto>> ReviewPhieuDuTruByLDP(RequestReviewPhieuDuTru param, string user, string userId)
+        {
+            if (param == null) return new ResponseModel1<PhieuDuTruDto>
+            {
+                KetQua = false,
+                Message = "Du lieu tham so dau vao null hoac khong hop le, vui long kiem tra lai!",
+                Data = null
+            };
+
+            var PhieuDuTruCheck = await _repositoryManager.PhieuDuTru.FindPhieuDuTruAsync(param.MaPhieuDuTru, true);
+            if (PhieuDuTruCheck == null)
+            {
+                return new ResponseModel1<PhieuDuTruDto>
+                {
+                    KetQua = false,
+                    Message = "Du lieu muon cap nhat khong ton tai, vui long kiem tra lai",
+                    Data = null
+                };
+            }
+            PhieuDuTruCheck.NgaySua = DateTime.Now;
+            PhieuDuTruCheck.NguoiSua = user;
+            PhieuDuTruCheck.NoiDungDuyet = param.Message;
+            
+            if (param.Action)
+            {
+                PhieuDuTruCheck.TrangThai = 1;
+            }
+            else
+            {
+                PhieuDuTruCheck.TrangThai = 0;
+            }
+
+            _repositoryManager.PhieuDuTru.UpdatePhieuDuTruAsync(PhieuDuTruCheck);
+            bool check = await _repositoryManager.SaveChangesAsync();
+            if (check)
+            {
+                if (param.Action)
+                {
+                    // Tao thong bao gui cho phong BLD
+                    NotificationModel noti = new NotificationModel()
+                    {
+                        Title = "Lanh dao phong duyet phieu phan tich ket qua",
+                        Message = $"Phieu du tru cho mau {PhieuDuTruCheck.MaPdkMau} duoc duyet nhan vien {user}, vui long kiem tra va kiem kho",
+                        CreatedAt = DateTime.Now,
+                    };
+                    await _hubContext.Clients.Group("VT_L").SendAsync("receiveNotification", noti);
+                    await _hubContext.Clients.Group("VT").SendAsync("receiveNotification", noti);
+                    await _hubContext.Clients.Group("VT_P").SendAsync("receiveNotification", noti);
+                    await _hubContext.Clients.User(PhieuDuTruCheck?.ManvLapPhieu ?? "").SendAsync("notificationForOneUser", noti);
+                }
+                else
+                {
+                    NotificationModel noti = new NotificationModel()
+                    {
+                        Title = "Lanh dao phong duyet phieu du tru",
+                        Message = $"Phieu du tru cho mau {PhieuDuTruCheck.MaPdkMau} duoc bi tu choi duyet boi nhan vien {user}, vui long kiem tra lai!",
+                        CreatedAt = DateTime.Now,
+                    };
+                    await _hubContext.Clients.User(PhieuDuTruCheck?.ManvLapPhieu ?? "").SendAsync("notificationForOneUser", noti);
+                }
+            }
+            var PhieuDuTruReturnDto = _mapper.Map<PhieuDuTruDto>(PhieuDuTruCheck);
             return new ResponseModel1<PhieuDuTruDto>
             {
                 KetQua = check,
@@ -185,7 +256,7 @@ namespace QLDV_KiemNghiem_BE.Services
                     Data = null
                 };
             }
-            PhieuDuTruDomain.TrangThai = false;
+            PhieuDuTruDomain.Active = false;
             PhieuDuTruDomain.NguoiSua = user;
             PhieuDuTruDomain.NgaySua = DateTime.Now;
 

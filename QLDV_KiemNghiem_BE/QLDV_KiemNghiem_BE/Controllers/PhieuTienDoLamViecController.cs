@@ -5,6 +5,7 @@ using QLDV_KiemNghiem_BE.DTO.ResponseDto;
 using QLDV_KiemNghiem_BE.Interfaces.ManagerInterface;
 using QLDV_KiemNghiem_BE.Models;
 using QLDV_KiemNghiem_BE.RequestFeatures;
+using QLDV_KiemNghiem_BE.RequestFeatures.PagingRequest;
 
 namespace QLDV_KiemNghiem_BE.Controllers
 {
@@ -24,18 +25,19 @@ namespace QLDV_KiemNghiem_BE.Controllers
 
         [HttpGet]
         [Route("getPhieuTienDoLamViecAll")]
-        public async Task<ActionResult> getPhieuTienDoLamViecAll()
+        public async Task<ActionResult> getPhieuTienDoLamViecAll(PhieuTienDoLamViecParam param)
         {
-            var result = await _service.PhieuTienDoLamViec.GetPhieuTienDoLamViecsAllAsync();
+            var result = await _service.PhieuTienDoLamViec.GetPhieuTienDoLamViecAllAsync(param);
+            Response.Headers.Append("X-Pagination", System.Text.Json.JsonSerializer.Serialize(result.pagi));
             _logger.LogDebug("get toan bo phieu tien do lam viec");
-            return Ok(result);
+            return Ok(result.datas);
         }
 
         [HttpGet]
         [Route("getPhieuTienDoLamViecByID")]
         public async Task<ActionResult> getPhieuTienDoLamViecByID(string maPhieuTienDoLamViec)
         {
-            var result = await _service.PhieuTienDoLamViec.FindPhieuTienDoLamViecAsync(maPhieuTienDoLamViec);
+            var result = await _service.PhieuTienDoLamViec.FindPhieuTienDoLamViecShowAsync(maPhieuTienDoLamViec);
             _logger.LogDebug("lay phieu tien do lam viec can tim: " + maPhieuTienDoLamViec);
             return Ok(result);
         }

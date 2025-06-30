@@ -98,6 +98,34 @@ namespace QLDV_KiemNghiem_BE.Controllers
             }
         }
 
+        [HttpPut]
+        [Route("reviewPhieuDuTruByLDP")]
+        public async Task<ActionResult> reviewPhieuDuTruByLDP(RequestReviewPhieuDuTru param)
+        {
+            if (!ModelState.IsValid)
+            {
+                var errors = ModelState.Values
+                .SelectMany(v => v.Errors)
+                .Select(e => e.ErrorMessage)
+                .ToList();
+                _logger.LogError("Loi validate tham so dau vao");
+                return BadRequest(new { Errors = errors });
+            }
+            var user = User.FindFirst(ClaimTypes.Email)?.Value.ToString() ?? "know";
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value.ToString() ?? null;
+            ResponseModel1<PhieuDuTruDto> update = await _service.PhieuDuTru.ReviewPhieuDuTruByLDP(param, user, userId);
+            if (update.KetQua)
+            {
+                _logger.LogDebug(update.Message);
+                return Ok(update.Data);
+            }
+            else
+            {
+                _logger.LogDebug(update.Message);
+                return BadRequest(update.Message);
+            }
+        }
+
         [HttpDelete]
         [Route("deletePhieuDuTru")]
         public async Task<ActionResult> deletePhieuDuTru(string PhieuDuTru)
