@@ -39,25 +39,20 @@ namespace QLDV_KiemNghiem_BE.Repositories
 
             return PagedList<PhieuPhanTichKetQuaProcedure>.ToPagedList(result, param.PageNumber, param.PageSize, param.GetAll);
         }
-
         public async Task<PhieuPhanTichKetQuaProcedure?> FindPhieuPhanTichKetQuaShowAsync(string maPhieuPhanTichKetQua)
         {
             var resultList = await _context.PhieuPhanTichKetQuaProcedures
             .FromSqlRaw("EXEC sp_getAllPhieuPhanTichKetQuaByBoLoc {0}", maPhieuPhanTichKetQua)
             .ToListAsync(); // Chuyển sang danh sách thực
-
             var result = resultList.FirstOrDefault();
-
             if (result != null)
             {
                 result.PhieuPhanTichKetQuaChiTiets = await _context.PhieuPhanTichKetQuaChiTiets
                     .Where(it => it.MaPhieuKetQua == result.MaID)
                     .ToListAsync();
             }
-
             return result;
         }
-
         public async Task<PhieuPhanTichKetQua?> FindPhieuPhanTichKetQuaAsync(string maPhieuPhanTichKetQua, bool track)
         {
             if (track)
