@@ -30,5 +30,7 @@ namespace QLDV_KiemNghiem_BE.DTO.ResponseDto
 
         [StringLength(200)]
         public string? MucChatLuong { get; set; }
+        public bool? Active { get; set; }
+
     }
 }

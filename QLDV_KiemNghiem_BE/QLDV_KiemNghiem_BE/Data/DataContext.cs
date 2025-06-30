@@ -483,9 +483,13 @@ public partial class DataContext : DbContext
         {
             entity.HasKey(e => e.MaId).HasName("PK__PhieuPha__2725BF40D3ACB92A");
 
+            entity.Property(e => e.Active).HasDefaultValue(true);
+
             entity.HasOne(d => d.MaKhoaNavigation).WithMany(p => p.PhieuPhanTichKetQuas).HasConstraintName("Fk_PhieuPhanTichKetQua_Khoa");
 
             entity.HasOne(d => d.MaPdkMauNavigation).WithMany(p => p.PhieuPhanTichKetQuas).HasConstraintName("Fk_PhieuPhanTichKetQua_PhieuDangKy_Mau");
+
+            entity.HasOne(d => d.MabldDuyetNavigation).WithMany(p => p.PhieuPhanTichKetQuaMabldDuyetNavigations).HasConstraintName("FK_PhieuPhanTichKetQua_NhanVien_BLDDuyet");
 
             entity.HasOne(d => d.ManvKiemTraNavigation).WithMany(p => p.PhieuPhanTichKetQuaManvKiemTraNavigations).HasConstraintName("Fk_PhieuPhanTichKetQua_NhanVien_KiemTra");
 
@@ -494,9 +498,13 @@ public partial class DataContext : DbContext
 
         modelBuilder.Entity<PhieuPhanTichKetQuaChiTiet>(entity =>
         {
-            entity.HasOne(d => d.MaChiTieuNavigation).WithMany().HasConstraintName("Fk_PhieuPhanTichKetQuaChiTiet_ChiTieu");
+            entity.HasKey(e => e.MaId).HasName("fk_PhieuPhanTichKetQuaChiTiet");
 
-            entity.HasOne(d => d.MaPhieuKetQuaNavigation).WithMany().HasConstraintName("Fk_PhieuPhanTichKetQuaChiTiet_PhieuPhanTichKetQua");
+            entity.Property(e => e.Active).HasDefaultValue(true);
+
+            entity.HasOne(d => d.MaChiTieuNavigation).WithMany(p => p.PhieuPhanTichKetQuaChiTiets).HasConstraintName("Fk_PhieuPhanTichKetQuaChiTiet_ChiTieu");
+
+            entity.HasOne(d => d.MaPhieuKetQuaNavigation).WithMany(p => p.PhieuPhanTichKetQuaChiTiets).HasConstraintName("Fk_PhieuPhanTichKetQuaChiTiet_PhieuPhanTichKetQua");
         });
 
         modelBuilder.Entity<PhieuThu>(entity =>

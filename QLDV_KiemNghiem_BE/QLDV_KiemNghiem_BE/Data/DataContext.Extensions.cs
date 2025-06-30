@@ -16,6 +16,7 @@ namespace QLDV_KiemNghiem_BE.Data
         public virtual DbSet<CheckPhanCongAllMauInPDK> CheckPhanCongAllMauInPDKs { get; set; }
         public virtual DbSet<PhieuDangKyMauProcedure> PhieuDangKyMauProcedures { get; set; }
         public virtual DbSet<PhieuDangKyMauThongKeDto> PhieuDangKyMauThongKeDtos { get; set; }
+        public virtual DbSet<PhieuPhanTichKetQuaProcedure> PhieuPhanTichKetQuaProcedures { get; set; }
         partial void OnModelCreatingPartial(ModelBuilder modelBuilder)
         {
        
@@ -28,6 +29,7 @@ namespace QLDV_KiemNghiem_BE.Data
             modelBuilder.Entity<CheckPhanCongAllMauInPDK>().HasNoKey();
             modelBuilder.Entity<PhieuDangKyMauProcedure>().HasNoKey();
             modelBuilder.Entity<PhieuDangKyMauThongKeDto>().HasNoKey();
+            modelBuilder.Entity<PhieuPhanTichKetQuaProcedure>().HasNoKey();
         }
     }
 

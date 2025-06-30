@@ -20,24 +20,7 @@ namespace QLDV_KiemNghiem_BE.HubsRealTime
         {
             await Groups.RemoveFromGroupAsync(Context.ConnectionId, groupName);
         }
-        //public override async Task OnConnectedAsync()
-        //{
-        //    var role = _contextAccessor.HttpContext.User.FindFirst(ClaimTypes.Role)?.Value.ToString();
-        //    if (!string.IsNullOrEmpty(role))
-        //    {
-        //        await Groups.AddToGroupAsync(Context.ConnectionId, role);
-        //        _connectionGroups[Context.ConnectionId] = role;
-        //    }
-        //    await base.OnConnectedAsync();
-        //}
-        //public override async Task OnDisconnectedAsync(System.Exception? exception)
-        //{
-        //    if (_connectionGroups.TryRemove(Context.ConnectionId, out var role))
-        //    {
-        //        await Groups.RemoveFromGroupAsync(Context.ConnectionId, role);
-        //    }
-        //    await base.OnDisconnectedAsync(exception);
-        //}
+    
         public async Task NotifyToAllAsync(string role, NotificationModel notification)
         {
             await Clients.All.SendAsync("notifycation", notification);
@@ -46,10 +29,14 @@ namespace QLDV_KiemNghiem_BE.HubsRealTime
         {
             await Clients.Group(role).SendAsync("receiveNotification", notification);
         }
-
         public async Task SendToUsers(List<string> userIds, NotificationModel noti)
         {
             await Clients.Users(userIds).SendAsync("notificationForPDXPB", noti);
+        }
+
+        public async Task SendToUser(string userId, NotificationModel noti)
+        {
+            await Clients.User(userId).SendAsync("notificationForOneUser", noti);
         }
     }
 }

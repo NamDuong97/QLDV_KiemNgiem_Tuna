@@ -1,10 +1,14 @@
-﻿using AutoMapper;
+﻿using System.Security.Claims;
+using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using QLDV_KiemNghiem_BE.DTO.RequestDto;
 using QLDV_KiemNghiem_BE.DTO.ResponseDto;
 using QLDV_KiemNghiem_BE.Interfaces.ManagerInterface;
 using QLDV_KiemNghiem_BE.Models;
 using QLDV_KiemNghiem_BE.RequestFeatures;
+using QLDV_KiemNghiem_BE.RequestFeatures.PagingRequest;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace QLDV_KiemNghiem_BE.Controllers
 {
@@ -24,11 +28,12 @@ namespace QLDV_KiemNghiem_BE.Controllers
 
         [HttpGet]
         [Route("getPhieuPhanTichKetQuaAll")]
-        public async Task<ActionResult> getPhieuPhanTichKetQuaAll()
+        public async Task<ActionResult> getPhieuPhanTichKetQuaAll( [FromQuery] PhieuPhanTichKetQuaParam param)
         {
-            var result = await _service.PhieuPhanTichKetQua.GetPhieuPhanTichKetQuasAllAsync();
-            _logger.LogDebug("get toan bo phieu phan tich ket qua");
-            return Ok(result);
+            var result = await _service.PhieuPhanTichKetQua.GetPhieuPhanTichKetQuaAllAsync(param);
+            Response.Headers.Append("X-Pagination", System.Text.Json.JsonSerializer.Serialize(result.pagi));
+            _logger.LogDebug("get all phieu phan tich ket qua");
+            return Ok(result.datas);
         }
 
         [HttpGet]
@@ -42,7 +47,7 @@ namespace QLDV_KiemNghiem_BE.Controllers
 
         [HttpPost]
         [Route("createPhieuPhanTichKetQua")]
-        public async Task<ActionResult> createPhieuPhanTichKetQua(PhieuPhanTichKetQuaDto PhieuPhanTichKetQuaDto)
+        public async Task<ActionResult> createPhieuPhanTichKetQua(PhieuPhanTichKetQuaRequestCreateDto PhieuPhanTichKetQuaDto)
         {
             if (!ModelState.IsValid)
             {
@@ -53,7 +58,9 @@ namespace QLDV_KiemNghiem_BE.Controllers
                 _logger.LogError("Loi validate tham so dau vao");
                 return BadRequest(new { Errors = errors });
             }
-            ResponseModel1<PhieuPhanTichKetQuaDto> create = await _service.PhieuPhanTichKetQua.CreatePhieuPhanTichKetQuaAsync(PhieuPhanTichKetQuaDto);
+            var user = User.FindFirst(ClaimTypes.Email)?.Value.ToString() ?? "know";
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value.ToString() ?? null;
+            ResponseModel1<PhieuPhanTichKetQuaDto> create = await _service.PhieuPhanTichKetQua.CreatePhieuPhanTichKetQuaAsync(PhieuPhanTichKetQuaDto, user, userId);
             if (create.KetQua)
             {
                 _logger.LogDebug(create.Message);
@@ -68,7 +75,7 @@ namespace QLDV_KiemNghiem_BE.Controllers
 
         [HttpPut]
         [Route("updatePhieuPhanTichKetQua")]
-        public async Task<ActionResult> updatePhieuPhanTichKetQua(PhieuPhanTichKetQuaDto PhieuPhanTichKetQuaDto)
+        public async Task<ActionResult> updatePhieuPhanTichKetQua(PhieuPhanTichKetQuaRequestUpdateDto PhieuPhanTichKetQuaDto)
         {
             if (!ModelState.IsValid)
             {
@@ -79,7 +86,9 @@ namespace QLDV_KiemNghiem_BE.Controllers
                 _logger.LogError("Loi validate tham so dau vao");
                 return BadRequest(new { Errors = errors });
             }
-            ResponseModel1<PhieuPhanTichKetQuaDto> update = await _service.PhieuPhanTichKetQua.UpdatePhieuPhanTichKetQuaAsync(PhieuPhanTichKetQuaDto);
+            var user = User.FindFirst(ClaimTypes.Email)?.Value.ToString() ?? "know";
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value.ToString() ?? null;
+            ResponseModel1<PhieuPhanTichKetQuaDto> update = await _service.PhieuPhanTichKetQua.UpdatePhieuPhanTichKetQuaAsync(PhieuPhanTichKetQuaDto, user, userId);
             if (update.KetQua)
             {
                 _logger.LogDebug(update.Message);
@@ -92,29 +101,78 @@ namespace QLDV_KiemNghiem_BE.Controllers
             }
         }
 
-        [HttpDelete]
-        [Route("deletePhieuPhanTichKetQua")]
-        public async Task<ActionResult> deletePhieuPhanTichKetQua(PhieuPhanTichKetQua PhieuPhanTichKetQua)
+        [HttpPut]
+        [Route("reviewPhieuPhanTichKetQuaByLDP")]
+        public async Task<ActionResult> reviewPhieuPhanTichKetQuaByLDP(RequestReviewPhieuPhanTichKetQua param)
         {
-            var checkExists = await _service.PhieuPhanTichKetQua.FindPhieuPhanTichKetQuaAsync(PhieuPhanTichKetQua.MaId);
-            if (checkExists != null)
+            if (!ModelState.IsValid)
             {
-                bool delete = await _service.PhieuPhanTichKetQua.DeletePhieuPhanTichKetQuaAsync(PhieuPhanTichKetQua);
-                if (delete)
-                {
-                    _logger.LogDebug("Cap nhat phieu phan tich ket qua thanh cong");
-                    return Ok(PhieuPhanTichKetQua);
-                }
-                else
-                {
-                    _logger.LogDebug("Cap nhat phieu phan tich ket qua that bai");
-                    return BadRequest();
-                }
+                var errors = ModelState.Values
+                .SelectMany(v => v.Errors)
+                .Select(e => e.ErrorMessage)
+                .ToList();
+                _logger.LogError("Loi validate tham so dau vao");
+                return BadRequest(new { Errors = errors });
+            }
+            var user = User.FindFirst(ClaimTypes.Email)?.Value.ToString() ?? "know";
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value.ToString() ?? null;
+            ResponseModel1<PhieuPhanTichKetQuaDto> update = await _service.PhieuPhanTichKetQua.ReviewPhieuPhanTichKetQuaByLDP(param, user, userId);
+            if (update.KetQua)
+            {
+                _logger.LogDebug(update.Message);
+                return Ok(update.Data);
             }
             else
             {
-                _logger.LogDebug("phieu phan tich ket qua khong ton tai");
-                return BadRequest();
+                _logger.LogDebug(update.Message);
+                return BadRequest(update.Message);
+            }
+        }
+
+        [HttpPut]
+        [Route("reviewPhieuPhanTichKetQuaByBLD")]
+        public async Task<ActionResult> reviewPhieuPhanTichKetQuaByBLD(RequestReviewPhieuPhanTichKetQua param)
+        {
+            if (!ModelState.IsValid)
+            {
+                var errors = ModelState.Values
+                .SelectMany(v => v.Errors)
+                .Select(e => e.ErrorMessage)
+                .ToList();
+                _logger.LogError("Loi validate tham so dau vao");
+                return BadRequest(new { Errors = errors });
+            }
+            var user = User.FindFirst(ClaimTypes.Email)?.Value.ToString() ?? "know";
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value.ToString() ?? null;
+            ResponseModel1<PhieuPhanTichKetQuaDto> update = await _service.PhieuPhanTichKetQua.ReviewPhieuPhanTichKetQuaByBLD(param, user, userId);
+            if (update.KetQua)
+            {
+                _logger.LogDebug(update.Message);
+                return Ok(update.Data);
+            }
+            else
+            {
+                _logger.LogDebug(update.Message);
+                return BadRequest(update.Message);
+            }
+        }
+
+
+        [HttpDelete]
+        [Route("deletePhieuPhanTichKetQua")]
+        public async Task<ActionResult> deletePhieuPhanTichKetQua(string maPhieuPhanTichKetQua)
+        {
+            var user = User.FindFirst(ClaimTypes.Email)?.Value.ToString() ?? "know";
+            ResponseModel1<PhieuPhanTichKetQuaDto> delete = await _service.PhieuPhanTichKetQua.DeletePhieuPhanTichKetQuaAsync(maPhieuPhanTichKetQua, user);
+            if (delete.KetQua)
+            {
+                _logger.LogDebug(delete.Message);
+                return Ok(delete.Data);
+            }
+            else
+            {
+                _logger.LogDebug(delete.Message);
+                return BadRequest(delete.Message);
             }
         }
     }

@@ -4,6 +4,7 @@ using QLDV_KiemNghiem_BE.Models;
 using QLDV_KiemNghiem_BE.Interfaces;
 using QLDV_KiemNghiem_BE.RequestFeatures;
 using QLDV_KiemNghiem_BE.DTO.ResponseDto;
+using QLDV_KiemNghiem_BE.DTO.RequestDto;
 
 namespace QLDV_KiemNghiem_BE.Services
 {
@@ -29,7 +30,7 @@ namespace QLDV_KiemNghiem_BE.Services
             var result = _mapper.Map<PhieuLuuMauDto>(PhieuLuuMauDomain);
             return result;
         }
-        public async Task<ResponseModel1<PhieuLuuMauDto>> CreatePhieuLuuMauAsync(PhieuLuuMauDto PhieuLuuMauDto)
+        public async Task<ResponseModel1<PhieuLuuMauDto>> CreatePhieuLuuMauAsync(PhieuLuuMauRequestCreateDto PhieuLuuMauDto, string user)
         {
             if (PhieuLuuMauDto == null) return new ResponseModel1<PhieuLuuMauDto>
             {
@@ -38,21 +39,25 @@ namespace QLDV_KiemNghiem_BE.Services
                 Data = null
             };
 
-            var checkExistsByID = await _repositoryManager.PhieuLuuMau.FindPhieuLuuMauAsync(PhieuLuuMauDto.MaId);
-            if (checkExistsByID != null) return new ResponseModel1<PhieuLuuMauDto>
+            PhieuLuuMau phieuLuuMau = new PhieuLuuMau()
             {
-                KetQua = false,
-                Message = "Du lieu them vo da ton tai, vui long kiem tra lai",
-                Data = null
+                MaId = Guid.NewGuid().ToString(),
+                MaPhieuLuu = "PLM_" + PublicFunction.processString(PhieuLuuMauDto.TenMau),
+                MaPdkMau = PhieuLuuMauDto.MaPdkMau,
+                DonViTinh = PhieuLuuMauDto.DonViTinh,
+                SoLuong = PhieuLuuMauDto.SoLuong,
+                LuuDenNgay = PhieuLuuMauDto.LuuDenNgay,
+                ManvLuu = PhieuLuuMauDto.ManvLuu,
+                TrangThai = "active",
+                NgayTao = DateTime.Now,
+                NguoiTao = user,
+                HanSuDung = PhieuLuuMauDto.HanSuDung,
+                TenMau = PhieuLuuMauDto.TenMau,
             };
 
-            var PhieuLuuMauDomain = _mapper.Map<PhieuLuuMau>(PhieuLuuMauDto);
-            PhieuLuuMauDomain.MaId = Guid.NewGuid().ToString();
-            PhieuLuuMauDomain.NgayTao = DateTime.Now;
-
-            _repositoryManager.PhieuLuuMau.CreatePhieuLuuMauAsync(PhieuLuuMauDomain);
+            _repositoryManager.PhieuLuuMau.CreatePhieuLuuMauAsync(phieuLuuMau);
             bool check = await _repositoryManager.SaveChangesAsync();
-            var PhieuLuuMauReturnDto = _mapper.Map<PhieuLuuMauDto>(PhieuLuuMauDomain);
+            var PhieuLuuMauReturnDto = _mapper.Map<PhieuLuuMauDto>(phieuLuuMau);
 
             return new ResponseModel1<PhieuLuuMauDto>
             {
@@ -61,7 +66,7 @@ namespace QLDV_KiemNghiem_BE.Services
                 Data = PhieuLuuMauReturnDto
             };
         }
-        public async Task<ResponseModel1<PhieuLuuMauDto>> UpdatePhieuLuuMauAsync(PhieuLuuMauDto PhieuLuuMauDto)
+        public async Task<ResponseModel1<PhieuLuuMauDto>> UpdatePhieuLuuMauAsync(PhieuLuuMauRequestUpdateDto PhieuLuuMauDto, string user)
         {
             if (PhieuLuuMauDto == null || PhieuLuuMauDto.MaId == null || PhieuLuuMauDto.MaId == "") return new ResponseModel1<PhieuLuuMauDto>
             {
@@ -80,12 +85,17 @@ namespace QLDV_KiemNghiem_BE.Services
                     Data = null
                 };
             }
-            var PhieuLuuMauDomain = _mapper.Map<PhieuLuuMau>(PhieuLuuMauDto);
-            PhieuLuuMauDomain.NgaySua = DateTime.Now;
-            PhieuLuuMauDomain.NguoiSua = "admin";
-            _repositoryManager.PhieuLuuMau.UpdatePhieuLuuMauAsync(PhieuLuuMauDomain);
+            PhieuLuuMauCheck.DonViTinh = string.IsNullOrEmpty(PhieuLuuMauDto.DonViTinh) ? PhieuLuuMauCheck.DonViTinh : PhieuLuuMauDto.DonViTinh;
+            PhieuLuuMauCheck.SoLuong = PhieuLuuMauDto.SoLuong != 0 ? PhieuLuuMauDto.SoLuong : PhieuLuuMauCheck.SoLuong;
+            PhieuLuuMauCheck.LuuDenNgay = PublicFunction.IsValidDateTime(PhieuLuuMauDto.LuuDenNgay) ? PhieuLuuMauDto.LuuDenNgay : PhieuLuuMauCheck.LuuDenNgay;
+            PhieuLuuMauCheck.ManvLuu = string.IsNullOrEmpty(PhieuLuuMauDto.ManvLuu) ? PhieuLuuMauCheck.ManvLuu : PhieuLuuMauDto.ManvLuu;
+            PhieuLuuMauCheck.HanSuDung = PublicFunction.IsValidDateTime(PhieuLuuMauDto.HanSuDung) ? PhieuLuuMauDto.HanSuDung : PhieuLuuMauCheck.HanSuDung;
+            PhieuLuuMauCheck.NgaySua = DateTime.Now;
+            PhieuLuuMauCheck.NguoiSua = user;
+
+            _repositoryManager.PhieuLuuMau.UpdatePhieuLuuMauAsync(PhieuLuuMauCheck);
             bool check = await _repositoryManager.SaveChangesAsync();
-            var PhieuLuuMauReturnDto = _mapper.Map<PhieuLuuMauDto>(PhieuLuuMauDomain);
+            var PhieuLuuMauReturnDto = _mapper.Map<PhieuLuuMauDto>(PhieuLuuMauCheck);
             return new ResponseModel1<PhieuLuuMauDto>
             {
                 KetQua = check,
@@ -93,20 +103,35 @@ namespace QLDV_KiemNghiem_BE.Services
                 Data = PhieuLuuMauReturnDto
             };
         }
-        public async Task<bool> DeletePhieuLuuMauAsync(PhieuLuuMau PhieuLuuMau)
+        public async Task<ResponseModel1<PhieuLuuMauDto>> DeletePhieuLuuMauAsync(string maPhieuLuuMau, string user, bool isDel)
         {
-            if (PhieuLuuMau == null) return false;
+            var PhieuLuuMauDomain = await _repositoryManager.PhieuLuuMau.FindPhieuLuuMauAsync(maPhieuLuuMau);
+            if (PhieuLuuMauDomain == null)
+            {
+                return new ResponseModel1<PhieuLuuMauDto>
+                {
+                    KetQua = false,
+                    Message = "Du lieu tham so dau vao null hoac khong hop le, vui long kiem tra lai!",
+                    Data = null
+                };
+            }
+            if(isDel)
+            {
+                _repositoryManager.PhieuLuuMau.DeletePhieuLuuMauAsync(PhieuLuuMauDomain);
+            }
             else
             {
-                var PhieuLuuMauDomain = await _repositoryManager.PhieuLuuMau.FindPhieuLuuMauAsync(PhieuLuuMau.MaId);
-                if (PhieuLuuMauDomain == null)
-                {
-                    return false;
-                }
-                _repositoryManager.PhieuLuuMau.DeletePhieuLuuMauAsync(PhieuLuuMauDomain);
-                bool check = await _repositoryManager.SaveChangesAsync();
-                return check;
+                PhieuLuuMauDomain.TrangThai = "no active";
+                PhieuLuuMauDomain.NgaySua = DateTime.Now;
+                PhieuLuuMauDomain.NguoiSua = user;
+                _repositoryManager.PhieuLuuMau.UpdatePhieuLuuMauAsync(PhieuLuuMauDomain);
             }
+            bool check = await _repositoryManager.SaveChangesAsync();
+            return new ResponseModel1<PhieuLuuMauDto>
+            {
+                KetQua = check,
+                Message = check?  "Xoa thanh cong!": "Xoa that bai!",
+            };
         }
     }
 }

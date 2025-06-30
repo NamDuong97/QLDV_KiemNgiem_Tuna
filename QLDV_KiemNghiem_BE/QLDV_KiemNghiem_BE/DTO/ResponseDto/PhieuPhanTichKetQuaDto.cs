@@ -14,25 +14,11 @@ namespace QLDV_KiemNghiem_BE.DTO.ResponseDto
         [StringLength(50)]
         public string? MaPdkMau { get; set; }
 
-        [StringLength(500)]
-        public string? TenMau { get; set; }
-
         [StringLength(50)]
         public string? ManvLap { get; set; }
 
         [StringLength(50)]
         public string? ManvKiemTra { get; set; }
-
-        [Column(TypeName = "datetime")]
-        public DateTime? NgayNhanMau { get; set; }
-
-        [Column(TypeName = "datetime")]
-        public DateTime? NgayKiemThu { get; set; }
-
-        [Column(TypeName = "datetime")]
-        public DateTime? NgayTraKetQua { get; set; }
-
-        public bool? LuuMau { get; set; }
 
         [StringLength(50)]
         public string? MaKhoa { get; set; }
@@ -40,9 +26,27 @@ namespace QLDV_KiemNghiem_BE.DTO.ResponseDto
         [StringLength(500)]
         public string? GhiChu { get; set; }
 
-        [StringLength(100)]
-        public string? TrangThai { get; set; }
+        public int? TrangThai { get; set; }
 
-        public string? YeuCauKiemNghiem { get; set; }
+        [Column(TypeName = "datetime")]
+        public DateTime? NgayTao { get; set; }
+
+        [StringLength(50)]
+        public string? NguoiTao { get; set; }
+
+        [StringLength(50)]
+        public string? NguoiSua { get; set; }
+
+        [Column(TypeName = "datetime")]
+        public DateTime? NgaySua { get; set; }
+
+        [StringLength(50)]
+        public string? MabldDuyet { get; set; }
+
+        public string? NoiDungDuyetSoBo { get; set; }
+
+        public string? NoiDungDuyetTongBo { get; set; }
+        public bool Active { get; set; }
+        public List<PhieuPhanTichKetQuaChiTietDto> phieuPhanTichKetQuaChiTietDtos { get; set; } = new List<PhieuPhanTichKetQuaChiTietDto>();
     }
 }

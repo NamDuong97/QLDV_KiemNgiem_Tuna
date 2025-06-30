@@ -23,7 +23,17 @@ namespace QLDV_KiemNghiem_BE.Repositories
         {
             return await _context.PhieuPhanTichKetQuaChiTiets.FindAsync(maPhieuPhanTichKetQuaChiTiet);
         }
-
+        public async Task<List<PhieuPhanTichKetQuaChiTiet>?> FindPhieuPhanTichKetQuaChiTietByMaPPTKQAsync(string maPPTKQ, bool track)
+        {
+            if (track)
+            {
+                return await _context.PhieuPhanTichKetQuaChiTiets.Where(it => it.MaPhieuKetQua == maPPTKQ).ToListAsync();
+            }
+            else
+            {
+                return await _context.PhieuPhanTichKetQuaChiTiets.AsNoTracking().Where(it => it.MaPhieuKetQua == maPPTKQ).ToListAsync();
+            }
+        }
         public void CreatePhieuPhanTichKetQuaChiTietAsync(PhieuPhanTichKetQuaChiTiet PhieuPhanTichKetQuaChiTiet)
         {
             _context.PhieuPhanTichKetQuaChiTiets.Add(PhieuPhanTichKetQuaChiTiet);

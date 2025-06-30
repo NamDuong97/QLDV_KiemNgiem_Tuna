@@ -184,6 +184,9 @@ public partial class NhanVien
     [InverseProperty("ManvNhapKhoNavigation")]
     public virtual ICollection<PhieuNhapKho> PhieuNhapKhoManvNhapKhoNavigations { get; set; } = new List<PhieuNhapKho>();
 
+    [InverseProperty("MabldDuyetNavigation")]
+    public virtual ICollection<PhieuPhanTichKetQua> PhieuPhanTichKetQuaMabldDuyetNavigations { get; set; } = new List<PhieuPhanTichKetQua>();
+
     [InverseProperty("ManvKiemTraNavigation")]
     public virtual ICollection<PhieuPhanTichKetQua> PhieuPhanTichKetQuaManvKiemTraNavigations { get; set; } = new List<PhieuPhanTichKetQua>();
 
