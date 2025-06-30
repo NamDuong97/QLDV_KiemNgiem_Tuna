@@ -2,10 +2,33 @@ import { useState } from "react";
 import { Search } from "react-feather";
 import Card from "../Card";
 import { sampleData } from "..";
+import { queryPhanTichKetQuaAll } from "../../../../hooks/personnels/queryPTKQ";
+import { getRoleGroup } from "../../../../configs/Role";
+import { role } from "../../../../configs/parseJwt";
+import { usePersonnel } from "../../../../contexts/PersonelsProvider";
 
-const List = ({ onView, onEdit }: any) => {
+const ListDaDuyet = ({ onView, onEdit }: any) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("");
+  const { personnelInfo } = usePersonnel();
+
+  const { data } = queryPhanTichKetQuaAll({
+    queryKey: "PhanTichKetQuaAll",
+    params:
+      getRoleGroup(role) === "KN"
+        ? role === "KN"
+          ? {
+              getAll: true,
+              maKhoa: personnelInfo?.maKhoa,
+              manvLap: personnelInfo?.maId,
+            }
+          : {
+              getAll: true,
+              maKhoa: personnelInfo?.maKhoa,
+              manvLap: personnelInfo?.maId,
+            }
+        : {},
+  });
 
   const filteredResults = Object.values(sampleData).filter((result: any) => {
     const matchesSearch =
@@ -66,4 +89,4 @@ const List = ({ onView, onEdit }: any) => {
   );
 };
 
-export default List;
+export default ListDaDuyet;

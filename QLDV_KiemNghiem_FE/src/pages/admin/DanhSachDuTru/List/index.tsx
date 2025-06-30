@@ -135,13 +135,6 @@ const List = ({ onView, onEdit, handleTag }: any) => {
               <h3 className="mt-4 text-lg font-medium text-gray-800">
                 Chưa có phiếu nào
               </h3>
-              <p className="mt-2 text-gray-500">Bắt đầu tạo phiếu dự trù</p>
-              <button
-                onClick={handleTag}
-                className="mt-4 px-4 py-2 text-sm font-medium text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 transition-all shadow-sm cursor-pointer"
-              >
-                Tạo phiếu
-              </button>
             </div>
           )}
         </div>

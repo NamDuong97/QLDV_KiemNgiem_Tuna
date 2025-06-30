@@ -1,10 +1,13 @@
 import { motion } from "motion/react";
 import { useState } from "react";
-import List from "./List";
 import Create from "./Create";
 import Tag from "./Tag";
 import ShowDetail from "./ShowDetail";
 import Edit from "./Edit";
+import ListDaDuyet from "./ListDaDuyet";
+import ListChuaDuyet from "./ListChuaDuyet";
+import ShowDetailChoDuyet from "./ShowDetailChoDuyet";
+import { role } from "../../../configs/parseJwt";
 
 export const sampleData: any = {
   KQ001: {
@@ -100,7 +103,9 @@ export const departments = [
 ];
 
 const PhanTichKetQua = () => {
-  const [activeView, setActiveView] = useState("list");
+  const [activeView, setActiveView] = useState(
+    role === "KN" ? "list" : "listChuaDuyet"
+  );
   const [selectedResultId, setSelectedResultId] = useState(null);
 
   const handleTabChange = (tab: any) => {
@@ -113,13 +118,17 @@ const PhanTichKetQua = () => {
     setActiveView("detail");
   };
 
+  const handleViewResultChoDuyet = (id: any) => {
+    setSelectedResultId(id);
+    setActiveView("detailChoDuyet");
+  };
+
   const handleEditResult = (id: any) => {
     setSelectedResultId(id);
     setActiveView("edit");
   };
 
   const handleSaveResult = (result: any) => {
-    // In a real app, you would save to your backend here
     console.log("Saving result:", result);
     alert("Đã lưu phiếu phân tích thành công!");
     setActiveView("list");
@@ -130,10 +139,17 @@ const PhanTichKetQua = () => {
     setSelectedResultId(null);
   };
 
+  const handleCancelChoDuyet = () => {
+    setActiveView("listChuaDuyet");
+    setSelectedResultId(null);
+  };
+
   const renderContent = () => {
     switch (activeView) {
       case "list":
-        return <List onView={handleViewResult} onEdit={handleEditResult} />;
+        return (
+          <ListDaDuyet onView={handleViewResult} onEdit={handleEditResult} />
+        );
       case "create":
         return <Create onCancel={handleCancel} onSave={handleSaveResult} />;
       case "detail":
@@ -144,6 +160,13 @@ const PhanTichKetQua = () => {
             onBack={handleCancel}
           />
         );
+      case "detailChoDuyet":
+        return (
+          <ShowDetailChoDuyet
+            resultId={selectedResultId}
+            onBack={handleCancelChoDuyet}
+          />
+        );
       case "edit":
         return (
           <Edit
@@ -152,8 +175,10 @@ const PhanTichKetQua = () => {
             onCancel={() => handleViewResult(selectedResultId)}
           />
         );
+      case "listChuaDuyet":
+        return <ListChuaDuyet onView={handleViewResultChoDuyet} />;
       default:
-        return <List onView={handleViewResult} onEdit={handleEditResult} />;
+        return <ListChuaDuyet onView={handleViewResultChoDuyet} />;
     }
   };
 
@@ -164,7 +189,7 @@ const PhanTichKetQua = () => {
       animate={{ x: 0, opacity: 1 }}
       exit={{ x: 0, opacity: 0 }}
       transition={{ duration: 0.5 }}
-      className="px-10 space-y-6 bg-blue-50 p-6 h-screen"
+      className="px-10 space-y-6 bg-blue-50 p-6"
     >
       <div className="flex justify-between items-center">
         <div>
@@ -176,7 +201,7 @@ const PhanTichKetQua = () => {
           </p>
         </div>
       </div>
-      {(activeView === "list" || activeView === "create") && (
+      {(activeView === "listChuaDuyet" || activeView === "list") && (
         <Tag activeTab={activeView} onTabChange={handleTabChange} />
       )}
       <div className="fade-in">{renderContent()}</div>

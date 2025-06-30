@@ -10,7 +10,6 @@ const Tag = (props: Props) => {
 
   const tabs = [
     { id: "list", label: "Danh sách phiếu", icon: List },
-    { id: "create", label: "Tạo phiếu mới", icon: Plus },
   ];
 
   return (

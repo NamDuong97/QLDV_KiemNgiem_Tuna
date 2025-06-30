@@ -179,6 +179,29 @@ const trangThaiPhanCongNoiBo: Record<string, TrangThai> = {
   },
 };
 
+const trangThaiPhanTichKetQua: Record<string, TrangThai> = {
+  1: {
+    text: "Chờ lãnh đạo phòng duyệt",
+    bgColor: "bg-yellow-100",
+    textColor: "text-yellow-800",
+  },
+  2: {
+    text: "Chờ BLĐ duyệt",
+    bgColor: "bg-blue-100",
+    textColor: "text-blue-800",
+  },
+  3: {
+    text: "BLĐ đã duyệt",
+    bgColor: "bg-green-100",
+    textColor: "text-green-800",
+  },
+  4: {
+    text: "BLĐ đã từ chối",
+    bgColor: "bg-red-100",
+    textColor: "text-red-800",
+  },
+};
+
 const trangThaiDuTru: Record<string, TrangThai> = {
   false: {
     text: "Chờ duyệt",
@@ -287,6 +310,22 @@ export function renderTrangThaiPhanCongNoiBo(trangThaiId: string) {
 
 export function renderTrangThaiDuTru(trangThaiId: string) {
   const trangThai = trangThaiDuTru[trangThaiId] || {
+    text: "Không xác định",
+    bgColor: "bg-gray-100",
+    textColor: "text-gray-800",
+  };
+
+  return (
+    <span
+      className={`inline-block px-2 py-1 text-xs font-medium rounded-full ${trangThai.bgColor} ${trangThai.textColor}`}
+    >
+      {trangThai.text}
+    </span>
+  );
+}
+
+export function renderTrangThaiPhanTichKetQua(trangThaiId: string) {
+  const trangThai = trangThaiPhanTichKetQua[trangThaiId] || {
     text: "Không xác định",
     bgColor: "bg-gray-100",
     textColor: "text-gray-800",

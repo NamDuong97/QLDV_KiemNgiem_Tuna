@@ -1,23 +1,26 @@
 import { GiTestTubes } from "react-icons/gi";
-import StatusBadge2 from "../../../../components/UI/StatusBadge2";
-import { formatDate } from "../../../../configs/configAll";
-import { Edit, Eye } from "react-feather";
+import {
+  formatDate,
+  renderTrangThaiPhanTichKetQua,
+} from "../../../../configs/configAll";
+import { Eye } from "react-feather";
+import { getInforNhanVien } from "../../../../hooks/personnels/access/useAccess";
 
-const Card = ({ result, onView, onEdit }: any) => {
+const Card = ({ result, onView }: any) => {
   const handleView = (e: any) => {
     e.stopPropagation();
-    onView(result.code);
+    onView(result?.maID);
   };
 
-  const handleEdit = (e: any) => {
-    e.stopPropagation();
-    onEdit(result.code);
-  };
+  const { data } = getInforNhanVien({
+    queryKey: "InforNhanVien",
+    params: result?.manvLap,
+  });
 
   return (
     <div
       className="result-card bg-white border border-gray-200 rounded-lg p-6 card-hover cursor-pointer"
-      onClick={() => onView(result.code)}
+      onClick={() => onView(result?.maID)}
     >
       <div className="flex justify-between items-start mb-4">
         <div className="flex items-center space-x-3">
@@ -25,29 +28,31 @@ const Card = ({ result, onView, onEdit }: any) => {
             <GiTestTubes className="text-blue-600" size={20} />
           </div>
           <div>
-            <h3 className="font-semibold text-gray-900">{result.code}</h3>
-            <p className="text-sm text-gray-600">{result.sampleName}</p>
+            <h3 className="font-semibold text-gray-900">
+              {result?.maPhieuKetQua}
+            </h3>
+            <p className="text-sm text-gray-600">{result?.tenMau}</p>
           </div>
         </div>
-        <StatusBadge2 status={result.status} />
+        {renderTrangThaiPhanTichKetQua(result?.trangThai)}
       </div>
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
         <div>
           <p className="text-gray-600">Nhân viên lập</p>
-          <p className="font-medium">{result.createdBy}</p>
+          <p className="font-medium">{data?.hoTen}</p>
         </div>
         <div>
           <p className="text-gray-600">Ngày nhận</p>
-          <p className="font-medium">{formatDate(result.receivedDate)}</p>
+          <p className="font-medium">{formatDate(result?.ngayNhanMau)}</p>
         </div>
         <div>
           <p className="text-gray-600">Ngày trả KQ</p>
-          <p className="font-medium">{formatDate(result.resultDate)}</p>
+          <p className="font-medium">{formatDate(result?.ngayTraKetQua)}</p>
         </div>
         <div>
           <p className="text-gray-600">Khoa</p>
-          <p className="font-medium">{result.department}</p>
+          <p className="font-medium">{result?.tenKhoa}</p>
         </div>
       </div>
 
@@ -58,13 +63,6 @@ const Card = ({ result, onView, onEdit }: any) => {
         >
           <Eye size={14} />
           <span>Xem</span>
-        </button>
-        <button
-          onClick={handleEdit}
-          className="px-3 py-1 text-amber-600 hover:bg-amber-50 rounded-md text-sm flex items-center space-x-1"
-        >
-          <Edit size={14} />
-          <span>Sửa</span>
         </button>
       </div>
     </div>

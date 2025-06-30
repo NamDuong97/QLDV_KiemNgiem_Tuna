@@ -65,6 +65,22 @@ export const API = {
       UPDATE_DU_TRU: "/api/PhieuDuTru/updatePhieuDuTru",
       DELETE_DU_TRU: "/api/PhieuDuTru/deletePhieuDuTru",
     },
+    PHAN_TICH_KET_QUA: {
+      GET_PHAN_TICH_KET_QUA_ALL:
+        "/api/PhieuPhanTichKetQua/getPhieuPhanTichKetQuaAll",
+      GET_PHAN_TICH_KET_QUA_BY_ID:
+        "/api/PhieuPhanTichKetQua/getPhieuPhanTichKetQuaByID",
+      CREATE_PHAN_TICH_KET_QUA:
+        "/api/PhieuPhanTichKetQua/createPhieuPhanTichKetQua",
+      UPDATE_PHAN_TICH_KET_QUA:
+        "/api/PhieuPhanTichKetQua/updatePhieuPhanTichKetQua",
+      REVIEW_PHAN_TICH_KET_QUA_LDP:
+        "/api/PhieuPhanTichKetQua/reviewPhieuPhanTichKetQuaByLDP",
+      REVIEW_PHAN_TICH_KET_QUA_BLD:
+        "/api/PhieuPhanTichKetQua/reviewPhieuPhanTichKetQuaByBLD",
+      DELETE_PHAN_TICH_KET_QUA:
+        "/api/PhieuPhanTichKetQua/deletePhieuPhanTichKetQua",
+    },
   },
   CUSTOMER: {
     PHIEU_DANG_KY_DICH_VU_KIEM_NGHIEM: {

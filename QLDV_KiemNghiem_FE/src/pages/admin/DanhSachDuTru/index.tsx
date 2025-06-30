@@ -1,6 +1,5 @@
 import { motion } from "motion/react";
 import ShowDetail from "./ShowDetail";
-import Create from "./Create";
 import List from "./List";
 import Edit from "./Edit";
 import { useState } from "react";
@@ -145,8 +144,6 @@ const DanhSachDuTru = () => {
             handleTag={() => setActiveView("create")}
           />
         );
-      case "create":
-        return <Create onCancel={handleCancel} />;
       case "detail":
         return (
           <ShowDetail
