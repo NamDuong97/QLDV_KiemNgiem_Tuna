@@ -1,29 +1,15 @@
 import { Trash2 } from "react-feather";
+import { DonViTinh } from "../../../../../Guest/formSignUpDVKN/components/Maus/FormThongTinMau";
 import InputSelectDonViTinh from "./InputSelectDonViTinh";
-import { DonViTinh } from "../../../Guest/formSignUpDVKN/components/Maus/FormThongTinMau";
 
 const Detail = ({
   index,
+  control,
   register,
   errors,
-  fieldNamePrefix,
   onRemove,
-  isEditable = true,
-  control,
-  detail,
+  fieldNamePrefix,
 }: any) => {
-  if (!isEditable) {
-    return (
-      <div className="grid grid-cols-5 gap-4 p-4 border-b border-gray-200 last:border-b-0">
-        <div className="font-medium col-span-1">{detail?.Ten_PLHC}</div>
-        <div className="col-span-1">
-          {detail?.soLuong} {detail?.donViTinh}
-        </div>
-        <div className="col-span-3">{detail?.ghiChu}</div>
-      </div>
-    );
-  }
-
   return (
     <div className="flex items-center gap-4 p-4 bg-gray-50 rounded-lg">
       <div className="grid gap-4 w-full">
@@ -37,11 +23,9 @@ const Detail = ({
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-0 focus-within:outline-1 focus-within:border-blue-600"
               placeholder="Nhập phụ liệu hóa chất"
             />
-            {errors?.Ten_PLHC && (
-              <p className="text-red-600 text-sm mt-1">
-                {errors.Ten_PLHC.message}
-              </p>
-            )}
+            <p className="text-red-600 text-sm mt-1">
+              {errors?.Ten_PLHC?.message}
+            </p>
           </div>
 
           <div className="w-full">
@@ -49,16 +33,14 @@ const Detail = ({
               Số lượng
             </label>
             <input
-              type="text"
+              type="number"
               {...register(`${fieldNamePrefix}.soLuong`)}
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-0 focus-within:outline-1 focus-within:border-blue-600"
               placeholder="Số lượng"
             />
-            {errors?.soLuong && (
-              <p className="text-red-600 text-sm mt-1">
-                {errors.soLuong.message}
-              </p>
-            )}
+            <p className="text-red-600 text-sm mt-1">
+              {errors?.soLuong?.message}
+            </p>
           </div>
 
           <div className="w-full">
@@ -66,12 +48,14 @@ const Detail = ({
               Đơn vị tính
             </label>
             <InputSelectDonViTinh
-              control={control}
               name={`${fieldNamePrefix}.donViTinh`}
-              data={DonViTinh}
               placeholder="Nhập ĐVT"
-              errorMessage={errors?.donViTinh?.message}
+              data={DonViTinh}
+              control={control}
             />
+            <p className="text-red-600 text-sm mt-1">
+              {errors?.donViTinh?.message}
+            </p>
           </div>
         </div>
 
@@ -84,12 +68,9 @@ const Detail = ({
             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-0 focus-within:outline-1 focus-within:border-blue-600"
             placeholder="Ghi chú"
           />
-          {errors?.ghiChu && (
-            <p className="text-red-600 text-sm mt-1">{errors.ghiChu.message}</p>
-          )}
+          <p className="text-red-600 text-sm mt-1">{errors?.ghiChu?.message}</p>
         </div>
       </div>
-
       <div className="flex items-end">
         <button
           type="button"

@@ -179,6 +179,19 @@ const trangThaiPhanCongNoiBo: Record<string, TrangThai> = {
   },
 };
 
+const trangThaiDuTru: Record<string, TrangThai> = {
+  false: {
+    text: "Chờ duyệt",
+    bgColor: "bg-yellow-100",
+    textColor: "text-yellow-800",
+  },
+  true: {
+    text: "Đã Duyệt",
+    bgColor: "bg-green-100",
+    textColor: "text-green-800",
+  },
+};
+
 export const getStatusClass = (status: any) => {
   switch (status) {
     case "Hoàn thành":
@@ -258,6 +271,22 @@ export function renderTrangThaiPhieuDeXuatPhongBan(trangThaiId: string) {
 
 export function renderTrangThaiPhanCongNoiBo(trangThaiId: string) {
   const trangThai = trangThaiPhanCongNoiBo[trangThaiId] || {
+    text: "Không xác định",
+    bgColor: "bg-gray-100",
+    textColor: "text-gray-800",
+  };
+
+  return (
+    <span
+      className={`inline-block px-2 py-1 text-xs font-medium rounded-full ${trangThai.bgColor} ${trangThai.textColor}`}
+    >
+      {trangThai.text}
+    </span>
+  );
+}
+
+export function renderTrangThaiDuTru(trangThaiId: string) {
+  const trangThai = trangThaiDuTru[trangThaiId] || {
     text: "Không xác định",
     bgColor: "bg-gray-100",
     textColor: "text-gray-800",

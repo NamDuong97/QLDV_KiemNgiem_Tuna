@@ -11,6 +11,7 @@ const EditPhieuDKyDVKN = lazy(
 import XacMinhEmail from "../pages/XacminhEmail";
 import RedirectCustomer from "./redirectCustomer";
 import { StoreProvider } from "../contexts/storeProvider";
+import NotFound from "../pages/404NotFound";
 
 const ProfileCustomer = lazy(() => import("../pages/Guest/manager/Profile"));
 
@@ -36,7 +37,6 @@ const RoutersCustomer = () => {
           path={APP_ROUTES.TUNA_XAC_MINH_EMAIL}
           element={<XacMinhEmail />}
         />
-
         {/* ==== Customer Routes ====*/}
         <Route
           element={
@@ -113,6 +113,7 @@ const RoutersCustomer = () => {
             }
           />
         </Route>
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </Suspense>
   );

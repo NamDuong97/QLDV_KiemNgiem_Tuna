@@ -1,22 +1,37 @@
-import StatusBadge2 from "../../../../components/UI/StatusBadge2";
-import { formatDate } from "../../../../configs/configAll";
+import {
+  formatDate,
+  renderTrangThaiDuTru,
+} from "../../../../configs/configAll";
 import { Edit, Eye, FileText } from "react-feather";
+import { getInforNhanVien } from "../../../../hooks/personnels/access/useAccess";
+import { getKhoaByID } from "../../../../hooks/personnels/queryKhoa";
 
-const Card = ({ result, onView, onEdit }: any) => {
+const Card = ({ result, onView, onEdit, dataDM_Mau }: any) => {
+  const { data } = getInforNhanVien({
+    queryKey: "InforNhanVien",
+    params: result?.manvLapPhieu,
+  });
+
+  const { data: dataKhoa } = getKhoaByID({
+    queryKey: "khoaByID",
+    params: result?.maKhoa,
+  });
+
   const handleView = (e: any) => {
     e.stopPropagation();
-    onView(result.MaPhieuDuTru);
+    onView(result.maId);
   };
 
   const handleEdit = (e: any) => {
     e.stopPropagation();
-    onEdit(result.MaPhieuDuTru);
+    onEdit(result.maId);
   };
+  console.log("dataId", result?.maId);
 
   return (
     <div
       className="result-card bg-white border border-gray-200 rounded-lg p-6 card-hover cursor-pointer"
-      onClick={() => onView(result.MaPhieuDuTru)}
+      onClick={() => onView(result?.maId)}
     >
       <div className="flex justify-between items-start mb-4">
         <div className="flex items-center space-x-3">
@@ -25,30 +40,31 @@ const Card = ({ result, onView, onEdit }: any) => {
           </div>
           <div>
             <h3 className="font-semibold text-gray-900">
-              {result.MaPhieuDuTru}
+              {result?.maPhieuDuTru}
             </h3>
-            <p className="text-sm text-gray-600">{result.Ten_Mau}</p>
+            <p className="text-sm text-gray-600">
+              {
+                dataDM_Mau?.find((item: any) => item.maId === result?.maPdkMau)
+                  ?.tenMau
+              }
+            </p>
           </div>
         </div>
-        <StatusBadge2 status={result.TrangThai} />
+        {renderTrangThaiDuTru(result.trangThai)}
       </div>
 
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
+      <div className="grid grid-cols-3 gap-4 text-sm">
         <div>
           <p className="text-gray-600">Nhân viên lập</p>
-          <p className="font-medium">{result.ManvLapPhieu}</p>
+          <p className="font-medium">{data?.hoTen}</p>
         </div>
         <div>
           <p className="text-gray-600">Ngày lập</p>
-          <p className="font-medium">{formatDate(result.NgayLap)}</p>
+          <p className="font-medium">{formatDate(result?.ngayLap)}</p>
         </div>
         <div>
           <p className="text-gray-600">Khoa</p>
-          <p className="font-medium">{result.MaKhoa}</p>
-        </div>
-        <div>
-          <p className="text-gray-600">Trạng thái</p>
-          <p className="font-medium">{result.TrangThai}</p>
+          <p className="font-medium">{dataKhoa?.tenKhoa}</p>
         </div>
       </div>
 

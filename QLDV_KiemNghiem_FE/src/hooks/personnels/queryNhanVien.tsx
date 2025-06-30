@@ -22,3 +22,4 @@ export const queryNhanVienALL = (props: Props) => {
     enabled: !!params,
   });
 };
+

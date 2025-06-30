@@ -1,153 +1,217 @@
-import { useEffect, useState } from "react";
-import { departments, employees, sampleData } from "..";
-import { ArrowLeft, Plus, Save } from "react-feather";
+import { useEffect } from "react";
+import { Plus, Save } from "react-feather";
+import { useFieldArray, useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import classes from "../../DanhSachPhanCongNoiBo/PhanCong/ModelPhanCong/style.module.scss";
+import clsx from "clsx";
+import yup from "../../../../configs/yup.custom";
+import { usePersonnel } from "../../../../contexts/PersonelsProvider";
+import { queryClient } from "../../../../lib/reactQuery";
+import { useStoreNotification } from "../../../../configs/stores/useStoreNotification";
+import {
+  getDuTruByID,
+  updateDuTru,
+} from "../../../../hooks/personnels/queryDuTru";
 import Detail from "../Detail";
+import { queryMauByID } from "../../../../hooks/personnels/queryMau";
 
-const Edit = ({ resultId, onSave, onCancel }: any) => {
-  const [formData, setFormData] = useState({
-    Ten_Mau: "",
-    NgayLap: "",
+interface Props {
+  resultId: any;
+  onCancel: () => void;
+}
+
+interface ChiTietPhieuDuTru {
+  Ten_PLHC: string;
+  soLuong: number | string;
+  donViTinh: string;
+  ghiChu: string;
+}
+
+interface FormPhieuDuTru {
+  ghiChu?: string | null;
+  chiTietPhieuDuTrus: ChiTietPhieuDuTru[];
+}
+
+const Edit = (props: Props) => {
+  const { resultId, onCancel } = props;
+
+  const { personnelInfo } = usePersonnel();
+
+  const { data } = getDuTruByID({
+    queryKey: "getDuTruByID",
+    params: resultId,
+  });
+  const { data: dataMauID } = queryMauByID({
+    queryKey: "MauByID",
+    params: data?.maPdkMau,
+  });
+  console.log("dataMau", data);
+
+  const schemaPhieuDuTru = yup.object().shape({
+    ghiChu: yup
+      .string()
+      .nullable()
+      .transform((value, originalValue) =>
+        originalValue === "" ? null : value
+      ),
+
+    chiTietPhieuDuTrus: yup
+      .array()
+      .of(
+        yup.object().shape({
+          Ten_PLHC: yup.string().required("Vui lòng nhập tên phụ liệu"),
+          soLuong: yup
+            .number()
+            .typeError("Số lượng phải là số")
+            .positive("Số lượng phải lớn hơn 0")
+            .required("Vui lòng nhập số lượng"),
+          donViTinh: yup.string().required("Vui lòng chọn đơn vị tính"),
+          ghiChu: yup.string().required("Vui lòng nhập Ghi chú"),
+        })
+      )
+      .required()
+      .min(1, "Cần ít nhất 1 chỉ tiêu"),
   });
 
-  const [testDetails, setTestDetails] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true);
+  const {
+    register,
+    reset,
+    control,
+    formState: { errors },
+    handleSubmit,
+  } = useForm({
+    mode: "onChange",
+    resolver: yupResolver<FormPhieuDuTru>(schemaPhieuDuTru),
+    defaultValues: {
+      ghiChu: "",
+      chiTietPhieuDuTrus: [
+        { Ten_PLHC: "", soLuong: 0, donViTinh: "", ghiChu: "" },
+      ],
+    },
+  });
+
+  const { fields, append, remove } = useFieldArray({
+    control,
+    name: "chiTietPhieuDuTrus",
+  });
+
+  const handleCloseModel = () => {
+    onCancel();
+    reset({
+      ghiChu: "",
+      chiTietPhieuDuTrus: [
+        { Ten_PLHC: "", soLuong: 0, donViTinh: "", ghiChu: "" },
+      ],
+    });
+  };
+
+  const handleSettled = async (response: any) => {
+    if (response?.status === 200) {
+      await queryClient.refetchQueries({
+        queryKey: ["DanhSachMau"],
+      });
+      onCancel();
+    }
+  };
+  const showNotification = useStoreNotification(
+    (state: any) => state.showNotification
+  );
+
+  const { mutate } = updateDuTru({
+    queryKey: "updateDuTru",
+    onSuccess: (data: any) => {
+      console.log("Tạo phiếu dự trù thành công:", data);
+      if (data.status === 200) {
+        showNotification({
+          message: "Tạo phiếu dự trù thành công",
+          status: 200,
+        });
+        return;
+      } else {
+        showNotification({
+          message: "Tạo phiếu dự trù thất bại",
+          status: 500,
+        });
+      }
+    },
+    onError: (error: any) => {
+      console.log("error", error);
+
+      showNotification({
+        message: "Tạo phiếu dự trù thất bại",
+        status: 400,
+      });
+    },
+    onSettled: handleSettled,
+  });
+
+  const onSubmit = (formData: FormPhieuDuTru) => {
+    const param = {
+      maPdkMau: dataMauID?.maId,
+      manvLapPhieu: personnelInfo?.maId,
+      maKhoa: personnelInfo?.maKhoa,
+      ghiChu: formData.ghiChu ?? "",
+      chiTietPhieuDuTrus: formData.chiTietPhieuDuTrus.map((item: any) => ({
+        donViTinh: item.donViTinh,
+        soLuong: item.soLuong,
+        maDmPlhc: item.Ten_PLHC,
+        ghiChu: item.ghiChu ?? "",
+      })),
+    };
+    // mutate(param);
+    console.log("Form Submit:", param);
+  };
 
   useEffect(() => {
-    const result = sampleData[resultId];
-    if (result) {
-      setFormData({
-        Ten_Mau: result.Ten_Mau,
-        NgayLap: result.NgayLap,
+    if (data) {
+      reset({
+        ghiChu: data.ghiChu ?? "",
+        chiTietPhieuDuTrus:
+          data.chiTietPhieuDuTrus?.map((item: any) => ({
+            Ten_PLHC: item.maDmPlhc ?? "",
+            soLuong: item.soLuong ?? 0,
+            donViTinh: item.donViTinh ?? "",
+            ghiChu: item.ghiChu ?? "",
+          })) ?? [],
       });
-
-      setTestDetails(
-        result.details && result.details.length > 0
-          ? [...result.details]
-          : [{ Ten_PLHC: "", SoLuong: "", GhiChu: "" }]
-      );
     }
-    setLoading(false);
-  }, [resultId]);
-
-  const handleInputChange = (field: any, value: any) => {
-    setFormData((prev) => ({ ...prev, [field]: value }));
-  };
-
-  const handleTestDetailChange = (index: any, detail: any) => {
-    const newDetails = [...testDetails];
-    newDetails[index] = detail;
-    setTestDetails(newDetails);
-  };
-
-  const addTestDetail = () => {
-    setTestDetails((prev) => [
-      ...prev,
-      { Ten_PLHC: "", SoLuong: "", GhiChu: "" },
-    ]);
-  };
-
-  const removeTestDetail = (index: any) => {
-    if (testDetails.length > 1) {
-      setTestDetails((prev) => prev.filter((_, i) => i !== index));
-    }
-  };
-
-  const handleSubmit = (e: any) => {
-    e.preventDefault();
-    const updatedResult = {
-      ...formData,
-      ChiTietPhieuDuTru: testDetails.filter(
-        (detail) => detail.Ten_PLHC.trim() !== ""
-      ),
-    };
-    console.log("New Result:", updatedResult);
-    // onSave(updatedResult);
-  };
-
-  if (loading) {
-    return (
-      <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-        <div className="animate-pulse">
-          <div className="h-4 bg-gray-200 rounded w-1/4 mb-4"></div>
-          <div className="space-y-3">
-            <div className="h-4 bg-gray-200 rounded"></div>
-            <div className="h-4 bg-gray-200 rounded w-5/6"></div>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  if (!sampleData[resultId]) {
-    return (
-      <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-        <div className="text-center">
-          <p className="text-gray-500">Không tìm thấy phiếu phân tích</p>
-          <button
-            onClick={onCancel}
-            className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-          >
-            Quay lại
-          </button>
-        </div>
-      </div>
-    );
-  }
+  }, [data, reset]);
 
   return (
     <div className="bg-white rounded-xl shadow-sm border border-gray-200">
-      <div className="px-6 py-4 border-b border-gray-200 bg-gray-50 flex justify-between items-center">
-        <div>
-          <h2 className="text-lg font-semibold text-gray-900">
-            Chỉnh sửa phiếu phân tích
-          </h2>
-          <p className="text-sm text-gray-600 mt-1">Mã phiếu: ABXCDF</p>
-        </div>
-        <button
-          onClick={onCancel}
-          className="px-4 py-2 cursor-pointer bg-cyan-600 text-white rounded-lg hover:bg-cyan-700 transition-colors flex items-center space-x-2"
-        >
-          <ArrowLeft size={16} />
-          <span>Quay lại</span>
-        </button>
+      <div className="px-6 py-4 border-b border-gray-200 bg-gray-50">
+        <h2 className="text-lg font-semibold text-gray-900">
+          Sửa phiếu dự trù cho mẫu ({dataMauID?.tenMau})
+        </h2>
       </div>
 
-      <form onSubmit={handleSubmit} className="p-6 space-y-6">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Tên mẫu *
-            </label>
-            <input
-              type="text"
-              required
-              defaultValue={formData.Ten_Mau}
-              onChange={(e) => handleInputChange("Ten_Mau", e.target.value)}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              placeholder="Nhập tên mẫu"
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Ngày lập *
-            </label>
-            <input
-              type="date"
-              required
-              defaultValue={formData.NgayLap}
-              onChange={(e) => handleInputChange("NgayLap", e.target.value)}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-            />
-          </div>
+      <form onSubmit={handleSubmit(onSubmit)} className="p-6 space-y-6">
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-2">
+            Ghi chú
+          </label>
+          <textarea
+            rows={3}
+            {...register("ghiChu")}
+            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-0 focus-within:outline-1 focus-within:border-blue-600"
+            placeholder="Nhập ghi chú..."
+          />
         </div>
         <div className="border-t border-gray-300 pt-6">
           <div className="flex justify-between items-center mb-4">
-            <h3 className="text-lg font-medium text-gray-900">
-              Chi tiết kết quả kiểm nghiệm
+            <h3 className="text-lg font-semibold text-gray-600">
+              Chi tiết phiếu
             </h3>
             <button
               type="button"
-              onClick={addTestDetail}
+              onClick={() =>
+                append({
+                  Ten_PLHC: "",
+                  soLuong: 0,
+                  donViTinh: "",
+                  ghiChu: "",
+                })
+              }
               className="px-4 py-2 cursor-pointer bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center space-x-2"
             >
               <Plus size={16} />
@@ -155,47 +219,44 @@ const Edit = ({ resultId, onSave, onCancel }: any) => {
             </button>
           </div>
 
-          <div className="space-y-4">
-            {testDetails.map((detail, index) => (
+          <div
+            className={clsx(
+              "space-y-4 max-h-72 overflow-y-auto",
+              classes.scrollbar_thin
+            )}
+          >
+            {fields.map((field, index) => (
               <Detail
-                key={index}
-                detail={detail}
+                key={field.id}
                 index={index}
-                onChange={handleTestDetailChange}
-                onRemove={removeTestDetail}
-                isEditable={true}
+                detail={field}
+                onRemove={() => remove(index)}
+                isEditable
+                control={control}
+                register={register}
+                errors={errors?.chiTietPhieuDuTrus?.[index]}
+                fieldNamePrefix={`chiTietPhieuDuTrus.${index}`}
               />
             ))}
           </div>
-
-          {testDetails.length === 0 && (
-            <div className="text-center py-8 text-gray-500">
-              <p>Chưa có chi tiết kết quả kiểm nghiệm</p>
-              <button
-                type="button"
-                onClick={addTestDetail}
-                className="mt-2 text-blue-600 hover:text-blue-800 text-sm font-medium"
-              >
-                Thêm chỉ tiêu đầu tiên
-              </button>
-            </div>
+          {errors.chiTietPhieuDuTrus && (
+            <p className="text-red-600 text-sm/">
+              {errors.chiTietPhieuDuTrus?.message}
+            </p>
           )}
         </div>
 
         <div className="flex justify-end space-x-4 pt-6 border-t border-gray-300">
           <button
             type="button"
-            onClick={onCancel}
+            onClick={handleCloseModel}
             className="px-6 py-2 cursor-pointer border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
           >
-            Hủy thay đổi
+            Hủy
           </button>
-          <button
-            type="submit"
-            className="px-6 py-2 cursor-pointer bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center space-x-2"
-          >
+          <button className="px-6 py-2 cursor-pointer bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center space-x-2">
             <Save size={16} />
-            <span>Lưu thay đổi</span>
+            <span>Lưu phiếu</span>
           </button>
         </div>
       </form>

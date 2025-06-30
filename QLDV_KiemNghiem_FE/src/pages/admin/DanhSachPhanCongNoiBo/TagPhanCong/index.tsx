@@ -1,4 +1,5 @@
 import { tagPhanCong } from "..";
+import { role } from "../../../../configs/parseJwt";
 
 interface Props {
   setIsTag: React.Dispatch<React.SetStateAction<string>>;
@@ -10,16 +11,19 @@ const TagPhanCong = (props: Props) => {
 
   return (
     <div className="flex flex-wrap gap-2">
-      <button
-        className={`px-3 py-1.5 cursor-pointer text-sm font-medium rounded-md ${
-          isTag === tagPhanCong.Phan_Cong
-            ? "bg-indigo-100 text-indigo-800"
-            : "text-gray-600 hover:bg-gray-100"
-        }`}
-        onClick={() => setIsTag(tagPhanCong.Phan_Cong)}
-      >
-        Phân công nhân viên
-      </button>
+      {role !== "KN" && (
+        <button
+          className={`px-3 py-1.5 cursor-pointer text-sm font-medium rounded-md ${
+            isTag === tagPhanCong.Phan_Cong
+              ? "bg-indigo-100 text-indigo-800"
+              : "text-gray-600 hover:bg-gray-100"
+          }`}
+          onClick={() => setIsTag(tagPhanCong.Phan_Cong)}
+        >
+          Phân công nhân viên
+        </button>
+      )}
+
       <button
         className={`px-3 py-1.5 cursor-pointer text-sm font-medium rounded-md ${
           isTag === tagPhanCong.Danh_Sach
@@ -30,16 +34,18 @@ const TagPhanCong = (props: Props) => {
       >
         Danh Sách phân công
       </button>
-      <button
-        className={`px-3 py-1.5 cursor-pointer text-sm font-medium rounded-md ${
-          isTag === tagPhanCong.Lich_Su_Phan_Cong
-            ? "bg-indigo-100 text-indigo-800"
-            : "text-gray-600 hover:bg-gray-100"
-        }`}
-        onClick={() => setIsTag(tagPhanCong.Lich_Su_Phan_Cong)}
-      >
-        Lịch sử phân công
-      </button>
+      {role !== "KN" && (
+        <button
+          className={`px-3 py-1.5 cursor-pointer text-sm font-medium rounded-md ${
+            isTag === tagPhanCong.Lich_Su_Phan_Cong
+              ? "bg-indigo-100 text-indigo-800"
+              : "text-gray-600 hover:bg-gray-100"
+          }`}
+          onClick={() => setIsTag(tagPhanCong.Lich_Su_Phan_Cong)}
+        >
+          Lịch sử phân công
+        </button>
+      )}
     </div>
   );
 };

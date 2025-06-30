@@ -8,5 +8,6 @@
         public int TrangThaiPhanCong { get; set; }
         public string ? NgayTraKetQuaFrom {  get; set; }
         public string? NgayTraKetQuaTo { get; set; }
+        public bool? LuuMau { get; set; } = true;
     }
 }

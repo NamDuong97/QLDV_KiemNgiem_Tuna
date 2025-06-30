@@ -276,7 +276,7 @@ const ModelXemChiTiet = (props: Props) => {
 
           <div>
             <h3 className="text-gray-500 font-semibold text-lg/6 flex items-center gap-2">
-              Thông tin mẫu phân công
+              Thông tin mẫu kiểm nghiệm
               {isMau ? (
                 <span
                   className="font-medium text-sm/6 cursor-pointer hover:underline text-blue-600"
@@ -388,7 +388,7 @@ const ModelXemChiTiet = (props: Props) => {
           </div>
           <div className="mt-2">
             <h3 className="text-gray-500 font-semibold text-lg/6 flex items-center gap-2">
-              Lịch sử tiến độ
+              Báo cáo tiến độ
               {data?.trangThai === true &&
                 !isChiTietTienDo &&
                 (isThem ? (
@@ -613,20 +613,16 @@ const ModelXemChiTiet = (props: Props) => {
           </div>
 
           <div className="flex justify-end space-x-3 mt-6 pt-6 border-t border-gray-300">
-            <button
-              onClick={handleClose}
-              className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors cursor-pointer"
-            >
-              Đóng
-            </button>
-            {getRoleGroup(role) === "KN" && data?.trangThai === true && (
-              <button
-                onClick={() => handleOpenModelSua(dataID)}
-                className="px-4 py-2 text-sm font-medium text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 transition-colors cursor-pointer"
-              >
-                Sửa
-              </button>
-            )}
+            {getRoleGroup(role) === "KN" &&
+              data?.trangThai === true &&
+              role !== "KN" && (
+                <button
+                  onClick={() => handleOpenModelSua(dataID)}
+                  className="px-4 py-2 text-sm font-medium text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 transition-colors cursor-pointer"
+                >
+                  Sửa
+                </button>
+              )}
           </div>
         </div>
       </div>

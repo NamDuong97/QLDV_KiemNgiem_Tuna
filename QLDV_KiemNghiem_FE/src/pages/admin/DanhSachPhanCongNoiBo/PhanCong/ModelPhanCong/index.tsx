@@ -161,7 +161,7 @@ const ModelPhanCong = (props: Props) => {
         <div className="px-6 py-4 border-b border-gray-100">
           <div className="flex justify-between items-center">
             <h3 className="text-lg font-semibold text-gray-800">
-              Phân công mẫu
+              Phân công mẫu({sample?.tenMau})
             </h3>
             <button
               onClick={handleClose}
@@ -183,24 +183,6 @@ const ModelPhanCong = (props: Props) => {
           </div>
         </div>
         <form onSubmit={handleSubmit(onSubmit)} className="p-6 space-y-6">
-          <div className="mb-6">
-            <div className="flex justify-between items-start mb-2">
-              <div>
-                <div className="flex items-center gap-2">
-                  <span className="text-xs font-medium text-gray-600">
-                    Mã Mẫu:
-                  </span>
-                  <span className="text-sm font-medium text-indigo-600">
-                    {sample?.maPdkMau}
-                  </span>
-                </div>
-                <h4 className="font-medium text-gray-800 text-lg">
-                  {sample?.tenMau}
-                </h4>
-              </div>
-            </div>
-          </div>
-
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
               Chọn nhân viên phân công

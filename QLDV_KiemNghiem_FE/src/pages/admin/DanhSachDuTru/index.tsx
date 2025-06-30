@@ -119,6 +119,8 @@ const DanhSachDuTru = () => {
   };
 
   const handleViewResult = (id: any) => {
+    console.log("id", id);
+
     setSelectedResultId(id);
     setActiveView("detail");
   };
@@ -126,12 +128,6 @@ const DanhSachDuTru = () => {
   const handleEditResult = (id: any) => {
     setSelectedResultId(id);
     setActiveView("edit");
-  };
-
-  const handleSaveResult = (result: any) => {
-    console.log("Saving result:", result);
-    alert("Đã lưu phiếu phân tích thành công!");
-    setActiveView("list");
   };
 
   const handleCancel = () => {
@@ -150,7 +146,7 @@ const DanhSachDuTru = () => {
           />
         );
       case "create":
-        return <Create onCancel={handleCancel} onSave={handleSaveResult} />;
+        return <Create onCancel={handleCancel} />;
       case "detail":
         return (
           <ShowDetail
@@ -160,13 +156,7 @@ const DanhSachDuTru = () => {
           />
         );
       case "edit":
-        return (
-          <Edit
-            resultId={selectedResultId}
-            onSave={handleSaveResult}
-            onCancel={handleCancel}
-          />
-        );
+        return <Edit resultId={selectedResultId} onCancel={handleCancel} />;
       default:
         return (
           <List

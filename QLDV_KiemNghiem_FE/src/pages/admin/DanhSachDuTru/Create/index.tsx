@@ -1,8 +1,10 @@
 import { useState } from "react";
 import { Plus, Save } from "react-feather";
 import Detail from "../Detail";
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
 
-const Create = ({ onCancel, onSave }: any) => {
+const Create = ({ onCancel }: any) => {
   const [formData, setFormData] = useState({
     Ten_Mau: "",
     NgayLap: "",
@@ -11,6 +13,17 @@ const Create = ({ onCancel, onSave }: any) => {
   const [testDetails, setTestDetails] = useState([
     { Ten_PLHC: "", SoLuong: "", GhiChu: "" },
   ]);
+
+  const {
+    register,
+
+    reset,
+    setValue,
+    control,
+    formState: { errors },
+  } = useForm({
+    mode: "onChange",
+  });
 
   const handleInputChange = (field: any, value: any) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
@@ -108,6 +121,7 @@ const Create = ({ onCancel, onSave }: any) => {
                 onChange={handleTestDetailChange}
                 onRemove={removeTestDetail}
                 isEditable={true}
+                control={control}
               />
             ))}
           </div>

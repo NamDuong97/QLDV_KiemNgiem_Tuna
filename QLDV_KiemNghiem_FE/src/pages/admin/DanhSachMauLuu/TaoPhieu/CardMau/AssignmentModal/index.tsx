@@ -3,7 +3,10 @@ import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
-import { formatDateNotTime } from "../../../../../../configs/configAll";
+import {
+  formatDateNotTime,
+  formatDateNotTime2,
+} from "../../../../../../configs/configAll";
 import { IoClose } from "react-icons/io5";
 import { usePersonnel } from "../../../../../../contexts/PersonelsProvider";
 import { createMauLuu } from "../../../../../../hooks/personnels/queryMauLuu";
@@ -63,12 +66,13 @@ const AssignmentModal = (props: Props) => {
   });
 
   const handleOnSettled = async (response: any) => {
-    // if (response.ketQua === true) {
-
-    // }
-    await queryClient.refetchQueries({
-      queryKey: ["ChitietPhieuDKKM"],
-    });
+    const { status } = response;
+    if (status === 200) {
+      await queryClient.refetchQueries({
+        queryKey: ["queryMauLuuAll"],
+      });
+      return;
+    }
   };
   const showNotification = useStoreNotification(
     (state: any) => state.showNotification
@@ -78,11 +82,11 @@ const AssignmentModal = (props: Props) => {
     queryKey: "createMauLuu",
     onSettled: handleOnSettled,
     onSuccess: (res: any) => {
-      const { ketQua, message } = res;
-      if (ketQua !== true) {
+      const { status } = res;
+      if (status !== 200) {
         showNotification({
-          message: message || "Tạo phiếu thất bại. Vui lòng thử lại.",
-          ketQua: ketQua,
+          message: "Tạo phiếu thất bại. Vui lòng thử lại.",
+          status: status,
         });
         return;
       }
@@ -93,18 +97,20 @@ const AssignmentModal = (props: Props) => {
 
   const handleAssignSubmit = (data: FormTaoPhieu) => {
     const dataTao = {
-      tenMau: selectedSamples?.name,
-      maPdkMau: selectedSamples?.id,
+      tenMau: selectedSamples?.tenMau,
+      maPdkMau: selectedSamples?.maId,
       soLuong: data.soLuong,
       donViTinh: data.donViTinh,
-      thoiGianLuu: formatDateNotTime(data.thoiGianLuu),
-      luuDenNgay: formatDateNotTime(data.luuDenNgay),
-      hanSuDung: "",
+      thoiGianLuu: formatDateNotTime2(data.thoiGianLuu),
+      luuDenNgay: formatDateNotTime2(data.luuDenNgay),
+      hanSuDung: selectedSamples?.hanSuDung,
       manvLuu: personnelInfo?.maId,
+      maId: "",
+      maPhieuLuu: "",
     };
 
     console.log("Submitted data:", dataTao);
-    // mutate(dataTao);
+    mutate(dataTao);
   };
 
   useEffect(() => {
@@ -144,7 +150,7 @@ const AssignmentModal = (props: Props) => {
             <p
               className={`inline-block px-2 py-1 text-sm font-medium rounded-full bg-green-100 text-green-800`}
             >
-              {selectedSamples?.name}
+              {selectedSamples?.tenMau}
             </p>
           </div>
 

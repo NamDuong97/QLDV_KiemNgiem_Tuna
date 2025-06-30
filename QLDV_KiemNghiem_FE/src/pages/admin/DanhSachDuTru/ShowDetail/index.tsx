@@ -1,40 +1,71 @@
-import { ArrowLeft, Edit } from "react-feather";
-import { sampleData } from "..";
-import StatusBadge2 from "../../../../components/UI/StatusBadge2";
-import { formatDate } from "../../../../configs/configAll";
+import { ArrowLeft, Check, Edit, Slash } from "react-feather";
+import {
+  formatDate,
+  renderTrangThaiDuTru,
+} from "../../../../configs/configAll";
 import Detail from "../Detail";
+import { getDuTruByID } from "../../../../hooks/personnels/queryDuTru";
+import { queryMauByID } from "../../../../hooks/personnels/queryMau";
+import { getKhoaByID } from "../../../../hooks/personnels/queryKhoa";
+import { getInforNhanVien } from "../../../../hooks/personnels/access/useAccess";
+import { role } from "../../../../configs/parseJwt";
+import { getRoleGroup } from "../../../../configs/Role";
 
 const ShowDetail = ({ resultId, onEdit, onBack }: any) => {
-  const result = sampleData[resultId];
+  const { data, isLoading } = getDuTruByID({
+    queryKey: "DuTruByID",
+    params: resultId,
+  });
 
-  if (!result) {
-    return (
-      <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-        <div className="text-center">
-          <p className="text-gray-500">Không tìm thấy phiếu phân tích</p>
-          <button
-            onClick={onBack}
-            className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-          >
-            Quay lại danh sách
-          </button>
-        </div>
-      </div>
-    );
-  }
+  const { data: dataMauID } = queryMauByID({
+    queryKey: "MauByID",
+    params: data?.maPdkMau,
+  });
 
+  const { data: dataKhoa } = getKhoaByID({
+    queryKey: "khoaByID",
+    params: data?.maKhoa,
+  });
+
+  const { data: dataNhanVien } = getInforNhanVien({
+    queryKey: "InforNhanVien",
+    params: data?.manvLapPhieu,
+  });
+  console.log("data", data, resultId);
   return (
     <div className="bg-white rounded-xl shadow-sm border border-gray-200">
       <div className="px-6 py-4 border-b border-gray-200 bg-gray-50 flex justify-between items-center">
-        <h2 className="text-lg font-semibold text-gray-900">Chi tiết phiếu</h2>
+        <h2 className="text-lg font-semibold text-gray-900">
+          Chi tiết phiếu dự trù
+        </h2>
         <div className="flex space-x-2">
-          <button
-            onClick={() => onEdit(resultId)}
-            className="px-4 py-2 cursor-pointer bg-cyan-600 text-white rounded-lg hover:bg-cyan-700 transition-colors flex items-center space-x-2"
-          >
-            <Edit size={16} />
-            <span>Chỉnh sửa</span>
-          </button>
+          {getRoleGroup(role) === "KN" && role !== "KN" && (
+            <>
+              <button
+                // onClick={() => onEdit(dataId)}
+                className="px-4 py-2 cursor-pointer bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors flex items-center space-x-2"
+              >
+                <Slash size={16} />
+                <span>Từ chối</span>
+              </button>
+              <button
+                // onClick={() => onEdit(dataId)}
+                className="px-4 py-2 cursor-pointer bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors flex items-center space-x-2"
+              >
+                <Check size={16} />
+                <span>Duyệt phiếu</span>
+              </button>
+            </>
+          )}
+          {data?.trangThai === false && (
+            <button
+              onClick={() => onEdit(resultId)}
+              className="px-4 py-2 cursor-pointer bg-cyan-600 text-white rounded-lg hover:bg-cyan-700 transition-colors flex items-center space-x-2"
+            >
+              <Edit size={16} />
+              <span>Chỉnh sửa</span>
+            </button>
+          )}
           <button
             onClick={onBack}
             className="px-4 py-2 cursor-pointer bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center space-x-2"
@@ -56,20 +87,24 @@ const ShowDetail = ({ resultId, onEdit, onBack }: any) => {
                 <div className="flex justify-between items-center">
                   <span className="text-gray-600">Mã phiếu:</span>
                   <span className="font-medium text-lg">
-                    {result.MaPhieuDuTru}
+                    {data?.maPhieuDuTru}
                   </span>
                 </div>
                 <div className="flex justify-between items-center">
                   <span className="text-gray-600">Tên mẫu:</span>
-                  <span className="font-medium">{result.Ten_Mau}</span>
+                  <span className="font-medium">{dataMauID?.tenMau}</span>
                 </div>
                 <div className="flex justify-between items-center">
                   <span className="text-gray-600">Trạng thái:</span>
-                  <StatusBadge2 status={result.TrangThai} />
+                  {renderTrangThaiDuTru(data?.trangThai)}
                 </div>
                 <div className="flex justify-between items-center">
                   <span className="text-gray-600">Khoa:</span>
-                  <span className="font-medium">{result.MaKhoa}</span>
+                  <span className="font-medium">{dataKhoa?.tenKhoa}</span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span className="text-gray-600">Ghi chú:</span>
+                  <span className="font-medium">bla blas</span>
                 </div>
               </div>
             </div>
@@ -83,7 +118,7 @@ const ShowDetail = ({ resultId, onEdit, onBack }: any) => {
                 <div className="flex justify-between items-center">
                   <span className="text-gray-600">Ngày lập:</span>
                   <span className="font-medium">
-                    {formatDate(result.NgayLap)}
+                    {formatDate(data?.ngayLap)}
                   </span>
                 </div>
               </div>
@@ -96,16 +131,7 @@ const ShowDetail = ({ resultId, onEdit, onBack }: any) => {
                 <div className="flex justify-between items-center">
                   <span className="text-gray-600">Nhân viên lập:</span>
                   <div className="text-right">
-                    <div className="font-medium">{result.ManvLapPhieu}</div>
-                    <div className="text-sm text-gray-500">
-                      {result.ManvLapPhieu === "NV123"
-                        ? "Nguyễn Văn A"
-                        : result.ManvLapPhieu === "NV002"
-                        ? "Trần Thị B"
-                        : result.ManvLapPhieu === "NV003"
-                        ? "Lê Văn C"
-                        : "N/A"}
-                    </div>
+                    <div className="font-medium"> {dataNhanVien?.hoTen}</div>
                   </div>
                 </div>
               </div>
@@ -119,11 +145,11 @@ const ShowDetail = ({ resultId, onEdit, onBack }: any) => {
               Chi tiết kết quả kiểm nghiệm
             </h3>
             <div className="text-sm text-gray-500">
-              Tổng số chỉ tiêu: {result.details?.length || 0}
+              Tổng số chỉ tiêu: {data?.chiTietPhieuDuTrus?.length || 0}
             </div>
           </div>
 
-          {result.ChiTietPhieuDuTru && result.ChiTietPhieuDuTru?.length > 0 ? (
+          {data?.chiTietPhieuDuTrus && data?.chiTietPhieuDuTrus?.length > 0 ? (
             <div className="bg-gray-50 rounded-lg overflow-hidden border border-gray-200">
               <div className="grid grid-cols-5 gap-4 p-4 bg-gray-100 font-medium text-sm text-gray-700 border-b border-gray-200">
                 <div className="flex items-center col-span-1">
@@ -137,7 +163,7 @@ const ShowDetail = ({ resultId, onEdit, onBack }: any) => {
                 </div>
               </div>
 
-              {result.ChiTietPhieuDuTru.map((detail: any, index: any) => (
+              {data?.chiTietPhieuDuTrus.map((detail: any, index: any) => (
                 <Detail
                   key={index}
                   detail={detail}

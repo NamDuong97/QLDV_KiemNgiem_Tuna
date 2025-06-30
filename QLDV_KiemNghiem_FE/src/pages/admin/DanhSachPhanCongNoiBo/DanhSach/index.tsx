@@ -24,10 +24,11 @@ import ModelPhanCongLai from "./ModelPhanCongLai";
 import { role } from "../../../../configs/parseJwt";
 import { getRoleGroup } from "../../../../configs/Role";
 import SelectItemKhoa from "./SelectItemKhoa";
-import { queryNhanVienALL } from "../../../../hooks/personnels/queryNhanVien";
 import { ListColors } from "../../../../constants/colors";
 import { queryClient } from "../../../../lib/reactQuery";
 import { useStoreNotification } from "../../../../configs/stores/useStoreNotification";
+import { usePersonnel } from "../../../../contexts/PersonelsProvider";
+import ModelCreatePhieuDuTru from "./ModelCreatePhieuDuTru";
 
 interface Props {
   handleTaoPhanCong: () => void;
@@ -35,11 +36,25 @@ interface Props {
 
 const DanhSach = (props: Props) => {
   const { handleTaoPhanCong } = props;
+  const { personnelInfo } = usePersonnel();
   const { data, isLoading } = queryPhanCongNoiBoAll({
     queryKey: "queryPhanCongNoiBoAll",
-    params: {
-      getAll: true,
-    },
+    params:
+      getRoleGroup(role) === "KN"
+        ? role === "KN"
+          ? {
+              getAll: true,
+              manvXuLy: personnelInfo?.maId,
+              maKhoa: personnelInfo?.maKhoa,
+            }
+          : {
+              getAll: true,
+              manvPhanCong: personnelInfo?.maId,
+              maKhoa: personnelInfo?.maKhoa,
+            }
+        : {
+            getAll: true,
+          },
   });
 
   const [isSortNew, setIsSortNew] = useState(false);
@@ -48,6 +63,7 @@ const DanhSach = (props: Props) => {
   const [openModelXemChiTiet, setOpenModelXemChiTiet] = useState(false);
   const [openModelSua, setOpenModelSua] = useState(false);
   const [openModelPhanCongLai, setOpenModelPhanCongLai] = useState(false);
+  const [openModelCreate, setOpenModelCreate] = useState(false);
   const [openModelXoa, setOpenModelXoa] = useState(false);
   const [saveID, setSaveID] = useState("");
 
@@ -199,9 +215,14 @@ const DanhSach = (props: Props) => {
                   )}
                 >
                   <div className="p-5">
-                    <h3 className="font-semibold text-gray-800 text-lg mb-3">
-                      {assignment?.tenMau}
-                    </h3>
+                    <div className="flex items-start justify-between">
+                      <h3 className="font-semibold text-gray-800 text-lg mb-3">
+                        {assignment?.tenMau}
+                      </h3>
+                      <div className="flex items-center text-gray-500 text-sm">
+                        {renderTrangThaiPhanCongNoiBo(assignment?.trangThai)}
+                      </div>
+                    </div>
 
                     <div className="bg-blue-50 rounded-xl p-4 mb-6">
                       <p className="text-xs text-gray-500 mb-2">
@@ -252,154 +273,60 @@ const DanhSach = (props: Props) => {
                       </div>
                     </div>
 
-                    <div className="flex items-center justify-between pt-3 border-t border-gray-100">
-                      <div className="flex items-center text-gray-500 text-sm">
-                        {renderTrangThaiPhanCongNoiBo(assignment?.trangThai)}
-                      </div>
-                      <div className="flex space-x-1">
-                        <Tooltip
-                          title="Xem chi tiết"
-                          slotProps={{
-                            popper: {
-                              modifiers: [
-                                {
-                                  name: "offset",
-                                  options: {
-                                    offset: [0, -14],
-                                  },
-                                },
-                              ],
-                            },
-                          }}
-                          disableInteractive
-                        >
-                          <button
-                            onClick={() => {
-                              setSaveID(assignment.maId);
-                              setOpenModelXemChiTiet(true);
-                            }}
-                            className="p-1.5 text-indigo-600 hover:bg-indigo-50 rounded transition-colors cursor-pointer"
-                          >
-                            <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              className="h-4 w-4 "
-                              viewBox="0 0 20 20"
-                              fill="currentColor"
-                            >
-                              <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
-                              <path
-                                fillRule="evenodd"
-                                d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z"
-                                clipRule="evenodd"
-                              />
-                            </svg>
-                          </button>
-                        </Tooltip>
-                        {getRoleGroup(role) === "KN" && (
-                          <>
-                            {assignment?.trangThai === true && (
-                              <>
-                                <Tooltip
-                                  title="Sửa"
-                                  slotProps={{
-                                    popper: {
-                                      modifiers: [
-                                        {
-                                          name: "offset",
-                                          options: {
-                                            offset: [0, -14],
-                                          },
-                                        },
-                                      ],
-                                    },
-                                  }}
-                                  disableInteractive
-                                >
-                                  <button
-                                    onClick={() => {
-                                      setSaveID(assignment.maId);
-                                      setOpenModelSua(true);
-                                    }}
-                                    className="p-1.5 text-yellow-600 hover:bg-yellow-50 rounded transition-colors cursor-pointer"
-                                  >
-                                    <svg
-                                      xmlns="http://www.w3.org/2000/svg"
-                                      className="h-4 w-4"
-                                      viewBox="0 0 20 20"
-                                      fill="currentColor"
-                                    >
-                                      <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
-                                    </svg>
-                                  </button>
-                                </Tooltip>
-                                <Tooltip
-                                  title="Hủy"
-                                  slotProps={{
-                                    popper: {
-                                      modifiers: [
-                                        {
-                                          name: "offset",
-                                          options: {
-                                            offset: [0, -14],
-                                          },
-                                        },
-                                      ],
-                                    },
-                                  }}
-                                  disableInteractive
-                                >
-                                  <button
-                                    onClick={() => {
-                                      setSaveID(assignment.maId);
-                                      setOpenModelXoa(true);
-                                    }}
-                                    className="p-1.5 text-red-600 hover:bg-red-50 rounded transition-colors cursor-pointer"
-                                  >
-                                    <svg
-                                      xmlns="http://www.w3.org/2000/svg"
-                                      className="h-4 w-4 mr-1"
-                                      viewBox="0 0 20 20"
-                                      fill="currentColor"
-                                    >
-                                      <path
-                                        fillRule="evenodd"
-                                        d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z"
-                                        clipRule="evenodd"
-                                      />
-                                    </svg>
-                                  </button>
-                                </Tooltip>
-                                <Tooltip
-                                  title="Phân công lại"
-                                  slotProps={{
-                                    popper: {
-                                      modifiers: [
-                                        {
-                                          name: "offset",
-                                          options: {
-                                            offset: [0, -14],
-                                          },
-                                        },
-                                      ],
-                                    },
-                                  }}
-                                  disableInteractive
-                                >
-                                  <button
-                                    onClick={() => {
-                                      setSaveID(assignment.maId);
-                                      setOpenModelPhanCongLai(true);
-                                    }}
-                                    className="p-1.5 text-red-600 hover:bg-red-50 rounded transition-colors cursor-pointer"
-                                  >
-                                    <MdSwapHoriz className="w-4 h-4" />
-                                  </button>
-                                </Tooltip>
-                              </>
-                            )}
-                          </>
-                        )}
-                      </div>
+                    <div className="flex items-center justify-end gap-3 pt-3 border-t border-gray-100">
+                      <button
+                        onClick={() => {
+                          setSaveID(assignment.maId);
+                          setOpenModelCreate(true);
+                        }}
+                        className="px-1.5 py-1 text-xs/4 text-white bg-green-600 hover:bg-green-700 rounded transition-colors cursor-pointer"
+                      >
+                        Tạo phiếu dự trù
+                      </button>
+                      <button
+                        onClick={() => {
+                          setSaveID(assignment.maId);
+                          setOpenModelXemChiTiet(true);
+                        }}
+                        className="px-1.5 py-1 text-xs/4 text-white bg-indigo-600 hover:bg-indigo-700 rounded transition-colors cursor-pointer"
+                      >
+                        Xem chi tiết
+                      </button>
+                      {getRoleGroup(role) === "KN" && role !== "KN" && (
+                        <>
+                          {assignment?.trangThai === true && (
+                            <>
+                              <button
+                                onClick={() => {
+                                  setSaveID(assignment.maId);
+                                  setOpenModelSua(true);
+                                }}
+                                className="px-1.5 py-1 text-xs/4 text-white bg-yellow-600 hover:bg-yellow-700 rounded transition-colors cursor-pointer"
+                              >
+                                Cập nhật
+                              </button>
+                              <button
+                                onClick={() => {
+                                  setSaveID(assignment.maId);
+                                  setOpenModelXoa(true);
+                                }}
+                                className="px-1.5 py-1 text-xs/4 text-white bg-red-600 hover:bg-red-700 rounded transition-colors cursor-pointer"
+                              >
+                                Hủy phiếu
+                              </button>
+                              <button
+                                onClick={() => {
+                                  setSaveID(assignment.maId);
+                                  setOpenModelPhanCongLai(true);
+                                }}
+                                className="px-1.5 py-1 text-xs/4 text-white bg-cyan-600 hover:bg-cyan-700 rounded transition-colors cursor-pointer"
+                              >
+                                Phân công lại
+                              </button>
+                            </>
+                          )}
+                        </>
+                      )}
                     </div>
                   </div>
                 </div>
@@ -474,6 +401,11 @@ const DanhSach = (props: Props) => {
       <ModelPhanCongLai
         open={openModelPhanCongLai}
         handleClose={() => setOpenModelPhanCongLai(false)}
+        dataID={saveID}
+      />
+      <ModelCreatePhieuDuTru
+        open={openModelCreate}
+        handleClose={() => setOpenModelCreate(false)}
         dataID={saveID}
       />
       <ConfirmationModal

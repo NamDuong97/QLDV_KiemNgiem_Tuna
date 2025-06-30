@@ -58,6 +58,13 @@ export const API = {
       HUY_PHAN_CONG: "/api/PhanCongNoiBo/deletePhanCongNoiBo",
       LICH_SU_PHAN_CONG: "/api/LichSuPhanCong/getLichSuPhanCongAll",
     },
+    DU_TRU: {
+      GET_DU_TRU_ALL: "/api/PhieuDuTru/getPhieuDuTruAll",
+      GET_DU_TRU_BY_ID: "/api/PhieuDuTru/getPhieuDuTruByID",
+      CREATE_DU_TRU: "/api/PhieuDuTru/createPhieuDuTru",
+      UPDATE_DU_TRU: "/api/PhieuDuTru/updatePhieuDuTru",
+      DELETE_DU_TRU: "/api/PhieuDuTru/deletePhieuDuTru",
+    },
   },
   CUSTOMER: {
     PHIEU_DANG_KY_DICH_VU_KIEM_NGHIEM: {

@@ -1,67 +1,37 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import SampleCard from "../SampleCard";
 import AssignmentModal from "../AssignmentModal";
 import InputSearch2 from "../../../../../../components/InputSearch2";
-import { Pagination } from "@mui/material";
-import ChiTietPhieuDKyDVKN from "../../../ChiTietMauLuu";
+import { Pagination, Skeleton } from "@mui/material";
 import removeVietnameseTones from "../../../../../../configs/removeVietnameseTones";
-import { Sample } from "..";
 import ChiTietMau from "../../../ChiTietMau";
-import { set } from "react-hook-form";
+import { getAllDanhSachMau } from "../../../../../../hooks/personnels/phanCongKhoa";
+import { usePersonnel } from "../../../../../../contexts/PersonelsProvider";
+import { useGetLoaiDichVuAll } from "../../../../../../hooks/customers/usePhieuDKyDVKN";
 
-interface Props {
-  departments: any;
-  data: any;
-  isLoading?: boolean;
-}
+const SampleList = () => {
+  const { personnelInfo } = usePersonnel();
 
-// function convertToMauPhanCong(data: any): MauPhanCong {
-//   return {
-//     maId: data.maId,
-//     tenMau: data.tenMau,
-//     tenTieuChuan: data.maTieuChuan,
-//     tenDichVu: data.loaiDv,
-//     soLo: data.soLo,
-//     donViSanXuat: data.donViSanXuat,
-//     ngaySanXuat: data.ngaySanXuat,
-//     hanSuDung: data.hanSuDung,
-//     soLuong: data.soLuong,
-//     donViTinh: data.donViTinh,
-//     trangThaiPhanCong: data.trangThaiPhanCong,
-//     maPhieuDangKy: data.maPhieuDangKy,
-//   };
-// }
+  const { data: dataMau, isLoading: isLoadingDanhSachMau } = getAllDanhSachMau({
+    queryKey: "DanhSachMauSampleList",
+    params: { getAll: true, maKhoa: personnelInfo?.maKhoa, luuMau: true },
+  });
 
-// function convertToMauPhanCong(data: any): MauPhanCong {
-//   return {
-//     maId: data.id,
-//     tenMau: data.name,
-//     tenTieuChuan: data.type,
-//     tenDichVu: data.loaiDv,
-//     soLo: data.soLo,
-//     donViSanXuat: data.priority,
-//     ngaySanXuat: data.ngaySanXuat,
-//     hanSuDung: data.hanSuDung,
-//     soLuong: data.soLuong,
-//     donViTinh: data.donViTinh,
-//     trangThaiPhanCong: data.status,
-//     maPhieuDangKy: data.maPhieuDangKy,
-//   };
-// }
+  const { data: dataLDV } = useGetLoaiDichVuAll({
+    queryKey: "LoaiDichVuAllSampleList",
+  });
 
-const SampleList = (props: Props) => {
-  const { data, isLoading } = props;
-
-  const [samples, setSamples] = useState<Sample[]>(data);
+  const [samples, setSamples] = useState<any[]>(dataMau?.data);
+  const [saveID, setSaveID] = useState<any>(null);
   const [selectedSamples, setSelectedSamples] = useState<any>(null);
   const [searchQuery, setSearchQuery] = useState("");
 
   const [isAssignModalOpen, setIsAssignModalOpen] = useState(false);
   const filteredSamples: any = samples?.filter((sample: any) => {
     const query = removeVietnameseTones(searchQuery.toLowerCase());
-    const matchesSearch =
-      removeVietnameseTones(sample.id.toLowerCase()).includes(query) ||
-      removeVietnameseTones(sample.name.toLowerCase()).includes(query);
+    const matchesSearch = removeVietnameseTones(
+      sample.tenMau.toLowerCase()
+    ).includes(query);
     return matchesSearch;
   });
 
@@ -76,13 +46,8 @@ const SampleList = (props: Props) => {
   const totalPages = Math.ceil(
     filteredSamples && filteredSamples?.length / itemsPerPage
   );
-  const [openXemChiTiet, setOpenXemChiTiet] = useState(false);
   const [openXemChiTietMau, setOpenXemChiTietMau] = useState(false);
 
-  const handleCloseXemChiTiet = () => {
-    setOpenXemChiTiet(false);
-    sessionStorage.removeItem("phieu-DKKN-xem-chi-tiet");
-  };
   const handlePageChange = (_: any, value: number) => {
     setCurrentPage(value);
   };
@@ -100,9 +65,9 @@ const SampleList = (props: Props) => {
       }
   };
 
-  // useEffect(() => {
-  //   setSamples(data?.maus.map(convertToMauPhanCong));
-  // }, [data]);
+  useEffect(() => {
+    setSamples(dataMau?.data);
+  }, [dataMau?.data]);
 
   console.log("selectedSamples", selectedSamples);
 
@@ -150,7 +115,13 @@ const SampleList = (props: Props) => {
 
         {/* Sample List */}
         <div className="p-6">
-          {filteredSamples?.length === 0 ? (
+          {isLoadingDanhSachMau ? (
+            <div className="grid grid-cols-3 gap-4">
+              <Skeleton variant="rounded" width={468} height={228} />
+              <Skeleton variant="rounded" width={468} height={228} />
+              <Skeleton variant="rounded" width={468} height={228} />
+            </div>
+          ) : filteredSamples?.length === 0 ? (
             <div className="text-center py-8">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -171,42 +142,44 @@ const SampleList = (props: Props) => {
               </p>
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {currentItems
-                ?.filter((item: any) => !item.trangThaiPhanCong)
-                ?.map((sample: any) => (
+            <>
+              <div className="grid grid-cols-3 gap-4">
+                {currentItems?.map((sample: any, index: any) => (
                   <SampleCard
-                    key={sample.id}
+                    key={index}
                     sample={sample}
                     isSelected={selectedSamples}
                     onSelect={hanldeSelectedSamples}
-                    isLoading={isLoading}
+                    isLoading={isLoadingDanhSachMau}
                     handleOpenChiTiet={() => setOpenXemChiTietMau(true)}
+                    setSaveID={setSaveID}
+                    dataLDV={dataLDV}
                   />
                 ))}
-            </div>
+              </div>
+              <div className="p-4 flex justify-center">
+                <Pagination
+                  count={totalPages}
+                  page={currentPage}
+                  onChange={handlePageChange}
+                  variant="outlined"
+                  shape="rounded"
+                  color="primary"
+                  sx={{
+                    '[aria-label="Go to next page"],[aria-label="Go to previous page"]':
+                      {
+                        backgroundColor: "#1976d21f",
+                        border: "1px solid #1976d280",
+                        color: "#1976d2",
+                      },
+                    ".MuiPagination-ul": {
+                      justifyContent: "center",
+                    },
+                  }}
+                />
+              </div>
+            </>
           )}
-          <div className="p-4 flex justify-center">
-            <Pagination
-              count={totalPages}
-              page={currentPage}
-              onChange={handlePageChange}
-              variant="outlined"
-              shape="rounded"
-              color="primary"
-              sx={{
-                '[aria-label="Go to next page"],[aria-label="Go to previous page"]':
-                  {
-                    backgroundColor: "#1976d21f",
-                    border: "1px solid #1976d280",
-                    color: "#1976d2",
-                  },
-                ".MuiPagination-ul": {
-                  justifyContent: "center",
-                },
-              }}
-            />
-          </div>
         </div>
       </div>
 
@@ -214,17 +187,16 @@ const SampleList = (props: Props) => {
         isOpen={isAssignModalOpen}
         onClose={() => setIsAssignModalOpen(false)}
         selectedSamples={samples?.find(
-          (sample: any) => sample.id === selectedSamples
+          (sample: any) => sample.maId === selectedSamples
         )}
         samples={samples}
-      />
-      <ChiTietPhieuDKyDVKN
-        open={openXemChiTiet}
-        handleClose={handleCloseXemChiTiet}
       />
       <ChiTietMau
         open={openXemChiTietMau}
         handleClose={() => setOpenXemChiTietMau(false)}
+        saveID={saveID}
+        dataMau={filteredSamples}
+        dataLDV={dataLDV}
       />
     </div>
   );

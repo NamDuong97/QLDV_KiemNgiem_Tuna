@@ -28,9 +28,6 @@ public partial class PhieuLuuMau
     public decimal? SoLuong { get; set; }
 
     [Column(TypeName = "datetime")]
-    public DateTime? ThoiGianLuu { get; set; }
-
-    [Column(TypeName = "datetime")]
     public DateTime? LuuDenNgay { get; set; }
 
     [StringLength(50)]

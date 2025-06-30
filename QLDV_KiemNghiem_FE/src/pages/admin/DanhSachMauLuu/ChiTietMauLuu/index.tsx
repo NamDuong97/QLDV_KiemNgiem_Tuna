@@ -28,6 +28,8 @@ const ChiTietMauLuu = (props: Props) => {
     handleClose();
   };
 
+  console.log("data", data);
+
   return (
     <Dialog
       open={open}

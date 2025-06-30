@@ -4,6 +4,7 @@ import { APP_ROUTES } from "../constants/routers";
 import { MainLayout } from "../pages/Admin/layout-admin";
 import XacMinhEmail from "../pages/XacminhEmail";
 import RedirectPersonnel from "./redirectPersonnel";
+import NotFound from "../pages/404NotFound";
 
 const Dashboard = lazy(() => import("../pages/Admin/Dashboard"));
 const LoginPage = lazy(() => import("../pages/Admin/Login"));
@@ -148,6 +149,7 @@ const RoutesPersonnels = () => {
           path={APP_ROUTES.TUNA_XAC_MINH_EMAIL}
           element={<XacMinhEmail />}
         />
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </Suspense>
   );

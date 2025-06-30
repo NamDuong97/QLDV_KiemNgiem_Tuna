@@ -43,6 +43,9 @@ const SampleCard = ({ sample, onImageClick, index }: any) => {
         queryClient.refetchQueries({
           queryKey: ["getPhanCongKhoaCMAll"],
         }),
+        queryClient.refetchQueries({
+          queryKey: ["DanhSachMau"],
+        }),
       ]);
     }
   };

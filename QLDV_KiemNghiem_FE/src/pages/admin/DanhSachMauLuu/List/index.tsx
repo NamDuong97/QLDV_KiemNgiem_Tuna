@@ -44,7 +44,6 @@ const DanhSach = (props: Props) => {
         removeVietnameseTones(sample?.tenMau?.toLowerCase()).includes(query);
       return matchesSearch;
     });
-  console.log("filteredSamples", filteredSamples);
 
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(10);
@@ -85,7 +84,7 @@ const DanhSach = (props: Props) => {
       <div className="grid gap-6 grid-cols-4">
         <Card
           title="Tổng mẫu kiểm nghiệm"
-          value={data?.length || 0}
+          value={filteredSamples?.length || 0}
           icon={<Clipboard className="w-6 h-6" />}
           isLoading={isLoading}
           bgColor="bg-indigo-100"

@@ -15,7 +15,9 @@ export const tagPhanCong = {
 };
 
 const DanhSachPhanCongNoiBo = () => {
-  const [isTag, setIsTag] = useState(tagPhanCong.Phan_Cong);
+  const [isTag, setIsTag] = useState(
+    role === "KN" ? tagPhanCong.Danh_Sach : tagPhanCong.Phan_Cong
+  );
   return (
     <motion.div
       key="DanhSachMauLuu"
@@ -23,7 +25,7 @@ const DanhSachPhanCongNoiBo = () => {
       animate={{ x: 0, opacity: 1 }}
       exit={{ x: 0, opacity: 0 }}
       transition={{ duration: 0.5 }}
-      className={clsx("px-10 space-y-6 bg-blue-50 p-6", {
+      className={clsx("px-10 space-y-6 bg-blue-50 p-6 h-screen", {
         "h-screen": tagPhanCong.Phan_Cong === isTag,
       })}
     >
@@ -32,24 +34,14 @@ const DanhSachPhanCongNoiBo = () => {
           Phân công nội bộ
         </h1>
       </div>
-      
-      {getRoleGroup(role) === "BLD" && (
-        <motion.div
-          key="DanhSach"
-          initial={{ y: 10, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          exit={{ y: -10, opacity: 0 }}
-          transition={{ duration: 0.2 }}
-          className="space-y-6"
-        >
-          <DanhSach handleTaoPhanCong={() => setIsTag(tagPhanCong.Phan_Cong)} />
-        </motion.div>
-      )}
 
-      {getRoleGroup(role) === "KN" && (
+      {(getRoleGroup(role) === "KN" || getRoleGroup(role) === "BLD") && (
         <>
-          <div className="bg-white p-4 rounded-lg shadow-sm">
+          <div className="bg-white p-4 rounded-lg shadow-sm flex justify-between">
             <TagPhanCong setIsTag={setIsTag} isTag={isTag} />
+            <button className="text-blue-600 cursor-pointer hover:underline">
+              Hướng dẫn sử dụng
+            </button>
           </div>
           {role !== "KN" && isTag === tagPhanCong.Phan_Cong && (
             <motion.div
