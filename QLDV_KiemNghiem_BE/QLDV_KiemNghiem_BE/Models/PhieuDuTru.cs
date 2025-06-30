@@ -30,7 +30,7 @@ public partial class PhieuDuTru
     [StringLength(50)]
     public string? MaKhoa { get; set; }
 
-    public bool? TrangThai { get; set; }
+    public int? TrangThai { get; set; }
 
     [StringLength(50)]
     public string? NguoiSua { get; set; }
@@ -40,6 +40,14 @@ public partial class PhieuDuTru
 
     [StringLength(500)]
     public string? GhiChu { get; set; }
+
+    public bool? Active { get; set; }
+
+    [StringLength(50)]
+    public string? ManvDuyet { get; set; }
+
+    [StringLength(500)]
+    public string? NoiDungDuyet { get; set; }
 
     [InverseProperty("MaPhieuDuTruNavigation")]
     public virtual ICollection<ChiTietPhieuDuTru> ChiTietPhieuDuTrus { get; set; } = new List<ChiTietPhieuDuTru>();
@@ -52,8 +60,12 @@ public partial class PhieuDuTru
     [InverseProperty("PhieuDuTrus")]
     public virtual PhieuDangKyMau? MaPdkMauNavigation { get; set; }
 
+    [ForeignKey("ManvDuyet")]
+    [InverseProperty("PhieuDuTruManvDuyetNavigations")]
+    public virtual NhanVien? ManvDuyetNavigation { get; set; }
+
     [ForeignKey("ManvLapPhieu")]
-    [InverseProperty("PhieuDuTrus")]
+    [InverseProperty("PhieuDuTruManvLapPhieuNavigations")]
     public virtual NhanVien? ManvLapPhieuNavigation { get; set; }
 
     [InverseProperty("MaPhieuDuTruNavigation")]

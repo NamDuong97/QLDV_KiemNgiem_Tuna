@@ -4,7 +4,7 @@ namespace QLDV_KiemNghiem_BE.DTO.RequestDto
 {
     public class ChiTietPhieuDuTruRequestUpdateDto
     {
-        [Required(ErrorMessage = "MaId không được bỏ trống!")]
+        [StringLength(50, ErrorMessage = "MaId tối đa 50 ký tự")]
         public string MaId { get; set; } = null!;
 
         [Required(ErrorMessage = "MaPhieuDuTru không được bỏ trống")]

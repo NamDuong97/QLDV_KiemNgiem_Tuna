@@ -24,8 +24,24 @@ namespace QLDV_KiemNghiem_BE.DTO.ResponseDto
         [StringLength(50)]
         public string? MaKhoa { get; set; }
 
-        public bool? TrangThai { get; set; }
+        public int? TrangThai { get; set; }
 
+        [StringLength(50)]
+        public string? NguoiSua { get; set; }
+
+        [Column(TypeName = "datetime")]
+        public DateTime? NgaySua { get; set; }
+
+        [StringLength(500)]
+        public string? GhiChu { get; set; }
+
+        public bool? Active { get; set; }
+
+        [StringLength(50)]
+        public string? ManvDuyet { get; set; }
+
+        [StringLength(500)]
+        public string? NoiDungDuyet { get; set; }
         public List<ChiTietPhieuDuTruDto> ChiTietPhieuDuTrus { get; set; } = new List<ChiTietPhieuDuTruDto>();
     }
 }

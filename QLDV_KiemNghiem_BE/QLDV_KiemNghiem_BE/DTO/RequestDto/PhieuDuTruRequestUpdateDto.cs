@@ -9,13 +9,8 @@ namespace QLDV_KiemNghiem_BE.DTO.RequestDto
         [Required(ErrorMessage = "MaId không được bỏ trống!")]
         public string MaId { get; set; } = null!;
 
-        [Required(ErrorMessage = "MaPdkMau không được bỏ trống")]
-        [StringLength(50, ErrorMessage = "MaPdkMau tối đa 50 ký tự")]
-        public string MaPdkMau { get; set; } = null!;
-
-        [Required(ErrorMessage = "MaKhoa không được bỏ trống")]
-        [StringLength(50, ErrorMessage = "MaKhoa tối đa 50 ký tự")]
-        public string? MaKhoa { get; set; }
+        [StringLength(500)]
+        public string? NoiDungDuyet { get; set; } = string.Empty;
         public string? GhiChu { get; set; } = string.Empty;
         public List<ChiTietPhieuDuTruRequestUpdateDto> ChiTietPhieuDuTrus { get; set; } = new List<ChiTietPhieuDuTruRequestUpdateDto>();
     }

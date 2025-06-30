@@ -9,6 +9,9 @@ namespace QLDV_KiemNghiem_BE.Interfaces
     {
         Task<IEnumerable<PhieuDuTruDto>> GetPhieuDuTrusAllAsync();
         Task<PhieuDuTruDto?> FindPhieuDuTruAsync(string maPhieuDuTru);
+
+        Task<ResponseModel1<PhieuDuTruDto>> ReviewPhieuDuTruByLDP(RequestReviewPhieuDuTru param, string user, string userId);
+
         Task<ResponseModel1<PhieuDuTruDto>> CreatePhieuDuTruAsync(PhieuDuTruRequestCreateDto PhieuDuTruDto, string user, string userId);
         Task<ResponseModel1<PhieuDuTruDto>> UpdatePhieuDuTruAsync(PhieuDuTruRequestUpdateDto PhieuDuTruDto, string user, string userId);
         Task<ResponseModel1<PhieuDuTruDto>> DeletePhieuDuTruAsync(string maPhieuDuTru, string user, string userId);
