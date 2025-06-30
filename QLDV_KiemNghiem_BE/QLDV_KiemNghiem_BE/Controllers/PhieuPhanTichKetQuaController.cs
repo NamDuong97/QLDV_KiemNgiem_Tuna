@@ -7,6 +7,7 @@ using QLDV_KiemNghiem_BE.DTO.ResponseDto;
 using QLDV_KiemNghiem_BE.Interfaces.ManagerInterface;
 using QLDV_KiemNghiem_BE.Models;
 using QLDV_KiemNghiem_BE.RequestFeatures;
+using QLDV_KiemNghiem_BE.RequestFeatures.PagingRequest;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace QLDV_KiemNghiem_BE.Controllers
@@ -27,11 +28,12 @@ namespace QLDV_KiemNghiem_BE.Controllers
 
         [HttpGet]
         [Route("getPhieuPhanTichKetQuaAll")]
-        public async Task<ActionResult> getPhieuPhanTichKetQuaAll()
+        public async Task<ActionResult> getPhieuPhanTichKetQuaAll( [FromQuery] PhieuPhanTichKetQuaParam param)
         {
-            var result = await _service.PhieuPhanTichKetQua.GetPhieuPhanTichKetQuasAllAsync();
-            _logger.LogDebug("get toan bo phieu phan tich ket qua");
-            return Ok(result);
+            var result = await _service.PhieuPhanTichKetQua.GetPhieuPhanTichKetQuaAllAsync(param);
+            Response.Headers.Append("X-Pagination", System.Text.Json.JsonSerializer.Serialize(result.pagi));
+            _logger.LogDebug("get all phieu phan tich ket qua");
+            return Ok(result.datas);
         }
 
         [HttpGet]
@@ -101,7 +103,7 @@ namespace QLDV_KiemNghiem_BE.Controllers
 
         [HttpPut]
         [Route("reviewPhieuPhanTichKetQuaByLDP")]
-        public async Task<ActionResult> reviewPhieuPhanTichKetQuaByLDP(string maPhieuPhanTichKetQua)
+        public async Task<ActionResult> reviewPhieuPhanTichKetQuaByLDP(RequestReviewPhieuPhanTichKetQua param)
         {
             if (!ModelState.IsValid)
             {
@@ -114,7 +116,7 @@ namespace QLDV_KiemNghiem_BE.Controllers
             }
             var user = User.FindFirst(ClaimTypes.Email)?.Value.ToString() ?? "know";
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value.ToString() ?? null;
-            ResponseModel1<PhieuPhanTichKetQuaDto> update = await _service.PhieuPhanTichKetQua.ReviewPhieuPhanTichKetQuaByLDP(maPhieuPhanTichKetQua, user, userId);
+            ResponseModel1<PhieuPhanTichKetQuaDto> update = await _service.PhieuPhanTichKetQua.ReviewPhieuPhanTichKetQuaByLDP(param, user, userId);
             if (update.KetQua)
             {
                 _logger.LogDebug(update.Message);
@@ -129,7 +131,7 @@ namespace QLDV_KiemNghiem_BE.Controllers
 
         [HttpPut]
         [Route("reviewPhieuPhanTichKetQuaByBLD")]
-        public async Task<ActionResult> reviewPhieuPhanTichKetQuaByBLD(string maPhieuPhanTichKetQua)
+        public async Task<ActionResult> reviewPhieuPhanTichKetQuaByBLD(RequestReviewPhieuPhanTichKetQua param)
         {
             if (!ModelState.IsValid)
             {
@@ -142,7 +144,7 @@ namespace QLDV_KiemNghiem_BE.Controllers
             }
             var user = User.FindFirst(ClaimTypes.Email)?.Value.ToString() ?? "know";
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value.ToString() ?? null;
-            ResponseModel1<PhieuPhanTichKetQuaDto> update = await _service.PhieuPhanTichKetQua.ReviewPhieuPhanTichKetQuaByBLD(maPhieuPhanTichKetQua, user, userId);
+            ResponseModel1<PhieuPhanTichKetQuaDto> update = await _service.PhieuPhanTichKetQua.ReviewPhieuPhanTichKetQuaByBLD(param, user, userId);
             if (update.KetQua)
             {
                 _logger.LogDebug(update.Message);
@@ -158,10 +160,10 @@ namespace QLDV_KiemNghiem_BE.Controllers
 
         [HttpDelete]
         [Route("deletePhieuPhanTichKetQua")]
-        public async Task<ActionResult> deletePhieuPhanTichKetQua(string maPhieuPhanTichKetQua, bool isDel)
+        public async Task<ActionResult> deletePhieuPhanTichKetQua(string maPhieuPhanTichKetQua)
         {
             var user = User.FindFirst(ClaimTypes.Email)?.Value.ToString() ?? "know";
-            ResponseModel1<PhieuPhanTichKetQuaDto> delete = await _service.PhieuPhanTichKetQua.DeletePhieuPhanTichKetQuaAsync(maPhieuPhanTichKetQua, user, isDel);
+            ResponseModel1<PhieuPhanTichKetQuaDto> delete = await _service.PhieuPhanTichKetQua.DeletePhieuPhanTichKetQuaAsync(maPhieuPhanTichKetQua, user);
             if (delete.KetQua)
             {
                 _logger.LogDebug(delete.Message);

@@ -21,25 +21,11 @@ public partial class PhieuPhanTichKetQua
     [StringLength(50)]
     public string? MaPdkMau { get; set; }
 
-    [StringLength(500)]
-    public string? TenMau { get; set; }
-
     [StringLength(50)]
     public string? ManvLap { get; set; }
 
     [StringLength(50)]
     public string? ManvKiemTra { get; set; }
-
-    [Column(TypeName = "datetime")]
-    public DateTime? NgayNhanMau { get; set; }
-
-    [Column(TypeName = "datetime")]
-    public DateTime? NgayKiemThu { get; set; }
-
-    [Column(TypeName = "datetime")]
-    public DateTime? NgayTraKetQua { get; set; }
-
-    public bool? LuuMau { get; set; }
 
     [StringLength(50)]
     public string? MaKhoa { get; set; }
@@ -47,8 +33,7 @@ public partial class PhieuPhanTichKetQua
     [StringLength(500)]
     public string? GhiChu { get; set; }
 
-    [StringLength(100)]
-    public string? TrangThai { get; set; }
+    public int? TrangThai { get; set; }
 
     [Column(TypeName = "datetime")]
     public DateTime? NgayTao { get; set; }
@@ -62,10 +47,14 @@ public partial class PhieuPhanTichKetQua
     [Column(TypeName = "datetime")]
     public DateTime? NgaySua { get; set; }
 
-    public string? YeuCauKiemNghiem { get; set; }
-
     [StringLength(50)]
     public string? MabldDuyet { get; set; }
+
+    public string? NoiDungDuyetSoBo { get; set; }
+
+    public string? NoiDungDuyetTongBo { get; set; }
+
+    public bool? Active { get; set; }
 
     [ForeignKey("MaKhoa")]
     [InverseProperty("PhieuPhanTichKetQuas")]
@@ -86,4 +75,7 @@ public partial class PhieuPhanTichKetQua
     [ForeignKey("ManvLap")]
     [InverseProperty("PhieuPhanTichKetQuaManvLapNavigations")]
     public virtual NhanVien? ManvLapNavigation { get; set; }
+
+    [InverseProperty("MaPhieuKetQuaNavigation")]
+    public virtual ICollection<PhieuPhanTichKetQuaChiTiet> PhieuPhanTichKetQuaChiTiets { get; set; } = new List<PhieuPhanTichKetQuaChiTiet>();
 }

@@ -79,7 +79,7 @@ namespace QLDV_KiemNghiem_BE.Services
             _phieuDuTruService = new Lazy<IPhieuDuTruService>(() => new PhieuDuTruService(repositoryManager, mapper, dataContext));
             _phieuLuuMauService = new Lazy<IPhieuLuuMauService>(() => new PhieuLuuMauService(repositoryManager, mapper));
             _phieuTienDoLamViecService = new Lazy<IPhieuTienDoLamViecService>(() => new PhieuTienDoLamViecService(repositoryManager, mapper));
-            _phieuPhanTichKetQuaService = new Lazy<IPhieuPhanTichKetQuaService>(() => new PhieuPhanTichKetQuaService(repositoryManager, mapper));
+            _phieuPhanTichKetQuaService = new Lazy<IPhieuPhanTichKetQuaService>(() => new PhieuPhanTichKetQuaService(repositoryManager, mapper, hubContext));
             _khachHangService = new Lazy<IKhachHangService>(() => new KhachHangService(repositoryManager, mapper, emailService, tokenService, configuration));
             _nhanVienService = new Lazy<INhanVienService>(() => new NhanVienService(repositoryManager, mapper, tokenService));
             _phieuChiService = new Lazy<IPhieuChiService>(() => new PhieuChiService(repositoryManager, mapper));

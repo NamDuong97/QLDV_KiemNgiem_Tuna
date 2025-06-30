@@ -23,8 +23,8 @@ namespace QLDV_KiemNghiem_BE.Repositories
         {
             var result = await _context.PhieuDangKyMauProcedures.
                 FromSqlRaw("exec sp_getAllPhieuDangKyMauByBoLoc @maLoaiMau={0}, @maKhoa = {1}, @manvThucHien = {2}, @trangThaiPhanCong = {3}," +
-                "@ngayTraKetQuaFrom = {4}, @ngayTraKetQuaTo = {5}",
-                param.MaLoaiMau ?? "", param.MaKhoa ?? "", param.ManvThucHien ?? "", param.TrangThaiPhanCong, param.NgayTraKetQuaFrom ?? "", param.NgayTraKetQuaTo ?? "").ToListAsync();
+                "@ngayTraKetQuaFrom = {4}, @ngayTraKetQuaTo = {5}, @luuMau = {6}",
+                param.MaLoaiMau ?? "", param.MaKhoa ?? "", param.ManvThucHien ?? "", param.TrangThaiPhanCong, param.NgayTraKetQuaFrom ?? "", param.NgayTraKetQuaTo ?? "", param.LuuMau).ToListAsync();
 
             foreach (var item in result)
             {

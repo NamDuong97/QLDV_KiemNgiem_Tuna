@@ -41,4 +41,7 @@ public partial class ChiTieu
 
     [InverseProperty("MaChiTieuNavigation")]
     public virtual ICollection<MauTieuChuanChiTieu> MauTieuChuanChiTieus { get; set; } = new List<MauTieuChuanChiTieu>();
+
+    [InverseProperty("MaChiTieuNavigation")]
+    public virtual ICollection<PhieuPhanTichKetQuaChiTiet> PhieuPhanTichKetQuaChiTiets { get; set; } = new List<PhieuPhanTichKetQuaChiTiet>();
 }

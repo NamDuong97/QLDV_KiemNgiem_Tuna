@@ -47,7 +47,7 @@ namespace QLDV_KiemNghiem_BE.Services
                 Data = null
             };
 
-            var checkExistPhieuPhanTichKetQua = await _repositoryManager.PhieuPhanTichKetQua.FindPhieuPhanTichKetQuaAsync(checkExistsByID.MaPhieuKetQua);
+            var checkExistPhieuPhanTichKetQua = await _repositoryManager.PhieuPhanTichKetQua.FindPhieuPhanTichKetQuaAsync(checkExistsByID?.MaPhieuKetQua ?? "", true);
             if (checkExistPhieuPhanTichKetQua==null)
             {
                 return new ResponseModel1<PhieuPhanTichKetQuaChiTietDto>
@@ -95,7 +95,7 @@ namespace QLDV_KiemNghiem_BE.Services
                 };
             }
 
-            var checkExistPhieuPhanTichKetQua = await _repositoryManager.PhieuPhanTichKetQua.FindPhieuPhanTichKetQuaAsync(PhieuPhanTichKetQuaChiTietCheck.MaPhieuKetQua);
+            var checkExistPhieuPhanTichKetQua = await _repositoryManager.PhieuPhanTichKetQua.FindPhieuPhanTichKetQuaAsync(PhieuPhanTichKetQuaChiTietCheck?.MaPhieuKetQua ?? "", true);
             if (checkExistPhieuPhanTichKetQua == null)
             {
                 return new ResponseModel1<PhieuPhanTichKetQuaChiTietDto>
