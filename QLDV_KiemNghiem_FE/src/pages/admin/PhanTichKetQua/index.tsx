@@ -3,14 +3,12 @@ import { useState } from "react";
 import Tag from "./Tag";
 import ShowDetail from "./ShowDetail";
 import Edit from "./Edit";
-import ListDaDuyet from "./ListDaDuyet";
-import ListChuaDuyet from "./ListChuaDuyet";
 import ShowDetailChoDuyet from "./ShowDetailChoDuyet";
-import { role } from "../../../configs/parseJwt";
 import ModelSuaNoiDungSoBo from "./ModelSuaNoiDungSoBo";
 import ModelSuaNoiDungTongBo from "./ModelSuaNoiDungTongBo";
-import { getRoleGroup } from "../../../configs/Role";
-import ListChoLDPDuyet from "./ListChoLDPDuyet";
+import ListChoDuyet from "./ListChoDuyet";
+import ListBLDDuyet from "./ListBLDDuyet";
+import ListLDPDuyet from "./ListLDPDuyet";
 
 export const sampleData: any = {
   KQ001: {
@@ -106,13 +104,7 @@ export const departments = [
 ];
 
 const PhanTichKetQua = () => {
-  const [activeView, setActiveView] = useState(
-    role === "KN"
-      ? "list"
-      : getRoleGroup(role) === "BLD"
-      ? "listChuaDuyet"
-      : "ListChoLDPDuyet"
-  );
+  const [activeView, setActiveView] = useState("listChoDuyet");
   const [selectedResultId, setSelectedResultId] = useState(null);
   const [openModelNoiDungDuyetSoBo, setOpenModelNoiDungDuyetSoBo] =
     useState(false);
@@ -161,9 +153,9 @@ const PhanTichKetQua = () => {
 
   const renderContent = () => {
     switch (activeView) {
-      case "list":
+      case "listBLDDuyet":
         return (
-          <ListDaDuyet
+          <ListBLDDuyet
             onView={handleViewResult}
             onEdit={handleEditResult}
             handleOpenModelNoiDungSoBo={handleOpenModelNoiDungSoBo}
@@ -171,9 +163,9 @@ const PhanTichKetQua = () => {
           />
         );
 
-      case "ListChoLDPDuyet":
+      case "ListLDPDuyet":
         return (
-          <ListChoLDPDuyet
+          <ListLDPDuyet
             onView={handleViewResult}
             onEdit={handleEditResult}
             handleOpenModelNoiDungSoBo={handleOpenModelNoiDungSoBo}
@@ -202,10 +194,10 @@ const PhanTichKetQua = () => {
             onCancel={() => handleViewResult(selectedResultId)}
           />
         );
-      case "listChuaDuyet":
-        return <ListChuaDuyet onView={handleViewResultChoDuyet} />;
+      case "listChoDuyet":
+        return <ListChoDuyet onView={handleViewResultChoDuyet} />;
       default:
-        return <ListChuaDuyet onView={handleViewResultChoDuyet} />;
+        return <ListChoDuyet onView={handleViewResultChoDuyet} />;
     }
   };
 
@@ -228,7 +220,9 @@ const PhanTichKetQua = () => {
           </p>
         </div>
       </div>
-      {(activeView === "listChuaDuyet" || activeView === "list") && (
+      {(activeView === "listChoDuyet" ||
+        activeView === "ListBLDDuyet" ||
+        activeView === "ListLDPDuyet") && (
         <Tag activeTab={activeView} onTabChange={handleTabChange} />
       )}
       <div className="fade-in">{renderContent()}</div>

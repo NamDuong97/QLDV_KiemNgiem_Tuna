@@ -96,9 +96,9 @@ const ShowDetailChoDuyet = ({ resultId, onEdit, onBack }: any) => {
                   </div>
                 </div>
                 <div className="flex justify-between items-center">
-                  <span className="text-gray-600">Nhân viên kiểm tra:</span>
+                  <span className="text-gray-600">Ngày nhận mẫu:</span>
                   <div className="text-right">
-                    <div className="font-medium">{data?.tennvKiemTra}</div>
+                    <div className="font-medium"> {formatDate(data?.ngayNhanMau)}</div>
                   </div>
                 </div>
               </div>

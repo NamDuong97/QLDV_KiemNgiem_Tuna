@@ -8,7 +8,7 @@ import SelectItemKhoa from "./SelectItemKhoa";
 import { getRoleGroup } from "../../../../configs/Role";
 import { role } from "../../../../configs/parseJwt";
 
-const ListChoLDPDuyet = ({ onView }: any) => {
+const ListLDPDuyet = ({ onView }: any) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectKhoa, setSelectKhoa] = useState("");
   const { personnelInfo } = usePersonnel();
@@ -142,4 +142,4 @@ const ListChoLDPDuyet = ({ onView }: any) => {
   );
 };
 
-export default ListChoLDPDuyet;
+export default ListLDPDuyet;

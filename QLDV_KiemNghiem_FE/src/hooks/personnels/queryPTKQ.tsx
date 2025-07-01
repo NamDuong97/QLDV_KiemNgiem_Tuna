@@ -12,7 +12,7 @@ interface Props {
 export const queryPhanTichKetQuaAll = (props: Props) => {
   const { queryKey, params } = props;
   return useQuery({
-    queryKey: [queryKey],
+    queryKey: [queryKey, params],
     queryFn: async () => {
       const response = await phanTichKetQuaServices.getPhanTichKetQuaAll(
         params

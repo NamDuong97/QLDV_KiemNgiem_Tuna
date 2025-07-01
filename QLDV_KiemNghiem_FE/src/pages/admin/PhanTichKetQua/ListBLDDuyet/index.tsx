@@ -10,7 +10,7 @@ import SelectItemTrangThai from "./SelectItemTrangThai";
 import SelectItemKhoa from "./SelectItemKhoa";
 import { FaSortAmountDown, FaSortAmountUp } from "react-icons/fa";
 
-const ListDaDuyet = ({
+const ListBLDDuyet = ({
   onView,
   onEdit,
   handleOpenModelNoiDungSoBo,
@@ -201,4 +201,4 @@ const ListDaDuyet = ({
   );
 };
 
-export default ListDaDuyet;
+export default ListBLDDuyet;

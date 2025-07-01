@@ -8,19 +8,29 @@ import SelectItemKhoa from "./SelectItemKhoa";
 import { getRoleGroup } from "../../../../configs/Role";
 import { role } from "../../../../configs/parseJwt";
 
-const ListChuaDuyet = ({ onView }: any) => {
+const ListChoDuyet = ({ onView }: any) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectKhoa, setSelectKhoa] = useState("");
   const { personnelInfo } = usePersonnel();
+  const [selectNhanVienXuLy, setSelectNhanVienXuLy] = useState("");
+
+  const params: any = {
+    getAll: true,
+  };
+
+  if (role === "KN") {
+    params.manvLap = personnelInfo?.maId;
+  } else if (role === "BLD") {
+    if (selectNhanVienXuLy !== "") {
+      params.manvKiemTra = selectNhanVienXuLy;
+    }
+  }
 
   const { data, isLoading } = queryPhanTichKetQuaAll({
     queryKey: "phanTichKetQuaChuaDuyet",
-    params: {
-      getAll: true,
-      // maKhoa: personnelInfo?.maKhoa,
-    },
+    params,
   });
-  console.log("dadatadatadatata", data);
+  console.log("dadatadatadatata", data, params);
 
   const filteredResults = data
     ?.filter((item: any) => item.trangThai === 1)
@@ -142,4 +152,4 @@ const ListChuaDuyet = ({ onView }: any) => {
   );
 };
 
-export default ListChuaDuyet;
+export default ListChoDuyet;
