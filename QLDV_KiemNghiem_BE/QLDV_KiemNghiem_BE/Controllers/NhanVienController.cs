@@ -85,7 +85,7 @@ namespace QLDV_KiemNghiem_BE.Controllers
 
         [HttpGet]
         [Route("getNhanVienAll")]
-        public async Task<ActionResult> getNhanVienAll(NhanVienParam param)
+        public async Task<ActionResult> getNhanVienAll( [FromQuery] NhanVienParam param)
         {
             if(_redis.IsConnected)
             {

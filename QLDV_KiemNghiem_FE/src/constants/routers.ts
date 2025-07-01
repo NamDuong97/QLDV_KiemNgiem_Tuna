@@ -153,6 +153,12 @@ export const APP_ROUTES = {
     DANH_SACH_PHAN_CONG_KHOA_CM: {
       to: "/tuna/danh-sach-phan-cong-khoa-chuyen-mon",
       xem_chi_tiet: "/tuna/danh-sach-phan-cong-khoa-chuyen-mon/xem-chi-tiet",
+      sua_phan_cong_khoa_chuyen_mon:
+        "/tuna/danh-sach-phan-cong-khoa-chuyen-mon/sua-phan-cong-khoa-chuyen-mon",
+    },
+    DANH_SACH_MAU: {
+      to: "/tuna/danh-sach-mau-kiem-nghiem",
+      xem_chi_tiet: "/tuna/danh-sach-mau-kiem-nghiem/xem-chi-tiet",
     },
   },
   TUNA_CUSTOMER: {

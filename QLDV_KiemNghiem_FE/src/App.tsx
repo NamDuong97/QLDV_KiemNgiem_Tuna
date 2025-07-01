@@ -7,26 +7,30 @@ import { PersonnelProvider } from "./contexts/PersonelsProvider";
 import { StoreProvider } from "./contexts/storeProvider";
 import { SignalRProvider } from "./contexts/SignalRProvider";
 import { useLocation } from "react-router";
+import { NotificationProvider } from "./contexts/NotificationContext";
+import NotificationContainer from "./components/NotificationComponent/NotificationContainer";
 
 function App() {
   const isAdmin = useLocation().pathname.startsWith("/tuna");
-
   return (
     <QueryClientProvider client={queryClient}>
-      {isAdmin ? (
-        <PersonnelProvider>
+      <NotificationProvider>
+        {isAdmin ? (
+          <PersonnelProvider>
+            <SignalRProvider>
+              <RoutesPersonnels />
+            </SignalRProvider>
+          </PersonnelProvider>
+        ) : (
           <SignalRProvider>
-            <RoutesPersonnels />
+            <StoreProvider>
+              <Routers />
+            </StoreProvider>
           </SignalRProvider>
-        </PersonnelProvider>
-      ) : (
-        <SignalRProvider>
-          <StoreProvider>
-            <Routers />
-          </StoreProvider>
-        </SignalRProvider>
-      )}
-      <HandleSnackbar />
+        )}
+        <NotificationContainer />
+        <HandleSnackbar />
+      </NotificationProvider>
     </QueryClientProvider>
   );
 }

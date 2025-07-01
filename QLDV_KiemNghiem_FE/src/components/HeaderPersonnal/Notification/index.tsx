@@ -3,7 +3,6 @@ import EmptyNotification from "./Empty";
 import NotificationItem from "./Item";
 import { InitialNotifications } from "..";
 import { Drawer } from "@mui/material";
-import Notification from "../../../configs/stores/Notification";
 
 interface Props {
   isOpen: boolean;
@@ -14,10 +13,6 @@ interface Props {
 
 const NotificationTest = (props: Props) => {
   const { isOpen, setNotifications, notifications, setIsOpen } = props;
-
-  const tesNotification = Notification()
-  console.log('testNotification',tesNotification);
-  
 
   const markAsRead = (id: any) => {
     setNotifications(

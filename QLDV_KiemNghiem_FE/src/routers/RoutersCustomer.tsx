@@ -1,41 +1,35 @@
 import { Suspense, lazy } from "react";
 import { Route, Routes } from "react-router";
 import { APP_ROUTES } from "../constants/routers";
-import LayoutCustomer from "../pages/customer/layout";
-import LayoutCustomerManager from "../pages/customer/manager/layout";
-const PhieuDKyDVKN = lazy(
-  () => import("../pages/customer/manager/PhieuDKyDVKN")
-);
-const QuanLyHoaDon = lazy(
-  () => import("../pages/customer/manager/QuanLyHoaDon")
-);
+import LayoutCustomer from "../pages/Guest/layout";
+import LayoutCustomerManager from "../pages/Guest/manager/layout";
+const PhieuDKyDVKN = lazy(() => import("../pages/Guest/manager/PhieuDKyDVKN"));
+const QuanLyHoaDon = lazy(() => import("../pages/Guest/manager/QuanLyHoaDon"));
 const EditPhieuDKyDVKN = lazy(
-  () => import("../pages/customer/manager/PhieuDKyDVKN/editPhieuDKyDVKN")
+  () => import("../pages/Guest/manager/PhieuDKyDVKN/editPhieuDKyDVKN")
 );
-import XacMinhEmail from "../pages/xacminhEmail";
+import XacMinhEmail from "../pages/XacminhEmail";
 import RedirectCustomer from "./redirectCustomer";
 import { StoreProvider } from "../contexts/storeProvider";
+import NotFound from "../pages/404NotFound";
 
-const ProfileCustomer = lazy(() => import("../pages/customer/manager/Profile"));
+const ProfileCustomer = lazy(() => import("../pages/Guest/manager/Profile"));
 
 const ShowPhieuDKyDVKN = lazy(
-  () => import("../pages/customer/manager/PhieuDKyDVKN/showPhieuDKyDVKN")
+  () => import("../pages/Guest/manager/PhieuDKyDVKN/showPhieuDKyDVKN")
 );
 const XemChiTiet = lazy(
-  () =>
-    import("../pages/customer/manager/QuanLyHoaDon/ChiTietHoaDon/XemChiTiet")
+  () => import("../pages/Guest/manager/QuanLyHoaDon/ChiTietHoaDon/XemChiTiet")
 );
 const ThanhToanHoaDon = lazy(
   () =>
-    import(
-      "../pages/customer/manager/QuanLyHoaDon/ChiTietHoaDon/ThanhToanHoaDon"
-    )
+    import("../pages/Guest/manager/QuanLyHoaDon/ChiTietHoaDon/ThanhToanHoaDon")
 );
 
-const Home = lazy(() => import("../pages/customer/home"));
-const FormSignUpDVKN = lazy(() => import("../pages/customer/formSignUpDVKN"));
+const Home = lazy(() => import("../pages/Guest/home"));
+const FormSignUpDVKN = lazy(() => import("../pages/Guest/formSignUpDVKN"));
 
-const RoutersCustomer =  () => {
+const RoutersCustomer = () => {
   return (
     <Suspense>
       <Routes>
@@ -43,7 +37,6 @@ const RoutersCustomer =  () => {
           path={APP_ROUTES.TUNA_XAC_MINH_EMAIL}
           element={<XacMinhEmail />}
         />
-
         {/* ==== Customer Routes ====*/}
         <Route
           element={
@@ -120,6 +113,7 @@ const RoutersCustomer =  () => {
             }
           />
         </Route>
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </Suspense>
   );

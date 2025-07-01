@@ -43,8 +43,8 @@ namespace QLDV_KiemNghiem_BE.Controllers
         [Route("reviewChiTietPhieuDeXuatPhongBanByPhongKhoa")]
         public async Task<ActionResult> reviewChiTietPhieuDeXuatPhongBanByPhongKhoa(RequestReviewPhieuDeXuatPhongBan duyetPhieu)
         {
-            var user = User.FindFirst(ClaimTypes.Email)?.Value.ToString() ?? "unknow";
-            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value.ToString() ?? "unknow";
+            var user = User.FindFirst(ClaimTypes.Email)?.Value.ToString() ?? "a1@example.com";
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value.ToString() ?? "NV009";
             var phieuDeXuat = await _service.ChiTietPhieuDeXuatPhongBan.ReviewPhieuDeXuatPhongBanByPhongKhoa(duyetPhieu, user, userId);
             // Tao thong bao gui cho phong KHTH
             if(phieuDeXuat.KetQua) // Lưu thành công rồi mới xem xét gửi thông báo

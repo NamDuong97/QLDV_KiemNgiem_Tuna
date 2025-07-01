@@ -16,6 +16,7 @@ export const queryKhoaAll = (props: Props) => {
       return response?.data;
     },
     refetchOnWindowFocus: false,
+    staleTime: Infinity,
   });
 };
 
@@ -28,5 +29,6 @@ export const getKhoaByID = (props: Props) => {
       return response?.data;
     },
     refetchOnWindowFocus: false,
+    enabled: !!params,
   });
 };

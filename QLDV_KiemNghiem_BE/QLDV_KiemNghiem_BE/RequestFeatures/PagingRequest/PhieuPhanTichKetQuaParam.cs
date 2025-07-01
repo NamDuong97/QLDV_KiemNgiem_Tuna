@@ -2,6 +2,7 @@
 {
     public class PhieuPhanTichKetQuaParam : RequestParameters
     {
+        public string? MaId { get; set; } = string.Empty;
         public string? MaKhoa { get; set; } = string.Empty;
 
         public string? DonViSanXuat { get; set; } = string.Empty;

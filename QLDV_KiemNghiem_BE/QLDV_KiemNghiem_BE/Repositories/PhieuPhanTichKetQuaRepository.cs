@@ -22,6 +22,7 @@ namespace QLDV_KiemNghiem_BE.Repositories
         {
             var result = await _context.PhieuPhanTichKetQuaProcedures
                  .FromSqlRaw("EXEC sp_getAllPhieuPhanTichKetQuaByBoLoc {0}, {1}, {2}, {3}, {4}, {5}, {6}, {7}",
+                 param.MaId ?? string.Empty,
             param.MaKhoa ?? string.Empty,
             param.DonViSanXuat ?? string.Empty,
             param.ManvLap ?? string.Empty,

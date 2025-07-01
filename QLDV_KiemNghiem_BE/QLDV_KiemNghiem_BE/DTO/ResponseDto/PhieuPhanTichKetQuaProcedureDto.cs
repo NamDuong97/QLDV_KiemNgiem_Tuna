@@ -48,7 +48,6 @@ namespace QLDV_KiemNghiem_BE.DTO.ResponseDto
 
         [StringLength(50)]
         public string? TrangThaiNhanMau { get; set; }
-
         [StringLength(500)]
         public string? YeuCauKiemNghiem { get; set; }
 
