@@ -4,10 +4,6 @@ import {
   Archive,
   Share,
   FileText,
-<<<<<<< HEAD
-  Inbox,
-=======
->>>>>>> 04b46de79db4bb30ce17d9d312e8173788377fb0
   ShoppingCart,
 } from "react-feather";
 import { image } from "../../constants/image";
@@ -39,11 +35,7 @@ import { MdAssignment, MdAssignmentInd, MdReceiptLong } from "react-icons/md";
 import { usePersonnel } from "../../contexts/PersonelsProvider";
 import { TbLogout } from "react-icons/tb";
 import { role } from "../../configs/parseJwt";
-<<<<<<< HEAD
-import { FaFileInvoiceDollar, FaFlask } from "react-icons/fa6";
-=======
 import { FaFlask } from "react-icons/fa6";
->>>>>>> 04b46de79db4bb30ce17d9d312e8173788377fb0
 import { FaChartLine } from "react-icons/fa";
 import { HiClipboardDocumentList } from "react-icons/hi2";
 import { getChucVuByID } from "../../hooks/personnels/queryChucVu";
