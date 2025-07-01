@@ -611,19 +611,18 @@ const ModelXemChiTiet = (props: Props) => {
               />
             )}
           </div>
-
-          <div className="flex justify-end space-x-3 mt-6 pt-6 border-t border-gray-300">
-            {getRoleGroup(role) === "KN" &&
-              data?.trangThai === true &&
-              role !== "KN" && (
+          {getRoleGroup(role) === "KN" &&
+            data?.trangThai === true &&
+            role !== "KN" && (
+              <div className="flex justify-end space-x-3 mt-6 pt-6 border-t border-gray-300">
                 <button
                   onClick={() => handleOpenModelSua(dataID)}
                   className="px-4 py-2 text-sm font-medium text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 transition-colors cursor-pointer"
                 >
                   Sửa
                 </button>
-              )}
-          </div>
+              </div>
+            )}
         </div>
       </div>
     </Dialog>

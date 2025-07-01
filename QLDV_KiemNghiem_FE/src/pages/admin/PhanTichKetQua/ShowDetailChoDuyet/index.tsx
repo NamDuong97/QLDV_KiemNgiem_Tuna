@@ -122,6 +122,40 @@ const ShowDetailChoDuyet = ({ resultId, onEdit, onBack }: any) => {
                 </div>
               </div>
             </div>
+            {data?.noiDungDuyetTongBo ||
+              (data?.noiDungDuyetSoBo && (
+                <div className="bg-gradient-to-r from-amber-50 to-orange-50 p-6 rounded-lg">
+                  <h3 className="text-lg font-semibold text-gray-900 mb-4">
+                    Nội dung duyệt
+                  </h3>
+                  <div className="space-y-3">
+                    {data?.noiDungDuyetSoBo && (
+                      <div>
+                        <span className="text-gray-600 block mb-2 font-medium">
+                          Nội dung duyệt trưởng phòng({data?.tenKhoa}):
+                        </span>
+                        <div className="bg-white p-4 rounded-lg border border-gray-200 shadow-sm">
+                          <p className="text-sm text-gray-700 leading-relaxed">
+                            {data?.noiDungDuyetSoBo}
+                          </p>
+                        </div>
+                      </div>
+                    )}
+                    {data?.noiDungDuyetTongBo && (
+                      <div>
+                        <span className="text-gray-600 block mb-2 font-medium">
+                          Nội dung duyệt ban lãnh đạo phòng:
+                        </span>
+                        <div className="bg-white p-4 rounded-lg border border-gray-200 shadow-sm">
+                          <p className="text-sm text-gray-700 leading-relaxed">
+                            {data?.noiDungDuyetTongBo}
+                          </p>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              ))}
           </div>
           <div className="space-y-6">
             <div className="bg-gradient-to-r from-red-50 to-yellow-50 p-6 rounded-lg">
@@ -180,7 +214,7 @@ const ShowDetailChoDuyet = ({ resultId, onEdit, onBack }: any) => {
                 </div>
                 <div>
                   <span className="text-gray-600 block mb-2 font-medium">
-                    Ghi chú:
+                    Ghi chú(nhân viên):
                   </span>
                   <div className="bg-white p-4 rounded-lg border border-gray-200 shadow-sm">
                     <p className="text-sm text-gray-700 leading-relaxed">

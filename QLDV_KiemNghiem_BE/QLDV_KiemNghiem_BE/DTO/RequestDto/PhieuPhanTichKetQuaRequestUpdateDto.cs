@@ -13,7 +13,7 @@ namespace QLDV_KiemNghiem_BE.DTO.RequestDto
         [StringLength(500, ErrorMessage = "GhiChu tối đa 500 ký tự")]
         public string GhiChu { get; set; } = string.Empty;
 
-        [StringLength(500, ErrorMessage = "TrangThai tối đa 500 ký tự")]
+        [Range(0, maximum: 10, ErrorMessage = "TrangThai phai lon hon 0")]
         public int TrangThai { get; set; } = 0;
         public string NoiDungDuyetSoBo { get; set; } = string.Empty;
 

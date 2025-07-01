@@ -81,6 +81,9 @@ export const API = {
       DELETE_PHAN_TICH_KET_QUA:
         "/api/PhieuPhanTichKetQua/deletePhieuPhanTichKetQua",
     },
+    CHI_TIEU: {
+      GET_CHI_TIEU_ALL: "/api/ChiTieu/getChiTieuAll",
+    },
   },
   CUSTOMER: {
     PHIEU_DANG_KY_DICH_VU_KIEM_NGHIEM: {

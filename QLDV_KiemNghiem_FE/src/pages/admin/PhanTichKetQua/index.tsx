@@ -1,6 +1,5 @@
 import { motion } from "motion/react";
 import { useState } from "react";
-import Create from "./Create";
 import Tag from "./Tag";
 import ShowDetail from "./ShowDetail";
 import Edit from "./Edit";
@@ -8,6 +7,10 @@ import ListDaDuyet from "./ListDaDuyet";
 import ListChuaDuyet from "./ListChuaDuyet";
 import ShowDetailChoDuyet from "./ShowDetailChoDuyet";
 import { role } from "../../../configs/parseJwt";
+import ModelSuaNoiDungSoBo from "./ModelSuaNoiDungSoBo";
+import ModelSuaNoiDungTongBo from "./ModelSuaNoiDungTongBo";
+import { getRoleGroup } from "../../../configs/Role";
+import ListChoLDPDuyet from "./ListChoLDPDuyet";
 
 export const sampleData: any = {
   KQ001: {
@@ -104,9 +107,17 @@ export const departments = [
 
 const PhanTichKetQua = () => {
   const [activeView, setActiveView] = useState(
-    role === "KN" ? "list" : "listChuaDuyet"
+    role === "KN"
+      ? "list"
+      : getRoleGroup(role) === "BLD"
+      ? "listChuaDuyet"
+      : "ListChoLDPDuyet"
   );
   const [selectedResultId, setSelectedResultId] = useState(null);
+  const [openModelNoiDungDuyetSoBo, setOpenModelNoiDungDuyetSoBo] =
+    useState(false);
+  const [openModelNoiDungDuyetTongBo, setOpenModelNoiDungDuyetTongBo] =
+    useState(false);
 
   const handleTabChange = (tab: any) => {
     setActiveView(tab);
@@ -128,10 +139,14 @@ const PhanTichKetQua = () => {
     setActiveView("edit");
   };
 
-  const handleSaveResult = (result: any) => {
-    console.log("Saving result:", result);
-    alert("Đã lưu phiếu phân tích thành công!");
-    setActiveView("list");
+  const handleOpenModelNoiDungSoBo = (id: any) => {
+    setSelectedResultId(id);
+    setOpenModelNoiDungDuyetSoBo(true);
+  };
+
+  const handleOpenModelNoiDungTongBo = (id: any) => {
+    setSelectedResultId(id);
+    setOpenModelNoiDungDuyetTongBo(true);
   };
 
   const handleCancel = () => {
@@ -148,10 +163,23 @@ const PhanTichKetQua = () => {
     switch (activeView) {
       case "list":
         return (
-          <ListDaDuyet onView={handleViewResult} onEdit={handleEditResult} />
+          <ListDaDuyet
+            onView={handleViewResult}
+            onEdit={handleEditResult}
+            handleOpenModelNoiDungSoBo={handleOpenModelNoiDungSoBo}
+            handleOpenModelNoiDungTongBo={handleOpenModelNoiDungTongBo}
+          />
         );
-      case "create":
-        return <Create onCancel={handleCancel} onSave={handleSaveResult} />;
+
+      case "ListChoLDPDuyet":
+        return (
+          <ListChoLDPDuyet
+            onView={handleViewResult}
+            onEdit={handleEditResult}
+            handleOpenModelNoiDungSoBo={handleOpenModelNoiDungSoBo}
+            handleOpenModelNoiDungTongBo={handleOpenModelNoiDungTongBo}
+          />
+        );
       case "detail":
         return (
           <ShowDetail
@@ -171,7 +199,6 @@ const PhanTichKetQua = () => {
         return (
           <Edit
             resultId={selectedResultId}
-            onSave={handleSaveResult}
             onCancel={() => handleViewResult(selectedResultId)}
           />
         );
@@ -205,6 +232,16 @@ const PhanTichKetQua = () => {
         <Tag activeTab={activeView} onTabChange={handleTabChange} />
       )}
       <div className="fade-in">{renderContent()}</div>
+      <ModelSuaNoiDungSoBo
+        open={openModelNoiDungDuyetSoBo}
+        handleClose={() => setOpenModelNoiDungDuyetSoBo(false)}
+        dataID={selectedResultId}
+      />
+      <ModelSuaNoiDungTongBo
+        open={openModelNoiDungDuyetTongBo}
+        handleClose={() => setOpenModelNoiDungDuyetTongBo(false)}
+        dataID={selectedResultId}
+      />
     </motion.div>
   );
 };

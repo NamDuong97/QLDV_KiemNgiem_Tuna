@@ -40,7 +40,7 @@ const Detail = ({
   }
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-6 gap-4 p-4 bg-gray-50 rounded-lg">
+    <div className="grid grid-cols-6 gap-4 p-4 bg-gray-50 rounded-lg">
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-1">
           Tên chỉ tiêu

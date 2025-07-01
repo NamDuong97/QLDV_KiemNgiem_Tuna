@@ -29,6 +29,7 @@ import { queryClient } from "../../../../lib/reactQuery";
 import { useStoreNotification } from "../../../../configs/stores/useStoreNotification";
 import { usePersonnel } from "../../../../contexts/PersonelsProvider";
 import ModelCreatePhieuDuTru from "./ModelCreatePhieuDuTru";
+import ModelCreatePhieuPhanTichKetQua from "./ModelCreatePhieuPhanTichKetQua";
 
 interface Props {
   handleTaoPhanCong: () => void;
@@ -64,6 +65,7 @@ const DanhSach = (props: Props) => {
   const [openModelSua, setOpenModelSua] = useState(false);
   const [openModelPhanCongLai, setOpenModelPhanCongLai] = useState(false);
   const [openModelCreate, setOpenModelCreate] = useState(false);
+  const [openModelPTKG, setOpenModelPTKG] = useState(false);
   const [openModelXoa, setOpenModelXoa] = useState(false);
   const [saveID, setSaveID] = useState("");
 
@@ -273,60 +275,73 @@ const DanhSach = (props: Props) => {
                       </div>
                     </div>
 
-                    <div className="flex items-center justify-end gap-3 pt-3 border-t border-gray-100">
-                      <button
-                        onClick={() => {
-                          setSaveID(assignment.maId);
-                          setOpenModelCreate(true);
-                        }}
-                        className="px-1.5 py-1 text-xs/4 text-white bg-green-600 hover:bg-green-700 rounded transition-colors cursor-pointer"
-                      >
-                        Tạo phiếu dự trù
-                      </button>
+                    <div className="flex flex-wrap gap-3 pt-3 border-t border-gray-100 justify-center items-center">
                       <button
                         onClick={() => {
                           setSaveID(assignment.maId);
                           setOpenModelXemChiTiet(true);
                         }}
-                        className="px-1.5 py-1 text-xs/4 text-white bg-indigo-600 hover:bg-indigo-700 rounded transition-colors cursor-pointer"
+                        className="px-2 py-1 text-xs font-medium cursor-pointer text-white bg-indigo-500 hover:bg-indigo-600 rounded-md transition-colors"
                       >
                         Xem chi tiết
                       </button>
-                      {getRoleGroup(role) === "KN" && role !== "KN" && (
-                        <>
-                          {assignment?.trangThai === true && (
-                            <>
-                              <button
-                                onClick={() => {
+
+                      {getRoleGroup(role) === "KN" &&
+                        role !== "KN" &&
+                        assignment?.trangThai === true && (
+                          <>
+                            {[
+                              {
+                                label: "Tạo phiếu PTKQ",
+                                color: "violet",
+                                onClick: () => {
+                                  setSaveID(assignment.maId);
+                                  setOpenModelPTKG(true);
+                                },
+                              },
+                              {
+                                label: "Tạo phiếu dự trù",
+                                color: "green",
+                                onClick: () => {
+                                  setSaveID(assignment.maId);
+                                  setOpenModelCreate(true);
+                                },
+                              },
+                              {
+                                label: "Cập nhật",
+                                color: "yellow",
+                                onClick: () => {
                                   setSaveID(assignment.maId);
                                   setOpenModelSua(true);
-                                }}
-                                className="px-1.5 py-1 text-xs/4 text-white bg-yellow-600 hover:bg-yellow-700 rounded transition-colors cursor-pointer"
-                              >
-                                Cập nhật
-                              </button>
-                              <button
-                                onClick={() => {
+                                },
+                              },
+                              {
+                                label: "Hủy phiếu",
+                                color: "rose",
+                                onClick: () => {
                                   setSaveID(assignment.maId);
                                   setOpenModelXoa(true);
-                                }}
-                                className="px-1.5 py-1 text-xs/4 text-white bg-red-600 hover:bg-red-700 rounded transition-colors cursor-pointer"
-                              >
-                                Hủy phiếu
-                              </button>
-                              <button
-                                onClick={() => {
+                                },
+                              },
+                              {
+                                label: "Phân công lại",
+                                color: "cyan",
+                                onClick: () => {
                                   setSaveID(assignment.maId);
                                   setOpenModelPhanCongLai(true);
-                                }}
-                                className="px-1.5 py-1 text-xs/4 text-white bg-cyan-600 hover:bg-cyan-700 rounded transition-colors cursor-pointer"
+                                },
+                              },
+                            ].map((btn, idx) => (
+                              <button
+                                key={idx}
+                                onClick={btn.onClick}
+                                className={`px-2 py-1 text-xs font-medium cursor-pointer text-white bg-${btn.color}-500 hover:bg-${btn.color}-600 rounded-md transition-colors`}
                               >
-                                Phân công lại
+                                {btn.label}
                               </button>
-                            </>
-                          )}
-                        </>
-                      )}
+                            ))}
+                          </>
+                        )}
                     </div>
                   </div>
                 </div>
@@ -406,6 +421,11 @@ const DanhSach = (props: Props) => {
       <ModelCreatePhieuDuTru
         open={openModelCreate}
         handleClose={() => setOpenModelCreate(false)}
+        dataID={saveID}
+      />
+      <ModelCreatePhieuPhanTichKetQua
+        open={openModelPTKG}
+        onClose={() => setOpenModelPTKG(false)}
         dataID={saveID}
       />
       <ConfirmationModal

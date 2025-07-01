@@ -16,6 +16,11 @@ const Tag = (props: Props) => {
       icon: AlertTriangle,
     },
     { id: "list", label: "Danh sách phiếu phân tích", icon: List },
+    {
+      id: "ListChoLDPDuyet",
+      label: "Danh sách phiếu chờ lãnh đạo phòng duyệt",
+      icon: List,
+    },
     // { id: "create", label: "Tạo phiếu mới", icon: Plus },
   ];
 

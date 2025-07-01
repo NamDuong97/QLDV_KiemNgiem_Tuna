@@ -179,7 +179,7 @@ const trangThaiPhanCongNoiBo: Record<string, TrangThai> = {
   },
 };
 
-const trangThaiPhanTichKetQua: Record<string, TrangThai> = {
+export const trangThaiPhanTichKetQua: Record<string, TrangThai> = {
   1: {
     text: "Chờ lãnh đạo phòng duyệt",
     bgColor: "bg-yellow-100",

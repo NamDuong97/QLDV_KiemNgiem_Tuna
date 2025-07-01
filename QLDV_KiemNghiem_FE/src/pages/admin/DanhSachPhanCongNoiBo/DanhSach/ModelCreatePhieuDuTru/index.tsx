@@ -215,7 +215,7 @@ const ModelCreatePhieuDuTru = (props: Props) => {
                 className="px-4 py-2 cursor-pointer bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center space-x-2"
               >
                 <Plus size={16} />
-                <span>Thêm chỉ tiêu</span>
+                <span>Thêm phụ liệu hóa chất</span>
               </button>
             </div>
 
