@@ -21,14 +21,16 @@ namespace QLDV_KiemNghiem_BE.Repositories
         public async Task<PagedList<PhieuTienDoLamViecProcedure>> GetPhieuTienDoLamViecAllAsync(PhieuTienDoLamViecParam param)
         {
             var result = await _context.PhieuTienDoLamViecProcedures
-                .FromSqlRaw("EXEC sp_getAllPhieuTienDoLamViecByBoLoc {0}, {1}, {2}, {3}, {4}, {5}, {6}",
+                .FromSqlRaw("EXEC sp_getAllPhieuTienDoLamViecByBoLoc {0}, {1}, {2}, {3}, {4}, {5}, {6}, {7}, {8}",
+                    param.MaID ?? string.Empty,
+                    param.MaMau ?? string.Empty,
                     param.MaKhoa ?? string.Empty,
                     param.ManvXuLy ?? string.Empty,
                     param.TenGiaiDoanThucHien ?? string.Empty,
                     param.ManvKiemTra ?? string.Empty,
                     param.NgayTraKetQuaFrom ?? string.Empty,
                     param.NgayTraKetQuaTo ?? string.Empty,
-                    param.TrangThai.HasValue ? param.TrangThai.Value : true
+                    param.TrangThai ?? 2 // Mặc định là true nếu null
                 ).ToListAsync();
 
             return PagedList<PhieuTienDoLamViecProcedure>.ToPagedList(result, param.PageNumber, param.PageSize, param.GetAll);
@@ -41,9 +43,18 @@ namespace QLDV_KiemNghiem_BE.Repositories
             var result = resultList.FirstOrDefault();
             return result;
         }
-        public async Task<PhieuTienDoLamViec?> FindPhieuTienDoLamViecAsync(string maPhieuTienDoLamViec)
+        public async Task<PhieuTienDoLamViec?> FindPhieuTienDoLamViecAsync(string maPhieuTienDoLamViec, bool track)
         {
-            return await _context.PhieuTienDoLamViecs.FindAsync(maPhieuTienDoLamViec);
+            if (track)
+            {
+                return await _context.PhieuTienDoLamViecs.FirstOrDefaultAsync(it => it.MaId == maPhieuTienDoLamViec);
+
+            }
+            else
+            {
+                return await _context.PhieuTienDoLamViecs.AsNoTracking().FirstOrDefaultAsync(it => it.MaId ==maPhieuTienDoLamViec);
+
+            }
         }
         public void CreatePhieuTienDoLamViecAsync(PhieuTienDoLamViec PhieuTienDoLamViec)
         {

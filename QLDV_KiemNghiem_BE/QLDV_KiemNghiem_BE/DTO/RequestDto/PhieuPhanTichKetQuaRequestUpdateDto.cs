@@ -1,6 +1,7 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using QLDV_KiemNghiem_BE.DTO.ResponseDto;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using QLDV_KiemNghiem_BE.DTO.ResponseDto;
+using System.Runtime.InteropServices;
 
 namespace QLDV_KiemNghiem_BE.DTO.RequestDto
 {
@@ -13,7 +14,7 @@ namespace QLDV_KiemNghiem_BE.DTO.RequestDto
         [StringLength(500, ErrorMessage = "GhiChu tối đa 500 ký tự")]
         public string GhiChu { get; set; } = string.Empty;
 
-        [Range(0, maximum: 10, ErrorMessage = "TrangThai phai lon hon 0")]
+        [Range(0, maximum:10, ErrorMessage = "TrangThai phai lon hon 0")]
         public int TrangThai { get; set; } = 0;
         public string NoiDungDuyetSoBo { get; set; } = string.Empty;
 

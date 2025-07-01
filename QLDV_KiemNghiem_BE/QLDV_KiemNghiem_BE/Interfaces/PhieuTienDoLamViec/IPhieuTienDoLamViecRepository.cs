@@ -10,7 +10,7 @@ namespace QLDV_KiemNghiem_BE.Interfaces
     {
         Task<PagedList<PhieuTienDoLamViecProcedure>> GetPhieuTienDoLamViecAllAsync(PhieuTienDoLamViecParam param);
         Task<PhieuTienDoLamViecProcedure?> FindPhieuTienDoLamViecShowAsync(string maPhieuTienDo);
-        Task<PhieuTienDoLamViec?> FindPhieuTienDoLamViecAsync(string maPhieuTienDoLamViec);
+        Task<PhieuTienDoLamViec?> FindPhieuTienDoLamViecAsync(string maPhieuTienDoLamViec, bool track);
         void CreatePhieuTienDoLamViecAsync(PhieuTienDoLamViec PhieuTienDoLamViec);
         void UpdatePhieuTienDoLamViecAsync(PhieuTienDoLamViec PhieuTienDoLamViec);
         void DeletePhieuTienDoLamViecAsync(PhieuTienDoLamViec PhieuTienDoLamViec);

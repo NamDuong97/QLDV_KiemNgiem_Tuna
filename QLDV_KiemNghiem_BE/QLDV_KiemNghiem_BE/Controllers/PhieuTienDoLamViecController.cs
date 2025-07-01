@@ -1,11 +1,14 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using QLDV_KiemNghiem_BE.DTO.RequestDto;
 using QLDV_KiemNghiem_BE.DTO.ResponseDto;
 using QLDV_KiemNghiem_BE.Interfaces.ManagerInterface;
 using QLDV_KiemNghiem_BE.Models;
 using QLDV_KiemNghiem_BE.RequestFeatures;
 using QLDV_KiemNghiem_BE.RequestFeatures.PagingRequest;
+using System.Security.Claims;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace QLDV_KiemNghiem_BE.Controllers
 {
@@ -25,7 +28,7 @@ namespace QLDV_KiemNghiem_BE.Controllers
 
         [HttpGet]
         [Route("getPhieuTienDoLamViecAll")]
-        public async Task<ActionResult> getPhieuTienDoLamViecAll(PhieuTienDoLamViecParam param)
+        public async Task<ActionResult> getPhieuTienDoLamViecAll([FromQuery] PhieuTienDoLamViecParam param)
         {
             var result = await _service.PhieuTienDoLamViec.GetPhieuTienDoLamViecAllAsync(param);
             Response.Headers.Append("X-Pagination", System.Text.Json.JsonSerializer.Serialize(result.pagi));
@@ -44,7 +47,7 @@ namespace QLDV_KiemNghiem_BE.Controllers
 
         [HttpPost]
         [Route("createPhieuTienDoLamViec")]
-        public async Task<ActionResult> createPhieuTienDoLamViec(PhieuTienDoLamViecDto PhieuTienDoLamViecDto)
+        public async Task<ActionResult> createPhieuTienDoLamViec(PhieuTienDoLamViecRequestCreateDto PhieuTienDoLamViecDto)
         {
             if (!ModelState.IsValid)
             {
@@ -55,7 +58,9 @@ namespace QLDV_KiemNghiem_BE.Controllers
                 _logger.LogError("Loi validate tham so dau vao");
                 return BadRequest(new { Errors = errors });
             }
-            ResponseModel1<PhieuTienDoLamViecDto> create = await _service.PhieuTienDoLamViec.CreatePhieuTienDoLamViecAsync(PhieuTienDoLamViecDto);
+            var user = User.FindFirst(ClaimTypes.Email)?.Value.ToString() ?? "unknow";
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value.ToString() ?? null;
+            ResponseModel1<PhieuTienDoLamViecDto> create = await _service.PhieuTienDoLamViec.CreatePhieuTienDoLamViecAsync(PhieuTienDoLamViecDto, user, userId);
             if (create.KetQua)
             {
                 _logger.LogDebug(create.Message);
@@ -69,8 +74,8 @@ namespace QLDV_KiemNghiem_BE.Controllers
         }
 
         [HttpPut]
-        [Route("updatePhieuTienDoLamViec")]
-        public async Task<ActionResult> updatePhieuTienDoLamViec(PhieuTienDoLamViecDto PhieuTienDoLamViecDto)
+        [Route("reviewPhieuTienDoLamViec")]
+        public async Task<ActionResult> reviewPhieuTienDoLamViec(PhieuTienDoLamViecRequestReviewDto param)
         {
             if (!ModelState.IsValid)
             {
@@ -81,7 +86,9 @@ namespace QLDV_KiemNghiem_BE.Controllers
                 _logger.LogError("Loi validate tham so dau vao");
                 return BadRequest(new { Errors = errors });
             }
-            ResponseModel1<PhieuTienDoLamViecDto> update = await _service.PhieuTienDoLamViec.UpdatePhieuTienDoLamViecAsync(PhieuTienDoLamViecDto);
+            var user = User.FindFirst(ClaimTypes.Email)?.Value.ToString() ?? "unknow";
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value.ToString() ?? null;
+            ResponseModel1<PhieuTienDoLamViecDto> update = await _service.PhieuTienDoLamViec.ReviewPhieuTienDoLamViec(param, user, userId);
             if (update.KetQua)
             {
                 _logger.LogDebug(update.Message);
@@ -96,27 +103,20 @@ namespace QLDV_KiemNghiem_BE.Controllers
 
         [HttpDelete]
         [Route("deletePhieuTienDoLamViec")]
-        public async Task<ActionResult> deletePhieuTienDoLamViec(PhieuTienDoLamViec PhieuTienDoLamViec)
+        public async Task<ActionResult> deletePhieuTienDoLamViec(string maPhieuTienDoLamViec)
         {
-            var checkExists = await _service.PhieuTienDoLamViec.FindPhieuTienDoLamViecAsync(PhieuTienDoLamViec.MaId);
-            if (checkExists != null)
+            var user = User.FindFirst(ClaimTypes.Email)?.Value.ToString() ?? "unknow";
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value.ToString() ?? null;
+            ResponseModel1<PhieuTienDoLamViecDto> delete = await _service.PhieuTienDoLamViec.DeletePhieuTienDoLamViecAsync(maPhieuTienDoLamViec, user, userId);
+            if (delete.KetQua)
             {
-                bool delete = await _service.PhieuTienDoLamViec.DeletePhieuTienDoLamViecAsync(PhieuTienDoLamViec);
-                if (delete)
-                {
-                    _logger.LogDebug("Cap nhat phieu tien do lam viec thanh cong");
-                    return Ok(PhieuTienDoLamViec);
-                }
-                else
-                {
-                    _logger.LogDebug("Cap nhat phieu tien do lam viec that bai");
-                    return BadRequest();
-                }
+                _logger.LogDebug(delete.Message);
+                return Ok(delete.Data);
             }
             else
             {
-                _logger.LogDebug("phieu tien do lam viec khong ton tai");
-                return BadRequest();
+                _logger.LogDebug(delete.Message);
+                return BadRequest(delete.Message);
             }
         }
     }

@@ -93,6 +93,9 @@ namespace QLDV_KiemNghiem_BE.DTO.ResponseDto
         [StringLength(100)]
         public string? NguoiTao { get; set; }
 
+        [Column(TypeName = "datetime")]
+        public DateTime? NgayTao { get; set; }
+
         [StringLength(100)]
         public string? NguoiSua { get; set; }
 
