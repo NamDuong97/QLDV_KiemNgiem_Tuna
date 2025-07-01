@@ -1,4 +1,4 @@
-import { List, Plus } from "react-feather";
+import { List } from "react-feather";
 
 interface Props {
   activeTab: any;
@@ -8,9 +8,7 @@ interface Props {
 const Tag = (props: Props) => {
   const { activeTab, onTabChange } = props;
 
-  const tabs = [
-    { id: "list", label: "Danh sách phiếu", icon: List },
-  ];
+  const tabs = [{ id: "list", label: "Danh sách phiếu", icon: List }];
 
   return (
     <nav className="flex space-x-8 mb-8">

@@ -8,7 +8,7 @@ import {
   formatDateNotTime,
   renderTrangThaiPhanCongNoiBo,
 } from "../../../../configs/configAll";
-import { Pagination, Skeleton, Tooltip } from "@mui/material";
+import { Pagination, Skeleton } from "@mui/material";
 import ModelXemChiTiet from "./ModelXemChiTiet";
 import ModelSua from "./ModelSua";
 import ConfirmationModal from "../../../../components/ConfirmationModal";
@@ -19,7 +19,6 @@ import {
   queryPhanCongNoiBoAll,
 } from "../../../../hooks/personnels/queryPhanCongNoiBo";
 import SelectItemTrangThai from "./SelectItemTrangThai";
-import { MdSwapHoriz } from "react-icons/md";
 import ModelPhanCongLai from "./ModelPhanCongLai";
 import { role } from "../../../../configs/parseJwt";
 import { getRoleGroup } from "../../../../configs/Role";

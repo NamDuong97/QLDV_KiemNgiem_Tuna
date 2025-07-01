@@ -7,7 +7,6 @@ import { usePersonnel } from "../../../../contexts/PersonelsProvider";
 import CardDuyet from "../CardDuyet";
 import { Pagination, Skeleton } from "@mui/material";
 import SelectItemKhoa from "./SelectItemKhoa";
-import { FaSortAmountDown, FaSortAmountUp } from "react-icons/fa";
 
 const ListBLDDuyet = ({
   onView,

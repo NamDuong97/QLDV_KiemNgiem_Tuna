@@ -4,7 +4,6 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import {
-  formatDateNotTime,
   formatDateNotTime2,
 } from "../../../../../../configs/configAll";
 import { IoClose } from "react-icons/io5";

@@ -2,7 +2,6 @@ import { motion } from "motion/react";
 import { useState } from "react";
 import Tag from "./Tag";
 import ShowDetail from "./ShowDetail";
-import Edit from "./Edit";
 import ShowDetailChoDuyet from "./ShowDetailChoDuyet";
 import ModelSuaNoiDungSoBo from "./ModelSuaNoiDungSoBo";
 import ModelSuaNoiDungTongBo from "./ModelSuaNoiDungTongBo";

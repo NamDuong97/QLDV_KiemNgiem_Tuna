@@ -3,11 +3,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
 import yup from "../../../../../configs/yup.custom";
 import { queryClient } from "../../../../../lib/reactQuery";
-import {
-  useDanhGiaBLD,
-  useDanhGiaNhanVien,
-  useUndoDanhGiaBLD,
-} from "../../../../../hooks/personnels/quanLyPhieuDKKM";
+import { useUndoDanhGiaBLD } from "../../../../../hooks/personnels/quanLyPhieuDKKM";
 import { role } from "../../../../../configs/parseJwt";
 import { useStoreNotification } from "../../../../../configs/stores/useStoreNotification";
 import { getRoleGroup } from "../../../../../configs/Role";
@@ -24,7 +20,7 @@ interface FormGhiChu {
 }
 
 const FormGhiChuHoanTac = (props: Props) => {
-  const { id, handleClose, closeGhiChu, trangThaiID } = props;
+  const { id, handleClose, closeGhiChu } = props;
 
   let schema = useMemo(() => {
     return yup.object().shape({

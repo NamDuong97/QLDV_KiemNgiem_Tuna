@@ -32,7 +32,6 @@ const LichSuPhanCong = () => {
   const [selectKhoa, setSelectKhoa] = useState("");
   const [openModelSua, setOpenModelSua] = useState(false);
   const [openModelXoa, setOpenModelXoa] = useState(false);
-  const [saveID, setSaveID] = useState("");
 
   const [searchQuery, setSearchQuery] = useState("");
   const filteredSamples: any = data?.filter((sample: any) => {
@@ -392,7 +391,7 @@ const LichSuPhanCong = () => {
       <ModelSua
         open={openModelSua}
         handleClose={() => setOpenModelSua(false)}
-        dataID={saveID}
+        // dataID={saveID}
       />
 
       <ConfirmationModal

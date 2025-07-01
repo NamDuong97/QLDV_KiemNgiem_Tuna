@@ -153,7 +153,7 @@ const ModelCreatePhieuDuTru = (props: Props) => {
         ghiChu: item.ghiChu ?? "",
       })),
     };
-    // mutate(param);
+    mutate(param);
     console.log("Form Submit:", param);
   };
 

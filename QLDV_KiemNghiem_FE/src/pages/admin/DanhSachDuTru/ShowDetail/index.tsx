@@ -12,7 +12,7 @@ import { role } from "../../../../configs/parseJwt";
 import { getRoleGroup } from "../../../../configs/Role";
 
 const ShowDetail = ({ resultId, onEdit, onBack }: any) => {
-  const { data, isLoading } = getDuTruByID({
+  const { data } = getDuTruByID({
     queryKey: "DuTruByID",
     params: resultId,
   });

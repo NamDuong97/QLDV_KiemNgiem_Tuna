@@ -1,4 +1,4 @@
-import { ArrowLeft, Edit } from "react-feather";
+import { ArrowLeft } from "react-feather";
 import {
   formatDate,
   renderTrangThaiPhanTichKetQua,
