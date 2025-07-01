@@ -208,12 +208,17 @@ export const trangThaiPhanTichKetQua: Record<string, TrangThai> = {
 };
 
 const trangThaiDuTru: Record<string, TrangThai> = {
-  false: {
+  0: {
+    text: "Đã hủy",
+    bgColor: "bg-red-100",
+    textColor: "text-red-800",
+  },
+  1: {
     text: "Chờ duyệt",
     bgColor: "bg-yellow-100",
     textColor: "text-yellow-800",
   },
-  true: {
+  2: {
     text: "Đã Duyệt",
     bgColor: "bg-green-100",
     textColor: "text-green-800",

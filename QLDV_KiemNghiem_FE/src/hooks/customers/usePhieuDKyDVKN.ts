@@ -174,7 +174,7 @@ export const useCreateTieuChuan = (props: Props) => {
 };
 
 export const useCreateDmPhuLieuHoaChat = (props: Props) => {
-  const { queryKey, onSettled } = props;
+  const { queryKey, onSettled, onSuccess, onError } = props;
   return useMutation({
     mutationKey: [queryKey],
     mutationFn: async (params: any) => {
@@ -183,9 +183,8 @@ export const useCreateDmPhuLieuHoaChat = (props: Props) => {
       );
       return response;
     },
-    onSuccess: (response: any) => {
-      if (response !== 200) console.log("Lỗi Server");
-    },
+    onSuccess: onSuccess,
+    onError: onError,
     onSettled: onSettled,
   });
 };

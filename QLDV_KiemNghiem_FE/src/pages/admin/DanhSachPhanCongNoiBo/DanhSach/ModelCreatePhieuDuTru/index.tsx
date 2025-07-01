@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Plus, Save } from "react-feather";
 import { useFieldArray, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -12,6 +12,8 @@ import { queryClient } from "../../../../../lib/reactQuery";
 import { useStoreNotification } from "../../../../../configs/stores/useStoreNotification";
 import { createDuTru } from "../../../../../hooks/personnels/queryDuTru";
 import { usePersonnel } from "../../../../../contexts/PersonelsProvider";
+import { useGetDmPhuLieuHoaChatAll } from "../../../../../hooks/customers/usePhieuDKyDVKN";
+import PopupThemMau from "./PopupThemPLHC";
 
 interface Props {
   open: boolean;
@@ -33,14 +35,17 @@ interface FormPhieuDuTru {
 
 const ModelCreatePhieuDuTru = (props: Props) => {
   const { open, handleClose, dataID } = props;
-
   const { personnelInfo } = usePersonnel();
-
+  const [openPopupThemPLHC, setOpenPopupThemPLHC] = useState(false);
+  const handleOpenPopupThemPLHC = () => setOpenPopupThemPLHC(true);
   const { data } = queryPhanCongNoiBoByID({
     queryKey: "queryPhanCongNoiBoByID",
     params: dataID,
   });
-  // console.log("dataMau", data);
+
+  const { data: dataDM_PhuLieuHoaChat } = useGetDmPhuLieuHoaChatAll({
+    queryKey: "GetDmPhuLieuHoaChatAll",
+  });
 
   const schemaPhieuDuTru = yup.object().shape({
     ghiChu: yup
@@ -103,7 +108,7 @@ const ModelCreatePhieuDuTru = (props: Props) => {
   const handleSettled = async (response: any) => {
     if (response?.status === 200) {
       await queryClient.refetchQueries({
-        queryKey: ["DanhSachMau"],
+        queryKey: ["queryDuTruAll"],
       });
       handleClose();
     }
@@ -154,7 +159,6 @@ const ModelCreatePhieuDuTru = (props: Props) => {
       })),
     };
     mutate(param);
-    console.log("Form Submit:", param);
   };
 
   useEffect(() => {
@@ -236,6 +240,8 @@ const ModelCreatePhieuDuTru = (props: Props) => {
                   register={register}
                   errors={errors?.chiTietPhieuDuTrus?.[index]}
                   fieldNamePrefix={`chiTietPhieuDuTrus.${index}`}
+                  dataDM_PhuLieuHoaChat={dataDM_PhuLieuHoaChat}
+                  handleOpenPopupThemPLHC={handleOpenPopupThemPLHC}
                 />
               ))}
             </div>
@@ -261,6 +267,10 @@ const ModelCreatePhieuDuTru = (props: Props) => {
           </div>
         </form>
       </div>
+      <PopupThemMau
+        open={openPopupThemPLHC}
+        handleClose={() => setOpenPopupThemPLHC(false)}
+      />
     </Dialog>
   );
 };

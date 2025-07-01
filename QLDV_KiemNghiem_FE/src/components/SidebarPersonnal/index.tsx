@@ -260,34 +260,38 @@ const SidebarPersonnal = () => {
               {(getRoleGroup(role) === "BLD" ||
                 getRoleGroup(role) === "KN") && (
                 <>
-                  <button
-                    onClick={() => {
-                      handleRedirect(quanLyLuuMau);
-                    }}
-                    className={clsx(
-                      "flex items-center space-x-2 sidebar-link px-4 py-3 text-gray-700 rounded-lg",
-                      {
-                        "text-indigo-600 active":
-                          pathname.split("/")[2] ===
-                          APP_ROUTES.TUNA_ADMIN.QUAN_LY_PHIEU_LUU_MAU.to.split(
-                            "/"
-                          )[2],
-                      }
-                    )}
-                  >
-                    <span className="w-5">
-                      <Archive
-                        className={clsx("w-5 h-5 text-gray-500", {
-                          "text-indigo-600":
+                  {(role === "KN_L" ||
+                    role === "KN_P" ||
+                    getRoleGroup(role) === "BLD") && (
+                    <button
+                      onClick={() => {
+                        handleRedirect(quanLyLuuMau);
+                      }}
+                      className={clsx(
+                        "flex items-center space-x-2 sidebar-link px-4 py-3 text-gray-700 rounded-lg",
+                        {
+                          "text-indigo-600 active":
                             pathname.split("/")[2] ===
                             APP_ROUTES.TUNA_ADMIN.QUAN_LY_PHIEU_LUU_MAU.to.split(
                               "/"
                             )[2],
-                        })}
-                      />
-                    </span>
-                    <span className="text-start">Mẫu lưu</span>
-                  </button>
+                        }
+                      )}
+                    >
+                      <span className="w-5">
+                        <Archive
+                          className={clsx("w-5 h-5 text-gray-500", {
+                            "text-indigo-600":
+                              pathname.split("/")[2] ===
+                              APP_ROUTES.TUNA_ADMIN.QUAN_LY_PHIEU_LUU_MAU.to.split(
+                                "/"
+                              )[2],
+                          })}
+                        />
+                      </span>
+                      <span className="text-start">Mẫu lưu</span>
+                    </button>
+                  )}
                   <button
                     onClick={() => {
                       handleRedirect(quanLyPhanCongNoiBo);
@@ -347,30 +351,36 @@ const SidebarPersonnal = () => {
                 </>
               )}
 
-              <button
-                onClick={() => {
-                  handleRedirect(quanLyHoaDonTrangAdmin);
-                }}
-                className={clsx(
-                  "flex items-center space-x-2 sidebar-link px-4 py-3 text-gray-700 rounded-lg",
-                  {
-                    "text-indigo-600 active":
-                      pathname.split("/")[2] ===
-                      APP_ROUTES.TUNA_ADMIN.QUAN_LY_HOA_DON.to.split("/")[2],
-                  }
-                )}
-              >
-                <span className="w-5">
-                  <MdReceiptLong
-                    className={clsx("w-5 h-5 text-gray-500", {
-                      "text-indigo-600":
+              {(getRoleGroup(role) === "BLD" ||
+                getRoleGroup(role) === "KHTH" ||
+                getRoleGroup(role) === "KET") && (
+                <button
+                  onClick={() => {
+                    handleRedirect(quanLyHoaDonTrangAdmin);
+                  }}
+                  className={clsx(
+                    "flex items-center space-x-2 sidebar-link px-4 py-3 text-gray-700 rounded-lg",
+                    {
+                      "text-indigo-600 active":
                         pathname.split("/")[2] ===
                         APP_ROUTES.TUNA_ADMIN.QUAN_LY_HOA_DON.to.split("/")[2],
-                    })}
-                  />
-                </span>
-                <span className="text-start">Hóa đơn</span>
-              </button>
+                    }
+                  )}
+                >
+                  <span className="w-5">
+                    <MdReceiptLong
+                      className={clsx("w-5 h-5 text-gray-500", {
+                        "text-indigo-600":
+                          pathname.split("/")[2] ===
+                          APP_ROUTES.TUNA_ADMIN.QUAN_LY_HOA_DON.to.split(
+                            "/"
+                          )[2],
+                      })}
+                    />
+                  </span>
+                  <span className="text-start">Hóa đơn</span>
+                </button>
+              )}
               <button
                 onClick={() => {
                   handleRedirect(quanLyPhieuPhanTichKetQua);

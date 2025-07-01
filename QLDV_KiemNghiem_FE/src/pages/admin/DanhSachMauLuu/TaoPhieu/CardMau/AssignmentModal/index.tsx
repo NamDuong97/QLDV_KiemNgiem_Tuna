@@ -3,14 +3,14 @@ import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
-import {
-  formatDateNotTime2,
-} from "../../../../../../configs/configAll";
+import { formatDateNotTime2 } from "../../../../../../configs/configAll";
 import { IoClose } from "react-icons/io5";
 import { usePersonnel } from "../../../../../../contexts/PersonelsProvider";
 import { createMauLuu } from "../../../../../../hooks/personnels/queryMauLuu";
 import { useStoreNotification } from "../../../../../../configs/stores/useStoreNotification";
 import { queryClient } from "../../../../../../lib/reactQuery";
+import InputSelectDonViTinh from "./InputSelectDonViTinh";
+import { DonViTinh } from "../../../../../Guest/formSignUpDVKN/components/Maus/FormThongTinMau";
 
 interface Props {
   samples: any[];
@@ -22,7 +22,6 @@ interface Props {
 interface FormTaoPhieu {
   soLuong: number;
   donViTinh: string;
-  thoiGianLuu: Date;
   luuDenNgay: Date;
 }
 
@@ -36,19 +35,11 @@ const schema = yup.object().shape({
     .required("Vui lòng nhập số lượng")
     .min(1, "Số lượng phải lớn hơn 0"),
   donViTinh: yup.string().required("Vui lòng nhập đơn vị tính"),
-  thoiGianLuu: yup
-    .date()
-    .typeError("Vui lòng chọn thời gian lưu")
-    .required("Vui lòng chọn thời gian lưu")
-    .min(today, "Thời gian lưu phải từ hôm nay trở đi"),
   luuDenNgay: yup
     .date()
     .typeError("Vui lòng chọn ngày lưu đến")
     .required("Vui lòng chọn ngày lưu đến")
-    .min(
-      yup.ref("thoiGianLuu"),
-      "Ngày lưu đến phải tính từ thời gian lưu trở đi"
-    ),
+    .min(today, "Ngày lưu đến phải tính từ thời điểm hiện tại"),
 });
 
 const AssignmentModal = (props: Props) => {
@@ -60,6 +51,7 @@ const AssignmentModal = (props: Props) => {
     register,
     handleSubmit,
     formState: { errors },
+    control,
   } = useForm<FormTaoPhieu>({
     resolver: yupResolver(schema),
   });
@@ -100,12 +92,9 @@ const AssignmentModal = (props: Props) => {
       maPdkMau: selectedSamples?.maId,
       soLuong: data.soLuong,
       donViTinh: data.donViTinh,
-      thoiGianLuu: formatDateNotTime2(data.thoiGianLuu),
       luuDenNgay: formatDateNotTime2(data.luuDenNgay),
       hanSuDung: selectedSamples?.hanSuDung,
       manvLuu: personnelInfo?.maId,
-      maId: "",
-      maPhieuLuu: "",
     };
 
     console.log("Submitted data:", dataTao);
@@ -117,7 +106,6 @@ const AssignmentModal = (props: Props) => {
       reset({
         soLuong: 0,
         donViTinh: "",
-        thoiGianLuu: undefined,
         luuDenNgay: undefined,
       });
     }
@@ -160,7 +148,7 @@ const AssignmentModal = (props: Props) => {
             <input
               type="number"
               {...register("soLuong")}
-              className="w-full py-1 px-4 border border-gray-300 rounded"
+              className="w-full py-2 px-4 border border-gray-300 rounded"
             />
             {errors.soLuong && (
               <p className="text-xs text-red-600">{errors.soLuong.message}</p>
@@ -171,29 +159,14 @@ const AssignmentModal = (props: Props) => {
             <label className="text-sm font-medium text-gray-700">
               Đơn vị tính *
             </label>
-            <input
-              type="text"
-              {...register("donViTinh")}
-              className="w-full py-1 px-4 border border-gray-300 rounded"
+            <InputSelectDonViTinh
+              name="donViTinh"
+              placeholder="Nhập ĐVT"
+              data={DonViTinh}
+              control={control}
             />
             {errors.donViTinh && (
               <p className="text-xs text-red-600">{errors.donViTinh.message}</p>
-            )}
-          </div>
-
-          <div>
-            <label className="text-sm font-medium text-gray-700">
-              Thời gian lưu mẫu *
-            </label>
-            <input
-              type="date"
-              {...register("thoiGianLuu")}
-              className="w-full py-1 px-4 border border-gray-300 rounded"
-            />
-            {errors.thoiGianLuu && (
-              <p className="text-xs text-red-600">
-                {errors.thoiGianLuu.message}
-              </p>
             )}
           </div>
 
@@ -204,7 +177,7 @@ const AssignmentModal = (props: Props) => {
             <input
               type="date"
               {...register("luuDenNgay")}
-              className="w-full py-1 px-4 border border-gray-300 rounded"
+              className="w-full py-2 px-4 border border-gray-300 rounded"
             />
             {errors.luuDenNgay && (
               <p className="text-xs text-red-600">

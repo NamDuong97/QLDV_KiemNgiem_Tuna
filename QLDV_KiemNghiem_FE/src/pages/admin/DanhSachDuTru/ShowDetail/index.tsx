@@ -10,6 +10,10 @@ import { getKhoaByID } from "../../../../hooks/personnels/queryKhoa";
 import { getInforNhanVien } from "../../../../hooks/personnels/access/useAccess";
 import { role } from "../../../../configs/parseJwt";
 import { getRoleGroup } from "../../../../configs/Role";
+import FormLyDoTuChoi from "./formLyDoTuChoi";
+import { useState } from "react";
+import { TypeConformation } from "../../../../constants/typeConfirmation";
+import { typeConfirmation } from "../../PhanTichKetQua/ShowDetailChoDuyet";
 
 const ShowDetail = ({ resultId, onEdit, onBack }: any) => {
   const { data } = getDuTruByID({
@@ -27,11 +31,19 @@ const ShowDetail = ({ resultId, onEdit, onBack }: any) => {
     params: data?.maKhoa,
   });
 
+  const [open, setOpen] = useState(false);
+  const [isTypeConform, setIsTypeConform] = useState<string>("");
+
   const { data: dataNhanVien } = getInforNhanVien({
     queryKey: "InforNhanVien",
     params: data?.manvLapPhieu,
   });
-  console.log("data", data, resultId);
+
+  const { data: dataNhanVienDuyet } = getInforNhanVien({
+    queryKey: "InforNhanVienDuyet",
+    params: data?.manvDuyet,
+  });
+
   return (
     <div className="bg-white rounded-xl shadow-sm border border-gray-200">
       <div className="px-6 py-4 border-b border-gray-200 bg-gray-50 flex justify-between items-center">
@@ -39,25 +51,33 @@ const ShowDetail = ({ resultId, onEdit, onBack }: any) => {
           Chi tiết phiếu dự trù
         </h2>
         <div className="flex space-x-2">
-          {getRoleGroup(role) === "KN" && role !== "KN" && (
-            <>
-              <button
-                // onClick={() => onEdit(dataId)}
-                className="px-4 py-2 cursor-pointer bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors flex items-center space-x-2"
-              >
-                <Slash size={16} />
-                <span>Từ chối</span>
-              </button>
-              <button
-                // onClick={() => onEdit(dataId)}
-                className="px-4 py-2 cursor-pointer bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors flex items-center space-x-2"
-              >
-                <Check size={16} />
-                <span>Duyệt phiếu</span>
-              </button>
-            </>
-          )}
-          {data?.trangThai === false && (
+          {getRoleGroup(role) === "KN" &&
+            role !== "KN" &&
+            data?.trangThai === 0 && (
+              <>
+                <button
+                  onClick={() => {
+                    setOpen(true);
+                    setIsTypeConform(typeConfirmation.TuChoi);
+                  }}
+                  className="px-4 py-2 cursor-pointer bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors flex items-center space-x-2"
+                >
+                  <Slash size={16} />
+                  <span>Từ chối</span>
+                </button>
+                <button
+                  onClick={() => {
+                    setOpen(true);
+                    setIsTypeConform(typeConfirmation.DuyetPhieu);
+                  }}
+                  className="px-4 py-2 cursor-pointer bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors flex items-center space-x-2"
+                >
+                  <Check size={16} />
+                  <span>Duyệt phiếu</span>
+                </button>
+              </>
+            )}
+          {data?.trangThai !== 0 && (
             <button
               onClick={() => onEdit(resultId)}
               className="px-4 py-2 cursor-pointer bg-cyan-600 text-white rounded-lg hover:bg-cyan-700 transition-colors flex items-center space-x-2"
@@ -134,6 +154,16 @@ const ShowDetail = ({ resultId, onEdit, onBack }: any) => {
                     <div className="font-medium"> {dataNhanVien?.hoTen}</div>
                   </div>
                 </div>
+                {data?.manvDuyet && (
+                  <div className="flex justify-between items-center">
+                    <span className="text-gray-600">Nhân viên duyệt:</span>
+                    <div className="text-right">
+                      <div className="font-medium">
+                        {dataNhanVienDuyet?.hoTen}
+                      </div>
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
           </div>
@@ -202,6 +232,18 @@ const ShowDetail = ({ resultId, onEdit, onBack }: any) => {
           )}
         </div>
       </div>
+      <FormLyDoTuChoi
+        isOpen={open}
+        onClose={() => setOpen(false)}
+        type={TypeConformation.Info}
+        title={`Xác nhận ${
+          isTypeConform === typeConfirmation.TuChoi
+            ? `lãnh đạo phòng từ chối`
+            : `lãnh đạo phòng duyệt phiếu`
+        }`}
+        dataID={data?.maId}
+        typeConform={isTypeConform}
+      />
     </div>
   );
 };

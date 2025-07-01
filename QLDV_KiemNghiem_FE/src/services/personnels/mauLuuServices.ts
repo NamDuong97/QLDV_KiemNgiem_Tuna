@@ -38,4 +38,31 @@ export default class mauLuuServices {
       return err;
     }
   }
+
+  static async updateMauLuu(params: any) {
+    try {
+      const response = await _APIInstance.put(
+        API.ADMIN.MAUS_LUU.UPDATE_MAUS_LUU,
+        params,
+        {
+          headers: { "Content-Type": "application/json" },
+        }
+      );
+      return response;
+    } catch (err: any) {
+      return err;
+    }
+  }
+
+  static async deleteMauLuu(params: any) {
+    try {
+      const response = await _APIInstance.delete(
+        API.ADMIN.MAUS_LUU.DELETE_MAUS_LUU,
+        { params: params }
+      );
+      return response;
+    } catch (err: any) {
+      return err;
+    }
+  }
 }

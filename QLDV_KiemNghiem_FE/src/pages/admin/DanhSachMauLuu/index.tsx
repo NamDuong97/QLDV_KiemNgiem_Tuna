@@ -23,12 +23,6 @@ const tableHead = [
     align: Align.Left,
   },
   {
-    id: "ThoiGianLuu",
-    sort: false,
-    label: "Thời gian lưu",
-    align: Align.Left,
-  },
-  {
     id: "LuuDenNgay",
     sort: false,
     label: "Lưu đến ngày",

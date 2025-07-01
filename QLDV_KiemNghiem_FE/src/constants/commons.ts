@@ -47,7 +47,8 @@ export const API = {
       GET_MAUS_LUU_ALL: "/api/PhieuLuuMau/getPhieuLuuMauAll",
       GET_MAUS_LUU_BY_ID: "/api/PhieuLuuMau/getPhieuLuuMauByID",
       CREATE_MAUS_LUU: "/api/PhieuLuuMau/createPhieuLuuMau",
-      UPDATE_MAUS_LUU: "/api/PhieuLuuMau/createPhieuLuuMau",
+      UPDATE_MAUS_LUU: "/api/PhieuLuuMau/updatePhieuLuuMau",
+      DELETE_MAUS_LUU: "/api/PhieuLuuMau/deletePhieuLuuMau",
     },
     PHAN_CONG_NOI_BO: {
       GET_ALL: "/api/PhanCongNoiBo/getPhanCongNoiBoAll",
@@ -64,6 +65,7 @@ export const API = {
       CREATE_DU_TRU: "/api/PhieuDuTru/createPhieuDuTru",
       UPDATE_DU_TRU: "/api/PhieuDuTru/updatePhieuDuTru",
       DELETE_DU_TRU: "/api/PhieuDuTru/deletePhieuDuTru",
+      DUYET_DU_TRU: "/api/PhieuDuTru/reviewPhieuDuTruByLDP",
     },
     PHAN_TICH_KET_QUA: {
       GET_PHAN_TICH_KET_QUA_ALL:
@@ -83,6 +85,12 @@ export const API = {
     },
     CHI_TIEU: {
       GET_CHI_TIEU_ALL: "/api/ChiTieu/getChiTieuAll",
+    },
+    HOA_DON_THU: {
+      GET_ALL: "/api/HoaDonThu/getHoaDonThuAll",
+      GET_BY_GUEST: "/api/HoaDonThu/getHoaDonThuOfCustomer?maKH=",
+      GET_BY_ID: "/api/HoaDonThu/getHoaDonThuByID?maHoaDonThu=",
+      DELETE: "/api/HoaDonThu/deleteHoaDonThu?maHoaDonThu=",
     },
   },
   CUSTOMER: {

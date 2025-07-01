@@ -23,16 +23,21 @@ const List = ({ onView, onEdit }: any) => {
 
   const dataDM_Mau: any = dataMau?.data;
 
-  const filteredResults = data?.filter((result: any) => {
-    const matchesSearch =
-      dataDM_Mau
-        ?.find((item: any) => item.maId === result?.maPdkMau)
-        ?.tenMau?.toLowerCase()
-        .includes(searchTerm.toLowerCase()) ||
-      result?.maPhieuDuTru?.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesStatus = !statusFilter || result.status === statusFilter;
-    return matchesSearch && matchesStatus;
-  });
+  const filteredResults = data
+    ?.filter((item: any) => item?.active)
+    ?.filter((result: any) => {
+      const matchesSearch =
+        dataDM_Mau
+          ?.find((item: any) => item.maId === result?.maPdkMau)
+          ?.tenMau?.toLowerCase()
+          .includes(searchTerm.toLowerCase()) ||
+        result?.maPhieuDuTru?.toLowerCase().includes(searchTerm.toLowerCase());
+      const matchesStatus = !statusFilter || result.status === statusFilter;
+      return matchesSearch && matchesStatus;
+    })
+    ?.sort((a: any, b: any) => {
+      return new Date(b.ngayLap).getTime() - new Date(a.ngayLap).getTime();
+    });
 
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(10);
