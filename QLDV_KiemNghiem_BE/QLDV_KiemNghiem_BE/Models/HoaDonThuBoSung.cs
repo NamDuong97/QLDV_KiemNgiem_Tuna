@@ -21,9 +21,6 @@ public partial class HoaDonThuBoSung
     [Column(TypeName = "decimal(18, 2)")]
     public decimal? TongTien { get; set; }
 
-    [Column(TypeName = "datetime")]
-    public DateTime? NgayLap { get; set; }
-
     [StringLength(50)]
     public string? ManvLap { get; set; }
 
@@ -41,6 +38,11 @@ public partial class HoaDonThuBoSung
 
     [Column(TypeName = "datetime")]
     public DateTime? NgaySua { get; set; }
+
+    [StringLength(500)]
+    public string? GhiChu { get; set; }
+
+    public bool? Active { get; set; }
 
     [InverseProperty("MaHdbsNavigation")]
     public virtual ICollection<ChiTietHoaDonThuBoSung> ChiTietHoaDonThuBoSungs { get; set; } = new List<ChiTietHoaDonThuBoSung>();

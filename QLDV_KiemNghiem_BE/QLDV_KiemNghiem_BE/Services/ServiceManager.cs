@@ -48,6 +48,8 @@ namespace QLDV_KiemNghiem_BE.Services
         private readonly Lazy<IChiTietPhieuDeXuatPhongBanService> _chiTietPhieuDeXuatPhongBanService;
         private readonly Lazy<ILichSuPhanCongService> _lichSuPhanCongService;
         private readonly Lazy<IChiTietPhieuDuTruService> _chiTietPhieuDuTruService;
+        private readonly Lazy<IHoaDonThuBoSungService> _hoaDonThuBoSungService;
+        private readonly Lazy<IChiTietHoaDonThuBoSungService> _chiTietHoaDonThuBoSungService;
 
         public ServiceManager(IRepositoryManager repositoryManager, IMapper mapper, DataContext dataContext, IEmailService emailService, ITokenService tokenService, IConfiguration configuration,
             IHubContext<NotificationHub> hubContext, IConnectionMultiplexer redis, IDistributedCache cache)
@@ -88,6 +90,8 @@ namespace QLDV_KiemNghiem_BE.Services
             _chiTietPhieuDeXuatPhongBanService = new Lazy<IChiTietPhieuDeXuatPhongBanService>(() => new ChiTietPhieuDeXuatPhongBanService(repositoryManager, mapper, hubContext));
             _lichSuPhanCongService = new Lazy<ILichSuPhanCongService>(() => new LichSuPhanCongService(repositoryManager, mapper));
             _chiTietPhieuDuTruService = new Lazy<IChiTietPhieuDuTruService>(() => new ChiTietPhieuDuTruService(repositoryManager, mapper));
+            _hoaDonThuBoSungService = new Lazy<IHoaDonThuBoSungService>(() => new HoaDonThuBoSungService(repositoryManager, mapper));
+            _chiTietHoaDonThuBoSungService = new Lazy<IChiTietHoaDonThuBoSungService>(() => new ChiTietHoaDonThuBoSungService(repositoryManager, mapper));
         }
 
         //public IEmailService Email => _email.Value;
@@ -123,6 +127,8 @@ namespace QLDV_KiemNghiem_BE.Services
         public IChiTietPhieuDeXuatPhongBanService ChiTietPhieuDeXuatPhongBan => _chiTietPhieuDeXuatPhongBanService.Value;
         public ILichSuPhanCongService LichSuPhanCong => _lichSuPhanCongService.Value;
         public IChiTietPhieuDuTruService ChiTietPhieuDuTru => _chiTietPhieuDuTruService.Value;
+        public IHoaDonThuBoSungService HoaDonThuBoSung => _hoaDonThuBoSungService.Value;
+        public IChiTietHoaDonThuBoSungService ChiTietHoaDonThuBoSung => _chiTietHoaDonThuBoSungService.Value;
 
     }
 }

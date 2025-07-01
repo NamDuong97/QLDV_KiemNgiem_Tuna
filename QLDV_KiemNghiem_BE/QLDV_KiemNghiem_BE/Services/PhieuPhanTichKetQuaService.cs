@@ -216,7 +216,7 @@ namespace QLDV_KiemNghiem_BE.Services
             }
             else
             {
-                PhieuPhanTichKetQuaCheck.TrangThai = 1;
+                PhieuPhanTichKetQuaCheck.TrangThai = 5;
             }
 
             _repositoryManager.PhieuPhanTichKetQua.UpdatePhieuPhanTichKetQuaAsync(PhieuPhanTichKetQuaCheck);
