@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace QLDV_KiemNghiem_BE.DTO.ResponseDto
 {
+    [Keyless]
     public class PhieuTienDoLamViecProcedure
     {
         [Column("MaID")]
@@ -56,6 +57,9 @@ namespace QLDV_KiemNghiem_BE.DTO.ResponseDto
         public DateTime? ThoiGianDen { get; set; }
 
         public string? NoiDungBaoCao { get; set; }
+
+        [StringLength(500)]
+        public string? NoiDungDanhGia { get; set; }
 
         [StringLength(500)]
         public string? GhiChu { get; set; }

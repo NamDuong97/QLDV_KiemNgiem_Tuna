@@ -31,6 +31,9 @@ namespace QLDV_KiemNghiem_BE.DTO.ResponseDto
         public string? NoiDungBaoCao { get; set; }
 
         [StringLength(500)]
+        public string? NoiDungDanhGia { get; set; }
+
+        [StringLength(500)]
         public string? GhiChu { get; set; }
 
         [StringLength(50)]

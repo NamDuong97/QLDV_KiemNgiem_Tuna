@@ -17,9 +17,6 @@ public partial class PhieuTienDoLamViec
     [StringLength(50)]
     public string? MaPhieuTienDo { get; set; }
 
-    [Column(TypeName = "datetime")]
-    public DateTime? NgayNhanMau { get; set; }
-
     [StringLength(50)]
     public string? ManvXuLy { get; set; }
 
@@ -32,9 +29,6 @@ public partial class PhieuTienDoLamViec
     [Column(TypeName = "datetime")]
     public DateTime? ThoiGianDen { get; set; }
 
-    [Column(TypeName = "decimal(18, 2)")]
-    public decimal? TongThoiGianThucHien { get; set; }
-
     public string? NoiDungBaoCao { get; set; }
 
     [StringLength(500)]
@@ -43,7 +37,7 @@ public partial class PhieuTienDoLamViec
     [StringLength(50)]
     public string? ManvKiemTra { get; set; }
 
-    public bool? TrangThai { get; set; }
+    public int? TrangThai { get; set; }
 
     [Column(TypeName = "datetime")]
     public DateTime? NgayTao { get; set; }
@@ -60,6 +54,9 @@ public partial class PhieuTienDoLamViec
     [Column("MaPDK_Mau")]
     [StringLength(50)]
     public string? MaPdkMau { get; set; }
+
+    [StringLength(500)]
+    public string? NoiDungDanhGia { get; set; }
 
     [ForeignKey("MaPdkMau")]
     [InverseProperty("PhieuTienDoLamViecs")]
