@@ -1,8 +1,7 @@
 import { ReactNode } from "react";
 import { Navigate, useLocation } from "react-router";
 import { APP_ROUTES } from "../constants/routers";
-import { EKey } from "../constants/commons";
-import Cookies from "js-cookie";
+import { GuestInfor } from "../contexts/storeProvider";
 
 interface RedirectCustomerProps {
   children: ReactNode;
@@ -28,18 +27,18 @@ const RedirectCustomer = ({
   children,
   pathRedirect,
 }: RedirectCustomerProps) => {
-  const login = Cookies.get(EKey.TOKEN_GUEST);
+  const { isLogin, isLoadingAuth } = GuestInfor();
   const location = useLocation();
   const guard = routeGuards[location.pathname];
   const passedSessionGuard = guard
     ? !!sessionStorage.getItem(guard.sessionKey)
     : true;
 
-  if (!login) {
-    return <Navigate to={pathRedirect} state={{ from: location }} replace />;
+  if (isLoadingAuth) {
+    return null;
   }
 
-  if (!passedSessionGuard) {
+  if (!isLogin || !passedSessionGuard) {
     return <Navigate to={pathRedirect} state={{ from: location }} replace />;
   }
 

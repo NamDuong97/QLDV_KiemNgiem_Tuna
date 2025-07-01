@@ -3,13 +3,15 @@ export const API = {
     DANG_NHAP: "/api/nhanvien/loginNhanVien",
     NHAN_VIEN: {
       GET_INFOR_NHAN_VIEN: "/api/nhanvien/getNhanVienByID",
-      GET_NHAN_VIEN_ALL: "/api/nhanvien/getNhanVienByID",
+      GET_NHAN_VIEN_BY_ID: "/api/nhanvien/getNhanVienByID",
+      GET_NHAN_VIEN_ALL: "/api/NhanVien/getNhanVienAll",
     },
     PHIEU_DKY_DVKM: {
       QUAN_LY_PHIEU_DKY_DVKM: "/api/phieudangky/getPhieuDangKyAll",
-      XEM_CHI_TIET: "/api/phieudangky/findPhieuDangKy?maPhieuDangKy=",
+      XEM_CHI_TIET: "/api/PhieuDangKy/findPhieuDangKy?maPhieuDangKy=",
       DANH_GIA_NHANVIEN: "/api/PhieuDangKy/reviewPhieuDangKyByKHDT",
       DANH_GIA_BLD: "/api/PhieuDangKy/reviewPhieuDangKyByBLD",
+      UNDO_DANH_GIA_BLD: "/api/PhieuDangKy/undoReviewPhieuDangKyByBLD",
     },
     KHOA: {
       GET_KHOA_ALL: "/api/Khoa/getKhoaAll",
@@ -22,6 +24,65 @@ export const API = {
         "/api/PhieuPhieuDeXuatPhongBan/getPhieuPhieuDeXuatPhongBanAll",
       GET_PHAN_CONG_KHOA_CHUYEN_MON_BY_ID:
         "/api/PhieuPhieuDeXuatPhongBan/getPhieuPhieuDeXuatPhongBanByID?maPhieuPhieuDeXuatPhongBan=",
+      GET_DANH_SACH_MAU_All: "/api/PhieuDangKyMau/getPhieuDangKyMauAll",
+    },
+    CHI_TIET_PHAN_CONG_KHOA: {
+      TRUONG_PHONG_DUYET_MAUS:
+        "/api/ChiTietPhieuDeXuatPhongBan/reviewChiTietPhieuDeXuatPhongBanByPhongKhoa",
+      BLD_DUYET_MAUS:
+        "/api/ChiTietPhieuDeXuatPhongBan/reviewChiTietPhieuDeXuatPhongBanByBLD",
+    },
+    CHUC_VU: {
+      GET_CHUC_VU_BY_ID: "/api/ChucVu/getChucVuByID",
+    },
+    MAUS: {
+      GET_MAU_ALL: "/api/PhieuDangKyMau/getPhieuDangKyMauAll",
+      GET_MAU_BY_ID: "/api/PhieuDangKyMau/getPhieuDangKyMau",
+      GET_LOAI_MAU_ALL: "/api/LoaiMau/getLoaiMauAll",
+      GET_LOAI_MAU_BY_ID: "/api/LoaiMau/getLoaiMau",
+      HUY_MAU: "/api/PhieuDangKyMau/cancelPhieuDangKyMau",
+      THONG_KE_MAUS: "/api/PhieuDangKyMau/getPhieuDangKyMauThongKe",
+    },
+    MAUS_LUU: {
+      GET_MAUS_LUU_ALL: "/api/PhieuLuuMau/getPhieuLuuMauAll",
+      GET_MAUS_LUU_BY_ID: "/api/PhieuLuuMau/getPhieuLuuMauByID",
+      CREATE_MAUS_LUU: "/api/PhieuLuuMau/createPhieuLuuMau",
+      UPDATE_MAUS_LUU: "/api/PhieuLuuMau/createPhieuLuuMau",
+    },
+    PHAN_CONG_NOI_BO: {
+      GET_ALL: "/api/PhanCongNoiBo/getPhanCongNoiBoAll",
+      GET_BY_ID: "/api/PhanCongNoiBo/getPhanCongNoiBoByID",
+      CREATE: "/api/PhanCongNoiBo/createPhanCongNoiBo",
+      UPDATE: "/api/PhanCongNoiBo/updatePhanCongNoiBo",
+      PHAN_CONG_LAI: "/api/PhanCongNoiBo/reassignPhanCongNoiBo",
+      HUY_PHAN_CONG: "/api/PhanCongNoiBo/deletePhanCongNoiBo",
+      LICH_SU_PHAN_CONG: "/api/LichSuPhanCong/getLichSuPhanCongAll",
+    },
+    DU_TRU: {
+      GET_DU_TRU_ALL: "/api/PhieuDuTru/getPhieuDuTruAll",
+      GET_DU_TRU_BY_ID: "/api/PhieuDuTru/getPhieuDuTruByID",
+      CREATE_DU_TRU: "/api/PhieuDuTru/createPhieuDuTru",
+      UPDATE_DU_TRU: "/api/PhieuDuTru/updatePhieuDuTru",
+      DELETE_DU_TRU: "/api/PhieuDuTru/deletePhieuDuTru",
+    },
+    PHAN_TICH_KET_QUA: {
+      GET_PHAN_TICH_KET_QUA_ALL:
+        "/api/PhieuPhanTichKetQua/getPhieuPhanTichKetQuaAll",
+      GET_PHAN_TICH_KET_QUA_BY_ID:
+        "/api/PhieuPhanTichKetQua/getPhieuPhanTichKetQuaByID",
+      CREATE_PHAN_TICH_KET_QUA:
+        "/api/PhieuPhanTichKetQua/createPhieuPhanTichKetQua",
+      UPDATE_PHAN_TICH_KET_QUA:
+        "/api/PhieuPhanTichKetQua/updatePhieuPhanTichKetQua",
+      REVIEW_PHAN_TICH_KET_QUA_LDP:
+        "/api/PhieuPhanTichKetQua/reviewPhieuPhanTichKetQuaByLDP",
+      REVIEW_PHAN_TICH_KET_QUA_BLD:
+        "/api/PhieuPhanTichKetQua/reviewPhieuPhanTichKetQuaByBLD",
+      DELETE_PHAN_TICH_KET_QUA:
+        "/api/PhieuPhanTichKetQua/deletePhieuPhanTichKetQua",
+    },
+    CHI_TIEU: {
+      GET_CHI_TIEU_ALL: "/api/ChiTieu/getChiTieuAll",
     },
   },
   CUSTOMER: {

@@ -82,8 +82,255 @@ const trangThaiMap: Record<string, TrangThai> = {
   },
 };
 
+const trangThaiMauMap: Record<string, TrangThai> = {
+  1: {
+    text: "Chờ phân công",
+    bgColor: "bg-yellow-100",
+    textColor: "text-yellow-800",
+  },
+  2: {
+    text: "Đang kiểm nghiệm",
+    bgColor: "bg-purple-100",
+    textColor: "text-purple-800",
+  },
+  3: {
+    text: "Đã bị huỷ bởi khoa chuyên môn",
+    bgColor: "bg-red-100",
+    textColor: "text-red-800",
+  },
+  4: {
+    text: "Đã bị huỷ bởi khách",
+    bgColor: "bg-indigo-100",
+    textColor: "text-indigo-800",
+  },
+  5: {
+    text: "Đã hoàn thành",
+    bgColor: "bg-green-100",
+    textColor: "text-green-800",
+  },
+  6: {
+    text: "Đã phân công chờ duyệt",
+    bgColor: "bg-blue-100",
+    textColor: "text-blue-800",
+  },
+};
+
+const trangThaiChiTietPhieuDeXuatPhongBan: Record<string, TrangThai> = {
+  0: {
+    text: "Khách hàng đã hủy",
+    bgColor: "bg-gray-100",
+    textColor: "text-gray-800",
+  },
+  1: {
+    text: "Phòng ban từ chối – chờ BLĐ duyệt",
+    bgColor: "bg-yellow-100",
+    textColor: "text-yellow-800",
+  },
+  2: {
+    text: "Chờ phòng ban duyệt",
+    bgColor: "bg-blue-100",
+    textColor: "text-blue-800",
+  },
+  3: {
+    text: "Đã duyệt",
+    bgColor: "bg-purple-100",
+    textColor: "text-purple-800",
+  },
+  4: {
+    text: "Phòng ban từ chối – chờ phân công lại",
+    bgColor: "bg-orange-100",
+    textColor: "text-orange-800",
+  },
+  5: {
+    text: "Hủy do không có phòng ban tiếp nhận",
+    bgColor: "bg-red-100",
+    textColor: "text-red-800",
+  },
+};
+
+const trangThaiPhieuDeXuatPhongBan: Record<string, TrangThai> = {
+  0: {
+    text: "Đã Hủy",
+    bgColor: "bg-yellow-100",
+    textColor: "text-yellow-800",
+  },
+  1: {
+    text: "Chờ phòng ban duyệt",
+    bgColor: "bg-blue-100",
+    textColor: "text-blue-800",
+  },
+  2: {
+    text: "Đã duyệt",
+    bgColor: "bg-green-100",
+    textColor: "text-green-800",
+  },
+};
+
+const trangThaiPhanCongNoiBo: Record<string, TrangThai> = {
+  false: {
+    text: "Đã Hủy",
+    bgColor: "bg-yellow-100",
+    textColor: "text-yellow-800",
+  },
+  true: {
+    text: "Đã phân công",
+    bgColor: "bg-green-100",
+    textColor: "text-green-800",
+  },
+};
+
+export const trangThaiPhanTichKetQua: Record<string, TrangThai> = {
+  1: {
+    text: "Chờ lãnh đạo phòng duyệt",
+    bgColor: "bg-yellow-100",
+    textColor: "text-yellow-800",
+  },
+  2: {
+    text: "Chờ BLĐ duyệt",
+    bgColor: "bg-blue-100",
+    textColor: "text-blue-800",
+  },
+  3: {
+    text: "BLĐ đã duyệt",
+    bgColor: "bg-green-100",
+    textColor: "text-green-800",
+  },
+  4: {
+    text: "BLĐ đã từ chối",
+    bgColor: "bg-red-100",
+    textColor: "text-red-800",
+  },
+  5: {
+    text: "LDP từ chối",
+    bgColor: "bg-purple-100",
+    textColor: "text-purple-800",
+  },
+};
+
+const trangThaiDuTru: Record<string, TrangThai> = {
+  false: {
+    text: "Chờ duyệt",
+    bgColor: "bg-yellow-100",
+    textColor: "text-yellow-800",
+  },
+  true: {
+    text: "Đã Duyệt",
+    bgColor: "bg-green-100",
+    textColor: "text-green-800",
+  },
+};
+
+export const getStatusClass = (status: any) => {
+  switch (status) {
+    case "Hoàn thành":
+      return "bg-green-100 text-green-800";
+    case "Đang kiểm tra":
+      return "bg-blue-100 text-blue-800";
+    case "Đang xử lý":
+      return "bg-yellow-100 text-yellow-800";
+    default:
+      return "bg-gray-100 text-gray-800";
+  }
+};
+
 export function renderTrangThai(trangThaiId: string) {
   const trangThai = trangThaiMap[trangThaiId] || {
+    text: "Không xác định",
+    bgColor: "bg-gray-100",
+    textColor: "text-gray-800",
+  };
+
+  return (
+    <span
+      className={`inline-block px-2 py-1 text-xs font-medium rounded-full ${trangThai.bgColor} ${trangThai.textColor}`}
+    >
+      {trangThai.text}
+    </span>
+  );
+}
+
+export function renderTrangThaiMau(trangThaiId: string) {
+  const trangThai = trangThaiMauMap[trangThaiId] || {
+    text: "Không xác định",
+    bgColor: "bg-gray-100",
+    textColor: "text-gray-800",
+  };
+
+  return (
+    <span
+      className={`inline-block px-2 py-1 text-xs font-medium rounded-full ${trangThai.bgColor} ${trangThai.textColor}`}
+    >
+      {trangThai.text}
+    </span>
+  );
+}
+
+export function renderTrangThaiChiTietPhieuDeXuatPhongBan(trangThaiId: string) {
+  const trangThai = trangThaiChiTietPhieuDeXuatPhongBan[trangThaiId] || {
+    text: "Không xác định",
+    bgColor: "bg-gray-100",
+    textColor: "text-gray-800",
+  };
+
+  return (
+    <span
+      className={`inline-block px-2 py-1 text-xs font-medium rounded-full ${trangThai.bgColor} ${trangThai.textColor}`}
+    >
+      {trangThai.text}
+    </span>
+  );
+}
+
+export function renderTrangThaiPhieuDeXuatPhongBan(trangThaiId: string) {
+  const trangThai = trangThaiPhieuDeXuatPhongBan[trangThaiId] || {
+    text: "Không xác định",
+    bgColor: "bg-gray-100",
+    textColor: "text-gray-800",
+  };
+
+  return (
+    <span
+      className={`inline-block px-2 py-1 text-xs font-medium rounded-full ${trangThai.bgColor} ${trangThai.textColor}`}
+    >
+      {trangThai.text}
+    </span>
+  );
+}
+
+export function renderTrangThaiPhanCongNoiBo(trangThaiId: string) {
+  const trangThai = trangThaiPhanCongNoiBo[trangThaiId] || {
+    text: "Không xác định",
+    bgColor: "bg-gray-100",
+    textColor: "text-gray-800",
+  };
+
+  return (
+    <span
+      className={`inline-block px-2 py-1 text-xs font-medium rounded-full ${trangThai.bgColor} ${trangThai.textColor}`}
+    >
+      {trangThai.text}
+    </span>
+  );
+}
+
+export function renderTrangThaiDuTru(trangThaiId: string) {
+  const trangThai = trangThaiDuTru[trangThaiId] || {
+    text: "Không xác định",
+    bgColor: "bg-gray-100",
+    textColor: "text-gray-800",
+  };
+
+  return (
+    <span
+      className={`inline-block px-2 py-1 text-xs font-medium rounded-full ${trangThai.bgColor} ${trangThai.textColor}`}
+    >
+      {trangThai.text}
+    </span>
+  );
+}
+
+export function renderTrangThaiPhanTichKetQua(trangThaiId: string) {
+  const trangThai = trangThaiPhanTichKetQua[trangThaiId] || {
     text: "Không xác định",
     bgColor: "bg-gray-100",
     textColor: "text-gray-800",
@@ -107,4 +354,43 @@ export const formatDate = (dateString: any) => {
     hour: "2-digit",
     minute: "2-digit",
   });
+};
+
+export const formatDateNotTime = (dateString: any) => {
+  const date = new Date(dateString).toLocaleDateString("vi-VN");
+  return date;
+};
+
+export const formatDateNotTime2 = (date?: string | Date) => {
+  if (!date) return undefined;
+  const d = new Date(date);
+  return d.toLocaleDateString("sv-SE");
+};
+
+export const getQualityClass = (quality: any) => {
+  switch (quality) {
+    case "Đạt":
+      return "bg-green-100 text-green-800";
+    case "Không đạt":
+      return "bg-red-100 text-red-800";
+    case "Cần kiểm tra lại":
+      return "bg-yellow-100 text-yellow-800";
+    case "Chưa xác định":
+      return "bg-gray-100 text-gray-800";
+    default:
+      return "bg-gray-100 text-gray-800";
+  }
+};
+
+export const getStatusIcon = (status: any) => {
+  switch (status) {
+    case "Hoàn thành":
+      return "✅";
+    case "Đang kiểm tra":
+      return "🔍";
+    case "Đang xử lý":
+      return "⏳";
+    default:
+      return "📋";
+  }
 };

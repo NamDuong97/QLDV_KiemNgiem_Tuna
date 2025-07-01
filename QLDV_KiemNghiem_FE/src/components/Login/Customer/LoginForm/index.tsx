@@ -1,6 +1,6 @@
 import { Box } from "@mui/material";
 import { motion } from "motion/react";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo } from "react";
 import { FormAccountCustomerLogin } from "../../../../models/Account-Customer";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -17,9 +17,6 @@ interface Props {
 
 const LoginForm = (props: Props) => {
   const { btnSignUp, btnRepassword, handleCloseLoginCustomer } = props;
-
-  const [count, setCount] = useState(0);
-  const [disabled, setDisabled] = useState(false);
 
   let schemaLogin = useMemo(() => {
     return yup.object().shape({
@@ -52,8 +49,6 @@ const LoginForm = (props: Props) => {
     if (response && response.status === 200) {
       handleCloseLoginCustomer?.();
       reset({ email: "", password: "" });
-    } else {
-      setCount(count + 1);
     }
   };
 
@@ -65,16 +60,6 @@ const LoginForm = (props: Props) => {
   const LoginSubmit = (data: FormAccountCustomerLogin) => {
     mutate(data);
   };
-  useEffect(() => {
-    if (count === 3) {
-      setDisabled(true);
-      const timer = setTimeout(() => {
-        setDisabled(false);
-        setCount(0);
-      }, 30000);
-      return () => clearTimeout(timer);
-    }
-  }, [count]);
 
   useEffect(() => {
     reset({ email: "", password: "" });
@@ -134,12 +119,7 @@ const LoginForm = (props: Props) => {
             </Box>
             <Box>
               <button
-                disabled={disabled}
-                className={`font-bold text-center w-full  py-2 text-white rounded-md  ${
-                  disabled
-                    ? "cursor-no-drop bg-blue-400"
-                    : "cursor-pointer bg-blue-500 hover:bg-blue-400"
-                }`}
+                className={`font-bold text-center w-full  py-2 text-white rounded-md cursor-pointer bg-blue-500 hover:bg-blue-400`}
               >
                 Đăng nhập
               </button>

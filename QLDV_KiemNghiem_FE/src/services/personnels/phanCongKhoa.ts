@@ -17,11 +17,10 @@ export default class phanCongKhoaServices {
       return err;
     }
   }
-  static async getPhanCongKhoaCMAll() {
+  static async getPhanCongKhoaCMAll(params: any) {
     try {
       const response = await _APIInstance.get(
-        API.ADMIN.PHIEU_PHIEU_DE_XUAT_PHONG_BAN
-          .GET_PHAN_CONG_KHOA_CHUYEN_MON_ALL
+        `${API.ADMIN.PHIEU_PHIEU_DE_XUAT_PHONG_BAN.GET_PHAN_CONG_KHOA_CHUYEN_MON_ALL}?GetAll=${params}`
       );
       return response;
     } catch (err: any) {
@@ -34,6 +33,48 @@ export default class phanCongKhoaServices {
         `${API.ADMIN.PHIEU_PHIEU_DE_XUAT_PHONG_BAN.GET_PHAN_CONG_KHOA_CHUYEN_MON_BY_ID}${params}`
       );
       return response;
+    } catch (err: any) {
+      return err;
+    }
+  }
+
+  static async getAllDanhSachMau(params: any) {
+    try {
+      const response = await _APIInstance.get(
+        API.ADMIN.PHIEU_PHIEU_DE_XUAT_PHONG_BAN.GET_DANH_SACH_MAU_All,
+        {
+          params,
+        }
+      );
+      return response;
+    } catch (err: any) {
+      return err;
+    }
+  }
+
+  static async truongPhongDuyet(params: any) {
+    // Vừa chạy cho lý do vừa chạy cho duyệt
+    try {
+      const response = await _APIInstance.put(
+        API.ADMIN.CHI_TIET_PHAN_CONG_KHOA.TRUONG_PHONG_DUYET_MAUS,
+        params,
+        { headers: { "Content-Type": "application/json" } }
+      );
+      return response?.data;
+    } catch (err: any) {
+      return err;
+    }
+  }
+
+  static async BLDDuyet(params: any) {
+    // Vừa chạy cho lý do vừa chạy cho duyệt
+    try {
+      const response = await _APIInstance.put(
+        API.ADMIN.CHI_TIET_PHAN_CONG_KHOA.BLD_DUYET_MAUS,
+        params,
+        { headers: { "Content-Type": "application/json" } }
+      );
+      return response?.data;
     } catch (err: any) {
       return err;
     }

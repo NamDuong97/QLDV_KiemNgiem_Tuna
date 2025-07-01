@@ -1,9 +1,7 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useEffect, useMemo } from "react";
 import { useForm } from "react-hook-form";
-import { useNavigate } from "react-router";
 import yup from "../../../configs/yup.custom";
-import { APP_ROUTES } from "../../../constants/routers";
 import { image } from "../../../constants/image";
 import { useDangNhapNhanVien } from "../../../hooks/personnels/access/useAccess";
 import { queryClient } from "../../../lib/reactQuery";
@@ -14,8 +12,6 @@ interface LoginForm {
 }
 
 const Login = () => {
-  const router = useNavigate();
-
   let schema = useMemo(() => {
     return yup.object().shape({
       email: yup
@@ -37,11 +33,10 @@ const Login = () => {
     formState: { errors },
   } = useForm<LoginForm>({ resolver: yupResolver(schema), mode: "onChange" });
 
-  const handleOnSettled = async (response: any) => {
+  const handleOnSettled = async () => {
     await queryClient.invalidateQueries({
       queryKey: ["DangNhapNhanVien"],
     });
-    if (response?.status === 200) router(APP_ROUTES.TUNA_ADMIN.DASHBOARD.to);
   };
 
   const { mutate } = useDangNhapNhanVien({
@@ -52,10 +47,6 @@ const Login = () => {
   const onSubmit = (data: LoginForm) => {
     mutate(data);
   };
-
-  // const handleRedirectForgot = () => {
-  //   router(APP_ROUTES.TUNA_ADMIN.FORGOTPASSWORD.to);
-  // };
 
   useEffect(() => {
     reset({

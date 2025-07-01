@@ -17,7 +17,7 @@ namespace QLDV_KiemNghiem_BE.Extensions
                 new RateLimitRule
                 {
                     Endpoint = "*",
-                    Limit = 200,
+                    Limit = 700,
                     Period = "1h"
                 },
                  new RateLimitRule
@@ -50,7 +50,7 @@ namespace QLDV_KiemNghiem_BE.Extensions
                 option.AddPolicy("KYTOnly", policy =>
                 {
                     policy.RequireAuthenticatedUser();
-                    policy.RequireClaim(ClaimTypes.Role, "KYT", "BLD_L", "KYT_P");
+                    policy.RequireClaim(ClaimTypes.Role, "KYT", "KYT_L", "KYT_P");
                 });
                 option.AddPolicy("BLDOnly", policy =>
                 {
@@ -71,7 +71,6 @@ namespace QLDV_KiemNghiem_BE.Extensions
                 {
                     policy.RequireAuthenticatedUser();
                     policy.RequireClaim(ClaimTypes.Role, "VT", "VT_L", "VT_P");
-                    
                 });
                 option.AddPolicy("KETOnly", policy =>
                 {
@@ -161,7 +160,8 @@ namespace QLDV_KiemNghiem_BE.Extensions
                     policy.WithOrigins("http://localhost:5175")
                             .AllowAnyHeader()
                             .AllowAnyMethod()
-                            .AllowCredentials(); // cho phép hub realtime kết nối
+                            .AllowCredentials() // cho phép hub realtime kết nối
+                            .WithExposedHeaders("X-Pagination"); // Cho phép truy cập header này từ trình duyệt
                 });
             });
         }

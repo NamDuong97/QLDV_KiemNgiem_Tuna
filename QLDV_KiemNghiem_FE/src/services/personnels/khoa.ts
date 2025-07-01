@@ -14,8 +14,7 @@ export default class khoaServices {
   static async getKhoaByID(param: any) {
     try {
       const response = await _APIInstance.get(
-        API.ADMIN.KHOA.GET_KHOA_BY_ID,
-        param
+        `${API.ADMIN.KHOA.GET_KHOA_BY_ID}${param}`
       );
       return response;
     } catch (err: any) {

@@ -1,18 +1,17 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 // import { useSignalR } from "../../contexts/SignalRProvider";
 import { usePersonnel } from "../../contexts/PersonelsProvider";
 import { HubConnectionState } from "@microsoft/signalr";
 //import createSignalRConnection from "../test";
 import { useSignalR } from "../../contexts/SignalRProvider";
+import { useNotificationService } from "../../hooks/NotificationService/useNotificationService";
 
-const Notification = () => {
+const ToastNotification = () => {
   // const connection = useSignalR();
   //const token = Cookies.get(EKey.TOKEN);
   const connection = useSignalR();
   const { personnelInfo } = usePersonnel();
-  const [notifications, setNotifications] = useState<any>([]);
-  console.log("notifications", notifications);
-
+  const { showEventNotification } = useNotificationService();
   useEffect(() => {
     if (
       personnelInfo !== null &&
@@ -75,28 +74,25 @@ const Notification = () => {
             console.log("SignalR Connected 1");
             connection.on("notifycation", (data: any) => {
               console.log("New notifycation:", data);
-              setNotifications((prev: any) => [...prev, data]);
+              showEventNotification(data);
             });
 
             // Lắng nghe sự kiện receiveNotification
             console.log("SignalR Connected 2");
             connection.on("receiveNotification", (data: any) => {
               console.log("New receiveNotification:", data);
-              setNotifications((prev: any) => [...prev, data]);
+              showEventNotification(data);
             });
 
             console.log("SignalR Connected 3");
             connection.on("notificationForPDXPB", (data: any) => {
               console.log("New notificationForPDXPB:", data);
-              setNotifications((prev: any) => [...prev, data]);
+              showEventNotification(data);
             });
           })
           .catch((e: any) => console.error("Connection failed: ", e));
       }
     }
   }, [connection]);
-
-  return notifications;
 };
-
-export default Notification;
+export default ToastNotification;

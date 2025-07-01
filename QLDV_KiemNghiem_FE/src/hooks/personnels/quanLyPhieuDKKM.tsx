@@ -5,31 +5,36 @@ interface Props {
   queryKey: string;
   params?: any;
   onSettled?: any;
+  activeFilter?: any;
+  onSuccess?: any;
+  onError?: any;
 }
 
 export const listPhieuDKKNAll = (props: Props) => {
-  const { queryKey } = props;
-  return useQuery({
-    queryKey: [queryKey],
-    queryFn: async () => {
-      const response = await QuanlyPhieuDKYKNServices.listPhieuDKKNAll();
-      return response?.data;
-    },
-    refetchOnWindowFocus: false,
-    staleTime: Infinity,
-  });
-};
-
-export const listPhieuDKKM_KHTH = (props: Props) => {
   const { queryKey, params } = props;
   return useQuery({
-    queryKey: [queryKey],
+    queryKey: [queryKey, params],
     queryFn: async () => {
       const response = await QuanlyPhieuDKYKNServices.quanLyPhieuDKKN(params);
       return response?.data;
     },
     refetchOnWindowFocus: false,
     staleTime: Infinity,
+    enabled: !!params,
+  });
+};
+
+export const listPhieuDKKM = (props: Props) => {
+  const { queryKey, params } = props;
+  return useQuery({
+    queryKey: [queryKey, params],
+    queryFn: async () => {
+      const response = await QuanlyPhieuDKYKNServices.quanLyPhieuDKKN(params);
+      return response?.data;
+    },
+    refetchOnWindowFocus: false,
+    staleTime: Infinity,
+    enabled: !!params,
   });
 };
 
@@ -45,7 +50,6 @@ export const xemChitietPhieuDKKM = (props: Props) => {
     },
     refetchOnWindowFocus: false,
     enabled: !!params,
-    staleTime: Infinity,
   });
 };
 
@@ -69,6 +73,20 @@ export const useDanhGiaBLD = (props: Props) => {
       const response = await QuanlyPhieuDKYKNServices.DanhGiaBLD(params);
       return response;
     },
+    onSettled: onSettled,
+  });
+};
+
+export const useUndoDanhGiaBLD = (props: Props) => {
+  const { queryKey, onSettled, onSuccess, onError } = props;
+  return useMutation({
+    mutationKey: [queryKey],
+    mutationFn: async (params: any) => {
+      const response = await QuanlyPhieuDKYKNServices.UndoDanhGiaBLD(params);
+      return response;
+    },
+    onSuccess: onSuccess,
+    onError: onError,
     onSettled: onSettled,
   });
 };

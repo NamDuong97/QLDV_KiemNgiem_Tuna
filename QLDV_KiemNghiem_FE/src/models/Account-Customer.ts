@@ -11,6 +11,8 @@ export const keyTag = {
   Da_Huy: "da-huy",
   Tat_Ca: "tat-ca",
   Kiem_Tra_Lai: "kiem-tra-lai",
+  Nhan_Vien_Duỵet: "nhan-vien-duyet",
+  Ban_Lanh_Dao_Duyet: "BLD-duyet",
 };
 
 export interface FormAccountCustomerLogin {

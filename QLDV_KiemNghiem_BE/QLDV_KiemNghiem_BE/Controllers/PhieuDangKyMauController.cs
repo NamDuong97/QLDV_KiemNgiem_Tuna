@@ -225,8 +225,8 @@ namespace QLDV_KiemNghiem_BE.Controllers
             }
         }
 
-        [Authorize(Policy = "KHTHOnly")]
-        [Authorize(Policy = "KHTHOnly")]
+        //[Authorize(Policy = "KHTHOnly")]
+        //[Authorize(Policy = "KHTHOnly")]
         [HttpPut]
         [Route("cancelPhieuDangKyMau")]
         public async Task<ActionResult> cancelPhieuDangKyMau(PhieuDangKyMauRequestCancelDto MauDto)

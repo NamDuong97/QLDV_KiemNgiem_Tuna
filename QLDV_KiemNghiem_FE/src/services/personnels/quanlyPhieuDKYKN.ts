@@ -2,21 +2,11 @@ import _APIInstance from "../../configs/configAPI";
 import { API } from "../../constants/commons";
 
 export default class QuanlyPhieuDKYKNServices {
-  static async listPhieuDKKNAll() {
-    try {
-      const response = await _APIInstance.get(
-        API.ADMIN.PHIEU_DKY_DVKM.QUAN_LY_PHIEU_DKY_DVKM
-      );
-      return response;
-    } catch (err: any) {
-      return err;
-    }
-  }
-
   static async quanLyPhieuDKKN(params: any) {
     try {
       const response = await _APIInstance.get(
-        `${API.ADMIN.PHIEU_DKY_DVKM.QUAN_LY_PHIEU_DKY_DVKM}?trangThaiID=${params}`
+        API.ADMIN.PHIEU_DKY_DVKM.QUAN_LY_PHIEU_DKY_DVKM,
+        { params }
       );
       return response;
     } catch (err: any) {
@@ -54,6 +44,19 @@ export default class QuanlyPhieuDKYKNServices {
     try {
       const response = await _APIInstance.put(
         API.ADMIN.PHIEU_DKY_DVKM.DANH_GIA_BLD,
+        params,
+        { headers: { "Content-Type": "application/json" } }
+      );
+      return response?.data;
+    } catch (err: any) {
+      return err;
+    }
+  }
+  static async UndoDanhGiaBLD(params: any) {
+    // Vừa chạy cho lý do từ chối vừa chạy cho duyệt phiếu đăng ký
+    try {
+      const response = await _APIInstance.put(
+        API.ADMIN.PHIEU_DKY_DVKM.UNDO_DANH_GIA_BLD,
         params,
         { headers: { "Content-Type": "application/json" } }
       );
