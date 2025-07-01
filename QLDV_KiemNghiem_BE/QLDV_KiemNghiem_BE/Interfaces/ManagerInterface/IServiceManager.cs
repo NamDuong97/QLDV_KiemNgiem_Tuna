@@ -37,6 +37,8 @@ namespace QLDV_KiemNghiem_BE.Interfaces.ManagerInterface
         IChiTietPhieuDeXuatPhongBanService ChiTietPhieuDeXuatPhongBan { get; }
         ILichSuPhanCongService LichSuPhanCong { get; }
         IChiTietPhieuDuTruService ChiTietPhieuDuTru { get; }
+        IHoaDonThuBoSungService HoaDonThuBoSung { get; }
+        IChiTietHoaDonThuBoSungService ChiTietHoaDonThuBoSung { get; }
         //ITokenService Token { get; }
         //IEmailService Email { get; }
     }
