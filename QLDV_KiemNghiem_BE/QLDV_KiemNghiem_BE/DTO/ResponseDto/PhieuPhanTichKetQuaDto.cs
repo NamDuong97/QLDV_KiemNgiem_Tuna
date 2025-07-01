@@ -28,11 +28,11 @@ namespace QLDV_KiemNghiem_BE.DTO.ResponseDto
 
         public int? TrangThai { get; set; }
 
-        [Column(TypeName = "datetime")]
-        public DateTime? NgayTao { get; set; }
-
         [StringLength(50)]
         public string? NguoiTao { get; set; }
+
+        [Column(TypeName = "datetime")]
+        public DateTime? NgayTao { get; set; }
 
         [StringLength(50)]
         public string? NguoiSua { get; set; }
