@@ -1,22 +1,21 @@
 import { GiTestTubes } from "react-icons/gi";
 import {
   formatDate,
-  formatDateNotTime2,
   renderTrangThaiPhanTichKetQua,
 } from "../../../../configs/configAll";
 import { Edit, Eye } from "react-feather";
-import { role } from "../../../../configs/parseJwt";
 import { getRoleGroup } from "../../../../configs/Role";
+import { role } from "../../../../configs/parseJwt";
 
-const Card = ({ result, onView, onEdit }: any) => {
+const CardLDPDuyet = ({ result, onView, handleOpenModelNoiDungSoBo }: any) => {
   const handleView = (e: any) => {
     e.stopPropagation();
     onView(result?.maID);
   };
 
-  const handleEdit = (e: any) => {
+  const handleOpenNoiDungSoBo = (e: any) => {
     e.stopPropagation();
-    onEdit(result?.maID);
+    handleOpenModelNoiDungSoBo(result?.maID);
   };
 
   return (
@@ -44,23 +43,21 @@ const Card = ({ result, onView, onEdit }: any) => {
           <p className="text-gray-600">Nhân viên lập</p>
           <p className="font-medium">{result?.tennvLap}</p>
         </div>
-        {result?.trangThai >= 2 && (
-          <div>
-            <p className="text-gray-600">Nhân viên kiểm tra</p>
-            <p className="font-medium">{result?.tennvKiemTra}</p>
-          </div>
-        )}
+        <div>
+          <p className="text-gray-600">Nhân viên kiểm tra</p>
+          <p className="font-medium">{result?.tennvKiemTra}</p>
+        </div>
         <div>
           <p className="text-gray-600">Ngày trả KQ</p>
-          <p className="font-medium">{formatDateNotTime2(result?.ngayTraKetQua)}</p>
+          <p className="font-medium">{formatDate(result?.ngayTraKetQua)}</p>
         </div>
         <div>
           <p className="text-gray-600">Ngày tạo</p>
-          <p className="font-medium">{formatDateNotTime2(result?.ngayTao)}</p>
+          <p className="font-medium">{formatDate(result?.ngayTao)}</p>
         </div>
         <div>
           <p className="text-gray-600">Ngày sửa</p>
-          <p className="font-medium">{formatDateNotTime2(result?.ngaySua)}</p>
+          <p className="font-medium">{formatDate(result?.ngayTao)}</p>
         </div>
         <div>
           <p className="text-gray-600">Khoa</p>
@@ -76,18 +73,20 @@ const Card = ({ result, onView, onEdit }: any) => {
           <Eye size={14} />
           <span>Xem</span>
         </button>
-        {getRoleGroup(role) === "KN" && (
-          <button
-            onClick={handleEdit}
-            className="px-3 py-1 text-yellow-600 hover:bg-yellow-50 rounded-md text-sm flex items-center space-x-1 cursor-pointer"
-          >
-            <Edit size={14} />
-            <span>Sửa</span>
-          </button>
-        )}
+        {getRoleGroup(role) === "KN" &&
+          role !== "KN" &&
+          result?.trangThai === 2 && (
+            <button
+              onClick={handleOpenNoiDungSoBo}
+              className="px-3 py-1 text-yellow-600 hover:bg-yellow-50 rounded-md text-sm flex items-center space-x-1 cursor-pointer"
+            >
+              <Edit size={14} />
+              <span>Sửa nội dung sơ bộ</span>
+            </button>
+          )}
       </div>
     </div>
   );
 };
 
-export default Card;
+export default CardLDPDuyet;

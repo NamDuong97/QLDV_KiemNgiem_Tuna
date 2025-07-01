@@ -1,4 +1,5 @@
 import { List } from "react-feather";
+import { getRoleGroup } from "../../../../configs/Role";
 import { role } from "../../../../configs/parseJwt";
 
 interface Props {
@@ -16,8 +17,11 @@ const Tag = (props: Props) => {
       icon: List,
     },
     {
-      id: "ListLDPDuyet",
-      label: "Danh sách phiếu lãnh đạo phòng duyệt",
+      id: "listLDPDuyet",
+      label:
+        getRoleGroup(role) === "BLD"
+          ? "Phiếu đang xử lý"
+          : "Danh sách phiếu lãnh đạo phòng duyệt",
       icon: List,
     },
     {

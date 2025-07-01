@@ -3,8 +3,13 @@ import { useForm } from "react-hook-form";
 import { typeConformationColor } from "../../../../../constants/typeConfirmation";
 import { queryClient } from "../../../../../lib/reactQuery";
 import { useStoreNotification } from "../../../../../configs/stores/useStoreNotification";
-import { duyetPhanTichKetQuaLDP } from "../../../../../hooks/personnels/queryPTKQ";
+import {
+  duyetPhanTichKetQuaBLD,
+  duyetPhanTichKetQuaLDP,
+} from "../../../../../hooks/personnels/queryPTKQ";
 import { typeConfirmation } from "..";
+import { getRoleGroup } from "../../../../../configs/Role";
+import { role } from "../../../../../configs/parseJwt";
 
 interface Props {
   isOpen: boolean;
@@ -81,26 +86,76 @@ const FormLyDoTuChoi = (props: Props) => {
     onSettled: handleSettled,
   });
 
+  const { mutate: mutateBLD } = duyetPhanTichKetQuaBLD({
+    queryKey: "duyetPhanTichKetQuaBLD",
+    onSuccess: (data: any) => {
+      if (data.status === 200) {
+        showNotification({
+          message: `${
+            typeConform === typeConfirmation.TuChoi ? "Từ chối" : "Duyệt phiếu"
+          } thành công`,
+          status: 200,
+        });
+        return;
+      } else {
+        showNotification({
+          message: `${
+            typeConform === typeConfirmation.TuChoi ? "Từ chối" : "Duyệt phiếu"
+          } thất bại`,
+          status: 500,
+        });
+      }
+    },
+    onError: (error: any) => {
+      console.log("error", error);
+      showNotification({
+        message: `${
+          typeConform === typeConfirmation.TuChoi ? "Từ chối" : "Duyệt phiếu"
+        } thất bại`,
+        status: 400,
+      });
+    },
+    onSettled: handleSettled,
+  });
+
   const handleClose = () => {
     reset();
     onClose();
   };
 
   const onSubmit = (data: { note: string }) => {
-    if (typeConform === typeConfirmation.TuChoi) {
-      const params = {
-        maPhieuPhanTichKetQua: dataID,
-        message: data.note,
-        action: false,
-      };
-      mutate(params);
+    if (getRoleGroup(role) === "BLD") {
+      if (typeConform === typeConfirmation.TuChoi) {
+        const params = {
+          maPhieuPhanTichKetQua: dataID,
+          message: data.note,
+          action: false,
+        };
+        mutateBLD(params);
+      } else {
+        const params = {
+          maPhieuPhanTichKetQua: dataID,
+          message: data.note,
+          action: true,
+        };
+        mutateBLD(params);
+      }
     } else {
-      const params = {
-        maPhieuPhanTichKetQua: dataID,
-        message: data.note,
-        action: true,
-      };
-      mutate(params);
+      if (typeConform === typeConfirmation.TuChoi) {
+        const params = {
+          maPhieuPhanTichKetQua: dataID,
+          message: data.note,
+          action: false,
+        };
+        mutate(params);
+      } else {
+        const params = {
+          maPhieuPhanTichKetQua: dataID,
+          message: data.note,
+          action: true,
+        };
+        mutate(params);
+      }
     }
   };
 

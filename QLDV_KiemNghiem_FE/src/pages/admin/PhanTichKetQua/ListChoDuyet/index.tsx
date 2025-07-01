@@ -8,36 +8,37 @@ import SelectItemKhoa from "./SelectItemKhoa";
 import { getRoleGroup } from "../../../../configs/Role";
 import { role } from "../../../../configs/parseJwt";
 
-const ListChoDuyet = ({ onView }: any) => {
+const ListChoDuyet = ({ onView, onEdit }: any) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectKhoa, setSelectKhoa] = useState("");
   const { personnelInfo } = usePersonnel();
-  const [selectNhanVienXuLy, setSelectNhanVienXuLy] = useState("");
 
-  const params: any = {
-    getAll: true,
-  };
+  const params: any = { getAll: true };
 
   if (role === "KN") {
     params.manvLap = personnelInfo?.maId;
-  } else if (role === "BLD") {
-    if (selectNhanVienXuLy !== "") {
-      params.manvKiemTra = selectNhanVienXuLy;
-    }
+    params.maKhoa = personnelInfo?.maKhoa; // Giả sử bạn muốn gán maKhoa vào tham số riêng
   }
 
   const { data, isLoading } = queryPhanTichKetQuaAll({
     queryKey: "phanTichKetQuaChuaDuyet",
     params,
   });
-  console.log("dadatadatadatata", data, params);
 
   const filteredResults = data
-    ?.filter((item: any) => item.trangThai === 1)
+    ?.filter((item: any) =>
+      getRoleGroup(role) === "BLD"
+        ? item.trangThai === 2
+        : item.trangThai !== 2 && item.trangThai !== 3
+    )
     ?.filter((result: any) => {
       const matchesSearch =
         result?.tenMau?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        result?.maPhieuKetQua.toLowerCase().includes(searchTerm.toLowerCase());
+        result?.maPhieuKetQua
+          .toLowerCase()
+          .includes(searchTerm.toLowerCase()) ||
+        result?.tennvKiemTra.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        result?.tennvLap.toLowerCase().includes(searchTerm.toLowerCase());
       const matchesStatus = !selectKhoa || result?.maKhoa === selectKhoa;
       return matchesSearch && matchesStatus;
     });
@@ -68,10 +69,10 @@ const ListChoDuyet = ({ onView }: any) => {
             <div className="relative">
               <input
                 type="search"
-                placeholder="Tìm kiếm theo mã phiếu, tên mẫu..."
+                placeholder="Tìm kiếm theo mã phiếu, tên mẫu, tên nhân viên kiểm tra, tên nhân viên lập..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-0 focus-within:outline-1 focus-within:border-blue-500 w-80"
+                className="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-0 focus-within:outline-1 focus-within:border-blue-500 w-2xl"
               />
               <Search
                 className="absolute left-3 top-3 text-gray-400"
@@ -101,7 +102,12 @@ const ListChoDuyet = ({ onView }: any) => {
           <>
             <div className="grid gap-4">
               {currentItems.map((result: any, index: any) => (
-                <Card key={index} result={result} onView={onView} />
+                <Card
+                  key={index}
+                  result={result}
+                  onView={onView}
+                  onEdit={onEdit}
+                />
               ))}
             </div>
             <div className="p-4 flex justify-center">

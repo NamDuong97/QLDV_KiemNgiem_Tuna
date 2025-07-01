@@ -9,6 +9,8 @@ import ModelSuaNoiDungTongBo from "./ModelSuaNoiDungTongBo";
 import ListChoDuyet from "./ListChoDuyet";
 import ListBLDDuyet from "./ListBLDDuyet";
 import ListLDPDuyet from "./ListLDPDuyet";
+import EditChoDuyet from "./EditChoDuyet";
+import ShowDetailLDPDuyet from "./ShowDetailLDPDuyet";
 
 export const sampleData: any = {
   KQ001: {
@@ -121,14 +123,19 @@ const PhanTichKetQua = () => {
     setActiveView("detail");
   };
 
+  const handleViewResultLDPDuyet = (id: any) => {
+    setSelectedResultId(id);
+    setActiveView("detailLDPDuyet");
+  };
+
   const handleViewResultChoDuyet = (id: any) => {
     setSelectedResultId(id);
     setActiveView("detailChoDuyet");
   };
 
-  const handleEditResult = (id: any) => {
+  const handleEditResultChoDuyet = (id: any) => {
     setSelectedResultId(id);
-    setActiveView("edit");
+    setActiveView("editChoDuyet");
   };
 
   const handleOpenModelNoiDungSoBo = (id: any) => {
@@ -142,12 +149,17 @@ const PhanTichKetQua = () => {
   };
 
   const handleCancel = () => {
-    setActiveView("list");
+    setActiveView("listBLDDuyet");
     setSelectedResultId(null);
   };
 
   const handleCancelChoDuyet = () => {
-    setActiveView("listChuaDuyet");
+    setActiveView("listChoDuyet");
+    setSelectedResultId(null);
+  };
+
+  const handleCancelChoLDPDuyet = () => {
+    setActiveView("listLDPDuyet");
     setSelectedResultId(null);
   };
 
@@ -157,29 +169,20 @@ const PhanTichKetQua = () => {
         return (
           <ListBLDDuyet
             onView={handleViewResult}
-            onEdit={handleEditResult}
             handleOpenModelNoiDungSoBo={handleOpenModelNoiDungSoBo}
             handleOpenModelNoiDungTongBo={handleOpenModelNoiDungTongBo}
           />
         );
 
-      case "ListLDPDuyet":
+      case "listLDPDuyet":
         return (
           <ListLDPDuyet
-            onView={handleViewResult}
-            onEdit={handleEditResult}
+            onView={handleViewResultLDPDuyet}
             handleOpenModelNoiDungSoBo={handleOpenModelNoiDungSoBo}
-            handleOpenModelNoiDungTongBo={handleOpenModelNoiDungTongBo}
           />
         );
       case "detail":
-        return (
-          <ShowDetail
-            resultId={selectedResultId}
-            onEdit={handleEditResult}
-            onBack={handleCancel}
-          />
-        );
+        return <ShowDetail resultId={selectedResultId} onBack={handleCancel} />;
       case "detailChoDuyet":
         return (
           <ShowDetailChoDuyet
@@ -187,17 +190,34 @@ const PhanTichKetQua = () => {
             onBack={handleCancelChoDuyet}
           />
         );
-      case "edit":
+      case "detailLDPDuyet":
         return (
-          <Edit
+          <ShowDetailLDPDuyet
             resultId={selectedResultId}
-            onCancel={() => handleViewResult(selectedResultId)}
+            onBack={handleCancelChoLDPDuyet}
+          />
+        );
+      case "editChoDuyet":
+        return (
+          <EditChoDuyet
+            resultId={selectedResultId}
+            onCancel={() => setActiveView("listChoDuyet")}
           />
         );
       case "listChoDuyet":
-        return <ListChoDuyet onView={handleViewResultChoDuyet} />;
+        return (
+          <ListChoDuyet
+            onView={handleViewResultChoDuyet}
+            onEdit={handleEditResultChoDuyet}
+          />
+        );
       default:
-        return <ListChoDuyet onView={handleViewResultChoDuyet} />;
+        return (
+          <ListChoDuyet
+            onView={handleViewResultChoDuyet}
+            onEdit={handleEditResultChoDuyet}
+          />
+        );
     }
   };
 
@@ -221,8 +241,8 @@ const PhanTichKetQua = () => {
         </div>
       </div>
       {(activeView === "listChoDuyet" ||
-        activeView === "ListBLDDuyet" ||
-        activeView === "ListLDPDuyet") && (
+        activeView === "listBLDDuyet" ||
+        activeView === "listLDPDuyet") && (
         <Tag activeTab={activeView} onTabChange={handleTabChange} />
       )}
       <div className="fade-in">{renderContent()}</div>

@@ -285,28 +285,42 @@ const DanhSach = (props: Props) => {
                       >
                         Xem chi tiết
                       </button>
+                      {assignment?.trangThai === true && (
+                        <>
+                          {[
+                            {
+                              label: "Tạo phiếu PTKQ",
+                              color: "violet",
+                              onClick: () => {
+                                setSaveID(assignment.maId);
+                                setOpenModelPTKG(true);
+                              },
+                            },
+                            {
+                              label: "Tạo phiếu dự trù",
+                              color: "green",
+                              onClick: () => {
+                                setSaveID(assignment.maId);
+                                setOpenModelCreate(true);
+                              },
+                            },
+                          ].map((btn, idx) => (
+                            <button
+                              key={idx}
+                              onClick={btn.onClick}
+                              className={`px-2 py-1 text-xs font-medium cursor-pointer text-white bg-${btn.color}-500 hover:bg-${btn.color}-600 rounded-md transition-colors`}
+                            >
+                              {btn.label}
+                            </button>
+                          ))}
+                        </>
+                      )}
 
                       {getRoleGroup(role) === "KN" &&
                         role !== "KN" &&
                         assignment?.trangThai === true && (
                           <>
                             {[
-                              {
-                                label: "Tạo phiếu PTKQ",
-                                color: "violet",
-                                onClick: () => {
-                                  setSaveID(assignment.maId);
-                                  setOpenModelPTKG(true);
-                                },
-                              },
-                              {
-                                label: "Tạo phiếu dự trù",
-                                color: "green",
-                                onClick: () => {
-                                  setSaveID(assignment.maId);
-                                  setOpenModelCreate(true);
-                                },
-                              },
                               {
                                 label: "Cập nhật",
                                 color: "yellow",

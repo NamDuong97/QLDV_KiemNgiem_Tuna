@@ -8,6 +8,8 @@ import { getPhanTichKetQuaByID } from "../../../../hooks/personnels/queryPTKQ";
 import FormLyDoTuChoi from "./formLyDoTuChoi";
 import { useState } from "react";
 import { TypeConformation } from "../../../../constants/typeConfirmation";
+import { role } from "../../../../configs/parseJwt";
+import { getRoleGroup } from "../../../../configs/Role";
 
 export const typeConfirmation = {
   TuChoi: "tuchoi",
@@ -30,26 +32,30 @@ const ShowDetailChoDuyet = ({ resultId, onEdit, onBack }: any) => {
           Chi tiết phiếu phân tích đang chờ duyệt
         </h2>
         <div className="flex space-x-2">
-          <button
-            onClick={() => {
-              setOpen(true);
-              setIsTypeConform(typeConfirmation.TuChoi);
-            }}
-            className="px-4 py-2 bg-yellow-200 text-yellow-700 rounded-lg hover:bg-yellow-300 cursor-pointer transition-colors flex items-center space-x-2"
-          >
-            <Slash size={16} />
-            <span>Từ chối</span>
-          </button>
-          <button
-            onClick={() => {
-              setOpen(true);
-              setIsTypeConform(typeConfirmation.DuyetPhieu);
-            }}
-            className="px-4 py-2 bg-green-200 text-green-700 rounded-lg hover:bg-green-300 cursor-pointer transition-colors flex items-center space-x-2"
-          >
-            <Check size={16} />
-            <span>Duyệt phiếu</span>
-          </button>
+          {role !== "KN" && (
+            <>
+              <button
+                onClick={() => {
+                  setOpen(true);
+                  setIsTypeConform(typeConfirmation.TuChoi);
+                }}
+                className="px-4 py-2 bg-yellow-200 text-yellow-700 rounded-lg hover:bg-yellow-300 cursor-pointer transition-colors flex items-center space-x-2"
+              >
+                <Slash size={16} />
+                <span>Từ chối</span>
+              </button>
+              <button
+                onClick={() => {
+                  setOpen(true);
+                  setIsTypeConform(typeConfirmation.DuyetPhieu);
+                }}
+                className="px-4 py-2 bg-green-200 text-green-700 rounded-lg hover:bg-green-300 cursor-pointer transition-colors flex items-center space-x-2"
+              >
+                <Check size={16} />
+                <span>Duyệt phiếu</span>
+              </button>
+            </>
+          )}
           <button
             onClick={onBack}
             className="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-300 cursor-pointer transition-colors flex items-center space-x-2"
@@ -98,7 +104,10 @@ const ShowDetailChoDuyet = ({ resultId, onEdit, onBack }: any) => {
                 <div className="flex justify-between items-center">
                   <span className="text-gray-600">Ngày nhận mẫu:</span>
                   <div className="text-right">
-                    <div className="font-medium"> {formatDate(data?.ngayNhanMau)}</div>
+                    <div className="font-medium">
+                      {" "}
+                      {formatDate(data?.ngayNhanMau)}
+                    </div>
                   </div>
                 </div>
               </div>
@@ -120,42 +129,22 @@ const ShowDetailChoDuyet = ({ resultId, onEdit, onBack }: any) => {
                     {formatDate(data?.ngayTraKetQua)}
                   </span>
                 </div>
+                <div className="flex justify-between items-center">
+                  <span className="text-gray-600">Ngày tạo:</span>
+                  <span className="font-medium">
+                    {formatDate(data?.ngayTao)}
+                  </span>
+                </div>
+                {data?.ngaySua && (
+                  <div className="flex justify-between items-center">
+                    <span className="text-gray-600">Ngày sửa:</span>
+                    <span className="font-medium">
+                      {formatDate(data?.ngaySua)}
+                    </span>
+                  </div>
+                )}
               </div>
             </div>
-            {data?.noiDungDuyetTongBo ||
-              (data?.noiDungDuyetSoBo && (
-                <div className="bg-gradient-to-r from-amber-50 to-orange-50 p-6 rounded-lg">
-                  <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                    Nội dung duyệt
-                  </h3>
-                  <div className="space-y-3">
-                    {data?.noiDungDuyetSoBo && (
-                      <div>
-                        <span className="text-gray-600 block mb-2 font-medium">
-                          Nội dung duyệt trưởng phòng({data?.tenKhoa}):
-                        </span>
-                        <div className="bg-white p-4 rounded-lg border border-gray-200 shadow-sm">
-                          <p className="text-sm text-gray-700 leading-relaxed">
-                            {data?.noiDungDuyetSoBo}
-                          </p>
-                        </div>
-                      </div>
-                    )}
-                    {data?.noiDungDuyetTongBo && (
-                      <div>
-                        <span className="text-gray-600 block mb-2 font-medium">
-                          Nội dung duyệt ban lãnh đạo phòng:
-                        </span>
-                        <div className="bg-white p-4 rounded-lg border border-gray-200 shadow-sm">
-                          <p className="text-sm text-gray-700 leading-relaxed">
-                            {data?.noiDungDuyetTongBo}
-                          </p>
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                </div>
-              ))}
           </div>
           <div className="space-y-6">
             <div className="bg-gradient-to-r from-red-50 to-yellow-50 p-6 rounded-lg">
@@ -214,7 +203,7 @@ const ShowDetailChoDuyet = ({ resultId, onEdit, onBack }: any) => {
                 </div>
                 <div>
                   <span className="text-gray-600 block mb-2 font-medium">
-                    Ghi chú(nhân viên):
+                    Ghi chú nhân viên({data?.tennvLap}):
                   </span>
                   <div className="bg-white p-4 rounded-lg border border-gray-200 shadow-sm">
                     <p className="text-sm text-gray-700 leading-relaxed">
@@ -222,6 +211,30 @@ const ShowDetailChoDuyet = ({ resultId, onEdit, onBack }: any) => {
                     </p>
                   </div>
                 </div>
+                {data?.noiDungDuyetSoBo && (
+                  <div>
+                    <span className="text-gray-600 block mb-2 font-medium">
+                      Ghi chú lãnh đạo phòng({data?.tennvKiemTra}):
+                    </span>
+                    <div className="bg-white p-4 rounded-lg border border-gray-200 shadow-sm">
+                      <p className="text-sm text-gray-700 leading-relaxed">
+                        {data?.noiDungDuyetSoBo}
+                      </p>
+                    </div>
+                  </div>
+                )}
+                {data?.noiDungDuyetTongBo && (
+                  <div>
+                    <span className="text-gray-600 block mb-2 font-medium">
+                      Ghi chú ban lãnh đạo({data?.tenbldDuyet}):
+                    </span>
+                    <div className="bg-white p-4 rounded-lg border border-gray-200 shadow-sm">
+                      <p className="text-sm text-gray-700 leading-relaxed">
+                        {data?.noiDungDuyetTongBo}
+                      </p>
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
           </div>
@@ -359,7 +372,7 @@ const ShowDetailChoDuyet = ({ resultId, onEdit, onBack }: any) => {
         onClose={() => setOpen(false)}
         type={TypeConformation.Info}
         title={`Xác nhận ${
-          isTypeConform === typeConfirmation.TuChoi ? "từ chối" : "duyệt phiếu"
+          isTypeConform === typeConfirmation.TuChoi ? `${getRoleGroup(role) === "BLD"? "ban lãnh đạo": "lãnh đạo phòng"} từ chối` : `${getRoleGroup(role) === "BLD"? "ban lãnh đạo": "lãnh đạo phòng"} duyệt phiếu`
         }`}
         dataID={data?.maID}
         typeConform={isTypeConform}

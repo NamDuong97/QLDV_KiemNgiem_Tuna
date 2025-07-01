@@ -1,34 +1,51 @@
 import { useState } from "react";
 import { Search } from "react-feather";
-import Card from "../Card";
 import { queryPhanTichKetQuaAll } from "../../../../hooks/personnels/queryPTKQ";
 import { usePersonnel } from "../../../../contexts/PersonelsProvider";
 import { Pagination, Skeleton } from "@mui/material";
 import SelectItemKhoa from "./SelectItemKhoa";
 import { getRoleGroup } from "../../../../configs/Role";
 import { role } from "../../../../configs/parseJwt";
+import CardLDPDuyet from "../CardLDPDuyet";
+import SelectItemTrangThai from "./SelectItemTrangThai";
 
-const ListLDPDuyet = ({ onView }: any) => {
+const ListLDPDuyet = ({ onView, handleOpenModelNoiDungSoBo }: any) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectKhoa, setSelectKhoa] = useState("");
+  const [selectTrangThai, setSelectTrangThai] = useState("");
   const { personnelInfo } = usePersonnel();
 
   const { data, isLoading } = queryPhanTichKetQuaAll({
     queryKey: "phanTichKetQuaChuaDuyet",
-    params: {
-      getAll: true,
-      // maKhoa: personnelInfo?.maKhoa,
-    },
+    params:
+      getRoleGroup(role) === "BLD"
+        ? {
+            getAll: true,
+          }
+        : {
+            getAll: true,
+            maKhoa: personnelInfo?.maKhoa,
+          },
   });
   console.log("dadatadatadatata", data);
 
   const filteredResults = data
-    ?.filter((item: any) => item.trangThai === 1)
+    ?.filter((item: any) =>
+      getRoleGroup(role) === "BLD"
+        ? item.trangThai !== 2 && item.trangThai !== 3
+        : item.trangThai === 2
+    )
     ?.filter((result: any) => {
       const matchesSearch =
         result?.tenMau?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        result?.maPhieuKetQua.toLowerCase().includes(searchTerm.toLowerCase());
-      const matchesStatus = !selectKhoa || result?.maKhoa === selectKhoa;
+        result?.maPhieuKetQua
+          .toLowerCase()
+          .includes(searchTerm.toLowerCase()) ||
+        result?.tennvKiemTra.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        result?.tennvLap.toLowerCase().includes(searchTerm.toLowerCase());
+      const matchesStatus =
+        (!selectKhoa || result?.maKhoa === selectKhoa) &&
+        (!selectTrangThai || result?.trangThai === Number(selectTrangThai));
       return matchesSearch && matchesStatus;
     });
 
@@ -50,18 +67,18 @@ const ListLDPDuyet = ({ onView }: any) => {
   return (
     <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
       <div className="px-6 py-4 border-b border-gray-200 bg-gray-50">
-        <div className="flex justify-between items-center">
+        <div className="grid gap-4">
           <h2 className="text-lg font-semibold text-gray-900">
-            Danh sách phiếu đang chờ duyệt
+            Danh sách phiếu lãnh đạo phòng duyệt
           </h2>
           <div className="flex items-center space-x-4">
             <div className="relative">
               <input
                 type="search"
-                placeholder="Tìm kiếm theo mã phiếu, tên mẫu..."
+                placeholder="Tìm kiếm theo mã phiếu, tên mẫu, tên nhân viên kiểm tra, tên nhân viên lập..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-0 focus-within:outline-1 focus-within:border-blue-500 w-80"
+                className="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-0 focus-within:outline-1 focus-within:border-blue-500 w-2xl"
               />
               <Search
                 className="absolute left-3 top-3 text-gray-400"
@@ -70,11 +87,18 @@ const ListLDPDuyet = ({ onView }: any) => {
             </div>
 
             {getRoleGroup(role) === "BLD" && (
-              <SelectItemKhoa
-                title="Khoa"
-                setItem={setSelectKhoa}
-                item={selectKhoa}
-              />
+              <>
+                <SelectItemKhoa
+                  title="Khoa"
+                  setItem={setSelectKhoa}
+                  item={selectKhoa}
+                />
+                <SelectItemTrangThai
+                  title="trạng thái"
+                  setItem={setSelectTrangThai}
+                  item={selectTrangThai}
+                />
+              </>
             )}
           </div>
         </div>
@@ -91,7 +115,12 @@ const ListLDPDuyet = ({ onView }: any) => {
           <>
             <div className="grid gap-4">
               {currentItems.map((result: any, index: any) => (
-                <Card key={index} result={result} onView={onView} />
+                <CardLDPDuyet
+                  key={index}
+                  result={result}
+                  onView={onView}
+                  handleOpenModelNoiDungSoBo={handleOpenModelNoiDungSoBo}
+                />
               ))}
             </div>
             <div className="p-4 flex justify-center">

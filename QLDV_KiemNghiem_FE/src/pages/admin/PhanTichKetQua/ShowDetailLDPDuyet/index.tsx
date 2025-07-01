@@ -6,7 +6,7 @@ import {
 import Detail from "../Detail";
 import { getPhanTichKetQuaByID } from "../../../../hooks/personnels/queryPTKQ";
 
-const ShowDetail = ({ resultId, onEdit, onBack }: any) => {
+const ShowDetailLDPDuyet = ({ resultId, onBack }: any) => {
   const { data } = getPhanTichKetQuaByID({
     queryKey: "PhanTichKetQuaByIDShowDetail",
     params: resultId,
@@ -21,7 +21,7 @@ const ShowDetail = ({ resultId, onEdit, onBack }: any) => {
         <div className="flex space-x-2">
           <button
             onClick={onBack}
-            className="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors flex items-center cursor-pointer space-x-2"
+            className="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors cursor-pointer flex items-center space-x-2"
           >
             <ArrowLeft size={16} />
             <span>Quay lại</span>
@@ -68,12 +68,6 @@ const ShowDetail = ({ resultId, onEdit, onBack }: any) => {
                   <span className="text-gray-600">Nhân viên kiểm tra:</span>
                   <div className="text-right">
                     <div className="font-medium">{data?.tennvKiemTra}</div>
-                  </div>
-                </div>
-                <div className="flex justify-between items-center">
-                  <span className="text-gray-600">Nhân viên tổng duyệt:</span>
-                  <div className="text-right">
-                    <div className="font-medium">{data?.tenbldDuyet}</div>
                   </div>
                 </div>
               </div>
@@ -177,26 +171,30 @@ const ShowDetail = ({ resultId, onEdit, onBack }: any) => {
                     </p>
                   </div>
                 </div>
-                <div>
-                  <span className="text-gray-600 block mb-2 font-medium">
-                    Ghi chú lãnh đạo phòng({data?.tennvKiemTra}):
-                  </span>
-                  <div className="bg-white p-4 rounded-lg border border-gray-200 shadow-sm">
-                    <p className="text-sm text-gray-700 leading-relaxed">
-                      {data?.noiDungDuyetSoBo}
-                    </p>
+                {data?.noiDungDuyetSoBo && (
+                  <div>
+                    <span className="text-gray-600 block mb-2 font-medium">
+                      Ghi chú lãnh đạo phòng({data?.tennvKiemTra}):
+                    </span>
+                    <div className="bg-white p-4 rounded-lg border border-gray-200 shadow-sm">
+                      <p className="text-sm text-gray-700 leading-relaxed">
+                        {data?.noiDungDuyetSoBo}
+                      </p>
+                    </div>
                   </div>
-                </div>
-                <div>
-                  <span className="text-gray-600 block mb-2 font-medium">
-                    Ghi chú ban lãnh đạo({data?.tenbldDuyet}):
-                  </span>
-                  <div className="bg-white p-4 rounded-lg border border-gray-200 shadow-sm">
-                    <p className="text-sm text-gray-700 leading-relaxed">
-                      {data?.noiDungDuyetTongBo}
-                    </p>
+                )}
+                {data?.noiDungDuyetTongBo && (
+                  <div>
+                    <span className="text-gray-600 block mb-2 font-medium">
+                      Ghi chú ban lãnh đạo({data?.tenbldDuyet}):
+                    </span>
+                    <div className="bg-white p-4 rounded-lg border border-gray-200 shadow-sm">
+                      <p className="text-sm text-gray-700 leading-relaxed">
+                        {data?.noiDungDuyetTongBo}
+                      </p>
+                    </div>
                   </div>
-                </div>
+                )}
               </div>
             </div>
           </div>
@@ -265,12 +263,6 @@ const ShowDetail = ({ resultId, onEdit, onBack }: any) => {
               <p className="text-gray-500">
                 Chưa có chi tiết kết quả kiểm nghiệm
               </p>
-              <button
-                onClick={() => onEdit(resultId)}
-                className="mt-3 text-blue-600 hover:text-blue-800 text-sm font-medium"
-              >
-                Thêm kết quả kiểm nghiệm
-              </button>
             </div>
           )}
         </div>
@@ -333,4 +325,4 @@ const ShowDetail = ({ resultId, onEdit, onBack }: any) => {
   );
 };
 
-export default ShowDetail;
+export default ShowDetailLDPDuyet;

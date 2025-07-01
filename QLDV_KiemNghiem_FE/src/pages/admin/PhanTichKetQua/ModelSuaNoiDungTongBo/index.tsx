@@ -46,7 +46,7 @@ const ModelSuaNoiDungTongBo = (props: Props) => {
   } = useForm<FormValues>({
     resolver: yupResolver(schema),
     defaultValues: {
-      noiDungDuyetTongBo: "",
+      noiDungDuyetTongBo: data?.noiDungDuyetTongBo,
     },
   });
 
@@ -75,6 +75,7 @@ const ModelSuaNoiDungTongBo = (props: Props) => {
           message: "Sửa phiếu phân tích thành công",
           status: 200,
         });
+        handleClose()
         return;
       } else {
         showNotification({
@@ -109,10 +110,12 @@ const ModelSuaNoiDungTongBo = (props: Props) => {
   useEffect(() => {
     if (data) {
       reset({
-        noiDungDuyetTongBo: data?.noiDungDuyetSoBo || "",
+        noiDungDuyetTongBo: data?.noiDungDuyetTongBo || "",
       });
     }
   }, [data, reset]);
+
+  console.log("data?.noiDungDuyetSoBo ", data?.noiDungDuyetTongBo);
 
   return (
     <Dialog

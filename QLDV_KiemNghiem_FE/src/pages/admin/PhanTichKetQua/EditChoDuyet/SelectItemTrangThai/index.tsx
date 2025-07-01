@@ -2,16 +2,14 @@ import Box from "@mui/material/Box";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
-import { trangThaiPhanTichKetQua } from "../../../../../configs/configAll";
 
 interface Props {
   item?: any;
   setItem?: any;
-  title?: any;
 }
 
 export default function SelectItemTrangThai(props: Props) {
-  const { item, setItem, title } = props;
+  const { item, setItem } = props;
 
   const handleChange = (event: SelectChangeEvent) => {
     setItem(event.target.value as string);
@@ -23,7 +21,7 @@ export default function SelectItemTrangThai(props: Props) {
     >
       <FormControl fullWidth>
         <Select
-          value={item}
+          value={item || ""} // fallback tránh lỗi undefined
           displayEmpty
           onChange={handleChange}
           MenuProps={{
@@ -37,12 +35,8 @@ export default function SelectItemTrangThai(props: Props) {
             },
           }}
         >
-          <MenuItem value="">Tất cả {title}</MenuItem>
-          {Object.entries(trangThaiPhanTichKetQua).map(([key, value]) => (
-            <MenuItem key={key} value={key}>
-              {value.text}
-            </MenuItem>
-          ))}
+          <MenuItem value="Đạt">Đạt</MenuItem>
+          <MenuItem value="Chưa đạt">Chưa đạt</MenuItem>
         </Select>
       </FormControl>
     </Box>

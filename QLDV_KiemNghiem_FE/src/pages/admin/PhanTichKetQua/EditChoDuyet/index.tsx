@@ -1,20 +1,19 @@
-import { Dialog, DialogContent, DialogActions } from "@mui/material";
-import { useForm, useFieldArray } from "react-hook-form";
+import { useEffect } from "react";
+import { ArrowLeft, Delete, Plus, Save } from "react-feather";
+import { queryChiTieuAll } from "../../../../hooks/personnels/queryChiTieus";
+import { Controller, useFieldArray, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import * as yup from "yup";
-import DeleteIcon from "@mui/icons-material/Delete";
-import { queryChiTieuAll } from "../../../../../hooks/personnels/queryChiTieus";
-import { queryPhanCongNoiBoByID } from "../../../../../hooks/personnels/queryPhanCongNoiBo";
-import { Plus, Save } from "react-feather";
+import { queryClient } from "../../../../lib/reactQuery";
+import { useStoreNotification } from "../../../../configs/stores/useStoreNotification";
+import {
+  getPhanTichKetQuaByID,
+  updatePhanTichKetQua,
+} from "../../../../hooks/personnels/queryPTKQ";
+import yup from "../../../../configs/yup.custom";
+import SelectItemTrangThai from "./SelectItemTrangThai";
 import SelectItemChiTieu from "./SelectItemChiTieu";
 import InputSelectDonViTinh from "./InputSelectDonViTinh";
-import { DonViTinh } from "../../../../Guest/formSignUpDVKN/components/Maus/FormThongTinMau";
-import { createPhanTichKetQua } from "../../../../../hooks/personnels/queryPTKQ";
-import { useStoreNotification } from "../../../../../configs/stores/useStoreNotification";
-import { queryClient } from "../../../../../lib/reactQuery";
-import { usePersonnel } from "../../../../../contexts/PersonelsProvider";
-import { useState } from "react";
-import SelectItemTrangThai from "./SelectItemTrangThai";
+import { DonViTinh } from "../../../Guest/formSignUpDVKN/components/Maus/FormThongTinMau";
 
 const schema = yup.object({
   ghiChu: yup.string().nullable(),
@@ -29,51 +28,33 @@ const schema = yup.object({
         donVi: yup.string().required("Vui lòng nhập đơn vị"),
         ghiChu: yup.string().required("Vui lòng nhập ghi chú"),
         trangThai: yup.string(),
+        isDel: yup.boolean().nullable(),
       })
     )
     .min(1, "Cần ít nhất 1 chỉ tiêu"),
 });
 
-const ModelCreatePhieuPhanTichKetQua = ({ open, onClose, dataID }: any) => {
+const EditChoDuyet = ({ resultId, onCancel }: any) => {
   const { data: chiTieus } = queryChiTieuAll({
     queryKey: "ChiTieuAll",
   });
-  const { data } = queryPhanCongNoiBoByID({
-    queryKey: "queryPhanCongNoiBoByID",
-    params: dataID,
+  const { data } = getPhanTichKetQuaByID({
+    queryKey: "getPhanTichKetQuaByID",
+    params: resultId,
   });
-  const { personnelInfo } = usePersonnel();
-  const [statusFilter, setStatusFilter] = useState("Đạt");
-
   const {
-    register,
     control,
+    register,
     handleSubmit,
     reset,
     setValue,
+    setError,
+    watch,
     formState: { errors },
   } = useForm({
-    defaultValues: {
-      ghiChu: "",
-      chiTietPhanTichKetQuas: [
-        {
-          maChiTieu: "",
-          tenChiTieu: "",
-          ketQua: "",
-          mucChatLuong: "",
-          donVi: "",
-          ghiChu: "",
-          trangThai: "Đat",
-        },
-      ],
-    },
     resolver: yupResolver(schema),
   });
-  const handleClose = () => {
-    onClose();
-    reset();
-  };
-  const { fields, append, remove } = useFieldArray({
+  const { fields, append } = useFieldArray({
     control,
     name: "chiTietPhanTichKetQuas",
   });
@@ -85,28 +66,28 @@ const ModelCreatePhieuPhanTichKetQua = ({ open, onClose, dataID }: any) => {
           queryKey: ["phanTichKetQuaChuaDuyet"],
         }),
         queryClient.refetchQueries({
-          queryKey: ["PhanTichKetQuaListDaDuyet"],
+          queryKey: ["getPhanTichKetQuaByID"],
         }),
       ]);
-      handleClose();
     }
   };
   const showNotification = useStoreNotification(
     (state: any) => state.showNotification
   );
 
-  const { mutate } = createPhanTichKetQua({
-    queryKey: "createDuTru",
+  const { mutate } = updatePhanTichKetQua({
+    queryKey: "updatePhanTichKetQua",
     onSuccess: (data: any) => {
+      console.log("Sửa phiếu phân tích thành công:", data);
       if (data.status === 200) {
         showNotification({
-          message: "Tạo phiếu phân tích thành công",
+          message: "Sửa phiếu phân tích thành công",
           status: 200,
         });
         return;
       } else {
         showNotification({
-          message: "Tạo phiếu phân tích thất bại",
+          message: "Sửa phiếu phân tích thất bại",
           status: 500,
         });
       }
@@ -115,109 +96,192 @@ const ModelCreatePhieuPhanTichKetQua = ({ open, onClose, dataID }: any) => {
       console.log("error", error);
 
       showNotification({
-        message: "Tạo phiếu phân tích thất bại",
+        message: "Sửa phiếu phân tích thất bại",
         status: 400,
       });
     },
     onSettled: handleSettled,
   });
 
+  const softDelete = (index: any) => {
+    setValue(`chiTietPhanTichKetQuas.${index}.isDel`, true);
+  };
+
   const handleSave = (dataPhieu: any) => {
+    const validChiTiet = dataPhieu.chiTietPhanTichKetQuas.filter(
+      (item: any) => item?.isDel !== true
+    );
+
+    if (validChiTiet.length === 0) {
+      setError("chiTietPhanTichKetQuas", {
+        type: "manual",
+        message: "Cần ít nhất 1 chỉ tiêu chưa bị xóa.",
+      });
+      return;
+    }
+
+    const originalChiTiet = data?.phieuPhanTichKetQuaChiTietDtos || [];
+
     const params = {
-      maPdkMau: data?.maPdkMau,
-      maKhoa: personnelInfo?.maKhoa,
+      maId: data?.maID,
       ghiChu: dataPhieu.ghiChu,
+      trangThai: 0,
+      noiDungDuyetSoBo: "",
+      noiDungDuyetTongBo: "",
       chiTietPhanTichKetQuas: dataPhieu.chiTietPhanTichKetQuas.map(
-        (item: any) => ({
-          maChiTieu: item.maChiTieu,
-          tenChiTieu: item.tenChiTieu,
-          ketQua: item.ketQua,
-          mucChatLuong: item.mucChatLuong,
-          donVi: item.donVi,
-          ghiChu: item.ghiChu,
-          trangThai: item.trangThai,
-        })
+        (item: any) => {
+          const {
+            maId,
+            maChiTieu,
+            tenChiTieu,
+            ketQua,
+            mucChatLuong,
+            donVi,
+            ghiChu,
+            trangThai,
+            isDel,
+          } = item;
+
+          const base = {
+            maId,
+            maChiTieu,
+            tenChiTieu,
+            ketQua,
+            mucChatLuong,
+            donVi,
+            ghiChu,
+            trangThai,
+          };
+
+          if (isDel === true) {
+            return { ...base, isDel: true };
+          }
+          const originalItem = originalChiTiet.find(
+            (o: any) => o.maId === maId
+          );
+
+          if (originalItem) {
+            const isChanged =
+              originalItem.maChiTieu !== maChiTieu ||
+              originalItem.tenChiTieu !== tenChiTieu ||
+              originalItem.ketQua !== ketQua ||
+              originalItem.mucChatLuong !== mucChatLuong ||
+              originalItem.donVi !== donVi ||
+              originalItem.ghiChu !== ghiChu ||
+              originalItem.trangThai !== trangThai;
+
+            if (isChanged) {
+              return { ...base, isDel: false };
+            }
+          }
+          if (!maId) {
+            return { ...base, maId: "" };
+          }
+          return base;
+        }
       ),
     };
     mutate(params);
   };
 
+  useEffect(() => {
+    if (data) {
+      reset({
+        ghiChu: data.ghiChu,
+        chiTietPhanTichKetQuas: (
+          data?.phieuPhanTichKetQuaChiTietDtos || []
+        ).map((item: any) => ({
+          ...item,
+          isDel: false,
+        })),
+      });
+    }
+  }, [data, reset]);
+
   return (
-    <Dialog
-      open={open}
-      onClose={handleClose}
-      maxWidth="xl"
-      fullWidth
-      sx={{
-        ".MuiPaper-root": {
-          borderRadius: 4,
-        },
-      }}
-    >
-      <div className="px-6 py-4 border-b border-gray-200 bg-gray-50">
-        <h2 className="text-lg font-semibold text-gray-900">
-          Tạo phiếu phân tích mới cho mẫu ({data?.tenMau})
-        </h2>
+    <div className="bg-white rounded-xl shadow-sm border border-gray-200">
+      <div className="px-6 py-4 border-b border-gray-200 bg-gray-50 flex justify-between items-center">
+        <div>
+          <h2 className="text-lg font-semibold text-gray-900">
+            Chỉnh sửa phiếu phân tích
+          </h2>
+          <p className="text-sm text-gray-600 mt-1">
+            Mã phiếu phân tích kết quả: {data?.maPhieuKetQua} - {data?.tenMau}
+          </p>
+        </div>
+        <div className="flex gap-6">
+          <button
+            onClick={handleSubmit(handleSave)}
+            className="px-4 py-2 text-white bg-cyan-600 rounded-lg hover:bg-cyan-700 transition-colors cursor-pointer flex items-center space-x-2"
+          >
+            <Save size={16} />
+            <span>Lưu phiếu</span>
+          </button>
+          <button
+            onClick={onCancel}
+            className="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors cursor-pointer flex items-center space-x-2"
+          >
+            <ArrowLeft size={16} />
+            <span>Quay lại</span>
+          </button>
+        </div>
       </div>
 
-      <DialogContent dividers className="!p-8 bg-gray-50">
-        <form
-          id="form-create"
-          onSubmit={handleSubmit(handleSave)}
-          className="space-y-8"
-        >
-          <div>
+      <form
+        id="form-create"
+        onSubmit={handleSubmit(handleSave)}
+        className="space-y-8 p-8"
+      >
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-2">
+            Ghi chú
+          </label>
+          <textarea
+            rows={3}
+            {...register("ghiChu")}
+            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-0 focus-within:outline-1 focus-within:border-blue-600"
+            placeholder="Nhập ghi chú..."
+          />
+        </div>
+
+        <div className="border-t-2 border-gray-200 pt-8 space-y-6">
+          <div className="flex justify-between items-center mb-4">
             <h3 className="text-lg font-semibold text-gray-600">
-              Thông tin chung của phiếu phân tích
+              Chi tiết phiếu
             </h3>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Ghi chú
-              </label>
-              <textarea
-                rows={3}
-                {...register("ghiChu")}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-0 focus-within:outline-1 focus-within:border-blue-600"
-                placeholder="Nhập ghi chú..."
-              />
-            </div>
+            <button
+              type="button"
+              onClick={() =>
+                append({
+                  maChiTieu: "",
+                  tenChiTieu: "",
+                  ketQua: "",
+                  mucChatLuong: "",
+                  donVi: "",
+                  ghiChu: "",
+                  trangThai: "Chưa đạt",
+                })
+              }
+              className="px-4 py-2 cursor-pointer bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center space-x-2"
+            >
+              <Plus size={16} />
+              <span>Thêm Chỉ Tiêu</span>
+            </button>
           </div>
 
-          <div className="border-t-2 border-gray-200 pt-8 space-y-6">
-            <div className="flex justify-between items-center mb-4">
-              <h3 className="text-lg font-semibold text-gray-600">
-                Thông tin chi tiết phiếu
-              </h3>
-              <button
-                type="button"
-                onClick={() =>
-                  append({
-                    maChiTieu: "",
-                    tenChiTieu: "",
-                    ketQua: "",
-                    mucChatLuong: "",
-                    donVi: "",
-                    ghiChu: "",
-                    trangThai: "Đat",
-                  })
-                }
-                className="px-4 py-2 cursor-pointer bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center space-x-2"
-              >
-                <Plus size={16} />
-                <span>Thêm Chỉ Tiêu</span>
-              </button>
-            </div>
+          {errors.chiTietPhanTichKetQuas && (
+            <p className="text-red-600 text-sm mb-4 font-medium">
+              {errors.chiTietPhanTichKetQuas.message}
+            </p>
+          )}
 
-            {errors.chiTietPhanTichKetQuas && (
-              <p className="text-red-600 text-sm mb-4 font-medium">
-                {errors.chiTietPhanTichKetQuas.message}
-              </p>
-            )}
-
-            {fields.map((field, index) => (
+          {fields.map((field, index) => {
+            const isDeleted = watch(`chiTietPhanTichKetQuas.${index}.isDel`);
+            if (isDeleted) return null;
+            return (
               <div
                 key={field.id}
-                className="grid grid-cols-4 gap-6 p-4 bg-gray-100 rounded-lg"
+                className="grid grid-cols-4 gap-6 p-4 bg-gray-50 rounded-lg"
               >
                 <div>
                   <label
@@ -327,15 +391,21 @@ const ModelCreatePhieuPhanTichKetQua = ({ open, onClose, dataID }: any) => {
                 </div>
                 <div className="col-span-1">
                   <label
-                    htmlFor={`ghiChuItem-${index}`}
+                    htmlFor={`trangThai-${index}`}
                     className="block text-sm font-medium mb-2 text-gray-700"
                   >
                     Trạng thái <span className="text-red-500">*</span>
                   </label>
                   <div className="flex items-center space-x-2">
-                    <SelectItemTrangThai
-                      item={statusFilter}
-                      setItem={setStatusFilter}
+                    <Controller
+                      control={control}
+                      name={`chiTietPhanTichKetQuas.${index}.trangThai`}
+                      render={({ field }) => (
+                        <SelectItemTrangThai
+                          item={field.value}
+                          setItem={(val: any) => field.onChange(val)}
+                        />
+                      )}
                     />
                   </div>
                 </div>
@@ -343,38 +413,20 @@ const ModelCreatePhieuPhanTichKetQua = ({ open, onClose, dataID }: any) => {
                 <div className="flex items-end justify-center">
                   <button
                     type="button"
-                    onClick={() => remove(index)}
+                    onClick={() => softDelete(index)}
                     className="flex cursor-pointer items-center justify-center px-4 py-2 bg-red-50 text-red-600 rounded-lg hover:bg-red-100 hover:text-red-700 transition duration-300 ease-in-out shadow-sm hover:shadow-md border border-red-200"
                   >
-                    <DeleteIcon className="mr-2" />
+                    <Delete className="mr-2" />
                     <span>Xóa chỉ tiêu</span>
                   </button>
                 </div>
               </div>
-            ))}
-          </div>
-        </form>
-      </DialogContent>
-
-      <DialogActions className="!p-6 !bg-gray-100 !border-t border-gray-200 !rounded-b-xl flex justify-end space-x-4">
-        <button
-          type="button"
-          onClick={handleClose}
-          className="px-6 py-2 cursor-pointer border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
-        >
-          Hủy
-        </button>
-        <button
-          type="submit"
-          form="form-create"
-          className="px-6 py-2 cursor-pointer bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center space-x-2"
-        >
-          <Save size={16} />
-          <span>Lưu phiếu</span>
-        </button>
-      </DialogActions>
-    </Dialog>
+            );
+          })}
+        </div>
+      </form>
+    </div>
   );
 };
 
-export default ModelCreatePhieuPhanTichKetQua;
+export default EditChoDuyet;

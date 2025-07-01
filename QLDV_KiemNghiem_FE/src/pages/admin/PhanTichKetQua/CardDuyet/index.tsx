@@ -54,7 +54,7 @@ const CardDuyet = ({
         {renderTrangThaiPhanTichKetQua(result?.trangThai)}
       </div>
 
-      <div className="grid grid-cols-5 gap-4 text-sm">
+      <div className="grid grid-cols-6 gap-4 text-sm">
         <div>
           <p className="text-gray-600">Nhân viên lập</p>
           <p className="font-medium">{result?.tennvLap}</p>
@@ -64,12 +64,16 @@ const CardDuyet = ({
           <p className="font-medium">{result?.tennvKiemTra}</p>
         </div>
         <div>
-          <p className="text-gray-600">Ngày nhận</p>
-          <p className="font-medium">{formatDate(result?.ngayNhanMau)}</p>
-        </div>
-        <div>
           <p className="text-gray-600">Ngày trả KQ</p>
           <p className="font-medium">{formatDate(result?.ngayTraKetQua)}</p>
+        </div>
+        <div>
+          <p className="text-gray-600">Ngày tạo</p>
+          <p className="font-medium">{formatDate(result?.ngayTao)}</p>
+        </div>
+        <div>
+          <p className="text-gray-600">Ngày sửa</p>
+          <p className="font-medium">{formatDate(result?.ngayTao)}</p>
         </div>
         <div>
           <p className="text-gray-600">Khoa</p>

@@ -6,7 +6,6 @@ import { role } from "../../../../configs/parseJwt";
 import { usePersonnel } from "../../../../contexts/PersonelsProvider";
 import CardDuyet from "../CardDuyet";
 import { Pagination, Skeleton } from "@mui/material";
-import SelectItemTrangThai from "./SelectItemTrangThai";
 import SelectItemKhoa from "./SelectItemKhoa";
 import { FaSortAmountDown, FaSortAmountUp } from "react-icons/fa";
 
@@ -17,53 +16,37 @@ const ListBLDDuyet = ({
   handleOpenModelNoiDungTongBo,
 }: any) => {
   const [searchTerm, setSearchTerm] = useState("");
-  const [statusFilter, setStatusFilter] = useState("");
   const [selectKhoa, setSelectKhoa] = useState("");
-  const [isSortNew, setIsSortNew] = useState(false);
   const { personnelInfo } = usePersonnel();
 
-  const isKNGroup = getRoleGroup(role) === "KN";
+  // const isKNGroup = getRoleGroup(role) === "KN";
 
-  const params = {
-    getAll: true,
-    ...(isKNGroup && role === "KN"
-      ? {
-          maKhoa: personnelInfo?.maKhoa,
-          manvLap: personnelInfo?.maId,
-        }
-      : {}),
-  };
+  // const params = {
+  //   getAll: true,
+  //   ...(isKNGroup && role === "KN"
+  //     ? {
+  //         maKhoa: personnelInfo?.maKhoa,
+  //         manvLap: personnelInfo?.maId,
+  //       }
+  //     : {}),
+  // };
 
   const { data, isLoading } = queryPhanTichKetQuaAll({
     queryKey: "PhanTichKetQuaListDaDuyet",
-    params,
+    params: {
+      getAll: true,
+      maKhoa: personnelInfo?.maKhoa,
+    },
   });
-  const finalResults = data?.filter((result: any) => {
-    const matchesSearch =
-      result?.tenMau?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      result?.maPhieuKetQua.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesAll =
-      (!selectKhoa || result?.maKhoa === selectKhoa) &&
-      (!statusFilter || result?.trangThai === Number(statusFilter));
-
-    return matchesSearch && matchesAll;
-  });
-
-  const filteredResults = isSortNew
-    ? finalResults
-        ?.slice()
-        ?.sort(
-          (a: any, b: any) =>
-            new Date(a.ngayTraKetQua).getTime() -
-            new Date(b.ngayTraKetQua).getTime()
-        )
-    : finalResults
-        ?.slice()
-        ?.sort(
-          (a: any, b: any) =>
-            new Date(b.ngayTraKetQua).getTime() -
-            new Date(a.ngayTraKetQua).getTime()
-        );
+  const filteredResults = data
+    ?.filter((item: any) => item.trangThai === 3)
+    .filter((result: any) => {
+      const matchesSearch =
+        result?.tenMau?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        result?.maPhieuKetQua.toLowerCase().includes(searchTerm.toLowerCase());
+      const matchesStatus = !selectKhoa || result?.maKhoa === selectKhoa;
+      return matchesSearch && matchesStatus;
+    });
 
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(4);
@@ -85,7 +68,7 @@ const ListBLDDuyet = ({
       <div className="px-6 py-4 border-b border-gray-200 bg-gray-50">
         <div className="flex justify-between items-center">
           <h2 className="text-lg font-semibold text-gray-900">
-            Danh sách phiếu phân tích
+            Danh sách phiếu ban lãnh đạo duyệt
           </h2>
           <div className="flex items-center space-x-4">
             <div className="relative">
@@ -101,21 +84,6 @@ const ListBLDDuyet = ({
                 size={16}
               />
             </div>
-            <button
-              onClick={() => setIsSortNew(!isSortNew)}
-              type="button"
-              className="btn btn-outline-primary border border-gray-300 py-[6px] px-2 rounded cursor-pointer hover:bg-blue-50"
-            >
-              {isSortNew ? (
-                <span className="flex items-center gap-2 text-gray-800">
-                  <FaSortAmountUp /> Cũ Nhất
-                </span>
-              ) : (
-                <span className="flex items-center gap-2 text-gray-800">
-                  <FaSortAmountDown /> Mới nhất
-                </span>
-              )}
-            </button>
             {getRoleGroup(role) === "BLD" && (
               <SelectItemKhoa
                 title="Khoa"
@@ -123,11 +91,6 @@ const ListBLDDuyet = ({
                 item={selectKhoa}
               />
             )}
-            <SelectItemTrangThai
-              title="Trạng thái"
-              item={statusFilter}
-              setItem={setStatusFilter}
-            />
           </div>
         </div>
       </div>
