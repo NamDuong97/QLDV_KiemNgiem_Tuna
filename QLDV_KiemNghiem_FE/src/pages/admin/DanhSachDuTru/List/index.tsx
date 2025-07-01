@@ -6,7 +6,7 @@ import { queryDuTruAll } from "../../../../hooks/personnels/queryDuTru";
 import { getAllDanhSachMau } from "../../../../hooks/personnels/phanCongKhoa";
 import { Pagination, Skeleton } from "@mui/material";
 
-const List = ({ onView, onEdit, handleTag }: any) => {
+const List = ({ onView, onEdit }: any) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("");
 

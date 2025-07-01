@@ -1,8 +1,4 @@
-import React from "react";
-
-interface Props {}
-
-const MuaVatTu = (props: Props) => {
+const MuaVatTu = () => {
   return <div>MuaVatTu</div>;
 };
 

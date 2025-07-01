@@ -189,7 +189,7 @@ const NotFound = () => {
 
         <div className="mt-8 text-center text-gray-500 text-sm">
           © {new Date().getFullYear()} Trung tâm Viện Kiểm nghiệm. Tất cả các
-          quyền được bảo lưu.
+          quyền được bảo lưu. 
         </div>
       </div>
     </div>

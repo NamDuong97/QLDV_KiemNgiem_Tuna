@@ -8,7 +8,6 @@ import { maNhanVien } from "../../../../../configs/parseJwt";
 import { createPhieuPhanCongKhoa } from "../../../../../hooks/personnels/phanCongKhoa";
 import { queryClient } from "../../../../../lib/reactQuery";
 import { useStoreNotification } from "../../../../../configs/stores/useStoreNotification";
-import { formatDateNotTime } from "../../../../../configs/configAll";
 
 interface Props {
   samples: MauPhanCong[];

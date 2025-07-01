@@ -1,8 +1,4 @@
-import React from "react";
-
-interface Props {}
-
-const DanhSachHoaDon = (props: Props) => {
+const DanhSachHoaDon = () => {
   return <div>DanhSachHoaDon</div>;
 };
 

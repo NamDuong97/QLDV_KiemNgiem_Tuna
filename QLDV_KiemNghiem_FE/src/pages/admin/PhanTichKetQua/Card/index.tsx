@@ -1,6 +1,5 @@
 import { GiTestTubes } from "react-icons/gi";
 import {
-  formatDate,
   formatDateNotTime2,
   renderTrangThaiPhanTichKetQua,
 } from "../../../../configs/configAll";
