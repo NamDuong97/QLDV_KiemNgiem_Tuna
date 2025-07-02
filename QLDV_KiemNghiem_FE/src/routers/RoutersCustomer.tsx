@@ -21,9 +21,13 @@ const ShowPhieuDKyDVKN = lazy(
 const XemChiTiet = lazy(
   () => import("../pages/Guest/manager/QuanLyHoaDon/ChiTietHoaDon/XemChiTiet")
 );
-const ThanhToanHoaDon = lazy(
-  () =>
-    import("../pages/Guest/manager/QuanLyHoaDon/ChiTietHoaDon/ThanhToanHoaDon")
+
+const PhanTichKetQua = lazy(
+  () => import("../pages/Guest/manager/PhanTichKetQua")
+);
+
+const ShowDetail = lazy(
+  () => import("../pages/Guest/manager/PhanTichKetQua/ShowDetail")
 );
 
 const Home = lazy(() => import("../pages/Guest/home"));
@@ -72,6 +76,10 @@ const RoutersCustomer = () => {
               path={APP_ROUTES.TUNA_CUSTOMER.QUAN_LY_HOA_DON.to}
               element={<QuanLyHoaDon />}
             />
+            <Route
+              path={APP_ROUTES.TUNA_CUSTOMER.QUAN_LY_PHAN_TICH_KET_QUA.to}
+              element={<PhanTichKetQua />}
+            />
           </Route>
           <Route
             path={APP_ROUTES.TUNA_CUSTOMER.EDIT_PHIEU_DKY_DVKN.to}
@@ -95,22 +103,13 @@ const RoutersCustomer = () => {
           />
           <Route
             path={
-              APP_ROUTES.TUNA_CUSTOMER.QUAN_LY_HOA_DON.SHOW_THANH_TOAN_HOA_DON
-                .to
+              APP_ROUTES.TUNA_CUSTOMER.QUAN_LY_PHAN_TICH_KET_QUA.xem_chi_tiet
             }
-            element={
-              // <Redirect path={APP_ROUTES.TUNA_CUSTOMER.QUAN_LY_HOA_DON.to}>
-              <ThanhToanHoaDon />
-              // </Redirect>
-            }
+            element={<ShowDetail />}
           />
           <Route
             path={APP_ROUTES.TUNA_CUSTOMER.QUAN_LY_HOA_DON.SHOW_HOA_DON.to}
-            element={
-              // <Redirect path={APP_ROUTES.TUNA_CUSTOMER.QUAN_LY_HOA_DON.to}>
-              <XemChiTiet />
-              // </Redirect>
-            }
+            element={<XemChiTiet />}
           />
         </Route>
         <Route path="*" element={<NotFound />} />

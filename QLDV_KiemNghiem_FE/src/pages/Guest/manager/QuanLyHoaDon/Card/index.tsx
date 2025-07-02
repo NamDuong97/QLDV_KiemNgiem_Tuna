@@ -1,9 +1,5 @@
 import { Eye } from "react-feather";
 import { MdReceiptLong } from "react-icons/md";
-import {
-  formatDateNotTime2,
-  renderTrangThaiPhanTichKetQua,
-} from "../../../../../configs/configAll";
 
 const Card = ({ result, onView }: any) => {
   const handleView = (e: any) => {
@@ -28,7 +24,11 @@ const Card = ({ result, onView }: any) => {
             <p className="text-sm text-gray-600">SDKPT20256160749594</p>
           </div>
         </div>
-        {renderTrangThaiPhanTichKetQua(result?.trangThai)}
+        <span
+          className={`inline-block px-2 py-1 text-xs font-medium rounded-full bg-green-100 text-green-800`}
+        >
+          Đã thanh toán
+        </span>
       </div>
 
       <div className="grid grid-cols-4 gap-4 text-sm">
@@ -40,7 +40,7 @@ const Card = ({ result, onView }: any) => {
         )}
         <div>
           <p className="text-gray-600">Ngày lập</p>
-          <p className="font-medium">{formatDateNotTime2(result?.ngayTao)}</p>
+          <p className="font-medium">2/2/2025</p>
         </div>
         <div className="col-span-2">
           <p className="text-gray-600">Ghi chú</p>

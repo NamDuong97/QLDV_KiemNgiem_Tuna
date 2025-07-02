@@ -15,9 +15,6 @@ const routeGuards: Record<string, { sessionKey: string }> = {
   [APP_ROUTES.TUNA_CUSTOMER.SHOW_PHIEU_DKY_DVKN.to]: {
     sessionKey: "xem-phieuDky",
   },
-  [APP_ROUTES.TUNA_CUSTOMER.QUAN_LY_HOA_DON.SHOW_THANH_TOAN_HOA_DON.to]: {
-    sessionKey: "show-hoadon",
-  },
   [APP_ROUTES.TUNA_CUSTOMER.QUAN_LY_HOA_DON.SHOW_HOA_DON.to]: {
     sessionKey: "show-hoadon",
   },

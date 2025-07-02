@@ -94,6 +94,26 @@ export default function LayoutCustomerManager() {
               >
                 Quản lý hóa đơn
               </button>
+              <button
+                onClick={() =>
+                  navigate(
+                    APP_ROUTES.TUNA_CUSTOMER.QUAN_LY_PHAN_TICH_KET_QUA.to
+                  )
+                }
+                className={clsx(
+                  "py-4 px-10 capitalize cursor-pointer text-cyan-900 hover:text-orange-400",
+                  {
+                    "border-b-[2px] border-orange-400 font-bold text-orange-400":
+                      pathName ===
+                      APP_ROUTES.TUNA_CUSTOMER.QUAN_LY_PHAN_TICH_KET_QUA.to,
+                    "font-medium border-gray-300":
+                      pathName !==
+                      APP_ROUTES.TUNA_CUSTOMER.QUAN_LY_PHAN_TICH_KET_QUA.to,
+                  }
+                )}
+              >
+                Quản lý phiếu phân tích kết quả
+              </button>
             </div>
           </div>
         </div>

@@ -176,9 +176,7 @@ const ShowDetailChoDuyet = ({ resultId, onEdit, onBack }: any) => {
                 </div>
                 <div className="flex justify-between items-center">
                   <span className="text-gray-600">Tiêu chuẩn:</span>
-                  <span className="font-medium">
-                    {data?.soLuong} {data?.tenTieuChuan}
-                  </span>
+                  <span className="font-medium">{data?.tenTieuChuan}</span>
                 </div>
                 <div className="flex justify-between items-center">
                   <span className="text-gray-600">Đơn vị sản xuất:</span>
@@ -372,7 +370,13 @@ const ShowDetailChoDuyet = ({ resultId, onEdit, onBack }: any) => {
         onClose={() => setOpen(false)}
         type={TypeConformation.Info}
         title={`Xác nhận ${
-          isTypeConform === typeConfirmation.TuChoi ? `${getRoleGroup(role) === "BLD"? "ban lãnh đạo": "lãnh đạo phòng"} từ chối` : `${getRoleGroup(role) === "BLD"? "ban lãnh đạo": "lãnh đạo phòng"} duyệt phiếu`
+          isTypeConform === typeConfirmation.TuChoi
+            ? `${
+                getRoleGroup(role) === "BLD" ? "ban lãnh đạo" : "lãnh đạo phòng"
+              } từ chối`
+            : `${
+                getRoleGroup(role) === "BLD" ? "ban lãnh đạo" : "lãnh đạo phòng"
+              } duyệt phiếu`
         }`}
         dataID={data?.maID}
         typeConform={isTypeConform}

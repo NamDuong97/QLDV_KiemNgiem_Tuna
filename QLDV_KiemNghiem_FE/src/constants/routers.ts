@@ -201,10 +201,10 @@ export const APP_ROUTES = {
         to: "/chi-tiet-hoa-don",
         title: "Trang chi chi tiết hóa đơn",
       },
-      SHOW_THANH_TOAN_HOA_DON: {
-        to: "/thanh-toan-hoa-don",
-        title: "Trang thanh toán hóa đơn",
-      },
+    },
+    QUAN_LY_PHAN_TICH_KET_QUA: {
+      to: "/quan-ly-phan-tich-ket-qua",
+      xem_chi_tiet: "/quan-ly-phan-tich-ket-qua/xem-chi-tiet",
     },
   },
   TUNA_XAC_MINH_EMAIL: "/xac-minh-email",

@@ -343,12 +343,6 @@ const ShowDetail = ({ resultId, onEdit, onBack, handleOpenPhieuDKy }: any) => {
               <p className="text-gray-500">
                 Chưa có chi tiết kết quả kiểm nghiệm
               </p>
-              <button
-                onClick={() => onEdit(resultId)}
-                className="mt-3 text-blue-600 hover:text-blue-800 text-sm font-medium"
-              >
-                Thêm kết quả kiểm nghiệm
-              </button>
             </div>
           )}
         </div>
