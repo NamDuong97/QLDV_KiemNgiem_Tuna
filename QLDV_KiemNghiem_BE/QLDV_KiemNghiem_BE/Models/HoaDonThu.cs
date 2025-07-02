@@ -33,7 +33,8 @@ public partial class HoaDonThu
     [StringLength(500)]
     public string? GhiChu { get; set; }
 
-    public bool? TrangThai { get; set; }
+    [StringLength(100)]
+    public string? TrangThai { get; set; }
 
     [Column(TypeName = "datetime")]
     public DateTime? NgayTao { get; set; }
@@ -50,6 +51,8 @@ public partial class HoaDonThu
     [Column("SoDKPT")]
     [StringLength(50)]
     public string? SoDkpt { get; set; }
+
+    public bool? Active { get; set; }
 
     [InverseProperty("MaHdNavigation")]
     public virtual ICollection<ChiTietHoaDonThu> ChiTietHoaDonThus { get; set; } = new List<ChiTietHoaDonThu>();

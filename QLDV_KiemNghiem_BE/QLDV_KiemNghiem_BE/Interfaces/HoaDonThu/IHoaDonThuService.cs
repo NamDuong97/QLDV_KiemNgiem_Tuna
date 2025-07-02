@@ -8,7 +8,7 @@ namespace QLDV_KiemNghiem_BE.Interfaces
 {
     public interface IHoaDonThuService
     {
-        Task<(IEnumerable<HoaDonThuDto> datas, Pagination pagi)> GetHoaDonThusAllAsync(HoaDonThuParam param, bool tracking);
+        Task<(IEnumerable<HoaDonThuProcedureDto> datas, Pagination pagi)> GetHoaDonThusAllAsync(HoaDonThuParam param);
         Task<IEnumerable<HoaDonThuDto>> GetHoaDonThuOfCustomer(string maKH);
         Task<HoaDonThuDto?> FindHoaDonThuAsync(string maHoaDonThu);
         Task<ResponseModel1<HoaDonThuDto>> CreateHoaDonThuAsync(HoaDonThuDto hoaDonThuDto, string user);

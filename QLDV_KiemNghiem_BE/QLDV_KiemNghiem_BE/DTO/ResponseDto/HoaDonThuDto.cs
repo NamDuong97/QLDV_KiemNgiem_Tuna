@@ -24,7 +24,7 @@ namespace QLDV_KiemNghiem_BE.DTO.ResponseDto
         [StringLength(500)]
         public string? GhiChu { get; set; }
 
-        public bool? TrangThai { get; set; }
+        public string? TrangThai { get; set; }
 
         public DateTime? NgayTao { get; set; }
 
@@ -38,6 +38,8 @@ namespace QLDV_KiemNghiem_BE.DTO.ResponseDto
 
         [StringLength(50)]
         public string? SoDkpt { get; set; }
+
+        public bool? Active { get; set; }
         public ICollection<HoaDonThuBoSungDto> HoaDonThuBoSungs { get; set; } = new List<HoaDonThuBoSungDto>();
         public ICollection<ChiTietHoaDonThuDto> ChiTietHoaDonThus { get; set; } = new List<ChiTietHoaDonThuDto>();
     }

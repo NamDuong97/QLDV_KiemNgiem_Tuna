@@ -10,6 +10,7 @@ namespace QLDV_KiemNghiem_BE.Interfaces
     {
         Task<PagedList<HoaDonThuBoSungProcedure>> GetHoaDonThuBoSungAllAsync(HoaDonThuBoSungParam param);
         Task<HoaDonThuBoSungProcedure?> FindHoaDonThuBoSungShowAsync(string maPhieuTienDo);
+        Task<List<HoaDonThuBoSungProcedure>?> FindHoaDonThuBoSungByMaHoaDonThuAsync(string maHoaDonThu);
         Task<HoaDonThuBoSung?> FindHoaDonThuBoSungAsync(string maHoaDonThuBoSung, bool track);
         void CreateHoaDonThuBoSungAsync(HoaDonThuBoSung HoaDonThuBoSung);
         void UpdateHoaDonThuBoSungAsync(HoaDonThuBoSung HoaDonThuBoSung);

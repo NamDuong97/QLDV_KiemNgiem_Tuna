@@ -1,12 +1,13 @@
-﻿using System;
-using AutoMapper;
+﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using QLDV_KiemNghiem_BE.Data;
+using QLDV_KiemNghiem_BE.DTO.ResponseDto;
 using QLDV_KiemNghiem_BE.Interfaces;
 using QLDV_KiemNghiem_BE.Models;
 using QLDV_KiemNghiem_BE.RequestFeatures;
 using QLDV_KiemNghiem_BE.RequestFeatures.PagingRequest;
 using QLDV_KiemNghiem_BE.Shared;
+using System;
 
 namespace QLDV_KiemNghiem_BE.Repositories
 {
@@ -19,39 +20,36 @@ namespace QLDV_KiemNghiem_BE.Repositories
             _context = context;
             _mapper = mapper;
         }
-        public async Task<PagedList<HoaDonThu>> GetHoaDonThusAllAsync(HoaDonThuParam param, bool tracking)
+        public async Task<PagedList<HoaDonThuProcedure>> GetAllHoaDonThuByBoLocAsync(HoaDonThuParam param)
         {
-            if (tracking)
+            var result = await _context.HoaDonThuProcedures
+                .FromSqlRaw("EXEC sp_getAllHoaDonThuByBoLoc {0}, {1}, {2}, {3}, {4}, {5}, {6}, {7}, {8}, {9}",
+                    param.MaID ?? string.Empty,
+                    param.MaHD ?? string.Empty,
+                    param.ManvXuLy ?? string.Empty,
+                    param.TrangThai ?? string.Empty,
+                    param.NgayLapFrom ?? string.Empty,
+                    param.NgayLapTo ?? string.Empty,
+                    param.TongTienFrom ?? string.Empty,
+                    param.TongTienTo ?? string.Empty,
+                    param.MaKH ?? string.Empty,
+                    param.Active ?? string.Empty
+                ).ToListAsync();
+
+            if (param.IsChiTietHoaDon)
             {
-                var result = await _context.HoaDonThus.
-                    FromSqlRaw("exec layHoaDonThuTheoBoLoc @maNVXL = {0}, @soDKPT = {1}, @maHD = {2}, @ngayLapFrom = {3}," +
-                    "@ngayLapTo = {4}, @tongTienFrom = {5}, @tongTienTo = {6}", param.ManvXuLy, param.SoDKPT, param.MaHoaDon, 
-                    param.NgayLapTo, param.NgayLapTo, param.TongTienFrom, param.TongTienTo)
-                .ToListAsync();
-                _context.Attach(result);
-                foreach (var item in result)
+                foreach (var hoaDon in result)
                 {
-                    await _context.Entry(item).Collection(p => p.ChiTietHoaDonThus).Query().LoadAsync();
-                    await _context.Entry(item).Collection(p => p.HoaDonThuBoSungs).Query().LoadAsync();
+
+                    hoaDon.DsChiTietHoaDonThu = await _context.ChiTietHoaDonThus
+                        .Where(it => it.MaHd == hoaDon.MaID)
+                        .ToListAsync();
                 }
-                return PagedList<HoaDonThu>.ToPagedList(result, param.PageNumber, param.PageSize, param.GetAll);
             }
-            else
-            {
-                var result = await _context.HoaDonThus.
-                    FromSqlRaw("exec layHoaDonThuTheoBoLoc @maNVXL = {0}, @soDKPT = {1}, @maHD = {2}, @ngayLapFrom = {3}," +
-                    "@ngayLapTo = {4}, @tongTienFrom = {5}, @tongTienTo = {6}", param.ManvXuLy, param.SoDKPT, param.MaHoaDon,
-                    param.NgayLapTo, param.NgayLapTo, param.TongTienFrom, param.TongTienTo)
-                .ToListAsync();
-               
-                foreach (var item in result)
-                {
-                    await _context.Entry(item).Collection(p => p.ChiTietHoaDonThus).Query().LoadAsync();
-                    await _context.Entry(item).Collection(p => p.HoaDonThuBoSungs).Query().Include(a => a.ChiTietHoaDonThuBoSungs).LoadAsync();
-                }
-                return PagedList<HoaDonThu>.ToPagedList(result, param.PageNumber, param.PageSize, param.GetAll);
-            }
+           
+            return PagedList<HoaDonThuProcedure>.ToPagedList(result, param.PageNumber, param.PageSize, param.GetAll);
         }
+
         public async Task<IEnumerable<HoaDonThu>> GetHoaDonThuOfCustomer(string maKH)
         {
             var hoaDonThus = await _context.HoaDonThus.FromSqlRaw("exec sp_GetAllHoaDonOfCustomer @maKh = {0}", maKH).ToListAsync();
