@@ -245,6 +245,8 @@ public partial class DataContext : DbContext
         {
             entity.HasKey(e => e.MaId).HasName("PK__HoaDonTh__2725BF40469A108D");
 
+            entity.Property(e => e.Active).HasDefaultValue(true);
+
             entity.HasOne(d => d.MaPhieuDangKyNavigation).WithMany(p => p.HoaDonThus).HasConstraintName("Fk_HoaDonThu_PhieuDangKy");
 
             entity.HasOne(d => d.ManvXuLyNavigation).WithMany(p => p.HoaDonThus).HasConstraintName("Fk_HoaDonThu_NhanVien_XuLy");

@@ -21,28 +21,46 @@ namespace QLDV_KiemNghiem_BE.Services
             _repositoryManager = repositoryManager;
             _mapper = mapper;
         }
-        public async Task<(IEnumerable<HoaDonThuDto> datas, Pagination pagi)> GetHoaDonThusAllAsync(HoaDonThuParam param, bool tracking)
+        public async Task<(IEnumerable<HoaDonThuProcedureDto> datas, Pagination pagi)> GetHoaDonThusAllAsync(HoaDonThuParam param)
         {
-            var HoaDonThuDomains = await _repositoryManager.HoaDonThu.GetHoaDonThusAllAsync(param, tracking);
-            List<HoaDonThuDto> hoaDonThuDtos = new List<HoaDonThuDto>();
+            var HoaDonThuDomains = await _repositoryManager.HoaDonThu.GetAllHoaDonThuByBoLocAsync(param);
+            List<HoaDonThuProcedureDto> hoaDonThuDtos = new List<HoaDonThuProcedureDto>();
+           
             foreach(var hoaDon in HoaDonThuDomains)
             {
-                var hoaDonThuDto = _mapper.Map<HoaDonThuDto>(hoaDon);
-                List<HoaDonThuBoSungDto> hoaDonThuBoSungDtos = new List<HoaDonThuBoSungDto>();
-                List<ChiTietHoaDonThuDto> chiTietHoaDonThuDtos = new List<ChiTietHoaDonThuDto>();
-
-                chiTietHoaDonThuDtos = _mapper.Map<List<ChiTietHoaDonThuDto>>(hoaDon.ChiTietHoaDonThus);
-                hoaDonThuDto.ChiTietHoaDonThus = chiTietHoaDonThuDtos;
-
-                foreach(var hoaDonBoSung in hoaDon.HoaDonThuBoSungs)
+                if (hoaDon != null)
                 {
-                    var hoaDonBoSungDto = _mapper.Map<HoaDonThuBoSungDto>(hoaDonBoSung);
-                    hoaDonBoSungDto.ChiTietHoaDonThuBoSungs = _mapper.Map<List<ChiTietHoaDonThuBoSungDto>>(hoaDonBoSung.ChiTietHoaDonThuBoSungs);
-                    hoaDonThuBoSungDtos.Add(hoaDonBoSungDto);
-                }
-                hoaDonThuDto.HoaDonThuBoSungs = hoaDonThuBoSungDtos;
+                    var hoaDonThuDto = _mapper.Map<HoaDonThuProcedureDto>(hoaDon);
+                    List<HoaDonThuBoSungProcedureDto> hoaDonThuBoSungDtos = new List<HoaDonThuBoSungProcedureDto>();
+                    List<ChiTietHoaDonThuDto> chiTietHoaDonThuDtos = new List<ChiTietHoaDonThuDto>();
 
-                hoaDonThuDtos.Add(hoaDonThuDto);
+                    if (param.IsHoaDonBoSung)
+                    {
+                        // tìm tất cả hóa đơn bổ sung của hóa đơn hiện tại
+                        var hoaDonBoSungProcedures = await _repositoryManager.HoaDonThuBoSung.FindHoaDonThuBoSungByMaHoaDonThuAsync(hoaDon?.MaID ?? "");
+                        if (hoaDonBoSungProcedures != null && hoaDonBoSungProcedures.Count() > 0)
+                        {
+                            hoaDon!.DsHoaDonThuBoSung = hoaDonBoSungProcedures;
+                            foreach (var hoaDonBoSung in hoaDon.DsHoaDonThuBoSung)
+                            {
+                                var hoaDonBoSungDto = _mapper.Map<HoaDonThuBoSungProcedureDto>(hoaDonBoSung);
+                                hoaDonBoSungDto.ChiTietHoaDonThuBoSungDtos = _mapper.Map<List<ChiTietHoaDonThuBoSungDto>>(hoaDonBoSung.ChiTietHoaDonThuBoSungs);
+                                hoaDonThuBoSungDtos.Add(hoaDonBoSungDto);
+                            }
+                            hoaDonThuDto.DsHoaDonThuBoSung = hoaDonThuBoSungDtos;
+                        }
+                    }
+
+                    // Thêm chi tiết hóa đơn 
+                    if(hoaDon!.DsChiTietHoaDonThu != null && hoaDon!.DsChiTietHoaDonThu.Count()> 0)
+                    {
+                        chiTietHoaDonThuDtos = _mapper.Map<List<ChiTietHoaDonThuDto>>(hoaDon!.DsChiTietHoaDonThu);
+                        hoaDonThuDto.DsChiTietHoaDonThu = chiTietHoaDonThuDtos;
+                    }
+
+                    // Thêm hóa đơn dto vào danh sách sách hóa đơn trả về cho client
+                    hoaDonThuDtos.Add(hoaDonThuDto);
+                }
             }
 
             return (datas: hoaDonThuDtos, pagi: HoaDonThuDomains.Pagination);
@@ -116,7 +134,7 @@ namespace QLDV_KiemNghiem_BE.Services
                 TongTien = tongTien,
                 NgayLap = DateTime.Now,
                 GhiChu = "Tao hoa don thanh toan cho phieu dang ky" + phieuDangKy.SoDkpt,
-                TrangThai = true,
+                Active = true,
                 NgayTao = DateTime.Now,
                 NguoiTao = user,
                 SoDkpt = phieuDangKy.SoDkpt
@@ -228,7 +246,7 @@ namespace QLDV_KiemNghiem_BE.Services
                     Message = "Du lieu can xoa khong ton tai, vui long kiem tra lai",
                 };
             }
-            HoaDonThuDomain.TrangThai = false;
+            HoaDonThuDomain.Active = false;
             HoaDonThuDomain.NguoiSua = user;
             HoaDonThuDomain.NgaySua = DateTime.Now;
 

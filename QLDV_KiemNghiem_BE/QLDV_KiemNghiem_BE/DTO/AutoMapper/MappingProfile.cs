@@ -87,6 +87,10 @@ namespace QLDV_KiemNghiem_BE.DTO.AutoMapper
                   .ForAllMembers(opts => opts.Condition((src, dest, srcMember) =>
                     srcMember != null && (!(srcMember is string str) || !string.IsNullOrWhiteSpace(str))));
 
+            CreateMap<HoaDonThuProcedure, HoaDonThuProcedureDto>().ReverseMap()
+                  .ForAllMembers(opts => opts.Condition((src, dest, srcMember) =>
+                    srcMember != null && (!(srcMember is string str) || !string.IsNullOrWhiteSpace(str))));
+
             CreateMap<ChiTietHoaDonThu, ChiTietHoaDonThuDto>().ReverseMap().ForMember(dest => dest.MaId, opt => opt.Ignore())
                   .ForAllMembers(opts => opts.Condition((src, dest, srcMember) =>
                     srcMember != null && (!(srcMember is string str) || !string.IsNullOrWhiteSpace(str))));

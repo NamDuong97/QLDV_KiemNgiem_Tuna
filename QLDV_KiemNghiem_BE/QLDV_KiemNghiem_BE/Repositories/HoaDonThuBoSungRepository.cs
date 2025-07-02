@@ -51,6 +51,21 @@ namespace QLDV_KiemNghiem_BE.Repositories
             }
             return null;
         }
+        public async Task<List<HoaDonThuBoSungProcedure>?> FindHoaDonThuBoSungByMaHoaDonThuAsync(string maHoaDonThu)
+        {
+            var resultList = await _context.HoaDonThuBoSungProcedures
+                .FromSqlRaw("EXEC sp_getAllHoaDonThuBoSungByBoLoc {0}, {1}", "", maHoaDonThu)
+                .ToListAsync();
+           
+            if (resultList != null && resultList.Count() > 0)
+            {
+                foreach (var item in resultList) {
+
+                    item.ChiTietHoaDonThuBoSungs = await _context.ChiTietHoaDonThuBoSungs.Where(it => it.MaHdbs == item.MaID).ToListAsync();
+                }
+            }
+            return null;
+        }
         public async Task<HoaDonThuBoSung?> FindHoaDonThuBoSungAsync(string maHoaDonThuBoSung, bool track)
         {
             if (track)
