@@ -1,57 +1,56 @@
 import { motion } from "motion/react";
 import { useState } from "react";
-import ShowDetailChoDuyet from "./ShowDetailChoDuyet";
-import EditChoDuyet from "./EditChoDuyet";
 import List from "./List";
+import ShowDetail from "./ShowDetail";
+import Edit from "./Edit";
+import ChiTietPhieuDKyDVKN from "./ChiTietPhieuDKyDVKN";
 
 const DanhSachHoaDon = () => {
   const [activeView, setActiveView] = useState("list");
   const [selectedResultId, setSelectedResultId] = useState(null);
-  const handleViewResultChoDuyet = (id: any) => {
+  const [openXemChiTiet, setOpenXemChiTiet] = useState(false);
+  const [isSaveIdPDKy, setIsSaveIdPDKy] = useState(false);
+  const handleViewResult = (id: any) => {
     setSelectedResultId(id);
-    setActiveView("detailChoDuyet");
+    setActiveView("detail");
   };
 
-  const handleEditResultChoDuyet = (id: any) => {
+  const handleEditResult = (id: any) => {
     setSelectedResultId(id);
-    setActiveView("editChoDuyet");
+    setActiveView("edit");
   };
 
-  const handleCancelChoDuyet = () => {
+  const handleOpenPhieuDKy = (id: any) => {
+    setIsSaveIdPDKy(id);
+    setOpenXemChiTiet(true);
+  };
+
+  const handleCancel = () => {
     setActiveView("list");
     setSelectedResultId(null);
   };
 
   const renderContent = () => {
     switch (activeView) {
-      case "detailChoDuyet":
+      case "detail":
         return (
-          <ShowDetailChoDuyet
+          <ShowDetail
             resultId={selectedResultId}
-            onBack={handleCancelChoDuyet}
+            onBack={handleCancel}
+            handleOpenPhieuDKy={handleOpenPhieuDKy}
           />
         );
-      case "editChoDuyet":
+      case "edit":
         return (
-          <EditChoDuyet
+          <Edit
             resultId={selectedResultId}
             onCancel={() => setActiveView("list")}
           />
         );
       case "list":
-        return (
-          <List
-            onView={handleViewResultChoDuyet}
-            onEdit={handleEditResultChoDuyet}
-          />
-        );
+        return <List onView={handleViewResult} onEdit={handleEditResult} />;
       default:
-        return (
-          <List
-            onView={handleViewResultChoDuyet}
-            onEdit={handleEditResultChoDuyet}
-          />
-        );
+        return <List onView={handleViewResult} onEdit={handleEditResult} />;
     }
   };
 
@@ -76,6 +75,11 @@ const DanhSachHoaDon = () => {
       </div>
 
       <div className="fade-in">{renderContent()}</div>
+      <ChiTietPhieuDKyDVKN
+        open={openXemChiTiet}
+        handleClose={() => setOpenXemChiTiet(false)}
+        isSaveIdPDKy={isSaveIdPDKy}
+      />
     </motion.div>
   );
 };

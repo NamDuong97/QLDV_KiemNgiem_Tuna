@@ -1,20 +1,20 @@
+import { Eye } from "react-feather";
+import { MdReceiptLong } from "react-icons/md";
 import {
   formatDateNotTime2,
   renderTrangThaiPhanTichKetQua,
-} from "../../../../configs/configAll";
-import { Eye } from "react-feather";
-import { MdReceiptLong } from "react-icons/md";
+} from "../../../../../configs/configAll";
 
 const Card = ({ result, onView }: any) => {
   const handleView = (e: any) => {
     e.stopPropagation();
-    onView(result?.maID);
+    onView("HD002");
   };
 
   return (
     <div
       className="result-card bg-white border border-gray-200 rounded-lg p-6 card-hover cursor-pointer"
-      onClick={() => onView(result?.maID)}
+      onClick={() => onView("HD002")}
     >
       <div className="flex justify-between items-start mb-4">
         <div className="flex items-center space-x-3">

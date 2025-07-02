@@ -69,6 +69,7 @@ export const useGetDmPhuLieuHoaChatAll = (props: Props) => {
       const response = await PhieuDKyDVKN_Services.getDmPhuLieuHoaChatAll();
       return response;
     },
+    staleTime: Infinity,
   });
 };
 

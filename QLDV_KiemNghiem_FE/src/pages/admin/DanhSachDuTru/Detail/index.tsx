@@ -11,11 +11,12 @@ const Detail = ({
   isEditable = true,
   control,
   detail,
+  dataDMPLHC,
 }: any) => {
   if (!isEditable) {
     return (
       <div className="grid grid-cols-5 gap-4 p-4 border-b border-gray-200 last:border-b-0">
-        <div className="font-medium col-span-1">{detail?.Ten_PLHC}</div>
+        <div className="font-medium col-span-1">{dataDMPLHC?.find((item: any) => item?.maId === detail?.maDmPlhc)?.tenDmPlhc}</div>
         <div className="col-span-1">
           {detail?.soLuong} {detail?.donViTinh}
         </div>

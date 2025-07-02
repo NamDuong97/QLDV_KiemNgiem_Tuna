@@ -41,7 +41,7 @@ export default class duTruServices {
     try {
       const response = await _APIInstance.put(
         API.ADMIN.DU_TRU.UPDATE_DU_TRU,
-        { params: params },
+        params,
         {
           headers: { "Content-Type": "application/json" },
         }

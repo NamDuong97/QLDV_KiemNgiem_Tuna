@@ -34,7 +34,7 @@ const schema = yup.object({
     .min(1, "Cần ít nhất 1 chỉ tiêu"),
 });
 
-const EditChoDuyet = ({ resultId, onCancel }: any) => {
+const Edit = ({ resultId, onCancel }: any) => {
   const { data: chiTieus } = queryChiTieuAll({
     queryKey: "ChiTieuAll",
   });
@@ -435,4 +435,4 @@ const EditChoDuyet = ({ resultId, onCancel }: any) => {
   );
 };
 
-export default EditChoDuyet;
+export default Edit;

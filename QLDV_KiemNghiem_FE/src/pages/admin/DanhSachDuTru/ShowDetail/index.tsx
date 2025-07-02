@@ -14,12 +14,14 @@ import FormLyDoTuChoi from "./formLyDoTuChoi";
 import { useState } from "react";
 import { TypeConformation } from "../../../../constants/typeConfirmation";
 import { typeConfirmation } from "../../PhanTichKetQua/ShowDetailChoDuyet";
+import { useGetDmPhuLieuHoaChatAll } from "../../../../hooks/customers/usePhieuDKyDVKN";
 
 const ShowDetail = ({ resultId, onEdit, onBack }: any) => {
   const { data } = getDuTruByID({
     queryKey: "DuTruByID",
     params: resultId,
   });
+  console.log("data", data);
 
   const { data: dataMauID } = queryMauByID({
     queryKey: "MauByID",
@@ -42,6 +44,10 @@ const ShowDetail = ({ resultId, onEdit, onBack }: any) => {
   const { data: dataNhanVienDuyet } = getInforNhanVien({
     queryKey: "InforNhanVienDuyet",
     params: data?.manvDuyet,
+  });
+
+  const { data: dataDMPLHC } = useGetDmPhuLieuHoaChatAll({
+    queryKey: "useGetDmPhuLieuHoaChatAll",
   });
 
   return (
@@ -175,11 +181,12 @@ const ShowDetail = ({ resultId, onEdit, onBack }: any) => {
               Chi tiết kết quả kiểm nghiệm
             </h3>
             <div className="text-sm text-gray-500">
-              Tổng số chỉ tiêu: {data?.chiTietPhieuDuTrus?.length || 0}
+              Tổng số chỉ tiêu: {data?.chiTietPhieuDuTruDtos?.length || 0}
             </div>
           </div>
 
-          {data?.chiTietPhieuDuTrus && data?.chiTietPhieuDuTrus?.length > 0 ? (
+          {data?.chiTietPhieuDuTruDtos &&
+          data?.chiTietPhieuDuTruDtos?.length > 0 ? (
             <div className="bg-gray-50 rounded-lg overflow-hidden border border-gray-200">
               <div className="grid grid-cols-5 gap-4 p-4 bg-gray-100 font-medium text-sm text-gray-700 border-b border-gray-200">
                 <div className="flex items-center col-span-1">
@@ -193,12 +200,13 @@ const ShowDetail = ({ resultId, onEdit, onBack }: any) => {
                 </div>
               </div>
 
-              {data?.chiTietPhieuDuTrus.map((detail: any, index: any) => (
+              {data?.chiTietPhieuDuTruDtos?.map((detail: any, index: any) => (
                 <Detail
                   key={index}
                   detail={detail}
                   index={index}
                   isEditable={false}
+                  dataDMPLHC={dataDMPLHC}
                 />
               ))}
             </div>

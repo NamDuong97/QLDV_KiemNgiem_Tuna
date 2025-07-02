@@ -27,7 +27,6 @@ const ListLDPDuyet = ({ onView, handleOpenModelNoiDungSoBo }: any) => {
             maKhoa: personnelInfo?.maKhoa,
           },
   });
-  console.log("dadatadatadatata", data);
 
   const filteredResults = data
     ?.filter((item: any) =>

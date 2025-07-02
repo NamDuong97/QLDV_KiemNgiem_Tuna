@@ -3,7 +3,6 @@ import Card from "../Card";
 import InputSearch2 from "../../../../components/InputSearch2";
 import SelectItemTrangThai from "./SelectItemTrangThai";
 import { queryDuTruAll } from "../../../../hooks/personnels/queryDuTru";
-import { getAllDanhSachMau } from "../../../../hooks/personnels/phanCongKhoa";
 import { Pagination, Skeleton } from "@mui/material";
 
 const List = ({ onView, onEdit }: any) => {
@@ -14,24 +13,14 @@ const List = ({ onView, onEdit }: any) => {
     queryKey: "queryDuTruAll",
   });
 
-  const { data: dataMau } = getAllDanhSachMau({
-    queryKey: "DanhSachMau",
-    params: {
-      getAll: true,
-    },
-  });
-
-  const dataDM_Mau: any = dataMau?.data;
-
   const filteredResults = data
     ?.filter((item: any) => item?.active)
     ?.filter((result: any) => {
       const matchesSearch =
-        dataDM_Mau
-          ?.find((item: any) => item.maId === result?.maPdkMau)
-          ?.tenMau?.toLowerCase()
+        result?.maPhieuDuTru
+          ?.toLowerCase()
           .includes(searchTerm.toLowerCase()) ||
-        result?.maPhieuDuTru?.toLowerCase().includes(searchTerm.toLowerCase());
+        result?.tenMau?.toLowerCase().includes(searchTerm.toLowerCase());
       const matchesStatus = !statusFilter || result.status === statusFilter;
       return matchesSearch && matchesStatus;
     })
@@ -64,7 +53,7 @@ const List = ({ onView, onEdit }: any) => {
           <div className="flex items-center space-x-4">
             <div className="flex gap-4 w-lg">
               <InputSearch2
-                placeholder="Tìm kiếm ..."
+                placeholder="Tìm kiếm tên mẫu hoặc mã dự trù..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
@@ -94,7 +83,6 @@ const List = ({ onView, onEdit }: any) => {
                   result={result}
                   onView={onView}
                   onEdit={onEdit}
-                  dataDM_Mau={dataDM_Mau}
                 />
               ))}
               {currentItems?.length > 0 && (

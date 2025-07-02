@@ -27,8 +27,6 @@ interface Props {
 
 const Edit = (props: Props) => {
   const { resultId, onCancel, handleViewResult } = props;
-
-  const { personnelInfo } = usePersonnel();
   const [openPopupThemPLHC, setOpenPopupThemPLHC] = useState(false);
   const handleOpenPopupThemPLHC = () => setOpenPopupThemPLHC(true);
 
@@ -38,7 +36,7 @@ const Edit = (props: Props) => {
   });
   const { data: dataMauID } = queryMauByID({
     queryKey: "MauByID",
-    params: data?.maPdkMau,
+    params: data?.maPDK_Mau,
   });
 
   const { data: dataDM_PhuLieuHoaChat } = useGetDmPhuLieuHoaChatAll({
@@ -51,7 +49,8 @@ const Edit = (props: Props) => {
       .array()
       .of(
         yup.object({
-          maPhieuDuTru: yup.string().required("Vui lòng nhập tên phụ liệu"),
+          maId: yup.string(),
+          maDmPlhc: yup.string().required("Vui lòng nhập tên phụ liệu"),
           soLuong: yup
             .number()
             .typeError("Số lượng phải là số")
@@ -87,10 +86,10 @@ const Edit = (props: Props) => {
     name: "chiTietPhieuDuTrus",
   });
 
-  const softDelete = (index: number) => {
+  const softDelete = (index: any) => {
     const chiTiet = watch(`chiTietPhieuDuTrus.${index}`);
     if (!chiTiet) return;
-    if (chiTiet.isDel !== undefined) {
+    if (chiTiet?.maId) {
       setValue(`chiTietPhieuDuTrus.${index}.isDel`, true);
     } else {
       remove(index);
@@ -121,7 +120,6 @@ const Edit = (props: Props) => {
   const { mutate } = updateDuTru({
     queryKey: "updateDuTru",
     onSuccess: (data: any) => {
-      console.log("Tạo phiếu dự trù thành công:", data);
       if (data.status === 200) {
         showNotification({
           message: "Tạo phiếu dự trù thành công",
@@ -146,6 +144,40 @@ const Edit = (props: Props) => {
     onSettled: handleSettled,
   });
 
+  const buildChiTiet = (item: any, originalChiTiet: any) => {
+    const { maId, maDmPlhc, soLuong, donViTinh, ghiChu, isDel } = item;
+
+    const base = {
+      maId: maId ?? "",
+      maDmPlhc,
+      soLuong,
+      donViTinh,
+      ghiChu: ghiChu ?? "",
+    };
+
+    // Nếu đang xóa
+    if (isDel === true) {
+      return { ...base, isDel: true };
+    }
+
+    if (maId) {
+      const originalItem = originalChiTiet.find((o: any) => o.maId === maId);
+      if (originalItem) {
+        const isChanged =
+          originalItem.maDmPlhc !== maDmPlhc ||
+          originalItem.soLuong !== soLuong ||
+          originalItem.donViTinh !== donViTinh ||
+          (originalItem.ghiChu ?? "") !== (ghiChu ?? "");
+        return { ...base, isDel: isChanged ? false : undefined };
+      } else {
+        return { ...base, maId: maId };
+      }
+    } else {
+      // item mới thêm
+      return { ...base, maId: "" };
+    }
+  };
+
   const handleSave = (formData: any) => {
     const validChiTiet = formData.chiTietPhieuDuTrus.filter(
       (item: any) => item?.isDel !== true
@@ -159,68 +191,36 @@ const Edit = (props: Props) => {
       return;
     }
 
-    const originalChiTiet = data?.chiTietPhieuDuTrus || [];
+    const originalChiTiet = data?.chiTietPhieuDuTruDtos || [];
 
     const params = {
-      maPdkMau: dataMauID?.maId,
-      manvLapPhieu: personnelInfo?.maId,
-      maKhoa: personnelInfo?.maKhoa,
+      maId: resultId,
+      noiDungDuyet: "",
       ghiChu: formData.ghiChu ?? "",
-      chiTietPhieuDuTrus: formData.chiTietPhieuDuTrus.map((item: any) => {
-        const { maId, Ten_PLHC, soLuong, donViTinh, ghiChu, isDel } = item;
-
-        const base = {
-          maId,
-          Ten_PLHC,
-          soLuong,
-          donViTinh,
-          ghiChu: ghiChu ?? "",
-        };
-
-        if (isDel === true) {
-          return { ...base, isDel: true };
-        }
-
-        const originalItem = originalChiTiet.find(
-          (o: any) => o.maDmPlhc === Ten_PLHC
-        );
-
-        if (originalItem) {
-          const isChanged =
-            originalItem.maDmPlhc !== Ten_PLHC ||
-            originalItem.soLuong !== soLuong ||
-            originalItem.donViTinh !== donViTinh ||
-            (originalItem.ghiChu ?? "") !== (ghiChu ?? "");
-
-          if (isChanged) {
-            return { ...base, isDel: false };
-          }
-        }
-
-        if (!maId) {
-          return { ...base, maId: "" };
-        }
-
-        return base;
-      }),
+      chiTietPhieuDuTrus: formData.chiTietPhieuDuTrus.map((item: any) =>
+        buildChiTiet(item, originalChiTiet)
+      ),
     };
 
     console.log("Form Submit:", params);
-    // mutate(params);
+    mutate(params);
   };
 
   useEffect(() => {
     if (data) {
+      const chiTietMapped = (data.chiTietPhieuDuTruDtos || []).map(
+        (item: any) => ({
+          maId: item.maId,
+          maDmPlhc: item.maDmPlhc ?? "",
+          soLuong: item.soLuong ?? 0,
+          donViTinh: item.donViTinh ?? "",
+          ghiChu: item.ghiChu ?? "",
+          isDel: false,
+        })
+      );
       reset({
         ghiChu: data.ghiChu ?? "",
-        chiTietPhieuDuTrus:
-          data.chiTietPhieuDuTrus?.map((item: any) => ({
-            maPhieuDuTru: item.maDmPlhc ?? "",
-            soLuong: item.soLuong ?? 0,
-            donViTinh: item.donViTinh ?? "",
-            ghiChu: item.ghiChu ?? "",
-            isDel: false,
-          })) ?? [],
+        chiTietPhieuDuTrus: chiTietMapped,
       });
     }
   }, [data, reset]);
@@ -277,13 +277,14 @@ const Edit = (props: Props) => {
         <div className="border-t-2 border-gray-200 pt-8 space-y-6">
           <div className="flex justify-between items-center mb-4">
             <h3 className="text-lg font-semibold text-gray-600">
-              Chi tiết phiếu
+              Chi tiết phiếu dự trù
             </h3>
             <button
               type="button"
               onClick={() =>
                 append({
-                  maPhieuDuTru: "",
+                  maId: "",
+                  maDmPlhc: "",
                   soLuong: 0,
                   donViTinh: "",
                   ghiChu: "",
@@ -292,7 +293,7 @@ const Edit = (props: Props) => {
               className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center space-x-2"
             >
               <Plus size={16} />
-              <span>Thêm Chỉ Tiêu</span>
+              <span>Thêm phụ liệu hóa chất</span>
             </button>
           </div>
 
@@ -315,12 +316,12 @@ const Edit = (props: Props) => {
                     Tên PLHC
                   </label>
                   <InputSelectPLHC
-                    name={`chiTietPhieuDuTrus.${index}.maPhieuDuTru`}
+                    name={`chiTietPhieuDuTrus.${index}.maDmPlhc`}
                     control={control}
                     data={dataDM_PhuLieuHoaChat}
                     placeholder="Tên phụ liệu"
                     errorMessage={
-                      errors?.chiTietPhieuDuTrus?.[index]?.maPhieuDuTru?.message
+                      errors?.chiTietPhieuDuTrus?.[index]?.maDmPlhc?.message
                     }
                     handleOpenPopupThem={handleOpenPopupThemPLHC}
                   />

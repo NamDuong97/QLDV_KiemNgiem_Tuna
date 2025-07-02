@@ -109,6 +109,9 @@ export const API = {
       DELETE:
         "/api/PhieuTienDoLamViec/deletePhieuTienDoLamViec?maPhieuTienDoLamViec=",
     },
+    DM_PLHC: {
+      GET_BY_ID: "/api/DmPhuLieuHoaChat/findDmPhuLieuHoaChat?id=",
+    },
   },
   CUSTOMER: {
     PHIEU_DANG_KY_DICH_VU_KIEM_NGHIEM: {
