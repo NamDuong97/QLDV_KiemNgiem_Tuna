@@ -259,6 +259,5 @@ namespace QLDV_KiemNghiem_BE.Services
                 Data = dataReturn
             };
         }
-
     }
 }

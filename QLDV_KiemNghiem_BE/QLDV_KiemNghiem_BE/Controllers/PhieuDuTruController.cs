@@ -7,6 +7,7 @@ using QLDV_KiemNghiem_BE.DTO.ResponseDto;
 using QLDV_KiemNghiem_BE.Interfaces.ManagerInterface;
 using QLDV_KiemNghiem_BE.Models;
 using QLDV_KiemNghiem_BE.RequestFeatures;
+using QLDV_KiemNghiem_BE.RequestFeatures.PagingRequest;
 
 namespace QLDV_KiemNghiem_BE.Controllers
 {
@@ -26,18 +27,19 @@ namespace QLDV_KiemNghiem_BE.Controllers
 
         [HttpGet]
         [Route("getPhieuDuTruAll")]
-        public async Task<ActionResult> getPhieuDuTruAll()
+        public async Task<ActionResult> getPhieuDuTruAll([FromQuery]PhieuDuTruParam param)
         {
-            var result = await _service.PhieuDuTru.GetPhieuDuTrusAllAsync();
+            var result = await _service.PhieuDuTru.GetPhieuDuTruAllAsync(param);
+            Response.Headers.Append("X-Pagination", System.Text.Json.JsonSerializer.Serialize(result.pagi));
             _logger.LogDebug("get toan bo phieu du tru");
-            return Ok(result);
+            return Ok(result.datas);
         }
 
         [HttpGet]
         [Route("getPhieuDuTruByID")]
         public async Task<ActionResult> getPhieuDuTruByID(string maPhieuDuTru)
         {
-            var result = await _service.PhieuDuTru.FindPhieuDuTruAsync(maPhieuDuTru);
+            var result = await _service.PhieuDuTru.FindPhieuDuTruShowAsync(maPhieuDuTru);
             _logger.LogDebug("lay phieu du tru can tim: " + maPhieuDuTru);
             return Ok(result);
         }

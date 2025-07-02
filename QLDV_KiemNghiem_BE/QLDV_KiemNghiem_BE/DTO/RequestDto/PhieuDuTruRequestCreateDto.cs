@@ -10,10 +10,6 @@ namespace QLDV_KiemNghiem_BE.DTO.RequestDto
         [StringLength(50, ErrorMessage = "MaPdkMau tối đa 50 ký tự")]
         public string MaPdkMau { get; set; } = null!;
 
-        [Required(ErrorMessage = "ManvLapPhieu không được bỏ trống")]
-        [StringLength(50, ErrorMessage = "ManvLapPhieu tối đa 50 ký tự")]
-        public string ManvLapPhieu { get; set; } = null!;
-
         [Required(ErrorMessage = "MaKhoa không được bỏ trống")]
         [StringLength(50, ErrorMessage = "MaKhoa tối đa 50 ký tự")]
         public string? MaKhoa { get; set; }
