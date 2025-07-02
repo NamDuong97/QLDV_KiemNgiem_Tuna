@@ -18,6 +18,7 @@ import { Dispatch, SetStateAction } from "react";
 import { Align } from "../../../../../../../models/Table";
 import { APP_ROUTES } from "../../../../../../../constants/routers";
 import { CiEdit } from "react-icons/ci";
+import { Edit } from "react-feather";
 
 interface TableChoXetDuyetProps {
   tableBody: any;
@@ -191,10 +192,11 @@ const TableChoXetDuyet = (props: TableChoXetDuyetProps) => {
                   >
                     <button
                       onClick={() => handleRedirecEditPage(item)}
-                      className="px-2 py-1 rounded cursor-pointer border border-solid border-yellow-500 group hover:bg-yellow-500"
+                      className="px-2 py-1 rounded cursor-pointer text-yellow-600 hover:bg-yellow-50 group"
                     >
-                      <span className="text-base/4 lg:text-lg/6 font-bold text-yellow-500 group-hover:text-white">
-                        <CiEdit />
+                      <span className="text-base/4 lg:text-lg/6 flex items-center gap-2">
+                        <Edit size={14} />
+                        <span>Sửa</span>
                       </span>
                     </button>
                   </Tooltip>

@@ -172,10 +172,6 @@ const FormSignUpDVKN = () => {
         xuatKetQua: itemMau.xuatKetQua,
         trangThaiNhanMau: itemMau.trangThaiNhanMau,
         ghiChu: itemMau.ghiChu,
-        nguoiTao: itemMau.nguoiTao,
-        nguoiSua: "admin",
-        ngayTao: "2025-04-18T00:00:00",
-        ngaySua: "2025-04-18T00:00:00",
         thoiGianTieuChuan: Number(itemMau.thoiGianTieuChuan),
         maPdkMau: null,
         loaiDv: itemMau.loaiDv,
@@ -189,10 +185,6 @@ const FormSignUpDVKN = () => {
                 ghiChu: itemImage.ghiChu,
                 loaiAnh: itemImage.loaiAnh,
                 trangThai: true,
-                nguoiTao: itemImage.nguoiTao,
-                nguoiSua: null,
-                ngayTao: null,
-                ngaySua: null,
               };
             })
           : [],
@@ -212,10 +204,6 @@ const FormSignUpDVKN = () => {
         ngayHetHan: itemPLHC.ngayHetHan,
         tenNhaCungCap: itemPLHC.tenNhaCungCap,
         soLo: itemPLHC.soLo,
-        nguoiTao: itemPLHC.nguoiTao,
-        nguoiSua: itemPLHC.nguoiSua,
-        ngayTao: null,
-        ngaySua: null,
       })
     );
 
