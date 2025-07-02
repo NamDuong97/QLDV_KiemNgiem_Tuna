@@ -171,7 +171,7 @@ namespace QLDV_KiemNghiem_BE.Services
            
             return new ResponseModel1<PhieuTienDoLamViecDto>
             {
-                KetQua = false,
+                KetQua = check,
                 Message = check ? "Xoa thanh cong!" : "Xoa that bai",
                 Data = null
             };
