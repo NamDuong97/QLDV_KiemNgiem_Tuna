@@ -41,7 +41,7 @@ namespace QLDV_KiemNghiem_BE.Services
 
             var ChiTietPhieuDuTruDomain = _mapper.Map<ChiTietPhieuDuTru>(ChiTietPhieuDuTruDto);
             ChiTietPhieuDuTruDomain.MaId = Guid.NewGuid().ToString();
-            ChiTietPhieuDuTruDomain.TrangThai = "active";
+            ChiTietPhieuDuTruDomain.TrangThai = true;
 
             _repositoryManager.ChiTietPhieuDuTru.CreateChiTietPhieuDuTru(ChiTietPhieuDuTruDomain);
             bool check = await _repositoryManager.SaveChangesAsync();

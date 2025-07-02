@@ -7,9 +7,9 @@ namespace QLDV_KiemNghiem_BE.DTO.RequestDto
         [StringLength(50, ErrorMessage = "MaId tối đa 50 ký tự")]
         public string MaId { get; set; } = null!;
 
-        [Required(ErrorMessage = "MaPhieuDuTru không được bỏ trống")]
-        [StringLength(50, ErrorMessage = "MaPhieuDuTru tối đa 50 ký tự")]
-        public string MaPhieuDuTru { get; set; } = null!;
+        //[Required(ErrorMessage = "MaPhieuDuTru không được bỏ trống")]
+        //[StringLength(50, ErrorMessage = "MaPhieuDuTru tối đa 50 ký tự")]
+        //public string MaPhieuDuTru { get; set; } = null!;
 
         [StringLength(50, ErrorMessage = "DonViTinh tối đa 50 ký tự")]
         public string DonViTinh { get; set; } = string.Empty;

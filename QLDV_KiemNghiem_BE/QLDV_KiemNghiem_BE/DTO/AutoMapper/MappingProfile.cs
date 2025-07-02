@@ -178,6 +178,10 @@ namespace QLDV_KiemNghiem_BE.DTO.AutoMapper
                   .ForAllMembers(opts => opts.Condition((src, dest, srcMember) =>
                     srcMember != null && (!(srcMember is string str) || !string.IsNullOrWhiteSpace(str))));
 
+            CreateMap<PhieuDuTruProcedure, PhieuDuTruProcedureDto>().ReverseMap()
+                .ForAllMembers(opts => opts.Condition((src, dest, srcMember) =>
+                  srcMember != null && (!(srcMember is string str) || !string.IsNullOrWhiteSpace(str))));
+
             CreateMap<PhieuDuTruRequestCreateDto, PhieuDuTru>().ReverseMap()
                  .ForAllMembers(opts => opts.Condition((src, dest, srcMember) =>
                    srcMember != null && (!(srcMember is string str) || !string.IsNullOrWhiteSpace(str))));

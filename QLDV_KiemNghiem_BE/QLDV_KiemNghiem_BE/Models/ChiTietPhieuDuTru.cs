@@ -26,8 +26,7 @@ public partial class ChiTietPhieuDuTru
     [StringLength(500)]
     public string? GhiChu { get; set; }
 
-    [StringLength(100)]
-    public string? TrangThai { get; set; }
+    public bool? TrangThai { get; set; }
 
     [Column("MaDM_PLHC")]
     [StringLength(50)]

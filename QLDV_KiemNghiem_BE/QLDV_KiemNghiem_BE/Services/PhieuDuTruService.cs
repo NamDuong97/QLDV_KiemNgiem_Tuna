@@ -10,6 +10,8 @@ using QLDV_KiemNghiem_BE.Interfaces;
 using QLDV_KiemNghiem_BE.Interfaces.ManagerInterface;
 using QLDV_KiemNghiem_BE.Models;
 using QLDV_KiemNghiem_BE.RequestFeatures;
+using QLDV_KiemNghiem_BE.RequestFeatures.PagingRequest;
+using QLDV_KiemNghiem_BE.Shared;
 
 namespace QLDV_KiemNghiem_BE.Services
 {
@@ -26,18 +28,31 @@ namespace QLDV_KiemNghiem_BE.Services
             _context = context;
             _hubContext = hubContext;
         }
-        public async Task<IEnumerable<PhieuDuTruDto>> GetPhieuDuTrusAllAsync()
+        public async Task<(IEnumerable<PhieuDuTruProcedureDto> datas, Pagination pagi)> GetPhieuDuTruAllAsync(PhieuDuTruParam param)
         {
-            var PhieuDuTruDomains = await _repositoryManager.PhieuDuTru.GetPhieuDuTrusAllAsync();
-            var result = _mapper.Map<IEnumerable<PhieuDuTruDto>>(PhieuDuTruDomains);
-            return result;
+            List<PhieuDuTruProcedureDto> phieuDuTruDtos = new List<PhieuDuTruProcedureDto>();
+
+            var phieuDuTruDomains = await _repositoryManager.PhieuDuTru.GetPhieuDuTruAllAsync(param);
+            foreach (var phieuDuTru in phieuDuTruDomains)
+            {
+                var phieuDuTruDto = _mapper.Map<PhieuDuTruProcedureDto>(phieuDuTru);
+                phieuDuTruDto.ChiTietPhieuDuTruDtos = _mapper.Map<List<ChiTietPhieuDuTruDto>>(phieuDuTru.ChiTietPhieuDuTrus);
+                phieuDuTruDtos.Add(phieuDuTruDto);
+            }
+
+            return (datas: phieuDuTruDtos, pagi: phieuDuTruDomains.Pagination);
         }
-        public async Task<PhieuDuTruDto?> FindPhieuDuTruAsync(string maPhieuDuTru)
+        public async Task<PhieuDuTruProcedureDto?> FindPhieuDuTruShowAsync(string maPhieuDuTru)
         {
             if (maPhieuDuTru == null || maPhieuDuTru == "") return null;
-            var PhieuDuTruDomain = await _repositoryManager.PhieuDuTru.FindPhieuDuTrusAsync(maPhieuDuTru, false);
-            var result = _mapper.Map<PhieuDuTruDto>(PhieuDuTruDomain);
-            return result;
+            var PhieuDuTruDomain = await _repositoryManager.PhieuDuTru.FindPhieuDuTruShowAsync(maPhieuDuTru);
+            if (PhieuDuTruDomain != null)
+            {
+                var result = _mapper.Map<PhieuDuTruProcedureDto>(PhieuDuTruDomain);
+                result.ChiTietPhieuDuTruDtos = _mapper.Map<List<ChiTietPhieuDuTruDto>>(PhieuDuTruDomain.ChiTietPhieuDuTrus);
+                return result;
+            }
+            return null;
         }
         public async Task<ResponseModel1<PhieuDuTruDto>> CreatePhieuDuTruAsync(PhieuDuTruRequestCreateDto PhieuDuTruDto, string user, string userId)
         {
@@ -51,29 +66,41 @@ namespace QLDV_KiemNghiem_BE.Services
             {
                 MaId = Guid.NewGuid().ToString(),
                 MaPhieuDuTru = "PDT_" + PublicFunction.getTimeSystem(),
-                ManvLapPhieu = PhieuDuTruDto.ManvLapPhieu,
+                ManvLapPhieu = userId ?? null,
                 MaPdkMau = PhieuDuTruDto.MaPdkMau,
                 NgayLap = DateTime.Now,
                 MaKhoa = PhieuDuTruDto.MaKhoa,
-                GhiChu = PhieuDuTruDto.GhiChu
+                GhiChu = PhieuDuTruDto.GhiChu,
+                TrangThai = 1, // chờ duyệt
+                Active = true, // còn tồn tại
             };
 
             if(PhieuDuTruDto.ChiTietPhieuDuTrus!= null && PhieuDuTruDto.ChiTietPhieuDuTrus.Count() > 0)
             {
-                foreach(var item in PhieuDuTruDto.ChiTietPhieuDuTrus)
+                foreach (var item in PhieuDuTruDto.ChiTietPhieuDuTrus)
                 {
-                    ChiTietPhieuDuTru chiTietPhieuDuTru = new ChiTietPhieuDuTru()
-                    {
-                        MaId = Guid.NewGuid().ToString(),
-                        MaPhieuDuTru = phieuDuTru.MaId,
-                        DonViTinh = item.DonViTinh,
-                        SoLuong = item.SoLuong,
-                        GhiChu =item.GhiChu,
-                        TrangThai = "active",
-                        MaDmPlhc = item.MaDmPlhc,
-                    };
-                    phieuDuTru.ChiTietPhieuDuTrus.Add(chiTietPhieuDuTru);
+                   
+                        ChiTietPhieuDuTru chiTietPhieuDuTru = new ChiTietPhieuDuTru()
+                        {
+                            MaId = Guid.NewGuid().ToString(),
+                            MaPhieuDuTru = phieuDuTru.MaId,
+                            DonViTinh = item.DonViTinh,
+                            SoLuong = item.SoLuong,
+                            GhiChu = item.GhiChu,
+                            TrangThai = true,
+                            MaDmPlhc = item.MaDmPlhc,
+                        };
+                        phieuDuTru.ChiTietPhieuDuTrus.Add(chiTietPhieuDuTru);
+                    
                 }
+            }
+            else
+            {
+                return new ResponseModel1<PhieuDuTruDto>
+                {
+                    KetQua = false,
+                    Message = "Vui long them hoa chat phu lieu cho phieu du tru",
+                };
             }
 
             _repositoryManager.PhieuDuTru.CreatePhieuDuTruAsync(phieuDuTru);
@@ -83,7 +110,7 @@ namespace QLDV_KiemNghiem_BE.Services
             return new ResponseModel1<PhieuDuTruDto>
             {
                 KetQua = check,
-                Message = check ? "Them tieu chuan thanh cong!" : "Them tieu chuan that bai, vui long thu lai!",
+                Message = check ? "Tao phieu du tru thanh cong!" : "Tao phieu du tru that bai, vui long thu lai!",
                 Data = PhieuDuTruReturnDto
             };
         }
@@ -121,18 +148,27 @@ namespace QLDV_KiemNghiem_BE.Services
                     // Thêm mới
                     if (string.IsNullOrEmpty(item.MaId))
                     {
-                        var temp = new ChiTietPhieuDuTru
+                        var checkExistPLHC = await _repositoryManager.ChiTietPhieuDuTru.CheckExistPlhcAsync(PhieuDuTruCheck.MaId, item?.MaDmPlhc ?? "", item?.DonViTinh ?? "", false);
+                        if (checkExistPLHC != null)
                         {
-                            MaId = Guid.NewGuid().ToString(),
-                            MaPhieuDuTru = PhieuDuTruCheck.MaId,
-                            DonViTinh = item.DonViTinh,
-                            SoLuong = item.SoLuong,
-                            GhiChu = item.GhiChu,
-                            TrangThai = "active",
-                            MaDmPlhc = item.MaDmPlhc,
-                        };
-                        _repositoryManager.ChiTietPhieuDuTru.CreateChiTietPhieuDuTru(temp);
-                        chiTietPhieuDuTrus.Add(temp);
+                            checkExistPLHC.SoLuong += item?.SoLuong ?? 0;
+                            _repositoryManager.ChiTietPhieuDuTru.UpdateChiTietPhieuDuTruAsync(checkExistPLHC);
+                            chiTietPhieuDuTrus.Add(checkExistPLHC);
+                        }
+                        else // Nếu phụ liệu hóa chất chưa tồn tại thì thêm mới, ngược lại thì cộng dồn
+                        {
+                            var temp = new ChiTietPhieuDuTru
+                            {
+                                MaId = Guid.NewGuid().ToString(),
+                                MaPhieuDuTru = PhieuDuTruCheck.MaId,
+                                DonViTinh = item?.DonViTinh,
+                                SoLuong = item?.SoLuong,
+                                GhiChu = item?.GhiChu,
+                                MaDmPlhc = item?.MaDmPlhc,
+                            };
+                            _repositoryManager.ChiTietPhieuDuTru.CreateChiTietPhieuDuTru(temp);
+                            chiTietPhieuDuTrus.Add(temp);
+                        }
                     }
                     else // xoa, sua
                     {
@@ -146,7 +182,7 @@ namespace QLDV_KiemNghiem_BE.Services
                             else
                             {
                                 existing.DonViTinh = string.IsNullOrEmpty(item.DonViTinh) ? existing.DonViTinh: item.DonViTinh;
-                                existing.SoLuong = item.SoLuong > 0 ? existing.SoLuong : item.SoLuong;
+                                existing.SoLuong = item.SoLuong > 0 ? item.SoLuong : existing.SoLuong;
                                 existing.GhiChu = string.IsNullOrEmpty(item.GhiChu) ? existing.GhiChu : item.GhiChu;
                                 _repositoryManager.ChiTietPhieuDuTru.UpdateChiTietPhieuDuTruAsync(existing);
                                 chiTietPhieuDuTrus.Add(existing);
@@ -193,11 +229,11 @@ namespace QLDV_KiemNghiem_BE.Services
             
             if (param.Action)
             {
-                PhieuDuTruCheck.TrangThai = 1;
+                PhieuDuTruCheck.TrangThai = 2;
             }
             else
             {
-                PhieuDuTruCheck.TrangThai = 0;
+                PhieuDuTruCheck.TrangThai = 1;
             }
 
             _repositoryManager.PhieuDuTru.UpdatePhieuDuTruAsync(PhieuDuTruCheck);
@@ -266,7 +302,7 @@ namespace QLDV_KiemNghiem_BE.Services
             {
                 foreach(var item in chiTietPhieuDuTrus)
                 {
-                    item.TrangThai = "no active";
+                    item.TrangThai = false;
                     _repositoryManager.ChiTietPhieuDuTru.UpdateChiTietPhieuDuTruAsync(item);
                 }
             }

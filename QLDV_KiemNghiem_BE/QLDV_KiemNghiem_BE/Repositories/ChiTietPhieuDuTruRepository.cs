@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.VisualBasic;
 using QLDV_KiemNghiem_BE.Data;
 using QLDV_KiemNghiem_BE.Interfaces;
 using QLDV_KiemNghiem_BE.Models;
@@ -33,6 +34,20 @@ namespace QLDV_KiemNghiem_BE.Repositories
             else
             {
                 return await _context.ChiTietPhieuDuTrus.AsNoTracking().Where(it => it.MaPhieuDuTru == maPhieuDuTru && it.MaId == maid).FirstOrDefaultAsync();
+            }
+        }
+
+        public async Task<ChiTietPhieuDuTru?> CheckExistPlhcAsync(string maPhieuDuTru, string maPLHC, string dvt, bool track)
+        {
+            if (track)
+            {
+                return await _context.ChiTietPhieuDuTrus.
+                    FirstOrDefaultAsync(it => it.MaPhieuDuTru == maPhieuDuTru && it.MaDmPlhc == maPLHC && it.DonViTinh.ToLower().Trim().Equals(dvt));
+            }
+            else
+            {
+                return await _context.ChiTietPhieuDuTrus.AsNoTracking().
+                   FirstOrDefaultAsync(it => it.MaPhieuDuTru == maPhieuDuTru && it.MaDmPlhc == maPLHC && it.DonViTinh.ToLower().Trim().Equals(dvt));
             }
         }
 
