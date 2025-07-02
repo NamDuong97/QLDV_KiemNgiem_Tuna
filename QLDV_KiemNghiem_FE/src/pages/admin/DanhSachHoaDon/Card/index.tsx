@@ -1,4 +1,3 @@
-import { GiTestTubes } from "react-icons/gi";
 import {
   formatDateNotTime2,
   renderTrangThaiPhanTichKetQua,
@@ -6,6 +5,7 @@ import {
 import { Edit, Eye } from "react-feather";
 import { role } from "../../../../configs/parseJwt";
 import { getRoleGroup } from "../../../../configs/Role";
+import { MdReceiptLong } from "react-icons/md";
 
 const Card = ({ result, onView, onEdit }: any) => {
   const handleView = (e: any) => {
@@ -25,45 +25,39 @@ const Card = ({ result, onView, onEdit }: any) => {
     >
       <div className="flex justify-between items-start mb-4">
         <div className="flex items-center space-x-3">
-          <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
-            <GiTestTubes className="text-blue-600" size={20} />
+          <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
+            <MdReceiptLong className="text-green-600" size={20} />
           </div>
           <div>
             <h3 className="font-semibold text-gray-900">
-              {result?.maPhieuKetQua}
+              HD202561601111348_SDKPT202561601111281
             </h3>
-            <p className="text-sm text-gray-600">{result?.tenMau}</p>
+            <p className="text-sm text-gray-600">SDKPT20256160749594</p>
           </div>
         </div>
         {renderTrangThaiPhanTichKetQua(result?.trangThai)}
       </div>
 
-      <div className="grid grid-cols-6 gap-4 text-sm">
-        <div>
-          <p className="text-gray-600">Nhân viên lập</p>
-          <p className="font-medium">{result?.tennvLap}</p>
-        </div>
+      <div className="grid grid-cols-4 gap-4 text-sm">
         {result?.trangThai >= 2 && (
           <div>
-            <p className="text-gray-600">Nhân viên kiểm tra</p>
+            <p className="text-gray-600">Nhân viên xử lý</p>
             <p className="font-medium">{result?.tennvKiemTra}</p>
           </div>
         )}
         <div>
-          <p className="text-gray-600">Ngày trả KQ</p>
-          <p className="font-medium">{formatDateNotTime2(result?.ngayTraKetQua)}</p>
-        </div>
-        <div>
-          <p className="text-gray-600">Ngày tạo</p>
+          <p className="text-gray-600">Ngày lập</p>
           <p className="font-medium">{formatDateNotTime2(result?.ngayTao)}</p>
         </div>
-        <div>
-          <p className="text-gray-600">Ngày sửa</p>
-          <p className="font-medium">{formatDateNotTime2(result?.ngaySua)}</p>
+        <div className="col-span-2">
+          <p className="text-gray-600">Ghi chú</p>
+          <p className="font-medium">
+            Tao hoa don thanh toan cho phieu dang kySDKPT2025615211551887
+          </p>
         </div>
         <div>
-          <p className="text-gray-600">Khoa</p>
-          <p className="font-medium">{result?.tenKhoa}</p>
+          <p className="text-gray-600">Tổng tiền</p>
+          <p className="font-semibold text-lg text-red-600">2600000.00</p>
         </div>
       </div>
 
@@ -75,15 +69,6 @@ const Card = ({ result, onView, onEdit }: any) => {
           <Eye size={14} />
           <span>Xem</span>
         </button>
-        {getRoleGroup(role) === "KN" && (
-          <button
-            onClick={handleEdit}
-            className="px-3 py-1 text-yellow-600 hover:bg-yellow-50 rounded-md text-sm flex items-center space-x-1 cursor-pointer"
-          >
-            <Edit size={14} />
-            <span>Sửa</span>
-          </button>
-        )}
       </div>
     </div>
   );

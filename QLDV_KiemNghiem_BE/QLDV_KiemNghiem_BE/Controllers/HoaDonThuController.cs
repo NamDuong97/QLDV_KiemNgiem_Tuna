@@ -35,7 +35,7 @@ namespace QLDV_KiemNghiem_BE.Controllers
 
         [HttpGet]
         [Route("getHoaDonThuAll")]
-        public async Task<ActionResult> getHoaDonThuAll(HoaDonThuParam param)
+        public async Task<ActionResult> getHoaDonThuAll([FromQuery] HoaDonThuParam param)
         {
             var version = await _cache.GetStringAsync("hoadonthu:nhanvien:all:version") ?? "v1";
             var cacheKey = $"hoadonthu:nhanvien:all:{version}:{JsonConvert.SerializeObject(param)}";

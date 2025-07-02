@@ -67,6 +67,7 @@ const DanhSach = (props: Props) => {
   const [openModelPTKG, setOpenModelPTKG] = useState(false);
   const [openModelXoa, setOpenModelXoa] = useState(false);
   const [saveID, setSaveID] = useState("");
+  const [isThem, setIsThem] = useState(false);
 
   const [searchQuery, setSearchQuery] = useState("");
   const filteredSamples: any = data?.filter((sample: any) => {
@@ -288,6 +289,15 @@ const DanhSach = (props: Props) => {
                         <>
                           {[
                             {
+                              label: "Tạo phiếu tiến độ",
+                              color: "pink",
+                              onClick: () => {
+                                setSaveID(assignment.maId);
+                                setOpenModelXemChiTiet(true);
+                                setIsThem(true);
+                              },
+                            },
+                            {
                               label: "Tạo phiếu PTKQ",
                               color: "violet",
                               onClick: () => {
@@ -420,6 +430,8 @@ const DanhSach = (props: Props) => {
         handleClose={() => setOpenModelXemChiTiet(false)}
         dataID={saveID}
         handleOpenModelSua={handleOpenModelSua}
+        setIsThem={setIsThem}
+        isThem={isThem}
       />
       <ModelSua
         open={openModelSua}

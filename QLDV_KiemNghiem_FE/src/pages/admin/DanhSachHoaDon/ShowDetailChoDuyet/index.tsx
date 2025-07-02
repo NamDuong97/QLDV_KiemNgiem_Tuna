@@ -1,15 +1,10 @@
-import { ArrowLeft, Check, Slash } from "react-feather";
+import { ArrowLeft, Plus } from "react-feather";
 import {
   formatDate,
   renderTrangThaiPhanTichKetQua,
 } from "../../../../configs/configAll";
 import Detail from "../Detail";
 import { getPhanTichKetQuaByID } from "../../../../hooks/personnels/queryPTKQ";
-import FormLyDoTuChoi from "./formLyDoTuChoi";
-import { useState } from "react";
-import { TypeConformation } from "../../../../constants/typeConfirmation";
-import { role } from "../../../../configs/parseJwt";
-import { getRoleGroup } from "../../../../configs/Role";
 
 export const typeConfirmation = {
   TuChoi: "tuchoi",
@@ -22,9 +17,6 @@ const ShowDetailChoDuyet = ({ resultId, onEdit, onBack }: any) => {
     params: resultId,
   });
 
-  const [open, setOpen] = useState(false);
-  const [isTypeConform, setIsTypeConform] = useState<string>("");
-
   return (
     <div className="bg-white rounded-xl shadow-sm border border-gray-200">
       <div className="px-6 py-4 border-b border-gray-200 bg-gray-50 flex justify-between items-center">
@@ -32,30 +24,10 @@ const ShowDetailChoDuyet = ({ resultId, onEdit, onBack }: any) => {
           Chi tiết phiếu phân tích đang chờ duyệt
         </h2>
         <div className="flex space-x-2">
-          {role !== "KN" && (
-            <>
-              <button
-                onClick={() => {
-                  setOpen(true);
-                  setIsTypeConform(typeConfirmation.TuChoi);
-                }}
-                className="px-4 py-2 bg-yellow-200 text-yellow-700 rounded-lg hover:bg-yellow-300 cursor-pointer transition-colors flex items-center space-x-2"
-              >
-                <Slash size={16} />
-                <span>Từ chối</span>
-              </button>
-              <button
-                onClick={() => {
-                  setOpen(true);
-                  setIsTypeConform(typeConfirmation.DuyetPhieu);
-                }}
-                className="px-4 py-2 bg-green-200 text-green-700 rounded-lg hover:bg-green-300 cursor-pointer transition-colors flex items-center space-x-2"
-              >
-                <Check size={16} />
-                <span>Duyệt phiếu</span>
-              </button>
-            </>
-          )}
+          <button className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 cursor-pointer transition-colors flex items-center space-x-2">
+            <Plus size={16} />
+            <span>Tạo hóa đơn bổ sung</span>
+          </button>
           <button
             onClick={onBack}
             className="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-300 cursor-pointer transition-colors flex items-center space-x-2"
@@ -367,16 +339,6 @@ const ShowDetailChoDuyet = ({ resultId, onEdit, onBack }: any) => {
             </div>
           )}
       </div>
-      <FormLyDoTuChoi
-        isOpen={open}
-        onClose={() => setOpen(false)}
-        type={TypeConformation.Info}
-        title={`Xác nhận ${
-          isTypeConform === typeConfirmation.TuChoi ? `${getRoleGroup(role) === "BLD"? "ban lãnh đạo": "lãnh đạo phòng"} từ chối` : `${getRoleGroup(role) === "BLD"? "ban lãnh đạo": "lãnh đạo phòng"} duyệt phiếu`
-        }`}
-        dataID={data?.maID}
-        typeConform={isTypeConform}
-      />
     </div>
   );
 };

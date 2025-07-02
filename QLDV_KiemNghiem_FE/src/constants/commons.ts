@@ -91,6 +91,23 @@ export const API = {
       GET_BY_GUEST: "/api/HoaDonThu/getHoaDonThuOfCustomer?maKH=",
       GET_BY_ID: "/api/HoaDonThu/getHoaDonThuByID?maHoaDonThu=",
       DELETE: "/api/HoaDonThu/deleteHoaDonThu?maHoaDonThu=",
+      HOA_DON_BO_SUNG: {
+        GET_ALL: "/api/HoaDonThuBoSung/getHoaDonThuBoSungAll",
+        GET_BY_ID:
+          "/api/HoaDonThuBoSung/getHoaDonThuBoSungByID?maHoaDonThuBoSung=",
+        DELETE: "/api/HoaDonThuBoSung/deleteHoaDonThuBoSung?maHoaDonThuBoSung=",
+        CREATE: "/api/HoaDonThuBoSung/createHoaDonThuBoSung",
+        UPDATE: "/api/HoaDonThuBoSung/updateHoaDonThuBoSung",
+      },
+    },
+    TIEN_DO: {
+      GET_ALL: "/api/PhieuTienDoLamViec/getPhieuTienDoLamViecAll",
+      GET_BY_ID:
+        "/api/PhieuTienDoLamViec/getPhieuTienDoLamViecByID?maPhieuTienDoLamViec=",
+      CREATE: "/api/PhieuTienDoLamViec/createPhieuTienDoLamViec",
+      NHAN_XET: "/api/PhieuTienDoLamViec/reviewPhieuTienDoLamViec",
+      DELETE:
+        "/api/PhieuTienDoLamViec/deletePhieuTienDoLamViec?maPhieuTienDoLamViec=",
     },
   },
   CUSTOMER: {

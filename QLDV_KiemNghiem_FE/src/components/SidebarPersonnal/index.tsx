@@ -353,7 +353,8 @@ const SidebarPersonnal = () => {
 
               {(getRoleGroup(role) === "BLD" ||
                 getRoleGroup(role) === "KHTH" ||
-                getRoleGroup(role) === "KET") && (
+                getRoleGroup(role) === "KET" ||
+                getRoleGroup(role) === "KYT") && (
                 <button
                   onClick={() => {
                     handleRedirect(quanLyHoaDonTrangAdmin);

@@ -66,7 +66,7 @@ const List = ({ onView, onEdit }: any) => {
             <div className="relative">
               <input
                 type="search"
-                placeholder="Tìm kiếm theo mã phiếu, tên mẫu, tên nhân viên kiểm tra, tên nhân viên lập..."
+                placeholder="Tìm kiếm theo mã hóa đơn, số dkpt..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-0 focus-within:outline-1 focus-within:border-blue-500 w-2xl"
