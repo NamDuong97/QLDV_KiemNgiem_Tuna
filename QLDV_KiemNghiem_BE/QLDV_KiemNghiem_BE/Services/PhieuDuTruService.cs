@@ -225,6 +225,7 @@ namespace QLDV_KiemNghiem_BE.Services
             }
             PhieuDuTruCheck.NgaySua = DateTime.Now;
             PhieuDuTruCheck.NguoiSua = user;
+            PhieuDuTruCheck.ManvDuyet = userId;
             PhieuDuTruCheck.NoiDungDuyet = param.Message;
             
             if (param.Action)
