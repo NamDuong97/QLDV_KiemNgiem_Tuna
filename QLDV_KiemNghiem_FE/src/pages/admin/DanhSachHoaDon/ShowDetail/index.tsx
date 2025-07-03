@@ -1,12 +1,22 @@
 import { ArrowLeft, Eye, PenTool, Plus, Trash2 } from "react-feather";
-import { renderTrangThaiPhanTichKetQua } from "../../../../configs/configAll";
-import { getPhanTichKetQuaByID } from "../../../../hooks/personnels/queryPTKQ";
+import {
+  formatDate,
+  formatDateNotTime,
+  renderTrangThaiHoaDon,
+} from "../../../../configs/configAll";
 import { useState } from "react";
 import { MdReceipt } from "react-icons/md";
 import ShowDetailHDBS from "./ShowDetailHDBS";
 import ModelCreateHDBS from "./ModelCreateHDBS";
 import ModelEditHDBS from "./ModelEditHDBS";
-import { useQueryHoaDonThuByID } from "../../../../hooks/personnels/queryHoaDonThu";
+import {
+  useDeleteHoaDonBoSung,
+  useQueryHoaDonThuByID,
+} from "../../../../hooks/personnels/queryHoaDonThu";
+import { queryClient } from "../../../../lib/reactQuery";
+import { useStoreNotification } from "../../../../configs/stores/useStoreNotification";
+import ConfirmationModal from "../../../../components/ConfirmationModal";
+import { TypeConformation } from "../../../../constants/typeConfirmation";
 
 export const typeConfirmation = {
   TuChoi: "tuchoi",
@@ -18,14 +28,56 @@ const ShowDetail = ({ resultId, onBack, handleOpenPhieuDKy }: any) => {
   const [openModelHDBS, setOpenModelHDBS] = useState(false);
   const [openCreateModelHDBS, setOpenCreateModelHDBS] = useState(false);
   const [openEditModelHDBS, setOpenEditModelHDBS] = useState(false);
-  const [saveID, setSaveID] = useState(false);
+  const [openModelXoa, setOpenModelXoa] = useState(false);
+
+  const [saveID, setSaveID] = useState<any>(null);
   const { data } = useQueryHoaDonThuByID({
     queryKey: "useQueryHoaDonThuByID",
     maHoaDonThu: resultId,
   });
 
+  const handleSettled = async (response: any) => {
+    if (response?.status === 200) {
+      await Promise.all([
+        queryClient.refetchQueries({
+          queryKey: ["useQueryHoaDonThuByID"],
+        }),
+      ]);
+    }
+  };
+  const showNotification = useStoreNotification(
+    (state: any) => state.showNotification
+  );
+
+  const { mutate } = useDeleteHoaDonBoSung({
+    queryKey: "useDeleteHoaDonBoSung",
+    onSuccess: (data: any) => {
+      if (data.status === 200) {
+        showNotification({
+          message: `Xóa thành công`,
+          status: 200,
+        });
+        setOpenModelXoa(false);
+        return;
+      } else {
+        showNotification({
+          message: `Xóa thất bại`,
+          status: 500,
+        });
+      }
+    },
+    onError: (error: any) => {
+      console.log("error", error);
+      showNotification({
+        message: `Xóa thất bại`,
+        status: 400,
+      });
+    },
+    onSettled: handleSettled,
+  });
+
   const handleOpenPhieuDKyKM = () => {
-    handleOpenPhieuDKy("5760378b-0aa1-4ba4-96fa-4a30989a57d3");
+    handleOpenPhieuDKy(data?.maPhieuDangKy);
   };
 
   const handleOpenHDBS = (id: any) => {
@@ -43,6 +95,10 @@ const ShowDetail = ({ resultId, onBack, handleOpenPhieuDKy }: any) => {
     setOpenEditModelHDBS(true);
   };
 
+  const handeXoaHDBS = () => {
+    mutate(saveID);
+  };
+
   return (
     <div className="bg-white rounded-xl shadow-sm border border-gray-200">
       <div className="px-6 py-4 border-b border-gray-200 bg-gray-50 flex justify-between items-center">
@@ -51,7 +107,7 @@ const ShowDetail = ({ resultId, onBack, handleOpenPhieuDKy }: any) => {
         </h2>
         <div className="flex space-x-2">
           <button
-            onClick={() => handleOpenCreateHDBS("HD002")}
+            onClick={() => handleOpenCreateHDBS(data?.maId)}
             className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 cursor-pointer transition-colors flex items-center space-x-2"
           >
             <Plus size={16} />
@@ -76,9 +132,7 @@ const ShowDetail = ({ resultId, onBack, handleOpenPhieuDKy }: any) => {
               <div className="space-y-3">
                 <div className="flex justify-between items-center">
                   <span className="text-gray-600">Mã hóa đơn:</span>
-                  <span className="font-medium text-lg">
-                    HD20256160749914_SDKPT20256160749594
-                  </span>
+                  <span className="font-medium text-lg">{data?.maHd}</span>
                 </div>
                 <div className="flex justify-between items-center">
                   <p className="text-gray-600">
@@ -92,17 +146,17 @@ const ShowDetail = ({ resultId, onBack, handleOpenPhieuDKy }: any) => {
                     :
                   </p>
                   <p className="font-medium">
-                    <span>SDKPT20256160749594</span>
+                    <span>{data?.soDkpt}</span>
                   </p>
                 </div>
                 <div className="flex justify-between items-center">
                   <span className="text-gray-600">Trạng thái hóa đơn:</span>
-                  {renderTrangThaiPhanTichKetQua(data?.trangThai)}
+                  {renderTrangThaiHoaDon(data?.trangThai)}
                 </div>
                 <div className="flex justify-between items-center">
                   <span className="text-red-800 font-semibold">Tổng tiền:</span>
                   <span className="text-2xl font-bold text-red-900">
-                    2000000.00
+                    {parseInt(data?.tongTien).toLocaleString()} VND
                   </span>
                 </div>
               </div>
@@ -116,11 +170,13 @@ const ShowDetail = ({ resultId, onBack, handleOpenPhieuDKy }: any) => {
               <div className="space-y-3">
                 <div className="flex justify-between items-center">
                   <span className="text-gray-600">Người lập:</span>
-                  <span className="font-medium">admin</span>
+                  <span className="font-medium">{data?.nguoiTao}</span>
                 </div>
                 <div className="flex justify-between items-center">
                   <span className="text-gray-600">Ngày lập:</span>
-                  <span className="font-medium">2025-06-16 00:07:49.913</span>
+                  <span className="font-medium">
+                    {formatDate(data?.ngayLap)}
+                  </span>
                 </div>
                 <div>
                   <span className="text-gray-600 block mb-2 font-medium">
@@ -166,58 +222,52 @@ const ShowDetail = ({ resultId, onBack, handleOpenPhieuDKy }: any) => {
                 className={`inline-block px-2 py-1 text-xs font-medium rounded-full bg-violet-100 text-violet-800`}
               >
                 Tổng số chi tiết hóa đơn:
-                {data?.phieuPhanTichKetQuaChiTietDtos?.length || 0}
+                {data?.chiTietHoaDonThus?.length || 0}
               </div>
             ) : (
               <div
                 className={`inline-block px-2 py-1 text-xs font-medium rounded-full bg-violet-100 text-violet-800`}
               >
                 Tổng số hóa đơn bổ sung:
-                {data?.phieuPhanTichKetQuaChiTietDtos?.length || 0}
+                {data?.hoaDonThuBoSungs?.length || 0}
               </div>
             )}
           </div>
 
           {isCTHD ? (
-            data?.phieuPhanTichKetQuaChiTietDtos &&
-            data?.phieuPhanTichKetQuaChiTietDtos?.length > 0 ? (
+            data?.chiTietHoaDonThus && data?.chiTietHoaDonThus?.length > 0 ? (
               <div className="space-y-4 overflow-hidden rounded-lg">
-                {data?.phieuPhanTichKetQuaChiTietDtos?.map(
-                  (detail: any, index: any) => (
-                    <div
-                      key={index}
-                      className="result-card bg-white border border-gray-200 rounded-lg p-6 card-hover cursor-pointer"
-                    >
-                      <div className="flex justify-between items-start mb-4">
-                        <div className="flex items-center space-x-3">
-                          <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
-                            <MdReceipt className="text-green-600" size={20} />
-                          </div>
-                          <div>
-                            <h3 className="font-semibold text-gray-900">
-                              Mẫu A
-                            </h3>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="grid grid-cols-4 gap-4 text-sm">
-                        <div className="col-span-3">
-                          <p className="text-gray-600">Ghi chú</p>
-                          <p className="font-medium">
-                            Tao hoa don thanh toan cho phieu dang
-                            kySDKPT2025615211551887
-                          </p>
+                {data?.chiTietHoaDonThus?.map((detail: any, index: any) => (
+                  <div
+                    key={index}
+                    className="result-card bg-white border border-gray-200 rounded-lg p-6 card-hover cursor-pointer"
+                  >
+                    <div className="flex justify-between items-start mb-4">
+                      <div className="flex items-center space-x-3">
+                        <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
+                          <MdReceipt className="text-green-600" size={20} />
                         </div>
                         <div>
-                          <p className="text-gray-600">Tổng tiền</p>
-                          <p className="font-semibold text-lg text-red-600">
-                            2600000.00
-                          </p>
+                          <h3 className="font-semibold text-gray-900">
+                            {detail?.maMau}
+                          </h3>
                         </div>
                       </div>
                     </div>
-                  )
-                )}
+                    <div className="grid grid-cols-4 gap-4 text-sm">
+                      <div className="col-span-3">
+                        <p className="text-gray-600">Ghi chú</p>
+                        <p className="font-medium">{detail?.ghiChu}</p>
+                      </div>
+                      <div>
+                        <p className="text-gray-600">Thành tiền</p>
+                        <p className="font-semibold text-lg text-red-600">
+                          {parseInt(detail?.thanhTien).toLocaleString()} VND
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                ))}
               </div>
             ) : (
               <div className="bg-gray-50 rounded-lg p-8 text-center border border-gray-200">
@@ -239,89 +289,90 @@ const ShowDetail = ({ resultId, onBack, handleOpenPhieuDKy }: any) => {
                 <p className="text-gray-500">Chưa có chi tiết hóa đơn</p>
               </div>
             )
-          ) : data?.phieuPhanTichKetQuaChiTietDtos &&
-            data?.phieuPhanTichKetQuaChiTietDtos?.length > 0 ? (
+          ) : data?.hoaDonThuBoSungs && data?.hoaDonThuBoSungs?.length > 0 ? (
             <div className="space-y-4 overflow-hidden rounded-lg">
-              {data?.phieuPhanTichKetQuaChiTietDtos?.map(
-                (detail: any, index: any) => (
-                  <div
-                    key={index}
-                    onClick={() => handleOpenHDBS(index)}
-                    className="result-card bg-white border border-gray-200 rounded-lg p-6 card-hover cursor-pointer"
-                  >
-                    <div className="flex justify-between items-start mb-4">
-                      <div className="flex items-center space-x-3">
-                        <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
-                          <MdReceipt className="text-green-600" size={20} />
-                        </div>
-                        <div>
-                          <h3 className="font-semibold text-gray-900">
-                            Hóa đơn bổ sung #{index}
-                          </h3>
-                        </div>
+              {data?.hoaDonThuBoSungs?.map((detail: any, index: any) => (
+                <div
+                  key={index}
+                  onClick={() => handleOpenHDBS(detail?.maId)}
+                  className="result-card bg-white border border-gray-200 rounded-lg p-6 card-hover cursor-pointer"
+                >
+                  <div className="flex justify-between items-start mb-4">
+                    <div className="flex items-center space-x-3">
+                      <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
+                        <MdReceipt className="text-green-600" size={20} />
                       </div>
                       <div>
-                        <span
-                          className={`inline-block px-2 py-1 text-xs font-medium rounded-full bg-blue-100 text-blue-800`}
-                        >
-                          Đã thanh toán
-                        </span>
+                        <h3 className="font-semibold text-gray-900">
+                          Hóa đơn bổ sung #{index}
+                        </h3>
                       </div>
                     </div>
-                    <div className="grid grid-cols-6 gap-4 text-sm">
-                      <div>
-                        <p className="text-gray-600">Nhân viên lập</p>
-                        <p className="font-medium">Nguyễn Văn A</p>
-                      </div>
-                      <div>
-                        <p className="text-gray-600">Ngày tạo</p>
-                        <p className="font-medium">2025-07-01 21:16:33.827</p>
-                      </div>
-                      <div className="col-span-3">
-                        <p className="text-gray-600">Ghi chú</p>
-                        <p className="font-medium">
-                          Tao hoa don thanh toan cho phieu dang
-                          kySDKPT2025615211551887
-                        </p>
-                      </div>
-                      <div>
-                        <p className="text-gray-600">Tổng tiền</p>
-                        <p className="font-semibold text-lg text-red-600">
-                          2600000.00
-                        </p>
-                      </div>
-                    </div>
-                    <div className="mt-4 flex justify-end space-x-2">
-                      <button
-                        onClick={() => handleOpenHDBS(index)}
-                        className="px-3 py-1 text-blue-600 hover:bg-blue-50 rounded-md text-sm flex items-center space-x-1 cursor-pointer"
+                    <div>
+                      <span
+                        className={`inline-block px-2 py-1 text-xs font-medium rounded-full bg-blue-100 text-blue-800`}
                       >
-                        <Eye size={14} />
-                        <span>Xem chi tiết</span>
-                      </button>
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleOpenEditHDBS(index);
-                        }}
-                        className="px-3 py-1 text-yellow-600 hover:bg-yellow-50 rounded-md text-sm flex items-center space-x-1 cursor-pointer"
-                      >
-                        <PenTool size={14} />
-                        <span>Sửa</span>
-                      </button>
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                        }}
-                        className="px-3 py-1 text-red-600 hover:bg-red-50 rounded-md text-sm flex items-center space-x-1 cursor-pointer"
-                      >
-                        <Trash2 size={14} />
-                        <span>Xóa</span>
-                      </button>
+                        Đã thanh toán
+                      </span>
                     </div>
                   </div>
-                )
-              )}
+                  <div className="grid grid-cols-6 gap-4 text-sm">
+                    <div>
+                      <p className="text-gray-600">Nhân viên lập</p>
+                      <p className="font-medium">Nguyễn Văn A</p>
+                    </div>
+                    <div>
+                      <p className="text-gray-600">Ngày tạo</p>
+                      <p className="font-medium">
+                        {formatDateNotTime(detail?.ngayTao)}
+                      </p>
+                    </div>
+                    <div className="col-span-3">
+                      <p className="text-gray-600">Ghi chú</p>
+                      <p className="font-medium">
+                        Tao hoa don thanh toan cho phieu dang
+                        kySDKPT2025615211551887
+                      </p>
+                    </div>
+                    <div>
+                      <p className="text-gray-600">Tổng tiền</p>
+                      <p className="font-semibold text-lg text-red-600">
+                        {parseInt(detail?.tongTien).toLocaleString()} VND
+                      </p>
+                    </div>
+                  </div>
+                  <div className="mt-4 flex justify-end space-x-2">
+                    <button
+                      onClick={() => handleOpenHDBS(detail?.maId)}
+                      className="px-3 py-1 text-blue-600 hover:bg-blue-50 rounded-md text-sm flex items-center space-x-1 cursor-pointer"
+                    >
+                      <Eye size={14} />
+                      <span>Xem chi tiết</span>
+                    </button>
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleOpenEditHDBS(detail?.maId);
+                      }}
+                      className="px-3 py-1 text-yellow-600 hover:bg-yellow-50 rounded-md text-sm flex items-center space-x-1 cursor-pointer"
+                    >
+                      <PenTool size={14} />
+                      <span>Sửa</span>
+                    </button>
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setSaveID(detail?.maId);
+                        setOpenModelXoa(true);
+                      }}
+                      className="px-3 py-1 text-red-600 hover:bg-red-50 rounded-md text-sm flex items-center space-x-1 cursor-pointer"
+                    >
+                      <Trash2 size={14} />
+                      <span>Xóa</span>
+                    </button>
+                  </div>
+                </div>
+              ))}
             </div>
           ) : (
             <div className="bg-gray-50 rounded-lg p-8 text-center border border-gray-200">
@@ -340,9 +391,7 @@ const ShowDetail = ({ resultId, onBack, handleOpenPhieuDKy }: any) => {
                   />
                 </svg>
               </div>
-              <p className="text-gray-500">
-                Chưa có chi tiết kết quả kiểm nghiệm
-              </p>
+              <p className="text-gray-500">Chưa có hóa đơn bổ sung</p>
             </div>
           )}
         </div>
@@ -359,8 +408,16 @@ const ShowDetail = ({ resultId, onBack, handleOpenPhieuDKy }: any) => {
       />
       <ModelEditHDBS
         open={openEditModelHDBS}
-        handleClose={() => setOpenEditModelHDBS(false)}
-        dataID={saveID}
+        onCancel={() => setOpenEditModelHDBS(false)}
+        resultId={saveID}
+      />
+      <ConfirmationModal
+        isOpen={openModelXoa}
+        onClose={() => setOpenModelXoa(false)}
+        onConfirm={handeXoaHDBS}
+        title={"Xác nhận xóa?"}
+        message={"Bạn có chắc chắn muốn xóa?"}
+        type={TypeConformation.Error}
       />
     </div>
   );

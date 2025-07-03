@@ -99,21 +99,7 @@ const BLD = (props: Props) => {
 
   const { data: dataAll, isLoading: isLoadingAll } = listPhieuDKKNAll({
     queryKey: "listPhieuDKKNAll",
-    params:
-      selectedDateFrom && selectedDateTo
-        ? {
-            timeFrom: selectedDateFrom,
-            timeTo: selectedDateTo,
-          }
-        : selectedDateFrom
-        ? {
-            timeFrom: selectedDateFrom,
-          }
-        : selectedDateTo
-        ? {
-            timeTo: selectedDateTo,
-          }
-        : { getAll: true },
+    params:{getAll: false}
   });
   const [searchQuery, setSearchQuery] = useState("");
   const [selectTrangThai, setSelectTrangThai] = useState("");
@@ -247,7 +233,7 @@ const BLD = (props: Props) => {
               textColor="text-yellow-600"
             />
             <Card
-              title="Từ chối"
+              title="Trung tâm từ chối"
               value={
                 dataAll?.filter((item: any) => item.trangThaiId === "TT04")
                   ?.length
@@ -257,7 +243,7 @@ const BLD = (props: Props) => {
               textColor="text-red-600"
             />
             <Card
-              title="Đã hủy kiểm nghiệm"
+              title="Khách hàng hủy"
               value={
                 dataAll?.filter((item: any) => item.trangThaiId === "TT10")
                   ?.length

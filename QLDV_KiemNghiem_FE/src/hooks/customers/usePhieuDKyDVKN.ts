@@ -57,6 +57,8 @@ export const useGetDmMauAll = (props: Props) => {
       const response = await PhieuDKyDVKN_Services.getDmMauAll();
       return response;
     },
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
     staleTime: Infinity,
   });
 };
@@ -70,6 +72,8 @@ export const useGetDmPhuLieuHoaChatAll = (props: Props) => {
       return response;
     },
     staleTime: Infinity,
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
   });
 };
 
@@ -81,6 +85,9 @@ export const useGetLoaiDichVuAll = (props: Props) => {
       const response = await PhieuDKyDVKN_Services.getLoaiDichVuAll();
       return response;
     },
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
+    staleTime: Infinity,
   });
 };
 
@@ -95,6 +102,7 @@ export const useGetLoaiMauAll = (props: Props) => {
     ...options,
     refetchOnMount: false,
     refetchOnWindowFocus: false,
+    staleTime: Infinity,
   });
 };
 
@@ -110,6 +118,7 @@ export const useGetTieuChuanAll = (props: Props) => {
     ...options,
     refetchOnMount: false,
     refetchOnWindowFocus: false,
+    staleTime: Infinity,
   });
 };
 
@@ -121,6 +130,9 @@ export const useGetTrangThaiPhieuDkAll = (props: Props) => {
       const response = await PhieuDKyDVKN_Services.getTrangThaiPhieuDkAll();
       return response;
     },
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
+    staleTime: Infinity,
   });
 };
 

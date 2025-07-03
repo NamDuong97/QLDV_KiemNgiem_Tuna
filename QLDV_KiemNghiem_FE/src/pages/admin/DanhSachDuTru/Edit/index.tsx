@@ -2,10 +2,7 @@ import { useEffect, useState } from "react";
 import { ArrowLeft, Delete, Eye, Plus, Save } from "react-feather";
 import { useFieldArray, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import classes from "../../DanhSachPhanCongNoiBo/PhanCong/ModelPhanCong/style.module.scss";
-import clsx from "clsx";
 import yup from "../../../../configs/yup.custom";
-import { usePersonnel } from "../../../../contexts/PersonelsProvider";
 import { queryClient } from "../../../../lib/reactQuery";
 import { useStoreNotification } from "../../../../configs/stores/useStoreNotification";
 import {

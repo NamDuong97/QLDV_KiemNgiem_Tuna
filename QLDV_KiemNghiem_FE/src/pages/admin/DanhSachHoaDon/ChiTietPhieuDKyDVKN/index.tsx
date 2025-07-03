@@ -12,7 +12,7 @@ import { getRoleGroup } from "../../../../configs/Role";
 interface Props {
   open: boolean;
   handleClose: () => void;
-  isSaveIdPDKy: boolean;
+  isSaveIdPDKy: any;
 }
 
 const ChiTietPhieuDKyDVKN = (props: Props) => {
@@ -23,6 +23,7 @@ const ChiTietPhieuDKyDVKN = (props: Props) => {
     queryKey: "xemChitietPhieuDKKM",
     params: isSaveIdPDKy,
   });
+  console.log("isSaveIdPDKy", isSaveIdPDKy);
 
   const { data: dataNhanVien } = getInforNhanVien({
     queryKey: "getInforNhanVien",

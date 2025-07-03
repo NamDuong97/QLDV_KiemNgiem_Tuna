@@ -18,6 +18,7 @@ const List = ({ onView }: any) => {
     queryKey: "useQueryHoaDonThuAll",
     params: queryParams,
   });
+console.log('data',data);
 
   const filteredResults = data?.filter((result: any) => {
     const matchesSearch =

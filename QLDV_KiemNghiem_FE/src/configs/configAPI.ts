@@ -3,7 +3,7 @@ import Cookies from "js-cookie";
 import { EKey } from "../constants/commons";
 import accessServices from "../services/customers/accessService";
 import { isProd } from "../utils/env";
-
+const expires = 1 / 24;
 const _APIInstance = axios.create({
   baseURL: import.meta.env.VITE_PUBLIC_BASE_URL_SERVER,
   headers: {
@@ -15,20 +15,7 @@ const _APIInstance = axios.create({
 _APIInstance.interceptors.request.use(
   async (config: any) => {
     const token = Cookies.get(EKey.TOKEN);
-    const tokenGuest = Cookies.get(EKey.TOKEN_GUEST);
-    const url = new URL(window.location.href);
-    const isTunaRoute =
-      url.pathname === "/tuna" || url.pathname.startsWith("/tuna/");
-
-    if (isTunaRoute) {
-      if (token) {
-        config.headers.Authorization = `Bearer ${token}`;
-      }
-    } else {
-      if (tokenGuest) {
-        config.headers.Authorization = `Bearer ${tokenGuest}`;
-      }
-    }
+    config.headers.Authorization = `Bearer ${token}`;
     return config;
   },
   (error) => Promise.reject(error)
@@ -37,37 +24,26 @@ _APIInstance.interceptors.request.use(
 // Hàm dùng chung để refresh token và retry request
 const refreshAndRetry = async (
   originalRequest: any,
-  isGuest: boolean,
-  accessToken: string,
-  refreshToken: string
+  accessToken?: string,
+  refreshToken?: string
 ) => {
   try {
-    const res = isGuest
-      ? await accessServices.getRefreshTokenKhachHang({
-          accessToken,
-          refreshToken,
-        })
-      : await accessServices.getRefreshTokenNhanVien({
-          accessToken,
-          refreshToken,
-        });
-    const newAccessToken = res.accessToken || "";
-    const newRefreshToken = isGuest ? res.refreshTokenGuest : res.refreshToken;
-
-    Cookies.set(isGuest ? EKey.TOKEN_GUEST : EKey.TOKEN, newAccessToken, {
-      expires: 2,
+    const res = await accessServices.getRefreshTokenNhanVien({
+      accessToken,
+      refreshToken,
+    });
+    const newAccessToken = res.accessToken;
+    const newRefreshToken = res.refreshToken;
+    Cookies.set(EKey.TOKEN, newAccessToken, {
+      expires: expires,
       sameSite: "Strict",
       secure: isProd(),
     });
-    Cookies.set(
-      isGuest ? EKey.REFRESH_TOKEN_GUEST : EKey.REFRESH_TOKEN,
-      newRefreshToken,
-      {
-        expires: 2,
-        sameSite: "Strict",
-        secure: isProd(),
-      }
-    );
+    Cookies.set(EKey.REFRESH_TOKEN, newRefreshToken, {
+      expires: 7,
+      sameSite: "Strict",
+      secure: isProd(),
+    });
 
     originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
     return _APIInstance(originalRequest);
@@ -81,40 +57,19 @@ _APIInstance.interceptors.response.use(
   (res) => res,
   async (err) => {
     const originalRequest = err.config;
-    console.log("err.response?.status", err.response?.status);
-
+    const token = Cookies.get(EKey.TOKEN);
+    const refreshToken = Cookies.get(EKey.REFRESH_TOKEN);
     if (err.response?.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
-
-      const token = Cookies.get(EKey.TOKEN);
-      const refreshToken = Cookies.get(EKey.REFRESH_TOKEN);
-      const tokenGuest = Cookies.get(EKey.TOKEN_GUEST);
-      const refreshTokenGuest = Cookies.get(EKey.REFRESH_TOKEN_GUEST);
-
-      // Ưu tiên refresh token nhân viên nếu có
-      if (token && refreshToken) {
-        return refreshAndRetry(originalRequest, false, token, refreshToken);
-      }
-      // Nếu token khách
-      if (tokenGuest && refreshTokenGuest) {
-        return refreshAndRetry(
-          originalRequest,
-          true,
-          tokenGuest,
-          refreshTokenGuest
-        );
-      }
-      if (!token || !refreshToken) {
-        Cookies.remove(EKey.TOKEN);
-        Cookies.remove(EKey.REFRESH_TOKEN);
-        Cookies.remove(EKey.ID);
-      }
-      if (!tokenGuest || !refreshTokenGuest) {
-        Cookies.remove(EKey.TOKEN_GUEST);
-        Cookies.remove(EKey.REFRESH_TOKEN_GUEST);
+      if (refreshToken) {
+        return refreshAndRetry(originalRequest, token, refreshToken);
       }
     }
-
+    if (token === "undefined" || refreshToken === "undefined") {
+      Cookies.remove(EKey.REFRESH_TOKEN);
+      Cookies.remove(EKey.ID);
+      Cookies.remove(EKey.TOKEN);
+    }
     return Promise.reject(err);
   }
 );

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { FaMicroscope, FaSortAmountDown, FaSortAmountUp } from "react-icons/fa";
 import TableQuanLyPhieuDKyDVHN from "../Table";
 import { Pagination } from "@mui/material";
@@ -13,6 +13,9 @@ import ChiTietPhieuDKyDVKN from "../ChiTietPhieuDKyDVKN";
 import { getAllDanhSachMau } from "../../../../hooks/personnels/phanCongKhoa";
 import SelectItemLoaiMau from "./SelectItemLoaiMau";
 import { queryThongKe } from "../../../../hooks/personnels/queryMau";
+import { useQuery } from "@tanstack/react-query";
+import phanCongKhoaServices from "../../../../services/personnels/phanCongKhoa";
+import { IParamDangKyMau } from "../../../../type/params";
 
 interface Props {
   tableHead: any;
@@ -20,14 +23,30 @@ interface Props {
 
 const DanhSach = (props: Props) => {
   const { tableHead } = props;
+  const [selectLoaiMau, setSelectLoaiMau] = useState("");
+   const [currentPage, setCurrentPage] = useState(1);
   const [selectTrangThai, setSelectTrangThai] = useState("");
-  const { data: dataMau, isLoading } = getAllDanhSachMau({
-    queryKey: "AllDanhSachMau",
-    params:
-      selectTrangThai !== ""
-        ? { getAll: true, trangThaiPhanCong: selectTrangThai }
-        : { getAll: true },
+  const { data: dataMau, isLoading } = useQuery({
+    queryKey: ["AllDanhSachMau", currentPage,selectTrangThai,selectLoaiMau],
+    queryFn: async () => {
+      let params: IParamDangKyMau = {
+        PageSize: 10,
+        PageNumber: currentPage
+      }
+      if(selectLoaiMau){
+        params = {
+          ...params,
+          MaLoaiMau: selectLoaiMau
+        }
+      }
+      const response = await phanCongKhoaServices.getAllDanhSachMau(params);
+      return response;
+    },
+    refetchOnWindowFocus: false,
+    staleTime: 7 * 60 * 1000,
+    placeholderData: (prev) => prev
   });
+  console.log("selectLoaiMau",selectLoaiMau)
   const { data: dataThongKe, isLoading: isLoadingThongKe } = queryThongKe({
     queryKey: "queryThongKe",
   });
@@ -35,11 +54,12 @@ const DanhSach = (props: Props) => {
   console.log('dataMau',dataMau);
   
 
-  const [selectLoaiMau, setSelectLoaiMau] = useState("");
 
-  let data: any = dataMau?.data?.filter((item: any) =>
+  const  data = useMemo(() => {
+    return dataMau?.data?.filter((item: any) =>
     selectLoaiMau !== "" ? item.maLoaiMau === selectLoaiMau : item
   );
+  },[dataMau])
   const [searchQuery, setSearchQuery] = useState("");
 
   const [isSortNew, setIsSortNew] = useState(false);
@@ -50,7 +70,7 @@ const DanhSach = (props: Props) => {
       removeVietnameseTones(sample?.mau?.toLowerCase()).includes(query);
     return matchesSearch;
   });
-  const [currentPage, setCurrentPage] = useState(1);
+ 
   const [itemsPerPage] = useState(10);
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
@@ -71,6 +91,7 @@ const DanhSach = (props: Props) => {
     sessionStorage.removeItem("phieu-DKKN-xem-chi-tiet");
   };
   const handlePageChange = (_: any, value: number) => {
+    console.log("Value ", value)
     setCurrentPage(value);
   };
 
@@ -80,7 +101,7 @@ const DanhSach = (props: Props) => {
 
   return (
     <>
-      <div className="grid gap-6 grid-cols-4">
+      <div className="grid gap-6 grid-cols-3">
         <Card
           title="Tổng mẫu kiểm nghiệm"
           value={data?.length || 0}
@@ -164,15 +185,15 @@ const DanhSach = (props: Props) => {
       <div className="bg-white rounded-lg shadow-sm border border-gray-100">
         <TableQuanLyPhieuDKyDVHN
           tableHead={tableHead}
-          tableBody={currentItems}
+          tableBody={dataMau?.data}
           isLoading={isLoading}
           handleOpenChiTiet={() => setOpenXemChiTiet(true)}
         />
-        {currentItems?.length > 0 && (
+        {dataMau?.data?.length > 0 && (
           <div className="p-4 flex justify-center border-t border-gray-300">
             <Pagination
-              count={totalPages}
-              page={currentPage}
+              count={dataMau?.pagination?.TotalPages}
+              page={dataMau?.pagination.CurrentPage}
               onChange={handlePageChange}
               variant="outlined"
               shape="rounded"

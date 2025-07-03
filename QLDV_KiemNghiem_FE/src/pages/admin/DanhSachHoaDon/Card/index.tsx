@@ -37,7 +37,7 @@ const Card = ({ result, onView }: any) => {
         <div>
           <p className="text-gray-600">Tổng tiền</p>
           <p className="font-semibold text-lg text-red-600">
-            {result?.tongTien}
+            {parseInt(result?.tongTien).toLocaleString()} VND
           </p>
         </div>
       </div>

@@ -149,7 +149,5 @@ export const REFRESH_TOKEN = "REFRESH_TOKEN_APP";
 export enum EKey {
   TOKEN = "token",
   REFRESH_TOKEN = "refresh_token",
-  TOKEN_GUEST = "token_guest",
-  REFRESH_TOKEN_GUEST = "refresh_token_guest",
   ID = "id",
 }

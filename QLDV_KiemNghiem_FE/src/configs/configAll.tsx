@@ -219,7 +219,7 @@ export const trangThaiPhanTichKetQua: Record<string, TrangThai> = {
 
 const trangThaiDuTru: Record<string, TrangThai> = {
   0: {
-    text: "Đã hủy",
+    text: "Yêu cầu làm lại",
     bgColor: "bg-red-100",
     textColor: "text-red-800",
   },
@@ -232,6 +232,24 @@ const trangThaiDuTru: Record<string, TrangThai> = {
     text: "Đã Duyệt",
     bgColor: "bg-green-100",
     textColor: "text-green-800",
+  },
+};
+
+const trangThaiHoaDon: Record<string, TrangThai> = {
+  "0": {
+    text: "Chưa thanh toán",
+    bgColor: "bg-red-100",
+    textColor: "text-red-800",
+  },
+  "1": {
+    text: "Đã thanh toán",
+    bgColor: "bg-green-100",
+    textColor: "text-green-800",
+  },
+  "2": {
+    text: "Thanh toán một phần",
+    bgColor: "bg-blue-100",
+    textColor: "text-blue-800",
   },
 };
 
@@ -346,6 +364,22 @@ export function renderTrangThaiDuTru(trangThaiId: string) {
 
 export function renderTrangThaiPhanTichKetQua(trangThaiId: string) {
   const trangThai = trangThaiPhanTichKetQua[trangThaiId] || {
+    text: "Không xác định",
+    bgColor: "bg-gray-100",
+    textColor: "text-gray-800",
+  };
+
+  return (
+    <span
+      className={`inline-block px-2 py-1 text-xs font-medium rounded-full ${trangThai.bgColor} ${trangThai.textColor}`}
+    >
+      {trangThai.text}
+    </span>
+  );
+}
+
+export function renderTrangThaiHoaDon(trangThaiId: string) {
+  const trangThai = trangThaiHoaDon[trangThaiId] || {
     text: "Không xác định",
     bgColor: "bg-gray-100",
     textColor: "text-gray-800",

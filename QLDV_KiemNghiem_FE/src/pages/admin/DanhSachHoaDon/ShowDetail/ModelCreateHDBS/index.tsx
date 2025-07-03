@@ -101,6 +101,7 @@ const ModelCreateHDBS = (props: Props) => {
       await queryClient.refetchQueries({
         queryKey: ["useQueryHoaDonThuByID"],
       });
+      reset();
       handleClose();
     }
   };
@@ -117,6 +118,7 @@ const ModelCreateHDBS = (props: Props) => {
           message: "Tạo phiếu thành công",
           status: 200,
         });
+
         return;
       } else {
         showNotification({
@@ -138,7 +140,7 @@ const ModelCreateHDBS = (props: Props) => {
 
   const onSubmit = (formData: FormHDBoSung) => {
     const param = {
-      maHD: "17051397-0e72-4c61-af9e-ed54aa0fac55",
+      maHD: dataID,
       ghiChu: formData.ghiChu,
       chiTietHoaDonThuBoSungDtos: formData.chiTiethdboSungs.map((item) => ({
         maDM_PLHC: item.maDM_PLHC,
@@ -147,8 +149,6 @@ const ModelCreateHDBS = (props: Props) => {
         donGia: Number(item.donGia),
       })),
     };
-    console.log("param", param);
-
     mutate(param);
   };
 

@@ -36,7 +36,7 @@ export default function InputSelectPLHC({
             item.tenDmPlhc.toLowerCase().includes(currentValue.toLowerCase())
           );
 
-          const showAddNewOption = currentValue && filteredOptions.length === 0;
+          const showAddNewOption = currentValue && filteredOptions?.length === 0;
           const extendedOptions = showAddNewOption
             ? [
                 ...data,

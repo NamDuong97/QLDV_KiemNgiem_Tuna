@@ -73,7 +73,7 @@ const Login = () => {
             </div>
             <div className="mb-6 grid gap-1 relative">
               <label htmlFor="form2Example17" className="block text-cyan-950">
-                Email address
+                Email
               </label>
               <input
                 type="email"
@@ -92,7 +92,7 @@ const Login = () => {
                 htmlFor="form2Example27"
                 className="block mb-2 text-cyan-950"
               >
-                Password
+                Mật khẩu
               </label>
               <input
                 type="password"
@@ -108,20 +108,12 @@ const Login = () => {
             </div>
             <div className="mb-6">
               <button className="w-full py-3 bg-[#41737c] text-white text-lg rounded-lg hover:bg-[#356267] transition cursor-pointer">
-                Login
+                Đăng nhập
               </button>
             </div>
             <div className="flex justify-between items-center mb-4">
               <a className="text-sm text-cyan-950 hover:underline" href="#!">
-                Forgot password?
-              </a>
-            </div>
-            <div className="flex flex-wrap gap-4 text-xs text-cyan-950">
-              <a href="#!" className="hover:underline">
-                Terms of use.
-              </a>
-              <a href="#!" className="hover:underline">
-                Privacy policy
+                Quên mật khẩu?
               </a>
             </div>
           </form>

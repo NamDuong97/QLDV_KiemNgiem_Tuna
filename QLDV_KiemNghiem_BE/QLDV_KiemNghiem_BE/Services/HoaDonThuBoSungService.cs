@@ -74,7 +74,8 @@ namespace QLDV_KiemNghiem_BE.Services
                 GhiChu = hoaDonThuBoSungDto.GhiChu,
                 NgayTao = DateTime.Now,
                 NguoiTao = user,
-                TrangThai = "moi tao"
+                TrangThai = "moi tao",
+                ManvLap = userId
             };
 
             // Xử lý chi tiết hóa đơn nếu có

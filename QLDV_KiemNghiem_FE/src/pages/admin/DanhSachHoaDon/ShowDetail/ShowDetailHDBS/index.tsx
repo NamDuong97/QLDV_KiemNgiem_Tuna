@@ -1,5 +1,6 @@
 import { Dialog } from "@mui/material";
 import { MdOutlineReceipt } from "react-icons/md";
+import { useQueryHoaDonBoSungByID } from "../../../../../hooks/personnels/queryHoaDonThu";
 interface Props {
   open: boolean;
   handleClose: () => void;
@@ -9,11 +10,19 @@ interface Props {
 const ShowDetailHDBS = (props: Props) => {
   const { open, handleClose, dataID } = props;
 
+  const { data } = useQueryHoaDonBoSungByID({
+    queryKey: "useQueryHoaDonBoSungByID",
+    maHoaDonThuBoSung: dataID,
+  });
+
+  console.log('data',data);
+  
+
   return (
     <Dialog
       open={open}
       onClose={handleClose}
-      maxWidth="sm"
+      maxWidth="md"
       fullWidth
       sx={{
         ".MuiPaper-root": {
@@ -46,73 +55,45 @@ const ShowDetailHDBS = (props: Props) => {
             </button>
           </div>
         </div>
-        <div className="space-y-4 py-2 px-4">
-          <div className="result-card bg-white border border-gray-200 rounded-lg p-6 card-hover cursor-pointer">
-            <div className="flex justify-between items-start mb-4">
-              <div className="flex items-center space-x-3">
-                <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
-                  <MdOutlineReceipt className="text-green-600" size={20} />
-                </div>
-                <div>
-                  <h3 className="font-semibold text-gray-900">Cam thảo</h3>
-                </div>
-              </div>
-              <div>
-                <span
-                  className={`inline-block px-2 py-1 text-xs font-medium rounded-full bg-blue-100 text-blue-800`}
-                >
-                  Đã thanh toán
-                </span>
-              </div>
-            </div>
-            <div className="grid grid-cols-3 gap-4 text-sm">
-              <div>
-                <p className="text-gray-600">Số lượng</p>
-                <p className="font-medium">1 lọ</p>
-              </div>
-              <div>
-                <p className="text-gray-600">Đơn giá</p>
-                <p className="font-medium">99000.00</p>
-              </div>
-              <div>
-                <p className="text-gray-600">Thành tiền</p>
-                <p className="font-semibold text-lg text-red-600">99000.00</p>
-              </div>
-            </div>
-          </div>
-          <div className="result-card bg-white border border-gray-200 rounded-lg p-6 card-hover cursor-pointer">
-            <div className="flex justify-between items-start mb-4">
-              <div className="flex items-center space-x-3">
-                <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
-                  <MdOutlineReceipt className="text-green-600" size={20} />
-                </div>
-                <div>
-                  <h3 className="font-semibold text-gray-900">Cam thảo</h3>
+
+        <div className="space-y-4 py-2 px-4 overflow-y-auto max-h-80">
+          {data?.chiTietHoaDonThuBoSungDtos
+            ?.filter((item: any) => item?.trangThai)
+            ?.map((item: any, index: any) => (
+              <div
+                key={index}
+                className="result-card bg-white border border-gray-200 rounded-lg p-6 card-hover cursor-pointer"
+              >
+                <div className="grid grid-cols-4 gap-4 text-sm w-">
+                  <div className="flex items-center space-x-3">
+                    <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
+                      <MdOutlineReceipt className="text-green-600" size={20} />
+                    </div>
+                    <div>
+                      <h3 className="font-semibold text-gray-900">
+                        {item?.maDmPlhc}
+                      </h3>
+                    </div>
+                  </div>
+                  <div>
+                    <p className="text-gray-600">Số lượng</p>
+                    <p className="font-medium">{`${item?.soLuong} ${item?.donViTinh}`}</p>
+                  </div>
+                  <div>
+                    <p className="text-gray-600">Đơn giá</p>
+                    <p className="font-medium">
+                      {parseInt(item?.donGia).toLocaleString()} VND
+                    </p>
+                  </div>
+                  <div>
+                    <p className="text-gray-600">Thành tiền</p>
+                    <p className="font-semibold text-lg text-red-600">
+                      {parseInt(item?.thanhTien).toLocaleString()} VND
+                    </p>
+                  </div>
                 </div>
               </div>
-              <div>
-                <span
-                  className={`inline-block px-2 py-1 text-xs font-medium rounded-full bg-blue-100 text-blue-800`}
-                >
-                  Đã thanh toán
-                </span>
-              </div>
-            </div>
-            <div className="grid grid-cols-3 gap-4 text-sm">
-              <div>
-                <p className="text-gray-600">Số lượng</p>
-                <p className="font-medium">1 lọ</p>
-              </div>
-              <div>
-                <p className="text-gray-600">Đơn giá</p>
-                <p className="font-medium">99000.00</p>
-              </div>
-              <div>
-                <p className="text-gray-600">Thành tiền</p>
-                <p className="font-semibold text-lg text-red-600">99000.00</p>
-              </div>
-            </div>
-          </div>
+            ))}
         </div>
         <div className="p-6 space-y-6 border-t border-gray-300">
           <div className="flex justify-end">

@@ -8,7 +8,7 @@ const DanhSachHoaDon = () => {
   const [activeView, setActiveView] = useState("list");
   const [selectedResultId, setSelectedResultId] = useState(null);
   const [openXemChiTiet, setOpenXemChiTiet] = useState(false);
-  const [isSaveIdPDKy, setIsSaveIdPDKy] = useState(false);
+  const [isSaveIdPDKy, setIsSaveIdPDKy] = useState(null);
   const handleViewResult = (id: any) => {
     setSelectedResultId(id);
     setActiveView("detail");

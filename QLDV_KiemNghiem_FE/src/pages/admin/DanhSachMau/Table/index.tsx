@@ -11,7 +11,7 @@ import {
 } from "@mui/material";
 import { Align } from "../../../../models/Table";
 import { FaEye } from "react-icons/fa";
-import { formatDate, renderTrangThaiMau } from "../../../../configs/configAll";
+import { formatDate, formatDateNotTime, renderTrangThaiMau } from "../../../../configs/configAll";
 
 interface TableProps {
   tableBody: any[];
@@ -151,7 +151,7 @@ const TableQuanLyPhieuDKyDVHN = (props: TableProps) => {
                 <TableCell align="center">
                   <Box className="flex gap-2 items-center justify-start">
                     <p className="text-base/4 font-medium text-gray-700">
-                      {formatDate(item?.ngaySanXuat)}
+                      {formatDateNotTime(item?.ngaySanXuat)}
                     </p>
                   </Box>
                 </TableCell>
