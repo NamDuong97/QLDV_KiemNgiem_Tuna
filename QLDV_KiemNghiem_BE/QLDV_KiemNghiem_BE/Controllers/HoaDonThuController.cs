@@ -1,5 +1,4 @@
-﻿using System.Security.Claims;
-using AutoMapper;
+﻿using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
@@ -7,11 +6,13 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
+using QLDV_KiemNghiem_BE.DTO.RequestDto;
 using QLDV_KiemNghiem_BE.DTO.ResponseDto;
 using QLDV_KiemNghiem_BE.Interfaces.ManagerInterface;
 using QLDV_KiemNghiem_BE.Models;
 using QLDV_KiemNghiem_BE.RequestFeatures;
 using QLDV_KiemNghiem_BE.RequestFeatures.PagingRequest;
+using System.Security.Claims;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace QLDV_KiemNghiem_BE.Controllers
@@ -43,16 +44,6 @@ namespace QLDV_KiemNghiem_BE.Controllers
             return Ok(result.datas);
         }
 
-        // action này dùng để hiển thị phiếu đăng ký cho khách hàng cụ thể
-        [HttpGet]
-        //[Authorize(Roles = "KH,BLD,KET,KHTH,KYT")]
-        [Route("getHoaDonThuOfCustomer")]
-        public async Task<ActionResult> getHoaDonThuOfCustomer(string maKH)
-        {
-            var hoaDonThus = await _service.HoaDonThu.GetHoaDonThuOfCustomer(maKH);
-            _logger.LogDebug("lay toan bo hoa don thu cua khach hang: " + maKH);
-            return Ok(hoaDonThus);
-        }
 
         [HttpGet]
         [Route("getHoaDonThuByID")]
@@ -66,7 +57,7 @@ namespace QLDV_KiemNghiem_BE.Controllers
         [HttpPost]
         [Authorize(Roles = "KET")]
         [Route("createHoaDonThu")]
-        public async Task<ActionResult> createHoaDonThu(HoaDonThuDto HoaDonThuDto)
+        public async Task<ActionResult> createHoaDonThu(HoaDonThuRequestCreateDto HoaDonThuDto)
         {
             if (!ModelState.IsValid)
             {
@@ -78,7 +69,8 @@ namespace QLDV_KiemNghiem_BE.Controllers
                 return BadRequest(new { Errors = errors });
             }
             var nameUser = User.FindFirst(ClaimTypes.Email)?.Value.ToString() ?? "unknow";
-            ResponseModel1<HoaDonThuDto> create = await _service.HoaDonThu.CreateHoaDonThuAsync(HoaDonThuDto, nameUser);
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value.ToString() ?? null;
+            ResponseModel1<HoaDonThuDto> create = await _service.HoaDonThu.CreateHoaDonThuAsync(HoaDonThuDto, nameUser, userId);
             if (create.KetQua)
             {
                 _logger.LogDebug(create.Message);
@@ -94,7 +86,7 @@ namespace QLDV_KiemNghiem_BE.Controllers
         [HttpPut]
         [Authorize(Roles = "KET")]
         [Route("updateHoaDonThu")]
-        public async Task<ActionResult> updateHoaDonThu(HoaDonThuDto HoaDonThuDto)
+        public async Task<ActionResult> updateHoaDonThu(HoaDonThuRequestUpdateDto HoaDonThuDto)
         {
             if (!ModelState.IsValid)
             {
@@ -106,7 +98,8 @@ namespace QLDV_KiemNghiem_BE.Controllers
                 return BadRequest(new { Errors = errors });
             }
             var nameUser = User.FindFirst(ClaimTypes.Email)?.Value.ToString() ?? "unknow";
-            var update = await _service.HoaDonThu.UpdateHoaDonThuAsync(HoaDonThuDto, nameUser);
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value.ToString() ?? null;
+            var update = await _service.HoaDonThu.UpdateHoaDonThuAsync(HoaDonThuDto, nameUser, userId);
             if (update.KetQua)
             {
                 _logger.LogDebug("Cap nhat hoa don thu thanh cong");

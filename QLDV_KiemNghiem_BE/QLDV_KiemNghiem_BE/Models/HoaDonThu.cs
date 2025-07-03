@@ -36,9 +36,6 @@ public partial class HoaDonThu
     [StringLength(100)]
     public string? TrangThai { get; set; }
 
-    [Column(TypeName = "datetime")]
-    public DateTime? NgayTao { get; set; }
-
     [StringLength(50)]
     public string? NguoiTao { get; set; }
 
