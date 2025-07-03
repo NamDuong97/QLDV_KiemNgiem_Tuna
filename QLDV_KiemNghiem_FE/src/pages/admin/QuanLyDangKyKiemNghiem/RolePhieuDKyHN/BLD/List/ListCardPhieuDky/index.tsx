@@ -11,7 +11,10 @@ const ListCardPhieuDky = ({ registration, onView }: any) => {
     sessionStorage.setItem("phieu-DKKN-xem-chi-tiet", JSON.stringify(id));
   };
   return (
-    <div className="card bg-white rounded-lg shadow-sm overflow-hidden hover:shadow-md transition-all duration-300 hover:-translate-y-1">
+    <div
+      onClick={() => handleRedirectXemChiTiet(registration.maId)}
+      className="card bg-white rounded-lg shadow-sm overflow-hidden hover:shadow-md transition-all duration-300 hover:-translate-y-1 cursor-pointer"
+    >
       <div className="p-5">
         <div className="flex justify-between items-start">
           <div>

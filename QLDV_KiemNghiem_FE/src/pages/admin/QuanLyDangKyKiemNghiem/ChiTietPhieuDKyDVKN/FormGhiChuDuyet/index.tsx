@@ -44,6 +44,15 @@ const FormGhiChuDuyet = (props: Props) => {
       handleClose();
     }
     await Promise.all([
+       queryClient.refetchQueries({
+        queryKey: ["listPhieuDKKM_KHTH"],
+      }),
+      queryClient.refetchQueries({
+        queryKey: ["quanLyPhieuDKKMs_KHTH"],
+      }),
+      queryClient.refetchQueries({
+        queryKey: ["listPhieuDKKNAllKHTH"],
+      }),
       queryClient.refetchQueries({
         queryKey: ["listPhieuDKKM_BLD"],
       }),
@@ -72,6 +81,18 @@ const FormGhiChuDuyet = (props: Props) => {
       }),
       queryClient.refetchQueries({
         queryKey: ["listPhieuDKKNAllKHTH"],
+      }),
+      queryClient.refetchQueries({
+        queryKey: ["listPhieuDKKM_BLD"],
+      }),
+      queryClient.refetchQueries({
+        queryKey: ["quanLyPhieuDKKMs_BLD"],
+      }),
+      queryClient.refetchQueries({
+        queryKey: ["listPhieuDKKNAll"],
+      }),
+      queryClient.refetchQueries({
+        queryKey: ["listPhieuChoPhanCong"],
       }),
     ]);
   };

@@ -21,7 +21,7 @@ const ShowDetail = ({ resultId, onEdit, onBack }: any) => {
     queryKey: "DuTruByID",
     params: resultId,
   });
-  console.log("data", data);
+  console.log("datadatadata", data?.trangThai);
 
   const { data: dataMauID } = queryMauByID({
     queryKey: "MauByID",
@@ -59,7 +59,7 @@ const ShowDetail = ({ resultId, onEdit, onBack }: any) => {
         <div className="flex space-x-2">
           {getRoleGroup(role) === "KN" &&
             role !== "KN" &&
-            data?.trangThai === 0 && (
+            data?.trangThai == 1  && (
               <>
                 <button
                   onClick={() => {
@@ -83,7 +83,7 @@ const ShowDetail = ({ resultId, onEdit, onBack }: any) => {
                 </button>
               </>
             )}
-          {data?.trangThai !== 0 && (
+          {data?.trangThai !== 0 && data?.trangThai !== 2 && (
             <button
               onClick={() => onEdit(resultId)}
               className="px-4 py-2 cursor-pointer bg-cyan-600 text-white rounded-lg hover:bg-cyan-700 transition-colors flex items-center space-x-2"
@@ -249,7 +249,7 @@ const ShowDetail = ({ resultId, onEdit, onBack }: any) => {
             ? `lãnh đạo phòng từ chối`
             : `lãnh đạo phòng duyệt phiếu`
         }`}
-        dataID={data?.maId}
+        dataID={data?.maID}
         typeConform={isTypeConform}
       />
     </div>

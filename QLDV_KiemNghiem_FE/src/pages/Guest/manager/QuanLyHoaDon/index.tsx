@@ -1,9 +1,12 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { Search } from "react-feather";
 // import { Pagination, Skeleton } from "@mui/material";
 import Card from "./Card";
 import { useNavigate } from "react-router";
 import { APP_ROUTES } from "../../../../constants/routers";
+import { useQueryHoaDonThuAll } from "../../../../hooks/personnels/queryHoaDonThu";
+import { Pagination, Skeleton, TextField } from "@mui/material";
+import { GuestInfor } from "../../../../contexts/storeProvider";
 
 // import { queryPhanTichKetQuaAll } from "../../../../hooks/personnels/queryPTKQ";
 // import { usePersonnel } from "../../../../contexts/PersonelsProvider";
@@ -13,43 +16,52 @@ import { APP_ROUTES } from "../../../../constants/routers";
 const QuanLyHoaDon = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const navigate = useNavigate();
+  const { userInfo } = GuestInfor();
   const handleViewResult = (id: any) => {
     navigate(APP_ROUTES.TUNA_CUSTOMER.QUAN_LY_HOA_DON.SHOW_HOA_DON.to);
     sessionStorage.setItem("chi-tiet-hoa-don", JSON.stringify(id));
   };
+  const [selectedDateFrom, setSelectedDateFrom] = useState("");
+  const [selectedDateTo, setSelectedDateTo] = useState("");
+  const queryParams = useMemo(() => {
+    const params: any = { getAll: true, maKH: userInfo?.maId };
+    if (selectedDateFrom) params.ngayLapFrom = selectedDateFrom;
+    if (selectedDateTo) params.ngayLapTo = selectedDateTo;
+    return params;
+  }, [selectedDateFrom, selectedDateTo]);
+  const { data, isLoading } = useQueryHoaDonThuAll({
+    queryKey: "useQueryHoaDonThuAll",
+    params: queryParams,
+  });
+  const handleChangeDateFrom = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSelectedDateFrom(event.target.value);
+  };
+  const handleChangeDateTo = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSelectedDateTo(event.target.value);
+  };
 
-  // const filteredResults = data
-  //   ?.filter((item: any) =>
-  //     getRoleGroup(role) === "BLD"
-  //       ? item.trangThai === 2
-  //       : item.trangThai !== 2 && item.trangThai !== 3
-  //   )
-  //   ?.filter((result: any) => {
-  //     const matchesSearch =
-  //       result?.tenMau?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-  //       result?.maPhieuKetQua
-  //         .toLowerCase()
-  //         .includes(searchTerm.toLowerCase()) ||
-  //       result?.tennvKiemTra.toLowerCase().includes(searchTerm.toLowerCase()) ||
-  //       result?.tennvLap.toLowerCase().includes(searchTerm.toLowerCase());
-  //     const matchesStatus = !selectKhoa || result?.maKhoa === selectKhoa;
-  //     return matchesSearch && matchesStatus;
-  //   });
+  const filteredResults = data?.filter((result: any) => {
+    const matchesSearch =
+      result?.maHD.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      result?.soDKPT.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      result?.tenKH.toLowerCase().includes(searchTerm.toLowerCase());
+    return matchesSearch;
+  });
 
-  // const [currentPage, setCurrentPage] = useState(1);
-  // const [itemsPerPage] = useState(4);
-  // const indexOfLastItem = currentPage * itemsPerPage;
-  // const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  // const currentItems = filteredResults?.slice(
-  //   indexOfFirstItem,
-  //   indexOfLastItem
-  // );
-  // const totalPages = Math.ceil(
-  //   filteredResults && filteredResults?.length / itemsPerPage
-  // );
-  // const handlePageChange = (_: any, value: number) => {
-  //   setCurrentPage(value);
-  // };
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage] = useState(2);
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = filteredResults?.slice(
+    indexOfFirstItem,
+    indexOfLastItem
+  );
+  const totalPages = Math.ceil(
+    filteredResults && filteredResults?.length / itemsPerPage
+  );
+  const handlePageChange = (_: any, value: number) => {
+    setCurrentPage(value);
+  };
 
   return (
     <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
@@ -70,29 +82,41 @@ const QuanLyHoaDon = () => {
               />
             </div>
           </div>
+          <div className="flex items-center gap-2">
+            <TextField
+              size="small"
+              variant="outlined"
+              type="date"
+              value={selectedDateFrom}
+              onChange={handleChangeDateFrom}
+            />
+            -{" "}
+            <TextField
+              size="small"
+              variant="outlined"
+              type="date"
+              value={selectedDateTo}
+              onChange={handleChangeDateTo}
+            />
+          </div>
         </div>
       </div>
 
       <div className="p-6">
-        {/* {isLoading ? (
+        {isLoading ? (
           <div className="grid gap-4">
             <Skeleton variant="rounded" width={1441} height={198} />
             <Skeleton variant="rounded" width={1441} height={198} />
             <Skeleton variant="rounded" width={1441} height={198} />
           </div>
-        ) : currentItems?.length > 0 ? ( */}
-        <>
-          <div className="grid gap-4">
-            {/* {currentItems.map((result: any, index: any) => (
-                
-              ))} */}
-            <Card
-              // key={index}
-              // result={result}
-              onView={handleViewResult}
-            />
-          </div>
-          {/* <div className="p-4 flex justify-center">
+        ) : currentItems?.length > 0 ? (
+          <>
+            <div className="grid gap-4">
+              {currentItems.map((result: any, index: any) => (
+                <Card key={index} result={result} />
+              ))}
+            </div>
+            <div className="p-4 flex justify-center">
               <Pagination
                 count={totalPages}
                 page={currentPage}
@@ -112,9 +136,9 @@ const QuanLyHoaDon = () => {
                   },
                 }}
               />
-            </div> */}
-        </>
-        {/* ) : (
+            </div>
+          </>
+        ) : (
           <div className="p-8 text-center">
             <div className="w-16 h-16 mx-auto bg-indigo-100 rounded-full flex items-center justify-center">
               <svg
@@ -134,7 +158,7 @@ const QuanLyHoaDon = () => {
               Chưa có phiếu nào
             </h3>
           </div>
-        )} */}
+        )}
       </div>
     </div>
   );

@@ -4,14 +4,21 @@ import InputSearch2 from "../../../../components/InputSearch2";
 import SelectItemTrangThai from "./SelectItemTrangThai";
 import { queryDuTruAll } from "../../../../hooks/personnels/queryDuTru";
 import { Pagination, Skeleton } from "@mui/material";
+import { usePersonnel } from "../../../../contexts/PersonelsProvider";
 
 const List = ({ onView, onEdit }: any) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("");
+  const { personnelInfo } = usePersonnel();
 
   const { data, isLoading } = queryDuTruAll({
     queryKey: "queryDuTruAll",
+    params: {
+      getAll: true,
+      maKhoa: personnelInfo?.maKhoa,
+    },
   });
+  console.log("data", data);
 
   const filteredResults = data
     ?.filter((item: any) => item?.active)

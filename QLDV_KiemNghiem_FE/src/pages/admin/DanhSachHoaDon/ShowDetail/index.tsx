@@ -6,22 +6,22 @@ import { MdReceipt } from "react-icons/md";
 import ShowDetailHDBS from "./ShowDetailHDBS";
 import ModelCreateHDBS from "./ModelCreateHDBS";
 import ModelEditHDBS from "./ModelEditHDBS";
+import { useQueryHoaDonThuByID } from "../../../../hooks/personnels/queryHoaDonThu";
 
 export const typeConfirmation = {
   TuChoi: "tuchoi",
   DuyetPhieu: "DuyetPhieu",
 };
 
-const ShowDetail = ({ resultId, onEdit, onBack, handleOpenPhieuDKy }: any) => {
+const ShowDetail = ({ resultId, onBack, handleOpenPhieuDKy }: any) => {
   const [isCTHD, setisCTHD] = useState(true);
   const [openModelHDBS, setOpenModelHDBS] = useState(false);
   const [openCreateModelHDBS, setOpenCreateModelHDBS] = useState(false);
   const [openEditModelHDBS, setOpenEditModelHDBS] = useState(false);
   const [saveID, setSaveID] = useState(false);
-
-  const { data } = getPhanTichKetQuaByID({
-    queryKey: "PhanTichKetQuaByID",
-    params: resultId,
+  const { data } = useQueryHoaDonThuByID({
+    queryKey: "useQueryHoaDonThuByID",
+    maHoaDonThu: resultId,
   });
 
   const handleOpenPhieuDKyKM = () => {

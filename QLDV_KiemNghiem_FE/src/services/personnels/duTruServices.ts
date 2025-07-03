@@ -2,9 +2,11 @@ import _APIInstance from "../../configs/configAPI";
 import { API } from "../../constants/commons";
 
 export default class duTruServices {
-  static async getDuTruAll() {
+  static async getDuTruAll(params: any) {
     try {
-      const response = await _APIInstance.get(API.ADMIN.DU_TRU.GET_DU_TRU_ALL);
+      const response = await _APIInstance.get(API.ADMIN.DU_TRU.GET_DU_TRU_ALL, {
+        params: params,
+      });
       return response;
     } catch (err: any) {
       return err;

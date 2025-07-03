@@ -3,7 +3,6 @@ import { motion } from "motion/react";
 import { useState } from "react";
 import Maus from "./components/Maus";
 import PhuLieuHoaChat from "./components/PhuLieuHoaChat";
-import { MdDoorBack } from "react-icons/md";
 import { IoMdArrowDropdown } from "react-icons/io";
 import { MdAccountBox } from "react-icons/md";
 import { MdDescription } from "react-icons/md";
@@ -13,6 +12,7 @@ import { Inputs } from "../../../../../components/Inputs";
 import { useNavigate } from "react-router";
 import { APP_ROUTES } from "../../../../../constants/routers";
 import { image } from "../../../../../constants/image";
+import { ArrowLeft } from "react-feather";
 
 const ShowPhieuDKyDVKN = () => {
   const [isThongTinChung, setThongTinChung] = useState(true);
@@ -52,7 +52,7 @@ const ShowPhieuDKyDVKN = () => {
                   navigate(APP_ROUTES.TUNA_CUSTOMER.PHIEU_DKY_DVKN.to)
                 }
               >
-                <MdDoorBack className="w-4 h-4 sm:w-7 sm:h-7 text-[#306fb2]" />
+                <ArrowLeft className="w-4 h-4 sm:w-7 sm:h-7 text-[#306fb2]" />
               </button>
               <h1 className="capitalize text-xl/4 sm:text-3xl/6 font-bold text-white">
                 Số ĐKPT: {dataPhieu?.soDkpt}

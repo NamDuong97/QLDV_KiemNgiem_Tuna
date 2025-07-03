@@ -14,21 +14,7 @@ const Detail = ({
   fieldNamePrefix,
   dataDM_PhuLieuHoaChat,
   handleOpenPopupThemPLHC,
-  setValue,
 }: any) => {
-  const chiTiet = useWatch({
-    control,
-    name: `chiTiethdboSungs.${index}`,
-  });
-
-  useEffect(() => {
-    if (!chiTiet) return;
-    const soLuong = parseFloat(chiTiet.soLuong) || 0;
-    const donGia = parseFloat(chiTiet.donGia) || 0;
-    const thanhTien = soLuong * donGia;
-    setValue(`${fieldNamePrefix}.thanhTien`, thanhTien, { shouldValidate: true });
-  }, [chiTiet?.soLuong, chiTiet?.donGia, setValue, fieldNamePrefix]);
-
   return (
     <div className="flex items-center gap-4 p-4 bg-gray-50 rounded-lg">
       <div className="grid gap-4 w-full">
@@ -56,7 +42,9 @@ const Detail = ({
               className="w-full px-3 py-2 border rounded-md"
               placeholder="Số lượng"
             />
-            <p className="text-red-600 text-sm mt-1">{errors?.soLuong?.message}</p>
+            <p className="text-red-600 text-sm mt-1">
+              {errors?.soLuong?.message}
+            </p>
           </div>
           <div className="w-full">
             <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -68,7 +56,9 @@ const Detail = ({
               data={DonViTinh}
               placeholder="Đơn vị tính"
             />
-            <p className="text-red-600 text-sm mt-1">{errors?.donViTinh?.message}</p>
+            <p className="text-red-600 text-sm mt-1">
+              {errors?.donViTinh?.message}
+            </p>
           </div>
           <div className="w-full">
             <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -80,20 +70,9 @@ const Detail = ({
               className="w-full px-3 py-2 border rounded-md"
               placeholder="Đơn giá"
             />
-            <p className="text-red-600 text-sm mt-1">{errors?.donGia?.message}</p>
-          </div>
-          <div className="w-full">
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Thành tiền
-            </label>
-            <input
-              type="number"
-              {...register(`${fieldNamePrefix}.thanhTien`)}
-              className="w-full px-3 py-2 border rounded-md bg-gray-100"
-              placeholder="Thành tiền"
-              readOnly
-            />
-            <p className="text-red-600 text-sm mt-1">{errors?.thanhTien?.message}</p>
+            <p className="text-red-600 text-sm mt-1">
+              {errors?.donGia?.message}
+            </p>
           </div>
         </div>
       </div>

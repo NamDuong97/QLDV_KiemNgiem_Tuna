@@ -32,6 +32,9 @@ const DanhSach = (props: Props) => {
     queryKey: "queryThongKe",
   });
 
+  console.log('dataMau',dataMau);
+  
+
   const [selectLoaiMau, setSelectLoaiMau] = useState("");
 
   let data: any = dataMau?.data?.filter((item: any) =>

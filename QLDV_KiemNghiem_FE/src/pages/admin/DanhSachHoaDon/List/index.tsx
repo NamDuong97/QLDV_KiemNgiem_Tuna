@@ -1,47 +1,31 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { Search } from "react-feather";
 import Card from "../Card";
-import { queryPhanTichKetQuaAll } from "../../../../hooks/personnels/queryPTKQ";
-import { usePersonnel } from "../../../../contexts/PersonelsProvider";
-import { Pagination, Skeleton } from "@mui/material";
-import SelectItemKhoa from "./SelectItemKhoa";
-import { getRoleGroup } from "../../../../configs/Role";
-import { role } from "../../../../configs/parseJwt";
+import { Pagination, Skeleton, TextField } from "@mui/material";
+import { useQueryHoaDonThuAll } from "../../../../hooks/personnels/queryHoaDonThu";
 
-const List = ({ onView, onEdit }: any) => {
+const List = ({ onView }: any) => {
   const [searchTerm, setSearchTerm] = useState("");
-  const [selectKhoa, setSelectKhoa] = useState("");
-  const { personnelInfo } = usePersonnel();
-
-  const params: any = { getAll: true };
-
-  if (role === "KN") {
-    params.manvLap = personnelInfo?.maId;
-    params.maKhoa = personnelInfo?.maKhoa; // Giả sử bạn muốn gán maKhoa vào tham số riêng
-  }
-
-  const { data, isLoading } = queryPhanTichKetQuaAll({
-    queryKey: "phanTichKetQuaChuaDuyet",
-    params,
+  const [selectedDateFrom, setSelectedDateFrom] = useState("");
+  const [selectedDateTo, setSelectedDateTo] = useState("");
+  const queryParams = useMemo(() => {
+    const params: any = { getAll: true };
+    if (selectedDateFrom) params.ngayLapFrom = selectedDateFrom;
+    if (selectedDateTo) params.ngayLapTo = selectedDateTo;
+    return params;
+  }, [selectedDateFrom, selectedDateTo]);
+  const { data, isLoading } = useQueryHoaDonThuAll({
+    queryKey: "useQueryHoaDonThuAll",
+    params: queryParams,
   });
 
-  const filteredResults = data
-    ?.filter((item: any) =>
-      getRoleGroup(role) === "BLD"
-        ? item.trangThai === 2
-        : item.trangThai !== 2 && item.trangThai !== 3
-    )
-    ?.filter((result: any) => {
-      const matchesSearch =
-        result?.tenMau?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        result?.maPhieuKetQua
-          .toLowerCase()
-          .includes(searchTerm.toLowerCase()) ||
-        result?.tennvKiemTra.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        result?.tennvLap.toLowerCase().includes(searchTerm.toLowerCase());
-      const matchesStatus = !selectKhoa || result?.maKhoa === selectKhoa;
-      return matchesSearch && matchesStatus;
-    });
+  const filteredResults = data?.filter((result: any) => {
+    const matchesSearch =
+      result?.maHD.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      result?.soDKPT.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      result?.tenKH.toLowerCase().includes(searchTerm.toLowerCase());
+    return matchesSearch;
+  });
 
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(4);
@@ -58,15 +42,22 @@ const List = ({ onView, onEdit }: any) => {
     setCurrentPage(value);
   };
 
+  const handleChangeDateFrom = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSelectedDateFrom(event.target.value);
+  };
+  const handleChangeDateTo = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSelectedDateTo(event.target.value);
+  };
+
   return (
     <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
       <div className="px-6 py-4 border-b border-gray-200 bg-gray-50">
         <div className="flex justify-between items-center">
-          <div className="flex items-center space-x-4">
+          <div className="flex items-center justify-between space-x-4">
             <div className="relative">
               <input
                 type="search"
-                placeholder="Tìm kiếm theo mã hóa đơn, số dkpt..."
+                placeholder="Tìm kiếm theo mã hóa đơn, số dkpt, tên khách hàng..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-0 focus-within:outline-1 focus-within:border-blue-500 w-2xl"
@@ -76,14 +67,33 @@ const List = ({ onView, onEdit }: any) => {
                 size={16}
               />
             </div>
-
-            {getRoleGroup(role) === "BLD" && (
-              <SelectItemKhoa
-                title="Khoa"
-                setItem={setSelectKhoa}
-                item={selectKhoa}
-              />
-            )}
+          </div>
+          <div className="flex items-center gap-2">
+            <TextField
+              size="small"
+              variant="outlined"
+              type="date"
+              value={selectedDateFrom}
+              sx={{
+                input: {
+                  cursor: "pointer",
+                },
+              }}
+              onChange={handleChangeDateFrom}
+            />
+            -{" "}
+            <TextField
+              size="small"
+              variant="outlined"
+              type="date"
+              value={selectedDateTo}
+              sx={{
+                input: {
+                  cursor: "pointer",
+                },
+              }}
+              onChange={handleChangeDateTo}
+            />
           </div>
         </div>
       </div>
@@ -99,12 +109,7 @@ const List = ({ onView, onEdit }: any) => {
           <>
             <div className="grid gap-4">
               {currentItems.map((result: any, index: any) => (
-                <Card
-                  key={index}
-                  result={result}
-                  onView={onView}
-                  onEdit={onEdit}
-                />
+                <Card key={index} result={result} onView={onView} />
               ))}
             </div>
             <div className="p-4 flex justify-center">

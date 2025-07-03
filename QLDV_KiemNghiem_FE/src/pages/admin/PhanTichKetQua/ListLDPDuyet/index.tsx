@@ -18,7 +18,7 @@ const ListLDPDuyet = ({ onView, handleOpenModelNoiDungSoBo }: any) => {
   const { data, isLoading } = queryPhanTichKetQuaAll({
     queryKey: "phanTichKetQuaChuaDuyet",
     params:
-      getRoleGroup(role) === "BLD"
+      getRoleGroup(role) === "BLD" || getRoleGroup(role) === "KHTH"
         ? {
             getAll: true,
           }
@@ -30,7 +30,7 @@ const ListLDPDuyet = ({ onView, handleOpenModelNoiDungSoBo }: any) => {
 
   const filteredResults = data
     ?.filter((item: any) =>
-      getRoleGroup(role) === "BLD"
+      getRoleGroup(role) === "BLD" ||  getRoleGroup(role) === "KHTH"
         ? item.trangThai !== 2 && item.trangThai !== 3
         : item.trangThai === 2
     )

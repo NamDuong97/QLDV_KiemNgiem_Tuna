@@ -297,6 +297,7 @@ const BLD = (props: Props) => {
                 variant="outlined"
                 type="date"
                 value={selectedDateFrom}
+                className="cursor-pointer"
                 onChange={handleChangeDateFrom}
               />
               -{" "}
@@ -305,6 +306,7 @@ const BLD = (props: Props) => {
                 variant="outlined"
                 type="date"
                 value={selectedDateTo}
+                className="cursor-pointer"
                 onChange={handleChangeDateTo}
               />
             </div>

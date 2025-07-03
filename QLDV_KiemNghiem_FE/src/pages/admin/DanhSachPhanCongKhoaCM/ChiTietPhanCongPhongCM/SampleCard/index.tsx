@@ -33,6 +33,8 @@ const SampleCard = ({ sample, onImageClick, index }: any) => {
   });
   const dataTC: any = dataTieuChuan;
   const dataLDV: any = dataLoaiDV;
+  console.log('dataMau',dataMau);
+  
 
   const handleOnSettled = async (response: any) => {
     if (response.ketQua === true) {
@@ -45,6 +47,9 @@ const SampleCard = ({ sample, onImageClick, index }: any) => {
         }),
         queryClient.refetchQueries({
           queryKey: ["DanhSachMau"],
+        }),
+        queryClient.refetchQueries({
+          queryKey: ["AllDanhSachMau"],
         }),
       ]);
     }

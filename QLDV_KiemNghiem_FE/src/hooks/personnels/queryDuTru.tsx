@@ -10,15 +10,16 @@ interface Props {
 }
 
 export const queryDuTruAll = (props: Props) => {
-  const { queryKey } = props;
+  const { queryKey, params } = props;
   return useQuery({
-    queryKey: [queryKey],
+    queryKey: [queryKey, params],
     queryFn: async () => {
-      const response = await duTruServices.getDuTruAll();
+      const response = await duTruServices.getDuTruAll(params);
       return response?.data;
     },
     refetchOnWindowFocus: false,
     staleTime: Infinity,
+    enabled: !!params,
   });
 };
 

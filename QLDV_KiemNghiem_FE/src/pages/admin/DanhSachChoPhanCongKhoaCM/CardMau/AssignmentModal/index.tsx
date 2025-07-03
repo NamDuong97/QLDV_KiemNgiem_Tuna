@@ -16,6 +16,7 @@ interface Props {
   selectedSamples: any;
   departments: any;
   setSamples: React.Dispatch<React.SetStateAction<MauPhanCong[]>>;
+  handleSelectedSamples: () => void;
 }
 interface FormPhanCong {
   ghiChu: {
@@ -28,7 +29,13 @@ interface FormPhanCong {
 }
 
 const AssignmentModal = (props: Props) => {
-  const { isOpen, onClose, selectedSamples, departments } = props;
+  const {
+    isOpen,
+    onClose,
+    selectedSamples,
+    departments,
+    handleSelectedSamples,
+  } = props;
   const [selectedDepartment, setSelectedDepartment] = useState(null);
   const [timeGiaoMau, setTimeGiaoMau] = useState<any>(null);
 
@@ -147,6 +154,7 @@ const AssignmentModal = (props: Props) => {
         message: "Phân công mẫu cho phòng ban thành công",
         status: 200,
       });
+      handleSelectedSamples();
       onClose();
     },
     onError: (err: any) => {

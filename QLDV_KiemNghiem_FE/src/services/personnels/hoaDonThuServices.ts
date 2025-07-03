@@ -4,10 +4,9 @@ import { API } from "../../constants/commons";
 export default class hoaDonThuServices {
   static async getAll(params: any) {
     try {
-      const response = await _APIInstance.get(
-        API.ADMIN.HOA_DON_THU.GET_ALL,
-        params
-      );
+      const response = await _APIInstance.get(API.ADMIN.HOA_DON_THU.GET_ALL, {
+        params: params,
+      });
       return response;
     } catch (err: any) {
       return err;

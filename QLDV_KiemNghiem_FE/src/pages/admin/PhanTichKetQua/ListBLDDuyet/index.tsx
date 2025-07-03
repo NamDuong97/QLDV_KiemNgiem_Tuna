@@ -18,24 +18,23 @@ const ListBLDDuyet = ({
   const [selectKhoa, setSelectKhoa] = useState("");
   const { personnelInfo } = usePersonnel();
 
-  // const isKNGroup = getRoleGroup(role) === "KN";
+  const isKNGroup = getRoleGroup(role) === "KN";
 
-  // const params = {
-  //   getAll: true,
-  //   ...(isKNGroup && role === "KN"
-  //     ? {
-  //         maKhoa: personnelInfo?.maKhoa,
-  //         manvLap: personnelInfo?.maId,
-  //       }
-  //     : {}),
-  // };
+  const params = {
+    getAll: true,
+    ...(isKNGroup && role === "KN"
+      ? {
+          maKhoa: personnelInfo?.maKhoa,
+          manvLap: personnelInfo?.maId,
+        }
+      : isKNGroup
+      ? { maKhoa: personnelInfo?.maKhoa }
+      : {}),
+  };
 
   const { data, isLoading } = queryPhanTichKetQuaAll({
     queryKey: "PhanTichKetQuaListDaDuyet",
-    params: {
-      getAll: true,
-      maKhoa: personnelInfo?.maKhoa,
-    },
+    params: params,
   });
   const filteredResults = data
     ?.filter((item: any) => item.trangThai === 3)

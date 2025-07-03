@@ -24,8 +24,6 @@ const ChiTietPhieuDKyDVKN = (props: Props) => {
     params: isSaveIdPDKy,
   });
 
-  console.log("data", data);
-
   const { data: dataNhanVien } = getInforNhanVien({
     queryKey: "getInforNhanVien",
     params: data?.manvSoDuyet,

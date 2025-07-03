@@ -49,6 +49,13 @@ const ShowDetail = () => {
           }}
         />
         <Box className="!absolute py-6 px-6 2xl:px-20 sm:py-8 bottom-0 w-full flex items-center gap-2 sm:gap-4">
+          <h1 className="capitalize text-xl/4 sm:text-3xl/6 font-bold text-white">
+            Chi tiết phiếu phân tích PTKQ008:
+          </h1>
+        </Box>
+      </Box>
+      <div className="bg-white rounded-xl shadow-sm border border-gray-200">
+        <div className="px-6 py-4 border-b border-gray-200 bg-gray-50 flex justify-between items-center">
           <button
             className="p-1 sm:p-2 rounded-full bg-gray-200 hover:bg-gray-300 transition-colors group cursor-pointer"
             onClick={() =>
@@ -57,20 +64,13 @@ const ShowDetail = () => {
           >
             <ArrowLeft className="w-4 h-4 sm:w-7 sm:h-7 text-sky-600" />
           </button>
-          <h1 className="capitalize text-xl/4 sm:text-3xl/6 font-bold text-white">
-            Chi tiết phiếu phân tích PTKQ008:
-          </h1>
-        </Box>
-      </Box>
-      <div className="bg-white rounded-xl shadow-sm border border-gray-200">
-        <div className="px-6 py-4 border-b border-gray-200 bg-gray-50 flex justify-end items-center">
           <div className="flex space-x-2">
             <button
               onClick={() => {
                 setOpen(true);
                 setIsTypeConform(typeConfirmation.TuChoi);
               }}
-              className="px-4 py-2 bg-yellow-200 text-yellow-700 rounded-lg hover:bg-yellow-300 cursor-pointer transition-colors flex items-center space-x-2"
+              className="px-2 py-1 lg:px-4 lg:py-2 text-xs lg:text-base bg-yellow-200 text-yellow-700 rounded-lg hover:bg-yellow-300 cursor-pointer transition-colors flex items-center space-x-2"
             >
               <Slash size={16} />
               <span>Từ chối</span>
@@ -80,7 +80,7 @@ const ShowDetail = () => {
                 setOpen(true);
                 setIsTypeConform(typeConfirmation.DuyetPhieu);
               }}
-              className="px-4 py-2 bg-green-200 text-green-700 rounded-lg hover:bg-green-300 cursor-pointer transition-colors flex items-center space-x-2"
+              className="px-1 py-2 lg:px-4 lg:py-2 text-xs lg:text-base bg-green-200 text-green-700 rounded-lg hover:bg-green-300 cursor-pointer transition-colors flex items-center space-x-2"
             >
               <Check size={16} />
               <span>Duyệt phiếu</span>
@@ -89,7 +89,7 @@ const ShowDetail = () => {
         </div>
 
         <div className="p-6">
-          <div className="grid grid-cols-2 gap-8">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
             <div className="space-y-6">
               <div className="bg-gradient-to-r from-blue-50 to-indigo-50 p-6 rounded-lg">
                 <h3 className="text-lg font-semibold text-gray-900 mb-4">

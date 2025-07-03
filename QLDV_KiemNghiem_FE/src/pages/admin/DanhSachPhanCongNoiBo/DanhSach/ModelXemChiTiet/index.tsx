@@ -13,7 +13,6 @@ import Timeline from "./Timeline";
 import yup from "../../../../../configs/yup.custom";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { usePersonnel } from "../../../../../contexts/PersonelsProvider";
 import {
   useMutationCreatePhieuTienDo,
   useMutationDeletePhieuTienDo,
@@ -260,6 +259,8 @@ const ModelXemChiTiet = (props: Props) => {
       ghiChu: "",
     });
   }, []);
+  console.log('data',data);
+  
 
   return (
     <Dialog

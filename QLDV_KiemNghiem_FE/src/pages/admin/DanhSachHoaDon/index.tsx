@@ -2,7 +2,6 @@ import { motion } from "motion/react";
 import { useState } from "react";
 import List from "./List";
 import ShowDetail from "./ShowDetail";
-import Edit from "./Edit";
 import ChiTietPhieuDKyDVKN from "./ChiTietPhieuDKyDVKN";
 
 const DanhSachHoaDon = () => {
@@ -13,11 +12,6 @@ const DanhSachHoaDon = () => {
   const handleViewResult = (id: any) => {
     setSelectedResultId(id);
     setActiveView("detail");
-  };
-
-  const handleEditResult = (id: any) => {
-    setSelectedResultId(id);
-    setActiveView("edit");
   };
 
   const handleOpenPhieuDKy = (id: any) => {
@@ -40,17 +34,10 @@ const DanhSachHoaDon = () => {
             handleOpenPhieuDKy={handleOpenPhieuDKy}
           />
         );
-      case "edit":
-        return (
-          <Edit
-            resultId={selectedResultId}
-            onCancel={() => setActiveView("list")}
-          />
-        );
       case "list":
-        return <List onView={handleViewResult} onEdit={handleEditResult} />;
+        return <List onView={handleViewResult} />;
       default:
-        return <List onView={handleViewResult} onEdit={handleEditResult} />;
+        return <List onView={handleViewResult} />;
     }
   };
 

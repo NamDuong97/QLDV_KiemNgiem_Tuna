@@ -271,6 +271,7 @@ const SampleList = (props: Props) => {
         departments={departments}
         samples={samples}
         setSamples={setSamples}
+        handleSelectedSamples={() => setSelectedSamples([])}
       />
       <AssignmentDeleteModal
         isOpen={isAssignmentDeleteModalOpen}
