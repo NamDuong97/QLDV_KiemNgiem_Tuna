@@ -234,7 +234,7 @@ namespace QLDV_KiemNghiem_BE.Services
             }
             else
             {
-                PhieuDuTruCheck.TrangThai = 1;
+                PhieuDuTruCheck.TrangThai = 0;
             }
 
             _repositoryManager.PhieuDuTru.UpdatePhieuDuTruAsync(PhieuDuTruCheck);
@@ -271,6 +271,38 @@ namespace QLDV_KiemNghiem_BE.Services
             {
                 KetQua = check,
                 Message = check ? "Cap nhat thanh cong!" : "Cap nhat that bai",
+                Data = PhieuDuTruReturnDto
+            };
+        }
+        public async Task<ResponseModel1<PhieuDuTruDto>> RequestReviewAgainPhieuDuTru(string maPhieuDuTru, string user, string userId)
+        {
+            if (maPhieuDuTru == null) return new ResponseModel1<PhieuDuTruDto>
+            {
+                KetQua = false,
+                Message = "Du lieu tham so dau vao null hoac khong hop le, vui long kiem tra lai!",
+                Data = null
+            };
+
+            var PhieuDuTruCheck = await _repositoryManager.PhieuDuTru.FindPhieuDuTruAsync(maPhieuDuTru, true);
+            if (PhieuDuTruCheck == null)
+            {
+                return new ResponseModel1<PhieuDuTruDto>
+                {
+                    KetQua = false,
+                    Message = "Du lieu muon cap nhat khong ton tai, vui long kiem tra lai",
+                    Data = null
+                };
+            }
+            PhieuDuTruCheck.NgaySua = DateTime.Now;
+            PhieuDuTruCheck.NguoiSua = user;
+            PhieuDuTruCheck.TrangThai = 1;
+
+            bool check = await _repositoryManager.SaveChangesAsync();
+            var PhieuDuTruReturnDto = _mapper.Map<PhieuDuTruDto>(PhieuDuTruCheck);
+            return new ResponseModel1<PhieuDuTruDto>
+            {
+                KetQua = check,
+                Message = check ? "Phieu du tru duoc gui duyet lai thanh cong" : "Phieu du tru duoc gui duyet lai that bai",
                 Data = PhieuDuTruReturnDto
             };
         }

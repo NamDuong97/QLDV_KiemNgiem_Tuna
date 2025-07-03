@@ -75,7 +75,8 @@ namespace QLDV_KiemNghiem_BE.Services
                 NgayTao = DateTime.Now,
                 NguoiTao = user,
                 TrangThai = "moi tao",
-                ManvLap = userId
+                ManvLap = userId,
+                Active = true
             };
 
             // Xử lý chi tiết hóa đơn nếu có
@@ -158,7 +159,8 @@ namespace QLDV_KiemNghiem_BE.Services
                             DonViTinh = item.DonViTinh,
                             SoLuong = item.SoLuong ?? 0,
                             DonGia = item.DonGia ?? 0,
-                            ThanhTien = item.SoLuong * item.DonGia
+                            ThanhTien = item.SoLuong * item.DonGia,
+                            TrangThai = true
                         };
                         hoaDonCheck.TongTien += newCT.ThanhTien;
                         _repositoryManager.ChiTietHoaDonThuBoSung.CreateChiTietHoaDonThuBoSung(newCT);

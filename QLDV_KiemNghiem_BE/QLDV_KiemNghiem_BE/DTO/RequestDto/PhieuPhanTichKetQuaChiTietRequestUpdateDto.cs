@@ -29,8 +29,7 @@ namespace QLDV_KiemNghiem_BE.DTO.RequestDto
 
         [StringLength(100, ErrorMessage = "TrangThai tối đa 100 ký tự")]
         public string TrangThai { get; set; } = string.Empty;
-
-        public bool IsDel {  get; set; } = false;
+        public int Action {  get; set; } = 0;
 
         // khong cho sua machitieu, tenchitieu, muon sua thi xoa cai cu, them cai moi
     }

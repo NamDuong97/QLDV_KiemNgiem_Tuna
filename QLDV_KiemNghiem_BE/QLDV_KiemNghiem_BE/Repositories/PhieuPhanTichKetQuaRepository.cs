@@ -21,7 +21,7 @@ namespace QLDV_KiemNghiem_BE.Repositories
         public async Task<PagedList<PhieuPhanTichKetQuaProcedure>> GetPhieuPhanTichKetQuaAllAsync(PhieuPhanTichKetQuaParam param)
         {
             var result = await _context.PhieuPhanTichKetQuaProcedures
-                 .FromSqlRaw("EXEC sp_getAllPhieuPhanTichKetQuaByBoLoc {0}, {1}, {2}, {3}, {4}, {5}, {6}, {7}, {8}",
+                 .FromSqlRaw("EXEC sp_getAllPhieuPhanTichKetQuaByBoLoc {0}, {1}, {2}, {3}, {4}, {5}, {6}, {7}, {8}, {9}, {10}",
             param.MaId ?? string.Empty,
             param.MaKhoa ?? string.Empty,
             param.DonViSanXuat ?? string.Empty,
@@ -30,8 +30,9 @@ namespace QLDV_KiemNghiem_BE.Repositories
             param.MabldDuyet ?? string.Empty,
             param.DonViGuiMau ?? string.Empty,
             param.NgayTraKetQuaFrom ?? string.Empty,
-            param.NgayTraKetQuaTo ?? string.Empty)
-            .ToListAsync();
+            param.NgayTraKetQuaTo ?? string.Empty,
+            param.TrangThai ?? string.Empty,
+            param.Active).ToListAsync();
 
            foreach(var item in result)
            {

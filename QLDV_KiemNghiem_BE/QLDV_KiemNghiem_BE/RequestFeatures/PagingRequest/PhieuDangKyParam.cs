@@ -8,5 +8,6 @@
         public string TimeTo { get; set; } = string.Empty;
         public string ManvDuyet { get; set; } = string.Empty;
         public string MaBldDuyet { get; set; } = string.Empty;
+      
     }
 }

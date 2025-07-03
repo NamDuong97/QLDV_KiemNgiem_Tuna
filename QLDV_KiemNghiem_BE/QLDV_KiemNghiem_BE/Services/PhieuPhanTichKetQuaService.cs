@@ -135,7 +135,8 @@ namespace QLDV_KiemNghiem_BE.Services
             {
                 foreach(var item in pTKQ.ChiTietPhanTichKetQuas)
                 {
-                    if(string.IsNullOrEmpty(item.MaId))
+                    if (item.Action == 0) continue;
+                    if (item.Action == 2)
                     {
                         PhieuPhanTichKetQuaChiTiet pTKQCT = new PhieuPhanTichKetQuaChiTiet()
                         {
@@ -153,15 +154,15 @@ namespace QLDV_KiemNghiem_BE.Services
                         _repositoryManager.PhieuPhanTichKetQuaChiTiet.CreatePhieuPhanTichKetQuaChiTietAsync(pTKQCT);
                         datas.Add(pTKQCT);
                     }
-                    else
+                    else 
                     {
                         var checkPPTKQCT = await _repositoryManager.PhieuPhanTichKetQuaChiTiet.FindPhieuPhanTichKetQuaChiTietAsync(item.MaId);
                         if(checkPPTKQCT == null) continue;
-                        if (item.IsDel)
+                        if (item.Action == 3)
                         {  
                           _repositoryManager.PhieuPhanTichKetQuaChiTiet.DeletePhieuPhanTichKetQuaChiTietAsync(checkPPTKQCT);
                         }
-                        else
+                        else if (item.Action == 1)
                         {
                             checkPPTKQCT.KetQua = string.IsNullOrEmpty(item.KetQua) ? checkPPTKQCT.KetQua : item.KetQua;
                             checkPPTKQCT.DonVi = string.IsNullOrEmpty(item.DonVi) ? checkPPTKQCT.DonVi : item.DonVi;

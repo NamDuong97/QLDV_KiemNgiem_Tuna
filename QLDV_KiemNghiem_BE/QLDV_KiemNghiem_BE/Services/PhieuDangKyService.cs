@@ -12,6 +12,7 @@ using QLDV_KiemNghiem_BE.Models;
 using QLDV_KiemNghiem_BE.Repositories;
 using QLDV_KiemNghiem_BE.RequestFeatures;
 using QLDV_KiemNghiem_BE.RequestFeatures.PagingRequest;
+using QLDV_KiemNghiem_BE.Shared;
 using StackExchange.Redis;
 using System;
 using System.Threading.Channels;
@@ -33,10 +34,10 @@ namespace QLDV_KiemNghiem_BE.Services
             _redis = redis;
             _cache = cache;
         }
-        public async Task<IEnumerable<PhieuDangKyDto>> GetPhieuDangKiesAllAsync(PhieuDangKyParam phieuDangKyParam)
+        public async Task<(IEnumerable<PhieuDangKyDto> datas, Pagination pagi)> GetPhieuDangKiesAllAsync(PhieuDangKyParam phieuDangKyParam)
         {
-            string makh, trangthaiID, from, to;
-            DateTime temp = DateTime.Now;
+            //string makh, trangthaiID, from, to;
+            //DateTime temp = DateTime.Now;
             List<PhieuDangKyDto> phieuDangKyDtos = new List<PhieuDangKyDto>(); // lưu những phiếu đăng ký đã chuyển sang Dto
             var phieuDangKies = await _repositoryManager.PhieuDangKy.GetPhieuDangKiesAllAsync(phieuDangKyParam); // lấy ra các phiếu đăng ký domain
             foreach (var item in phieuDangKies)
@@ -55,7 +56,7 @@ namespace QLDV_KiemNghiem_BE.Services
                 phieuDangKyDto.PhieuDangKyPhuLieuHoaChats = phieuDangKyPhuLieuHoaChatDtos;
                 phieuDangKyDtos.Add(phieuDangKyDto);
             }
-            return phieuDangKyDtos;
+            return (datas: phieuDangKyDtos, pagi: phieuDangKies.Pagination);
         }
         public async Task<IEnumerable<PhieuDangKyDto>> GetPhieuDangKiesOfCustomerAsync(string maKH, string maTrangThaiPhieuDangKy)
         {
@@ -101,6 +102,10 @@ namespace QLDV_KiemNghiem_BE.Services
             result.Maus = phieuDangKyMauDtos;
             // Tra ket qua
             return result;
+        }
+        public ThongKePhieuDangKyProcedure? GetPhieuDangKyThongKe()
+        {
+            return _repositoryManager.PhieuDangKy.GetPhieuDangKyThongKe();
         }
         public async Task<ResponseModel1<PhieuDangKyDto>> CreatePhieuDangKyAsync(PhieuDangKyDto phieuDangKyDto, string user)
         {

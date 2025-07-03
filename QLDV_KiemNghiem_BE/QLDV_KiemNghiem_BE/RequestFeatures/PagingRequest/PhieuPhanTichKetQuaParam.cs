@@ -16,8 +16,8 @@
         public string? DonViGuiMau { get; set; } = string.Empty;
 
         public string? NgayTraKetQuaFrom { get; set; } = string.Empty;
-
         public string? NgayTraKetQuaTo { get; set; } = string.Empty;
+        public string? TrangThai { get; set; } = string.Empty;
+        public string? Active { get; set; } = string.Empty;
     }
-
 }
