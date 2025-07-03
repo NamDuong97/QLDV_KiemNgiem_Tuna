@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
@@ -43,8 +44,9 @@ namespace QLDV_KiemNghiem_BE.Controllers
                 return BadRequest("Thieu tham so truyen vao");
             }
             var phieuDangKys = await _service.PhieuDangKy.GetPhieuDangKiesAllAsync(phieuDangKyParam);
+            Response.Headers.Append("X-Pagination", System.Text.Json.JsonSerializer.Serialize(phieuDangKys.pagi));
             _logger.LogDebug("lay toan bo phieu dang ky");
-            return Ok(phieuDangKys);
+            return Ok(phieuDangKys.datas);
         }
 
         [Authorize(Roles = "KHTH")]
@@ -69,6 +71,16 @@ namespace QLDV_KiemNghiem_BE.Controllers
        
             _logger.LogDebug(phieuDangKys.Message);
             return Ok(phieuDangKys);
+        }
+
+        //[Authorize(Policy = "KHTH_BLD_KN")]
+        [HttpGet]
+        [Route("getPhieuDangKyThongKe")]
+        public ActionResult getPhieuDangKyThongKe()
+        {
+            var result = _service.PhieuDangKy.GetPhieuDangKyThongKe();
+            _logger.LogDebug($"get thong ke phieu dang ky thanh cong");
+            return Ok(result);
         }
 
         //[Authorize(Roles = "BLD")]

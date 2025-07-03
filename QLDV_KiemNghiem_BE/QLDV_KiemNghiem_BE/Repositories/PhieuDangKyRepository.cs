@@ -3,10 +3,12 @@ using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using QLDV_KiemNghiem_BE.Data;
 using QLDV_KiemNghiem_BE.DTO;
+using QLDV_KiemNghiem_BE.DTO.ResponseDto;
 using QLDV_KiemNghiem_BE.Interfaces;
 using QLDV_KiemNghiem_BE.Models;
 using QLDV_KiemNghiem_BE.RequestFeatures;
 using QLDV_KiemNghiem_BE.RequestFeatures.PagingRequest;
+using QLDV_KiemNghiem_BE.Shared;
 using System;
 using System.Linq;
 using static System.Runtime.InteropServices.JavaScript.JSType;
@@ -23,7 +25,7 @@ namespace QLDV_KiemNghiem_BE.Repositories
             _context = context;
             _mapper = mapper;
         }
-        public async Task<IEnumerable<PhieuDangKy>> GetPhieuDangKiesAllAsync(PhieuDangKyParam pr)
+        public async Task<PagedList<PhieuDangKy>> GetPhieuDangKiesAllAsync(PhieuDangKyParam pr)
         {
             var result = await _context.PhieuDangKies
                 .FromSqlRaw("exec layPhieuDangKyTheoBoLoc @maKH = {0}, @trangThaiID = {1}, @timeFrom = {2}, @timeTo = {3}, @manvDuyet ={4}, @mabldDuyet ={5}",
@@ -34,7 +36,11 @@ namespace QLDV_KiemNghiem_BE.Repositories
             {
                 await _context.Entry(item).Collection(p => p.PhieuDangKyMaus).Query().Include(m => m.PhieuDangKyMauHinhAnhs).LoadAsync();
             }
-            return result;
+            return PagedList<PhieuDangKy>.ToPagedList(result, pr.PageNumber, pr.PageSize, pr.GetAll);
+        }
+        public ThongKePhieuDangKyProcedure? GetPhieuDangKyThongKe()
+        {
+            return _context.ThongKePhieuDangKyProcedures.FromSqlRaw("exec sp_ThongKePhieuDangKy").AsEnumerable().FirstOrDefault();
         }
         public async Task<IEnumerable<PhieuDangKy>> GetPhieuDangKiesOfCustomerAsync(string maKH, string maTrangThaiPhieuDangKy)
         {
