@@ -80,7 +80,7 @@ namespace QLDV_KiemNghiem_BE.Extensions
                 option.AddPolicy("KHTH_BLD_KN", policy =>
                 {
                     policy.RequireAuthenticatedUser();
-                    policy.RequireClaim(ClaimTypes.Role, "KET", "KET_L", "KET_P", "BLD_L", "BLD_KN", "BLD_NL", "BLD_TC",
+                    policy.RequireClaim(ClaimTypes.Role, "KHTH", "KHTH_L", "KHTH_P", "KET", "KET_L", "KET_P", "BLD_L", "BLD_KN", "BLD_NL", "BLD_TC",
                         "KN", "KN_L", "KN_P");
                 });
                 option.AddPolicy("BLD_KYT", policy =>

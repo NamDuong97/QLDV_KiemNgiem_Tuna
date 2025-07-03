@@ -9,7 +9,6 @@ namespace QLDV_KiemNghiem_BE.Interfaces
     public interface IHoaDonThuRepository
     {
         Task<PagedList<HoaDonThuProcedure>> GetAllHoaDonThuByBoLocAsync(HoaDonThuParam param);
-        Task<IEnumerable<HoaDonThu>> GetHoaDonThuOfCustomer(string maKH);
         Task<decimal> GetToTalMoneyOfMau(string dmMau, string maTieuChuan, string maLoaiDichVu);
         Task<HoaDonThu?> FindHoaDonThuAsync(string maHoaDonThu, bool tracking);
         Task<HoaDonThu?> CheckExistHoaDonThuByPhieuDangKyAsync(string maPhieuDangKy, bool tracking);

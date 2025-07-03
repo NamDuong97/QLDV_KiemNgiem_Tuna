@@ -46,20 +46,7 @@ namespace QLDV_KiemNghiem_BE.Repositories
                         .ToListAsync();
                 }
             }
-           
             return PagedList<HoaDonThuProcedure>.ToPagedList(result, param.PageNumber, param.PageSize, param.GetAll);
-        }
-
-        public async Task<IEnumerable<HoaDonThu>> GetHoaDonThuOfCustomer(string maKH)
-        {
-            var hoaDonThus = await _context.HoaDonThus.FromSqlRaw("exec sp_GetAllHoaDonOfCustomer @maKh = {0}", maKH).ToListAsync();
-
-            foreach (var item in hoaDonThus)
-            {
-                await _context.Entry(item).Collection(p => p.ChiTietHoaDonThus).Query().LoadAsync();
-                await _context.Entry(item).Collection(p => p.HoaDonThuBoSungs).Query().Include(item => item.ChiTietHoaDonThuBoSungs).LoadAsync();
-            }
-            return hoaDonThus;
         }
         public async Task<decimal> GetToTalMoneyOfMau(string dmMau, string maTieuChuan, string maLoaiDichVu)
         {
