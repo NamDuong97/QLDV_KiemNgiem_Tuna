@@ -32,6 +32,11 @@ namespace QLDV_KiemNghiem_BE.DTO.ResponseDto
 
         [Column(TypeName = "datetime")]
         public DateTime? NgaySua { get; set; }
+
+        [StringLength(500)]
+        public string? GhiChu { get; set; }
+
+        public bool? Active { get; set; }
         public ICollection<ChiTietHoaDonThuBoSungDto> ChiTietHoaDonThuBoSungs { get; set; } = new List<ChiTietHoaDonThuBoSungDto>();
     }
 }

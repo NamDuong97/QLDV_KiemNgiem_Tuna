@@ -63,6 +63,7 @@ namespace QLDV_KiemNghiem_BE.Repositories
 
                     item.ChiTietHoaDonThuBoSungs = await _context.ChiTietHoaDonThuBoSungs.Where(it => it.MaHdbs == item.MaID).ToListAsync();
                 }
+                return resultList;
             }
             return null;
         }

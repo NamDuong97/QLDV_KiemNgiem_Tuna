@@ -12,6 +12,7 @@ namespace QLDV_KiemNghiem_BE.Interfaces
         Task<(IEnumerable<PhieuDuTruProcedureDto> datas, Pagination pagi)> GetPhieuDuTruAllAsync(PhieuDuTruParam param);
         Task<PhieuDuTruProcedureDto?> FindPhieuDuTruShowAsync(string maPhieuDuTru);
         Task<ResponseModel1<PhieuDuTruDto>> ReviewPhieuDuTruByLDP(RequestReviewPhieuDuTru param, string user, string userId);
+        Task<ResponseModel1<PhieuDuTruDto>> RequestReviewAgainPhieuDuTru(string maPhieuDuTru, string user, string userId);
         Task<ResponseModel1<PhieuDuTruDto>> CreatePhieuDuTruAsync(PhieuDuTruRequestCreateDto PhieuDuTruDto, string user, string userId);
         Task<ResponseModel1<PhieuDuTruDto>> UpdatePhieuDuTruAsync(PhieuDuTruRequestUpdateDto PhieuDuTruDto, string user, string userId);
         Task<ResponseModel1<PhieuDuTruDto>> DeletePhieuDuTruAsync(string maPhieuDuTru, string user, string userId);

@@ -66,11 +66,25 @@ namespace QLDV_KiemNghiem_BE.Services
 
             return (datas: hoaDonThuDtos, pagi: HoaDonThuDomains.Pagination);
         } 
-        public async Task<HoaDonThuDto?> FindHoaDonThuAsync(string maHoaDonThu)
+        public async Task<HoaDonThuProcedureDto?> FindHoaDonThuAsync(string maHoaDonThu)
         {
             if (maHoaDonThu == null || maHoaDonThu == "") return null;
-            var HoaDonThuDomain = await _repositoryManager.HoaDonThu.FindHoaDonThuAsync(maHoaDonThu, false);
-            var result = _mapper.Map<HoaDonThuDto>(HoaDonThuDomain);
+            var HoaDonThuDomain = await _repositoryManager.HoaDonThu.FindHoaDonThuShowAsync(maHoaDonThu);
+            // Lấy những hóa đơn bổ sung liên quan đến hóa đơn thu
+            var hoaDonThuBoSung = await _repositoryManager.HoaDonThuBoSung.FindHoaDonThuBoSungByMaHoaDonThuAsync(maHoaDonThu);
+            List<HoaDonThuBoSungProcedureDto> ds = new List<HoaDonThuBoSungProcedureDto>();
+            if(hoaDonThuBoSung!= null)
+            {
+                foreach (var item in hoaDonThuBoSung)
+                {
+                    var hoaDonBoSungProcedureDto = _mapper.Map<HoaDonThuBoSungProcedureDto>(item);
+                    hoaDonBoSungProcedureDto.ChiTietHoaDonThuBoSungDtos = _mapper.Map<List<ChiTietHoaDonThuBoSungDto>>(item.ChiTietHoaDonThuBoSungs);
+                    ds.Add(hoaDonBoSungProcedureDto);
+                }
+            }
+
+            var result = _mapper.Map<HoaDonThuProcedureDto>(HoaDonThuDomain);
+            result.DsHoaDonThuBoSung = ds;
             return result;
         }
         public async Task<ResponseModel1<HoaDonThuDto>> CreateHoaDonThuAsync(HoaDonThuRequestCreateDto hoaDonThuDto, string user, string userId)

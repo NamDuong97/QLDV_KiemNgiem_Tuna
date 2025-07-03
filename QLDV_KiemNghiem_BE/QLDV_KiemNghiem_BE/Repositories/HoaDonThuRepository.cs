@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.SignalR.Protocol;
 using Microsoft.EntityFrameworkCore;
 using QLDV_KiemNghiem_BE.Data;
 using QLDV_KiemNghiem_BE.DTO.ResponseDto;
@@ -56,17 +57,24 @@ namespace QLDV_KiemNghiem_BE.Repositories
             .FirstOrDefaultAsync();
             return result?.ThanhTien ?? 0;
         }
-        public async Task<HoaDonThu?> FindHoaDonThuAsync(string maHoaDonThu, bool tracking)
+        public async Task<HoaDonThu?> FindHoaDonThuAsync(string maHoaDonThu, bool track)
         {
-            var result =  await _context.HoaDonThus.FindAsync(maHoaDonThu);
-            if(result!= null && tracking)
-            {
-                _context.Attach(result);
-            }
-            await _context.Entry(result).Collection(p => p.ChiTietHoaDonThus).Query().LoadAsync();
-            await _context.Entry(result).Collection(p => p.HoaDonThuBoSungs).Query().Include(a => a.ChiTietHoaDonThuBoSungs).LoadAsync();
+            return track ? await _context.HoaDonThus.FirstOrDefaultAsync(it => it.MaId == maHoaDonThu) :
+                await _context.HoaDonThus.AsNoTracking().FirstOrDefaultAsync(it => it.MaId == maHoaDonThu);
+        }
+        public async Task<HoaDonThuProcedure?> FindHoaDonThuShowAsync(string maHoaDonThu)
+        {
 
-            return result;
+            var result = await _context.HoaDonThuProcedures
+                .FromSqlRaw("EXEC sp_getAllHoaDonThuByBoLoc {0}", maHoaDonThu).ToListAsync();
+            var qk = result.FirstOrDefault();
+
+            if (qk != null)
+            {
+                qk.DsChiTietHoaDonThu = await _context.ChiTietHoaDonThus.Where(it => it.MaHd == qk.MaID).ToListAsync();
+                return qk;
+            }
+            return null;            
         }
         public async Task<HoaDonThu?> CheckExistHoaDonThuByPhieuDangKyAsync(string maPhieuDangKy, bool tracking)
         {
