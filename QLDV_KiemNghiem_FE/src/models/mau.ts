@@ -4,6 +4,7 @@ export interface Anh {
   size?: string;
   type?: string;
   ghiChu?: string;
+  file?: File;
 }
 
 export interface FormMau {

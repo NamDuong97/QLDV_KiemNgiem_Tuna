@@ -28,12 +28,18 @@ const refreshAndRetry = async (
   refreshToken?: string
 ) => {
   try {
-    const res = await accessServices.getRefreshTokenNhanVien({
+    const resNhanVien = await accessServices.getRefreshTokenNhanVien({
       accessToken,
       refreshToken,
     });
-    const newAccessToken = res.accessToken;
-    const newRefreshToken = res.refreshToken;
+    const resTokenKhachHang = await accessServices.getRefreshTokenKhachHang({
+      accessToken,
+      refreshToken,
+    });
+    const newAccessToken =
+      resNhanVien.accessToken || resTokenKhachHang.accessToken;
+    const newRefreshToken =
+      resNhanVien.refreshToken || resTokenKhachHang.refreshToken;
     Cookies.set(EKey.TOKEN, newAccessToken, {
       expires: expires,
       sameSite: "Strict",

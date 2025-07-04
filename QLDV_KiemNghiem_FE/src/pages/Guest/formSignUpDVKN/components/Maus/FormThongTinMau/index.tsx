@@ -312,7 +312,7 @@ const FormThongTinMau = (props: FormThongTinMauProps) => {
     ).maId;
     const dataImage: any[] = [];
 
-    console.log("data", data);
+    console.log("datadatadata", listImage);
 
     data.phieuDangKyMauHinhAnhs.map((item) =>
       dataImage.push({
@@ -324,12 +324,14 @@ const FormThongTinMau = (props: FormThongTinMauProps) => {
         ghiChu: item.ghiChu,
         loaiAnh: "",
         trangThai: "",
+        file: item.file,
         nguoiTao: userInfo.maId,
         nguoiSua: "",
         ngayTao: "",
         ngaySua: "",
       })
     );
+    console.log("data", data);
 
     const dataMau = {
       maId: "",
@@ -404,10 +406,7 @@ const FormThongTinMau = (props: FormThongTinMauProps) => {
         ghiChu: item.ghiChu,
         loaiAnh: "",
         trangThai: "",
-        nguoiTao: userInfo.maId,
-        nguoiSua: "",
-        ngayTao: "",
-        ngaySua: "",
+        file: item.file,
       })
     );
 
@@ -432,10 +431,6 @@ const FormThongTinMau = (props: FormThongTinMauProps) => {
       xuatKetQua: data.xuatKetQua,
       trangThaiNhanMau: "",
       ghiChu: data.ghiChu,
-      nguoiTao: userInfo.maId,
-      nguoiSua: "",
-      ngayTao: "",
-      ngaySua: "",
       thoiGianTieuChuan: dataThoiGianTieuChuan?.data,
       maPdkMau: null,
       loaiDv: MaLoaiDV,
@@ -540,6 +535,7 @@ const FormThongTinMau = (props: FormThongTinMauProps) => {
   useEffect(() => {
     setValue("phieuDangKyMauHinhAnhs", listImage);
   }, [listImage, setValue]);
+  console.log("listImage", listImage);
 
   return (
     <Box>

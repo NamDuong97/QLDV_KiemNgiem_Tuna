@@ -35,22 +35,13 @@ const ModelSua = (props: Props) => {
   const schema = yup.object({
     thoiGianPhanCong: yup
       .date()
-      .typeError("Vui lòng chọn thời gian phân công")
-      .required("Vui lòng chọn thời gian phân công"),
+      .typeError("Vui lòng chọn thời gian thực hiện")
+      .required("Vui lòng chọn thời gian thực hiện"),
     thoiGianTraKetQua: yup
       .date()
       .typeError("Vui lòng chọn thời gian trả kết quả")
       .required("Vui lòng chọn thời gian trả kết quả")
-      .min(today, "Thời gian trả kết quả phải tính từ hôm nay trở đi")
-      .test(
-        "is-after-phancong",
-        "Thời gian trả kết quả phải sau thời gian phân công",
-        function (value) {
-          const { thoiGianPhanCong } = this.parent;
-          if (!value || !thoiGianPhanCong) return true;
-          return new Date(value) > new Date(thoiGianPhanCong);
-        }
-      ),
+      .min(today, "Thời gian trả kết quả phải tính từ hôm nay trở đi"),
     ghiChu: yup
       .string()
       .required("Vui lòng nhập ghi chú")
@@ -170,7 +161,7 @@ const ModelSua = (props: Props) => {
         <div className="p-6 space-y-6">
           <div>
             <label className="text-sm font-medium text-gray-700">
-              Thời gian phân công *
+              Thời gian thực hiện *
             </label>
             <input
               type="date"
