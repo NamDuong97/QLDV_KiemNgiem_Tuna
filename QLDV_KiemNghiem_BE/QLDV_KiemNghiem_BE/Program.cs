@@ -16,6 +16,7 @@ using QLDV_KiemNghiem_BE.Services;
 using StackExchange.Redis;
 using Microsoft.AspNetCore.SignalR;
 using QLDV_KiemNghiem_BE.HubsRealTime;
+using QLDV_KiemNghiem_BE.Interfaces.UploadFile;
 //using QLDV_KiemNghiem_BE.Hubs;
 
 
@@ -27,6 +28,7 @@ builder.Services.AddScoped<IRepositoryManager, RepositoryManager>();
 builder.Services.AddScoped<IServiceManager, ServiceManager>();
 builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddScoped<ITokenService, TokenService>();
+builder.Services.AddScoped<IUploadFileService, UploadFileService>();
 //builder.Services.AddSingleton<IUserIdProvider, CustomUserIdProvider>();
 
 
@@ -58,6 +60,8 @@ builder.Services.ConfigureResponseCaching();
 builder.Services.ConfigureRedisCaching(builder.Configuration?.GetConnectionString("Redis"));
 
 var app = builder.Build();
+
+app.UseStaticFiles(); // <-- 👈 Phải có dòng này để phục vụ file tĩnh (ảnh)
 
 app.UseCors("AllowFrontend");
 

@@ -1,13 +1,16 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Distributed;
 using Newtonsoft.Json;
 using QLDV_KiemNghiem_BE.Data;
 using QLDV_KiemNghiem_BE.DTO.ResponseDto;
+using QLDV_KiemNghiem_BE.HubsRealTime;
 using QLDV_KiemNghiem_BE.Interfaces;
 using QLDV_KiemNghiem_BE.Interfaces.ManagerInterface;
+using QLDV_KiemNghiem_BE.Interfaces.UploadFile;
 using QLDV_KiemNghiem_BE.Models;
 using QLDV_KiemNghiem_BE.Repositories;
 using QLDV_KiemNghiem_BE.RequestFeatures;
@@ -26,13 +29,18 @@ namespace QLDV_KiemNghiem_BE.Services
         private IMapper _mapper;
         private readonly IConnectionMultiplexer _redis;
         private readonly IDistributedCache _cache;
-        public PhieuDangKyService(IRepositoryManager repositoryManager, IMapper mapper, DataContext dataContext, IConnectionMultiplexer redis, IDistributedCache cache)
+        private readonly IHubContext<NotificationHub> _hubContext;
+        private readonly IUploadFileService _uploadFile;
+        public PhieuDangKyService(IRepositoryManager repositoryManager, IMapper mapper, DataContext dataContext, IConnectionMultiplexer redis, IDistributedCache cache,
+            IHubContext<NotificationHub> hubContext, IUploadFileService uploadFile)
         {
             _context = dataContext;
             _repositoryManager = repositoryManager;
             _mapper = mapper;
             _redis = redis;
             _cache = cache;
+            _hubContext = hubContext;
+            _uploadFile = uploadFile;
         }
         public async Task<(IEnumerable<PhieuDangKyDto> datas, Pagination pagi)> GetPhieuDangKiesAllAsync(PhieuDangKyParam phieuDangKyParam)
         {
@@ -155,14 +163,18 @@ namespace QLDV_KiemNghiem_BE.Services
                 Console.WriteLine("So luong hinh anh trong mau: " + mau.PhieuDangKyMauHinhAnhs.Count);
                 foreach (var img in mau.PhieuDangKyMauHinhAnhs)
                 {
+                    // Lưu ảnh vào thư mục của dự án và trả về đường dẫn ảnh
+                    var image = await _uploadFile.UploadImageAsync(img?.Image);
+                    if (image.FileName == "0" && image.Url == "0") continue;
                     var hinhAnh = new PhieuDangKyMauHinhAnh
                     {
                         MaId = Guid.NewGuid().ToString(),
                         MaMau = mauDomain.MaId,
-                        Ten = img.Ten,
-                        DinhDang = img.DinhDang,
+                        Ten = image.FileName,
+                        DinhDang = image.FileName.Split('.')[1],
                         GhiChu = img.GhiChu,
                         LoaiAnh = img.LoaiAnh,
+                        PathImg = image.Url,
                         TrangThai = img.TrangThai,
                     };
                     phieuDangKyMauHinhAnhDomains.Add(hinhAnh); // Them vao de tra ve cho ng dung
@@ -184,7 +196,6 @@ namespace QLDV_KiemNghiem_BE.Services
                 phieuDangKyPhuLieuHoaChatDomains.Add(phieuDangKyPhuLieuHoaChatDomain);
                 await _repositoryManager.PhieuDangKyPhuLieuHoaChat.CreatePhieuDangKyPhuLieuHoaChatAsync(phieuDangKyPhuLieuHoaChatDomain);
             }
-
             await _repositoryManager.PhieuDangKy.CreatePhieuDangKyAsync(phieuDangKyDomain);
             // Ghi vao CSDL
             bool check = await _repositoryManager.SaveChangesAsync();
@@ -192,25 +203,17 @@ namespace QLDV_KiemNghiem_BE.Services
             var phieuDangKyReturnDto = _mapper.Map<PhieuDangKyDto>(phieuDangKyDomain);
             phieuDangKyReturnDto.Maus = _mapper.Map<List<PhieuDangKyMauDto>>(phieuDangKyMauDomains);
             phieuDangKyReturnDto.PhieuDangKyPhuLieuHoaChats = _mapper.Map<List<PhieuDangKyPhuLieuHoaChatDto>>(phieuDangKyPhuLieuHoaChatDomains);
-            //// Them du lieu vao cache
-            //if (_redis.IsConnected)
-            //{
-            //    foreach (var item in phieuDangKyReturnDto.Maus)
-            //    {
-            //        var cacheKey = $"phieudangkymau:{item?.MaId}";
-            //        var cacheObj = new CachedResponse<PhieuDangKyMauDto>
-            //        {
-            //            Data = item
-            //        };
-            //        // Lưu dữ liệu vào redis phieudangkymau
-            //        await _cache.SetStringAsync(cacheKey, JsonConvert.SerializeObject(cacheObj), new DistributedCacheEntryOptions
-            //        {
-            //            AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(5)
-            //        });
-            //        // Cap nhat version moi cho cache redis phieudangkymau:all
-            //        await _cache.SetStringAsync("phieudangkymau:all:version", $"v{DateTime.UtcNow.Ticks}");
-            //    }
-            //}
+            if(check)
+            {
+                // Tao thong bao gui cho phong KHTH
+                NotificationModel noti = new NotificationModel()
+                {
+                    Title = "Phieu dang ky moi",
+                    Message = "Da co phieu dang ky moi, xin vui long xem xet duyet!",
+                    CreatedAt = DateTime.Now,
+                };
+                await _hubContext.Clients.Group("KHTH").SendAsync("receiveNotification", noti);
+            }
             return new ResponseModel1<PhieuDangKyDto>
             {
                 KetQua = check,

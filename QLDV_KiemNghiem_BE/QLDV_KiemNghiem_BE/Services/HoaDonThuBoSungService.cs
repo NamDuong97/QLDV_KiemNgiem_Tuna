@@ -75,6 +75,7 @@ namespace QLDV_KiemNghiem_BE.Services
                 NgayTao = DateTime.Now,
                 NguoiTao = user,
                 TrangThai = "moi tao",
+                ManvLap = userId,
                 Active = true
             };
 
