@@ -5,6 +5,7 @@ using QLDV_KiemNghiem_BE.Data;
 using QLDV_KiemNghiem_BE.HubsRealTime;
 using QLDV_KiemNghiem_BE.Interfaces;
 using QLDV_KiemNghiem_BE.Interfaces.ManagerInterface;
+using QLDV_KiemNghiem_BE.Interfaces.UploadFile;
 using QLDV_KiemNghiem_BE.Models;
 using StackExchange.Redis;
 
@@ -52,14 +53,14 @@ namespace QLDV_KiemNghiem_BE.Services
         private readonly Lazy<IChiTietHoaDonThuBoSungService> _chiTietHoaDonThuBoSungService;
 
         public ServiceManager(IRepositoryManager repositoryManager, IMapper mapper, DataContext dataContext, IEmailService emailService, ITokenService tokenService, IConfiguration configuration,
-            IHubContext<NotificationHub> hubContext, IConnectionMultiplexer redis, IDistributedCache cache)
+            IHubContext<NotificationHub> hubContext, IConnectionMultiplexer redis, IDistributedCache cache, IUploadFileService uploadFile)
         {
             _repositoryManager = repositoryManager;
             _mapper = mapper;
             _configuration = configuration;
             //_email = new Lazy<IEmailService>(() => new EmailService(configuration));
             //_token = new Lazy<ITokenService>(() => new TokenService(configuration));
-            _phieuDangKyService = new Lazy<IPhieuDangKyService>(() => new PhieuDangKyService(repositoryManager, mapper, dataContext, redis, cache));
+            _phieuDangKyService = new Lazy<IPhieuDangKyService>(() => new PhieuDangKyService(repositoryManager, mapper, dataContext, redis, cache, hubContext, uploadFile));
             _phieuDangKyMauService = new Lazy<IPhieuDangKyMauService>(() => new PhieuDangKyMauService(repositoryManager, mapper));
             _dmPhuLieuHoaChatService = new Lazy<IDmPhuLieuHoaChatService>(() => new DmPhuLieuHoaChatService(repositoryManager, mapper));
             _phieuDangKyPhuLieuHoaChatService = new Lazy<IPhieuDangKyPhuLieuHoaChatService>(() => new PhieuDangKyPhuLieuHoaChatService(repositoryManager, mapper));
