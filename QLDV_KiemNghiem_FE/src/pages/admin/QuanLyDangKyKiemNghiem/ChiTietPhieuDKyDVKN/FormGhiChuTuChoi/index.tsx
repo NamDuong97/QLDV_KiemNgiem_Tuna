@@ -9,6 +9,7 @@ import {
 } from "../../../../../hooks/personnels/quanLyPhieuDKKM";
 import { role } from "../../../../../configs/parseJwt";
 import { getRoleGroup } from "../../../../../configs/Role";
+import { useStoreNotification } from "../../../../../configs/stores/useStoreNotification";
 
 interface Props {
   id: any;
@@ -39,27 +40,44 @@ const FormGhiChuTuChoi = (props: Props) => {
     mode: "onChange",
   });
 
+  const showNotification = useStoreNotification(
+    (state: any) => state.showNotification
+  );
+
   const handleOnSettled = async (response: any) => {
-    await Promise.all([
-      queryClient.refetchQueries({
-        queryKey: ["listPhieuDKKM_KHTH"],
-      }),
-      queryClient.refetchQueries({
-        queryKey: ["listPhieuDKKM_BLD"],
-      }),
-      queryClient.refetchQueries({
-        queryKey: ["listPhieuDKKM_KHTH"],
-      }),
-      queryClient.refetchQueries({
-        queryKey: ["quanLyPhieuDKKMs_BLD"],
-      }),
-    ]);
     if (response.ketQua === true) {
+      showNotification({
+        message: `Từ chối thành công`,
+        status: 200,
+      });
       handleClose();
+      await Promise.all([
+        queryClient.refetchQueries({
+          queryKey: ["listPhieuDKKM_KHTH"],
+        }),
+        queryClient.refetchQueries({
+          queryKey: ["listPhieuDKKM_BLD"],
+        }),
+        queryClient.refetchQueries({
+          queryKey: ["listPhieuDKKM_KHTH"],
+        }),
+        queryClient.refetchQueries({
+          queryKey: ["quanLyPhieuDKKMs_BLD"],
+        }),
+        queryClient.refetchQueries({
+          queryKey: ["ThongKePhieuDky"],
+        }),
+      ]);
+      return;
+    } else {
+      showNotification({
+        message: `Từ chối thất bại`,
+        status: 500,
+      });
     }
   };
   const { mutate: mutateBLD } = useDanhGiaBLD({
-    queryKey: "useDanhGiaBLD",
+    queryKey: "useDanhGiaBLDTuChoi",
     onSettled: handleOnSettled,
   });
 
@@ -75,7 +93,7 @@ const FormGhiChuTuChoi = (props: Props) => {
       action: false,
     };
     if (getRoleGroup(role) === "KHTH") mutateNhanVien(params);
-    mutateBLD(params);
+    else mutateBLD(params);
   };
 
   useEffect(() => {

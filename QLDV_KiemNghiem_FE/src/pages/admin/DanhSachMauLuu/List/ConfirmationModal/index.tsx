@@ -130,11 +130,11 @@ const ConfirmationModal = (props: Props) => {
           <p className="text-center text-gray-500 text-lg mb-6 grid">
             Hành động này không thể hoàn tác.
             <span className="text-sm">
-              Xóa cứng sẽ xóa khỏi dữ liệu đã lưu trước đó.
+              Xóa vĩnh viễn sẽ xóa khỏi dữ liệu đã lưu trước đó.
             </span>
             {trangThai !== "no active" && (
               <span className="text-sm">
-                Xóa mềm sẽ thay đổi trạng thái của phiếu.
+                Xóa sẽ thay đổi trạng thái của phiếu.
               </span>
             )}
           </p>
@@ -149,14 +149,14 @@ const ConfirmationModal = (props: Props) => {
               onClick={handleXoaCung}
               className={`px-4 py-2 text-sm font-medium bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors cursor-pointer`}
             >
-              Xóa cứng
+              Xóa vĩnh viễn
             </button>
             {trangThai !== "no active" && (
               <button
                 onClick={handleXoaMem}
                 className={`px-4 py-2 text-sm font-medium bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors cursor-pointer`}
               >
-                Xóa mềm
+                Xóa
               </button>
             )}
           </div>

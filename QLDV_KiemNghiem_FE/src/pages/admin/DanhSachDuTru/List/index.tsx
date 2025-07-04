@@ -5,6 +5,8 @@ import SelectItemTrangThai from "./SelectItemTrangThai";
 import { queryDuTruAll } from "../../../../hooks/personnels/queryDuTru";
 import { Pagination, Skeleton } from "@mui/material";
 import { usePersonnel } from "../../../../contexts/PersonelsProvider";
+import { getRoleGroup } from "../../../../configs/Role";
+import { role } from "../../../../configs/parseJwt";
 
 const List = ({ onView, onEdit }: any) => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -13,10 +15,15 @@ const List = ({ onView, onEdit }: any) => {
 
   const { data, isLoading } = queryDuTruAll({
     queryKey: "queryDuTruAll",
-    params: {
-      getAll: true,
-      maKhoa: personnelInfo?.maKhoa,
-    },
+    params:
+      getRoleGroup(role) === "BLD"
+        ? {
+            getAll: true,
+          }
+        : {
+            getAll: true,
+            maKhoa: personnelInfo?.maKhoa,
+          },
   });
   console.log("data", data);
 

@@ -64,6 +64,20 @@ export const updateDuTru = (props: Props) => {
   });
 };
 
+export const lamLaiPhieuDuTru = (props: Props) => {
+  const { queryKey, onSettled, onSuccess, onError } = props;
+  return useMutation({
+    mutationKey: [queryKey],
+    mutationFn: async (params: any) => {
+      const response = await duTruServices.lamLaiPhieuDuTru(params);
+      return response;
+    },
+    onSuccess: onSuccess,
+    onError: onError,
+    onSettled: onSettled,
+  });
+};
+
 export const duyetDuTru = (props: Props) => {
   const { queryKey, onSettled, onSuccess, onError } = props;
   return useMutation({

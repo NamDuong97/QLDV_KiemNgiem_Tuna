@@ -113,7 +113,7 @@ const QuanLyHoaDon = () => {
           <>
             <div className="grid gap-4">
               {currentItems.map((result: any, index: any) => (
-                <Card key={index} result={result} />
+                <Card key={index} result={result} onView={handleViewResult} />
               ))}
             </div>
             <div className="p-4 flex justify-center">

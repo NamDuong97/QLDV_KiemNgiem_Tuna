@@ -4,10 +4,11 @@ import {
   renderTrangThaiDuTru,
 } from "../../../../configs/configAll";
 import Detail from "../Detail";
-import { getDuTruByID } from "../../../../hooks/personnels/queryDuTru";
-import { queryMauByID } from "../../../../hooks/personnels/queryMau";
+import {
+  getDuTruByID,
+  lamLaiPhieuDuTru,
+} from "../../../../hooks/personnels/queryDuTru";
 import { getKhoaByID } from "../../../../hooks/personnels/queryKhoa";
-import { getInforNhanVien } from "../../../../hooks/personnels/access/useAccess";
 import { role } from "../../../../configs/parseJwt";
 import { getRoleGroup } from "../../../../configs/Role";
 import FormLyDoTuChoi from "./formLyDoTuChoi";
@@ -15,18 +16,17 @@ import { useState } from "react";
 import { TypeConformation } from "../../../../constants/typeConfirmation";
 import { typeConfirmation } from "../../PhanTichKetQua/ShowDetailChoDuyet";
 import { useGetDmPhuLieuHoaChatAll } from "../../../../hooks/customers/usePhieuDKyDVKN";
+import { queryClient } from "../../../../lib/reactQuery";
+import { useStoreNotification } from "../../../../configs/stores/useStoreNotification";
+import ConfirmationModal from "../../../../components/ConfirmationModal";
 
 const ShowDetail = ({ resultId, onEdit, onBack }: any) => {
   const { data } = getDuTruByID({
     queryKey: "DuTruByID",
     params: resultId,
   });
-  console.log("datadatadata", data?.trangThai);
-
-  const { data: dataMauID } = queryMauByID({
-    queryKey: "MauByID",
-    params: data?.maPdkMau,
-  });
+  const [openModelXoa, setOpenModelXoa] = useState(false);
+  console.log("datadatadata", data);
 
   const { data: dataKhoa } = getKhoaByID({
     queryKey: "khoaByID",
@@ -36,19 +36,52 @@ const ShowDetail = ({ resultId, onEdit, onBack }: any) => {
   const [open, setOpen] = useState(false);
   const [isTypeConform, setIsTypeConform] = useState<string>("");
 
-  const { data: dataNhanVien } = getInforNhanVien({
-    queryKey: "InforNhanVien",
-    params: data?.manvLapPhieu,
-  });
-
-  const { data: dataNhanVienDuyet } = getInforNhanVien({
-    queryKey: "InforNhanVienDuyet",
-    params: data?.manvDuyet,
-  });
-
   const { data: dataDMPLHC } = useGetDmPhuLieuHoaChatAll({
     queryKey: "useGetDmPhuLieuHoaChatAll",
   });
+
+  const handleSettled = async (response: any) => {
+    if (response?.status === 200) {
+      await queryClient.refetchQueries({
+        queryKey: ["DanhSachMau"],
+      });
+      setOpenModelXoa(false);
+    }
+  };
+  const showNotification = useStoreNotification(
+    (state: any) => state.showNotification
+  );
+
+  const { mutate } = lamLaiPhieuDuTru({
+    queryKey: "lamLaiPhieuDuTru",
+    onSuccess: (data: any) => {
+      if (data.status === 200) {
+        showNotification({
+          message: "Gửi phiếu thành công",
+          status: 200,
+        });
+        return;
+      } else {
+        showNotification({
+          message: "Gửi phiếu thất bại",
+          status: 500,
+        });
+      }
+    },
+    onError: (error: any) => {
+      console.log("error", error);
+
+      showNotification({
+        message: "Gửi phiếu thất bại",
+        status: 400,
+      });
+    },
+    onSettled: handleSettled,
+  });
+
+  const handeGui = () => {
+    mutate(data?.maID);
+  };
 
   return (
     <div className="bg-white rounded-xl shadow-sm border border-gray-200">
@@ -59,7 +92,7 @@ const ShowDetail = ({ resultId, onEdit, onBack }: any) => {
         <div className="flex space-x-2">
           {getRoleGroup(role) === "KN" &&
             role !== "KN" &&
-            data?.trangThai == 1  && (
+            data?.trangThai == 1 && (
               <>
                 <button
                   onClick={() => {
@@ -83,13 +116,23 @@ const ShowDetail = ({ resultId, onEdit, onBack }: any) => {
                 </button>
               </>
             )}
-          {data?.trangThai !== 0 && data?.trangThai !== 2 && (
+          {data?.trangThai !== 2 && (
             <button
               onClick={() => onEdit(resultId)}
               className="px-4 py-2 cursor-pointer bg-cyan-600 text-white rounded-lg hover:bg-cyan-700 transition-colors flex items-center space-x-2"
             >
               <Edit size={16} />
               <span>Chỉnh sửa</span>
+            </button>
+          )}
+          {data?.trangThai === 0 && (
+            <button
+              type="button"
+              onClick={() => setOpenModelXoa(true)}
+              className="px-4 py-2 text-white bg-cyan-600 cursor-pointer rounded-lg hover:bg-cyan-700 flex items-center space-x-2"
+            >
+              {/* <Save size={16} /> */}
+              <span>Gửi</span>
             </button>
           )}
           <button
@@ -118,7 +161,7 @@ const ShowDetail = ({ resultId, onEdit, onBack }: any) => {
                 </div>
                 <div className="flex justify-between items-center">
                   <span className="text-gray-600">Tên mẫu:</span>
-                  <span className="font-medium">{dataMauID?.tenMau}</span>
+                  <span className="font-medium">{data?.tenMau}</span>
                 </div>
                 <div className="flex justify-between items-center">
                   <span className="text-gray-600">Trạng thái:</span>
@@ -130,8 +173,14 @@ const ShowDetail = ({ resultId, onEdit, onBack }: any) => {
                 </div>
                 <div className="flex justify-between items-center">
                   <span className="text-gray-600">Ghi chú:</span>
-                  <span className="font-medium">bla blas</span>
+                  <span className="font-medium">{data?.ghiChu}</span>
                 </div>
+                {data?.noiDungDuyet && (
+                  <div className="flex justify-between items-center">
+                    <span className="text-gray-600">Ghi chú:</span>
+                    <span className="font-medium">{data?.noiDungDuyet}</span>
+                  </div>
+                )}
               </div>
             </div>
           </div>
@@ -157,16 +206,14 @@ const ShowDetail = ({ resultId, onEdit, onBack }: any) => {
                 <div className="flex justify-between items-center">
                   <span className="text-gray-600">Nhân viên lập:</span>
                   <div className="text-right">
-                    <div className="font-medium"> {dataNhanVien?.hoTen}</div>
+                    <div className="font-medium">{data?.tenNvLap}</div>
                   </div>
                 </div>
                 {data?.manvDuyet && (
                   <div className="flex justify-between items-center">
                     <span className="text-gray-600">Nhân viên duyệt:</span>
                     <div className="text-right">
-                      <div className="font-medium">
-                        {dataNhanVienDuyet?.hoTen}
-                      </div>
+                      <div className="font-medium">{data?.tenNvDuyet}</div>
                     </div>
                   </div>
                 )}
@@ -251,6 +298,14 @@ const ShowDetail = ({ resultId, onEdit, onBack }: any) => {
         }`}
         dataID={data?.maID}
         typeConform={isTypeConform}
+      />
+      <ConfirmationModal
+        isOpen={openModelXoa}
+        onClose={() => setOpenModelXoa(false)}
+        onConfirm={handeGui}
+        title={"Xác nhận gửi?"}
+        message={"Bạn có chắc chắn muốn gửi?"}
+        type={TypeConformation.Info}
       />
     </div>
   );

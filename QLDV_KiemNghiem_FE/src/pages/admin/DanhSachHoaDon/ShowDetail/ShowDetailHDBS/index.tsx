@@ -15,8 +15,7 @@ const ShowDetailHDBS = (props: Props) => {
     maHoaDonThuBoSung: dataID,
   });
 
-  console.log('data',data);
-  
+  console.log("data", data, dataID);
 
   return (
     <Dialog

@@ -98,6 +98,7 @@ const ShowDetail = ({ resultId, onBack, handleOpenPhieuDKy }: any) => {
   const handeXoaHDBS = () => {
     mutate(saveID);
   };
+console.log('data',data);
 
   return (
     <div className="bg-white rounded-xl shadow-sm border border-gray-200">
@@ -107,7 +108,7 @@ const ShowDetail = ({ resultId, onBack, handleOpenPhieuDKy }: any) => {
         </h2>
         <div className="flex space-x-2">
           <button
-            onClick={() => handleOpenCreateHDBS(data?.maId)}
+            onClick={() => handleOpenCreateHDBS(data?.maID)}
             className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 cursor-pointer transition-colors flex items-center space-x-2"
           >
             <Plus size={16} />
@@ -132,7 +133,7 @@ const ShowDetail = ({ resultId, onBack, handleOpenPhieuDKy }: any) => {
               <div className="space-y-3">
                 <div className="flex justify-between items-center">
                   <span className="text-gray-600">Mã hóa đơn:</span>
-                  <span className="font-medium text-lg">{data?.maHd}</span>
+                  <span className="font-medium text-lg">{data?.maHD}</span>
                 </div>
                 <div className="flex justify-between items-center">
                   <p className="text-gray-600">
@@ -146,7 +147,7 @@ const ShowDetail = ({ resultId, onBack, handleOpenPhieuDKy }: any) => {
                     :
                   </p>
                   <p className="font-medium">
-                    <span>{data?.soDkpt}</span>
+                    <span>{data?.soDKPT}</span>
                   </p>
                 </div>
                 <div className="flex justify-between items-center">
@@ -170,7 +171,7 @@ const ShowDetail = ({ resultId, onBack, handleOpenPhieuDKy }: any) => {
               <div className="space-y-3">
                 <div className="flex justify-between items-center">
                   <span className="text-gray-600">Người lập:</span>
-                  <span className="font-medium">{data?.nguoiTao}</span>
+                  <span className="font-medium">{data?.tenNvXuLy}</span>
                 </div>
                 <div className="flex justify-between items-center">
                   <span className="text-gray-600">Ngày lập:</span>
@@ -222,22 +223,22 @@ const ShowDetail = ({ resultId, onBack, handleOpenPhieuDKy }: any) => {
                 className={`inline-block px-2 py-1 text-xs font-medium rounded-full bg-violet-100 text-violet-800`}
               >
                 Tổng số chi tiết hóa đơn:
-                {data?.chiTietHoaDonThus?.length || 0}
+                {data?.dsChiTietHoaDonThu?.length || 0}
               </div>
             ) : (
               <div
                 className={`inline-block px-2 py-1 text-xs font-medium rounded-full bg-violet-100 text-violet-800`}
               >
                 Tổng số hóa đơn bổ sung:
-                {data?.hoaDonThuBoSungs?.length || 0}
+                {data?.dsHoaDonThuBoSung?.length || 0}
               </div>
             )}
           </div>
 
           {isCTHD ? (
-            data?.chiTietHoaDonThus && data?.chiTietHoaDonThus?.length > 0 ? (
+            data?.dsChiTietHoaDonThu && data?.dsChiTietHoaDonThu?.length > 0 ? (
               <div className="space-y-4 overflow-hidden rounded-lg">
-                {data?.chiTietHoaDonThus?.map((detail: any, index: any) => (
+                {data?.dsChiTietHoaDonThu?.map((detail: any, index: any) => (
                   <div
                     key={index}
                     className="result-card bg-white border border-gray-200 rounded-lg p-6 card-hover cursor-pointer"
@@ -289,9 +290,9 @@ const ShowDetail = ({ resultId, onBack, handleOpenPhieuDKy }: any) => {
                 <p className="text-gray-500">Chưa có chi tiết hóa đơn</p>
               </div>
             )
-          ) : data?.hoaDonThuBoSungs && data?.hoaDonThuBoSungs?.length > 0 ? (
+          ) : data?.dsHoaDonThuBoSung && data?.dsHoaDonThuBoSung?.length > 0 ? (
             <div className="space-y-4 overflow-hidden rounded-lg">
-              {data?.hoaDonThuBoSungs?.map((detail: any, index: any) => (
+              {data?.dsHoaDonThuBoSung?.map((detail: any, index: any) => (
                 <div
                   key={index}
                   onClick={() => handleOpenHDBS(detail?.maId)}

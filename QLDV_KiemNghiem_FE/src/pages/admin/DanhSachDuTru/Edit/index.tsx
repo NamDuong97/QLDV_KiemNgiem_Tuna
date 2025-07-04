@@ -7,6 +7,7 @@ import { queryClient } from "../../../../lib/reactQuery";
 import { useStoreNotification } from "../../../../configs/stores/useStoreNotification";
 import {
   getDuTruByID,
+  lamLaiPhieuDuTru,
   updateDuTru,
 } from "../../../../hooks/personnels/queryDuTru";
 import { queryMauByID } from "../../../../hooks/personnels/queryMau";
@@ -222,12 +223,14 @@ const Edit = (props: Props) => {
     }
   }, [data, reset]);
 
+  console.log("data", data);
+
   return (
     <div className="bg-white rounded-xl shadow-sm border border-gray-200">
       <div className="px-6 py-4 border-b border-gray-200 bg-gray-50 flex justify-between items-center">
         <div>
           <h2 className="text-lg font-semibold text-gray-900">
-            Sửa phiếu dự trù
+            {data?.trangThai === 0 ? "Làm lại" : "Sửa"} phiếu dự trù
           </h2>
           <p className="text-sm text-gray-600 mt-1">
             Cho mẫu: {dataMauID?.tenMau}
@@ -241,6 +244,7 @@ const Edit = (props: Props) => {
             <Save size={16} />
             <span>Lưu phiếu</span>
           </button>
+
           <button
             onClick={onCancel}
             className="px-4 py-2 border border-gray-300 cursor-pointer text-gray-700 rounded-lg hover:bg-gray-100 flex items-center space-x-2"

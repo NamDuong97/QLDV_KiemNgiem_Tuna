@@ -10,6 +10,7 @@ interface InputSelectPLHCProps {
   placeholder?: string;
   title?: string;
   handleOpenPopupThem: () => void;
+  disable?: any;
 }
 
 export default function InputSelectPLHC({
@@ -20,7 +21,9 @@ export default function InputSelectPLHC({
   data,
   placeholder,
   title,
+
   handleOpenPopupThem,
+  disable,
 }: InputSelectPLHCProps) {
   return (
     <div>
@@ -36,7 +39,8 @@ export default function InputSelectPLHC({
             item.tenDmPlhc.toLowerCase().includes(currentValue.toLowerCase())
           );
 
-          const showAddNewOption = currentValue && filteredOptions?.length === 0;
+          const showAddNewOption =
+            currentValue && filteredOptions?.length === 0;
           const extendedOptions = showAddNewOption
             ? [
                 ...data,

@@ -69,6 +69,20 @@ export default class duTruServices {
     }
   }
 
+  static async lamLaiPhieuDuTru(params: any) {
+    try {
+      const response = await _APIInstance.put(
+        `${API.ADMIN.DU_TRU.LAM_LAI_PHIEU}?maPhieuDuTru=${params}`,
+        {
+          headers: { "Content-Type": "application/json" },
+        }
+      );
+      return response;
+    } catch (err: any) {
+      return err;
+    }
+  }
+
   static async deleteDuTru(params: any) {
     try {
       const response = await _APIInstance.delete(

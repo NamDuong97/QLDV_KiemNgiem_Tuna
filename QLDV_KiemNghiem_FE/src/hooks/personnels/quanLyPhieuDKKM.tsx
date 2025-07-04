@@ -90,3 +90,16 @@ export const useUndoDanhGiaBLD = (props: Props) => {
     onSettled: onSettled,
   });
 };
+
+export const ThongKePhieuDky = (props: Props) => {
+  const { queryKey } = props;
+  return useQuery({
+    queryKey: [queryKey],
+    queryFn: async () => {
+      const response = await QuanlyPhieuDKYKNServices.ThongKePhieuDky();
+      return response?.data;
+    },
+    refetchOnWindowFocus: false,
+    staleTime: 5 * 60 * 1000,
+  });
+};

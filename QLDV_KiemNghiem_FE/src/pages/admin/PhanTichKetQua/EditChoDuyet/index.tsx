@@ -191,7 +191,7 @@ const EditChoDuyet = ({ resultId, onCancel }: any) => {
     console.log("params", params);
     console.log("dataPhieu", dataPhieu);
 
-    // mutate(params);
+    mutate(params);
   };
 
   useEffect(() => {
@@ -207,6 +207,9 @@ const EditChoDuyet = ({ resultId, onCancel }: any) => {
       });
     }
   }, [data, reset]);
+
+  console.log('error', errors);
+  
 
   return (
     <div className="bg-white rounded-xl shadow-sm border border-gray-200">

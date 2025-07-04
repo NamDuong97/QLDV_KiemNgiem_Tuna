@@ -1,4 +1,4 @@
-import { Box } from "@mui/material";
+import { Box, Skeleton } from "@mui/material";
 import { APP_ROUTES } from "../../../../../../constants/routers";
 import { motion } from "motion/react";
 import { MdReceipt } from "react-icons/md";
@@ -7,12 +7,26 @@ import { image } from "../../../../../../constants/image";
 import { ArrowLeft, Eye } from "react-feather";
 import { useState } from "react";
 import ShowDetailHDBS from "../ShowDetailHDBS";
+import { useQueryHoaDonThuByID } from "../../../../../../hooks/personnels/queryHoaDonThu";
+import {
+  formatDate,
+  formatDateNotTime,
+  renderTrangThaiHoaDon,
+} from "../../../../../../configs/configAll";
 
 const XemChiTiet = () => {
   const navigate = useNavigate();
   const [isCTHD, setisCTHD] = useState(true);
   const [openModelHDBS, setOpenModelHDBS] = useState(false);
   const [saveID, setSaveID] = useState(false);
+  const session = sessionStorage.getItem("chi-tiet-hoa-don");
+  const id = session ? JSON.parse(session) : "";
+
+  const { data, isLoading } = useQueryHoaDonThuByID({
+    queryKey: "queryHoaDonBoSungByID",
+    maHoaDonThu: id,
+  });
+  console.log("datadata", data);
 
   const handleOpenHDBS = (id: any) => {
     setSaveID(id);
@@ -50,7 +64,7 @@ const XemChiTiet = () => {
             <ArrowLeft className="w-4 h-4 sm:w-7 sm:h-7 text-sky-600" />
           </button>
           <h1 className="capitalize text-xl/4 sm:text-3xl/6 font-bold text-white">
-            Hóa Đơn HD202561601111348_SDKPT202561601111281:
+            Hóa Đơn {data?.maHD}:
           </h1>
         </Box>
       </Box>
@@ -64,24 +78,22 @@ const XemChiTiet = () => {
               <div className="space-y-3">
                 <div className="flex justify-between items-center">
                   <span className="text-gray-600">Mã hóa đơn:</span>
-                  <span className="font-medium text-lg">
-                    HD20256160749914_SDKPT20256160749594
-                  </span>
+                  <span className="font-medium text-lg">{data?.maHD}</span>
                 </div>
                 <div className="flex justify-between items-center">
                   <p className="text-gray-600">Số DKPT :</p>
                   <p className="font-medium">
-                    <span>SDKPT20256160749594</span>
+                    <span>{data?.soDKPT}</span>
                   </p>
                 </div>
                 <div className="flex justify-between items-center">
                   <span className="text-gray-600">Trạng thái hóa đơn:</span>
-                  {/* {renderTrangThaiPhanTichKetQua(data?.trangThai)} */}
+                  {renderTrangThaiHoaDon(data?.trangThai)}
                 </div>
                 <div className="flex justify-between items-center">
                   <span className="text-red-800 font-semibold">Tổng tiền:</span>
                   <span className="text-2xl font-bold text-red-900">
-                    2000000.00
+                    {parseInt(data?.tongTien).toLocaleString()} VND
                   </span>
                 </div>
               </div>
@@ -95,11 +107,17 @@ const XemChiTiet = () => {
               <div className="space-y-3">
                 <div className="flex justify-between items-center">
                   <span className="text-gray-600">Người lập:</span>
-                  <span className="font-medium">admin</span>
+                  <span className="font-medium">
+                    {data?.tenNvXuLy
+                      ? data?.tenNvXuLy
+                      : "Trung tâm kiểm nghiệm Tuna"}
+                  </span>
                 </div>
                 <div className="flex justify-between items-center">
                   <span className="text-gray-600">Ngày lập:</span>
-                  <span className="font-medium">2025-06-16 00:07:49.913</span>
+                  <span className="font-medium">
+                    {formatDate(data?.ngayLap)}
+                  </span>
                 </div>
                 <div>
                   <span className="text-gray-600 block mb-2 font-medium">
@@ -107,7 +125,7 @@ const XemChiTiet = () => {
                   </span>
                   <div className="bg-white p-4 rounded-lg border border-gray-200 shadow-sm">
                     <p className="text-sm text-gray-700 leading-relaxed">
-                      BLa Bla
+                      {data?.ghiChu}
                     </p>
                   </div>
                 </div>
@@ -145,28 +163,55 @@ const XemChiTiet = () => {
                 className={`inline-block px-2 py-1 text-xs font-medium rounded-full bg-violet-100 text-violet-800`}
               >
                 Tổng số chi tiết hóa đơn:
-                {0}
+                {data?.dsChiTietHoaDonThu.length || 0}
               </div>
             ) : (
               <div
                 className={`inline-block px-2 py-1 text-xs font-medium rounded-full bg-violet-100 text-violet-800`}
               >
                 Tổng số hóa đơn bổ sung:
-                {0}
+                {data?.dsHoaDonThuBoSung.length || 0}
               </div>
             )}
           </div>
 
-          {/* // data?.phieuPhanTichKetQuaChiTietDtos &&
-            // data?.phieuPhanTichKetQuaChiTietDtos?.length > 0 ? (
-            //   <div className="space-y-4 overflow-hidden rounded-lg">
-            //     {data?.phieuPhanTichKetQuaChiTietDtos?.map(
-            //       (detail: any, index: any) => (
-                //   )
-                // )}
-              // </div> */}
-
-          {/* <div className="bg-gray-50 rounded-lg p-8 text-center border border-gray-200">
+          {isCTHD ? (
+            data?.dsChiTietHoaDonThu && data?.dsChiTietHoaDonThu?.length > 0 ? (
+              <div className="space-y-4 overflow-hidden rounded-lg">
+                {data?.dsChiTietHoaDonThu?.map((detail: any, index: any) => (
+                  <div
+                    key={index}
+                    className="result-card bg-white border border-gray-200 rounded-lg p-6 card-hover cursor-pointer"
+                  >
+                    <div className="flex justify-between items-start mb-4">
+                      <div className="flex items-center space-x-3">
+                        <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
+                          <MdReceipt className="text-green-600" size={20} />
+                        </div>
+                        <div>
+                          <h3 className="font-semibold text-gray-900">
+                            {detail?.maMau}
+                          </h3>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="grid grid-cols-4 gap-4 text-sm">
+                      <div className="col-span-3">
+                        <p className="text-gray-600">Ghi chú</p>
+                        <p className="font-medium">{detail?.ghiChu}</p>
+                      </div>
+                      <div>
+                        <p className="text-gray-600">Thành tiền</p>
+                        <p className="font-semibold text-lg text-red-600">
+                          {parseInt(detail?.thanhTien).toLocaleString()} VND
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="bg-gray-50 rounded-lg p-8 text-center border border-gray-200">
                 <div className="text-gray-400 mb-2">
                   <svg
                     className="mx-auto h-12 w-12"
@@ -183,17 +228,74 @@ const XemChiTiet = () => {
                   </svg>
                 </div>
                 <p className="text-gray-500">Chưa có chi tiết hóa đơn</p>
-              </div> */}
-
-          {/* data?.phieuPhanTichKetQuaChiTietDtos &&
-            data?.phieuPhanTichKetQuaChiTietDtos?.length > 0 ? (
+              </div>
+            )
+          ) : data?.dsHoaDonThuBoSung && data?.dsHoaDonThuBoSung?.length > 0 ? (
             <div className="space-y-4 overflow-hidden rounded-lg">
-              {data?.phieuPhanTichKetQuaChiTietDtos?.map(
-                (detail: any, index: any) => (                  )
-              )}
-            </div>*/}
-
-          {/* <div className="bg-gray-50 rounded-lg p-8 text-center border border-gray-200">
+              {data?.dsHoaDonThuBoSung?.map((detail: any, index: any) => (
+                <div
+                  key={index}
+                  onClick={() => handleOpenHDBS(detail?.maId)}
+                  className="result-card bg-white border border-gray-200 rounded-lg p-6 card-hover cursor-pointer"
+                >
+                  <div className="flex justify-between items-start mb-4">
+                    <div className="flex items-center space-x-3">
+                      <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
+                        <MdReceipt className="text-green-600" size={20} />
+                      </div>
+                      <div>
+                        <h3 className="font-semibold text-gray-900">
+                          Hóa đơn bổ sung #{index}
+                        </h3>
+                      </div>
+                    </div>
+                    <div>
+                      <span
+                        className={`inline-block px-2 py-1 text-xs font-medium rounded-full bg-blue-100 text-blue-800`}
+                      >
+                        Đã thanh toán
+                      </span>
+                    </div>
+                  </div>
+                  <div className="grid grid-cols-6 gap-4 text-sm">
+                    <div>
+                      <p className="text-gray-600">Nhân viên lập</p>
+                      <p className="font-medium">Nguyễn Văn A</p>
+                    </div>
+                    <div>
+                      <p className="text-gray-600">Ngày tạo</p>
+                      <p className="font-medium">
+                        {formatDateNotTime(detail?.ngayTao)}
+                      </p>
+                    </div>
+                    <div className="col-span-3">
+                      <p className="text-gray-600">Ghi chú</p>
+                      <p className="font-medium">
+                        Tao hoa don thanh toan cho phieu dang
+                        kySDKPT2025615211551887
+                      </p>
+                    </div>
+                    <div>
+                      <p className="text-gray-600">Tổng tiền</p>
+                      <p className="font-semibold text-lg text-red-600">
+                        {parseInt(detail?.tongTien).toLocaleString()} VND
+                      </p>
+                    </div>
+                  </div>
+                  <div className="mt-4 flex justify-end space-x-2">
+                    <button
+                      onClick={() => handleOpenHDBS(detail?.maId)}
+                      className="px-3 py-1 text-blue-600 hover:bg-blue-50 rounded-md text-sm flex items-center space-x-1 cursor-pointer"
+                    >
+                      <Eye size={14} />
+                      <span>Xem chi tiết</span>
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="bg-gray-50 rounded-lg p-8 text-center border border-gray-200">
               <div className="text-gray-400 mb-2">
                 <svg
                   className="mx-auto h-12 w-12"
@@ -209,99 +311,7 @@ const XemChiTiet = () => {
                   />
                 </svg>
               </div>
-              <p className="text-gray-500">
-                Chưa có chi tiết kết quả kiểm nghiệm
-              </p>
-            </div> */}
-
-          {isCTHD ? (
-            <div
-              // key={index}
-              className="result-card bg-white border border-gray-200 rounded-lg p-6 card-hover cursor-pointer"
-            >
-              <div className="flex justify-between items-start mb-4">
-                <div className="flex items-center space-x-3">
-                  <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
-                    <MdReceipt className="text-green-600" size={20} />
-                  </div>
-                  <div>
-                    <h3 className="font-semibold text-gray-900">Mẫu A</h3>
-                  </div>
-                </div>
-              </div>
-              <div className="grid grid-cols-4 gap-4 text-sm">
-                <div className="col-span-3">
-                  <p className="text-gray-600">Ghi chú</p>
-                  <p className="font-medium">
-                    Tao hoa don thanh toan cho phieu dang
-                    kySDKPT2025615211551887
-                  </p>
-                </div>
-                <div>
-                  <p className="text-gray-600">Tổng tiền</p>
-                  <p className="font-semibold text-lg text-red-600">
-                    2600000.00
-                  </p>
-                </div>
-              </div>
-            </div>
-          ) : (
-            <div
-              // key={index}
-              onClick={() => handleOpenHDBS("")}
-              className="result-card bg-white border border-gray-200 rounded-lg p-6 card-hover cursor-pointer"
-            >
-              <div className="flex justify-between items-start mb-4">
-                <div className="flex items-center space-x-3">
-                  <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
-                    <MdReceipt className="text-green-600" size={20} />
-                  </div>
-                  <div>
-                    <h3 className="font-semibold text-gray-900">
-                      Hóa đơn bổ sung #
-                    </h3>
-                  </div>
-                </div>
-                <div>
-                  <span
-                    className={`inline-block px-2 py-1 text-xs font-medium rounded-full bg-blue-100 text-blue-800`}
-                  >
-                    Đã thanh toán
-                  </span>
-                </div>
-              </div>
-              <div className="grid grid-cols-6 gap-4 text-sm">
-                <div>
-                  <p className="text-gray-600">Nhân viên lập</p>
-                  <p className="font-medium">Nguyễn Văn A</p>
-                </div>
-                <div>
-                  <p className="text-gray-600">Ngày tạo</p>
-                  <p className="font-medium">2025-07-01 21:16:33.827</p>
-                </div>
-                <div className="col-span-3">
-                  <p className="text-gray-600">Ghi chú</p>
-                  <p className="font-medium">
-                    Tao hoa don thanh toan cho phieu dang
-                    kySDKPT2025615211551887
-                  </p>
-                </div>
-                <div>
-                  <p className="text-gray-600">Tổng tiền</p>
-                  <p className="font-semibold text-lg text-red-600">
-                    2600000.00
-                  </p>
-                </div>
-              </div>
-              <div className="mt-4 flex justify-end space-x-2">
-                <button
-                  onClick={() => handleOpenHDBS("")}
-                  className="px-3 py-1 text-blue-600 hover:bg-blue-50 rounded-md text-sm flex items-center space-x-1 cursor-pointer"
-                >
-                  <Eye size={14} />
-                  <span>Xem chi tiết</span>
-                </button>
-              </div>
+              <p className="text-gray-500">Chưa có hóa đơn bổ sung</p>
             </div>
           )}
         </div>

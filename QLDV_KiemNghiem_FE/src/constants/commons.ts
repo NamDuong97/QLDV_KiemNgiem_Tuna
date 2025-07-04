@@ -12,6 +12,7 @@ export const API = {
       DANH_GIA_NHANVIEN: "/api/PhieuDangKy/reviewPhieuDangKyByKHDT",
       DANH_GIA_BLD: "/api/PhieuDangKy/reviewPhieuDangKyByBLD",
       UNDO_DANH_GIA_BLD: "/api/PhieuDangKy/undoReviewPhieuDangKyByBLD",
+      THONG_KE: "/api/PhieuDangKy/getPhieuDangKyThongKe",
     },
     KHOA: {
       GET_KHOA_ALL: "/api/Khoa/getKhoaAll",
@@ -66,6 +67,7 @@ export const API = {
       UPDATE_DU_TRU: "/api/PhieuDuTru/updatePhieuDuTru",
       DELETE_DU_TRU: "/api/PhieuDuTru/deletePhieuDuTru",
       DUYET_DU_TRU: "/api/PhieuDuTru/reviewPhieuDuTruByLDP",
+      LAM_LAI_PHIEU: "/api/PhieuDuTru/requestReviewAgainPhieuDuTru",
     },
     PHAN_TICH_KET_QUA: {
       GET_PHAN_TICH_KET_QUA_ALL:

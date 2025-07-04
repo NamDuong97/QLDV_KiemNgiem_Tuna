@@ -410,7 +410,7 @@ const SidebarPersonnal = () => {
                 </span>
                 <span className="text-start">Phân tích kết quả</span>
               </button>
-              {(getRoleGroup(role) === "BLD" ||
+              {/* {(getRoleGroup(role) === "BLD" ||
                 getRoleGroup(role) === "KET") && (
                 <>
                   <button
@@ -470,7 +470,7 @@ const SidebarPersonnal = () => {
                     <span className="text-start">Mua vật tư</span>
                   </button>
                 </>
-              )}
+              )} */}
             </div>
           </div>
           <div className="flex flex-col space-y-2">

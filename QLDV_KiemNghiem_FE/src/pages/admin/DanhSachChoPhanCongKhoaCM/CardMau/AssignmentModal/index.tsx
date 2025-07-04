@@ -59,7 +59,7 @@ const AssignmentModal = (props: Props) => {
           .required(`Chọn ngày cho ${tenMau}`)
           .test(
             "is-date",
-            "Ngày không hợp lệ",
+            "Yêu cầu chọn ngày thực hiện",
             (value) => !isNaN(Date.parse(value || ""))
           )
           .test(
@@ -99,18 +99,6 @@ const AssignmentModal = (props: Props) => {
             console.log("now <= date", now <= inputDate, now, inputDate);
 
             return now <= inputDate;
-          }
-        )
-        .test(
-          "Thời gian giao mẫu không được vượt quá 7 ngày",
-          "Thời gian giao mẫu không được vượt quá 7 ngày",
-          (value) => {
-            if (!value) return false;
-            const now = new Date();
-            const date = new Date(value);
-            const diff =
-              (date.getTime() - now.getTime()) / (1000 * 60 * 60 * 24);
-            return diff <= 7;
           }
         ),
       ghiChu: buildGhiChuSchema(sampleList, timeGiaoMau || undefined),

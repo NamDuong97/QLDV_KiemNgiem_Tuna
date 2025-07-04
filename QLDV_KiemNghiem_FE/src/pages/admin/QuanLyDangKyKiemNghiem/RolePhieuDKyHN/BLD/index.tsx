@@ -99,7 +99,7 @@ const BLD = (props: Props) => {
 
   const { data: dataAll, isLoading: isLoadingAll } = listPhieuDKKNAll({
     queryKey: "listPhieuDKKNAll",
-    params:{getAll: false}
+    params: { getAll: true },
   });
   const [searchQuery, setSearchQuery] = useState("");
   const [selectTrangThai, setSelectTrangThai] = useState("");
@@ -110,7 +110,10 @@ const BLD = (props: Props) => {
       const query = removeVietnameseTones(searchQuery.toLowerCase());
       const matchesSearch =
         removeVietnameseTones(sample.soDkpt.toLowerCase()).includes(query) ||
-        removeVietnameseTones(sample.nguoiGuiMau.toLowerCase()).includes(query);
+        removeVietnameseTones(sample.nguoiGuiMau.toLowerCase()).includes(
+          query
+        ) ||
+        removeVietnameseTones(sample.donViGuiMau.toLowerCase()).includes(query);
       return matchesSearch;
     }),
     [keyTag.Ban_Lanh_Dao_Duyet]: dataBLDDuyet?.filter((sample: any) => {
@@ -267,9 +270,9 @@ const BLD = (props: Props) => {
     <>
       {handleThongKe()}
       <div className="p-4 bg-white rounded-lg shadow-sm border border-gray-100 gap-2 flex justify-between">
-        <div className="flex gap-4 w-sm">
+        <div className="flex gap-4 w-lg">
           <InputSearch2
-            placeholder="Tìm kiếm số dkpt hoặc người gửi mẫu..."
+            placeholder="Tìm kiếm số dkpt hoặc người gửi mẫu, đơn vị gửi mẫu..."
             value={searchQuery}
             onChange={handleSearchChange}
           />

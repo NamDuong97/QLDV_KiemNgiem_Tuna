@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import {
   listPhieuDKKM,
   listPhieuDKKNAll,
+  ThongKePhieuDky,
 } from "../../../../../hooks/personnels/quanLyPhieuDKKM";
 import { FaSortAmountDown, FaSortAmountUp } from "react-icons/fa";
 import TableQuanLyPhieuDKyDVHN from "../../Table";
@@ -48,6 +49,7 @@ const KHTH = (props: Props) => {
     queryKey: "listPhieuDKKM_KHTH",
     params: {
       maTrangThaiID: "TT01",
+      getAll: true,
     },
   });
   const { data: dataNhanVienDuyet, isLoading: isLoadingNhanVienDuyet } =
@@ -57,6 +59,7 @@ const KHTH = (props: Props) => {
         selectedDateFrom && selectedDateTo
           ? [
               {
+                getAll: true,
                 manvDuyet: maNhanVien,
                 maTrangThaiID: "TT02",
                 timeFrom: selectedDateFrom,
@@ -67,6 +70,7 @@ const KHTH = (props: Props) => {
                 maTrangThaiID: "TT03",
                 timeFrom: selectedDateFrom,
                 timeTo: selectedDateTo,
+                getAll: true,
               },
             ]
           : selectedDateFrom
@@ -75,11 +79,13 @@ const KHTH = (props: Props) => {
                 manvDuyet: maNhanVien,
                 maTrangThaiID: "TT02",
                 timeFrom: selectedDateFrom,
+                getAll: true,
               },
               {
                 manvDuyet: maNhanVien,
                 maTrangThaiID: "TT03",
                 timeFrom: selectedDateFrom,
+                getAll: true,
               },
             ]
           : selectedDateTo
@@ -88,21 +94,25 @@ const KHTH = (props: Props) => {
                 manvDuyet: maNhanVien,
                 maTrangThaiID: "TT02",
                 timeTo: selectedDateTo,
+                getAll: true,
               },
               {
                 manvDuyet: maNhanVien,
                 maTrangThaiID: "TT03",
                 timeTo: selectedDateTo,
+                getAll: true,
               },
             ]
           : [
               {
                 manvDuyet: maNhanVien,
                 maTrangThaiID: "TT02",
+                getAll: true,
               },
               {
                 manvDuyet: maNhanVien,
                 maTrangThaiID: "TT03",
+                getAll: true,
               },
             ],
     });
@@ -125,6 +135,11 @@ const KHTH = (props: Props) => {
           }
         : { getAll: true },
   });
+
+  const { data: dataThongKePhieuDky, isLoading: isLoadingThongKePhieuDky } =
+    ThongKePhieuDky({
+      queryKey: "ThongKePhieuDky",
+    });
 
   const dataShow: any = {
     [keyTag.Cho_Xu_Ly]: data?.filter((sample: any) => {
@@ -196,11 +211,11 @@ const KHTH = (props: Props) => {
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
             <Card
               title="Tổng phiếu đang chờ xử lý"
-              value={data?.length}
+              value={dataThongKePhieuDky?.tT01}
               icon={<Clipboard className="w-6 h-6" />}
               bgColor="bg-indigo-100"
               textColor="text-indigo-600"
-              isLoading={isLoading}
+              isLoading={isLoadingThongKePhieuDky}
             />
           </div>
         );
@@ -222,50 +237,43 @@ const KHTH = (props: Props) => {
           <div className="grid grid-cols-5 space-x-4">
             <Card
               title="Tổng phiếu"
-              value={dataAll?.length}
+              value={dataThongKePhieuDky?.tongPhieu}
               icon={<Clipboard className="w-6 h-6" />}
               bgColor="bg-indigo-100"
               textColor="text-indigo-600"
+              isLoading={isLoadingThongKePhieuDky}
             />
             <Card
               title="Đã hoàn thành"
-              value={
-                dataAll?.filter((item: any) => item.trangThaiId === "TT09")
-                  ?.length
-              }
+              value={dataThongKePhieuDky?.daHoanThanh}
               icon={<CheckCircle className="w-6 h-6" />}
               bgColor="bg-green-100"
               textColor="text-green-600"
+              isLoading={isLoadingThongKePhieuDky}
             />
             <Card
               title="Đang kiểm nghiệm"
-              value={
-                dataAll?.filter((item: any) => item.trangThaiId === "TT07")
-                  ?.length
-              }
+              value={dataThongKePhieuDky?.dangKiemNghiem}
               icon={<Clock className="w-6 h-6" />}
               bgColor="bg-yellow-100"
               textColor="text-yellow-600"
+              isLoading={isLoadingThongKePhieuDky}
             />
             <Card
-              title="Từ chối"
-              value={
-                dataAll?.filter((item: any) => item.trangThaiId === "TT04")
-                  ?.length
-              }
+              title="Khách hàng từ chối"
+              value={dataThongKePhieuDky?.khachHangHuy}
               icon={<AlertTriangle className="w-6 h-6" />}
               bgColor="bg-red-100"
               textColor="text-red-600"
+              isLoading={isLoadingThongKePhieuDky}
             />
             <Card
-              title="Đã hủy kiểm nghiệm"
-              value={
-                dataAll?.filter((item: any) => item.trangThaiId === "TT10")
-                  ?.length
-              }
+              title="Trung tâm từ chối"
+              value={dataThongKePhieuDky?.ttTuChoi}
               icon={<AlertCircle className="w-6 h-6" />}
               bgColor="bg-gray-100"
               textColor="text-gray-600"
+              isLoading={isLoadingThongKePhieuDky}
             />
           </div>
         );

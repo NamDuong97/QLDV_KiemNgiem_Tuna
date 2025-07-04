@@ -8,6 +8,9 @@ const Card = ({ result, onView }: any) => {
     onView(result?.maID);
   };
 
+  console.log('result',result);
+  
+
   return (
     <div
       className="result-card bg-white border border-gray-200 rounded-lg p-6 card-hover cursor-pointer"
@@ -25,7 +28,7 @@ const Card = ({ result, onView }: any) => {
         </div>
       </div>
 
-      <div className="grid grid-cols-5 gap-4 text-sm">
+      <div className="grid grid-cols-3 gap-4 text-sm">
         <div>
           <p className="text-gray-600">Tên khách hàng</p>
           <p className="font-medium">{result?.tenKH}</p>
@@ -33,10 +36,6 @@ const Card = ({ result, onView }: any) => {
         <div>
           <p className="text-gray-600">Ngày lập</p>
           <p className="font-medium">{formatDateNotTime2(result?.ngayLap)}</p>
-        </div>
-        <div className="col-span-2">
-          <p className="text-gray-600">Ghi chú</p>
-          <p className="font-medium">{result?.ghiChu}</p>
         </div>
         <div>
           <p className="text-gray-600">Tổng tiền</p>
