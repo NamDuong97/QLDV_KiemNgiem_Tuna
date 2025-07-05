@@ -164,17 +164,17 @@ namespace QLDV_KiemNghiem_BE.Services
                 foreach (var img in mau.PhieuDangKyMauHinhAnhs)
                 {
                     // Lưu ảnh vào thư mục của dự án và trả về đường dẫn ảnh
-                    var image = await _uploadFile.UploadImageAsync(img?.Image);
-                    if (image.FileName == "0" && image.Url == "0") continue;
+                    //var image = await _uploadFile.UploadImageAsync(img?.Image);
+                    //if (image.FileName == "0" && image.Url == "0") continue;
                     var hinhAnh = new PhieuDangKyMauHinhAnh
                     {
                         MaId = Guid.NewGuid().ToString(),
                         MaMau = mauDomain.MaId,
-                        Ten = image.FileName,
-                        DinhDang = image.FileName.Split('.')[1],
+                        Ten = img.Ten,
+                        DinhDang = img.DinhDang,
                         GhiChu = img.GhiChu,
                         LoaiAnh = img.LoaiAnh,
-                        PathImg = image.Url,
+                        PathImg = img.PathImg,
                         TrangThai = img.TrangThai,
                     };
                     phieuDangKyMauHinhAnhDomains.Add(hinhAnh); // Them vao de tra ve cho ng dung

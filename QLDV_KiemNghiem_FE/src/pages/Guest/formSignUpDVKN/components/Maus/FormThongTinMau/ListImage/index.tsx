@@ -36,7 +36,6 @@ const ListImage = (props: Props) => {
               size: file.size,
               lastModified: file.lastModified,
               base64: imgData,
-              type: file.type,
               ghiChu: "",
             };
             setListImage((prev: any[]) => [...prev, newImage]);

@@ -49,13 +49,13 @@ const ModelCreateHDBS = (props: Props) => {
           donViTinh: yup.string().required("Vui lòng chọn đơn vị tính"),
           soLuong: yup
             .number()
-            .typeError("Số lượng phải là số")
+            .typeError("Vui lòng nhập số lượng")
             .positive("Số lượng phải lớn hơn 0")
             .required("Vui lòng nhập số lượng"),
           maDM_PLHC: yup.string().required("Vui lòng chọn phụ liệu hóa chất"),
           donGia: yup
             .number()
-            .typeError("Đơn giá phải là số")
+            .typeError("Vui lòng nhập đơn giá")
             .min(0, "Đơn giá không âm")
             .required("Vui lòng nhập đơn giá"),
         })

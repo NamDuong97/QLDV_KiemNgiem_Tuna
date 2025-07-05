@@ -3,6 +3,7 @@ import {
   useGetLoaiDichVuAll,
   useGetTieuChuanAll,
 } from "../../../../../../hooks/customers/usePhieuDKyDVKN";
+import { image } from "../../../../../../constants/image";
 
 interface MausProps {
   currentItems: any;
@@ -222,9 +223,9 @@ const Maus = (props: MausProps) => {
                         className="flex gap-2 items-center justify-center w-[200px]"
                       >
                         <img
-                          src={item.base64}
+                          src={item.PathImg || image.imageTunaLogo}
                           alt={item.ten}
-                          className="object-contain"
+                          className="object-contain shadow border border-gray-300 rounded"
                         />
                       </div>
                     )

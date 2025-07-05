@@ -185,6 +185,7 @@ const FormSignUpDVKN = () => {
                 ghiChu: itemImage.ghiChu,
                 loaiAnh: itemImage.loaiAnh,
                 trangThai: true,
+                pathImg:""
               };
             })
           : [],

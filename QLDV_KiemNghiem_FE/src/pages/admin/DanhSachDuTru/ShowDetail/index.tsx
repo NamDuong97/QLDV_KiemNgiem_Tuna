@@ -26,7 +26,6 @@ const ShowDetail = ({ resultId, onEdit, onBack }: any) => {
     params: resultId,
   });
   const [openModelXoa, setOpenModelXoa] = useState(false);
-  console.log("datadatadata", data);
 
   const { data: dataKhoa } = getKhoaByID({
     queryKey: "khoaByID",
@@ -42,9 +41,14 @@ const ShowDetail = ({ resultId, onEdit, onBack }: any) => {
 
   const handleSettled = async (response: any) => {
     if (response?.status === 200) {
-      await queryClient.refetchQueries({
-        queryKey: ["DanhSachMau"],
-      });
+      await Promise.all([
+        queryClient.refetchQueries({
+          queryKey: ["DanhSachMau"],
+        }),
+        queryClient.refetchQueries({
+          queryKey: ["DuTruByID"],
+        }),
+      ]);
       setOpenModelXoa(false);
     }
   };

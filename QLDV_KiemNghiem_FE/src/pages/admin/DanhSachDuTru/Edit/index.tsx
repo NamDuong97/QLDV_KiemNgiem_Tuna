@@ -120,13 +120,13 @@ const Edit = (props: Props) => {
     onSuccess: (data: any) => {
       if (data.status === 200) {
         showNotification({
-          message: "Tạo phiếu dự trù thành công",
+          message: "Sửa phiếu thành công",
           status: 200,
         });
         return;
       } else {
         showNotification({
-          message: "Tạo phiếu dự trù thất bại",
+          message: "Sửa phiếu thất bại",
           status: 500,
         });
       }
@@ -135,7 +135,7 @@ const Edit = (props: Props) => {
       console.log("error", error);
 
       showNotification({
-        message: "Tạo phiếu dự trù thất bại",
+        message: "Sửa phiếu thất bại",
         status: 400,
       });
     },

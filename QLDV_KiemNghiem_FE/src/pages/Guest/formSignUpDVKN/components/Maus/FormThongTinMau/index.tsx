@@ -324,11 +324,7 @@ const FormThongTinMau = (props: FormThongTinMauProps) => {
         ghiChu: item.ghiChu,
         loaiAnh: "",
         trangThai: "",
-        file: item.file,
         nguoiTao: userInfo.maId,
-        nguoiSua: "",
-        ngayTao: "",
-        ngaySua: "",
       })
     );
     console.log("data", data);
@@ -355,9 +351,6 @@ const FormThongTinMau = (props: FormThongTinMauProps) => {
       trangThaiNhanMau: "",
       ghiChu: data.ghiChu,
       nguoiTao: userInfo.maId,
-      nguoiSua: "",
-      ngayTao: "",
-      ngaySua: "",
       thoiGianTieuChuan: dataThoiGianTieuChuan?.data,
       maPdkMau: null,
       loaiDv: MaLoaiDV,
@@ -406,7 +399,6 @@ const FormThongTinMau = (props: FormThongTinMauProps) => {
         ghiChu: item.ghiChu,
         loaiAnh: "",
         trangThai: "",
-        file: item.file,
       })
     );
 

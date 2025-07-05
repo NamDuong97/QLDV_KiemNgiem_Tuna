@@ -290,12 +290,12 @@ console.log('data',data);
                 <p className="text-gray-500">Chưa có chi tiết hóa đơn</p>
               </div>
             )
-          ) : data?.dsHoaDonThuBoSung && data?.dsHoaDonThuBoSung?.length > 0 ? (
+          ) : data?.dsHoaDonThuBoSung && data?.dsHoaDonThuBoSung.filter((item: any) => item.active)?.length > 0 ? (
             <div className="space-y-4 overflow-hidden rounded-lg">
-              {data?.dsHoaDonThuBoSung?.map((detail: any, index: any) => (
+              {data?.dsHoaDonThuBoSung?.filter((item: any) => item.active)?.map((detail: any, index: any) => (
                 <div
                   key={index}
-                  onClick={() => handleOpenHDBS(detail?.maId)}
+                  onClick={() => handleOpenHDBS(detail?.maID)}
                   className="result-card bg-white border border-gray-200 rounded-lg p-6 card-hover cursor-pointer"
                 >
                   <div className="flex justify-between items-start mb-4">
@@ -344,7 +344,7 @@ console.log('data',data);
                   </div>
                   <div className="mt-4 flex justify-end space-x-2">
                     <button
-                      onClick={() => handleOpenHDBS(detail?.maId)}
+                      onClick={() => handleOpenHDBS(detail?.maID)}
                       className="px-3 py-1 text-blue-600 hover:bg-blue-50 rounded-md text-sm flex items-center space-x-1 cursor-pointer"
                     >
                       <Eye size={14} />
@@ -353,7 +353,7 @@ console.log('data',data);
                     <button
                       onClick={(e) => {
                         e.stopPropagation();
-                        handleOpenEditHDBS(detail?.maId);
+                        handleOpenEditHDBS(detail?.maID);
                       }}
                       className="px-3 py-1 text-yellow-600 hover:bg-yellow-50 rounded-md text-sm flex items-center space-x-1 cursor-pointer"
                     >
@@ -363,7 +363,7 @@ console.log('data',data);
                     <button
                       onClick={(e) => {
                         e.stopPropagation();
-                        setSaveID(detail?.maId);
+                        setSaveID(detail?.maID);
                         setOpenModelXoa(true);
                       }}
                       className="px-3 py-1 text-red-600 hover:bg-red-50 rounded-md text-sm flex items-center space-x-1 cursor-pointer"

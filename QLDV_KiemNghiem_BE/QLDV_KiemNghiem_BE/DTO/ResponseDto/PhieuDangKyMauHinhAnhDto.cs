@@ -18,7 +18,7 @@ namespace QLDV_KiemNghiem_BE.DTO.ResponseDto
 
         public bool? TrangThai { get; set; }
 
-        public IFormFile? Image { get; set; }
+        //public IFormFile? Image { get; set; }
 
         public string? PathImg { get; set; }
 
