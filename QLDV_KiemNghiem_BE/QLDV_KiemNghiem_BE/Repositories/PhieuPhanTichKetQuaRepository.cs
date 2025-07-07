@@ -21,9 +21,10 @@ namespace QLDV_KiemNghiem_BE.Repositories
         public async Task<PagedList<PhieuPhanTichKetQuaProcedure>> GetPhieuPhanTichKetQuaAllAsync(PhieuPhanTichKetQuaParam param)
         {
             var result = await _context.PhieuPhanTichKetQuaProcedures
-                 .FromSqlRaw("EXEC sp_getAllPhieuPhanTichKetQuaByBoLoc {0}, {1}, {2}, {3}, {4}, {5}, {6}, {7}, {8}, {9}, {10}",
+                 .FromSqlRaw("EXEC sp_getAllPhieuPhanTichKetQuaByBoLoc {0}, {1}, {2}, {3}, {4}, {5}, {6}, {7}, {8}, {9}, {10}, {11}",
             param.MaId ?? string.Empty,
             param.MaKhoa ?? string.Empty,
+            param.MaPhieuDangKy ?? string.Empty,
             param.DonViSanXuat ?? string.Empty,
             param.ManvLap ?? string.Empty,
             param.ManvKiemTra ?? string.Empty,
