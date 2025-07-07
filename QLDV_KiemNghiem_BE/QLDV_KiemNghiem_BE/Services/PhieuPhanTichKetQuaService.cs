@@ -326,6 +326,68 @@ namespace QLDV_KiemNghiem_BE.Services
                 Data = PhieuPhanTichKetQuaReturnDto
             };
         }
+        public async Task<ResponseModel1<PhieuPhanTichKetQuaDto>> ReviewPhieuPhanTichKetQuaByCustomer(RequestReviewPhieuPhanTichKetQuaByCustomer param, string user, string userId)
+        {
+            if (param == null) return new ResponseModel1<PhieuPhanTichKetQuaDto>
+            {
+                KetQua = false,
+                Message = "Du lieu tham so dau vao null hoac khong hop le, vui long kiem tra lai!",
+                Data = null
+            };
+
+            var PhieuPhanTichKetQuaCheck = await _repositoryManager.PhieuPhanTichKetQua.FindPhieuPhanTichKetQuaAsync(param.MaPhieuPhanTichKetQua, true);
+            if (PhieuPhanTichKetQuaCheck == null)
+            {
+                return new ResponseModel1<PhieuPhanTichKetQuaDto>
+                {
+                    KetQua = false,
+                    Message = "Du lieu muon cap nhat khong ton tai, vui long kiem tra lai",
+                    Data = null
+                };
+            }
+            // Cập nhật trạng thái của mẫu và phiếu đăng ký
+            var updateMauAndPhieuDangKy = await _repositoryManager.PhieuPhanTichKetQua.ProcessUpdatePTKQWhenCustomerReview(param.MaPhieuPhanTichKetQua, param.Action, param.Message, user);
+
+            if (updateMauAndPhieuDangKy > 0)
+            {
+                if (param.Action)
+                {
+                    // Tao thong bao gui cho phong BLD
+                    NotificationModel noti = new NotificationModel()
+                    {
+                        Title = "Customer duyet phieu phan tich ket qua",
+                        Message = $"Phieu phan tich ket qua cho mau {PhieuPhanTichKetQuaCheck.MaPdkMau} da duoc phe duyet boi {user}",
+                        CreatedAt = DateTime.Now,
+                    };
+                    await _hubContext.Clients.Group("BLD").SendAsync("receiveNotification", noti);
+                    await _hubContext.Clients.Group("KHTH").SendAsync("receiveNotification", noti);
+                    await _hubContext.Clients.User(PhieuPhanTichKetQuaCheck?.ManvLap ?? "").SendAsync("notificationForOneUser", noti);
+                    await _hubContext.Clients.User(PhieuPhanTichKetQuaCheck?.ManvKiemTra ?? "").SendAsync("notificationForOneUser", noti);
+
+                }
+                else
+                {
+                    NotificationModel noti = new NotificationModel()
+                    {
+                        Title = "Customer duyet phieu phan tich ket qua",
+                        Message = $"Phieu phan tich ket qua cho mau {PhieuPhanTichKetQuaCheck.MaPdkMau} da bi tu choi phe duyet boi {user}",
+                        CreatedAt = DateTime.Now,
+                    };
+                    await _hubContext.Clients.Group("BLD").SendAsync("receiveNotification", noti);
+                    await _hubContext.Clients.Group("KHTH").SendAsync("receiveNotification", noti);
+                    await _hubContext.Clients.User(PhieuPhanTichKetQuaCheck?.ManvLap ?? "").SendAsync("notificationForOneUser", noti);
+                    await _hubContext.Clients.User(PhieuPhanTichKetQuaCheck?.ManvKiemTra ?? "").SendAsync("notificationForOneUser", noti);
+                }
+            }
+            var PhieuPhanTichKetQuaReturnDto = _mapper.Map<PhieuPhanTichKetQuaDto>(PhieuPhanTichKetQuaCheck);
+            return new ResponseModel1<PhieuPhanTichKetQuaDto>
+            {
+                KetQua = updateMauAndPhieuDangKy > 0,
+                Message = updateMauAndPhieuDangKy > 0  ? "Khach hanh duyet phieu phan tich ket qua thanh cong" : "Khach hanh duyet phieu phan tich ket qua that bai",
+                Data = PhieuPhanTichKetQuaReturnDto
+            };
+        }
+
         public async Task<ResponseModel1<PhieuPhanTichKetQuaDto>> DeletePhieuPhanTichKetQuaAsync(string maPhieuPhanTichKetQua, string user)
         {
             var PhieuPhanTichKetQuaDomain = await _repositoryManager.PhieuPhanTichKetQua.FindPhieuPhanTichKetQuaAsync(maPhieuPhanTichKetQua, false);

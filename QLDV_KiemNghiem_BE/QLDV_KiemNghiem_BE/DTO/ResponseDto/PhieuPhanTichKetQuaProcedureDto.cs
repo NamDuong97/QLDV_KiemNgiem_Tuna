@@ -103,6 +103,9 @@ namespace QLDV_KiemNghiem_BE.DTO.ResponseDto
         public DateTime? NgaySua { get; set; }
 
         public bool Active { get; set; }
+
+        [StringLength(500)]
+        public string? NoiDungPhanHoiOfCustomer { get; set; }
         public virtual ICollection<PhieuPhanTichKetQuaChiTietDto> PhieuPhanTichKetQuaChiTietDtos { get; set; } = new List<PhieuPhanTichKetQuaChiTietDto>();
         // Thuoc tinh navigation de lay danh sach phieuphantichketquachitiet
     }

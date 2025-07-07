@@ -34,11 +34,11 @@ namespace QLDV_KiemNghiem_BE.Repositories
             param.TrangThai ?? string.Empty,
             param.Active).ToListAsync();
 
-           foreach(var item in result)
-           {
+            foreach (var item in result)
+            {
                 item.PhieuPhanTichKetQuaChiTiets = await _context.PhieuPhanTichKetQuaChiTiets.Where(it => it.MaPhieuKetQua == item.MaID).ToListAsync();
-           }
-
+            }
+            
             return PagedList<PhieuPhanTichKetQuaProcedure>.ToPagedList(result, param.PageNumber, param.PageSize, param.GetAll);
         }
         public async Task<PhieuPhanTichKetQuaProcedure?> FindPhieuPhanTichKetQuaShowAsync(string maPhieuPhanTichKetQua)
@@ -53,6 +53,12 @@ namespace QLDV_KiemNghiem_BE.Repositories
                     .Where(it => it.MaPhieuKetQua == result.MaID)
                     .ToListAsync();
             }
+            return result;
+        }
+        public async Task<int> ProcessUpdatePTKQWhenCustomerReview(string maPhieuPTKQ, bool action, string message, string user)
+        {
+            var result = await _context.Database.ExecuteSqlRawAsync("exec sp_ProcessUpdatePTKQWhenCustomerReview {0}, {1}, {2}, {3}",
+               maPhieuPTKQ, action, message, user);
             return result;
         }
         public async Task<PhieuPhanTichKetQua?> FindPhieuPhanTichKetQuaAsync(string maPhieuPhanTichKetQua, bool track)

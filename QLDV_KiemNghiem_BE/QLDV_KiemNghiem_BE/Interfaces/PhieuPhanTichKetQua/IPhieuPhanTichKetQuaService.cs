@@ -15,6 +15,7 @@ namespace QLDV_KiemNghiem_BE.Interfaces
         Task<ResponseModel1<PhieuPhanTichKetQuaDto>> UpdatePhieuPhanTichKetQuaAsync(PhieuPhanTichKetQuaRequestUpdateDto PhieuPhanTichKetQuaDto, string user, string userId);
         Task<ResponseModel1<PhieuPhanTichKetQuaDto>> ReviewPhieuPhanTichKetQuaByLDP(RequestReviewPhieuPhanTichKetQua param, string user, string userId);
         Task<ResponseModel1<PhieuPhanTichKetQuaDto>> ReviewPhieuPhanTichKetQuaByBLD(RequestReviewPhieuPhanTichKetQua param, string user, string userId);
+        Task<ResponseModel1<PhieuPhanTichKetQuaDto>> ReviewPhieuPhanTichKetQuaByCustomer(RequestReviewPhieuPhanTichKetQuaByCustomer param, string user, string userId);
         Task<ResponseModel1<PhieuPhanTichKetQuaDto>> DeletePhieuPhanTichKetQuaAsync(string maPhieuPhanTichKetQua, string user);
     }
 }

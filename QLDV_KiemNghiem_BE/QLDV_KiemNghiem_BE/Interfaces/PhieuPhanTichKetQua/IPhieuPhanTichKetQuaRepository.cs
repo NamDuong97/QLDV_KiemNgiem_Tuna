@@ -12,6 +12,7 @@ namespace QLDV_KiemNghiem_BE.Interfaces
         Task<PhieuPhanTichKetQuaProcedure?> FindPhieuPhanTichKetQuaShowAsync(string maPhieuPhanTichKetQua);
         Task<PhieuPhanTichKetQua?> FindPhieuPhanTichKetQuaAsync(string maPhieuPhanTichKetQua, bool track);
         Task<int> ProcessReviewSuccessPhieuPhanTichKetQuaByBLD(string maMau, string user, string userId);
+        Task<int> ProcessUpdatePTKQWhenCustomerReview(string maPhieuPTKQ, bool action, string message, string user);
         void CreatePhieuPhanTichKetQuaAsync(PhieuPhanTichKetQua PhieuPhanTichKetQua);
         void UpdatePhieuPhanTichKetQuaAsync(PhieuPhanTichKetQua PhieuPhanTichKetQua);
         void DeletePhieuPhanTichKetQuaAsync(PhieuPhanTichKetQua PhieuPhanTichKetQua);
