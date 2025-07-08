@@ -17,7 +17,9 @@ const ListImage = (props: Props) => {
 
   const onDrop = useCallback(
     (acceptedFiles: any) => {
+      console.log("acceptedFiles",)
       acceptedFiles.forEach((file: any) => {
+        console.log("files",file);
         const isDuplicate = listImage.some(
           (img: any) =>
             img.name === file.name &&
@@ -27,16 +29,20 @@ const ListImage = (props: Props) => {
 
         if (!isDuplicate) {
           const reader = new FileReader();
+         
+        
           reader.onabort = () => console.log("file reading was aborted");
-          reader.onerror = () => console.log("file reading has failed");
-          reader.onload = () => {
+          reader.onerror = () => console.log("file reading has failed"); 
+          reader.onload = (test) => {
             const imgData = reader.result as string;
+            console.log("test" , test);
             const newImage = {
               ten: file.name,
               size: file.size,
               lastModified: file.lastModified,
               base64: imgData,
               ghiChu: "",
+              image: file
             };
             setListImage((prev: any[]) => [...prev, newImage]);
             setErrorIsTrungLap(false);

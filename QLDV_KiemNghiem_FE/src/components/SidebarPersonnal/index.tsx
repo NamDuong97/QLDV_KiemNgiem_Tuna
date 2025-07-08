@@ -125,7 +125,7 @@ const SidebarPersonnal = () => {
                   pathname === APP_ROUTES.TUNA_ADMIN.DASHBOARD.to,
               })}
             />
-            <span>Tổng quan</span>
+            <span className="capitalize">Tổng quan</span>
           </button>
           <div className="flex flex-col space-y-2">
             <div className="pl-4">
@@ -163,7 +163,7 @@ const SidebarPersonnal = () => {
                         })}
                       />
                     </span>
-                    <span className="text-start">Phiếu kiểm nghiệm</span>
+                    <span className="text-start capitalize">Phiếu kiểm nghiệm</span>
                   </button>
                   <button
                     onClick={() => {
@@ -191,7 +191,7 @@ const SidebarPersonnal = () => {
                         })}
                       />
                     </span>
-                    <span className="text-start">
+                    <span className="text-start capitalize">
                       Phân công Khoa chuyên môn
                     </span>
                   </button>
@@ -219,7 +219,7 @@ const SidebarPersonnal = () => {
                         })}
                       />
                     </span>
-                    <span className="text-start">Danh sách mẫu</span>
+                    <span className="text-start capitalize">Danh sách mẫu</span>
                   </button>
                 </>
               )}
@@ -254,7 +254,7 @@ const SidebarPersonnal = () => {
                       })}
                     />
                   </span>
-                  <span className="text-start">Danh sách phân công khoa</span>
+                  <span className="text-start capitalize">Danh sách phân công khoa</span>
                 </button>
               )}
               {(getRoleGroup(role) === "BLD" ||
@@ -289,7 +289,7 @@ const SidebarPersonnal = () => {
                           })}
                         />
                       </span>
-                      <span className="text-start">Mẫu lưu</span>
+                      <span className="text-start capitalize">Phiếu lưu mẫu</span>
                     </button>
                   )}
                   <button
@@ -318,7 +318,7 @@ const SidebarPersonnal = () => {
                         })}
                       />
                     </span>
-                    <span className="text-start">Phân công nội bộ</span>
+                    <span className="text-start capitalize">Phân công nội bộ</span>
                   </button>
                   <button
                     onClick={() => {
@@ -346,7 +346,7 @@ const SidebarPersonnal = () => {
                         })}
                       />
                     </span>
-                    <span className="text-start">Dự trù</span>
+                    <span className="text-start capitalize">Phiếu Dự trù</span>
                   </button>
                 </>
               )}
@@ -379,7 +379,7 @@ const SidebarPersonnal = () => {
                       })}
                     />
                   </span>
-                  <span className="text-start">Hóa đơn</span>
+                  <span className="text-start capitalize">Hóa đơn</span>
                 </button>
               )}
               <button
@@ -387,7 +387,7 @@ const SidebarPersonnal = () => {
                   handleRedirect(quanLyPhieuPhanTichKetQua);
                 }}
                 className={clsx(
-                  "flex items-center space-x-2 sidebar-link px-4 py-3 text-gray-700 rounded-lg",
+                  "flex items-start space-x-2 sidebar-link px-4 py-3 text-gray-700 rounded-lg",
                   {
                     "text-indigo-600 active":
                       pathname.split("/")[2] ===
@@ -408,7 +408,7 @@ const SidebarPersonnal = () => {
                     })}
                   />
                 </span>
-                <span className="text-start">Phân tích kết quả</span>
+                <span className="text-start capitalize">Phiếu Phân tích kết quả</span>
               </button>
               {/* {(getRoleGroup(role) === "BLD" ||
                 getRoleGroup(role) === "KET") && (

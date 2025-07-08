@@ -1,9 +1,9 @@
 import { Dialog } from "@mui/material";
 import { useForm } from "react-hook-form";
 import { typeConfirmation } from "..";
-import { typeConformationColor } from "../../../../../../constants/typeConfirmation";
-import { queryClient } from "../../../../../../lib/reactQuery";
-import { useStoreNotification } from "../../../../../../configs/stores/useStoreNotification";
+import { typeConformationColor } from "../../../../../../../../../constants/typeConfirmation";
+import { queryClient } from "../../../../../../../../../lib/reactQuery";
+import { useStoreNotification } from "../../../../../../../../../configs/stores/useStoreNotification";
 
 interface Props {
   isOpen: boolean;
@@ -12,11 +12,10 @@ interface Props {
   message?: any;
   type?: any;
   dataID: any;
-  typeConform: string;
 }
 
 const FormLyDoTuChoi = (props: Props) => {
-  const { isOpen, onClose, title, message, type, dataID, typeConform } = props;
+  const { isOpen, onClose, title, message, type, dataID } = props;
 
   const tyleConfirmationModal = typeConformationColor[type];
 
@@ -54,21 +53,12 @@ const FormLyDoTuChoi = (props: Props) => {
   };
 
   const onSubmit = (data: { note: string }) => {
-    if (typeConform === typeConfirmation.TuChoi) {
-      const params = {
-        maPhieuPhanTichKetQua: dataID,
-        message: data.note,
-        action: false,
-      };
-      // mutate(params);
-    } else {
-      const params = {
-        maPhieuPhanTichKetQua: dataID,
-        message: data.note,
-        action: true,
-      };
-      // mutate(params);
-    }
+    const params = {
+      maPhieuPhanTichKetQua: dataID,
+      message: data.note,
+      action: false,
+    };
+    // mutate(params);
   };
 
   return (

@@ -5,6 +5,9 @@ import { queryKhoaAll } from "../../../../hooks/personnels/queryKhoa";
 import Card from "./Card";
 import { AlertTriangle, Clipboard } from "react-feather";
 import { queryThongKe } from "../../../../hooks/personnels/queryMau";
+import TagPhanCong from "../TagPhanCong";
+import { useState } from "react";
+import ListMauTuChoi from "./ListMauTuChoi";
 
 export const colorPresets = [
   "bg-red-100 text-red-800 border-red-200 hover:bg-red-200",
@@ -16,10 +19,20 @@ export const colorPresets = [
   "bg-pink-100 text-pink-800 border-pink-200 hover:bg-pink-200",
 ];
 
+export const tagDanhSachPhieuChoPhanCongKhoaCM = {
+  phancong: "Phân công khoa chuyên môn",
+  duyetmautuchoi: "Danh sách mẫu từ chối",
+};
+
 const CardMau = () => {
   const { data: dataKhoaAll } = queryKhoaAll({
     queryKey: "queryKhoaAll",
   });
+
+  const [isTag, setIsTag] = useState(
+    tagDanhSachPhieuChoPhanCongKhoaCM.phancong
+  );
+
   const departments =
     dataKhoaAll
       ?.filter((khoa: any) => khoa.maId !== "K06")
@@ -44,6 +57,7 @@ const CardMau = () => {
         transition={{ duration: 0.5 }}
         className="grid gap-4"
       >
+        {" "}
         <div className="grid gap-6 grid-cols-4">
           <Card
             title="Mẫu đang chờ phân công"
@@ -62,7 +76,14 @@ const CardMau = () => {
             textColor="text-red-600"
           />
         </div>
-        <SampleList departments={departments} />
+        <div className="bg-white p-4 rounded-lg shadow-sm flex justify-between">
+          <TagPhanCong setIsTag={setIsTag} isTag={isTag} />
+        </div>
+        {isTag === tagDanhSachPhieuChoPhanCongKhoaCM.phancong ? (
+          <SampleList departments={departments} />
+        ) : (
+          <ListMauTuChoi departments={departments} />
+        )}
       </motion.div>
     </AnimatePresence>
   );

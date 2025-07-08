@@ -93,7 +93,9 @@ const XemChiTiet = () => {
                 <div className="flex justify-between items-center">
                   <span className="text-red-800 font-semibold">Tổng tiền:</span>
                   <span className="text-2xl font-bold text-red-900">
-                    {parseInt(data?.tongTien).toLocaleString()} VND
+                    {data?.tongTien === 0
+                      ? "Đang chờ xử lý"
+                      : `${parseInt(data?.tongTien).toLocaleString()} VND`}
                   </span>
                 </div>
               </div>

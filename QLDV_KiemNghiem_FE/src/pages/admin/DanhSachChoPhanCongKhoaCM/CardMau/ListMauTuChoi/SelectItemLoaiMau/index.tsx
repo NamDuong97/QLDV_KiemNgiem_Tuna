@@ -2,17 +2,18 @@ import Box from "@mui/material/Box";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
-import { trangThaiData } from "../../../../../../models/trangjThaiPhieuDKy";
+import { queryLoaiMauAll } from "../../../../../../hooks/personnels/queryMau";
 
 interface Props {
   item?: any;
   setItem?: any;
   title?: any;
-  activeFilter?: string;
 }
 
-export default function SelectItemTrangThai(props: Props) {
+export default function SelectItemLoaiMau(props: Props) {
   const { item, setItem, title } = props;
+
+  const { data } = queryLoaiMauAll({ queryKey: "LoaiMauAll" });
 
   const handleChange = (event: SelectChangeEvent) => {
     setItem(event.target.value as string);
@@ -20,7 +21,7 @@ export default function SelectItemTrangThai(props: Props) {
 
   return (
     <Box
-      sx={{ minWidth: 300, maxWidth: 300, ".MuiSelect-select": { padding: 1 } }}
+      sx={{ minWidth: 200, maxWidth: 200, ".MuiSelect-select": { padding: 1 } }}
     >
       <FormControl fullWidth>
         <Select
@@ -39,9 +40,9 @@ export default function SelectItemTrangThai(props: Props) {
           }}
         >
           <MenuItem value="">Tất cả {title}</MenuItem>
-          {trangThaiData?.map((option: any, index: any) => (
+          {data?.map((option: any, index: any) => (
             <MenuItem key={index} value={option.maId}>
-              {option.tenTt}
+              {option.tenLoaiMau}
             </MenuItem>
           ))}
         </Select>

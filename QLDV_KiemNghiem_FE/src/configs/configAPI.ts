@@ -4,6 +4,8 @@ import { EKey } from "../constants/commons";
 import accessServices from "../services/customers/accessService";
 import { isProd } from "../utils/env";
 const expires = 1 / 24;
+const location = window.location.href;
+
 const _APIInstance = axios.create({
   baseURL: import.meta.env.VITE_PUBLIC_BASE_URL_SERVER,
   headers: {
@@ -36,10 +38,17 @@ const refreshAndRetry = async (
       accessToken,
       refreshToken,
     });
+
     const newAccessToken =
-      resNhanVien.accessToken || resTokenKhachHang.accessToken;
+      location.split("/")[3] === "tuna"
+        ? resNhanVien.accessToken
+        : resTokenKhachHang.accessToken;
+
     const newRefreshToken =
-      resNhanVien.refreshToken || resTokenKhachHang.refreshToken;
+      location.split("/")[3] === "tuna"
+        ? resNhanVien.refreshToken
+        : resTokenKhachHang.refreshToken;
+
     Cookies.set(EKey.TOKEN, newAccessToken, {
       expires: expires,
       sameSite: "Strict",

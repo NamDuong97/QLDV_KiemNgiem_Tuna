@@ -31,7 +31,6 @@ export const PersonnelProvider = ({ children }: PropsWithChildren) => {
   }, []);
 
   const logout = () => {
-    console.log("Đã vào log out");
     Cookies.remove(EKey.TOKEN);
     Cookies.remove(EKey.REFRESH_TOKEN);
     Cookies.remove(EKey.ID);

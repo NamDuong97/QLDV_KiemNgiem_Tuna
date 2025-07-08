@@ -1,6 +1,6 @@
 import { Eye } from "react-feather";
 import { MdReceiptLong } from "react-icons/md";
-import { formatDateNotTime2 } from "../../../../../configs/configAll";
+import { formatDateNotTime2, renderTrangThaiHoaDon } from "../../../../../configs/configAll";
 
 const Card = ({ result, onView }: any) => {
   const handleView = (e: any) => {
@@ -8,8 +8,7 @@ const Card = ({ result, onView }: any) => {
     onView(result?.maID);
   };
 
-  console.log('result',result);
-  
+  console.log("result", result);
 
   return (
     <div
@@ -26,6 +25,7 @@ const Card = ({ result, onView }: any) => {
             <p className="text-sm text-gray-600">{result?.soDKPT}</p>
           </div>
         </div>
+        {renderTrangThaiHoaDon(result?.trangThai)}
       </div>
 
       <div className="grid grid-cols-3 gap-4 text-sm">
@@ -40,7 +40,7 @@ const Card = ({ result, onView }: any) => {
         <div>
           <p className="text-gray-600">Tổng tiền</p>
           <p className="font-semibold text-lg text-red-600">
-            {result?.tongTien}
+            {result?.tongTien === 0 ? "Đang chờ xử lý" : result?.tongTien}
           </p>
         </div>
       </div>

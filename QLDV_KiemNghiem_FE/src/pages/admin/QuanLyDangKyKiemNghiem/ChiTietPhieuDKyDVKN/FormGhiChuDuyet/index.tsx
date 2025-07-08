@@ -49,6 +49,9 @@ const FormGhiChuDuyet = (props: Props) => {
         queryKey: ["listPhieuDKKM_KHTH"],
       }),
       queryClient.refetchQueries({
+        queryKey: ["quanLyPhieuDKKMs_BLD"],
+      }),
+      queryClient.refetchQueries({
         queryKey: ["quanLyPhieuDKKMs_KHTH"],
       }),
       queryClient.refetchQueries({
@@ -56,9 +59,6 @@ const FormGhiChuDuyet = (props: Props) => {
       }),
       queryClient.refetchQueries({
         queryKey: ["listPhieuDKKM_BLD"],
-      }),
-      queryClient.refetchQueries({
-        queryKey: ["quanLyPhieuDKKMs_BLD"],
       }),
       queryClient.refetchQueries({
         queryKey: ["listPhieuDKKNAll"],

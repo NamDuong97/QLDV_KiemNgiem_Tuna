@@ -1,13 +1,14 @@
 import { GiTestTubes } from "react-icons/gi";
 import { Eye } from "react-feather";
-import { APP_ROUTES } from "../../../../../../constants/routers";
 import { useNavigate } from "react-router";
+import { APP_ROUTES } from "../../../../../../../../../constants/routers";
 
 const Card = ({ result }: any) => {
   const navigate = useNavigate();
 
   const handleView = (id: any) => {
-    navigate(APP_ROUTES.TUNA_CUSTOMER.QUAN_LY_PHAN_TICH_KET_QUA.xem_chi_tiet);
+    navigate(APP_ROUTES.TUNA_CUSTOMER.PHIEU_DKY_DVKN.QUAN_LY_PHAN_TICH_KET_QUA
+                .xem_chi_tiet);
     sessionStorage.setItem("chi-tiet-phan-tich-ket-qua", JSON.stringify(id));
   };
 

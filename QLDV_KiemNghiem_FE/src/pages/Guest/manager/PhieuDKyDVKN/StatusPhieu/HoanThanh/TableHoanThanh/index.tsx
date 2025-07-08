@@ -14,6 +14,7 @@ import { useNavigate } from "react-router";
 import { Align } from "../../../../../../../models/Table";
 import { APP_ROUTES } from "../../../../../../../constants/routers";
 import { FaEye } from "react-icons/fa";
+import { GiTestTubes } from "react-icons/gi";
 
 interface TableProps {
   tableBody: any;
@@ -39,6 +40,13 @@ const TableHoanThanh = (props: TableProps) => {
   const handleRedirecEditPage = (item: any) => {
     navigate(APP_ROUTES.TUNA_CUSTOMER.SHOW_PHIEU_DKY_DVKN.to);
     sessionStorage.setItem("xem-phieuDky", JSON.stringify(item));
+  };
+
+  const handleRedirecPhanTichPage = (item: any) => {
+    navigate(
+      APP_ROUTES.TUNA_CUSTOMER.PHIEU_DKY_DVKN.QUAN_LY_PHAN_TICH_KET_QUA.to
+    );
+    sessionStorage.setItem("xem-phan-tich-ket-qua", JSON.stringify(item));
   };
 
   return (
@@ -137,30 +145,56 @@ const TableHoanThanh = (props: TableProps) => {
                   </Box>
                 </TableCell>
                 <TableCell align="center">
-                  <Tooltip
-                    title="Xem chi tiết"
-                    slotProps={{
-                      popper: {
-                        modifiers: [
-                          {
-                            name: "offset",
-                            options: {
-                              offset: [0, -10],
+                  <div className="flex justify-center items-center gap-2">
+                    <Tooltip
+                      title="Xem chi tiết"
+                      slotProps={{
+                        popper: {
+                          modifiers: [
+                            {
+                              name: "offset",
+                              options: {
+                                offset: [0, -10],
+                              },
                             },
-                          },
-                        ],
-                      },
-                    }}
-                  >
-                    <button
-                      onClick={() => handleRedirecEditPage(item)}
-                      className="px-2 py-1 rounded cursor-pointer border border-solid border-yellow-500 group hover:bg-yellow-500"
+                          ],
+                        },
+                      }}
                     >
-                      <span className="text-base/4 lg:text-lg/6 font-bold text-yellow-500 group-hover:text-white">
-                        <FaEye />
-                      </span>
-                    </button>
-                  </Tooltip>
+                      <button
+                        onClick={() => handleRedirecEditPage(item)}
+                        className="px-2 py-1 rounded cursor-pointer border border-solid border-yellow-500 group hover:bg-yellow-500"
+                      >
+                        <span className="text-base/4 lg:text-xl/6 font-bold text-yellow-500 group-hover:text-white">
+                          <FaEye />
+                        </span>
+                      </button>
+                    </Tooltip>
+                    <Tooltip
+                      title="Xem danh sách phân tích kết quả"
+                      slotProps={{
+                        popper: {
+                          modifiers: [
+                            {
+                              name: "offset",
+                              options: {
+                                offset: [0, -10],
+                              },
+                            },
+                          ],
+                        },
+                      }}
+                    >
+                      <button
+                        onClick={() => handleRedirecPhanTichPage(item)}
+                        className="px-2 py-1 rounded cursor-pointer border border-solid border-blue-500 group hover:bg-blue-500"
+                      >
+                        <span className="text-base/4 lg:text-xl/6 font-bold text-blue-500 group-hover:text-white">
+                          <GiTestTubes />
+                        </span>
+                      </button>
+                    </Tooltip>
+                  </div>
                 </TableCell>
               </TableRow>
             ))

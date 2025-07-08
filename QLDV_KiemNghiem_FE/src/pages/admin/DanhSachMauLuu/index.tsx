@@ -60,7 +60,7 @@ const DanhSachMauLuu = () => {
     >
       <div className="">
         <h1 className="text-2xl capitalize font-semibold text-gray-800">
-          Danh sách mẫu lưu nghiểm nghiệm
+          Danh sách phiếu lưu mẫu nghiểm nghiệm
         </h1>
       </div>
       <DanhSach tableHead={tableHead} />

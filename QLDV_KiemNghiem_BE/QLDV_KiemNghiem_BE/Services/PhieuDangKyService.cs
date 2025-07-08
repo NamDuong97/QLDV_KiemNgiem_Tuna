@@ -163,19 +163,15 @@ namespace QLDV_KiemNghiem_BE.Services
                 Console.WriteLine("So luong hinh anh trong mau: " + mau.PhieuDangKyMauHinhAnhs.Count);
                 foreach (var img in mau.PhieuDangKyMauHinhAnhs)
                 {
-                    // Lưu ảnh vào thư mục của dự án và trả về đường dẫn ảnh
+                    //Lưu ảnh vào thư mục của dự án và trả về đường dẫn ảnh
                     //var image = await _uploadFile.UploadImageAsync(img?.Image);
                     //if (image.FileName == "0" && image.Url == "0") continue;
                     var hinhAnh = new PhieuDangKyMauHinhAnh
                     {
                         MaId = Guid.NewGuid().ToString(),
                         MaMau = mauDomain.MaId,
-                        Ten = img.Ten,
-                        DinhDang = img.DinhDang,
                         GhiChu = img.GhiChu,
                         LoaiAnh = img.LoaiAnh,
-                        PathImg = img.PathImg,
-                        TrangThai = img.TrangThai,
                     };
                     phieuDangKyMauHinhAnhDomains.Add(hinhAnh); // Them vao de tra ve cho ng dung
                     await _repositoryManager.PhieuDangKyMauHinhAnh.CreatePhieuDangKyMauHinhAnhAsync(hinhAnh);

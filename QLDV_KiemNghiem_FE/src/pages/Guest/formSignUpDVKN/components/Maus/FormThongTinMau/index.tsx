@@ -91,7 +91,7 @@ const FormThongTinMau = (props: FormThongTinMauProps) => {
   const dataTest = sessionStorage.getItem("PhieuDangKy");
   const dataPhieuDangky = dataTest ? JSON.parse(dataTest) : null;
   const { userInfo } = useContext(StoreContext);
-
+  
   const [listImage, setListImage] = useState(() => {
     const dataImageTemp = sessionStorage.getItem("ImageTemp");
     return dataImageTemp !== undefined &&
@@ -301,13 +301,13 @@ const FormThongTinMau = (props: FormThongTinMauProps) => {
     : 0;
 
   const handleCreateMau = (data: FormMau) => {
-    const MaDm_Mau = dataDMMau.find(
+    const MaDm_Mau = dataDMMau?.find(
       (item: any) => item.tenMau === data.tenMau
     ).maId;
-    const maTieuChuan = dataTieuChuanAll.find(
+    const maTieuChuan = dataTieuChuanAll?.find(
       (item: any) => item.tenTieuChuan === data.tenTieuChuan
     ).maId;
-    const maLoaidv = dataLoaiDichVuAll.find(
+    const maLoaidv = dataLoaiDichVuAll?.find(
       (item: any) => item.tenDichVu === data.tenLoaiDichVu
     ).maId;
     const dataImage: any[] = [];
@@ -316,15 +316,9 @@ const FormThongTinMau = (props: FormThongTinMauProps) => {
 
     data.phieuDangKyMauHinhAnhs.map((item) =>
       dataImage.push({
-        maId: "",
-        maMau: "",
-        ten: item.ten,
-        dinhDang: item.type,
         base64: item.base64,
         ghiChu: item.ghiChu,
-        loaiAnh: "",
-        trangThai: "",
-        nguoiTao: userInfo.maId,
+        image: item?.image,
       })
     );
     console.log("data", data);
@@ -391,14 +385,9 @@ const FormThongTinMau = (props: FormThongTinMauProps) => {
     const dataImage: any[] = [];
     data.phieuDangKyMauHinhAnhs.map((item) =>
       dataImage.push({
-        maId: "",
-        maMau: "",
-        ten: item.ten,
-        dinhDang: item.type,
         base64: item.base64,
         ghiChu: item.ghiChu,
-        loaiAnh: "",
-        trangThai: "",
+        image:item.image
       })
     );
 

@@ -23,11 +23,16 @@ const XemChiTiet = lazy(
 );
 
 const PhanTichKetQua = lazy(
-  () => import("../pages/Guest/manager/PhanTichKetQua")
+  () =>
+    import(
+      "../pages/Guest/manager/PhieuDKyDVKN/StatusPhieu/HoanThanh/PhanTichKetQua"
+    )
 );
-
 const ShowDetail = lazy(
-  () => import("../pages/Guest/manager/PhanTichKetQua/ShowDetail")
+  () =>
+    import(
+      "../pages/Guest/manager/PhieuDKyDVKN/StatusPhieu/HoanThanh/PhanTichKetQua/ShowDetail"
+    )
 );
 
 const Home = lazy(() => import("../pages/Guest/home"));
@@ -76,11 +81,14 @@ const RoutersCustomer = () => {
               path={APP_ROUTES.TUNA_CUSTOMER.QUAN_LY_HOA_DON.to}
               element={<QuanLyHoaDon />}
             />
-            <Route
-              path={APP_ROUTES.TUNA_CUSTOMER.QUAN_LY_PHAN_TICH_KET_QUA.to}
-              element={<PhanTichKetQua />}
-            />
           </Route>
+          <Route
+            path={
+              APP_ROUTES.TUNA_CUSTOMER.PHIEU_DKY_DVKN.QUAN_LY_PHAN_TICH_KET_QUA
+                .to
+            }
+            element={<PhanTichKetQua />}
+          />
           <Route
             path={APP_ROUTES.TUNA_CUSTOMER.EDIT_PHIEU_DKY_DVKN.to}
             element={
@@ -103,7 +111,8 @@ const RoutersCustomer = () => {
           />
           <Route
             path={
-              APP_ROUTES.TUNA_CUSTOMER.QUAN_LY_PHAN_TICH_KET_QUA.xem_chi_tiet
+              APP_ROUTES.TUNA_CUSTOMER.PHIEU_DKY_DVKN.QUAN_LY_PHAN_TICH_KET_QUA
+                .xem_chi_tiet
             }
             element={<ShowDetail />}
           />

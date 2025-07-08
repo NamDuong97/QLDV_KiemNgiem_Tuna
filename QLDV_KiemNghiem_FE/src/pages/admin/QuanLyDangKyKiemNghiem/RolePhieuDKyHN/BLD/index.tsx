@@ -32,6 +32,20 @@ const BLD = (props: Props) => {
   const { setOpenXemChiTiet, activeFilter } = props;
   const [selectedDateFrom, setSelectedDateFrom] = useState("");
   const [selectedDateTo, setSelectedDateTo] = useState("");
+
+  const buildTimeParams = () => {
+    const params: any = {};
+    if (selectedDateFrom) params.timeFrom = selectedDateFrom;
+    if (selectedDateTo) params.timeTo = selectedDateTo;
+    return Object.keys(params).length > 0 ? params : { getAll: true };
+  };
+
+  const buildQuanLyPhieuDKKMParams = () => ({
+    MaBldDuyet: maNhanVien,
+    getAll: true,
+    ...buildTimeParams(),
+  });
+
   const { data, isLoading } = listPhieuDKKM({
     queryKey: "listPhieuDKKM_BLD",
     params: {
@@ -42,94 +56,67 @@ const BLD = (props: Props) => {
   const { data: dataBLDDuyet, isLoading: isLoadingBLDDuyet } = quanLyPhieuDKKMs(
     {
       queryKey: "quanLyPhieuDKKMs_BLD",
-      paramsList:
-        selectedDateFrom && selectedDateTo
-          ? [
-              {
-                maBldDuyet: maNhanVien,
-                maTrangThaiID: "TT04",
-                timeFrom: selectedDateFrom,
-                timeTo: selectedDateTo,
-              },
-              {
-                maBldDuyet: maNhanVien,
-                maTrangThaiID: "TT05",
-                timeFrom: selectedDateFrom,
-                timeTo: selectedDateTo,
-              },
-            ]
-          : selectedDateFrom
-          ? [
-              {
-                maBldDuyet: maNhanVien,
-                maTrangThaiID: "TT04",
-                timeFrom: selectedDateFrom,
-              },
-              {
-                maBldDuyet: maNhanVien,
-                maTrangThaiID: "TT05",
-                timeFrom: selectedDateFrom,
-              },
-            ]
-          : selectedDateTo
-          ? [
-              {
-                maBldDuyet: maNhanVien,
-                maTrangThaiID: "TT04",
-                timeTo: selectedDateTo,
-              },
-              {
-                maBldDuyet: maNhanVien,
-                maTrangThaiID: "TT05",
-                timeTo: selectedDateTo,
-              },
-            ]
-          : [
-              {
-                maBldDuyet: maNhanVien,
-                maTrangThaiID: "TT04",
-              },
-              {
-                maBldDuyet: maNhanVien,
-                maTrangThaiID: "TT05",
-              },
-            ],
+      paramsList: [buildQuanLyPhieuDKKMParams()],
     }
   );
 
   const { data: dataAll, isLoading: isLoadingAll } = listPhieuDKKNAll({
     queryKey: "listPhieuDKKNAll",
-    params: { getAll: true },
+    params: buildTimeParams(),
   });
   const [searchQuery, setSearchQuery] = useState("");
   const [selectTrangThai, setSelectTrangThai] = useState("");
   const [isSortNew, setIsSortNew] = useState(false);
 
   const dataShow: any = {
-    [keyTag.Cho_Xu_Ly]: data?.filter((sample: any) => {
-      const query = removeVietnameseTones(searchQuery.toLowerCase());
-      const matchesSearch =
-        removeVietnameseTones(sample.soDkpt.toLowerCase()).includes(query) ||
-        removeVietnameseTones(sample.nguoiGuiMau.toLowerCase()).includes(
-          query
-        ) ||
-        removeVietnameseTones(sample.donViGuiMau.toLowerCase()).includes(query);
-      return matchesSearch;
-    }),
-    [keyTag.Ban_Lanh_Dao_Duyet]: dataBLDDuyet?.filter((sample: any) => {
-      const query = removeVietnameseTones(searchQuery.toLowerCase());
-      const matchesSearch =
-        removeVietnameseTones(sample.soDkpt.toLowerCase()).includes(query) ||
-        removeVietnameseTones(sample.nguoiGuiMau.toLowerCase()).includes(query);
-      return matchesSearch;
-    }),
-    [keyTag.Tat_Ca]: dataAll?.filter((sample: any) => {
-      const query = removeVietnameseTones(searchQuery.toLowerCase());
-      const matchesSearch =
-        removeVietnameseTones(sample.soDkpt.toLowerCase()).includes(query) ||
-        removeVietnameseTones(sample.nguoiGuiMau.toLowerCase()).includes(query);
-      return matchesSearch;
-    }),
+    [keyTag.Cho_Xu_Ly]: data
+      ?.filter((sample: any) => {
+        const query = removeVietnameseTones(searchQuery.toLowerCase());
+        const matchesSearch =
+          removeVietnameseTones(sample.soDkpt.toLowerCase()).includes(query) ||
+          removeVietnameseTones(sample.nguoiGuiMau.toLowerCase()).includes(
+            query
+          ) ||
+          removeVietnameseTones(sample.donViGuiMau.toLowerCase()).includes(
+            query
+          );
+        return matchesSearch;
+      })
+      ?.sort((a: any, b: any) =>
+        isSortNew
+          ? new Date(a.ngayTao).getTime() - new Date(b.ngayTao).getTime()
+          : new Date(b.ngayTao).getTime() - new Date(a.ngayTao).getTime()
+      ),
+    [keyTag.Ban_Lanh_Dao_Duyet]: dataBLDDuyet
+      ?.filter((sample: any) => {
+        const query = removeVietnameseTones(searchQuery.toLowerCase());
+        const matchesSearch =
+          removeVietnameseTones(sample.soDkpt.toLowerCase()).includes(query) ||
+          removeVietnameseTones(sample.nguoiGuiMau.toLowerCase()).includes(
+            query
+          );
+        return matchesSearch;
+      })
+      ?.sort((a: any, b: any) =>
+        isSortNew
+          ? new Date(a.ngaySua).getTime() - new Date(b.ngaySua).getTime()
+          : new Date(b.ngaySua).getTime() - new Date(a.ngaySua).getTime()
+      ),
+    [keyTag.Tat_Ca]: dataAll
+      ?.filter((sample: any) => {
+        const query = removeVietnameseTones(searchQuery.toLowerCase());
+        const matchesSearch =
+          removeVietnameseTones(sample.soDkpt.toLowerCase()).includes(query) ||
+          removeVietnameseTones(sample.nguoiGuiMau.toLowerCase()).includes(
+            query
+          );
+        return matchesSearch;
+      })
+      ?.sort((a: any, b: any) =>
+        isSortNew
+          ? new Date(a.ngayTao).getTime() - new Date(b.ngayTao).getTime()
+          : new Date(b.ngayTao).getTime() - new Date(a.ngayTao).getTime()
+      ),
   };
 
   const filteredSamples: any = dataShow[activeFilter];
@@ -140,11 +127,6 @@ const BLD = (props: Props) => {
   const currentItems = filteredSamples
     ?.filter((item: any) =>
       selectTrangThai ? item.trangThaiId === selectTrangThai : item.trangThaiId
-    )
-    ?.sort((a: any, b: any) =>
-      isSortNew
-        ? new Date(a.ngaySua).getTime() - new Date(b.ngaySua).getTime()
-        : new Date(b.ngaySua).getTime() - new Date(a.ngaySua).getTime()
     )
     ?.slice(indexOfFirstItem, indexOfLastItem);
 
@@ -321,7 +303,6 @@ const BLD = (props: Props) => {
               title="Trạng thái"
               setItem={setSelectTrangThai}
               item={selectTrangThai}
-              activeFilter={activeFilter}
             />
           )}
         </div>

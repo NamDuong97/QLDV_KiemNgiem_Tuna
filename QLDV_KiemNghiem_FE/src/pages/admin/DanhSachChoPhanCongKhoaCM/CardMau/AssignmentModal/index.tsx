@@ -242,7 +242,7 @@ const AssignmentModal = (props: Props) => {
                   className="text-sm text-gray-600 bg-blue-50 p-3 rounded-lg"
                 >
                   <p className="text-gray-700">
-                    {sample.tenMau}
+                    Tên mẫu:{sample.tenMau}
                     <span className="text-gray-400">({sample.soLo})</span>
                   </p>
                   <div>

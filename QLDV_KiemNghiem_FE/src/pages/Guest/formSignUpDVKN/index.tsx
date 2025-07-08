@@ -1,6 +1,6 @@
 import { Box } from "@mui/material";
 import { motion } from "motion/react";
-import { useContext, useEffect, useMemo, useState } from "react";
+import { useCallback, useContext, useEffect, useMemo, useState } from "react";
 import PopupNofitication from "./components/PopupNofitication";
 import Maus from "./components/Maus";
 import PhuLieuHoaChat from "./components/PhuLieuHoaChat";
@@ -19,6 +19,7 @@ import PopupThoatForm from "./components/PopupThoatForm";
 import { useQueryClient } from "@tanstack/react-query";
 import { image } from "../../../constants/image";
 import { StoreContext } from "../../../contexts/storeProvider";
+import { v4 as uuidv4 } from "uuid";
 
 const dataHinhThucGuiTra = [
   { value: "Trực tiếp", label: "Trực tiếp" },
@@ -109,11 +110,16 @@ const FormSignUpDVKN = () => {
   const handleClosePopupThoatForm = () => {
     setOpenPopupThoatForm(false);
   };
-  const handleOnSettled = async () => {
-    await queryClient.invalidateQueries({
-      queryKey: ["CreatePhieuDKyDVKN"],
-    });
+  const handleOnSettled = async (response: any) => {
+    console.log("response", response?.status);
+    if (response?.status === 200) {
+      await queryClient.invalidateQueries({
+        queryKey: ["CreatePhieuDKyDVKN"],
+      });
+      sessionStorage.removeItem("PhieuDangKy");
+    }
   };
+
   const { mutate } = useCreatePhieuDKyDVKN({
     queryKey: "CreatePhieuDKyDVKN",
     onSettled: handleOnSettled,
@@ -145,115 +151,120 @@ const FormSignUpDVKN = () => {
       sessionStorage.setItem("PhieuDangKy", JSON.stringify(dataFinal));
     }
   };
+  const handleGui = useCallback(
+    async (dataForm: FormPhieuDangKy) => {
+      const id = uuidv4();
+      const dataMaus: any[] = [];
+      const dataPLHC: any[] = [];
+      const dataAnh: any[] = [];
 
-  const handleGui = (dataForm: FormPhieuDangKy) => {
-    const dataMaus: any = [];
-    const dataPLHC: any = [];
-    data?.Maus.map((itemMau: any) => {
-      dataMaus.push({
-        maId: "",
-        maDmMau: itemMau.maDmMau,
-        tenMau: itemMau.tenMau,
-        maTieuChuan: itemMau.maTieuChuan,
-        maPhieuDangKy: itemMau.maPhieuDangKy,
-        manvThucHien: "NV002",
-        maLoaiDV: itemMau.maLoaiDV,
-        madv: "DV001",
-        soLo: itemMau.soLo,
-        donViSanXuat: itemMau.donViSanXuat,
-        ngaySanXuat: itemMau.ngaySanXuat,
-        hanSuDung: itemMau.hanSuDung,
-        donViTinh: itemMau.donViTinh,
-        soLuong: Number(itemMau.soLuong),
-        yeuCauKiemNghiem: itemMau.yeuCauKiemNghiem,
-        tinhTrangMau: itemMau.tinhTrangMau,
-        dieuKienBaoQuan: itemMau.dieuKienBaoQuan,
-        luuMau: itemMau.luuMau,
-        xuatKetQua: itemMau.xuatKetQua,
-        trangThaiNhanMau: itemMau.trangThaiNhanMau,
-        ghiChu: itemMau.ghiChu,
-        thoiGianTieuChuan: Number(itemMau.thoiGianTieuChuan),
-        maPdkMau: null,
-        loaiDv: itemMau.loaiDv,
-        phieuDangKyMauHinhAnhs: itemMau.phieuDangKyMauHinhAnhs
-          ? itemMau.phieuDangKyMauHinhAnhs.map((itemImage: any) => {
-              return {
-                maId: "",
-                maMau: "",
-                ten: itemImage.ten,
-                dinhDang: itemImage.dinhDang ? itemImage.dinhDang : "",
-                ghiChu: itemImage.ghiChu,
-                loaiAnh: itemImage.loaiAnh,
-                trangThai: true,
-                pathImg:""
-              };
-            })
-          : [],
+      // Xử lý Maus
+      data?.Maus?.forEach((itemMau: any) => {
+        const phieuDangKyMauHinhAnhs = (
+          itemMau.phieuDangKyMauHinhAnhs || []
+        ).map((itemImage: any) => {
+          const hinhAnh = {
+            maId: "",
+            maMau: id,
+            ghiChu: itemImage.ghiChu,
+            image: itemImage?.image,
+          };
+          dataAnh.push(hinhAnh); // gom luôn hình ảnh
+          return hinhAnh;
+        });
+
+        dataMaus.push({
+          maId: id,
+          maDmMau: itemMau.maDmMau,
+          tenMau: itemMau.tenMau,
+          maTieuChuan: itemMau.maTieuChuan,
+          maPhieuDangKy: itemMau.maPhieuDangKy,
+          manvThucHien: "NV002",
+          maLoaiDV: itemMau.maLoaiDV,
+          madv: "DV001",
+          soLo: itemMau.soLo,
+          donViSanXuat: itemMau.donViSanXuat,
+          ngaySanXuat: itemMau.ngaySanXuat,
+          hanSuDung: itemMau.hanSuDung,
+          donViTinh: itemMau.donViTinh,
+          soLuong: Number(itemMau.soLuong),
+          yeuCauKiemNghiem: itemMau.yeuCauKiemNghiem,
+          tinhTrangMau: itemMau.tinhTrangMau,
+          dieuKienBaoQuan: itemMau.dieuKienBaoQuan,
+          luuMau: itemMau.luuMau,
+          xuatKetQua: itemMau.xuatKetQua,
+          trangThaiNhanMau: itemMau.trangThaiNhanMau,
+          ghiChu: itemMau.ghiChu,
+          thoiGianTieuChuan: Number(itemMau.thoiGianTieuChuan),
+          maPdkMau: null,
+          loaiDv: itemMau.loaiDv,
+          phieuDangKyMauHinhAnhs,
+        });
       });
-    });
 
-    data?.PLHC.map((itemPLHC: any) =>
-      dataPLHC.push({
-        maId: itemPLHC.maId,
-        maPhieuDangKy: itemPLHC.maPhieuDangKy,
-        maPlhc: itemPLHC.maPlhc,
-        tenPlhc: itemPLHC.tenPlhc,
-        tenHienThi: itemPLHC.tenHienThi,
-        soLuong: itemPLHC.soLuong,
-        donViTinh: itemPLHC.donViTinh,
-        ghiChu: itemPLHC.ghiChu,
-        ngayHetHan: itemPLHC.ngayHetHan,
-        tenNhaCungCap: itemPLHC.tenNhaCungCap,
-        soLo: itemPLHC.soLo,
-      })
-    );
+      // Xử lý PLHC
+      data?.PLHC?.forEach((itemPLHC: any) => {
+        dataPLHC.push({
+          maId: itemPLHC.maId,
+          maPhieuDangKy: itemPLHC.maPhieuDangKy,
+          maPlhc: itemPLHC.maPlhc,
+          tenPlhc: itemPLHC.tenPlhc,
+          tenHienThi: itemPLHC.tenHienThi,
+          soLuong: itemPLHC.soLuong,
+          donViTinh: itemPLHC.donViTinh,
+          ghiChu: itemPLHC.ghiChu,
+          ngayHetHan: itemPLHC.ngayHetHan,
+          tenNhaCungCap: itemPLHC.tenNhaCungCap,
+          soLo: itemPLHC.soLo,
+        });
+      });
 
-    if (isShow === 1) {
-      const dataPhieuDKY: any = {
+      // Xây dựng payload
+      const commonData = {
         maId: "",
-        maKh: userInfo.maId,
+        MaKh: userInfo.maId,
         manvNhanMau: "NV001",
-        nguoiNhanMau: "Nguyễn Văn A",
-        donViGuiMau: dataForm.DonViGuiMau,
-        nguoiGuiMau: dataForm.NguoiGuiMau,
-        soDienThoai: dataForm.SoDienThoai,
-        email: dataForm.Email,
-        diaChiLienHe: dataForm.DiaChiLienHe,
-        hinhThucGuiMau: dataForm.HinhThucGuiMau,
-        hinhThucTraKq: dataForm.HinhThucTraKQ,
-        diaChiGiaoMau: dataForm.DiaChiGiaoMau ? dataForm.DiaChiGiaoMau : "",
+        NguoiGuiMau: "Nguyễn Văn A",
         trangThaiId: "TT01",
-        ketQuaTiengAnh: dataForm.KetQuaTiengAnh ? true : false,
-        ngayGiaoMau: dataForm.NgayGiaoMau,
+        ketQuaTiengAnh: !!(dataForm?.KetQuaTiengAnh ?? data?.ketQuaTiengAnh),
+        NgayGiaoMau: dataForm?.NgayGiaoMau ?? data?.ngayGiaoMau,
         ngayThucHien: "2025-05-10T00:00:00",
         Maus: dataMaus,
         PhieuDangKyPhuLieuHoaChats: dataPLHC,
       };
-      mutate(dataPhieuDKY);
-    } else {
-      const dataPhieuDKY: any = {
-        maId: "",
-        maKh: userInfo.maId,
-        manvNhanMau: "NV001",
-        nguoiNhanMau: "Nguyễn Văn A",
-        donViGuiMau: data.donViGuiMau,
-        nguoiGuiMau: data.nguoiGuiMau,
-        soDienThoai: data.soDienThoai,
-        email: data.email,
-        diaChiLienHe: data.diaChiLienHe,
-        hinhThucGuiMau: data.hinhThucGuiMau,
-        hinhThucTraKq: data.hinhThucTraKq,
-        diaChiGiaoMau: data.diaChiGiaoMau ? data.diaChiGiaoMau : "",
-        trangThaiId: "TT01",
-        ketQuaTiengAnh: data.ketQuaTiengAnh ? true : false,
-        ngayGiaoMau: data.ngayGiaoMau,
-        ngayThucHien: "2025-05-10T00:00:00",
-        Maus: dataMaus,
-        PhieuDangKyPhuLieuHoaChats: dataPLHC,
-      };
-      mutate(dataPhieuDKY);
-    }
-  };
+
+      let dataPhieuDKY: any;
+      if (isShow === 1) {
+        dataPhieuDKY = {
+          ...commonData,
+          DonViGuiMau: dataForm.DonViGuiMau,
+          nguoiGuiMau: dataForm.NguoiGuiMau,
+          SoDienThoai: dataForm.SoDienThoai,
+          Email: dataForm.Email,
+          diaChiLienHe: dataForm.DiaChiLienHe,
+          hinhThucGuiMau: dataForm.HinhThucGuiMau,
+          hinhThucTraKq: dataForm.HinhThucTraKQ,
+          diaChiGiaoMau: dataForm.DiaChiGiaoMau || "",
+        };
+
+        mutate(dataPhieuDKY);
+      } else {
+        dataPhieuDKY = {
+          ...commonData,
+          DonViGuiMau: data?.donViGuiMau,
+          nguoiGuiMau: data?.nguoiGuiMau,
+          SoDienThoai: data?.soDienThoai,
+          Email: data?.email,
+          diaChiLienHe: data?.diaChiLienHe,
+          hinhThucGuiMau: data?.hinhThucGuiMau,
+          hinhThucTraKq: data?.hinhThucTraKq,
+          diaChiGiaoMau: data?.diaChiGiaoMau || "",
+        };
+        mutate(dataPhieuDKY);
+      }
+    },
+    [userInfo, data, isShow, mutate]
+  );
 
   const handleShow = () => {
     switch (isShow as number) {
@@ -312,7 +323,7 @@ const FormSignUpDVKN = () => {
                     onClick={handleSubmit(handleGui, () => {
                       errors && setIsShow(1);
                     })}
-                    className="whitespace-normal capitalize border-[2px] bg-blue-500 border-solid  hover:bg-blue-600 text-cyan-800 border-gray-300 rounded-md px-4 py-2 font-semibold text-base/6 flex justify-center cursor-pointer items-start sm:items-center sm:gap-2 hover:shadow-[0_4px_4px_rgba(0,0,0,0.2)]"
+                    className="whitespace-normal capitalize border-[2px] bg-blue-500 border-solid hover:bg-blue-600 text-cyan-800 border-gray-300 rounded-md px-4 py-2 font-semibold text-base/6 flex justify-center cursor-pointer items-start sm:items-center sm:gap-2 hover:shadow-[0_4px_4px_rgba(0,0,0,0.2)]"
                   >
                     <span className="pt-[2px] text-white">Gửi</span>
                   </button>
@@ -376,7 +387,7 @@ const FormSignUpDVKN = () => {
                     onClick={handleSubmit(handleGui, () => {
                       errors && setIsShow(1);
                     })}
-                    className="whitespace-normal capitalize border-[2px] bg-blue-500 border-solid  hover:bg-blue-600 text-cyan-800 border-gray-300 rounded-md px-4 py-2 font-semibold text-base/6 flex justify-center cursor-pointer items-start sm:items-center sm:gap-2 hover:shadow-[0_4px_4px_rgba(0,0,0,0.2)]"
+                    className="whitespace-normal capitalize border-[2px] bg-blue-500 border-solid hover:bg-blue-600 text-cyan-800 border-gray-300 rounded-md px-4 py-2 font-semibold text-base/6 flex justify-center cursor-pointer items-start sm:items-center sm:gap-2 hover:shadow-[0_4px_4px_rgba(0,0,0,0.2)]"
                   >
                     <span className="pt-[2px] text-white">Gửi</span>
                   </button>

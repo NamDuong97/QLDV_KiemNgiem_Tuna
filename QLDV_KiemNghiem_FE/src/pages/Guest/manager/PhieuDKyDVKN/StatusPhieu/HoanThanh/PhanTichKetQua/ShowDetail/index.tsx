@@ -2,13 +2,13 @@ import { ArrowLeft, Check, Slash } from "react-feather";
 import Detail from "./Detail";
 import FormLyDoTuChoi from "./formLyDoTuChoi";
 import { motion } from "motion/react";
-import { image } from "../../../../../constants/image";
-import { APP_ROUTES } from "../../../../../constants/routers";
 import { LuDoorOpen } from "react-icons/lu";
 import { useNavigate } from "react-router";
 import { Box } from "@mui/material";
 import { useState } from "react";
-import { TypeConformation } from "../../../../../constants/typeConfirmation";
+import { image } from "../../../../../../../../constants/image";
+import { APP_ROUTES } from "../../../../../../../../constants/routers";
+import { TypeConformation } from "../../../../../../../../constants/typeConfirmation";
 
 export const typeConfirmation = {
   TuChoi: "tuchoi",
@@ -25,7 +25,6 @@ const ShowDetail = () => {
   // const [isTypeConform, setIsTypeConform] = useState<string>("");
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
-  const [isTypeConform, setIsTypeConform] = useState<string>("");
 
   return (
     <motion.div
@@ -59,7 +58,10 @@ const ShowDetail = () => {
           <button
             className="p-1 sm:p-2 rounded-full bg-gray-200 hover:bg-gray-300 transition-colors group cursor-pointer"
             onClick={() =>
-              navigate(APP_ROUTES.TUNA_CUSTOMER.QUAN_LY_PHAN_TICH_KET_QUA.to)
+              navigate(
+                APP_ROUTES.TUNA_CUSTOMER.PHIEU_DKY_DVKN
+                  .QUAN_LY_PHAN_TICH_KET_QUA.to
+              )
             }
           >
             <ArrowLeft className="w-4 h-4 sm:w-7 sm:h-7 text-sky-600" />
@@ -68,22 +70,21 @@ const ShowDetail = () => {
             <button
               onClick={() => {
                 setOpen(true);
-                setIsTypeConform(typeConfirmation.TuChoi);
               }}
               className="px-2 py-1 lg:px-4 lg:py-2 text-xs lg:text-base bg-yellow-200 text-yellow-700 rounded-lg hover:bg-yellow-300 cursor-pointer transition-colors flex items-center space-x-2"
             >
               <Slash size={16} />
-              <span>Từ chối</span>
+              <span>Yêu cầu kiểm tra lại</span>
             </button>
             <button
               onClick={() => {
-                setOpen(true);
-                setIsTypeConform(typeConfirmation.DuyetPhieu);
+                // setOpen(true);
+                // setIsTypeConform(typeConfirmation.DuyetPhieu);
               }}
               className="px-1 py-2 lg:px-4 lg:py-2 text-xs lg:text-base bg-green-200 text-green-700 rounded-lg hover:bg-green-300 cursor-pointer transition-colors flex items-center space-x-2"
             >
               <Check size={16} />
-              <span>Duyệt phiếu</span>
+              <span>Hoàn thành</span>
             </button>
           </div>
         </div>
@@ -330,11 +331,8 @@ const ShowDetail = () => {
         isOpen={open}
         onClose={() => setOpen(false)}
         type={TypeConformation.Info}
-        title={`Xác nhận ${
-          isTypeConform === typeConfirmation.TuChoi ? "từ chối" : `duyệt phiếu`
-        }`}
+        title={`Xác nhận từ chối?`}
         dataID={"data?.maID"}
-        typeConform={isTypeConform}
       />
     </motion.div>
   );

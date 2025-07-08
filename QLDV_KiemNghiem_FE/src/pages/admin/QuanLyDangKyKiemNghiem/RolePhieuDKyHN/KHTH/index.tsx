@@ -45,6 +45,19 @@ const KHTH = (props: Props) => {
     setSelectedDateTo(event.target.value);
   };
 
+  const buildTimeParams = () => {
+    const params: any = {};
+    if (selectedDateFrom) params.timeFrom = selectedDateFrom;
+    if (selectedDateTo) params.timeTo = selectedDateTo;
+    return Object.keys(params).length > 0 ? params : { getAll: true };
+  };
+
+  const buildQuanLyPhieuDKKMParams = () => ({
+    manvDuyet: maNhanVien,
+    getAll: true,
+    ...buildTimeParams(),
+  });
+
   const { data, isLoading } = listPhieuDKKM({
     queryKey: "listPhieuDKKM_KHTH",
     params: {
@@ -55,85 +68,12 @@ const KHTH = (props: Props) => {
   const { data: dataNhanVienDuyet, isLoading: isLoadingNhanVienDuyet } =
     quanLyPhieuDKKMs({
       queryKey: "quanLyPhieuDKKMs_KHTH",
-      paramsList:
-        selectedDateFrom && selectedDateTo
-          ? [
-              {
-                getAll: true,
-                manvDuyet: maNhanVien,
-                maTrangThaiID: "TT02",
-                timeFrom: selectedDateFrom,
-                timeTo: selectedDateTo,
-              },
-              {
-                manvDuyet: maNhanVien,
-                maTrangThaiID: "TT03",
-                timeFrom: selectedDateFrom,
-                timeTo: selectedDateTo,
-                getAll: true,
-              },
-            ]
-          : selectedDateFrom
-          ? [
-              {
-                manvDuyet: maNhanVien,
-                maTrangThaiID: "TT02",
-                timeFrom: selectedDateFrom,
-                getAll: true,
-              },
-              {
-                manvDuyet: maNhanVien,
-                maTrangThaiID: "TT03",
-                timeFrom: selectedDateFrom,
-                getAll: true,
-              },
-            ]
-          : selectedDateTo
-          ? [
-              {
-                manvDuyet: maNhanVien,
-                maTrangThaiID: "TT02",
-                timeTo: selectedDateTo,
-                getAll: true,
-              },
-              {
-                manvDuyet: maNhanVien,
-                maTrangThaiID: "TT03",
-                timeTo: selectedDateTo,
-                getAll: true,
-              },
-            ]
-          : [
-              {
-                manvDuyet: maNhanVien,
-                maTrangThaiID: "TT02",
-                getAll: true,
-              },
-              {
-                manvDuyet: maNhanVien,
-                maTrangThaiID: "TT03",
-                getAll: true,
-              },
-            ],
+      paramsList: [buildQuanLyPhieuDKKMParams()],
     });
 
   const { data: dataAll, isLoading: isLoadingAll } = listPhieuDKKNAll({
     queryKey: "listPhieuDKKNAllKHTH",
-    params:
-      selectedDateFrom && selectedDateTo
-        ? {
-            timeFrom: selectedDateFrom,
-            timeTo: selectedDateTo,
-          }
-        : selectedDateFrom
-        ? {
-            timeFrom: selectedDateFrom,
-          }
-        : selectedDateTo
-        ? {
-            timeTo: selectedDateTo,
-          }
-        : { getAll: true },
+    params: buildTimeParams(),
   });
 
   const { data: dataThongKePhieuDky, isLoading: isLoadingThongKePhieuDky } =
@@ -340,7 +280,6 @@ const KHTH = (props: Props) => {
               title="Trạng thái"
               setItem={setSelectTrangThai}
               item={selectTrangThai}
-              activeFilter={activeFilter}
             />
           }
         </div>

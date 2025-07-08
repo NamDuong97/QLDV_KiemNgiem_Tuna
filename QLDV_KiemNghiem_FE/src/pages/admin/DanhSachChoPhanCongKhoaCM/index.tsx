@@ -1,7 +1,10 @@
 import { motion } from "motion/react";
 import CardMau from "./CardMau";
 
+
 const DanhSachPhieuChoPhanCongKhoaCM = () => {
+
+
   return (
     <motion.div
       key="DanhSachPhieuChoPhanCongKhoaCM"
@@ -14,6 +17,7 @@ const DanhSachPhieuChoPhanCongKhoaCM = () => {
       <h1 className="text-2xl capitalize font-semibold text-gray-800">
         Danh sách mẫu chờ phân công khoa chuyên môn
       </h1>
+      
       <CardMau />
     </motion.div>
   );
