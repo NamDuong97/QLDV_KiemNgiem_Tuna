@@ -1,55 +1,40 @@
 import { useState } from "react";
 import { Search } from "react-feather";
 import Card from "./Card";
+import { queryPhanTichKetQuaAll } from "../../../../../../../../hooks/personnels/queryPTKQ";
+import { Pagination, Skeleton } from "@mui/material";
 
 const List = () => {
   const [searchTerm, setSearchTerm] = useState("");
-  const [selectKhoa, setSelectKhoa] = useState("");
+  const session = sessionStorage.getItem("xem-phan-tich-ket-qua");
+  const id = session ? JSON.parse(session) : "";
+  const { data, isLoading } = queryPhanTichKetQuaAll({
+    queryKey: "queryPhanTichKetQuaAllKhachHang",
+    params: { getAll: true, MaPhieuDangKy: id, trangThai: 3 },
+  });
+  console.log("datadata", data);
 
-  // const params: any = { getAll: true };
+  const filteredResults = data?.filter((result: any) => {
+    const matchesSearch =
+      result?.tenMau?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      result?.maPhieuKetQua.toLowerCase().includes(searchTerm.toLowerCase());
+    return matchesSearch;
+  });
 
-  // if (role === "KN") {
-  //   params.manvLap = personnelInfo?.maId;
-  //   params.maKhoa = personnelInfo?.maKhoa; // Giả sử bạn muốn gán maKhoa vào tham số riêng
-  // }
-
-  // const { data, isLoading } = queryPhanTichKetQuaAll({
-  //   queryKey: "phanTichKetQuaChuaDuyet",
-  //   params,
-  // });
-
-  // const filteredResults = data
-  //   ?.filter((item: any) =>
-  //     getRoleGroup(role) === "BLD"
-  //       ? item.trangThai === 2
-  //       : item.trangThai !== 2 && item.trangThai !== 3
-  //   )
-  //   ?.filter((result: any) => {
-  //     const matchesSearch =
-  //       result?.tenMau?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-  //       result?.maPhieuKetQua
-  //         .toLowerCase()
-  //         .includes(searchTerm.toLowerCase()) ||
-  //       result?.tennvKiemTra.toLowerCase().includes(searchTerm.toLowerCase()) ||
-  //       result?.tennvLap.toLowerCase().includes(searchTerm.toLowerCase());
-  //     const matchesStatus = !selectKhoa || result?.maKhoa === selectKhoa;
-  //     return matchesSearch && matchesStatus;
-  //   });
-
-  // const [currentPage, setCurrentPage] = useState(1);
-  // const [itemsPerPage] = useState(4);
-  // const indexOfLastItem = currentPage * itemsPerPage;
-  // const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  // const currentItems = filteredResults?.slice(
-  //   indexOfFirstItem,
-  //   indexOfLastItem
-  // );
-  // const totalPages = Math.ceil(
-  //   filteredResults && filteredResults?.length / itemsPerPage
-  // );
-  // const handlePageChange = (_: any, value: number) => {
-  //   setCurrentPage(value);
-  // };
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage] = useState(4);
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = filteredResults?.slice(
+    indexOfFirstItem,
+    indexOfLastItem
+  );
+  const totalPages = Math.ceil(
+    filteredResults && filteredResults?.length / itemsPerPage
+  );
+  const handlePageChange = (_: any, value: number) => {
+    setCurrentPage(value);
+  };
 
   return (
     <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
@@ -73,11 +58,6 @@ const List = () => {
         </div>
       </div>
       <div className="p-6">
-        <Card
-          // key={index} result={result}
-        />
-      </div>
-      {/* <div className="p-6">
         {isLoading ? (
           <div className="grid gap-4">
             <Skeleton variant="rounded" width={1441} height={198} />
@@ -88,7 +68,7 @@ const List = () => {
           <>
             <div className="grid gap-4">
               {currentItems.map((result: any, index: any) => (
-                
+                <Card key={index} result={result} />
               ))}
             </div>
             <div className="p-4 flex justify-center">
@@ -134,7 +114,7 @@ const List = () => {
             </h3>
           </div>
         )}
-      </div> */}
+      </div>
     </div>
   );
 };

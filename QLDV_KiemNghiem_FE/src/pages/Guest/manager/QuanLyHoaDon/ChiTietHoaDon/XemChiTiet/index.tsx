@@ -1,4 +1,4 @@
-import { Box, Skeleton } from "@mui/material";
+import { Box } from "@mui/material";
 import { APP_ROUTES } from "../../../../../../constants/routers";
 import { motion } from "motion/react";
 import { MdReceipt } from "react-icons/md";
@@ -22,7 +22,7 @@ const XemChiTiet = () => {
   const session = sessionStorage.getItem("chi-tiet-hoa-don");
   const id = session ? JSON.parse(session) : "";
 
-  const { data, isLoading } = useQueryHoaDonThuByID({
+  const { data } = useQueryHoaDonThuByID({
     queryKey: "queryHoaDonBoSungByID",
     maHoaDonThu: id,
   });

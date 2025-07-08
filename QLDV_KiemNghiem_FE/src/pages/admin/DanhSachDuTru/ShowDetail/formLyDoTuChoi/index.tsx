@@ -3,8 +3,6 @@ import { useForm } from "react-hook-form";
 import { typeConformationColor } from "../../../../../constants/typeConfirmation";
 import { queryClient } from "../../../../../lib/reactQuery";
 import { useStoreNotification } from "../../../../../configs/stores/useStoreNotification";
-import { getRoleGroup } from "../../../../../configs/Role";
-import { role } from "../../../../../configs/parseJwt";
 import { typeConfirmation } from "../../../PhanTichKetQua/ShowDetailChoDuyet";
 import { duyetDuTru } from "../../../../../hooks/personnels/queryDuTru";
 

@@ -7,7 +7,6 @@ import { queryClient } from "../../../../lib/reactQuery";
 import { useStoreNotification } from "../../../../configs/stores/useStoreNotification";
 import {
   getDuTruByID,
-  lamLaiPhieuDuTru,
   updateDuTru,
 } from "../../../../hooks/personnels/queryDuTru";
 import { queryMauByID } from "../../../../hooks/personnels/queryMau";
@@ -98,10 +97,10 @@ const Edit = (props: Props) => {
     handleViewResult(resultId);
   };
 
-  const handleCloseModel = () => {
-    onCancel();
-    reset();
-  };
+  // const handleCloseModel = () => {
+  //   onCancel();
+  //   reset();
+  // };
 
   const handleSettled = async (response: any) => {
     if (response?.status === 200) {

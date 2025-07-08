@@ -25,6 +25,11 @@ import { queryClient } from "../../../../../lib/reactQuery";
 import FormNhanXet from "./FormNhanXet";
 import ConfirmationModal from "../../../../../components/ConfirmationModal";
 import { TypeConformation } from "../../../../../constants/typeConfirmation";
+import { queryMauByID } from "../../../../../hooks/personnels/queryMau";
+import {
+  useGetLoaiDichVuAll,
+  useGetTieuChuanAll,
+} from "../../../../../hooks/customers/usePhieuDKyDVKN";
 
 interface Props {
   open: boolean;
@@ -58,7 +63,10 @@ const ModelXemChiTiet = (props: Props) => {
     queryKey: "queryPhanCongNoiBoByID",
     params: dataID,
   });
-
+  const { data: dataMau } = queryMauByID({
+    queryKey: "queryMauByID",
+    params: data?.maPdkMau,
+  });
   const { data: dataTienDo, isLoading: isLoadingTienDo } =
     useQueryPhieuTienDoAll({
       queryKey: "useQueryPhieuTienDoAll",
@@ -69,6 +77,14 @@ const ModelXemChiTiet = (props: Props) => {
       queryKey: "useQueryPhieuTienDoByID",
       params: saveIdTienDo,
     });
+  const { data: dataTC } = useGetTieuChuanAll({
+    queryKey: "GetTieuChuanAll",
+  });
+  const { data: dataLDV } = useGetLoaiDichVuAll({
+    queryKey: "GetLoaiDichVuAll",
+  });
+  const dataTieuChuan: any = dataTC;
+  const dataLoaiDV: any = dataLDV;
 
   const handleSettled = async (response: any) => {
     if (response?.status === 200 || response?.status === 204) {
@@ -124,6 +140,7 @@ const ModelXemChiTiet = (props: Props) => {
           message: "Thao tác thành công",
           status: 200,
         });
+        reset();
         setIsThem(false);
         return;
       } else {
@@ -259,8 +276,7 @@ const ModelXemChiTiet = (props: Props) => {
       ghiChu: "",
     });
   }, []);
-  console.log('data',data);
-  
+  console.log("data", data);
 
   return (
     <Dialog
@@ -384,79 +400,104 @@ const ModelXemChiTiet = (props: Props) => {
                 <div className="grid grid-cols-4 gap-4">
                   <div>
                     <p className="text-xs text-gray-500">Tên mẫu</p>
-                    <p className="text-sm">sdfdsf</p>
+                    <p className="text-sm">{dataMau?.tenMau}</p>
                   </div>
                   <div>
                     <p className="text-xs text-gray-500">Tiêu chuẩn</p>
-                    <p className="text-sm">sdfdsf</p>
+                    <p className="text-sm">
+                      {
+                        dataTieuChuan?.find(
+                          (item: any) => item.maId === dataMau?.maTieuChuan
+                        )?.tenTieuChuan
+                      }
+                    </p>
                   </div>
                   <div>
                     <p className="text-xs text-gray-500">Dịch vụ</p>
-                    <p className="text-sm">sdfds</p>
+                    <p className="text-sm">
+                      {
+                        dataLoaiDV?.find(
+                          (item: any) => item.maLoaiDv === dataMau?.loaiDv
+                        )?.tenDichVu
+                      }
+                    </p>
                   </div>
                   <div>
                     <p className="text-xs text-gray-500">Số lô</p>
-                    <p className="text-sm">sdf</p>
+                    <p className="text-sm">{dataMau?.soLo}</p>
                   </div>
                   <div>
                     <p className="text-xs text-gray-500">Ngày sản xuất</p>
-                    <p className="text-sm">sdfsdf</p>
+                    <p className="text-sm">
+                      {formatDateNotTime(dataMau?.ngaySanXuat)}
+                    </p>
                   </div>
                   <div>
                     <p className="text-xs text-gray-500">
                       Thời gian hoàn thành
                     </p>
-                    <p className="text-sm">sdfsd ngày</p>
+                    <p className="text-sm">{dataMau?.thoiGianTieuChuan} ngày</p>
                   </div>
                   <div>
                     <p className="text-xs text-gray-500">
                       Ngày dự kiến trả kết quả
                     </p>
-                    <p className="text-sm">sdfsdfds</p>
+                    <p className="text-sm">
+                      {dataMau?.ngayTraKetQua
+                        ? formatDateNotTime(dataMau?.ngayTraKetQua)
+                        : "Đến khi hoàn thành"}
+                    </p>
                   </div>
                   <div>
                     <p className="text-xs text-gray-500">Hạn sử dụng</p>
-                    <p className="text-sm">sdfsdf</p>
+                    <p className="text-sm">
+                      {formatDateNotTime(dataMau?.hanSuDung)}
+                    </p>
                   </div>
                   <div>
                     <p className="text-xs text-gray-500">Số lượng</p>
-                    <p className="text-sm">sdfsdf</p>
+                    <p className="text-sm">{`${dataMau?.soLuong} ${dataMau?.donViTinh}`}</p>
                   </div>
                   <div>
                     <p className="text-xs text-gray-500">Điều kiện bảo quản</p>
-                    <p className="text-sm">sdfsdf</p>
+                    <p className="text-sm">{dataMau?.dieuKienBaoQuan}</p>
                   </div>
                   <div>
                     <p className="text-xs text-gray-500">Đơn vị sản xuất</p>
-                    <p className="text-sm">sdf</p>
+                    <p className="text-sm">{dataMau?.donViSanXuat}</p>
                   </div>
                   <div>
                     <p className="text-xs text-gray-500">Tình trạng mẫu</p>
-                    <p className="text-sm">sdfsdf</p>
+                    <p className="text-sm">{dataMau?.tinhTrangMau}</p>
                   </div>
                   <div>
                     <p className="text-xs text-gray-500">Lưu mẫu</p>
-                    <p className="text-sm">sdfsdfds</p>
+                    <p className="text-sm">
+                      {dataMau?.luuMau ? "Có lưu mẫu" : "Không lưu mẫu"}
+                    </p>
                   </div>
                   <div>
                     <p className="text-xs text-gray-500">Xuất kết quả</p>
-                    <p className="text-sm">sdfsdfd</p>
+                    <p className="text-sm">
+                      {dataMau?.xuatKetQua
+                        ? "Có xuất kết quả"
+                        : "Không xuất kết quả"}
+                    </p>
                   </div>
                 </div>
 
                 <div className="mt-3">
                   <p className="text-xs text-gray-500">Yêu cầu kiểm nghiệm</p>
-                  <p className="text-sm p-2 bg-blue-50 rounded">sdfsdfds</p>
+                  <p className="text-sm p-2 bg-blue-50 rounded">
+                    {dataMau?.yeuCauKiemNghiem}
+                  </p>
                 </div>
 
                 <div className="mt-3">
                   <p className="text-xs text-gray-500">Ghi chú khách hàng</p>
-                  <p className="text-sm p-2 bg-blue-50 rounded">sdfsdf</p>
-                </div>
-
-                <div className="mt-3">
-                  <p className="text-xs text-gray-500">Ghi chú</p>
-                  <p className="text-sm p-2 bg-blue-50 rounded">sdfsdfsd</p>
+                  <p className="text-sm p-2 bg-blue-50 rounded">
+                    {dataMau?.ghiChu ? dataMau?.ghiChu : "Không có ghi chú"}
+                  </p>
                 </div>
 
                 <div className="mt-3">
@@ -467,7 +508,7 @@ const ModelXemChiTiet = (props: Props) => {
             )}
           </div>
           <div className="mt-2">
-            <h3 className="text-gray-500 font-semibold text-lg/6 flex items-center gap-2">
+            <h3 className="text-gray-500 font-semibold text-lg/6 flex items-center gap-2 mb-3">
               Báo cáo tiến độ
               {data?.trangThai === true &&
                 !isChiTietTienDo &&
@@ -623,7 +664,10 @@ const ModelXemChiTiet = (props: Props) => {
                 )}
               </div>
             ) : isThem ? (
-              <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+              <form
+                onSubmit={handleSubmit(onSubmit)}
+                className="space-y-4 border border-gray-300 bg-white rounded-lg shadow-[0_4px_4px_rgba(0,0,0,0.25)] p-4"
+              >
                 <div className="grid grid-cols-2 gap-4">
                   <div>
                     <label className="text-sm font-medium text-gray-700">

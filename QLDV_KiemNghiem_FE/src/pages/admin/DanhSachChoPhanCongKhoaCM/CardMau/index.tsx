@@ -2,9 +2,9 @@ import { AnimatePresence, motion } from "framer-motion";
 import SampleList from "./SampleList";
 import "./style.module.scss";
 import { queryKhoaAll } from "../../../../hooks/personnels/queryKhoa";
-import Card from "./Card";
-import { AlertTriangle, Clipboard } from "react-feather";
-import { queryThongKe } from "../../../../hooks/personnels/queryMau";
+// import Card from "./Card";
+// import { AlertTriangle, Clipboard } from "react-feather";
+// import { queryThongKe } from "../../../../hooks/personnels/queryMau";
 import TagPhanCong from "../TagPhanCong";
 import { useState } from "react";
 import ListMauTuChoi from "./ListMauTuChoi";
@@ -43,9 +43,9 @@ const CardMau = () => {
         color: colorPresets[index % colorPresets.length],
       })) || [];
 
-  const { data: dataThongKe, isLoading: isLoadingThongKe } = queryThongKe({
-    queryKey: "queryThongKe",
-  });
+  // const { data: dataThongKe, isLoading: isLoadingThongKe } = queryThongKe({
+  //   queryKey: "queryThongKe",
+  // });
 
   return (
     <AnimatePresence mode="wait">
@@ -57,8 +57,7 @@ const CardMau = () => {
         transition={{ duration: 0.5 }}
         className="grid gap-4"
       >
-        {" "}
-        <div className="grid gap-6 grid-cols-4">
+        {/* <div className="grid gap-6 grid-cols-4">
           <Card
             title="Mẫu đang chờ phân công"
             value={dataThongKe?.mauChoPhanCong}
@@ -75,14 +74,14 @@ const CardMau = () => {
             bgColor="bg-red-100"
             textColor="text-red-600"
           />
-        </div>
+        </div> */}
         <div className="bg-white p-4 rounded-lg shadow-sm flex justify-between">
           <TagPhanCong setIsTag={setIsTag} isTag={isTag} />
         </div>
         {isTag === tagDanhSachPhieuChoPhanCongKhoaCM.phancong ? (
           <SampleList departments={departments} />
         ) : (
-          <ListMauTuChoi departments={departments} />
+          <ListMauTuChoi />
         )}
       </motion.div>
     </AnimatePresence>

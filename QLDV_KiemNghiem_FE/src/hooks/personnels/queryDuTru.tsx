@@ -2,17 +2,18 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import duTruServices from "../../services/personnels/duTruServices";
 
 interface Props {
-  queryKey: string;
+  queryKey?: string;
   params?: any;
   onSettled?: any;
   onSuccess?: any;
   onError?: any;
+  queryKeyList?: any;
 }
 
 export const queryDuTruAll = (props: Props) => {
-  const { queryKey, params } = props;
+  const { queryKeyList, params } = props;
   return useQuery({
-    queryKey: [queryKey, params],
+    queryKey: queryKeyList,
     queryFn: async () => {
       const response = await duTruServices.getDuTruAll(params);
       return response?.data;

@@ -2,13 +2,22 @@ import { ArrowLeft, Check, Slash } from "react-feather";
 import Detail from "./Detail";
 import FormLyDoTuChoi from "./formLyDoTuChoi";
 import { motion } from "motion/react";
-import { LuDoorOpen } from "react-icons/lu";
 import { useNavigate } from "react-router";
-import { Box } from "@mui/material";
+import { Box, Skeleton } from "@mui/material";
 import { useState } from "react";
 import { image } from "../../../../../../../../constants/image";
 import { APP_ROUTES } from "../../../../../../../../constants/routers";
 import { TypeConformation } from "../../../../../../../../constants/typeConfirmation";
+import {
+  duyetPhanTichKetQuaCUSTOMER,
+  getPhanTichKetQuaByID,
+} from "../../../../../../../../hooks/personnels/queryPTKQ";
+import {
+  formatDateNotTime,
+  renderTrangThaiPhanTichKetQua,
+} from "../../../../../../../../configs/configAll";
+import { useStoreNotification } from "../../../../../../../../configs/stores/useStoreNotification";
+import { queryClient } from "../../../../../../../../lib/reactQuery";
 
 export const typeConfirmation = {
   TuChoi: "tuchoi",
@@ -16,15 +25,63 @@ export const typeConfirmation = {
 };
 
 const ShowDetail = () => {
-  // const { data } = getPhanTichKetQuaByID({
-  //   queryKey: "PhanTichKetQuaByID",
-  //   params: resultId,
-  // });
-
-  // const [open, setOpen] = useState(false);
-  // const [isTypeConform, setIsTypeConform] = useState<string>("");
+  const session = sessionStorage.getItem("chi-tiet-phan-tich-ket-qua");
+  const id = session ? JSON.parse(session) : "";
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
+
+  const { data, isLoading } = getPhanTichKetQuaByID({
+    queryKey: "getPhanTichKetQuaByIDKhachHang",
+    params: id,
+  });
+
+  const handleSettled = async (response: any) => {
+    if (response?.status === 200) {
+      await Promise.all([
+        queryClient.refetchQueries({
+          queryKey: ["getPhanTichKetQuaByIDKhachHang"],
+        }),
+      ]);
+    }
+  };
+  const showNotification = useStoreNotification(
+    (state: any) => state.showNotification
+  );
+
+  const { mutate } = duyetPhanTichKetQuaCUSTOMER({
+    queryKey: "duyetPhanTichKetQuaLDP",
+    onSuccess: (data: any) => {
+      if (data.status === 200) {
+        showNotification({
+          message: `Duyệt phiếu thành công`,
+          status: 200,
+        });
+        return;
+      } else {
+        showNotification({
+          message: `Duyệt phiếu thất bại`,
+          status: 500,
+        });
+      }
+    },
+    onError: (error: any) => {
+      console.log("error", error);
+      showNotification({
+        message: `$Duyệt phiếu thất bại`,
+        status: 400,
+      });
+    },
+    onSettled: handleSettled,
+  });
+
+  const handleDuyet = () => {
+    const param = {
+      maPhieuPhanTichKetQua: data?.maID,
+      message: "",
+      action: true,
+    };
+    mutate(param);
+  };
 
   return (
     <motion.div
@@ -34,7 +91,7 @@ const ShowDetail = () => {
       exit={{ x: 0, opacity: 0 }}
       transition={{ duration: 0.7 }}
     >
-      <Box className="relative w-full h-[200px]">
+      <Box className="relative w-full h-[250px]">
         <Box
           sx={{
             position: "absolute",
@@ -66,27 +123,26 @@ const ShowDetail = () => {
           >
             <ArrowLeft className="w-4 h-4 sm:w-7 sm:h-7 text-sky-600" />
           </button>
-          <div className="flex space-x-2">
-            <button
-              onClick={() => {
-                setOpen(true);
-              }}
-              className="px-2 py-1 lg:px-4 lg:py-2 text-xs lg:text-base bg-yellow-200 text-yellow-700 rounded-lg hover:bg-yellow-300 cursor-pointer transition-colors flex items-center space-x-2"
-            >
-              <Slash size={16} />
-              <span>Yêu cầu kiểm tra lại</span>
-            </button>
-            <button
-              onClick={() => {
-                // setOpen(true);
-                // setIsTypeConform(typeConfirmation.DuyetPhieu);
-              }}
-              className="px-1 py-2 lg:px-4 lg:py-2 text-xs lg:text-base bg-green-200 text-green-700 rounded-lg hover:bg-green-300 cursor-pointer transition-colors flex items-center space-x-2"
-            >
-              <Check size={16} />
-              <span>Hoàn thành</span>
-            </button>
-          </div>
+          {data?.trangThai === 3 && (
+            <div className="flex space-x-2">
+              <button
+                onClick={() => {
+                  setOpen(true);
+                }}
+                className="px-2 py-1 lg:px-4 lg:py-2 text-xs lg:text-base bg-yellow-200 text-yellow-700 rounded-lg hover:bg-yellow-300 cursor-pointer transition-colors flex items-center space-x-2"
+              >
+                <Slash size={16} />
+                <span>Yêu cầu kiểm tra lại</span>
+              </button>
+              <button
+                onClick={handleDuyet}
+                className="px-1 py-2 lg:px-4 lg:py-2 text-xs lg:text-base bg-green-200 text-green-700 rounded-lg hover:bg-green-300 cursor-pointer transition-colors flex items-center space-x-2"
+              >
+                <Check size={16} />
+                <span>Hoàn thành</span>
+              </button>
+            </div>
+          )}
         </div>
 
         <div className="p-6">
@@ -99,18 +155,29 @@ const ShowDetail = () => {
                 <div className="space-y-3">
                   <div className="flex justify-between items-center">
                     <span className="text-gray-600">Mã phiếu:</span>
-                    <span className="font-medium text-lg">PTKQ008</span>
+                    {isLoading ? (
+                      <Skeleton variant="rounded" width={171} height={20} />
+                    ) : (
+                      <span className="font-medium text-lg">
+                        {data?.maPhieuKetQua}
+                      </span>
+                    )}
                   </div>
                   <div className="flex justify-between items-center">
                     <span className="text-gray-600">Khoa:</span>
-                    <span className="font-medium">
-                      Khoa Kiểm Nghiệm Hóa Chất
-                    </span>
+                    {isLoading ? (
+                      <Skeleton variant="rounded" width={171} height={20} />
+                    ) : (
+                      <span className="font-medium">{data?.tenKhoa}</span>
+                    )}
                   </div>
                   <div className="flex justify-between items-center">
                     <span className="text-gray-600">Trạng thái:</span>
-                    {/* {renderTrangThaiPhanTichKetQua(data?.trangThai)} */}
-                    Chờ lãnh đạo phòng duyệt
+                    {isLoading ? (
+                      <Skeleton variant="rounded" width={171} height={20} />
+                    ) : (
+                      renderTrangThaiPhanTichKetQua(data?.trangThai)
+                    )}
                   </div>
                 </div>
               </div>
@@ -122,13 +189,11 @@ const ShowDetail = () => {
                   <div className="flex justify-between items-center">
                     <span className="text-gray-600">Nhân viên lập:</span>
                     <div className="text-right">
-                      <div className="font-medium">Trần Văn C</div>
-                    </div>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-gray-600">Ngày nhận mẫu:</span>
-                    <div className="text-right">
-                      <div className="font-medium">00:00 01/01/1900</div>
+                      {isLoading ? (
+                        <Skeleton variant="rounded" width={171} height={20} />
+                      ) : (
+                        <span className="font-medium">{data?.tennvLap}</span>
+                      )}
                     </div>
                   </div>
                 </div>
@@ -140,15 +205,33 @@ const ShowDetail = () => {
                 <div className="space-y-3">
                   <div className="flex justify-between items-center">
                     <span className="text-gray-600">Ngày nhận mẫu:</span>
-                    <span className="font-medium">00:00 01/01/1900</span>
+                    {isLoading ? (
+                      <Skeleton variant="rounded" width={171} height={20} />
+                    ) : (
+                      <span className="font-medium">
+                        {formatDateNotTime(data?.ngayNhanMau)}
+                      </span>
+                    )}
                   </div>
                   <div className="flex justify-between items-center">
                     <span className="text-gray-600">Ngày trả kết quả:</span>
-                    <span className="font-medium">00:00 01/01/1900</span>
+                    {isLoading ? (
+                      <Skeleton variant="rounded" width={171} height={20} />
+                    ) : (
+                      <span className="font-medium">
+                        {formatDateNotTime(data?.ngayTraKetQua)}
+                      </span>
+                    )}
                   </div>
                   <div className="flex justify-between items-center">
                     <span className="text-gray-600">Ngày tạo:</span>
-                    <span className="font-medium">02:04 23/06/2025</span>
+                    {isLoading ? (
+                      <Skeleton variant="rounded" width={171} height={20} />
+                    ) : (
+                      <span className="font-medium">
+                        {formatDateNotTime(data?.ngayTao)}
+                      </span>
+                    )}
                   </div>
                 </div>
               </div>
@@ -161,31 +244,59 @@ const ShowDetail = () => {
                 <div className="space-y-3">
                   <div className="flex justify-between items-center">
                     <span className="text-gray-600">Số DKPT:</span>
-                    <span className="font-medium">SDKPT20256160749594</span>
+                    {isLoading ? (
+                      <Skeleton variant="rounded" width={171} height={20} />
+                    ) : (
+                      <span className="font-medium">{data?.sdkpt}</span>
+                    )}
                   </div>
                   <div className="flex justify-between items-center">
                     <span className="text-gray-600">Đơn vị gửi mẫu:</span>
-                    <span className="font-medium">Công ty ABC</span>
+                    {isLoading ? (
+                      <Skeleton variant="rounded" width={171} height={20} />
+                    ) : (
+                      <span className="font-medium">{data?.donViGuiMau}</span>
+                    )}
                   </div>
                   <div className="flex justify-between items-center">
                     <span className="text-gray-600">Tên mẫu:</span>
-                    <span className="font-medium">Cay sen</span>
+                    {isLoading ? (
+                      <Skeleton variant="rounded" width={171} height={20} />
+                    ) : (
+                      <span className="font-medium">{data?.tenMau}</span>
+                    )}
                   </div>
                   <div className="flex justify-between items-center">
                     <span className="text-gray-600">Số lô:</span>
-                    <span className="font-medium">LOT002</span>
+                    {isLoading ? (
+                      <Skeleton variant="rounded" width={171} height={20} />
+                    ) : (
+                      <span className="font-medium">{data?.soLo}</span>
+                    )}
                   </div>
                   <div className="flex justify-between items-center">
                     <span className="text-gray-600">Số lượng:</span>
-                    <span className="font-medium">200 Gói</span>
+                    {isLoading ? (
+                      <Skeleton variant="rounded" width={171} height={20} />
+                    ) : (
+                      <span className="font-medium">{`${data?.soLuong} ${data?.donViTinh}`}</span>
+                    )}
                   </div>
                   <div className="flex justify-between items-center">
                     <span className="text-gray-600">Tiêu chuẩn:</span>
-                    <span className="font-medium">Trung Quốc 2020</span>
+                    {isLoading ? (
+                      <Skeleton variant="rounded" width={171} height={20} />
+                    ) : (
+                      <span className="font-medium">{data?.tenTieuChuan}</span>
+                    )}
                   </div>
                   <div className="flex justify-between items-center">
                     <span className="text-gray-600">Đơn vị sản xuất:</span>
-                    <span className="font-medium">Công ty Dược B</span>
+                    {isLoading ? (
+                      <Skeleton variant="rounded" width={171} height={20} />
+                    ) : (
+                      <span className="font-medium">{data?.donViSanXuat}</span>
+                    )}
                   </div>
                 </div>
               </div>
@@ -199,9 +310,13 @@ const ShowDetail = () => {
                       Yêu cầu kiểm nghiệm:
                     </span>
                     <div className="bg-white p-4 rounded-lg border border-gray-200 shadow-sm">
-                      <p className="text-sm text-gray-700 leading-relaxed">
-                        Kiểm nghiệm tạp chất
-                      </p>
+                      {isLoading ? (
+                        <Skeleton variant="rounded" width={171} height={20} />
+                      ) : (
+                        <p className="text-sm text-gray-700 leading-relaxed">
+                          {data?.yeuCauKiemNghiem}
+                        </p>
+                      )}
                     </div>
                   </div>
                 </div>
@@ -216,7 +331,7 @@ const ShowDetail = () => {
               </h3>
               <div className="text-sm text-gray-500">
                 Tổng số chỉ tiêu:
-                {0}
+                {data?.phieuPhanTichKetQuaChiTietDtos?.length || 0}
               </div>
             </div>
             <div className="bg-gray-50 rounded-lg overflow-hidden border border-gray-200">
@@ -237,20 +352,14 @@ const ShowDetail = () => {
                   <span>Ghi chú</span>
                 </div>
               </div>
-
-              {/* {data?.phieuPhanTichKetQuaChiTietDtos?.map(
-                (detail: any, index: any) => ( */}
-              <Detail
-              // key={index}
-              // detail={detail}
-              // index={index}
-              />
-              {/* )
-              )} */}
             </div>
-            {/* {data?.phieuPhanTichKetQuaChiTietDtos &&
+            {data?.phieuPhanTichKetQuaChiTietDtos &&
             data?.phieuPhanTichKetQuaChiTietDtos?.length > 0 ? (
-              
+              data?.phieuPhanTichKetQuaChiTietDtos.map(
+                (detail: any, index: any) => (
+                  <Detail key={index} detail={detail} />
+                )
+              )
             ) : (
               <div className="bg-gray-50 rounded-lg p-8 text-center border border-gray-200">
                 <div className="text-gray-400 mb-2">
@@ -271,14 +380,8 @@ const ShowDetail = () => {
                 <p className="text-gray-500">
                   Chưa có chi tiết kết quả kiểm nghiệm
                 </p>
-                <button
-                  onClick={() => onEdit(resultId)}
-                  className="mt-3 text-blue-600 hover:text-blue-800 text-sm font-medium"
-                >
-                  Thêm kết quả kiểm nghiệm
-                </button>
               </div>
-            )} */}
+            )}
           </div>
 
           <div className="mt-6 grid grid-cols-1 md:grid-cols-4 gap-4">
@@ -287,23 +390,21 @@ const ShowDetail = () => {
                 Đạt tiêu chuẩn
               </div>
               <div className="text-2xl font-bold text-green-900">
-                {/* {
+                {
                   data?.phieuPhanTichKetQuaChiTietDtos?.filter(
                     (d: any) => d.trangThai === "Đạt"
                   ).length
-                } */}
-                2
+                }
               </div>
             </div>
             <div className="bg-red-50 p-4 rounded-lg border border-red-200">
               <div className="text-red-800 text-sm font-medium">Không đạt</div>
               <div className="text-2xl font-bold text-red-900">
-                {/* {
+                {
                   data?.phieuPhanTichKetQuaChiTietDtos?.filter(
                     (d: any) => d.trangThai === "Không đạt"
                   ).length
-                } */}
-                0
+                }
               </div>
             </div>
             <div className="bg-yellow-50 p-4 rounded-lg border border-yellow-200">
@@ -311,20 +412,14 @@ const ShowDetail = () => {
                 Cần kiểm tra lại
               </div>
               <div className="text-2xl font-bold text-yellow-900">
-                {/* {
+                {
                   data?.phieuPhanTichKetQuaChiTietDtos?.filter(
                     (d: any) => d.trangThai === "Cần kiểm tra lại"
                   ).length
-                }  */}
-                0
+                }
               </div>
             </div>
           </div>
-
-          {/* {data?.phieuPhanTichKetQuaChiTietDtos &&
-            data?.phieuPhanTichKetQuaChiTietDtos?.length > 0 && (
-              
-            )} */}
         </div>
       </div>
       <FormLyDoTuChoi
@@ -332,7 +427,7 @@ const ShowDetail = () => {
         onClose={() => setOpen(false)}
         type={TypeConformation.Info}
         title={`Xác nhận từ chối?`}
-        dataID={"data?.maID"}
+        dataID={data?.maID}
       />
     </motion.div>
   );

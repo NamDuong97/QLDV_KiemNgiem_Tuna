@@ -19,7 +19,7 @@ const Timeline = ({ events, handleShowTienDo, isLoading }: any) => {
             <Skeleton variant="rounded" className="w-full" height={112} />
           </div>
         ) : (
-          events.map((event: any, index: any) => (
+          events?.map((event: any, index: any) => (
             <div
               key={index}
               className={

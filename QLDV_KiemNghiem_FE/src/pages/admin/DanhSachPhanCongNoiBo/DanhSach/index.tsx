@@ -37,29 +37,46 @@ interface Props {
 const DanhSach = (props: Props) => {
   const { handleTaoPhanCong } = props;
   const { personnelInfo } = usePersonnel();
+  const [selectTrangThai, setSelectTrangThai] = useState("");
+
+  let params: any = { getAll: true };
+
+  const roleGroup = getRoleGroup(role);
+
+  if (roleGroup === "KN" && role === "KN") {
+    params = {
+      ...params,
+      maKhoa: personnelInfo?.maKhoa,
+      manvXuLy: personnelInfo?.maId,
+    };
+  } else if (roleGroup === "KN") {
+    params = {
+      ...params,
+      maKhoa: personnelInfo?.maKhoa,
+      manvPhanCong: personnelInfo?.maId,
+    };
+  } else {
+    params = { ...params };
+  }
+  if (selectTrangThai) {
+    params.TrangThai = selectTrangThai;
+  }
   const { data, isLoading } = queryPhanCongNoiBoAll({
-    queryKey: "queryPhanCongNoiBoAll",
-    params:
-      getRoleGroup(role) === "KN"
-        ? role === "KN"
-          ? {
-              getAll: true,
-              manvXuLy: personnelInfo?.maId,
-              maKhoa: personnelInfo?.maKhoa,
-            }
-          : {
-              getAll: true,
-              manvPhanCong: personnelInfo?.maId,
-              maKhoa: personnelInfo?.maKhoa,
-            }
-        : {
-            getAll: true,
-          },
+    queryKey: [
+      "queryPhanCongNoiBoAll",
+      role,
+      selectTrangThai,
+      personnelInfo?.maId,
+      personnelInfo?.maKhoa,
+    ],
+    params,
   });
+  console.log("se", selectTrangThai);
+
+  console.log("data", data);
 
   const [isSortNew, setIsSortNew] = useState(false);
   const [selectKhoa, setSelectKhoa] = useState("");
-  const [selectTrangThai, setSelectTrangThai] = useState("");
   const [openModelXemChiTiet, setOpenModelXemChiTiet] = useState(false);
   const [openModelSua, setOpenModelSua] = useState(false);
   const [openModelPhanCongLai, setOpenModelPhanCongLai] = useState(false);
@@ -211,10 +228,14 @@ const DanhSach = (props: Props) => {
                 <div
                   key={index}
                   className={clsx(
-                    "rounded-xl overflow-hidden self-start",
+                    "rounded-xl overflow-hidden cursor-pointer self-start",
                     classes.sample_item,
                     classes.glass_card
                   )}
+                  onClick={() => {
+                    setSaveID(assignment.maId);
+                    setOpenModelXemChiTiet(true);
+                  }}
                 >
                   <div className="p-5">
                     <div className="flex items-start justify-between">
@@ -277,7 +298,8 @@ const DanhSach = (props: Props) => {
 
                     <div className="flex flex-wrap gap-3 pt-3 border-t border-gray-100 justify-center items-center">
                       <button
-                        onClick={() => {
+                        onClick={(e) => {
+                          e.stopPropagation();
                           setSaveID(assignment.maId);
                           setOpenModelXemChiTiet(true);
                         }}
@@ -291,7 +313,8 @@ const DanhSach = (props: Props) => {
                             {
                               label: "Tạo phiếu tiến độ",
                               color: "pink",
-                              onClick: () => {
+                              onClick: (e: any) => {
+                                e.stopPropagation();
                                 setSaveID(assignment.maId);
                                 setOpenModelXemChiTiet(true);
                                 setIsThem(true);
@@ -300,7 +323,8 @@ const DanhSach = (props: Props) => {
                             {
                               label: "Tạo phiếu PTKQ",
                               color: "violet",
-                              onClick: () => {
+                              onClick: (e: any) => {
+                                e.stopPropagation();
                                 setSaveID(assignment.maId);
                                 setOpenModelPTKG(true);
                               },
@@ -308,7 +332,8 @@ const DanhSach = (props: Props) => {
                             {
                               label: "Tạo phiếu dự trù",
                               color: "green",
-                              onClick: () => {
+                              onClick: (e: any) => {
+                                e.stopPropagation();
                                 setSaveID(assignment.maId);
                                 setOpenModelCreate(true);
                               },

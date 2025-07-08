@@ -7,7 +7,7 @@ interface Props {
 }
 
 const ShowDetailHDBS = (props: Props) => {
-  const { open, handleClose, dataID } = props;
+  const { open, handleClose } = props;
 
   return (
     <Dialog

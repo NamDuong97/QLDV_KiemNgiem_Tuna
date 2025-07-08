@@ -1,9 +1,9 @@
 import { Dialog } from "@mui/material";
 import { useForm } from "react-hook-form";
-import { typeConfirmation } from "..";
 import { typeConformationColor } from "../../../../../../../../../constants/typeConfirmation";
 import { queryClient } from "../../../../../../../../../lib/reactQuery";
 import { useStoreNotification } from "../../../../../../../../../configs/stores/useStoreNotification";
+import { duyetPhanTichKetQuaCUSTOMER } from "../../../../../../../../../hooks/personnels/queryPTKQ";
 
 interface Props {
   isOpen: boolean;
@@ -34,10 +34,7 @@ const FormLyDoTuChoi = (props: Props) => {
     if (response?.status === 200) {
       await Promise.all([
         queryClient.refetchQueries({
-          queryKey: ["phanTichKetQuaChuaDuyet"],
-        }),
-        queryClient.refetchQueries({
-          queryKey: ["PhanTichKetQuaByID"],
+          queryKey: ["getPhanTichKetQuaByIDKhachHang"],
         }),
       ]);
       handleClose();
@@ -46,6 +43,32 @@ const FormLyDoTuChoi = (props: Props) => {
   const showNotification = useStoreNotification(
     (state: any) => state.showNotification
   );
+
+  const { mutate } = duyetPhanTichKetQuaCUSTOMER({
+    queryKey: "duyetPhanTichKetQuaLDP",
+    onSuccess: (data: any) => {
+      if (data.status === 200) {
+        showNotification({
+          message: `Duyệt phiếu thành công`,
+          status: 200,
+        });
+        return;
+      } else {
+        showNotification({
+          message: `Duyệt phiếu thất bại`,
+          status: 500,
+        });
+      }
+    },
+    onError: (error: any) => {
+      console.log("error", error);
+      showNotification({
+        message: `$Duyệt phiếu thất bại`,
+        status: 400,
+      });
+    },
+    onSettled: handleSettled,
+  });
 
   const handleClose = () => {
     reset();
@@ -58,7 +81,7 @@ const FormLyDoTuChoi = (props: Props) => {
       message: data.note,
       action: false,
     };
-    // mutate(params);
+    mutate(params);
   };
 
   return (
