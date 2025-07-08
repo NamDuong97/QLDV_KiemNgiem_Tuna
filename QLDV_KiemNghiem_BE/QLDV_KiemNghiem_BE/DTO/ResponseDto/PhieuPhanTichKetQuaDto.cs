@@ -47,6 +47,9 @@ namespace QLDV_KiemNghiem_BE.DTO.ResponseDto
 
         public string? NoiDungDuyetTongBo { get; set; }
         public bool Active { get; set; }
+
+        [StringLength(500)]
+        public string? NoiDungPhanHoiOfCustomer { get; set; }
         public List<PhieuPhanTichKetQuaChiTietDto> phieuPhanTichKetQuaChiTietDtos { get; set; } = new List<PhieuPhanTichKetQuaChiTietDto>();
     }
 }

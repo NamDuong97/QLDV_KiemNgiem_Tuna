@@ -56,6 +56,9 @@ public partial class PhieuPhanTichKetQua
 
     public bool? Active { get; set; }
 
+    [StringLength(500)]
+    public string? NoiDungPhanHoiOfCustomer { get; set; }
+
     [ForeignKey("MaKhoa")]
     [InverseProperty("PhieuPhanTichKetQuas")]
     public virtual Khoa? MaKhoaNavigation { get; set; }

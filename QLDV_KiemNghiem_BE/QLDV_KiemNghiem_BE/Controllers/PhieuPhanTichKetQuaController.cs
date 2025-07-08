@@ -130,6 +130,34 @@ namespace QLDV_KiemNghiem_BE.Controllers
         }
 
         [HttpPut]
+        [Route("reviewPhieuPhanTichKetQuaByCustomer")]
+        public async Task<ActionResult> reviewPhieuPhanTichKetQuaByCustomer(RequestReviewPhieuPhanTichKetQuaByCustomer param)
+        {
+            if (!ModelState.IsValid)
+            {
+                var errors = ModelState.Values
+                .SelectMany(v => v.Errors)
+                .Select(e => e.ErrorMessage)
+                .ToList();
+                _logger.LogError("Loi validate tham so dau vao");
+                return BadRequest(new { Errors = errors });
+            }
+            var user = User.FindFirst(ClaimTypes.Email)?.Value.ToString() ?? "know";
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value.ToString() ?? null;
+            ResponseModel1<PhieuPhanTichKetQuaDto> update = await _service.PhieuPhanTichKetQua.ReviewPhieuPhanTichKetQuaByCustomer(param, user, userId);
+            if (update.KetQua)
+            {
+                _logger.LogDebug(update.Message);
+                return Ok(update.Data);
+            }
+            else
+            {
+                _logger.LogDebug(update.Message);
+                return BadRequest(update.Message);
+            }
+        }
+
+        [HttpPut]
         [Route("reviewPhieuPhanTichKetQuaByBLD")]
         public async Task<ActionResult> reviewPhieuPhanTichKetQuaByBLD(RequestReviewPhieuPhanTichKetQua param)
         {
