@@ -27,12 +27,17 @@ const ToastNotification = () => {
 
             //JoinGroup Loại TK
             connection
-              .invoke("JoinGroup", personnelInfo?.maLoaiTk)
+              .invoke("JoinGroup", personnelInfo?.maLoaiTk.split("_")[0])
               .then(() =>
-                console.log(`Joined group ${personnelInfo?.maLoaiTk}`)
+                console.log(
+                  `Joined group ${personnelInfo?.maLoaiTk.split("_")[0]}`
+                )
               )
               .catch((err: any) =>
-                console.error(`Joined group ${personnelInfo?.maLoaiTk}`, err)
+                console.error(
+                  `Joined group ${personnelInfo?.maLoaiTk.split("_")[0]}`,
+                  err
+                )
               );
 
             //JoinGroup Khoa

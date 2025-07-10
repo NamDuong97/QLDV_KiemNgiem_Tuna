@@ -87,5 +87,10 @@ namespace QLDV_KiemNghiem_BE.DTO.ResponseDto
         public string? PhieuDangKyPhuLieuHoaChatsJson { get; set; }  
         public List<PhieuDangKyMauDto> Maus { get; set; } = new List<PhieuDangKyMauDto>();
         public IEnumerable<PhieuDangKyPhuLieuHoaChatDto> PhieuDangKyPhuLieuHoaChats { get; set; } = new List<PhieuDangKyPhuLieuHoaChatDto>();
+
+        //[NotMapped]
+        //public string? MausJson { get; set; }
+        //[NotMapped]
+        //public string? PhieuDangKyPhuLieuHoaChatsJson { get; set; }
     }
 }

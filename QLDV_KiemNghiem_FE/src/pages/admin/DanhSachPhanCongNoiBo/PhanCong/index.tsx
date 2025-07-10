@@ -12,10 +12,12 @@ import { useGetLoaiDichVuAll } from "../../../../hooks/customers/usePhieuDKyDVKN
 import { Skeleton } from "@mui/material";
 import { getRoleGroup } from "../../../../configs/Role";
 import { role } from "../../../../configs/parseJwt";
+import FormHuyMau from "./FormHuyMau";
 
 const PhanCong = ({ handleDanhSachPhanCong }: any) => {
   const [isSortNew, setIsSortNew] = useState(false);
   const [openModelPhanCong, setOpenModelPhanCong] = useState(false);
+  const [openModelHuyMau, setOpenModelHuyMau] = useState(false);
   const { personnelInfo } = usePersonnel();
   const { data, isLoading } = getAllDanhSachMau({
     queryKey: "DanhSachMau",
@@ -100,7 +102,7 @@ const PhanCong = ({ handleDanhSachPhanCong }: any) => {
             <div
               key={index}
               className={clsx(
-                "rounded-xl overflow-hidden cursor-pointer",
+                "rounded-xl overflow-hidden",
                 classes.sample_item,
                 classes.glass_card
               )}
@@ -161,27 +163,34 @@ const PhanCong = ({ handleDanhSachPhanCong }: any) => {
                     <span>HSD: {formatDate(sample.hanSuDung)}</span>
                   </div>
                   {getRoleGroup(role) === "KN" && (
-                    <button
-                      onClick={() => {
-                        setSaveID(sample?.maId);
-                        setOpenModelPhanCong(true);
-                      }}
-                      className="flex items-center text-sm font-medium text-indigo-600 hover:text-indigo-800 transition-colors cursor-pointer hover:underline"
-                    >
-                      <span>Phân công</span>
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        className="h-4 w-4 ml-1"
-                        viewBox="0 0 20 20"
-                        fill="currentColor"
-                      >
-                        <path
-                          fillRule="evenodd"
-                          d="M12.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-2.293-2.293a1 1 0 010-1.414z"
-                          clipRule="evenodd"
-                        />
-                      </svg>
-                    </button>
+                    <div className="flex items-center gap-2">
+                      {[
+                        {
+                          label: "Hủy mẫu",
+                          color: "rose",
+                          onClick: () => {
+                            setSaveID(sample.maId);
+                            setOpenModelHuyMau(true);
+                          },
+                        },
+                        {
+                          label: "Phân công nhân viên",
+                          color: "green",
+                          onClick: () => {
+                            setSaveID(sample?.maId);
+                            setOpenModelPhanCong(true);
+                          },
+                        },
+                      ].map((btn, idx) => (
+                        <button
+                          key={idx}
+                          onClick={btn.onClick}
+                          className={`px-2 py-1 text-xs font-medium cursor-pointer text-white bg-${btn.color}-500 hover:bg-${btn.color}-600 rounded-md transition-colors`}
+                        >
+                          {btn.label}
+                        </button>
+                      ))}
+                    </div>
                   )}
                 </div>
               </div>
@@ -227,6 +236,11 @@ const PhanCong = ({ handleDanhSachPhanCong }: any) => {
         maKhoa={personnelInfo?.maKhoa}
         manv={personnelInfo?.maId}
         hoTenNVPC={personnelInfo?.hoTen}
+      />
+      <FormHuyMau
+        open={openModelHuyMau}
+        handleClose={() => setOpenModelHuyMau(false)}
+        dataID={saveID}
       />
     </>
   );

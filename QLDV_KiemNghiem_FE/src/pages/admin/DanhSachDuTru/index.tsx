@@ -118,8 +118,6 @@ const DanhSachDuTru = () => {
   };
 
   const handleViewResult = (id: any) => {
-    console.log("id", id);
-
     setSelectedResultId(id);
     setActiveView("detail");
   };
@@ -153,7 +151,13 @@ const DanhSachDuTru = () => {
           />
         );
       case "edit":
-        return <Edit resultId={selectedResultId} onCancel={handleCancel} />;
+        return (
+          <Edit
+            resultId={selectedResultId}
+            onCancel={handleCancel}
+            handleViewResult={handleViewResult}
+          />
+        );
       default:
         return (
           <List

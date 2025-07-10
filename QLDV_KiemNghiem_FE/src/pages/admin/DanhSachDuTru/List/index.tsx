@@ -3,36 +3,54 @@ import Card from "../Card";
 import InputSearch2 from "../../../../components/InputSearch2";
 import SelectItemTrangThai from "./SelectItemTrangThai";
 import { queryDuTruAll } from "../../../../hooks/personnels/queryDuTru";
-import { getAllDanhSachMau } from "../../../../hooks/personnels/phanCongKhoa";
 import { Pagination, Skeleton } from "@mui/material";
+import { usePersonnel } from "../../../../contexts/PersonelsProvider";
+import { getRoleGroup } from "../../../../configs/Role";
+import { role } from "../../../../configs/parseJwt";
 
 const List = ({ onView, onEdit }: any) => {
   const [searchTerm, setSearchTerm] = useState("");
-  const [statusFilter, setStatusFilter] = useState("");
+  const [statusFilter, setStatusFilter] = useState(1);
+  const { personnelInfo } = usePersonnel();
+
+  //khởi tạo param mặc định
+  let params: any = {
+    getAll: true,
+  };
+
+  // Thêm theo role
+  if (getRoleGroup(role) !== "BLD") {
+    params.maKhoa = personnelInfo?.maKhoa;
+  }
+
+  if (role === "KN") {
+    params.ManvLap = personnelInfo?.maId;
+  }
+
+  // Thêm trạng thái nếu có chọn
+  if (statusFilter !== null && statusFilter !== undefined) {
+    params.trangThai = statusFilter;
+  }
 
   const { data, isLoading } = queryDuTruAll({
-    queryKey: "queryDuTruAll",
+    queryKeyList: ["queryDuTruAll", role, personnelInfo?.maKhoa, statusFilter],
+    params,
   });
+  console.log("data", data);
 
-  const { data: dataMau } = getAllDanhSachMau({
-    queryKey: "DanhSachMau",
-    params: {
-      getAll: true,
-    },
-  });
-
-  const dataDM_Mau: any = dataMau?.data;
-
-  const filteredResults = data?.filter((result: any) => {
-    const matchesSearch =
-      dataDM_Mau
-        ?.find((item: any) => item.maId === result?.maPdkMau)
-        ?.tenMau?.toLowerCase()
-        .includes(searchTerm.toLowerCase()) ||
-      result?.maPhieuDuTru?.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesStatus = !statusFilter || result.status === statusFilter;
-    return matchesSearch && matchesStatus;
-  });
+  const filteredResults = data
+    ?.filter((item: any) => item?.active)
+    ?.filter((result: any) => {
+      const matchesSearch =
+        result?.maPhieuDuTru
+          ?.toLowerCase()
+          .includes(searchTerm.toLowerCase()) ||
+        result?.tenMau?.toLowerCase().includes(searchTerm.toLowerCase());
+      return matchesSearch;
+    })
+    ?.sort((a: any, b: any) => {
+      return new Date(b.ngayLap).getTime() - new Date(a.ngayLap).getTime();
+    });
 
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(10);
@@ -59,7 +77,7 @@ const List = ({ onView, onEdit }: any) => {
           <div className="flex items-center space-x-4">
             <div className="flex gap-4 w-lg">
               <InputSearch2
-                placeholder="Tìm kiếm ..."
+                placeholder="Tìm kiếm tên mẫu hoặc mã dự trù..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
@@ -89,7 +107,6 @@ const List = ({ onView, onEdit }: any) => {
                   result={result}
                   onView={onView}
                   onEdit={onEdit}
-                  dataDM_Mau={dataDM_Mau}
                 />
               ))}
               {currentItems?.length > 0 && (

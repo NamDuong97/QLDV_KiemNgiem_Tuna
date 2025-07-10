@@ -1,15 +1,22 @@
 import { Dialog } from "@mui/material";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import {
-  formatDateNotTime,
   formatDateNotTime2,
 } from "../../../../configs/configAll";
 import { IoClose } from "react-icons/io5";
-import { getMauLuuByID } from "../../../../hooks/personnels/queryMauLuu";
+import {
+  getMauLuuByID,
+  updateMauLuu,
+} from "../../../../hooks/personnels/queryMauLuu";
 import { getInforNhanVien } from "../../../../hooks/personnels/access/useAccess";
+import InputSelectDonViTinh from "./InputSelectDonViTinh";
+import { DonViTinh } from "../../../Guest/formSignUpDVKN/components/Maus/FormThongTinMau";
+import { usePersonnel } from "../../../../contexts/PersonelsProvider";
+import { queryClient } from "../../../../lib/reactQuery";
+import { useStoreNotification } from "../../../../configs/stores/useStoreNotification";
 
 interface Props {
   isOpen: boolean;
@@ -19,7 +26,6 @@ interface Props {
 interface FormTaoPhieu {
   soLuong: number;
   donViTinh: string;
-  thoiGianLuu: string;
   luuDenNgay: string;
 }
 
@@ -30,7 +36,7 @@ const SuaMauLuu = (props: Props) => {
   const { isOpen, onClose } = props;
   const dataSession = sessionStorage.getItem("chi-tiet-mau-luu-sua");
   const id = dataSession ? JSON.parse(dataSession) : "";
-
+  const { personnelInfo } = usePersonnel();
   const { data } = getMauLuuByID({
     queryKey: "getMauLuuByID",
     params: id,
@@ -40,37 +46,25 @@ const SuaMauLuu = (props: Props) => {
     queryKey: "getInforNhanVien",
     params: data?.manvLuu,
   });
-
+  const initialLuuDenNgay = useRef<string | undefined>(undefined);
   const schema = yup.object().shape({
     soLuong: yup
       .number()
       .required("Vui lòng nhập số lượng")
       .min(1, "Số lượng phải lớn hơn 0"),
     donViTinh: yup.string().required("Vui lòng nhập đơn vị tính"),
-    thoiGianLuu: yup
-      .string()
-      .required("Vui lòng chọn thời gian lưu")
-      .test(
-        "is-valid-date",
-        "Thời gian lưu phải từ ngày lưu trước đó trở đi",
-        function (value) {
-          if (!value) return false;
-          const date: any = formatDateNotTime2(value);
-          const thoiGianLuu: any = formatDateNotTime2(data?.thoiGianLuu);
-          return date >= thoiGianLuu;
-        }
-      ),
-
     luuDenNgay: yup
       .string()
       .required("Vui lòng chọn ngày lưu đến")
       .test(
-        "is-after-thoiGianLuu",
-        "Ngày lưu đến được tính từ thời gian lưu trở đi",
+        "is-valid-if-changed",
+        "Ngày lưu đến phải tính từ thời điểm hiện tại",
         function (value) {
-          const { thoiGianLuu } = this.parent;
-          if (!value || !thoiGianLuu) return false;
-          return new Date(value) >= new Date(thoiGianLuu);
+          if (!value) return false;
+          if (value === initialLuuDenNgay.current) {
+            return true; // nếu không thay đổi, không cần validate
+          }
+          return new Date(value) >= today;
         }
       ),
   });
@@ -80,6 +74,7 @@ const SuaMauLuu = (props: Props) => {
     register,
     handleSubmit,
     formState: { errors },
+    control,
   } = useForm<FormTaoPhieu>({
     resolver: yupResolver(schema),
   });
@@ -87,38 +82,74 @@ const SuaMauLuu = (props: Props) => {
   useEffect(() => {
     if (isOpen) {
       if (data) {
+        const initDate = formatDateNotTime2(data?.luuDenNgay) || undefined;
+        initialLuuDenNgay.current = initDate;
         reset({
           soLuong: data?.soLuong ?? 0,
           donViTinh: data?.donViTinh ?? "",
-          thoiGianLuu: formatDateNotTime2(data?.thoiGianLuu) || undefined,
-          luuDenNgay: formatDateNotTime2(data?.luuDenNgay) || undefined,
+          luuDenNgay: initDate,
         });
       } else {
+        initialLuuDenNgay.current = undefined;
         reset({
           soLuong: 0,
           donViTinh: "",
-          thoiGianLuu: undefined,
           luuDenNgay: undefined,
         });
       }
     }
-  }, [isOpen, data]);
+  }, [isOpen, data, reset]);
+
+  const handleSettled = async (response: any) => {
+    if (response?.status === 200) {
+      await queryClient.refetchQueries({
+        queryKey: ["queryMauLuuAll"],
+      });
+      onClose();
+    }
+  };
+  const showNotification = useStoreNotification(
+    (state: any) => state.showNotification
+  );
+
+  const { mutate } = updateMauLuu({
+    queryKey: "updateMauLuu",
+    onSuccess: (data: any) => {
+      if (data.status === 200) {
+        showNotification({
+          message: "Sửa thành công",
+          status: 200,
+        });
+        return;
+      } else {
+        showNotification({
+          message: "Sửa thất bại",
+          status: 500,
+        });
+      }
+    },
+    onError: (error: any) => {
+      console.log("error", error);
+
+      showNotification({
+        message: "Sửa thất bại",
+        status: 400,
+      });
+    },
+    onSettled: handleSettled,
+  });
 
   const handleAssignSubmit = (dataForm: FormTaoPhieu) => {
     const dataTao = {
       maId: data?.maId,
-      maPdkMau: data?.maPdkMau,
-      maPhieuLuu: data?.maPhieuLuu,
       tenMau: data?.tenMau,
       soLuong: dataForm.soLuong,
       donViTinh: dataForm.donViTinh,
-      thoiGianLuu: formatDateNotTime(dataForm.thoiGianLuu),
-      luuDenNgay: formatDateNotTime(dataForm.luuDenNgay),
+      luuDenNgay: formatDateNotTime2(dataForm.luuDenNgay),
+      manvLuu: personnelInfo?.maId,
+      hanSuDung: data?.hanSuDung,
     };
-
-    console.log("Submitted data:", dataTao);
-
-    // onClose();
+    mutate(dataTao);
   };
 
   return (
@@ -175,29 +206,14 @@ const SuaMauLuu = (props: Props) => {
             <label className="text-sm font-medium text-gray-700">
               Đơn vị tính *
             </label>
-            <input
-              type="text"
-              {...register("donViTinh")}
-              className="w-full py-1 px-4 border border-gray-300 rounded"
+            <InputSelectDonViTinh
+              name="donViTinh"
+              placeholder="Nhập ĐVT"
+              data={DonViTinh}
+              control={control}
             />
             {errors.donViTinh && (
               <p className="text-xs text-red-600">{errors.donViTinh.message}</p>
-            )}
-          </div>
-
-          <div>
-            <label className="text-sm font-medium text-gray-700">
-              Thời gian lưu mẫu *
-            </label>
-            <input
-              type="date"
-              {...register("thoiGianLuu")}
-              className="w-full py-1 px-4 border border-gray-300 rounded"
-            />
-            {errors.thoiGianLuu && (
-              <p className="text-xs text-red-600">
-                {errors.thoiGianLuu.message}
-              </p>
             )}
           </div>
 

@@ -91,7 +91,7 @@ const FormThongTinMau = (props: FormThongTinMauProps) => {
   const dataTest = sessionStorage.getItem("PhieuDangKy");
   const dataPhieuDangky = dataTest ? JSON.parse(dataTest) : null;
   const { userInfo } = useContext(StoreContext);
-
+  
   const [listImage, setListImage] = useState(() => {
     const dataImageTemp = sessionStorage.getItem("ImageTemp");
     return dataImageTemp !== undefined &&
@@ -301,35 +301,27 @@ const FormThongTinMau = (props: FormThongTinMauProps) => {
     : 0;
 
   const handleCreateMau = (data: FormMau) => {
-    const MaDm_Mau = dataDMMau.find(
+    const MaDm_Mau = dataDMMau?.find(
       (item: any) => item.tenMau === data.tenMau
     ).maId;
-    const maTieuChuan = dataTieuChuanAll.find(
+    const maTieuChuan = dataTieuChuanAll?.find(
       (item: any) => item.tenTieuChuan === data.tenTieuChuan
     ).maId;
-    const maLoaidv = dataLoaiDichVuAll.find(
+    const maLoaidv = dataLoaiDichVuAll?.find(
       (item: any) => item.tenDichVu === data.tenLoaiDichVu
     ).maId;
     const dataImage: any[] = [];
 
-    console.log("data", data);
+    console.log("datadatadata", listImage);
 
     data.phieuDangKyMauHinhAnhs.map((item) =>
       dataImage.push({
-        maId: "",
-        maMau: "",
-        ten: item.ten,
-        dinhDang: item.type,
         base64: item.base64,
         ghiChu: item.ghiChu,
-        loaiAnh: "",
-        trangThai: "",
-        nguoiTao: userInfo.maId,
-        nguoiSua: "",
-        ngayTao: "",
-        ngaySua: "",
+        image: item?.image,
       })
     );
+    console.log("data", data);
 
     const dataMau = {
       maId: "",
@@ -353,9 +345,6 @@ const FormThongTinMau = (props: FormThongTinMauProps) => {
       trangThaiNhanMau: "",
       ghiChu: data.ghiChu,
       nguoiTao: userInfo.maId,
-      nguoiSua: "",
-      ngayTao: "",
-      ngaySua: "",
       thoiGianTieuChuan: dataThoiGianTieuChuan?.data,
       maPdkMau: null,
       loaiDv: MaLoaiDV,
@@ -396,18 +385,9 @@ const FormThongTinMau = (props: FormThongTinMauProps) => {
     const dataImage: any[] = [];
     data.phieuDangKyMauHinhAnhs.map((item) =>
       dataImage.push({
-        maId: "",
-        maMau: "",
-        ten: item.ten,
-        dinhDang: item.type,
         base64: item.base64,
         ghiChu: item.ghiChu,
-        loaiAnh: "",
-        trangThai: "",
-        nguoiTao: userInfo.maId,
-        nguoiSua: "",
-        ngayTao: "",
-        ngaySua: "",
+        image:item.image
       })
     );
 
@@ -432,10 +412,6 @@ const FormThongTinMau = (props: FormThongTinMauProps) => {
       xuatKetQua: data.xuatKetQua,
       trangThaiNhanMau: "",
       ghiChu: data.ghiChu,
-      nguoiTao: userInfo.maId,
-      nguoiSua: "",
-      ngayTao: "",
-      ngaySua: "",
       thoiGianTieuChuan: dataThoiGianTieuChuan?.data,
       maPdkMau: null,
       loaiDv: MaLoaiDV,
@@ -540,6 +516,7 @@ const FormThongTinMau = (props: FormThongTinMauProps) => {
   useEffect(() => {
     setValue("phieuDangKyMauHinhAnhs", listImage);
   }, [listImage, setValue]);
+  console.log("listImage", listImage);
 
   return (
     <Box>

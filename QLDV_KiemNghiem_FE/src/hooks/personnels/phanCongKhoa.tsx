@@ -59,13 +59,12 @@ export const getAllDanhSachMau = (props: Props) => {
     queryKey: [queryKey, params],
     queryFn: async () => {
       const response = await phanCongKhoaServices.getAllDanhSachMau(params);
-      const paginationRaw = response.headers["x-pagination"];
-      const pagination = paginationRaw ? JSON.parse(paginationRaw) : null;
-      return { data: response?.data, pagination };
+      return response;
     },
     refetchOnWindowFocus: false,
-    staleTime: Infinity,
+    staleTime: 7 * 60 * 1000,
     enabled: !!params,
+    placeholderData: (prev) => prev
   });
 };
 

@@ -1,8 +1,6 @@
 export interface Anh {
   base64?: string;
-  ten?: string;
-  size?: string;
-  type?: string;
+  image?:File;
   ghiChu?: string;
 }
 
@@ -64,19 +62,17 @@ export interface phieuDangKyMauHinhAnhs {
 }
 
 export interface phieuDangKyMauHinhAnhs2 {
-  maId: string;
-  maMau: string;
-  ten: string;
-  dinhDang: string;
-  ghiChu: string;
-  loaiAnh: string;
-  trangThai: boolean | string;
-  nguoiTao: string;
-  nguoiSua: string | null;
-  ngayTao: string | null;
-  ngaySua: string | null;
+  maId?: string;
+  maMau?: string;
+  ten?: string;
+  dinhDang?: string;
+  ghiChu?: string;
+  loaiAnh?: string;
+  trangThai?: boolean | string;
+  nguoiTao?: string;
+  nguoiSua?: string | null;
+  image?: File;
 }
-
 export interface Maus {
   maId: string;
   maDmMau: string;

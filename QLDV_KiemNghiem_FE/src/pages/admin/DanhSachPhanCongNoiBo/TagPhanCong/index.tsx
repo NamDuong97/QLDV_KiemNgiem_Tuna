@@ -20,7 +20,7 @@ const TagPhanCong = (props: Props) => {
           }`}
           onClick={() => setIsTag(tagPhanCong.Phan_Cong)}
         >
-          Phân công nhân viên
+          Danh sách mẫu chưa phân công
         </button>
       )}
 
@@ -32,7 +32,7 @@ const TagPhanCong = (props: Props) => {
         }`}
         onClick={() => setIsTag(tagPhanCong.Danh_Sach)}
       >
-        Danh Sách phân công
+        Danh Sách mẫu đã phân công
       </button>
       {role !== "KN" && (
         <button

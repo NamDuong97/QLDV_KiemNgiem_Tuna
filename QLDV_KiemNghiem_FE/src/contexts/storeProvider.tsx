@@ -16,14 +16,14 @@ export const StoreProvider = ({ children }: PropsWithChildren) => {
   const [userInfo, setUserInfo] = useState(null);
   const [isLogin, setIsLogin] = useState(false);
   const [openLoginCustomer, setOpenLoginCustomer] = useState(false);
-  const [token, setToken] = useState(Cookies.get(EKey.TOKEN_GUEST));
+  const [token, setToken] = useState(Cookies.get(EKey.TOKEN));
   const [isLoadingAuth, setIsLoadingAuth] = useState(true);
 
-  const refreshToken = Cookies.get(EKey.REFRESH_TOKEN_GUEST);
+  const refreshToken = Cookies.get(EKey.REFRESH_TOKEN);
 
   const logout = () => {
-    Cookies.remove(EKey.TOKEN_GUEST);
-    Cookies.remove(EKey.REFRESH_TOKEN_GUEST);
+    Cookies.remove(EKey.TOKEN);
+    Cookies.remove(EKey.REFRESH_TOKEN);
     setIsLogin(false);
     setUserInfo(null);
     window.location.reload();

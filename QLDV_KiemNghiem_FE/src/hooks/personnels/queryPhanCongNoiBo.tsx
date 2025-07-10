@@ -2,7 +2,7 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import phanCongNoiBoServices from "../../services/personnels/phanCongNoiBoServices";
 
 interface Props {
-  queryKey: string;
+  queryKey: any;
   params?: any;
   onSettled?: any;
   onSuccess?: any;
@@ -12,7 +12,7 @@ interface Props {
 export const queryPhanCongNoiBoAll = (props: Props) => {
   const { queryKey, params } = props;
   return useQuery({
-    queryKey: [queryKey],
+    queryKey: queryKey,
     queryFn: async () => {
       const response = await phanCongNoiBoServices.getPhanCongNoiBoAll(params);
       return response?.data;

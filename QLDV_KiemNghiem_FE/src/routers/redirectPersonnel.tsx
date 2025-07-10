@@ -28,6 +28,7 @@ const RedirectPersonnel = ({
   if (isLoadingAuth) {
     return null;
   }
+
   if (!isLoginPersonnel || !passedSessionGuard) {
     return <Navigate to={pathRedirect} state={{ from: location }} replace />;
   }

@@ -42,6 +42,7 @@ const SampleCard = ({
 
   return (
     <div
+      onClick={() => onSelect(sample.maId)}
       className={`border rounded-lg overflow-hidden sample-card transition-all cursor-pointer ${
         isSelected ? "border-blue-500 bg-blue-50" : "border-gray-200"
       }`}
@@ -58,7 +59,7 @@ const SampleCard = ({
             checked={isSelected}
             onChange={() => {}}
             onClick={() => onSelect(sample.maId)}
-            className="h-5 w-5 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+            className="h-5 w-5 text-blue-600 focus:ring-blue-500 border-gray-300 rounded cursor-pointer"
           />
         </div>
 
@@ -93,7 +94,10 @@ const SampleCard = ({
         <div className="text-sm text-gray-600 mb-3 flex justify-between items-center">
           {renderTrangThaiMau(sample.trangThaiPhanCong)}
           <p
-            onClick={() => handleXemChiTiet(sample.maPhieuDangKy)}
+            onClick={(e) => {
+              e.stopPropagation();
+              handleXemChiTiet(sample.maPhieuDangKy);
+            }}
             className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-sm font-medium hover:underline text-blue-600`}
           >
             Xem chi tiết

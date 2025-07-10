@@ -63,12 +63,12 @@ export const useDangNhapKhachHang = (props: Props) => {
         showNotification({ message: "Đăng nhập thành công", status: 200 });
         const { token, refreshToken } = res.data;
 
-        Cookies.set(EKey.TOKEN_GUEST, token, {
+        Cookies.set(EKey.TOKEN, token, {
           expires: 2,
           sameSite: "Strict",
           secure: isProd(),
         });
-        Cookies.set(EKey.REFRESH_TOKEN_GUEST, refreshToken, {
+        Cookies.set(EKey.REFRESH_TOKEN, refreshToken, {
           expires: 2,
           sameSite: "Strict",
           secure: isProd(),

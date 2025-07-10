@@ -36,7 +36,7 @@ namespace QLDV_KiemNghiem_BE.Controllers
             _redis = redis;
         }
 
-        [Authorize(Policy = "KHTH_BLD_KN")]
+        //[Authorize(Policy = "KHTH_BLD_KN")]
         [HttpGet]
         [Route("getPhieuDangKyMauAll")]
         public async Task<ActionResult> getPhieuDangKyMauAll([FromQuery]PhieuDangKyMauParam param)

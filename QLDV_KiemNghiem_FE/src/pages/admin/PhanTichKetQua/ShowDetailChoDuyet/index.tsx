@@ -32,7 +32,31 @@ const ShowDetailChoDuyet = ({ resultId, onEdit, onBack }: any) => {
           Chi tiết phiếu phân tích đang chờ duyệt
         </h2>
         <div className="flex space-x-2">
-          {role !== "KN" && (
+          {getRoleGroup(role) === "KN" && role !== "KN" && data?.trangThai === 1  && (
+            <>
+              <button
+                onClick={() => {
+                  setOpen(true);
+                  setIsTypeConform(typeConfirmation.TuChoi);
+                }}
+                className="px-4 py-2 bg-yellow-200 text-yellow-700 rounded-lg hover:bg-yellow-300 cursor-pointer transition-colors flex items-center space-x-2"
+              >
+                <Slash size={16} />
+                <span>Từ chối</span>
+              </button>
+              <button
+                onClick={() => {
+                  setOpen(true);
+                  setIsTypeConform(typeConfirmation.DuyetPhieu);
+                }}
+                className="px-4 py-2 bg-green-200 text-green-700 rounded-lg hover:bg-green-300 cursor-pointer transition-colors flex items-center space-x-2"
+              >
+                <Check size={16} />
+                <span>Duyệt phiếu</span>
+              </button>
+            </>
+          )}
+          {getRoleGroup(role) === "BLD" && data?.trangThai === 2 && (
             <>
               <button
                 onClick={() => {
@@ -176,9 +200,7 @@ const ShowDetailChoDuyet = ({ resultId, onEdit, onBack }: any) => {
                 </div>
                 <div className="flex justify-between items-center">
                   <span className="text-gray-600">Tiêu chuẩn:</span>
-                  <span className="font-medium">
-                    {data?.soLuong} {data?.tenTieuChuan}
-                  </span>
+                  <span className="font-medium">{data?.tenTieuChuan}</span>
                 </div>
                 <div className="flex justify-between items-center">
                   <span className="text-gray-600">Đơn vị sản xuất:</span>
@@ -372,7 +394,13 @@ const ShowDetailChoDuyet = ({ resultId, onEdit, onBack }: any) => {
         onClose={() => setOpen(false)}
         type={TypeConformation.Info}
         title={`Xác nhận ${
-          isTypeConform === typeConfirmation.TuChoi ? `${getRoleGroup(role) === "BLD"? "ban lãnh đạo": "lãnh đạo phòng"} từ chối` : `${getRoleGroup(role) === "BLD"? "ban lãnh đạo": "lãnh đạo phòng"} duyệt phiếu`
+          isTypeConform === typeConfirmation.TuChoi
+            ? `${
+                getRoleGroup(role) === "BLD" ? "ban lãnh đạo" : "lãnh đạo phòng"
+              } từ chối`
+            : `${
+                getRoleGroup(role) === "BLD" ? "ban lãnh đạo" : "lãnh đạo phòng"
+              } duyệt phiếu`
         }`}
         dataID={data?.maID}
         typeConform={isTypeConform}

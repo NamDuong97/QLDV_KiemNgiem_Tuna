@@ -16,6 +16,7 @@ interface Props {
   selectedSamples: any;
   departments: any;
   setSamples: React.Dispatch<React.SetStateAction<MauPhanCong[]>>;
+  handleSelectedSamples: () => void;
 }
 interface FormPhanCong {
   ghiChu: {
@@ -28,7 +29,13 @@ interface FormPhanCong {
 }
 
 const AssignmentModal = (props: Props) => {
-  const { isOpen, onClose, selectedSamples, departments } = props;
+  const {
+    isOpen,
+    onClose,
+    selectedSamples,
+    departments,
+    handleSelectedSamples,
+  } = props;
   const [selectedDepartment, setSelectedDepartment] = useState(null);
   const [timeGiaoMau, setTimeGiaoMau] = useState<any>(null);
 
@@ -52,7 +59,7 @@ const AssignmentModal = (props: Props) => {
           .required(`Chọn ngày cho ${tenMau}`)
           .test(
             "is-date",
-            "Ngày không hợp lệ",
+            "Yêu cầu chọn ngày thực hiện",
             (value) => !isNaN(Date.parse(value || ""))
           )
           .test(
@@ -92,18 +99,6 @@ const AssignmentModal = (props: Props) => {
             console.log("now <= date", now <= inputDate, now, inputDate);
 
             return now <= inputDate;
-          }
-        )
-        .test(
-          "Thời gian giao mẫu không được vượt quá 7 ngày",
-          "Thời gian giao mẫu không được vượt quá 7 ngày",
-          (value) => {
-            if (!value) return false;
-            const now = new Date();
-            const date = new Date(value);
-            const diff =
-              (date.getTime() - now.getTime()) / (1000 * 60 * 60 * 24);
-            return diff <= 7;
           }
         ),
       ghiChu: buildGhiChuSchema(sampleList, timeGiaoMau || undefined),
@@ -147,6 +142,7 @@ const AssignmentModal = (props: Props) => {
         message: "Phân công mẫu cho phòng ban thành công",
         status: 200,
       });
+      handleSelectedSamples();
       onClose();
     },
     onError: (err: any) => {
@@ -246,7 +242,7 @@ const AssignmentModal = (props: Props) => {
                   className="text-sm text-gray-600 bg-blue-50 p-3 rounded-lg"
                 >
                   <p className="text-gray-700">
-                    {sample.tenMau}
+                    Tên mẫu:{sample.tenMau}
                     <span className="text-gray-400">({sample.soLo})</span>
                   </p>
                   <div>

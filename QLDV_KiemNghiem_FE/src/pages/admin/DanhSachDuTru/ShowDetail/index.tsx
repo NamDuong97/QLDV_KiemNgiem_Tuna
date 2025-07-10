@@ -4,34 +4,89 @@ import {
   renderTrangThaiDuTru,
 } from "../../../../configs/configAll";
 import Detail from "../Detail";
-import { getDuTruByID } from "../../../../hooks/personnels/queryDuTru";
-import { queryMauByID } from "../../../../hooks/personnels/queryMau";
+import {
+  getDuTruByID,
+  lamLaiPhieuDuTru,
+} from "../../../../hooks/personnels/queryDuTru";
 import { getKhoaByID } from "../../../../hooks/personnels/queryKhoa";
-import { getInforNhanVien } from "../../../../hooks/personnels/access/useAccess";
 import { role } from "../../../../configs/parseJwt";
 import { getRoleGroup } from "../../../../configs/Role";
+import FormLyDoTuChoi from "./formLyDoTuChoi";
+import { useState } from "react";
+import { TypeConformation } from "../../../../constants/typeConfirmation";
+import { typeConfirmation } from "../../PhanTichKetQua/ShowDetailChoDuyet";
+import { useGetDmPhuLieuHoaChatAll } from "../../../../hooks/customers/usePhieuDKyDVKN";
+import { queryClient } from "../../../../lib/reactQuery";
+import { useStoreNotification } from "../../../../configs/stores/useStoreNotification";
+import ConfirmationModal from "../../../../components/ConfirmationModal";
 
 const ShowDetail = ({ resultId, onEdit, onBack }: any) => {
   const { data } = getDuTruByID({
     queryKey: "DuTruByID",
     params: resultId,
   });
-
-  const { data: dataMauID } = queryMauByID({
-    queryKey: "MauByID",
-    params: data?.maPdkMau,
-  });
+  const [openModelXoa, setOpenModelXoa] = useState(false);
 
   const { data: dataKhoa } = getKhoaByID({
     queryKey: "khoaByID",
     params: data?.maKhoa,
   });
 
-  const { data: dataNhanVien } = getInforNhanVien({
-    queryKey: "InforNhanVien",
-    params: data?.manvLapPhieu,
+  const [open, setOpen] = useState(false);
+  const [isTypeConform, setIsTypeConform] = useState<string>("");
+
+  const { data: dataDMPLHC } = useGetDmPhuLieuHoaChatAll({
+    queryKey: "useGetDmPhuLieuHoaChatAll",
   });
-  console.log("data", data, resultId);
+
+  const handleSettled = async (response: any) => {
+    if (response?.status === 200) {
+      await Promise.all([
+        queryClient.refetchQueries({
+          queryKey: ["DanhSachMau"],
+        }),
+        queryClient.refetchQueries({
+          queryKey: ["DuTruByID"],
+        }),
+      ]);
+      setOpenModelXoa(false);
+    }
+  };
+  const showNotification = useStoreNotification(
+    (state: any) => state.showNotification
+  );
+
+  const { mutate } = lamLaiPhieuDuTru({
+    queryKey: "lamLaiPhieuDuTru",
+    onSuccess: (data: any) => {
+      if (data.status === 200) {
+        showNotification({
+          message: "Gửi phiếu thành công",
+          status: 200,
+        });
+        return;
+      } else {
+        showNotification({
+          message: "Gửi phiếu thất bại",
+          status: 500,
+        });
+      }
+    },
+    onError: (error: any) => {
+      console.log("error", error);
+
+      showNotification({
+        message: "Gửi phiếu thất bại",
+        status: 400,
+      });
+    },
+    onSettled: handleSettled,
+  });
+
+  const handeGui = () => {
+    mutate(data?.maID);
+  };
+
   return (
     <div className="bg-white rounded-xl shadow-sm border border-gray-200">
       <div className="px-6 py-4 border-b border-gray-200 bg-gray-50 flex justify-between items-center">
@@ -39,31 +94,49 @@ const ShowDetail = ({ resultId, onEdit, onBack }: any) => {
           Chi tiết phiếu dự trù
         </h2>
         <div className="flex space-x-2">
-          {getRoleGroup(role) === "KN" && role !== "KN" && (
-            <>
-              <button
-                // onClick={() => onEdit(dataId)}
-                className="px-4 py-2 cursor-pointer bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors flex items-center space-x-2"
-              >
-                <Slash size={16} />
-                <span>Từ chối</span>
-              </button>
-              <button
-                // onClick={() => onEdit(dataId)}
-                className="px-4 py-2 cursor-pointer bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors flex items-center space-x-2"
-              >
-                <Check size={16} />
-                <span>Duyệt phiếu</span>
-              </button>
-            </>
-          )}
-          {data?.trangThai === false && (
+          {getRoleGroup(role) === "KN" &&
+            role !== "KN" &&
+            data?.trangThai == 1 && (
+              <>
+                <button
+                  onClick={() => {
+                    setOpen(true);
+                    setIsTypeConform(typeConfirmation.TuChoi);
+                  }}
+                  className="px-4 py-2 cursor-pointer bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors flex items-center space-x-2"
+                >
+                  <Slash size={16} />
+                  <span>Từ chối</span>
+                </button>
+                <button
+                  onClick={() => {
+                    setOpen(true);
+                    setIsTypeConform(typeConfirmation.DuyetPhieu);
+                  }}
+                  className="px-4 py-2 cursor-pointer bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors flex items-center space-x-2"
+                >
+                  <Check size={16} />
+                  <span>Duyệt phiếu</span>
+                </button>
+              </>
+            )}
+          {data?.trangThai !== 2 && (
             <button
               onClick={() => onEdit(resultId)}
               className="px-4 py-2 cursor-pointer bg-cyan-600 text-white rounded-lg hover:bg-cyan-700 transition-colors flex items-center space-x-2"
             >
               <Edit size={16} />
               <span>Chỉnh sửa</span>
+            </button>
+          )}
+          {data?.trangThai === 0 && (
+            <button
+              type="button"
+              onClick={() => setOpenModelXoa(true)}
+              className="px-4 py-2 text-white bg-cyan-600 cursor-pointer rounded-lg hover:bg-cyan-700 flex items-center space-x-2"
+            >
+              {/* <Save size={16} /> */}
+              <span>Gửi</span>
             </button>
           )}
           <button
@@ -92,7 +165,7 @@ const ShowDetail = ({ resultId, onEdit, onBack }: any) => {
                 </div>
                 <div className="flex justify-between items-center">
                   <span className="text-gray-600">Tên mẫu:</span>
-                  <span className="font-medium">{dataMauID?.tenMau}</span>
+                  <span className="font-medium">{data?.tenMau}</span>
                 </div>
                 <div className="flex justify-between items-center">
                   <span className="text-gray-600">Trạng thái:</span>
@@ -104,8 +177,14 @@ const ShowDetail = ({ resultId, onEdit, onBack }: any) => {
                 </div>
                 <div className="flex justify-between items-center">
                   <span className="text-gray-600">Ghi chú:</span>
-                  <span className="font-medium">bla blas</span>
+                  <span className="font-medium">{data?.ghiChu}</span>
                 </div>
+                {data?.noiDungDuyet && (
+                  <div className="flex justify-between items-center">
+                    <span className="text-gray-600">Ghi chú:</span>
+                    <span className="font-medium">{data?.noiDungDuyet}</span>
+                  </div>
+                )}
               </div>
             </div>
           </div>
@@ -131,9 +210,17 @@ const ShowDetail = ({ resultId, onEdit, onBack }: any) => {
                 <div className="flex justify-between items-center">
                   <span className="text-gray-600">Nhân viên lập:</span>
                   <div className="text-right">
-                    <div className="font-medium"> {dataNhanVien?.hoTen}</div>
+                    <div className="font-medium">{data?.tenNvLap}</div>
                   </div>
                 </div>
+                {data?.manvDuyet && (
+                  <div className="flex justify-between items-center">
+                    <span className="text-gray-600">Nhân viên duyệt:</span>
+                    <div className="text-right">
+                      <div className="font-medium">{data?.tenNvDuyet}</div>
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
           </div>
@@ -145,11 +232,12 @@ const ShowDetail = ({ resultId, onEdit, onBack }: any) => {
               Chi tiết kết quả kiểm nghiệm
             </h3>
             <div className="text-sm text-gray-500">
-              Tổng số chỉ tiêu: {data?.chiTietPhieuDuTrus?.length || 0}
+              Tổng số chỉ tiêu: {data?.chiTietPhieuDuTruDtos?.length || 0}
             </div>
           </div>
 
-          {data?.chiTietPhieuDuTrus && data?.chiTietPhieuDuTrus?.length > 0 ? (
+          {data?.chiTietPhieuDuTruDtos &&
+          data?.chiTietPhieuDuTruDtos?.length > 0 ? (
             <div className="bg-gray-50 rounded-lg overflow-hidden border border-gray-200">
               <div className="grid grid-cols-5 gap-4 p-4 bg-gray-100 font-medium text-sm text-gray-700 border-b border-gray-200">
                 <div className="flex items-center col-span-1">
@@ -163,12 +251,13 @@ const ShowDetail = ({ resultId, onEdit, onBack }: any) => {
                 </div>
               </div>
 
-              {data?.chiTietPhieuDuTrus.map((detail: any, index: any) => (
+              {data?.chiTietPhieuDuTruDtos?.map((detail: any, index: any) => (
                 <Detail
                   key={index}
                   detail={detail}
                   index={index}
                   isEditable={false}
+                  dataDMPLHC={dataDMPLHC}
                 />
               ))}
             </div>
@@ -202,6 +291,26 @@ const ShowDetail = ({ resultId, onEdit, onBack }: any) => {
           )}
         </div>
       </div>
+      <FormLyDoTuChoi
+        isOpen={open}
+        onClose={() => setOpen(false)}
+        type={TypeConformation.Info}
+        title={`Xác nhận ${
+          isTypeConform === typeConfirmation.TuChoi
+            ? `lãnh đạo phòng từ chối`
+            : `lãnh đạo phòng duyệt phiếu`
+        }`}
+        dataID={data?.maID}
+        typeConform={isTypeConform}
+      />
+      <ConfirmationModal
+        isOpen={openModelXoa}
+        onClose={() => setOpenModelXoa(false)}
+        onConfirm={handeGui}
+        title={"Xác nhận gửi?"}
+        message={"Bạn có chắc chắn muốn gửi?"}
+        type={TypeConformation.Info}
+      />
     </div>
   );
 };

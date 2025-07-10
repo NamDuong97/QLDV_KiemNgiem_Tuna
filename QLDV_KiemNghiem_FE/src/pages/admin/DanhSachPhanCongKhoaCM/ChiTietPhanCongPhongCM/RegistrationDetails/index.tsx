@@ -23,7 +23,6 @@ const RegistrationDetails = (props: Props) => {
     queryKey: "getInforNhanVien",
     params: data?.manvDeXuat,
   });
-  console.log("data", data);
 
   const navigate = useNavigate();
   const datadataKhoa: any = dataKhoaAll;

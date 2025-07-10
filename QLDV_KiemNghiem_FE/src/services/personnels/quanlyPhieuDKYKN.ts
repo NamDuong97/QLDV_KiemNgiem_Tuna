@@ -65,4 +65,15 @@ export default class QuanlyPhieuDKYKNServices {
       return err;
     }
   }
+
+  static async ThongKePhieuDky() {
+    try {
+      const response = await _APIInstance.get(
+        API.ADMIN.PHIEU_DKY_DVKM.THONG_KE
+      );
+      return response;
+    } catch (err: any) {
+      return err;
+    }
+  }
 }

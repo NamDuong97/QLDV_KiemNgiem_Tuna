@@ -19,7 +19,7 @@ export const listPhieuDKKNAll = (props: Props) => {
       return response?.data;
     },
     refetchOnWindowFocus: false,
-    staleTime: Infinity,
+    staleTime: 5 * 60 * 1000,
     enabled: !!params,
   });
 };
@@ -88,5 +88,18 @@ export const useUndoDanhGiaBLD = (props: Props) => {
     onSuccess: onSuccess,
     onError: onError,
     onSettled: onSettled,
+  });
+};
+
+export const ThongKePhieuDky = (props: Props) => {
+  const { queryKey } = props;
+  return useQuery({
+    queryKey: [queryKey],
+    queryFn: async () => {
+      const response = await QuanlyPhieuDKYKNServices.ThongKePhieuDky();
+      return response?.data;
+    },
+    refetchOnWindowFocus: false,
+    staleTime: 5 * 60 * 1000,
   });
 };
