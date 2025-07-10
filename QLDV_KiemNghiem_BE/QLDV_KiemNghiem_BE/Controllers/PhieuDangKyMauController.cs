@@ -41,51 +41,10 @@ namespace QLDV_KiemNghiem_BE.Controllers
         [Route("getPhieuDangKyMauAll")]
         public async Task<ActionResult> getPhieuDangKyMauAll([FromQuery]PhieuDangKyMauParam param)
         {
-            //if (_redis.IsConnected)
-            //{
-            //    var version = await _cache.GetStringAsync("phieudangkymau:all:version") ?? "v1";
-            //    var cacheKey = $"phieudangkymau:all:{version}:{JsonConvert.SerializeObject(param)}";
-            //    var cached = await _cache.GetStringAsync(cacheKey);
-            //    // Neu co cache
-            //    if (!string.IsNullOrEmpty(cached))
-            //    {
-            //        var cachedResult = JsonConvert.DeserializeObject<CachedResponse<IEnumerable<PhieuDangKyMauProcedureDto>>>(cached);
-
-            //        // Thêm lại header từ cache
-            //        foreach (var header in cachedResult?.Headers)
-            //        {
-            //            Response.Headers[header.Key] = header.Value.ToString();
-            //        }
-            //        return Ok(cachedResult.Data);
-            //    }
-               
-            //    // Nếu không có cache thì lấy dữ liệu từ BD
-            //    var result = await _service.PhieuDangKyMau.GetPhieuDangKyMauAllAsync(param);
-            //    // Lưu lại cả header và body
-            //    var headers = new Dictionary<string, string>
-            //    {
-            //        { "X-Pagination", System.Text.Json.JsonSerializer.Serialize(result.pagi) }
-            //    };
-            //    // Chuẩn bị dữ liệu để lưu vào redis
-            //    var cacheObj = new CachedResponse<IEnumerable<PhieuDangKyMauProcedureDto>>
-            //    {
-            //        Data = result.datas,
-            //        Headers = headers
-            //    };
-            //    // Lưu dữ liệu vào redis
-            //    await _cache.SetStringAsync(cacheKey, JsonConvert.SerializeObject(cacheObj), new DistributedCacheEntryOptions
-            //    {
-            //        AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(5)
-            //    });
-            //    Response.Headers.Append("X-Pagination", System.Text.Json.JsonSerializer.Serialize(result.pagi));
-            //    _logger.LogDebug("get all nhan vien");
-            //    return Ok(result.datas);
-            //}
-                var result = await _service.PhieuDangKyMau.GetPhieuDangKyMauAllAsync(param);
-                Response.Headers.Append("X-Pagination", System.Text.Json.JsonSerializer.Serialize(result.pagi));
-                _logger.LogDebug("get all nhan vien");
-                return Ok(result.datas);
-            
+            var result = await _service.PhieuDangKyMau.GetPhieuDangKyMauAllAsync(param);
+            Response.Headers.Append("X-Pagination", System.Text.Json.JsonSerializer.Serialize(result.pagi));
+            _logger.LogDebug("get all nhan vien");
+            return Ok(result.datas);
         }
 
         [Authorize(Policy = "KHTH_BLD_KN")]
@@ -93,39 +52,9 @@ namespace QLDV_KiemNghiem_BE.Controllers
         [Route("getPhieuDangKyMau")]
         public async Task<ActionResult> getPhieuDangKyMau(string maMau)
         {
-            //if (_redis.IsConnected)
-            //{
-            //    var cacheKey = $"phieudangkymau:{maMau}";
-            //    var cached = await _cache.GetStringAsync(cacheKey);
-            //    // Neu co cache
-            //    if (!string.IsNullOrEmpty(cached))
-            //    {
-            //        var cachedResult = JsonConvert.DeserializeObject<CachedResponse<PhieuDangKyMauDto>>(cached);
-            //        return Ok(cachedResult?.Data);
-            //    }
-            //    else
-            //    {
-            //        // Nếu không có cache thì lấy dữ liệu từ BD
-            //        var result = await _service.PhieuDangKyMau.GetPhieuDangKyMauAsync(maMau);
-            //        // Chuẩn bị dữ liệu để lưu vào redis
-            //        var cacheObj = new CachedResponse<PhieuDangKyMauDto>
-            //        {
-            //            Data = result,
-            //        };
-            //        // Lưu dữ liệu vào redis
-            //        await _cache.SetStringAsync(cacheKey, JsonConvert.SerializeObject(cacheObj), new DistributedCacheEntryOptions
-            //        {
-            //            AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(5)
-            //        });
-
-            //        _logger.LogDebug($"get mau theo ma {maMau}");
-            //        return Ok(result);
-            //    }
-            //}
-                var result = await _service.PhieuDangKyMau.GetPhieuDangKyMauAsync(maMau);
-                _logger.LogDebug($"get mau theo ma {maMau}");
-                return Ok(result);
-            
+            var result = await _service.PhieuDangKyMau.GetPhieuDangKyMauAsync(maMau);
+            _logger.LogDebug($"get mau theo ma {maMau}");
+            return Ok(result);
         }
 
         [Authorize(Policy = "KHTH_BLD_KN")]
