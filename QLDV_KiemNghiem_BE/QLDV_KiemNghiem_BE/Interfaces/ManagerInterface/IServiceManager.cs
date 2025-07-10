@@ -1,4 +1,5 @@
 ﻿using QLDV_KiemNghiem_BE.Interfaces;
+using QLDV_KiemNghiem_BE.Interfaces.UploadFile;
 using QLDV_KiemNghiem_BE.Repositories;
 using QLDV_KiemNghiem_BE.Services;
 
@@ -39,6 +40,7 @@ namespace QLDV_KiemNghiem_BE.Interfaces.ManagerInterface
         IChiTietPhieuDuTruService ChiTietPhieuDuTru { get; }
         IHoaDonThuBoSungService HoaDonThuBoSung { get; }
         IChiTietHoaDonThuBoSungService ChiTietHoaDonThuBoSung { get; }
+        IUploadFileService UploadFile { get; }  
         //ITokenService Token { get; }
         //IEmailService Email { get; }
     }

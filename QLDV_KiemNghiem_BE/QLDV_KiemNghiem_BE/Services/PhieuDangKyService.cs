@@ -30,9 +30,9 @@ namespace QLDV_KiemNghiem_BE.Services
         private readonly IConnectionMultiplexer _redis;
         private readonly IDistributedCache _cache;
         private readonly IHubContext<NotificationHub> _hubContext;
-        private readonly IUploadFileService _uploadFile;
+  
         public PhieuDangKyService(IRepositoryManager repositoryManager, IMapper mapper, DataContext dataContext, IConnectionMultiplexer redis, IDistributedCache cache,
-            IHubContext<NotificationHub> hubContext, IUploadFileService uploadFile)
+            IHubContext<NotificationHub> hubContext)
         {
             _context = dataContext;
             _repositoryManager = repositoryManager;
@@ -40,7 +40,6 @@ namespace QLDV_KiemNghiem_BE.Services
             _redis = redis;
             _cache = cache;
             _hubContext = hubContext;
-            _uploadFile = uploadFile;
         }
         public async Task<(IEnumerable<PhieuDangKyDto> datas, Pagination pagi)> GetPhieuDangKiesAllAsync(PhieuDangKyParam phieuDangKyParam)
         {
@@ -153,33 +152,36 @@ namespace QLDV_KiemNghiem_BE.Services
             {
                 PhieuDangKyMau mauDomain = new PhieuDangKyMau();
                 mauDomain = _mapper.Map<PhieuDangKyMau>(mau);
-                mauDomain.MaId = Guid.NewGuid().ToString();
                 mauDomain.MaPhieuDangKy = phieuDangKyDomain.MaId;
                 mauDomain.MaPdkMau = PublicFunction.processString(mauDomain.TenMau ?? "unknow") + "_" + mauDomain.LoaiDv  + "_" + mauDomain.ThoiGianTieuChuan.ToString();
                 mauDomain.TrangThaiPhanCong = null;
                 mauDomain.TrangThai = true;
           
                 // Thêm hình ảnh vào CSDL
-                Console.WriteLine("So luong hinh anh trong mau: " + mau.PhieuDangKyMauHinhAnhs.Count);
-                foreach (var img in mau.PhieuDangKyMauHinhAnhs)
-                {
-                    //Lưu ảnh vào thư mục của dự án và trả về đường dẫn ảnh
-                    //var image = await _uploadFile.UploadImageAsync(img?.Image);
-                    //if (image.FileName == "0" && image.Url == "0") continue;
-                    var hinhAnh = new PhieuDangKyMauHinhAnh
-                    {
-                        MaId = Guid.NewGuid().ToString(),
-                        MaMau = mauDomain.MaId,
-                        GhiChu = img.GhiChu,
-                        LoaiAnh = img.LoaiAnh,
-                    };
-                    phieuDangKyMauHinhAnhDomains.Add(hinhAnh); // Them vao de tra ve cho ng dung
-                    await _repositoryManager.PhieuDangKyMauHinhAnh.CreatePhieuDangKyMauHinhAnhAsync(hinhAnh);
-                }
-                mauDomain.PhieuDangKyMauHinhAnhs = phieuDangKyMauHinhAnhDomains;
+                //Console.WriteLine("So luong hinh anh trong mau: " + mau.PhieuDangKyMauHinhAnhs.Count);
+                //foreach (var img in mau.PhieuDangKyMauHinhAnhs)
+                //{
+                //    // Lưu ảnh vào thư mục của dự án và trả về đường dẫn ảnh
+                //    var image = await _uploadFile.UploadImageAsync(img?.Image);
+                //    if (image.FileName == "0" && image.Url == "0") continue;
+                //    var hinhAnh = new PhieuDangKyMauHinhAnh
+                //    {
+                //        MaId = Guid.NewGuid().ToString(),
+                //        MaMau = mauDomain.MaId,
+                //        Ten = image.FileName,
+                //        DinhDang = image.FileName.Split('.')[1],
+                //        GhiChu = img.GhiChu,
+                //        LoaiAnh = img.LoaiAnh,
+                //        PathImg = image.Url,
+                //        TrangThai = img.TrangThai,
+                //    };
+                //    phieuDangKyMauHinhAnhDomains.Add(hinhAnh); // Them vao de tra ve cho ng dung
+                //    await _repositoryManager.PhieuDangKyMauHinhAnh.CreatePhieuDangKyMauHinhAnhAsync(hinhAnh);
+                //}
+                //mauDomain.PhieuDangKyMauHinhAnhs = phieuDangKyMauHinhAnhDomains;
                 phieuDangKyMauDomains.Add(mauDomain);
                 await _repositoryManager.PhieuDangKyMau.CreatePhieuDangKyMauAsync(mauDomain);
-                phieuDangKyMauHinhAnhDomains = new List<PhieuDangKyMauHinhAnh>(); // sau khi them anh xong thi xoa mang anh di, them tiep
+              /*  phieuDangKyMauHinhAnhDomains = new List<PhieuDangKyMauHinhAnh>();*/ // sau khi them anh xong thi xoa mang anh di, them tiep
             }
 
             // Them danh sach plhc vao CSDL

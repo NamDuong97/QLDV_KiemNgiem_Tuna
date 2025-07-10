@@ -51,16 +51,18 @@ namespace QLDV_KiemNghiem_BE.Services
         private readonly Lazy<IChiTietPhieuDuTruService> _chiTietPhieuDuTruService;
         private readonly Lazy<IHoaDonThuBoSungService> _hoaDonThuBoSungService;
         private readonly Lazy<IChiTietHoaDonThuBoSungService> _chiTietHoaDonThuBoSungService;
+        private readonly Lazy<IUploadFileService> _uploadFileService;
 
         public ServiceManager(IRepositoryManager repositoryManager, IMapper mapper, DataContext dataContext, IEmailService emailService, ITokenService tokenService, IConfiguration configuration,
-            IHubContext<NotificationHub> hubContext, IConnectionMultiplexer redis, IDistributedCache cache, IUploadFileService uploadFile)
+            IHubContext<NotificationHub> hubContext, IConnectionMultiplexer redis, IDistributedCache cache,
+            IWebHostEnvironment env, IHttpContextAccessor httpContextAccessor)
         {
             _repositoryManager = repositoryManager;
             _mapper = mapper;
             _configuration = configuration;
             //_email = new Lazy<IEmailService>(() => new EmailService(configuration));
             //_token = new Lazy<ITokenService>(() => new TokenService(configuration));
-            _phieuDangKyService = new Lazy<IPhieuDangKyService>(() => new PhieuDangKyService(repositoryManager, mapper, dataContext, redis, cache, hubContext, uploadFile));
+            _phieuDangKyService = new Lazy<IPhieuDangKyService>(() => new PhieuDangKyService(repositoryManager, mapper, dataContext, redis, cache, hubContext));
             _phieuDangKyMauService = new Lazy<IPhieuDangKyMauService>(() => new PhieuDangKyMauService(repositoryManager, mapper));
             _dmPhuLieuHoaChatService = new Lazy<IDmPhuLieuHoaChatService>(() => new DmPhuLieuHoaChatService(repositoryManager, mapper));
             _phieuDangKyPhuLieuHoaChatService = new Lazy<IPhieuDangKyPhuLieuHoaChatService>(() => new PhieuDangKyPhuLieuHoaChatService(repositoryManager, mapper));
@@ -93,6 +95,7 @@ namespace QLDV_KiemNghiem_BE.Services
             _chiTietPhieuDuTruService = new Lazy<IChiTietPhieuDuTruService>(() => new ChiTietPhieuDuTruService(repositoryManager, mapper));
             _hoaDonThuBoSungService = new Lazy<IHoaDonThuBoSungService>(() => new HoaDonThuBoSungService(repositoryManager, mapper));
             _chiTietHoaDonThuBoSungService = new Lazy<IChiTietHoaDonThuBoSungService>(() => new ChiTietHoaDonThuBoSungService(repositoryManager, mapper));
+            _uploadFileService = new Lazy<IUploadFileService>(() => new UploadFileService(env, httpContextAccessor, repositoryManager, mapper));
         }
 
         //public IEmailService Email => _email.Value;
@@ -130,6 +133,7 @@ namespace QLDV_KiemNghiem_BE.Services
         public IChiTietPhieuDuTruService ChiTietPhieuDuTru => _chiTietPhieuDuTruService.Value;
         public IHoaDonThuBoSungService HoaDonThuBoSung => _hoaDonThuBoSungService.Value;
         public IChiTietHoaDonThuBoSungService ChiTietHoaDonThuBoSung => _chiTietHoaDonThuBoSungService.Value;
+        public IUploadFileService UploadFile => _uploadFileService.Value;
 
     }
 }

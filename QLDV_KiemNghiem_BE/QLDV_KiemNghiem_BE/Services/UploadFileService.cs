@@ -1,5 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
+using QLDV_KiemNghiem_BE.DTO.ResponseDto;
+using QLDV_KiemNghiem_BE.Interfaces.ManagerInterface;
 using QLDV_KiemNghiem_BE.Interfaces.UploadFile;
+using QLDV_KiemNghiem_BE.Models;
 
 namespace QLDV_KiemNghiem_BE.Services
 {
@@ -7,34 +10,45 @@ namespace QLDV_KiemNghiem_BE.Services
     {
         private readonly IWebHostEnvironment _env;
         private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly IRepositoryManager _repositoryManager;
+        private IMapper _mapper;
 
-        public UploadFileService(IWebHostEnvironment env, IHttpContextAccessor httpContextAccessor) {
+        public UploadFileService(IWebHostEnvironment env, IHttpContextAccessor httpContextAccessor, IRepositoryManager repository, IMapper mapper) {
             _env = env;
             _httpContextAccessor = httpContextAccessor;
+            _repositoryManager = repository;
+            _mapper = mapper;
         }
 
-        public async Task<(string FileName, string Url)> UploadImageAsync(IFormFile image)
+        public async Task<bool> UploadImageAsync(List<PhieuDangKyMauHinhAnhDto> images, HttpRequest request)
         {
-            
-            if (image == null || image.Length == 0)
-                return (FileName: "0", Url: "0");
-
-            var uploadsFolder = Path.Combine(_env.WebRootPath ?? Path.Combine(_env.ContentRootPath, "wwwroot"), "uploads");
-
-            if (!Directory.Exists(uploadsFolder))
-                Directory.CreateDirectory(uploadsFolder);
-
-            var uniqueFileName = Guid.NewGuid().ToString() + Path.GetExtension(image.FileName);
-            var filePath = Path.Combine(uploadsFolder, uniqueFileName);
-
-            using (var stream = new FileStream(filePath, FileMode.Create))
+            foreach(var item in images)
             {
-                await image.CopyToAsync(stream);
+                if(item.Image == null) continue;
+                var image = await PublicFunction.ProcessUpload(item?.Image, _env, request);
+                if(image.FileName == "0" || image.Url == "0") continue;
+                var mau = await _repositoryManager.PhieuDangKyMau.FindPhieuDangKyMauAsync(item.MaMau);
+                if(mau == null) continue;
+
+                PhieuDangKyMauHinhAnh phieuDangKyMauHinhAnh = new PhieuDangKyMauHinhAnh()
+                {
+                    MaId = Guid.NewGuid().ToString(),
+                    MaMau = item.MaMau,
+                    DinhDang = image.FileName.Split('.')[1],
+                    Ten = image.FileName.Split('.')[0],
+                    PathImg = image.Url,
+                    GhiChu = item.GhiChu,
+                    TrangThai = true
+                };
+                await _repositoryManager.PhieuDangKyMauHinhAnh.CreatePhieuDangKyMauHinhAnhAsync(phieuDangKyMauHinhAnh);
             }
 
-            var imageUrl = $"{_httpContextAccessor.HttpContext?.Request?.Scheme}://{_httpContextAccessor.HttpContext?.Request?.Host}/uploads/{uniqueFileName}";
-
-            return ( FileName : uniqueFileName, Url : imageUrl );
+            bool check = await _repositoryManager.SaveChangesAsync();
+            if (check)
+            {
+                return true;
+            }
+            return false;   
         }
     }
 }

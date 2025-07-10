@@ -228,8 +228,8 @@ namespace QLDV_KiemNghiem_BE.Controllers
         //[Authorize(Policy = "KHTHOnly")]
         //[Authorize(Policy = "KHTHOnly")]
         [HttpPut]
-        [Route("cancelPhieuDangKyMau")]
-        public async Task<ActionResult> cancelPhieuDangKyMau(PhieuDangKyMauRequestCancelDto MauDto)
+        [Route("cancelPhieuDangKyMauByKHTHBLD")]
+        public async Task<ActionResult> cancelPhieuDangKyMauByKHTHBLD(PhieuDangKyMauRequestCancelDto MauDto)
         {
             if (!ModelState.IsValid)
             {
@@ -244,17 +244,6 @@ namespace QLDV_KiemNghiem_BE.Controllers
             ResponseModel1<PhieuDangKyMauDto> cancel = await _service.PhieuDangKyMau.CancelPhieuDangKyMau(MauDto, user);
             if (cancel.KetQua)
             {
-                //if (_redis.IsConnected)
-                //{
-                //    // Xoa cache cu da co tren redis, va cap nhat du lieu moi cho cache phieudangkymau
-                //    await _cache.RemoveAsync($"phieudangkymau:{cancel?.Data?.MaId}");
-                //    await _cache.SetStringAsync($"phieudangkymau:{cancel?.Data?.MaId}", JsonConvert.SerializeObject(cancel?.Data), new DistributedCacheEntryOptions
-                //    {
-                //        AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(5)
-                //    });
-                //    // Cap nhat version moi cho cache redis phieudangkymau:all
-                //    await _cache.SetStringAsync("phieudangkymau:all:version", $"v{DateTime.UtcNow.Ticks}");
-                //}
                 _logger.LogDebug(cancel?.Message);
                 return Ok(cancel);
             }
