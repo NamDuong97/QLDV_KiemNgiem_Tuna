@@ -27,7 +27,7 @@ namespace QLDV_KiemNghiem_BE.Services
                 if(item.Image == null) continue;
                 var image = await PublicFunction.ProcessUpload(item?.Image, _env, request);
                 if(image.FileName == "0" || image.Url == "0") continue;
-                var mau = await _repositoryManager.PhieuDangKyMau.FindPhieuDangKyMauAsync(item.MaMau);
+                var mau = await _repositoryManager.PhieuDangKyMau.FindPhieuDangKyMauAsync(item?.MaMau ?? "", false);
                 if(mau == null) continue;
 
                 PhieuDangKyMauHinhAnh phieuDangKyMauHinhAnh = new PhieuDangKyMauHinhAnh()

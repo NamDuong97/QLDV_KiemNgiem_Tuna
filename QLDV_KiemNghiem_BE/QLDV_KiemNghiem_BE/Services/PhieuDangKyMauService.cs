@@ -1,7 +1,9 @@
 ﻿
 using AutoMapper;
+using Microsoft.AspNetCore.SignalR;
 using QLDV_KiemNghiem_BE.DTO.RequestDto;
 using QLDV_KiemNghiem_BE.DTO.ResponseDto;
+using QLDV_KiemNghiem_BE.HubsRealTime;
 using QLDV_KiemNghiem_BE.Interfaces;
 using QLDV_KiemNghiem_BE.Interfaces.ManagerInterface;
 using QLDV_KiemNghiem_BE.Models;
@@ -17,10 +19,12 @@ namespace QLDV_KiemNghiem_BE.Services
     {
         private readonly IRepositoryManager _repositoryManager;
         private readonly IMapper _mapper;
-        public PhieuDangKyMauService(IRepositoryManager repositoryManager, IMapper mapper)
+        private readonly IHubContext<NotificationHub> _hubContext;
+        public PhieuDangKyMauService(IRepositoryManager repositoryManager, IMapper mapper, IHubContext<NotificationHub> hubContext)
         {
             _repositoryManager = repositoryManager;
             _mapper = mapper;
+            _hubContext = hubContext;
         }
         public async Task<(IEnumerable<PhieuDangKyMauProcedureDto> datas, Pagination pagi)> GetPhieuDangKyMauAllAsync(PhieuDangKyMauParam param)
         {
@@ -46,7 +50,7 @@ namespace QLDV_KiemNghiem_BE.Services
         {
             return _repositoryManager.PhieuDangKyMau.GetPhieuDangKyMauThongKe();
         }
-        public async Task<ResponseModel1<PhieuDangKyMauDto>> CancelPhieuDangKyMau(PhieuDangKyMauRequestCancelDto mauDto, string user)
+        public async Task<ResponseModel1<PhieuDangKyMauDto>> CancelPhieuDangKyMauByKHTH(PhieuDangKyMauRequestCancelByKHTHDto mauDto, string user)
         {
             if(mauDto == null || mauDto.MaId == null || mauDto.MaId == "")
             {
@@ -57,7 +61,7 @@ namespace QLDV_KiemNghiem_BE.Services
                 };
             }
 
-            var checkExist = await _repositoryManager.PhieuDangKyMau.FindPhieuDangKyMauAsync(mauDto.MaId);
+            var checkExist = await _repositoryManager.PhieuDangKyMau.FindPhieuDangKyMauAsync(mauDto.MaId, true);
             
             if (checkExist== null)
             {
@@ -86,6 +90,102 @@ namespace QLDV_KiemNghiem_BE.Services
                 KetQua = true,
                 Message = "Huy mau thanh cong!",
                 Data = dataReturn
+            };
+        }
+        public async Task<ResponseModel1<PhieuDangKyMauDto>> CancelPhieuDangKyMauByLDP(PhieuDangKyMauRequestCancelByLDPDto mauDto, string user, string userId)
+        {
+            if (mauDto == null || mauDto.MaMau == null || mauDto.MaMau == "")
+            {
+                return new ResponseModel1<PhieuDangKyMauDto>
+                {
+                    KetQua = false,
+                    Message = "Thieu du lieu dau vao!"
+                };
+            }
+            var checkExist = await _repositoryManager.PhieuDangKyMau.FindPhieuDangKyMauAsync(mauDto.MaMau, true);
+            if (checkExist == null)
+            {
+                return new ResponseModel1<PhieuDangKyMauDto>
+                {
+                    KetQua = false,
+                    Message = "Mau khong ton tai!"
+                };
+            }
+            var checkExistPhieuDangKy = await _repositoryManager.PhieuDangKy.FindPhieuDangKyAsync(checkExist?.MaPhieuDangKy ?? "");
+            if (checkExistPhieuDangKy == null)
+            {
+                return new ResponseModel1<PhieuDangKyMauDto>
+                {
+                    KetQua = false,
+                    Message = "Phieu dang ky chua mau nay khong ton tai, vui long kiem tra!"
+                };
+            }
+            var userTable = await _repositoryManager.NhanVien.FindNhanVienAsync(userId);
+            var checkLichSuPhanCongMau = await _repositoryManager.LichSuPhanCongMauChoKhoa.FindLichSuPhanCongMauChoKhoaByMaMauAndKhoaAsync(mauDto.MaMau, userTable?.MaKhoa ?? "", true);
+            if(checkLichSuPhanCongMau!= null)
+            {
+                checkLichSuPhanCongMau.ThoiGianHuyMau = DateTime.Now;
+                checkLichSuPhanCongMau.ManvHuyMau = userId;
+                checkLichSuPhanCongMau.NgaySua = DateTime.Now;
+                checkLichSuPhanCongMau.NguoiSua = user;
+                checkLichSuPhanCongMau.NoiDungHuyMau = mauDto.Message;
+            }
+            checkExist!.TrangThaiPhanCong = 10;
+            checkExistPhieuDangKy.NgaySua = DateTime.Now;
+            checkExistPhieuDangKy.NguoiSua = user;
+            bool check = await _repositoryManager.SaveChangesAsync();
+
+            if (check) {
+                NotificationModel notificationModel = new NotificationModel()
+                {
+                    Title = "Lanh dao phong huy mau kiem nghiem",
+                    Message = $"Nguoi dung {user} da hoan tra mau {mauDto.MaMau}, Ban lanh dao can xet duyet truong hop nay",
+                    CreatedAt = DateTime.Now,
+                };
+                await _hubContext.Clients.Group("BLD").SendAsync("receiveNotification", notificationModel);
+            }
+            var dataReturn = _mapper.Map<PhieuDangKyMauDto>(checkExist);
+            return new ResponseModel1<PhieuDangKyMauDto>
+            {
+                KetQua = check,
+                Message = check ? "Huy mau thanh cong boi LDP!" : "Huy mau that bai boi LDP",
+                Data = dataReturn
+            };
+        }
+        public async Task<ResponseModel1<PhieuDangKyMauDto>> ReviewCancelPhieuDangKyMauByBLD(PhieuDangKyMauRequestReviewCancelByBLDDto mauDto, string user, string userId)
+        {
+            if (mauDto == null || mauDto.MaMau == null || mauDto.MaMau == "")
+            {
+                return new ResponseModel1<PhieuDangKyMauDto>
+                {
+                    KetQua = false,
+                    Message = "Thieu du lieu dau vao!"
+                };
+            }
+            var checkExist = await _repositoryManager.PhieuDangKyMau.FindPhieuDangKyMauAsync(mauDto.MaMau, true);
+            if (checkExist == null)
+            {
+                return new ResponseModel1<PhieuDangKyMauDto>
+                {
+                    KetQua = false,
+                    Message = "Mau khong ton tai!"
+                };
+            }
+            var checkExistPhieuDangKy = await _repositoryManager.PhieuDangKy.FindPhieuDangKyAsync(checkExist?.MaPhieuDangKy ?? "");
+            if (checkExistPhieuDangKy == null)
+            {
+                return new ResponseModel1<PhieuDangKyMauDto>
+                {
+                    KetQua = false,
+                    Message = "Phieu dang ky chua mau nay khong ton tai, vui long kiem tra!"
+                };
+            }
+         
+            int qk = await _repositoryManager.PhieuDangKyMau.ProcessCancelMauByLDP(mauDto.MaMau, mauDto.Message, mauDto.Action, user, userId, mauDto.MaKhoa);
+            return new ResponseModel1<PhieuDangKyMauDto>
+            {
+                KetQua = qk > 0 ? true: false,
+                Message = qk > 0 ? "Huy mau thanh cong boi LDP!" : "Huy mau that bai boi LDP",
             };
         }
         public async Task<ResponseModel1<PhieuDangKyMauDto>> CreatePhieuDangKyMauAsync(PhieuDangKyMauDto PhieuDangKyMauDto, string user)

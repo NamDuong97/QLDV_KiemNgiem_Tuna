@@ -38,6 +38,9 @@ public partial class Khoa
     public string? GhiChu { get; set; }
 
     [InverseProperty("MaKhoaNavigation")]
+    public virtual ICollection<LichSuPhanCongMauChoKhoa> LichSuPhanCongMauChoKhoas { get; set; } = new List<LichSuPhanCongMauChoKhoa>();
+
+    [InverseProperty("MaKhoaNavigation")]
     public virtual ICollection<NhanVien> NhanViens { get; set; } = new List<NhanVien>();
 
     [InverseProperty("MaKhoaTiepNhanNavigation")]

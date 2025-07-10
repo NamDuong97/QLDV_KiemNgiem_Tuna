@@ -33,7 +33,6 @@ namespace QLDV_KiemNghiem_BE.Repositories
 
             return PagedList<PhieuDangKyMauProcedure>.ToPagedList(result, param.PageNumber, param.PageSize, param.GetAll);
         }
-
         public async Task<PhieuDangKyMau?> GetPhieuDangKyMauAsync(string maPhieuDangKyMau)
         {
             return await _context.PhieuDangKyMaus.Include(item => item.PhieuDangKyMauHinhAnhs).Where(item => item.MaId == maPhieuDangKyMau).SingleOrDefaultAsync();
@@ -56,26 +55,35 @@ namespace QLDV_KiemNghiem_BE.Repositories
             }
             
         }
-
         public async Task<int> ProcessUpdateStatusObjecRelative (string maMau, int typeCancel, string message, string user)
         {
             // Hàm này xử lý việc phòng KHTH muốn hủy mẫu do khách hủy hoặc k phòng ban nào làm
             int rowCount =  await _context.Database.ExecuteSqlRawAsync("exec sp_ProcessUpdateStatusObjecRelativeFromCancelMau @maMau = {0}, @typeCancel = {1}, @message ={2}, @user ={3}", maMau, typeCancel, message, user);
             return rowCount;    
         }
-
         public async Task<int> ProcessUpdateStatusMauWhenBLDAction(string maPDK, string trangThaiId)
         {
             // Hàm này xử lý việc phòng KHTH muốn hủy mẫu do khách hủy hoặc k phòng ban nào làm
             int rowCount = await _context.Database.ExecuteSqlRawAsync("exec sp_ProcessUpdateStatusMauWhenBLDAction @maPDK = {0}, @trangThaiId ={1}", maPDK, trangThaiId);
             return rowCount;
         }
-
-        public async Task<PhieuDangKyMau?> FindPhieuDangKyMauAsync(string maPhieuDangKyMau)
+        public async Task<int> ProcessCancelMauByLDP(string maMau, string message, bool action, string user, string userId, string maKhoa)
         {
-            return await _context.PhieuDangKyMaus.FindAsync(maPhieuDangKyMau);
+            // Hàm này xử lý việc phòng KHTH muốn hủy mẫu do khách hủy hoặc k phòng ban nào làm
+            int rowCount = await _context.Database.ExecuteSqlRawAsync("exec sp_ProcessCancelMauByLDP {0},{1},{2},{3},{4},{5}", maMau, message, action, user, userId, maKhoa);
+            return rowCount;
         }
-
+        public async Task<PhieuDangKyMau?> FindPhieuDangKyMauAsync(string maPhieuDangKyMau, bool track)
+        {
+            if (track)
+            {
+                return await _context.PhieuDangKyMaus.FirstOrDefaultAsync(it=> it.MaId == maPhieuDangKyMau);
+            }
+            else
+            {
+                return await _context.PhieuDangKyMaus.AsNoTracking().FirstOrDefaultAsync(it => it.MaId == maPhieuDangKyMau);
+            }
+        }
         public async Task<int> CheckPhanCongAllMauInPDK(string maId, string maPhieuDangKy)
         {
             var result = await _context.CheckPhanCongAllMauInPDKs
@@ -84,22 +92,18 @@ namespace QLDV_KiemNghiem_BE.Repositories
           .FirstOrDefaultAsync();
             return result?.CheckPhanCongAllMau ?? 0;
         }
-
         public async Task CreatePhieuDangKyMauAsync(PhieuDangKyMau PhieuDangKyMau)
         {
             await _context.PhieuDangKyMaus.AddAsync(PhieuDangKyMau);
         }
-
         public void UpdatePhieuDangKyMauAsync(PhieuDangKyMau PhieuDangKyMau)
         {
             _context.PhieuDangKyMaus.Update(PhieuDangKyMau);
         }
-
         public void DeletePhieuDangKyMauAsync(PhieuDangKyMau PhieuDangKyMau)
         {
             _context.PhieuDangKyMaus.Remove(PhieuDangKyMau);
         }
-
         public async Task<PhieuDangKyMau?> CheckExistPhieuDangKyMauAsync(string phieuDangKyMau, string phieuDangKy, bool checking)
         {
             var result = new PhieuDangKyMau();

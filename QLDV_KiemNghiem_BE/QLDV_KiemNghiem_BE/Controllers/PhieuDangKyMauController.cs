@@ -90,21 +90,6 @@ namespace QLDV_KiemNghiem_BE.Controllers
             ResponseModel1<PhieuDangKyMauDto> create = await _service.PhieuDangKyMau.CreatePhieuDangKyMauAsync(mauDto, user);
             if (create.KetQua)
             {
-                //if (_redis.IsConnected)
-                //{
-                //    var cacheKey = $"phieudangkymau:{create?.Data?.MaId}";
-                //    var cacheObj = new CachedResponse<PhieuDangKyMauDto>
-                //    {
-                //        Data = create?.Data
-                //    };
-                //    // Lưu dữ liệu vào redis phieudangkymau
-                //    await _cache.SetStringAsync(cacheKey, JsonConvert.SerializeObject(cacheObj), new DistributedCacheEntryOptions
-                //    {
-                //        AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(5)
-                //    });
-                //    // Cap nhat version moi cho cache redis phieudangkymau:all
-                //    await _cache.SetStringAsync("phieudangkymau:all:version", $"v{DateTime.UtcNow.Ticks}");
-                //}
                 _logger.LogDebug("Them mau thanh cong");
                 return Ok(mauDto);
             }
@@ -158,7 +143,7 @@ namespace QLDV_KiemNghiem_BE.Controllers
         //[Authorize(Policy = "KHTHOnly")]
         [HttpPut]
         [Route("cancelPhieuDangKyMauByKHTHBLD")]
-        public async Task<ActionResult> cancelPhieuDangKyMauByKHTHBLD(PhieuDangKyMauRequestCancelDto MauDto)
+        public async Task<ActionResult> cancelPhieuDangKyMauByKHTHBLD(PhieuDangKyMauRequestCancelByKHTHDto MauDto)
         {
             if (!ModelState.IsValid)
             {
@@ -170,7 +155,63 @@ namespace QLDV_KiemNghiem_BE.Controllers
                 return BadRequest(new { Errors = errors });
             }
             var user = User.FindFirst(ClaimTypes.Email)?.Value.ToString() ?? "unknow";
-            ResponseModel1<PhieuDangKyMauDto> cancel = await _service.PhieuDangKyMau.CancelPhieuDangKyMau(MauDto, user);
+            ResponseModel1<PhieuDangKyMauDto> cancel = await _service.PhieuDangKyMau.CancelPhieuDangKyMauByKHTH(MauDto, user);
+            if (cancel.KetQua)
+            {
+                _logger.LogDebug(cancel?.Message);
+                return Ok(cancel);
+            }
+            else
+            {
+                _logger.LogDebug(cancel.Message);
+                return BadRequest();
+            }
+        }
+
+        [HttpPut]
+        [Route("cancelPhieuDangKyMauByLDP")]
+        public async Task<ActionResult> cancelPhieuDangKyMauByLDP(PhieuDangKyMauRequestCancelByLDPDto MauDto)
+        {
+            if (!ModelState.IsValid)
+            {
+                var errors = ModelState.Values
+                .SelectMany(v => v.Errors)
+                .Select(e => e.ErrorMessage)
+                .ToList();
+                _logger.LogError("Loi validate tham so dau vao");
+                return BadRequest(new { Errors = errors });
+            }
+            var user = User.FindFirst(ClaimTypes.Email)?.Value.ToString() ?? "unknow";
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value.ToString() ?? null;
+            ResponseModel1<PhieuDangKyMauDto> cancel = await _service.PhieuDangKyMau.CancelPhieuDangKyMauByLDP(MauDto, user, userId);
+            if (cancel.KetQua)
+            {
+                _logger.LogDebug(cancel?.Message);
+                return Ok(cancel);
+            }
+            else
+            {
+                _logger.LogDebug(cancel.Message);
+                return BadRequest();
+            }
+        }
+
+        [HttpPut]
+        [Route("reviewCancelPhieuDangKyMauByBLD")]
+        public async Task<ActionResult> reviewCancelPhieuDangKyMauByBLD(PhieuDangKyMauRequestReviewCancelByBLDDto MauDto)
+        {
+            if (!ModelState.IsValid)
+            {
+                var errors = ModelState.Values
+                .SelectMany(v => v.Errors)
+                .Select(e => e.ErrorMessage)
+                .ToList();
+                _logger.LogError("Loi validate tham so dau vao");
+                return BadRequest(new { Errors = errors });
+            }
+            var user = User.FindFirst(ClaimTypes.Email)?.Value.ToString() ?? "unknow";
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value.ToString() ?? null;
+            ResponseModel1<PhieuDangKyMauDto> cancel = await _service.PhieuDangKyMau.ReviewCancelPhieuDangKyMauByBLD(MauDto, user, userId);
             if (cancel.KetQua)
             {
                 _logger.LogDebug(cancel?.Message);

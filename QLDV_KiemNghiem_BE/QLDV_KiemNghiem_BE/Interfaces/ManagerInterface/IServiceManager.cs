@@ -40,7 +40,8 @@ namespace QLDV_KiemNghiem_BE.Interfaces.ManagerInterface
         IChiTietPhieuDuTruService ChiTietPhieuDuTru { get; }
         IHoaDonThuBoSungService HoaDonThuBoSung { get; }
         IChiTietHoaDonThuBoSungService ChiTietHoaDonThuBoSung { get; }
-        IUploadFileService UploadFile { get; }  
+        IUploadFileService UploadFile { get; }
+        ILichSuPhanCongMauChoKhoaService LichSuPhanCongMauChoKhoa { get; }
         //ITokenService Token { get; }
         //IEmailService Email { get; }
     }

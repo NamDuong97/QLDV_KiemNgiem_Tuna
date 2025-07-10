@@ -49,7 +49,27 @@ namespace QLDV_KiemNghiem_BE.Services
             var checkExistsChiTietPhieuDXPB = await _repositoryManager.ChiTietPhieuDeXuatPhongBan.FindChiTietPhieuDeXuatPhongBanAsync(duyetPhieu.MaId, true);
             if (checkExistsChiTietPhieuDXPB != null)
             {
-
+                var checkExistsPhieuDXPB = await _repositoryManager.PhieuDeXuatPhongBan.FindPhieuDeXuatPhongBanAsync(checkExistsChiTietPhieuDXPB.MaPhieuDeXuat, false);
+                if(checkExistsPhieuDXPB!= null)
+                {
+                    if (duyetPhieu.Action)
+                    {
+                        LichSuPhanCongMauChoKhoa lichSuPhanCongMauChoKhoa = new LichSuPhanCongMauChoKhoa()
+                        {
+                            MaId = Guid.NewGuid().ToString(),
+                            MaMau = checkExistsChiTietPhieuDXPB.MaPdkMau,
+                            MaKhoa = checkExistsPhieuDXPB.MaKhoaTiepNhan,
+                            ManvPhanCong = checkExistsPhieuDXPB.ManvDeXuat,
+                            ThoiGianPhanCong = checkExistsPhieuDXPB.NgayTao,
+                            TrangThai = 1,
+                            NguoiTao = user,
+                            GhiChu = $"Phong Khoa {checkExistsPhieuDXPB.MaKhoaTiepNhan} da nhan mau {checkExistsChiTietPhieuDXPB.MaPdkMau}",
+                            NgayTao = DateTime.Now
+                        };
+                        _repositoryManager.LichSuPhanCongMauChoKhoa.CreateLichSuPhanCongMauChoKhoaAsync(lichSuPhanCongMauChoKhoa);
+                        await _repositoryManager.SaveChangesAsync();
+                    }
+                }
                 int numRow = await _repositoryManager.ChiTietPhieuDeXuatPhongBan.ProcessReviewChiTietDeXuatPhongBanByPB(checkExistsChiTietPhieuDXPB.MaId, checkExistsChiTietPhieuDXPB?.MaPdkMau,
                   duyetPhieu.Action, user, duyetPhieu.Message, userId);
                 bool check = numRow > 0? true : false;
@@ -84,8 +104,29 @@ namespace QLDV_KiemNghiem_BE.Services
             var checkExistsChiTietPhieuDXPB = await _repositoryManager.ChiTietPhieuDeXuatPhongBan.FindChiTietPhieuDeXuatPhongBanAsync(duyetPhieu.MaId, true);
             if (checkExistsChiTietPhieuDXPB != null)
             {
+                var checkExistsPhieuDXPB = await _repositoryManager.PhieuDeXuatPhongBan.FindPhieuDeXuatPhongBanAsync(checkExistsChiTietPhieuDXPB?.MaPhieuDeXuat ?? "", false);
+                if (checkExistsPhieuDXPB != null)
+                {
+                    if (!duyetPhieu.Action)
+                    {
+                        LichSuPhanCongMauChoKhoa lichSuPhanCongMauChoKhoa = new LichSuPhanCongMauChoKhoa()
+                        {
+                            MaId = Guid.NewGuid().ToString(),
+                            MaMau = checkExistsChiTietPhieuDXPB?.MaPdkMau,
+                            MaKhoa = checkExistsPhieuDXPB.MaKhoaTiepNhan,
+                            ManvPhanCong = checkExistsPhieuDXPB.ManvDeXuat,
+                            ThoiGianPhanCong = checkExistsPhieuDXPB.NgayTao,
+                            TrangThai = 1,
+                            NguoiTao = user,
+                            GhiChu = $"Phong Khoa {checkExistsPhieuDXPB.MaKhoaTiepNhan} da nhan mau {checkExistsChiTietPhieuDXPB?.MaPdkMau}",
+                            NgayTao = DateTime.Now
+                        };
+                        _repositoryManager.LichSuPhanCongMauChoKhoa.CreateLichSuPhanCongMauChoKhoaAsync(lichSuPhanCongMauChoKhoa);
+                        await _repositoryManager.SaveChangesAsync();
+                    }
+                }
 
-                int numRow = await _repositoryManager.ChiTietPhieuDeXuatPhongBan.ProcessReviewChiTietDeXuatPhongBanByBLD(checkExistsChiTietPhieuDXPB.MaId, checkExistsChiTietPhieuDXPB.MaPdkMau,
+                int numRow = await _repositoryManager.ChiTietPhieuDeXuatPhongBan.ProcessReviewChiTietDeXuatPhongBanByBLD(checkExistsChiTietPhieuDXPB?.MaId ?? "", checkExistsChiTietPhieuDXPB?.MaPdkMau ?? "",
                     duyetPhieu.Action, user, userId);
                 bool check = numRow > 0 ? true : false;
                 return new ResponseReviewPhieuDeXuatPhongBan
@@ -105,19 +146,6 @@ namespace QLDV_KiemNghiem_BE.Services
                 };
             }
         }
-        //public async Task<bool> CancelChiTietPhieuDeXuatPhongBansByKHTH(CancelChiTietPhieuDeXuatPhongBanRequestDto cancelPhieu, string user, string userId)
-        //{
-        //    try
-        //    {
-        //        await _repositoryManager.ChiTietPhieuDeXuatPhongBan.ProcessUpdatePDXPBFromMauCancel(cancelPhieu.MaMau, user, userId);
-        //        return true;
-        //    }
-        //    catch ( Exception ex)
-        //    {
-        //        Console.WriteLine($"Có lỗi xảy ra: {ex.Message}");
-        //        return false;
-        //    } 
-        //}
         public async Task<ResponseModel1<ChiTietPhieuDeXuatPhongBanDto>> CreateChiTietPhieuDeXuatPhongBanAsync(ChiTietPhieuDeXuatPhongBanDto ChiTietPhieuDeXuatPhongBanDto, string user)
         {
             if (ChiTietPhieuDeXuatPhongBanDto == null) return new ResponseModel1<ChiTietPhieuDeXuatPhongBanDto>

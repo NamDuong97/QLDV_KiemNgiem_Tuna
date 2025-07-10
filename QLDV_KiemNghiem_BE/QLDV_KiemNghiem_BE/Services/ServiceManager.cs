@@ -52,6 +52,7 @@ namespace QLDV_KiemNghiem_BE.Services
         private readonly Lazy<IHoaDonThuBoSungService> _hoaDonThuBoSungService;
         private readonly Lazy<IChiTietHoaDonThuBoSungService> _chiTietHoaDonThuBoSungService;
         private readonly Lazy<IUploadFileService> _uploadFileService;
+        private readonly Lazy<ILichSuPhanCongMauChoKhoaService> _lichSuPhanCongMauChoKhoaService;
 
         public ServiceManager(IRepositoryManager repositoryManager, IMapper mapper, DataContext dataContext, IEmailService emailService, ITokenService tokenService, IConfiguration configuration,
             IHubContext<NotificationHub> hubContext, IConnectionMultiplexer redis, IDistributedCache cache,
@@ -96,6 +97,7 @@ namespace QLDV_KiemNghiem_BE.Services
             _hoaDonThuBoSungService = new Lazy<IHoaDonThuBoSungService>(() => new HoaDonThuBoSungService(repositoryManager, mapper));
             _chiTietHoaDonThuBoSungService = new Lazy<IChiTietHoaDonThuBoSungService>(() => new ChiTietHoaDonThuBoSungService(repositoryManager, mapper));
             _uploadFileService = new Lazy<IUploadFileService>(() => new UploadFileService(env, httpContextAccessor, repositoryManager, mapper));
+            _lichSuPhanCongMauChoKhoaService = new Lazy<ILichSuPhanCongMauChoKhoaService>(() => new LichSuPhanCongMauChoKhoaService(repositoryManager, mapper));
         }
 
         //public IEmailService Email => _email.Value;
@@ -134,6 +136,6 @@ namespace QLDV_KiemNghiem_BE.Services
         public IHoaDonThuBoSungService HoaDonThuBoSung => _hoaDonThuBoSungService.Value;
         public IChiTietHoaDonThuBoSungService ChiTietHoaDonThuBoSung => _chiTietHoaDonThuBoSungService.Value;
         public IUploadFileService UploadFile => _uploadFileService.Value;
-
+        public ILichSuPhanCongMauChoKhoaService LichSuPhanCongMauChoKhoa => _lichSuPhanCongMauChoKhoaService.Value;
     }
 }

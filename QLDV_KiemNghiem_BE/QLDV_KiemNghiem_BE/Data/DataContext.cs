@@ -54,6 +54,8 @@ public partial class DataContext : DbContext
 
     public virtual DbSet<LichSuPhanCong> LichSuPhanCongs { get; set; }
 
+    public virtual DbSet<LichSuPhanCongMauChoKhoa> LichSuPhanCongMauChoKhoas { get; set; }
+
     public virtual DbSet<Lkct> Lkcts { get; set; }
 
     public virtual DbSet<LoaiDichVu> LoaiDichVus { get; set; }
@@ -284,6 +286,23 @@ public partial class DataContext : DbContext
             entity.HasOne(d => d.ManvMoiNavigation).WithMany(p => p.LichSuPhanCongManvMoiNavigations).HasConstraintName("Fk_LichSuPhanCong_NhanVien_Moi");
 
             entity.HasOne(d => d.ManvPhanCongNavigation).WithMany(p => p.LichSuPhanCongManvPhanCongNavigations).HasConstraintName("Fk_LichSuPhanCong_NhanVien_PhanCong");
+        });
+
+        modelBuilder.Entity<LichSuPhanCongMauChoKhoa>(entity =>
+        {
+            entity.HasKey(e => e.MaId).HasName("PK__LichSuPh__2725BF405A942836");
+
+            entity.Property(e => e.TrangThai).HasDefaultValue(1);
+
+            entity.HasOne(d => d.MaKhoaNavigation).WithMany(p => p.LichSuPhanCongMauChoKhoas).HasConstraintName("Fk_LichSuPhanCongMauChoKhoa_Khoa");
+
+            entity.HasOne(d => d.MaMauNavigation).WithMany(p => p.LichSuPhanCongMauChoKhoas).HasConstraintName("Fk_LichSuPhanCongMauChoKhoa_PhieuDangKy_Mau");
+
+            entity.HasOne(d => d.ManvDuyetNavigation).WithMany(p => p.LichSuPhanCongMauChoKhoaManvDuyetNavigations).HasConstraintName("Fk_LichSuPhanCongMauChoKhoa_NhanVien_DuyetHuy");
+
+            entity.HasOne(d => d.ManvHuyMauNavigation).WithMany(p => p.LichSuPhanCongMauChoKhoaManvHuyMauNavigations).HasConstraintName("Fk_LichSuPhanCongMauChoKhoa_NhanVien_HuyMau");
+
+            entity.HasOne(d => d.ManvPhanCongNavigation).WithMany(p => p.LichSuPhanCongMauChoKhoaManvPhanCongNavigations).HasConstraintName("Fk_LichSuPhanCongMauChoKhoa_NhanVien_PhanCong");
         });
 
         modelBuilder.Entity<Lkct>(entity =>

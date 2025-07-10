@@ -13,7 +13,9 @@ namespace QLDV_KiemNghiem_BE.Interfaces
         Task<PhieuDangKyMauDto?> GetPhieuDangKyMauAsync(string maPhieuDangKyMau);
         PhieuDangKyMauThongKeDto? GetPhieuDangKyMauThongKe();
         Task<ResponseModel1<PhieuDangKyMauDto>> CreatePhieuDangKyMauAsync(PhieuDangKyMauDto PhieuDangKyMau, string user);
-        Task<ResponseModel1<PhieuDangKyMauDto>> CancelPhieuDangKyMau(PhieuDangKyMauRequestCancelDto mauDto, string user);
+        Task<ResponseModel1<PhieuDangKyMauDto>> CancelPhieuDangKyMauByKHTH(PhieuDangKyMauRequestCancelByKHTHDto mauDto, string user);
+        Task<ResponseModel1<PhieuDangKyMauDto>> CancelPhieuDangKyMauByLDP(PhieuDangKyMauRequestCancelByLDPDto mauDto, string user, string userId);
+        Task<ResponseModel1<PhieuDangKyMauDto>> ReviewCancelPhieuDangKyMauByBLD(PhieuDangKyMauRequestReviewCancelByBLDDto mauDto, string user, string userId)
         Task<ResponseModel1<PhieuDangKyMauDto>> UpdatePhieuDangKyMauAsync(PhieuDangKyMauDto PhieuDangKyMau, string user);
         Task<bool> DeletePhieuDangKyMauAsync(string maPhieuDangKyMau, string user);
     }
