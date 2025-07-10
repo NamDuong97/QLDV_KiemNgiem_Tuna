@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using QLDV_KiemNghiem_BE.DTO.RequestDto;
@@ -45,6 +46,7 @@ namespace QLDV_KiemNghiem_BE.Controllers
             return Ok(result);
         }
 
+        [Authorize(Roles = "KHTH")]
         [HttpPost]
         [Route("createHoaDonThuBoSung")]
         public async Task<ActionResult> createHoaDonThuBoSung(HoaDonThuBoSungRequestCreateDto HoaDonThuBoSungDto)

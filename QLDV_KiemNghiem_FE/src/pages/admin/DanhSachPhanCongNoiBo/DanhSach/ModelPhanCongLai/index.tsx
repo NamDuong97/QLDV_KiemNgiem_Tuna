@@ -60,9 +60,7 @@ const ModelPhanCongLai = (props: Props) => {
     nvCuLamToi: yup
       .date()
       .typeError("Vui lòng chọn thời gian nhân viên cũ làm tới")
-      .required("Vui lòng chọn thời gian nhân viên cũ làm tới")
-      .min(today, "Ngày bắt đầu phải tính từ hôm nay trở đi"),
-
+      .required("Vui lòng chọn thời gian nhân viên cũ làm tới"),
     nvMoiLamTu: yup
       .date()
       .typeError("Vui lòng chọn thời gian nhân viên mới làm từ")

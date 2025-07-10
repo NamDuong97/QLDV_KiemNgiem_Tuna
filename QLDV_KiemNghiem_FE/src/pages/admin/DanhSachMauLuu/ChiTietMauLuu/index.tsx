@@ -107,13 +107,12 @@ const ChiTietMauLuu = (props: Props) => {
             </div>
             <div>
               <h4 className="text-sm font-medium text-gray-500 mb-1">
-                Thời gian lưu
+                Lưu đến ngày
               </h4>
               {isLoading ? (
                 <Skeleton variant="rounded" width={100} height={20} />
               ) : (
                 <p id="viewSampleName" className="text-sm text-gray-900">
-                  {formatDate(data?.thoiGianLuu)} -{" "}
                   {formatDate(data?.luuDenNgay)}
                 </p>
               )}
@@ -149,7 +148,7 @@ const ChiTietMauLuu = (props: Props) => {
               </h4>
               {isLoading ? (
                 <Skeleton variant="rounded" width={100} height={20} />
-              ) : data?.trangThai === "1" ? (
+              ) : data?.trangThai === "active" ? (
                 <p
                   className={`inline-block px-2 py-1 text-xs font-medium rounded-full bg-green-100 text-green-800`}
                 >

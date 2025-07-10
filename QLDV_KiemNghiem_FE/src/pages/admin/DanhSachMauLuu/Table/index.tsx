@@ -12,6 +12,8 @@ import {
 import { Align } from "../../../../models/Table";
 import { FaEdit, FaEye } from "react-icons/fa";
 import { formatDate } from "../../../../configs/configAll";
+import { Trash2 } from "react-feather";
+import { role } from "../../../../configs/parseJwt";
 
 interface TableProps {
   tableBody: any[];
@@ -19,6 +21,7 @@ interface TableProps {
   isLoading?: boolean;
   handleOpenChiTiet: () => void;
   handleOpenSuaMauLuu: () => void;
+  handleOpenXoa: (id: any, trangThai: any) => void;
 }
 
 const TableQuanLyPhieuDKyDVHN = (props: TableProps) => {
@@ -28,6 +31,7 @@ const TableQuanLyPhieuDKyDVHN = (props: TableProps) => {
     isLoading,
     handleOpenChiTiet,
     handleOpenSuaMauLuu,
+    handleOpenXoa,
   } = props;
 
   const handleAlign = (align: string) => {
@@ -80,11 +84,6 @@ const TableQuanLyPhieuDKyDVHN = (props: TableProps) => {
               hover={true}
               className="cursor-pointer"
             >
-              <TableCell align="left">
-                <div className="flex justify-start">
-                  <Skeleton variant="rounded" width={150} height={30} />
-                </div>
-              </TableCell>
               <TableCell align="center">
                 <div className="flex justify-center">
                   <Skeleton variant="rounded" width={150} height={30} />
@@ -156,13 +155,6 @@ const TableQuanLyPhieuDKyDVHN = (props: TableProps) => {
                 <TableCell align="center">
                   <Box className="flex gap-2 items-center justify-start">
                     <p className="text-base/4 font-medium text-gray-700">
-                      {formatDate(item?.thoiGianLuu)}
-                    </p>
-                  </Box>
-                </TableCell>
-                <TableCell align="center">
-                  <Box className="flex gap-2 items-center justify-start">
-                    <p className="text-base/4 font-medium text-gray-700">
                       {formatDate(item?.luuDenNgay)}
                     </p>
                   </Box>
@@ -176,7 +168,7 @@ const TableQuanLyPhieuDKyDVHN = (props: TableProps) => {
                 </TableCell>
                 <TableCell align="center">
                   <Box className="flex gap-2 items-center justify-start">
-                    {item?.trangThai === "1" ? (
+                    {item?.trangThai === "active" ? (
                       <p
                         className={`inline-block px-2 py-1 text-xs font-medium rounded-full bg-green-100 text-green-800`}
                       >
@@ -216,29 +208,58 @@ const TableQuanLyPhieuDKyDVHN = (props: TableProps) => {
                         <FaEye className="w-5 h-5" />
                       </button>
                     </Tooltip>
-                    <Tooltip
-                      title="Sửa mẫu lưu"
-                      slotProps={{
-                        popper: {
-                          modifiers: [
-                            {
-                              name: "offset",
-                              options: {
-                                offset: [0, -14],
-                              },
+                    {(role === "KN_L" || role === "KN_P") && (
+                      <>
+                        <Tooltip
+                          title="Sửa mẫu lưu"
+                          slotProps={{
+                            popper: {
+                              modifiers: [
+                                {
+                                  name: "offset",
+                                  options: {
+                                    offset: [0, -14],
+                                  },
+                                },
+                              ],
                             },
-                          ],
-                        },
-                      }}
-                      disableInteractive
-                    >
-                      <button
-                        onClick={() => handleRedirectSua(item?.maId)}
-                        className="text-blue-700 font-medium text-sm/6 cursor-pointer flex gap-2 items-center"
-                      >
-                        <FaEdit className="w-5 h-5" />
-                      </button>
-                    </Tooltip>
+                          }}
+                          disableInteractive
+                        >
+                          <button
+                            onClick={() => handleRedirectSua(item?.maId)}
+                            className="text-blue-700 font-medium text-sm/6 cursor-pointer flex gap-2 items-center"
+                          >
+                            <FaEdit className="w-5 h-5" />
+                          </button>
+                        </Tooltip>
+                        <Tooltip
+                          title="Sửa mẫu lưu"
+                          slotProps={{
+                            popper: {
+                              modifiers: [
+                                {
+                                  name: "offset",
+                                  options: {
+                                    offset: [0, -14],
+                                  },
+                                },
+                              ],
+                            },
+                          }}
+                          disableInteractive
+                        >
+                          <button
+                            onClick={() =>
+                              handleOpenXoa(item?.maId, item?.trangThai)
+                            }
+                            className="text-red-700 font-medium text-sm/6 cursor-pointer flex gap-2 items-center"
+                          >
+                            <Trash2 className="w-5 h-5" />
+                          </button>
+                        </Tooltip>
+                      </>
+                    )}
                   </Box>
                 </TableCell>
               </TableRow>

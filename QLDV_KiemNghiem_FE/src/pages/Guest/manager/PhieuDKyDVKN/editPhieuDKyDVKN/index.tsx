@@ -161,10 +161,6 @@ const EditPhieuDKyDVKN = () => {
         xuatKetQua: itemMau.xuatKetQua,
         trangThaiNhanMau: itemMau.trangThaiNhanMau,
         ghiChu: itemMau.ghiChu,
-        nguoiTao: itemMau.nguoiTao,
-        nguoiSua: itemMau.nguoiSua ? itemMau.nguoiSua : "",
-        ngayTao: itemMau.ngayTao ? itemMau.ngayTao : "",
-        ngaySua: itemMau.ngaySua ? itemMau.ngaySua : "",
         thoiGianTieuChuan: Number(itemMau.thoiGianTieuChuan),
         maPdkMau: itemMau.maPdkMau ? itemMau.maPdkMau : null,
         loaiDv: itemMau.loaiDv,
@@ -179,10 +175,6 @@ const EditPhieuDKyDVKN = () => {
                 ghiChu: itemImage.ghiChu,
                 loaiAnh: itemImage.loaiAnh,
                 trangThai: itemImage.trangThai ? itemImage.trangThai : true,
-                nguoiTao: itemImage.nguoiTao,
-                nguoiSua: itemImage.nguoiSua ? itemImage.nguoiSua : null,
-                ngayTao: itemImage.ngayTao ? itemImage.ngayTao : null,
-                ngaySua: itemImage.ngaySua ? itemImage.ngaySua : null,
                 isDel: itemImage.isdel === true ? true : false,
               };
             })
@@ -203,10 +195,6 @@ const EditPhieuDKyDVKN = () => {
         ngayHetHan: itemPLHC.ngayHetHan,
         tenNhaCungCap: itemPLHC.tenNhaCungCap,
         soLo: itemPLHC.soLo,
-        nguoiTao: itemPLHC.nguoiTao,
-        nguoiSua: itemPLHC.nguoiSua,
-        ngayTao: itemPLHC.ngayTao ? itemPLHC.ngayTao : null,
-        ngaySua: itemPLHC.ngaySua ? itemPLHC.ngaySua : null,
         isDel: itemPLHC.isdel === true ? true : false,
       })
     );

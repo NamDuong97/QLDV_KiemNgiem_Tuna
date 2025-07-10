@@ -104,6 +104,22 @@ export const duyetPhanTichKetQuaBLD = (props: Props) => {
   });
 };
 
+export const duyetPhanTichKetQuaCUSTOMER = (props: Props) => {
+  const { queryKey, onSettled, onSuccess, onError } = props;
+  return useMutation({
+    mutationKey: [queryKey],
+    mutationFn: async (params: any) => {
+      const response = await phanTichKetQuaServices.duyetPhanTichKetQuaCUSTOMER(
+        params
+      );
+      return response;
+    },
+    onSuccess: onSuccess,
+    onError: onError,
+    onSettled: onSettled,
+  });
+};
+
 export const deletePhanTichKetQua = (props: Props) => {
   const { queryKey, onSettled, onSuccess, onError } = props;
   return useMutation({

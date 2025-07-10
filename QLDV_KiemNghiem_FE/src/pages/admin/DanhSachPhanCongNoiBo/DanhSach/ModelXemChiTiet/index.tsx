@@ -1,6 +1,7 @@
 import { Dialog, Skeleton } from "@mui/material";
 import {
   formatDate,
+  formatDateNotTime,
   renderTrangThaiPhanCongNoiBo,
 } from "../../../../../configs/configAll";
 import { queryPhanCongNoiBoByID } from "../../../../../hooks/personnels/queryPhanCongNoiBo";
@@ -12,95 +13,194 @@ import Timeline from "./Timeline";
 import yup from "../../../../../configs/yup.custom";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { usePersonnel } from "../../../../../contexts/PersonelsProvider";
+import {
+  useMutationCreatePhieuTienDo,
+  useMutationDeletePhieuTienDo,
+  useMutationNhanXetPhieuTienDo,
+  useQueryPhieuTienDoAll,
+  useQueryPhieuTienDoByID,
+} from "../../../../../hooks/personnels/queryTienDo";
+import { useStoreNotification } from "../../../../../configs/stores/useStoreNotification";
+import { queryClient } from "../../../../../lib/reactQuery";
+import FormNhanXet from "./FormNhanXet";
+import ConfirmationModal from "../../../../../components/ConfirmationModal";
+import { TypeConformation } from "../../../../../constants/typeConfirmation";
+import { queryMauByID } from "../../../../../hooks/personnels/queryMau";
+import {
+  useGetLoaiDichVuAll,
+  useGetTieuChuanAll,
+} from "../../../../../hooks/customers/usePhieuDKyDVKN";
 
 interface Props {
   open: boolean;
   handleClose: () => void;
   dataID: any;
   handleOpenModelSua: (id: string) => void;
+  setIsThem: React.Dispatch<React.SetStateAction<boolean>>;
+  isThem: boolean;
 }
 
 interface FormGiaiDoanThucHien {
   tenGiaiDoanThucHien: string;
-  ngayNhanMau: Date;
+
   thoiGianThucHienFrom: Date;
   thoiGianThucHienTo: Date;
-  tongThoiGianThucHien: number;
+
   noiDungBaoCao: string;
   ghiChu: string;
 }
 
-const timelineEvents = [
-  {
-    title: "Tiếp nhận mẫu",
-    time: "15/06/2023 08:00",
-    description: "Mẫu đã được tiếp nhận và kiểm tra sơ bộ",
-    handler: "Phạm Thị E",
-    completed: true,
-    active: false,
-  },
-  {
-    title: "Chuẩn bị mẫu",
-    time: "15/06/2023 09:15",
-    description: "Mẫu đã được chuẩn bị theo quy trình",
-    handler: "Nguyễn Văn B",
-    completed: true,
-    active: false,
-  },
-  {
-    title: "Kiểm tra vi sinh",
-    time: "15/06/2023 10:30",
-    description: "Đang thực hiện kiểm tra các chỉ tiêu vi sinh",
-    handler: "Nguyễn Văn B",
-    completed: true,
-    active: true,
-  },
-  {
-    title: "Kiểm tra kết quả",
-    time: "Chưa thực hiện",
-    description: "Kiểm tra và xác nhận kết quả",
-    completed: false,
-  },
-  {
-    title: "Hoàn thành",
-    time: "Chưa thực hiện",
-    description: "Hoàn thành và báo cáo kết quả",
-    completed: false,
-  },
-];
-
 const ModelXemChiTiet = (props: Props) => {
-  const { open, handleClose, dataID, handleOpenModelSua } = props;
+  const { open, handleClose, dataID, handleOpenModelSua, setIsThem, isThem } =
+    props;
   const [isMau, setIsMau] = useState(false);
-  const [isThem, setIsThem] = useState(false);
+  const [isChiTietTienDo, setisChiTietTienDo] = useState(false);
+  const [saveIdTienDo, setSaveIdTienDo] = useState<any>(null);
+  const [isPhanHoi, setIsPhanHoi] = useState(false);
+  const [openModelXoa, setOpenModelXoa] = useState(false);
+
   const { data, isLoading } = queryPhanCongNoiBoByID({
     queryKey: "queryPhanCongNoiBoByID",
     params: dataID,
   });
+  const { data: dataMau } = queryMauByID({
+    queryKey: "queryMauByID",
+    params: data?.maPdkMau,
+  });
+  const { data: dataTienDo, isLoading: isLoadingTienDo } =
+    useQueryPhieuTienDoAll({
+      queryKey: "useQueryPhieuTienDoAll",
+      params: { MaMau: data?.maPdkMau, getAll: true },
+    });
+  const { data: dataShowTienDoID, isLoading: isLoadingTienDoID } =
+    useQueryPhieuTienDoByID({
+      queryKey: "useQueryPhieuTienDoByID",
+      params: saveIdTienDo,
+    });
+  const { data: dataTC } = useGetTieuChuanAll({
+    queryKey: "GetTieuChuanAll",
+  });
+  const { data: dataLDV } = useGetLoaiDichVuAll({
+    queryKey: "GetLoaiDichVuAll",
+  });
+  const dataTieuChuan: any = dataTC;
+  const dataLoaiDV: any = dataLDV;
 
-  const [isChiTietTienDo, setisChiTietTienDo] = useState(false);
-  const [saveIdTienDo, setSaveIdTienDo] = useState(null);
-  const { personnelInfo } = usePersonnel();
-
-  const dataChiTietTienDo = timelineEvents.find(
-    (item: any) => item.title === saveIdTienDo
+  const handleSettled = async (response: any) => {
+    if (response?.status === 200 || response?.status === 204) {
+      await Promise.all([
+        queryClient.refetchQueries({
+          queryKey: ["useQueryPhieuTienDoAll"],
+        }),
+        queryClient.refetchQueries({
+          queryKey: ["useQueryPhieuTienDoByID"],
+        }),
+      ]);
+      setIsPhanHoi(false);
+    }
+  };
+  const showNotification = useStoreNotification(
+    (state: any) => state.showNotification
   );
+
+  const { mutate: mutateNhanXet } = useMutationNhanXetPhieuTienDo({
+    queryKey: "useMutationNhanXetPhieuTienDo",
+    onSuccess: (data: any) => {
+      console.log("Thao tác thành công:", data);
+      if (data.status === 200) {
+        showNotification({
+          message: "Thao tác thành công",
+          status: 200,
+        });
+        return;
+      } else {
+        showNotification({
+          message: "Thao tác thất bại",
+          status: 500,
+        });
+      }
+    },
+    onError: (error: any) => {
+      console.log("error", error);
+
+      showNotification({
+        message: "Thao tác thất bại",
+        status: 400,
+      });
+    },
+    onSettled: handleSettled,
+  });
+
+  const { mutate: mutateCreate } = useMutationCreatePhieuTienDo({
+    queryKey: "useMutationCreatePhieuTienDo",
+    onSuccess: (data: any) => {
+      console.log("Thao tác thành công:", data);
+      if (data.status === 200) {
+        showNotification({
+          message: "Thao tác thành công",
+          status: 200,
+        });
+        reset();
+        setIsThem(false);
+        return;
+      } else {
+        showNotification({
+          message: "Thao tác thất bại",
+          status: 500,
+        });
+      }
+    },
+    onError: (error: any) => {
+      console.log("error", error);
+
+      showNotification({
+        message: "Thao tác thất bại",
+        status: 400,
+      });
+    },
+    onSettled: handleSettled,
+  });
+
+  const { mutate: mutateDelete } = useMutationDeletePhieuTienDo({
+    queryKey: "useMutationDeletePhieuTienDo",
+    onSuccess: (data: any) => {
+      console.log("Thao tác thành công:", data);
+      if (data.status === 204) {
+        showNotification({
+          message: "Thao tác thành công",
+          status: 200,
+        });
+        setOpenModelXoa(false);
+        setisChiTietTienDo(false);
+        return;
+      } else {
+        showNotification({
+          message: "Thao tác thất bại",
+          status: 400,
+        });
+      }
+    },
+    onError: (error: any) => {
+      console.log("error", error);
+
+      showNotification({
+        message: "Thao tác thất bại",
+        status: 400,
+      });
+    },
+    onSettled: handleSettled,
+  });
+
+  const handleDelete = () => {
+    mutateDelete(saveIdTienDo);
+    // console.log("saveIdTienDo", saveIdTienDo);
+  };
 
   const schema = yup.object().shape({
     tenGiaiDoanThucHien: yup
       .string()
       .required("Vui lòng nhập tên giai đoạn thực hiện")
       .max(200, "Tên giai đoạn thực hiện không được vượt quá 200 ký tự"),
-
-    ngayNhanMau: yup
-      .date()
-      .transform((value, originalValue) =>
-        originalValue ? new Date(originalValue) : value
-      )
-      .typeError("Vui lòng chọn ngày nhận mẫu")
-      .required("Vui lòng chọn ngày nhận mẫu"),
-
     thoiGianThucHienFrom: yup
       .date()
       .transform((value, originalValue) =>
@@ -108,7 +208,6 @@ const ModelXemChiTiet = (props: Props) => {
       )
       .typeError("Vui lòng chọn thời gian bắt đầu")
       .required("Vui lòng chọn thời gian bắt đầu"),
-
     thoiGianThucHienTo: yup
       .date()
       .transform((value, originalValue) =>
@@ -117,15 +216,7 @@ const ModelXemChiTiet = (props: Props) => {
       .typeError("Vui lòng chọn thời gian kết thúc")
       .min(yup.ref("thoiGianThucHienFrom"), "Kết thúc phải sau bắt đầu")
       .required("Vui lòng chọn thời gian kết thúc"),
-
-    tongThoiGianThucHien: yup
-      .number()
-      .typeError("Vui lòng nhập tổng thời gian")
-      .positive("Tổng thời gian phải lớn hơn 0")
-      .required("Vui lòng nhập tổng thời gian"),
-
     noiDungBaoCao: yup.string().required("Vui lòng nhập nội dung báo cáo"),
-
     ghiChu: yup
       .string()
       .required("Vui lòng nhập ghi chú")
@@ -141,28 +232,24 @@ const ModelXemChiTiet = (props: Props) => {
     resolver: yupResolver(schema),
   });
 
-  const onSubmit = (data: FormGiaiDoanThucHien) => {
+  const onSubmit = (dataGiaiDoanThucHien: FormGiaiDoanThucHien) => {
     const {
-      ngayNhanMau,
       tenGiaiDoanThucHien,
       thoiGianThucHienFrom,
       thoiGianThucHienTo,
-      tongThoiGianThucHien,
       noiDungBaoCao,
       ghiChu,
-    } = data;
+    } = dataGiaiDoanThucHien;
 
     const params = {
-      ngayNhanMau: ngayNhanMau, // hoặc format bạn muốn
-      manvXuLy: personnelInfo?.maId,
-      tenGiaiDoanThucHien,
+      tenGiaiDoanThucHien: tenGiaiDoanThucHien,
       thoiGianTu: thoiGianThucHienFrom,
       thoiGianDen: thoiGianThucHienTo,
-      tongThoiGianThucHien,
-      noiDungBaoCao,
-      ghiChu,
+      noiDungBaoCao: noiDungBaoCao,
+      ghiChu: ghiChu,
+      maPDK_Mau: data?.maPdkMau,
     };
-    console.log("Data submit:", params);
+    mutateCreate(params);
   };
 
   const handleShowTienDo = (id: any) => {
@@ -170,22 +257,31 @@ const ModelXemChiTiet = (props: Props) => {
     setSaveIdTienDo(id);
   };
 
+  const OnClose = () => {
+    setSaveIdTienDo(null);
+    setisChiTietTienDo(false);
+    setIsPhanHoi(false);
+    setIsMau(false);
+    setIsThem(false);
+    handleClose();
+    setOpenModelXoa(false);
+  };
+
   useEffect(() => {
     reset({
       tenGiaiDoanThucHien: "",
-      ngayNhanMau: undefined,
       thoiGianThucHienFrom: undefined,
       thoiGianThucHienTo: undefined,
-      tongThoiGianThucHien: 0,
       noiDungBaoCao: "",
       ghiChu: "",
     });
   }, []);
+  console.log("data", data);
 
   return (
     <Dialog
       open={open}
-      onClose={handleClose}
+      onClose={OnClose}
       maxWidth="lg"
       fullWidth
       sx={{
@@ -198,10 +294,10 @@ const ModelXemChiTiet = (props: Props) => {
         <div className="px-6 py-4 border-b border-gray-100">
           <div className="flex justify-between items-center">
             <h3 className="text-xl font-semibold text-gray-800">
-              Chi tiết phân công
+              Chi tiết phân công mẫu ({data?.tenMau})
             </h3>
             <button
-              onClick={handleClose}
+              onClick={OnClose}
               className="text-gray-400 hover:text-gray-600 cursor-pointer p-1 hover:bg-gray-100"
             >
               <svg
@@ -304,79 +400,104 @@ const ModelXemChiTiet = (props: Props) => {
                 <div className="grid grid-cols-4 gap-4">
                   <div>
                     <p className="text-xs text-gray-500">Tên mẫu</p>
-                    <p className="text-sm">sdfdsf</p>
+                    <p className="text-sm">{dataMau?.tenMau}</p>
                   </div>
                   <div>
                     <p className="text-xs text-gray-500">Tiêu chuẩn</p>
-                    <p className="text-sm">sdfdsf</p>
+                    <p className="text-sm">
+                      {
+                        dataTieuChuan?.find(
+                          (item: any) => item.maId === dataMau?.maTieuChuan
+                        )?.tenTieuChuan
+                      }
+                    </p>
                   </div>
                   <div>
                     <p className="text-xs text-gray-500">Dịch vụ</p>
-                    <p className="text-sm">sdfds</p>
+                    <p className="text-sm">
+                      {
+                        dataLoaiDV?.find(
+                          (item: any) => item.maLoaiDv === dataMau?.loaiDv
+                        )?.tenDichVu
+                      }
+                    </p>
                   </div>
                   <div>
                     <p className="text-xs text-gray-500">Số lô</p>
-                    <p className="text-sm">sdf</p>
+                    <p className="text-sm">{dataMau?.soLo}</p>
                   </div>
                   <div>
                     <p className="text-xs text-gray-500">Ngày sản xuất</p>
-                    <p className="text-sm">sdfsdf</p>
+                    <p className="text-sm">
+                      {formatDateNotTime(dataMau?.ngaySanXuat)}
+                    </p>
                   </div>
                   <div>
                     <p className="text-xs text-gray-500">
                       Thời gian hoàn thành
                     </p>
-                    <p className="text-sm">sdfsd ngày</p>
+                    <p className="text-sm">{dataMau?.thoiGianTieuChuan} ngày</p>
                   </div>
                   <div>
                     <p className="text-xs text-gray-500">
                       Ngày dự kiến trả kết quả
                     </p>
-                    <p className="text-sm">sdfsdfds</p>
+                    <p className="text-sm">
+                      {dataMau?.ngayTraKetQua
+                        ? formatDateNotTime(dataMau?.ngayTraKetQua)
+                        : "Đến khi hoàn thành"}
+                    </p>
                   </div>
                   <div>
                     <p className="text-xs text-gray-500">Hạn sử dụng</p>
-                    <p className="text-sm">sdfsdf</p>
+                    <p className="text-sm">
+                      {formatDateNotTime(dataMau?.hanSuDung)}
+                    </p>
                   </div>
                   <div>
                     <p className="text-xs text-gray-500">Số lượng</p>
-                    <p className="text-sm">sdfsdf</p>
+                    <p className="text-sm">{`${dataMau?.soLuong} ${dataMau?.donViTinh}`}</p>
                   </div>
                   <div>
                     <p className="text-xs text-gray-500">Điều kiện bảo quản</p>
-                    <p className="text-sm">sdfsdf</p>
+                    <p className="text-sm">{dataMau?.dieuKienBaoQuan}</p>
                   </div>
                   <div>
                     <p className="text-xs text-gray-500">Đơn vị sản xuất</p>
-                    <p className="text-sm">sdf</p>
+                    <p className="text-sm">{dataMau?.donViSanXuat}</p>
                   </div>
                   <div>
                     <p className="text-xs text-gray-500">Tình trạng mẫu</p>
-                    <p className="text-sm">sdfsdf</p>
+                    <p className="text-sm">{dataMau?.tinhTrangMau}</p>
                   </div>
                   <div>
                     <p className="text-xs text-gray-500">Lưu mẫu</p>
-                    <p className="text-sm">sdfsdfds</p>
+                    <p className="text-sm">
+                      {dataMau?.luuMau ? "Có lưu mẫu" : "Không lưu mẫu"}
+                    </p>
                   </div>
                   <div>
                     <p className="text-xs text-gray-500">Xuất kết quả</p>
-                    <p className="text-sm">sdfsdfd</p>
+                    <p className="text-sm">
+                      {dataMau?.xuatKetQua
+                        ? "Có xuất kết quả"
+                        : "Không xuất kết quả"}
+                    </p>
                   </div>
                 </div>
 
                 <div className="mt-3">
                   <p className="text-xs text-gray-500">Yêu cầu kiểm nghiệm</p>
-                  <p className="text-sm p-2 bg-blue-50 rounded">sdfsdfds</p>
+                  <p className="text-sm p-2 bg-blue-50 rounded">
+                    {dataMau?.yeuCauKiemNghiem}
+                  </p>
                 </div>
 
                 <div className="mt-3">
                   <p className="text-xs text-gray-500">Ghi chú khách hàng</p>
-                  <p className="text-sm p-2 bg-blue-50 rounded">sdfsdf</p>
-                </div>
-
-                <div className="mt-3">
-                  <p className="text-xs text-gray-500">Ghi chú</p>
-                  <p className="text-sm p-2 bg-blue-50 rounded">sdfsdfsd</p>
+                  <p className="text-sm p-2 bg-blue-50 rounded">
+                    {dataMau?.ghiChu ? dataMau?.ghiChu : "Không có ghi chú"}
+                  </p>
                 </div>
 
                 <div className="mt-3">
@@ -387,7 +508,7 @@ const ModelXemChiTiet = (props: Props) => {
             )}
           </div>
           <div className="mt-2">
-            <h3 className="text-gray-500 font-semibold text-lg/6 flex items-center gap-2">
+            <h3 className="text-gray-500 font-semibold text-lg/6 flex items-center gap-2 mb-3">
               Báo cáo tiến độ
               {data?.trangThai === true &&
                 !isChiTietTienDo &&
@@ -412,67 +533,141 @@ const ModelXemChiTiet = (props: Props) => {
             </h3>
             {isChiTietTienDo ? (
               <div className="mb-6">
-                <h3 className="text-gray-500 font-medium text-bâse/6">
-                  Thông tin giai đoạn {dataChiTietTienDo?.title}
+                <h3 className="text-gray-500 font-semibold text-base/6 flex gap-2">
+                  Thông tin giai đoạn{" "}
+                  {isLoadingTienDoID ? (
+                    <Skeleton variant="rounded" className="w-32" height={24} />
+                  ) : (
+                    dataShowTienDoID?.tenGiaiDoanThucHien
+                  )}
                 </h3>
-                <div className="grid grid-cols-4 gap-x-4 gap-y-2 mb-4">
+                <div className="grid grid-cols-3 gap-x-4 gap-y-2 mb-4">
                   <div>
                     <p className="text-sm text-gray-500">Thời gian thực hiện</p>
                     {isLoading ? (
                       <Skeleton variant="rounded" width={250} height={20} />
                     ) : (
                       <p className="text-base font-medium text-gray-700">
-                        {dataChiTietTienDo?.time} - {dataChiTietTienDo?.time}
+                        {formatDate(dataShowTienDoID?.thoiGianTu)} -{" "}
+                        {formatDate(dataShowTienDoID?.thoiGianDen)}
                       </p>
                     )}
                   </div>
                   <div>
-                    <p className="text-sm text-gray-500">Thời gian nhận mẫu</p>
-                    <p className="text-base font-medium text-gray-700">
-                      {dataChiTietTienDo?.time}
-                    </p>
-                  </div>
-                  <div>
                     <p className="text-sm text-gray-500">Nhân viên xử lý</p>
-                    <p className="text-base font-medium text-gray-700">
-                      {data?.tennvXuly}
-                    </p>
+                    {isLoadingTienDoID ? (
+                      <Skeleton
+                        variant="rounded"
+                        className="w-full"
+                        height={24}
+                      />
+                    ) : (
+                      <p className="text-base font-medium text-gray-700">
+                        {dataShowTienDoID?.tennvXyLy}
+                      </p>
+                    )}
                   </div>
                   <div>
-                    <p className="text-sm text-gray-500">
-                      Tổng thời gian thực hiện
-                    </p>
-                    <p className="text-base font-medium text-gray-700">
-                      20 ngày
-                    </p>
+                    <p className="text-sm text-gray-500">Ngày trả kết quả</p>
+                    {isLoadingTienDoID ? (
+                      <Skeleton
+                        variant="rounded"
+                        className="w-full"
+                        height={24}
+                      />
+                    ) : (
+                      <p className="text-base font-medium text-gray-700">
+                        {formatDateNotTime(dataShowTienDoID?.ngayTraKetQua)}
+                      </p>
+                    )}
                   </div>
                   <div className="col-span-full">
                     <p className="text-sm text-gray-500">Nội dung báo cáo</p>
-                    <p className="text-base font-medium text-gray-700">
-                      {dataChiTietTienDo?.description}
-                    </p>
+                    {isLoadingTienDoID ? (
+                      <Skeleton
+                        variant="rounded"
+                        className="w-full"
+                        height={24}
+                      />
+                    ) : (
+                      <p className="text-base font-medium text-gray-700">
+                        {dataShowTienDoID?.noiDungBaoCao}
+                      </p>
+                    )}
                   </div>
                   <div className="col-span-full">
                     <p className="text-sm text-gray-500">Ghi chú</p>
-                    <p className="text-base font-medium text-gray-700">
-                      {dataChiTietTienDo?.description}
-                    </p>
+                    {isLoadingTienDoID ? (
+                      <Skeleton
+                        variant="rounded"
+                        className="w-full"
+                        height={24}
+                      />
+                    ) : (
+                      <p className="text-base font-medium text-gray-700">
+                        {dataShowTienDoID?.ghiChu}
+                      </p>
+                    )}
                   </div>
+                  {dataShowTienDoID?.noiDungDanhGia && (
+                    <div className="col-span-full">
+                      <p className="text-sm text-gray-500">Nội dung đánh giá</p>
+                      {isLoadingTienDoID ? (
+                        <Skeleton
+                          variant="rounded"
+                          className="w-full"
+                          height={24}
+                        />
+                      ) : (
+                        <p className="text-base font-medium text-gray-700">
+                          {dataShowTienDoID?.noiDungDanhGia}
+                        </p>
+                      )}
+                    </div>
+                  )}
                 </div>
-                <div className="flex justify-end">
-                  <button
-                    onClick={() => {
-                      setSaveIdTienDo(null);
-                      setisChiTietTienDo(false);
-                    }}
-                    className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors cursor-pointer"
-                  >
-                    Đóng
-                  </button>
-                </div>
+                {isPhanHoi ? (
+                  <FormNhanXet
+                    onCancel={() => setIsPhanHoi(false)}
+                    mutateNhanXet={mutateNhanXet}
+                    saveIdTienDo={saveIdTienDo}
+                  />
+                ) : (
+                  <div className="flex justify-end gap-4">
+                    {(role === "KN_L" || role === "KN_P") && (
+                      <button
+                        onClick={() => setIsPhanHoi(true)}
+                        className="px-4 py-2 text-sm font-medium text-white bg-green-600 rounded-lg hover:bg-green-700 transition-colors cursor-pointer"
+                      >
+                        Phản hồi
+                      </button>
+                    )}
+                    <button
+                      onClick={() => {
+                        setOpenModelXoa(true);
+                      }}
+                      className="px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-lg hover:bg-red-700 transition-colors cursor-pointer"
+                    >
+                      Xóa
+                    </button>
+
+                    <button
+                      onClick={() => {
+                        setSaveIdTienDo(null);
+                        setisChiTietTienDo(false);
+                      }}
+                      className="px-4 py-2 text-sm font-medium text-white bg-violet-600 rounded-lg hover:bg-violet-700 transition-colors cursor-pointer"
+                    >
+                      Đóng
+                    </button>
+                  </div>
+                )}
               </div>
             ) : isThem ? (
-              <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+              <form
+                onSubmit={handleSubmit(onSubmit)}
+                className="space-y-4 border border-gray-300 bg-white rounded-lg shadow-[0_4px_4px_rgba(0,0,0,0.25)] p-4"
+              >
                 <div className="grid grid-cols-2 gap-4">
                   <div>
                     <label className="text-sm font-medium text-gray-700">
@@ -487,23 +682,6 @@ const ModelXemChiTiet = (props: Props) => {
                     {errors.tenGiaiDoanThucHien && (
                       <p className="text-xs text-red-600">
                         {errors.tenGiaiDoanThucHien.message}
-                      </p>
-                    )}
-                  </div>
-                  <div>
-                    <label className="text-sm font-medium text-gray-700">
-                      Ngày nhận mẫu *
-                    </label>
-                    <div className="flex items-center gap-2">
-                      <input
-                        type="date"
-                        {...register("ngayNhanMau")}
-                        className="w-full py-1 px-1 border border-gray-300 rounded focus-within:outline-1 focus-within:border-blue-600"
-                      />
-                    </div>
-                    {errors.ngayNhanMau && (
-                      <p className="text-xs text-red-600">
-                        {errors.ngayNhanMau.message}
                       </p>
                     )}
                   </div>
@@ -540,23 +718,6 @@ const ModelXemChiTiet = (props: Props) => {
                         )}
                       </div>
                     </div>
-                  </div>
-                  <div>
-                    <label className="text-sm font-medium text-gray-700">
-                      Tổng thời gian thực hiện *
-                    </label>
-                    <div className="flex items-center gap-2">
-                      <input
-                        type="number"
-                        {...register("tongThoiGianThucHien")}
-                        className="w-full py-1 px-1 border border-gray-300 rounded focus-within:outline-1 focus-within:border-blue-600"
-                      />
-                    </div>
-                    {errors.tongThoiGianThucHien && (
-                      <p className="text-xs text-red-600">
-                        {errors.tongThoiGianThucHien.message}
-                      </p>
-                    )}
                   </div>
                 </div>
                 <div>
@@ -604,27 +765,68 @@ const ModelXemChiTiet = (props: Props) => {
                   </button>
                 </div>
               </form>
-            ) : (
+            ) : dataTienDo?.length > 0 ? (
               <Timeline
-                events={timelineEvents}
+                events={dataTienDo}
+                isLoading={isLoadingTienDo}
                 handleShowTienDo={handleShowTienDo}
               />
+            ) : (
+              <div className="glass-card rounded-xl p-8 text-center">
+                <div className="w-16 h-16 mx-auto bg-indigo-100 rounded-full flex items-center justify-center">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-8 w-8 text-indigo-600"
+                    viewBox="0 0 20 20"
+                    fill="currentColor"
+                  >
+                    <path
+                      fillRule="evenodd"
+                      d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                      clipRule="evenodd"
+                    />
+                  </svg>
+                </div>
+                <p className="mt-2 text-gray-500">
+                  Chưa có phiếu tiến độ nào được cập nhật
+                </p>
+                <button
+                  onClick={() => setIsThem(true)}
+                  className="cursor-pointer mt-4 px-4 py-2 text-sm font-medium text-indigo-600 bg-indigo-50 rounded-lg hover:bg-indigo-100 transition-all"
+                >
+                  Tạo phiếu tiến độ
+                </button>
+              </div>
             )}
           </div>
-          {getRoleGroup(role) === "KN" &&
-            data?.trangThai === true &&
-            role !== "KN" && (
-              <div className="flex justify-end space-x-3 mt-6 pt-6 border-t border-gray-300">
+          <div className="flex justify-end space-x-3 mt-6 pt-6 border-t border-gray-300">
+            <button
+              onClick={OnClose}
+              className="px-4 py-2 text-sm font-medium text-white bg-yellow-600 rounded-lg hover:bg-yellow-700 transition-colors cursor-pointer"
+            >
+              Đóng
+            </button>
+            {getRoleGroup(role) === "KN" &&
+              data?.trangThai === true &&
+              role !== "KN" && (
                 <button
                   onClick={() => handleOpenModelSua(dataID)}
                   className="px-4 py-2 text-sm font-medium text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 transition-colors cursor-pointer"
                 >
                   Sửa
                 </button>
-              </div>
-            )}
+              )}
+          </div>
         </div>
       </div>
+      <ConfirmationModal
+        isOpen={openModelXoa}
+        onClose={() => setOpenModelXoa(false)}
+        onConfirm={handleDelete}
+        title={"Xác nhận hủy?"}
+        message={"Bạn có chắc chắn muốn hủy?"}
+        type={TypeConformation.Error}
+      />
     </Dialog>
   );
 };

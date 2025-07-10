@@ -11,11 +11,11 @@ interface Props {
 
 const dataTrangThaiMauLuu = [
   {
-    maId: "1",
+    maId: "active",
     tenTt: "Đã lưu mẫu",
   },
   {
-    maId: "2",
+    maId: "no active",
     tenTt: "Đã hủy",
   },
 ];

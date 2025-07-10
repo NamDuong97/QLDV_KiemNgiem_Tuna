@@ -34,6 +34,14 @@ const data = [
     maTrangThai: 6,
     tenTrangThai: "Đã phân công chờ duyệt",
   },
+  {
+    maTrangThai: 7,
+    tenTrangThai: "Đã phân công nội bộ",
+  },
+  {
+    maTrangThai: 8,
+    tenTrangThai: "Đã hoàn thành kiểm nghiệm",
+  },
 ];
 
 export default function SelectItemTrangThai(props: Props) {

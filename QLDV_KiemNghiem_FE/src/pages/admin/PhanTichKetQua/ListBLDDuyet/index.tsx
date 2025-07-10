@@ -7,6 +7,7 @@ import { usePersonnel } from "../../../../contexts/PersonelsProvider";
 import CardDuyet from "../CardDuyet";
 import { Pagination, Skeleton } from "@mui/material";
 import SelectItemKhoa from "./SelectItemKhoa";
+import { FaSortAmountDown, FaSortAmountUp } from "react-icons/fa";
 
 const ListBLDDuyet = ({
   onView,
@@ -16,28 +17,33 @@ const ListBLDDuyet = ({
 }: any) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectKhoa, setSelectKhoa] = useState("");
+  const [isSortNew, setIsSortNew] = useState(false);
   const { personnelInfo } = usePersonnel();
 
-  // const isKNGroup = getRoleGroup(role) === "KN";
+  const isKNGroup = getRoleGroup(role) === "KN";
 
-  // const params = {
-  //   getAll: true,
-  //   ...(isKNGroup && role === "KN"
-  //     ? {
-  //         maKhoa: personnelInfo?.maKhoa,
-  //         manvLap: personnelInfo?.maId,
-  //       }
-  //     : {}),
-  // };
+  const params = {
+    getAll: true,
+    ...(isKNGroup && role === "KN"
+      ? {
+          maKhoa: personnelInfo?.maKhoa,
+          manvLap: personnelInfo?.maId,
+        }
+      : isKNGroup
+      ? { maKhoa: personnelInfo?.maKhoa }
+      : {}),
+  };
 
   const { data, isLoading } = queryPhanTichKetQuaAll({
     queryKey: "PhanTichKetQuaListDaDuyet",
-    params: {
-      getAll: true,
-      maKhoa: personnelInfo?.maKhoa,
-    },
+    params: params,
   });
   const filteredResults = data
+    ?.sort((a: any, b: any) =>
+      isSortNew
+        ? new Date(a.ngayTao).getTime() - new Date(b.ngayTao).getTime()
+        : new Date(b.ngayTao).getTime() - new Date(a.ngayTao).getTime()
+    )
     ?.filter((item: any) => item.trangThai === 3)
     .filter((result: any) => {
       const matchesSearch =
@@ -83,6 +89,24 @@ const ListBLDDuyet = ({
                 size={16}
               />
             </div>
+            <button
+              onClick={() => setIsSortNew(!isSortNew)}
+              type="button"
+              className="btn btn-outline-primary border border-gray-300 py-[6px] px-2 rounded cursor-pointer hover:bg-blue-50"
+            >
+              <span className="flex items-center gap-2 text-gray-800">
+                {isSortNew ? (
+                  <>
+                    <FaSortAmountUp /> Cũ nhất
+                  </>
+                ) : (
+                  <>
+                    <FaSortAmountDown />
+                    Mới nhất
+                  </>
+                )}
+              </span>
+            </button>
             {getRoleGroup(role) === "BLD" && (
               <SelectItemKhoa
                 title="Khoa"

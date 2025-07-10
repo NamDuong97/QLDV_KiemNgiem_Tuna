@@ -46,7 +46,10 @@ export default class phanCongKhoaServices {
           params,
         }
       );
-      return response;
+      return {
+                data: response.data,
+                pagination: response.headers['x-pagination'] ? JSON.parse(response.headers['x-pagination'] || '{}') : {}
+            };
     } catch (err: any) {
       return err;
     }

@@ -2,9 +2,11 @@ import _APIInstance from "../../configs/configAPI";
 import { API } from "../../constants/commons";
 
 export default class duTruServices {
-  static async getDuTruAll() {
+  static async getDuTruAll(params: any) {
     try {
-      const response = await _APIInstance.get(API.ADMIN.DU_TRU.GET_DU_TRU_ALL);
+      const response = await _APIInstance.get(API.ADMIN.DU_TRU.GET_DU_TRU_ALL, {
+        params: params,
+      });
       return response;
     } catch (err: any) {
       return err;
@@ -41,7 +43,36 @@ export default class duTruServices {
     try {
       const response = await _APIInstance.put(
         API.ADMIN.DU_TRU.UPDATE_DU_TRU,
-        { params: params },
+        params,
+        {
+          headers: { "Content-Type": "application/json" },
+        }
+      );
+      return response;
+    } catch (err: any) {
+      return err;
+    }
+  }
+
+  static async duyetDuTru(params: any) {
+    try {
+      const response = await _APIInstance.put(
+        API.ADMIN.DU_TRU.DUYET_DU_TRU,
+        params,
+        {
+          headers: { "Content-Type": "application/json" },
+        }
+      );
+      return response;
+    } catch (err: any) {
+      return err;
+    }
+  }
+
+  static async lamLaiPhieuDuTru(params: any) {
+    try {
+      const response = await _APIInstance.put(
+        `${API.ADMIN.DU_TRU.LAM_LAI_PHIEU}?maPhieuDuTru=${params}`,
         {
           headers: { "Content-Type": "application/json" },
         }

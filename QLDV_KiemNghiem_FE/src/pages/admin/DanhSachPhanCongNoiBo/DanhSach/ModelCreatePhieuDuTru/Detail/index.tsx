@@ -2,6 +2,8 @@ import { Trash2 } from "react-feather";
 import { DonViTinh } from "../../../../../Guest/formSignUpDVKN/components/Maus/FormThongTinMau";
 import InputSelectDonViTinh from "./InputSelectDonViTinh";
 
+import InputSelectPLHC from "./InputSelectPLHC";
+
 const Detail = ({
   index,
   control,
@@ -9,6 +11,8 @@ const Detail = ({
   errors,
   onRemove,
   fieldNamePrefix,
+  dataDM_PhuLieuHoaChat,
+  handleOpenPopupThemPLHC,
 }: any) => {
   return (
     <div className="flex items-center gap-4 p-4 bg-gray-50 rounded-lg">
@@ -18,14 +22,14 @@ const Detail = ({
             <label className="block text-sm font-medium text-gray-700 mb-1">
               Tên Phù liệu hóa chất
             </label>
-            <input
-              {...register(`${fieldNamePrefix}.Ten_PLHC`)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-0 focus-within:outline-1 focus-within:border-blue-600"
-              placeholder="Nhập phụ liệu hóa chất"
+            <InputSelectPLHC
+              name={`${fieldNamePrefix}.Ten_PLHC`}
+              control={control}
+              data={dataDM_PhuLieuHoaChat}
+              placeholder="VD: axit sunfuric 5%,..."
+              errorMessage={errors?.Ten_PLHC?.message}
+              handleOpenPopupThem={handleOpenPopupThemPLHC}
             />
-            <p className="text-red-600 text-sm mt-1">
-              {errors?.Ten_PLHC?.message}
-            </p>
           </div>
 
           <div className="w-full">

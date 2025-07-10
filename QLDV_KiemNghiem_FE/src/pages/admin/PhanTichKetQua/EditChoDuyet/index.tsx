@@ -28,7 +28,7 @@ const schema = yup.object({
         donVi: yup.string().required("Vui lòng nhập đơn vị"),
         ghiChu: yup.string().required("Vui lòng nhập ghi chú"),
         trangThai: yup.string(),
-        isDel: yup.boolean().nullable(),
+        action: yup.number().nullable(),
       })
     )
     .min(1, "Cần ít nhất 1 chỉ tiêu"),
@@ -54,7 +54,7 @@ const EditChoDuyet = ({ resultId, onCancel }: any) => {
   } = useForm({
     resolver: yupResolver(schema),
   });
-  const { fields, append } = useFieldArray({
+  const { fields, append, remove } = useFieldArray({
     control,
     name: "chiTietPhanTichKetQuas",
   });
@@ -104,12 +104,18 @@ const EditChoDuyet = ({ resultId, onCancel }: any) => {
   });
 
   const softDelete = (index: any) => {
-    setValue(`chiTietPhanTichKetQuas.${index}.isDel`, true);
+    const chiTiet = watch(`chiTietPhanTichKetQuas.${index}`);
+    if (!chiTiet) return;
+    if (chiTiet.action === 2) {
+      remove(index);
+    } else {
+      setValue(`chiTietPhanTichKetQuas.${index}.action`, 3);
+    }
   };
 
   const handleSave = (dataPhieu: any) => {
     const validChiTiet = dataPhieu.chiTietPhanTichKetQuas.filter(
-      (item: any) => item?.isDel !== true
+      (item: any) => item?.action !== 3
     );
 
     if (validChiTiet.length === 0) {
@@ -139,7 +145,7 @@ const EditChoDuyet = ({ resultId, onCancel }: any) => {
             donVi,
             ghiChu,
             trangThai,
-            isDel,
+            action,
           } = item;
 
           const base = {
@@ -151,10 +157,11 @@ const EditChoDuyet = ({ resultId, onCancel }: any) => {
             donVi,
             ghiChu,
             trangThai,
+            action,
           };
 
-          if (isDel === true) {
-            return { ...base, isDel: true };
+          if (action === 3) {
+            return { ...base, action: 3 };
           }
           const originalItem = originalChiTiet.find(
             (o: any) => o.maId === maId
@@ -171,7 +178,7 @@ const EditChoDuyet = ({ resultId, onCancel }: any) => {
               originalItem.trangThai !== trangThai;
 
             if (isChanged) {
-              return { ...base, isDel: false };
+              return { ...base, action: 1 };
             }
           }
           if (!maId) {
@@ -181,6 +188,9 @@ const EditChoDuyet = ({ resultId, onCancel }: any) => {
         }
       ),
     };
+    console.log("params", params);
+    console.log("dataPhieu", dataPhieu);
+
     mutate(params);
   };
 
@@ -192,11 +202,14 @@ const EditChoDuyet = ({ resultId, onCancel }: any) => {
           data?.phieuPhanTichKetQuaChiTietDtos || []
         ).map((item: any) => ({
           ...item,
-          isDel: false,
+          action: 0,
         })),
       });
     }
   }, [data, reset]);
+
+  console.log('error', errors);
+  
 
   return (
     <div className="bg-white rounded-xl shadow-sm border border-gray-200">
@@ -260,6 +273,7 @@ const EditChoDuyet = ({ resultId, onCancel }: any) => {
                   donVi: "",
                   ghiChu: "",
                   trangThai: "Chưa đạt",
+                  action: 2,
                 })
               }
               className="px-4 py-2 cursor-pointer bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center space-x-2"
@@ -276,39 +290,61 @@ const EditChoDuyet = ({ resultId, onCancel }: any) => {
           )}
 
           {fields.map((field, index) => {
-            const isDeleted = watch(`chiTietPhanTichKetQuas.${index}.isDel`);
-            if (isDeleted) return null;
+            const isDeleted = watch(`chiTietPhanTichKetQuas.${index}.action`);
+            if (isDeleted === 3) return null;
+            console.log("field", field.maChiTieu);
+
             return (
               <div
                 key={field.id}
                 className="grid grid-cols-4 gap-6 p-4 bg-gray-50 rounded-lg"
               >
-                <div>
-                  <label
-                    htmlFor={`maChiTieu-${index}`}
-                    className="block text-sm font-medium mb-2 text-gray-700"
-                  >
-                    Chỉ tiêu <span className="text-red-500">*</span>
-                  </label>
-                  <SelectItemChiTieu
-                    control={control}
-                    name={`chiTietPhanTichKetQuas.${index}.maChiTieu`}
-                    index={index}
-                    setValue={setValue}
-                    label="chỉ tiêu"
-                    data={chiTieus}
-                    errorMessage={
-                      errors.chiTietPhanTichKetQuas?.[index]?.maChiTieu?.message
-                    }
-                  />
-                </div>
+                {field.maChiTieu ? (
+                  <div>
+                    <label
+                      htmlFor={`maChiTieu-${index}`}
+                      className="block text-sm font-medium mb-2 text-gray-700"
+                    >
+                      Chỉ tiêu
+                    </label>
+                    <input
+                      id={`maChiTieu-${index}`}
+                      {...register(`chiTietPhanTichKetQuas.${index}.maChiTieu`)}
+                      className="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-gray-700 focus-within:border-blue-600 focus-within:outline-1 focus:outline-0 focus:ring-blue-200 transition duration-300 ease-in-out"
+                      disabled
+                    />
+                  </div>
+                ) : (
+                  <div>
+                    <label
+                      htmlFor={`maChiTieu-${index}`}
+                      className="block text-sm font-medium mb-2 text-gray-700"
+                    >
+                      Chỉ tiêu{" "}
+                      <span className="text-red-500 text-xsx">*</span>
+                    </label>
+                    <SelectItemChiTieu
+                      control={control}
+                      name={`chiTietPhanTichKetQuas.${index}.maChiTieu`}
+                      index={index}
+                      setValue={setValue}
+                      label="chỉ tiêu"
+                      data={chiTieus}
+                      errorMessage={
+                        errors.chiTietPhanTichKetQuas?.[index]?.maChiTieu
+                          ?.message
+                      }
+                    />
+                  </div>
+                )}
 
                 <div>
                   <label
                     htmlFor={`ketQua-${index}`}
                     className="block text-sm font-medium mb-2 text-gray-700"
                   >
-                    Kết quả <span className="text-red-500">*</span>
+                    Kết quả{" "}
+                    <span className="text-red-500 text-xsx">*</span>
                   </label>
                   <input
                     id={`ketQua-${index}`}
@@ -328,7 +364,8 @@ const EditChoDuyet = ({ resultId, onCancel }: any) => {
                     htmlFor={`donVi-${index}`}
                     className="block text-sm font-medium mb-2 text-gray-700"
                   >
-                    Đơn vị <span className="text-red-500">*</span>
+                    Đơn vị{" "}
+                    <span className="text-red-500 text-xsx">*</span>
                   </label>
                   <InputSelectDonViTinh
                     name={`chiTietPhanTichKetQuas.${index}.donVi`}
@@ -348,7 +385,8 @@ const EditChoDuyet = ({ resultId, onCancel }: any) => {
                     htmlFor={`mucChatLuong-${index}`}
                     className="block text-sm font-medium mb-2 text-gray-700"
                   >
-                    Mức chất lượng <span className="text-red-500">*</span>
+                    Mức chất lượng{" "}
+                    <span className="text-red-500 text-xsx">*</span>
                   </label>
                   <input
                     id={`mucChatLuong-${index}`}
@@ -373,7 +411,8 @@ const EditChoDuyet = ({ resultId, onCancel }: any) => {
                     htmlFor={`ghiChuItem-${index}`}
                     className="block text-sm font-medium mb-2 text-gray-700"
                   >
-                    Ghi chú <span className="text-red-500">*</span>
+                    Ghi chú{" "}
+                    <span className="text-red-500 text-xsx">*</span>
                   </label>
                   <div className="flex items-center space-x-2">
                     <input
@@ -394,7 +433,8 @@ const EditChoDuyet = ({ resultId, onCancel }: any) => {
                     htmlFor={`trangThai-${index}`}
                     className="block text-sm font-medium mb-2 text-gray-700"
                   >
-                    Trạng thái <span className="text-red-500">*</span>
+                    Trạng thái{" "}
+                    <span className="text-red-500 text-xsx">*</span>
                   </label>
                   <div className="flex items-center space-x-2">
                     <Controller

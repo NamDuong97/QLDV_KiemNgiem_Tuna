@@ -181,6 +181,10 @@ export const APP_ROUTES = {
     PHIEU_DKY_DVKN: {
       to: "/quan-ly-phieu-dang-ky-dich-vu-kiem-nghiem",
       title: "Quản lý phiếu đăng ký dịch vụ kiểm nghiệm",
+      QUAN_LY_PHAN_TICH_KET_QUA: {
+        to: "/quan-ly-phieu-dang-ky-dich-vu-kiem-nghiem/quan-ly-phan-tich-ket-qua",
+        xem_chi_tiet: "/quan-ly-phieu-dang-ky-dich-vu-kiem-nghiem/quan-ly-phan-tich-ket-qua/xem-chi-tiet",
+      },
     },
     EDIT_PHIEU_DKY_DVKN: {
       to: "/quan-ly-phieu-dang-ky-dich-vu-kiem-nghiem/sua-phieu-dang-ky-kiem-nghiem",
@@ -200,10 +204,6 @@ export const APP_ROUTES = {
       SHOW_HOA_DON: {
         to: "/chi-tiet-hoa-don",
         title: "Trang chi chi tiết hóa đơn",
-      },
-      SHOW_THANH_TOAN_HOA_DON: {
-        to: "/thanh-toan-hoa-don",
-        title: "Trang thanh toán hóa đơn",
       },
     },
   },

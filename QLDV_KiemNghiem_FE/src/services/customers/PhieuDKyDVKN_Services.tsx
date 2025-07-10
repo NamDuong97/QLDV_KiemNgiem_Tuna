@@ -6,7 +6,6 @@ import {
 } from "../../models/PhieuDangKy";
 
 export default class PhieuDKyDVKN_Services {
-
   static async getPhieuDangKyKiemNghiemByTrangThai(
     params: ParamsPhieuDangKyByTrangThai
   ) {
@@ -30,8 +29,8 @@ export default class PhieuDKyDVKN_Services {
         }
       );
       return response;
-    } catch (res) {
-      return res;
+    } catch (res: any) {
+      throw res.response?.data;
     }
   }
 

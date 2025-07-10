@@ -113,6 +113,16 @@ const trangThaiMauMap: Record<string, TrangThai> = {
     bgColor: "bg-blue-100",
     textColor: "text-blue-800",
   },
+  7: {
+    text: "Đã phân công nội bộ",
+    bgColor: "bg-violet-100",
+    textColor: "text-violet-800",
+  },
+  8: {
+    text: "Đã hoàn thành kiểm nghiệm",
+    bgColor: "bg-cyan-100",
+    textColor: "text-cyan-800",
+  },
 };
 
 const trangThaiChiTietPhieuDeXuatPhongBan: Record<string, TrangThai> = {
@@ -205,18 +215,51 @@ export const trangThaiPhanTichKetQua: Record<string, TrangThai> = {
     bgColor: "bg-purple-100",
     textColor: "text-purple-800",
   },
+  6: {
+    text: "Khách hàng duyệt",
+    bgColor: "bg-teal-100",
+    textColor: "text-teal-800",
+  },
+  7: {
+    text: "Khách hàng từ chối",
+    bgColor: "bg-rose-100",
+    textColor: "text-rose-800",
+  },
 };
 
 const trangThaiDuTru: Record<string, TrangThai> = {
-  false: {
+  0: {
+    text: "Yêu cầu làm lại",
+    bgColor: "bg-red-100",
+    textColor: "text-red-800",
+  },
+  1: {
     text: "Chờ duyệt",
     bgColor: "bg-yellow-100",
     textColor: "text-yellow-800",
   },
-  true: {
+  2: {
     text: "Đã Duyệt",
     bgColor: "bg-green-100",
     textColor: "text-green-800",
+  },
+};
+
+const trangThaiHoaDon: Record<string, TrangThai> = {
+  "0": {
+    text: "Chưa thanh toán",
+    bgColor: "bg-red-100",
+    textColor: "text-red-800",
+  },
+  "1": {
+    text: "Đã thanh toán",
+    bgColor: "bg-green-100",
+    textColor: "text-green-800",
+  },
+  "2": {
+    text: "Thanh toán một phần",
+    bgColor: "bg-blue-100",
+    textColor: "text-blue-800",
   },
 };
 
@@ -331,6 +374,22 @@ export function renderTrangThaiDuTru(trangThaiId: string) {
 
 export function renderTrangThaiPhanTichKetQua(trangThaiId: string) {
   const trangThai = trangThaiPhanTichKetQua[trangThaiId] || {
+    text: "Không xác định",
+    bgColor: "bg-gray-100",
+    textColor: "text-gray-800",
+  };
+
+  return (
+    <span
+      className={`inline-block px-2 py-1 text-xs font-medium rounded-full ${trangThai.bgColor} ${trangThai.textColor}`}
+    >
+      {trangThai.text}
+    </span>
+  );
+}
+
+export function renderTrangThaiHoaDon(trangThaiId: string) {
+  const trangThai = trangThaiHoaDon[trangThaiId] || {
     text: "Không xác định",
     bgColor: "bg-gray-100",
     textColor: "text-gray-800",

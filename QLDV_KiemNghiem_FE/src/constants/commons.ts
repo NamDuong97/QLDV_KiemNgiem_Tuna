@@ -12,6 +12,7 @@ export const API = {
       DANH_GIA_NHANVIEN: "/api/PhieuDangKy/reviewPhieuDangKyByKHDT",
       DANH_GIA_BLD: "/api/PhieuDangKy/reviewPhieuDangKyByBLD",
       UNDO_DANH_GIA_BLD: "/api/PhieuDangKy/undoReviewPhieuDangKyByBLD",
+      THONG_KE: "/api/PhieuDangKy/getPhieuDangKyThongKe",
     },
     KHOA: {
       GET_KHOA_ALL: "/api/Khoa/getKhoaAll",
@@ -47,7 +48,8 @@ export const API = {
       GET_MAUS_LUU_ALL: "/api/PhieuLuuMau/getPhieuLuuMauAll",
       GET_MAUS_LUU_BY_ID: "/api/PhieuLuuMau/getPhieuLuuMauByID",
       CREATE_MAUS_LUU: "/api/PhieuLuuMau/createPhieuLuuMau",
-      UPDATE_MAUS_LUU: "/api/PhieuLuuMau/createPhieuLuuMau",
+      UPDATE_MAUS_LUU: "/api/PhieuLuuMau/updatePhieuLuuMau",
+      DELETE_MAUS_LUU: "/api/PhieuLuuMau/deletePhieuLuuMau",
     },
     PHAN_CONG_NOI_BO: {
       GET_ALL: "/api/PhanCongNoiBo/getPhanCongNoiBoAll",
@@ -64,6 +66,8 @@ export const API = {
       CREATE_DU_TRU: "/api/PhieuDuTru/createPhieuDuTru",
       UPDATE_DU_TRU: "/api/PhieuDuTru/updatePhieuDuTru",
       DELETE_DU_TRU: "/api/PhieuDuTru/deletePhieuDuTru",
+      DUYET_DU_TRU: "/api/PhieuDuTru/reviewPhieuDuTruByLDP",
+      LAM_LAI_PHIEU: "/api/PhieuDuTru/requestReviewAgainPhieuDuTru",
     },
     PHAN_TICH_KET_QUA: {
       GET_PHAN_TICH_KET_QUA_ALL:
@@ -80,9 +84,37 @@ export const API = {
         "/api/PhieuPhanTichKetQua/reviewPhieuPhanTichKetQuaByBLD",
       DELETE_PHAN_TICH_KET_QUA:
         "/api/PhieuPhanTichKetQua/deletePhieuPhanTichKetQua",
+      REVIEW_PHAN_TICH_KET_QUA_CUSTOMER:
+        "/api/PhieuPhanTichKetQua/reviewPhieuPhanTichKetQuaByCustomer",
     },
     CHI_TIEU: {
       GET_CHI_TIEU_ALL: "/api/ChiTieu/getChiTieuAll",
+    },
+    HOA_DON_THU: {
+      GET_ALL: "/api/HoaDonThu/getHoaDonThuAll",
+      GET_BY_GUEST: "/api/HoaDonThu/getHoaDonThuOfCustomer?maKH=",
+      GET_BY_ID: "/api/HoaDonThu/getHoaDonThuByID?maHoaDonThu=",
+      DELETE: "/api/HoaDonThu/deleteHoaDonThu?maHoaDonThu=",
+      HOA_DON_BO_SUNG: {
+        GET_ALL: "/api/HoaDonThuBoSung/getHoaDonThuBoSungAll",
+        GET_BY_ID:
+          "/api/HoaDonThuBoSung/getHoaDonThuBoSungByID?maHoaDonThuBoSung=",
+        DELETE: "/api/HoaDonThuBoSung/deleteHoaDonThuBoSung?maHoaDonThuBoSung=",
+        CREATE: "/api/HoaDonThuBoSung/createHoaDonThuBoSung",
+        UPDATE: "/api/HoaDonThuBoSung/updateHoaDonThuBoSung",
+      },
+    },
+    TIEN_DO: {
+      GET_ALL: "/api/PhieuTienDoLamViec/getPhieuTienDoLamViecAll",
+      GET_BY_ID:
+        "/api/PhieuTienDoLamViec/getPhieuTienDoLamViecByID?maPhieuTienDoLamViec=",
+      CREATE: "/api/PhieuTienDoLamViec/createPhieuTienDoLamViec",
+      NHAN_XET: "/api/PhieuTienDoLamViec/reviewPhieuTienDoLamViec",
+      DELETE:
+        "/api/PhieuTienDoLamViec/deletePhieuTienDoLamViec?maPhieuTienDoLamViec=",
+    },
+    DM_PLHC: {
+      GET_BY_ID: "/api/DmPhuLieuHoaChat/findDmPhuLieuHoaChat?id=",
     },
   },
   CUSTOMER: {
@@ -121,7 +153,5 @@ export const REFRESH_TOKEN = "REFRESH_TOKEN_APP";
 export enum EKey {
   TOKEN = "token",
   REFRESH_TOKEN = "refresh_token",
-  TOKEN_GUEST = "token_guest",
-  REFRESH_TOKEN_GUEST = "refresh_token_guest",
   ID = "id",
 }

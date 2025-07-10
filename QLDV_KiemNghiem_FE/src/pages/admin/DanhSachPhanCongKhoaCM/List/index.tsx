@@ -63,7 +63,7 @@ const DanhSach = (props: Props) => {
         : new Date(b.ngayTao).getTime() - new Date(a.ngayTao).getTime()
     )
     ?.slice(indexOfFirstItem, indexOfLastItem);
-  const totalPages = Math.ceil(data && data?.length / itemsPerPage);
+  const totalPages = Math.ceil(currentItems && currentItems?.length / itemsPerPage);
 
   const handlePageChange = (_: any, value: number) => {
     setCurrentPage(value);

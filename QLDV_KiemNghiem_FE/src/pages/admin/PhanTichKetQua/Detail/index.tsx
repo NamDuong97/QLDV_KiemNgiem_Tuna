@@ -21,15 +21,7 @@ const Detail = ({
         <div>{detail?.donVi}</div>
         <div>
           <span
-            className={`px-2 py-1 rounded-full text-xs font-medium ${
-              detail?.trangThai === "Đạt"
-                ? "bg-green-100 text-green-800"
-                : detail.quality === "Không đạt"
-                ? "bg-red-100 text-red-800"
-                : detail.quality === "Cần kiểm tra lại"
-                ? "bg-yellow-100 text-yellow-800"
-                : "bg-gray-100 text-gray-800"
-            }`}
+            className={`px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800`}
           >
             {detail?.mucChatLuong}
           </span>

@@ -57,6 +57,8 @@ export const useGetDmMauAll = (props: Props) => {
       const response = await PhieuDKyDVKN_Services.getDmMauAll();
       return response;
     },
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
     staleTime: Infinity,
   });
 };
@@ -69,6 +71,9 @@ export const useGetDmPhuLieuHoaChatAll = (props: Props) => {
       const response = await PhieuDKyDVKN_Services.getDmPhuLieuHoaChatAll();
       return response;
     },
+    staleTime: Infinity,
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
   });
 };
 
@@ -80,6 +85,9 @@ export const useGetLoaiDichVuAll = (props: Props) => {
       const response = await PhieuDKyDVKN_Services.getLoaiDichVuAll();
       return response;
     },
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
+    staleTime: Infinity,
   });
 };
 
@@ -94,6 +102,7 @@ export const useGetLoaiMauAll = (props: Props) => {
     ...options,
     refetchOnMount: false,
     refetchOnWindowFocus: false,
+    staleTime: Infinity,
   });
 };
 
@@ -109,6 +118,7 @@ export const useGetTieuChuanAll = (props: Props) => {
     ...options,
     refetchOnMount: false,
     refetchOnWindowFocus: false,
+    staleTime: Infinity,
   });
 };
 
@@ -120,6 +130,9 @@ export const useGetTrangThaiPhieuDkAll = (props: Props) => {
       const response = await PhieuDKyDVKN_Services.getTrangThaiPhieuDkAll();
       return response;
     },
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
+    staleTime: Infinity,
   });
 };
 
@@ -174,7 +187,7 @@ export const useCreateTieuChuan = (props: Props) => {
 };
 
 export const useCreateDmPhuLieuHoaChat = (props: Props) => {
-  const { queryKey, onSettled } = props;
+  const { queryKey, onSettled, onSuccess, onError } = props;
   return useMutation({
     mutationKey: [queryKey],
     mutationFn: async (params: any) => {
@@ -183,9 +196,8 @@ export const useCreateDmPhuLieuHoaChat = (props: Props) => {
       );
       return response;
     },
-    onSuccess: (response: any) => {
-      if (response !== 200) console.log("Lỗi Server");
-    },
+    onSuccess: onSuccess,
+    onError: onError,
     onSettled: onSettled,
   });
 };

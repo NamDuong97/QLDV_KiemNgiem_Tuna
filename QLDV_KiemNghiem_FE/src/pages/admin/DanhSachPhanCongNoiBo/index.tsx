@@ -39,9 +39,6 @@ const DanhSachPhanCongNoiBo = () => {
         <>
           <div className="bg-white p-4 rounded-lg shadow-sm flex justify-between">
             <TagPhanCong setIsTag={setIsTag} isTag={isTag} />
-            <button className="text-blue-600 cursor-pointer hover:underline">
-              Hướng dẫn sử dụng
-            </button>
           </div>
           {role !== "KN" && isTag === tagPhanCong.Phan_Cong && (
             <motion.div

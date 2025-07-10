@@ -9,6 +9,7 @@ import {
 } from "../../../../../hooks/personnels/quanLyPhieuDKKM";
 import { role } from "../../../../../configs/parseJwt";
 import { getRoleGroup } from "../../../../../configs/Role";
+import { useStoreNotification } from "../../../../../configs/stores/useStoreNotification";
 
 interface Props {
   id: any;
@@ -45,10 +46,19 @@ const FormGhiChuDuyet = (props: Props) => {
     }
     await Promise.all([
       queryClient.refetchQueries({
-        queryKey: ["listPhieuDKKM_BLD"],
+        queryKey: ["listPhieuDKKM_KHTH"],
       }),
       queryClient.refetchQueries({
         queryKey: ["quanLyPhieuDKKMs_BLD"],
+      }),
+      queryClient.refetchQueries({
+        queryKey: ["quanLyPhieuDKKMs_KHTH"],
+      }),
+      queryClient.refetchQueries({
+        queryKey: ["listPhieuDKKNAllKHTH"],
+      }),
+      queryClient.refetchQueries({
+        queryKey: ["listPhieuDKKM_BLD"],
       }),
       queryClient.refetchQueries({
         queryKey: ["listPhieuDKKNAll"],
@@ -58,22 +68,58 @@ const FormGhiChuDuyet = (props: Props) => {
       }),
     ]);
   };
+  const showNotification = useStoreNotification(
+    (state: any) => state.showNotification
+  );
 
   const handleOnSettledKHTH = async (response: any) => {
     if (response.ketQua === true) {
+      showNotification({
+        message: `${
+          getRoleGroup(role) === "KHTH" ? "Duyệt sơ bộ" : "Duyệt phiếu"
+        } thành công`,
+        status: 200,
+      });
       handleClose();
+      await Promise.all([
+        queryClient.refetchQueries({
+          queryKey: ["listPhieuDKKM_KHTH"],
+        }),
+        queryClient.refetchQueries({
+          queryKey: ["quanLyPhieuDKKMs_KHTH"],
+        }),
+        queryClient.refetchQueries({
+          queryKey: ["listPhieuDKKNAllKHTH"],
+        }),
+        queryClient.refetchQueries({
+          queryKey: ["listPhieuDKKM_BLD"],
+        }),
+        queryClient.refetchQueries({
+          queryKey: ["quanLyPhieuDKKMs_BLD"],
+        }),
+        queryClient.refetchQueries({
+          queryKey: ["listPhieuDKKNAll"],
+        }),
+        queryClient.refetchQueries({
+          queryKey: ["listPhieuChoPhanCong"],
+        }),
+        queryClient.refetchQueries({
+          queryKey: ["ThongKePhieuDky"],
+        }),
+        queryClient.refetchQueries({
+          queryKey: ["AllDanhSachMau"],
+        }),
+      ]);
+
+      return;
+    } else {
+      showNotification({
+        message: `${
+          getRoleGroup(role) === "KHTH" ? "Duyệt sơ bộ" : "Duyệt phiếu"
+        } thất bại`,
+        status: 500,
+      });
     }
-    await Promise.all([
-      queryClient.refetchQueries({
-        queryKey: ["listPhieuDKKM_KHTH"],
-      }),
-      queryClient.refetchQueries({
-        queryKey: ["quanLyPhieuDKKMs_KHTH"],
-      }),
-      queryClient.refetchQueries({
-        queryKey: ["listPhieuDKKNAllKHTH"],
-      }),
-    ]);
   };
 
   const { mutate: mutateBLD } = useDanhGiaBLD({

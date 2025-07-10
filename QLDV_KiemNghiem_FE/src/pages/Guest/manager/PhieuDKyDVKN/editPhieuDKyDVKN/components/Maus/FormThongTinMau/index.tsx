@@ -316,8 +316,6 @@ const FormThongTinMau = (props: FormThongTinMauProps) => {
       dataImage.push({
         maId: "",
         maMau: "",
-        ten: item.ten,
-        dinhDang: item.type,
         base64: item.base64,
         ghiChu: item.ghiChu,
         loaiAnh: "",
@@ -396,8 +394,6 @@ const FormThongTinMau = (props: FormThongTinMauProps) => {
       dataImage.push({
         maId: "",
         maMau: "",
-        ten: item.ten,
-        dinhDang: item.type,
         base64: item.base64,
         ghiChu: item.ghiChu,
         loaiAnh: "",

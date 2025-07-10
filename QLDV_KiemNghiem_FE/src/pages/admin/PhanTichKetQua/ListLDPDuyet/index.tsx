@@ -8,17 +8,19 @@ import { getRoleGroup } from "../../../../configs/Role";
 import { role } from "../../../../configs/parseJwt";
 import CardLDPDuyet from "../CardLDPDuyet";
 import SelectItemTrangThai from "./SelectItemTrangThai";
+import { FaSortAmountDown, FaSortAmountUp } from "react-icons/fa";
 
 const ListLDPDuyet = ({ onView, handleOpenModelNoiDungSoBo }: any) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectKhoa, setSelectKhoa] = useState("");
   const [selectTrangThai, setSelectTrangThai] = useState("");
   const { personnelInfo } = usePersonnel();
+  const [isSortNew, setIsSortNew] = useState(false);
 
   const { data, isLoading } = queryPhanTichKetQuaAll({
     queryKey: "phanTichKetQuaChuaDuyet",
     params:
-      getRoleGroup(role) === "BLD"
+      getRoleGroup(role) === "BLD" || getRoleGroup(role) === "KHTH"
         ? {
             getAll: true,
           }
@@ -27,11 +29,15 @@ const ListLDPDuyet = ({ onView, handleOpenModelNoiDungSoBo }: any) => {
             maKhoa: personnelInfo?.maKhoa,
           },
   });
-  console.log("dadatadatadatata", data);
 
   const filteredResults = data
+    ?.sort((a: any, b: any) =>
+      isSortNew
+        ? new Date(a.ngayTao).getTime() - new Date(b.ngayTao).getTime()
+        : new Date(b.ngayTao).getTime() - new Date(a.ngayTao).getTime()
+    )
     ?.filter((item: any) =>
-      getRoleGroup(role) === "BLD"
+      getRoleGroup(role) === "BLD" || getRoleGroup(role) === "KHTH"
         ? item.trangThai !== 2 && item.trangThai !== 3
         : item.trangThai === 2
     )
@@ -85,7 +91,24 @@ const ListLDPDuyet = ({ onView, handleOpenModelNoiDungSoBo }: any) => {
                 size={16}
               />
             </div>
-
+            <button
+              onClick={() => setIsSortNew(!isSortNew)}
+              type="button"
+              className="btn btn-outline-primary border border-gray-300 py-[6px] px-2 rounded cursor-pointer hover:bg-blue-50"
+            >
+              <span className="flex items-center gap-2 text-gray-800">
+                {isSortNew ? (
+                  <>
+                    <FaSortAmountUp /> Cũ nhất
+                  </>
+                ) : (
+                  <>
+                    <FaSortAmountDown />
+                    Mới nhất
+                  </>
+                )}
+              </span>
+            </button>
             {getRoleGroup(role) === "BLD" && (
               <>
                 <SelectItemKhoa

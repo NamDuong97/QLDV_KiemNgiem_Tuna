@@ -4,7 +4,6 @@ import {
   Archive,
   Share,
   FileText,
-  ShoppingCart,
 } from "react-feather";
 import { image } from "../../constants/image";
 import {
@@ -37,20 +36,24 @@ import { TbLogout } from "react-icons/tb";
 import { role } from "../../configs/parseJwt";
 import { FaFlask } from "react-icons/fa6";
 import { FaChartLine } from "react-icons/fa";
-import { HiClipboardDocumentList } from "react-icons/hi2";
 import { getChucVuByID } from "../../hooks/personnels/queryChucVu";
 import { getRoleGroup } from "../../configs/Role";
+import { getKhoaByID } from "../../hooks/personnels/queryKhoa";
+import { Skeleton } from "@mui/material";
 
 const SidebarPersonnal = () => {
   const navigate = useNavigate();
   const pathname = useLocation().pathname;
   const { personnelInfo, logout } = usePersonnel();
 
-  const { data } = getChucVuByID({
+  const { data, isLoading } = getChucVuByID({
     queryKey: "getChucVuByID",
     params: personnelInfo?.maChucVu,
   });
-
+  const { data: dataKhoa } = getKhoaByID({
+    queryKey: "getChucVuByID",
+    params: personnelInfo?.maKhoa,
+  });
   const handleRedirect = (value?: string) => {
     switch (value) {
       case PhieuDKyDVKNManager:
@@ -125,7 +128,7 @@ const SidebarPersonnal = () => {
                   pathname === APP_ROUTES.TUNA_ADMIN.DASHBOARD.to,
               })}
             />
-            <span>Tổng quan</span>
+            <span className="capitalize">Tổng quan</span>
           </button>
           <div className="flex flex-col space-y-2">
             <div className="pl-4">
@@ -163,7 +166,9 @@ const SidebarPersonnal = () => {
                         })}
                       />
                     </span>
-                    <span className="text-start">Phiếu kiểm nghiệm</span>
+                    <span className="text-start capitalize">
+                      Phiếu kiểm nghiệm
+                    </span>
                   </button>
                   <button
                     onClick={() => {
@@ -191,7 +196,7 @@ const SidebarPersonnal = () => {
                         })}
                       />
                     </span>
-                    <span className="text-start">
+                    <span className="text-start capitalize">
                       Phân công Khoa chuyên môn
                     </span>
                   </button>
@@ -219,7 +224,7 @@ const SidebarPersonnal = () => {
                         })}
                       />
                     </span>
-                    <span className="text-start">Danh sách mẫu</span>
+                    <span className="text-start capitalize">Danh sách mẫu</span>
                   </button>
                 </>
               )}
@@ -254,40 +259,48 @@ const SidebarPersonnal = () => {
                       })}
                     />
                   </span>
-                  <span className="text-start">Danh sách phân công khoa</span>
+                  <span className="text-start capitalize">
+                    Danh sách phân công khoa
+                  </span>
                 </button>
               )}
               {(getRoleGroup(role) === "BLD" ||
                 getRoleGroup(role) === "KN") && (
                 <>
-                  <button
-                    onClick={() => {
-                      handleRedirect(quanLyLuuMau);
-                    }}
-                    className={clsx(
-                      "flex items-center space-x-2 sidebar-link px-4 py-3 text-gray-700 rounded-lg",
-                      {
-                        "text-indigo-600 active":
-                          pathname.split("/")[2] ===
-                          APP_ROUTES.TUNA_ADMIN.QUAN_LY_PHIEU_LUU_MAU.to.split(
-                            "/"
-                          )[2],
-                      }
-                    )}
-                  >
-                    <span className="w-5">
-                      <Archive
-                        className={clsx("w-5 h-5 text-gray-500", {
-                          "text-indigo-600":
+                  {(role === "KN_L" ||
+                    role === "KN_P" ||
+                    getRoleGroup(role) === "BLD") && (
+                    <button
+                      onClick={() => {
+                        handleRedirect(quanLyLuuMau);
+                      }}
+                      className={clsx(
+                        "flex items-center space-x-2 sidebar-link px-4 py-3 text-gray-700 rounded-lg",
+                        {
+                          "text-indigo-600 active":
                             pathname.split("/")[2] ===
                             APP_ROUTES.TUNA_ADMIN.QUAN_LY_PHIEU_LUU_MAU.to.split(
                               "/"
                             )[2],
-                        })}
-                      />
-                    </span>
-                    <span className="text-start">Mẫu lưu</span>
-                  </button>
+                        }
+                      )}
+                    >
+                      <span className="w-5">
+                        <Archive
+                          className={clsx("w-5 h-5 text-gray-500", {
+                            "text-indigo-600":
+                              pathname.split("/")[2] ===
+                              APP_ROUTES.TUNA_ADMIN.QUAN_LY_PHIEU_LUU_MAU.to.split(
+                                "/"
+                              )[2],
+                          })}
+                        />
+                      </span>
+                      <span className="text-start capitalize">
+                        Phiếu lưu mẫu
+                      </span>
+                    </button>
+                  )}
                   <button
                     onClick={() => {
                       handleRedirect(quanLyPhanCongNoiBo);
@@ -314,7 +327,9 @@ const SidebarPersonnal = () => {
                         })}
                       />
                     </span>
-                    <span className="text-start">Phân công nội bộ</span>
+                    <span className="text-start capitalize">
+                      Phân công nội bộ
+                    </span>
                   </button>
                   <button
                     onClick={() => {
@@ -342,41 +357,48 @@ const SidebarPersonnal = () => {
                         })}
                       />
                     </span>
-                    <span className="text-start">Dự trù</span>
+                    <span className="text-start capitalize">Phiếu Dự trù</span>
                   </button>
                 </>
               )}
 
-              <button
-                onClick={() => {
-                  handleRedirect(quanLyHoaDonTrangAdmin);
-                }}
-                className={clsx(
-                  "flex items-center space-x-2 sidebar-link px-4 py-3 text-gray-700 rounded-lg",
-                  {
-                    "text-indigo-600 active":
-                      pathname.split("/")[2] ===
-                      APP_ROUTES.TUNA_ADMIN.QUAN_LY_HOA_DON.to.split("/")[2],
-                  }
-                )}
-              >
-                <span className="w-5">
-                  <MdReceiptLong
-                    className={clsx("w-5 h-5 text-gray-500", {
-                      "text-indigo-600":
+              {(getRoleGroup(role) === "BLD" ||
+                getRoleGroup(role) === "KHTH" ||
+                getRoleGroup(role) === "KET" ||
+                getRoleGroup(role) === "KYT") && (
+                <button
+                  onClick={() => {
+                    handleRedirect(quanLyHoaDonTrangAdmin);
+                  }}
+                  className={clsx(
+                    "flex items-center space-x-2 sidebar-link px-4 py-3 text-gray-700 rounded-lg",
+                    {
+                      "text-indigo-600 active":
                         pathname.split("/")[2] ===
                         APP_ROUTES.TUNA_ADMIN.QUAN_LY_HOA_DON.to.split("/")[2],
-                    })}
-                  />
-                </span>
-                <span className="text-start">Hóa đơn</span>
-              </button>
+                    }
+                  )}
+                >
+                  <span className="w-5">
+                    <MdReceiptLong
+                      className={clsx("w-5 h-5 text-gray-500", {
+                        "text-indigo-600":
+                          pathname.split("/")[2] ===
+                          APP_ROUTES.TUNA_ADMIN.QUAN_LY_HOA_DON.to.split(
+                            "/"
+                          )[2],
+                      })}
+                    />
+                  </span>
+                  <span className="text-start capitalize">Hóa đơn</span>
+                </button>
+              )}
               <button
                 onClick={() => {
                   handleRedirect(quanLyPhieuPhanTichKetQua);
                 }}
                 className={clsx(
-                  "flex items-center space-x-2 sidebar-link px-4 py-3 text-gray-700 rounded-lg",
+                  "flex items-start space-x-2 sidebar-link px-4 py-3 text-gray-700 rounded-lg",
                   {
                     "text-indigo-600 active":
                       pathname.split("/")[2] ===
@@ -397,9 +419,11 @@ const SidebarPersonnal = () => {
                     })}
                   />
                 </span>
-                <span className="text-start">Phân tích kết quả</span>
+                <span className="text-start capitalize">
+                  Phiếu Phân tích kết quả
+                </span>
               </button>
-              {(getRoleGroup(role) === "BLD" ||
+              {/* {(getRoleGroup(role) === "BLD" ||
                 getRoleGroup(role) === "KET") && (
                 <>
                   <button
@@ -459,7 +483,7 @@ const SidebarPersonnal = () => {
                     <span className="text-start">Mua vật tư</span>
                   </button>
                 </>
-              )}
+              )} */}
             </div>
           </div>
           <div className="flex flex-col space-y-2">
@@ -493,7 +517,15 @@ const SidebarPersonnal = () => {
             <p className="text-sm font-medium text-gray-700">
               {personnelInfo?.hoTen}
             </p>
-            <p className="text-xs text-gray-500">{data?.tenChucVu}</p>
+            {isLoading ? (
+              <Skeleton variant="rounded" width={171} height={32} />
+            ) : (
+              <p className="text-xs text-gray-500">{`${data?.tenChucVu} ${
+                getRoleGroup(role) !== "BLD" && getRoleGroup(role) !== "KHTH"
+                  ? dataKhoa?.tenKhoa
+                  : ""
+              }`}</p>
+            )}
           </div>
         </div>
       </div>

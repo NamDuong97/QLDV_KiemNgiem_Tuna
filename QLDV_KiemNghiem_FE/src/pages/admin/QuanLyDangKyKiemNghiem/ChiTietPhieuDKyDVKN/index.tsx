@@ -35,11 +35,16 @@ const ChiTietPhieuDKyDVKN = (props: Props) => {
     params: id,
   });
 
-  console.log("data", data);
+  console.log("datadata", data);
 
   const { data: dataNhanVien } = getInforNhanVien({
     queryKey: "getInforNhanVien",
     params: data?.manvSoDuyet,
+  });
+
+  const { data: dataNhanVienBLD } = getInforNhanVien({
+    queryKey: "getInforNhanVienBLD",
+    params: data?.maBldduyet,
   });
 
   const handleClosePopup = async () => {
@@ -489,10 +494,7 @@ const ChiTietPhieuDKyDVKN = (props: Props) => {
               {data?.noiDungDuyetSoBo && (
                 <div className="col-span-full">
                   <label className="text-sm/6 text-gray-500">
-                    {getRoleGroup(role) === "BLD"
-                      ? `Nhân viên ${dataNhanVien?.hoTen} đánh
-                    giá phiếu`
-                      : "Ghi chú đánh giá phiếu"}
+                    Nhân viên {dataNhanVien?.hoTen} đánh giá phiếu
                   </label>
                   <div className="bg-gray-50 p-4 rounded-lg">
                     <p className="text-gray-700 font-semibold">
@@ -504,7 +506,7 @@ const ChiTietPhieuDKyDVKN = (props: Props) => {
               {getRoleGroup(role) === "BLD" && data?.noiDungTongDuyet && (
                 <div className="col-span-full">
                   <label className="text-sm/6 text-gray-500">
-                    Ghi chú đánh giá phiếu
+                    Ban lãnh đạo {dataNhanVienBLD?.hoTen} đánh giá phiếu
                   </label>
                   <div className="bg-gray-50 p-4 rounded-lg">
                     <p className="text-gray-700 font-semibold">

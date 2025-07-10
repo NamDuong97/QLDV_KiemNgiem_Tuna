@@ -6,7 +6,7 @@ import { Edit, Eye, FileText } from "react-feather";
 import { getInforNhanVien } from "../../../../hooks/personnels/access/useAccess";
 import { getKhoaByID } from "../../../../hooks/personnels/queryKhoa";
 
-const Card = ({ result, onView, onEdit, dataDM_Mau }: any) => {
+const Card = ({ result, onView, onEdit }: any) => {
   const { data } = getInforNhanVien({
     queryKey: "InforNhanVien",
     params: result?.manvLapPhieu,
@@ -19,19 +19,18 @@ const Card = ({ result, onView, onEdit, dataDM_Mau }: any) => {
 
   const handleView = (e: any) => {
     e.stopPropagation();
-    onView(result.maId);
+    onView(result.maID);
   };
 
   const handleEdit = (e: any) => {
     e.stopPropagation();
-    onEdit(result.maId);
+    onEdit(result.maID);
   };
-  console.log("dataId", result?.maId);
 
   return (
     <div
       className="result-card bg-white border border-gray-200 rounded-lg p-6 card-hover cursor-pointer"
-      onClick={() => onView(result?.maId)}
+      onClick={() => onView(result?.maID)}
     >
       <div className="flex justify-between items-start mb-4">
         <div className="flex items-center space-x-3">
@@ -42,12 +41,7 @@ const Card = ({ result, onView, onEdit, dataDM_Mau }: any) => {
             <h3 className="font-semibold text-gray-900">
               {result?.maPhieuDuTru}
             </h3>
-            <p className="text-sm text-gray-600">
-              {
-                dataDM_Mau?.find((item: any) => item.maId === result?.maPdkMau)
-                  ?.tenMau
-              }
-            </p>
+            <p className="text-sm text-gray-600">{result?.tenMau}</p>
           </div>
         </div>
         {renderTrangThaiDuTru(result.trangThai)}
