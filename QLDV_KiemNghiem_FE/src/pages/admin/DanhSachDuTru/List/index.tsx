@@ -10,20 +10,31 @@ import { role } from "../../../../configs/parseJwt";
 
 const List = ({ onView, onEdit }: any) => {
   const [searchTerm, setSearchTerm] = useState("");
-  const [statusFilter, setStatusFilter] = useState("");
+  const [statusFilter, setStatusFilter] = useState(1);
   const { personnelInfo } = usePersonnel();
 
+  //khởi tạo param mặc định
+  let params: any = {
+    getAll: true,
+  };
+
+  // Thêm theo role
+  if (getRoleGroup(role) !== "BLD") {
+    params.maKhoa = personnelInfo?.maKhoa;
+  }
+
+  if (role === "KN") {
+    params.ManvLap = personnelInfo?.maId;
+  }
+
+  // Thêm trạng thái nếu có chọn
+  if (statusFilter !== null && statusFilter !== undefined) {
+    params.trangThai = statusFilter;
+  }
+
   const { data, isLoading } = queryDuTruAll({
-    queryKey: "queryDuTruAll",
-    params:
-      getRoleGroup(role) === "BLD"
-        ? {
-            getAll: true,
-          }
-        : {
-            getAll: true,
-            maKhoa: personnelInfo?.maKhoa,
-          },
+    queryKeyList: ["queryDuTruAll", role, personnelInfo?.maKhoa, statusFilter],
+    params,
   });
   console.log("data", data);
 
@@ -35,8 +46,7 @@ const List = ({ onView, onEdit }: any) => {
           ?.toLowerCase()
           .includes(searchTerm.toLowerCase()) ||
         result?.tenMau?.toLowerCase().includes(searchTerm.toLowerCase());
-      const matchesStatus = !statusFilter || result.status === statusFilter;
-      return matchesSearch && matchesStatus;
+      return matchesSearch;
     })
     ?.sort((a: any, b: any) => {
       return new Date(b.ngayLap).getTime() - new Date(a.ngayLap).getTime();

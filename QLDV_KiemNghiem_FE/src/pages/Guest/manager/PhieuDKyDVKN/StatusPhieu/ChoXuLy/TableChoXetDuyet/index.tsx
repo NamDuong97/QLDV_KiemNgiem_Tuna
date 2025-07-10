@@ -17,7 +17,6 @@ import { useNavigate } from "react-router";
 import { Dispatch, SetStateAction } from "react";
 import { Align } from "../../../../../../../models/Table";
 import { APP_ROUTES } from "../../../../../../../constants/routers";
-import { CiEdit } from "react-icons/ci";
 import { Edit } from "react-feather";
 
 interface TableChoXetDuyetProps {

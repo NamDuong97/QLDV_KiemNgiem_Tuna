@@ -2,20 +2,26 @@ import { GiTestTubes } from "react-icons/gi";
 import { Eye } from "react-feather";
 import { useNavigate } from "react-router";
 import { APP_ROUTES } from "../../../../../../../../../constants/routers";
+import {
+  formatDateNotTime2,
+  renderTrangThaiPhanTichKetQua,
+} from "../../../../../../../../../configs/configAll";
 
 const Card = ({ result }: any) => {
   const navigate = useNavigate();
 
   const handleView = (id: any) => {
-    navigate(APP_ROUTES.TUNA_CUSTOMER.PHIEU_DKY_DVKN.QUAN_LY_PHAN_TICH_KET_QUA
-                .xem_chi_tiet);
+    navigate(
+      APP_ROUTES.TUNA_CUSTOMER.PHIEU_DKY_DVKN.QUAN_LY_PHAN_TICH_KET_QUA
+        .xem_chi_tiet
+    );
     sessionStorage.setItem("chi-tiet-phan-tich-ket-qua", JSON.stringify(id));
   };
 
   return (
     <div
       className="result-card bg-white border border-gray-200 rounded-lg p-6 card-hover cursor-pointer"
-      onClick={() => handleView("result?.maID")}
+      onClick={() => handleView(result?.maID)}
     >
       <div className="flex justify-between items-start mb-4">
         <div className="flex items-center space-x-3">
@@ -29,7 +35,7 @@ const Card = ({ result }: any) => {
             <p className="text-sm text-gray-600">{result?.tenMau}</p>
           </div>
         </div>
-        {/* {renderTrangThaiPhanTichKetQua(result?.trangThai)} */}
+        {renderTrangThaiPhanTichKetQua(result?.trangThai)}
       </div>
 
       <div className="grid grid-cols-6 gap-4 text-sm">
@@ -46,7 +52,7 @@ const Card = ({ result }: any) => {
         <div>
           <p className="text-gray-600">Ngày trả KQ</p>
           <p className="font-medium">
-            {/* {formatDateNotTime2(result?.ngayTraKetQua)} */}
+            {formatDateNotTime2(result?.ngayTraKetQua)}
           </p>
         </div>
         <div>

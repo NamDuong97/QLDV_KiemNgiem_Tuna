@@ -11,15 +11,11 @@ interface Props {
 
 const dataTrangThai = [
   {
-    maId: 0,
+    maId: false,
     tenTt: "Đã Hủy ",
   },
   {
-    maId: 1,
-    tenTt: "Chờ phòng ban duyệt",
-  },
-  {
-    maId: 2,
+    maId: true,
     tenTt: "Đã duyệt",
   },
 ];

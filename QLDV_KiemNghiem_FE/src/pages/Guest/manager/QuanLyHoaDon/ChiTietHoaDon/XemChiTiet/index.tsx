@@ -22,7 +22,7 @@ const XemChiTiet = () => {
   const session = sessionStorage.getItem("chi-tiet-hoa-don");
   const id = session ? JSON.parse(session) : "";
 
-  const { data, isLoading } = useQueryHoaDonThuByID({
+  const { data } = useQueryHoaDonThuByID({
     queryKey: "queryHoaDonBoSungByID",
     maHoaDonThu: id,
   });

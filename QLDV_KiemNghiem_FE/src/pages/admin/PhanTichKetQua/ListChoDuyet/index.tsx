@@ -7,11 +7,13 @@ import { Pagination, Skeleton } from "@mui/material";
 import SelectItemKhoa from "./SelectItemKhoa";
 import { getRoleGroup } from "../../../../configs/Role";
 import { role } from "../../../../configs/parseJwt";
+import { FaSortAmountDown, FaSortAmountUp } from "react-icons/fa";
 
 const ListChoDuyet = ({ onView, onEdit }: any) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectKhoa, setSelectKhoa] = useState("");
   const { personnelInfo } = usePersonnel();
+  const [isSortNew, setIsSortNew] = useState(false);
 
   const params: any = { getAll: true };
 
@@ -26,6 +28,11 @@ const ListChoDuyet = ({ onView, onEdit }: any) => {
   });
 
   const filteredResults = data
+    ?.sort((a: any, b: any) =>
+      isSortNew
+        ? new Date(a.ngayTao).getTime() - new Date(b.ngayTao).getTime()
+        : new Date(b.ngayTao).getTime() - new Date(a.ngayTao).getTime()
+    )
     ?.filter((item: any) =>
       getRoleGroup(role) === "BLD"
         ? item.trangThai === 2
@@ -79,7 +86,24 @@ const ListChoDuyet = ({ onView, onEdit }: any) => {
                 size={16}
               />
             </div>
-
+            <button
+              onClick={() => setIsSortNew(!isSortNew)}
+              type="button"
+              className="btn btn-outline-primary border border-gray-300 py-[6px] px-2 rounded cursor-pointer hover:bg-blue-50"
+            >
+              <span className="flex items-center gap-2 text-gray-800">
+                {isSortNew ? (
+                  <>
+                    <FaSortAmountUp /> Cũ nhất
+                  </>
+                ) : (
+                  <>
+                    <FaSortAmountDown />
+                    Mới nhất
+                  </>
+                )}
+              </span>
+            </button>
             {getRoleGroup(role) === "BLD" && (
               <SelectItemKhoa
                 title="Khoa"

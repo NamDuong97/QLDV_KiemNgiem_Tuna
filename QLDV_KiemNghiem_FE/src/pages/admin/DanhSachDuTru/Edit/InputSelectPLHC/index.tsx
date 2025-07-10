@@ -21,9 +21,7 @@ export default function InputSelectPLHC({
   data,
   placeholder,
   title,
-
   handleOpenPopupThem,
-  disable,
 }: InputSelectPLHCProps) {
   return (
     <div>

@@ -60,7 +60,7 @@ const ConfirmationModal = (props: Props) => {
       maPhieuLuuMau: dataId,
       isDel: true,
     };
-    // mutate(params);
+    mutate(params);
   };
 
   const handleXoaMem = () => {
@@ -68,7 +68,7 @@ const ConfirmationModal = (props: Props) => {
       maPhieuLuuMau: dataId,
       isDel: false,
     };
-    // mutate(params);
+    mutate(params);
   };
 
   return (

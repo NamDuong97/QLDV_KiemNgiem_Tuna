@@ -28,6 +28,7 @@ const SampleCard = ({
 
   return (
     <div
+      onClick={() => onSelect(sample?.maId)}
       className={`border rounded-lg overflow-hidden sample-card transition-all cursor-pointer ${
         isSelected === sample.maId
           ? "border-blue-500 bg-blue-50"
@@ -102,7 +103,10 @@ const SampleCard = ({
             Chờ lưu mẫu
           </p>
           <p
-            onClick={() => handleXemChiTiet(sample.maId)}
+            onClick={(e) => {
+              e.stopPropagation();
+              handleXemChiTiet(sample.maId);
+            }}
             className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-sm font-medium hover:underline text-blue-600`}
           >
             Xem chi tiết

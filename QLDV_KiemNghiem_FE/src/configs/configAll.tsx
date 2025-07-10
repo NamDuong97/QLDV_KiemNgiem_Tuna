@@ -215,6 +215,16 @@ export const trangThaiPhanTichKetQua: Record<string, TrangThai> = {
     bgColor: "bg-purple-100",
     textColor: "text-purple-800",
   },
+  6: {
+    text: "Khách hàng duyệt",
+    bgColor: "bg-teal-100",
+    textColor: "text-teal-800",
+  },
+  7: {
+    text: "Khách hàng từ chối",
+    bgColor: "bg-rose-100",
+    textColor: "text-rose-800",
+  },
 };
 
 const trangThaiDuTru: Record<string, TrangThai> = {

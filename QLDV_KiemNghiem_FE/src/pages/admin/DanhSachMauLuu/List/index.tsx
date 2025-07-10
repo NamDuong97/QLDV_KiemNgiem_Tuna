@@ -30,6 +30,7 @@ const DanhSach = (props: Props) => {
   });
   const [saveID, setSaveID] = useState(null);
   const [trangThai, setTrangThai] = useState(null);
+  const [isSortNew, setIsSortNew] = useState(false);
 
   const [searchQuery, setSearchQuery] = useState("");
   const [selectTrangThai, setSelectTrangThai] = useState("");
@@ -52,6 +53,11 @@ const DanhSach = (props: Props) => {
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentItems = filteredSamples
+    ?.sort((a: any, b: any) =>
+      isSortNew
+        ? new Date(a.hanSuDung).getTime() - new Date(b.hanSuDung).getTime()
+        : new Date(b.hanSuDung).getTime() - new Date(a.hanSuDung).getTime()
+    )
     ?.filter((item: any) =>
       selectTrangThai
         ? item.trangThai === selectTrangThai
@@ -104,6 +110,24 @@ const DanhSach = (props: Props) => {
           />
         </div>
         <div className="flex space-x-4 items-center">
+          <button
+            onClick={() => setIsSortNew(!isSortNew)}
+            type="button"
+            className="btn btn-outline-primary border border-gray-300 py-[6px] px-2 rounded cursor-pointer hover:bg-blue-50"
+          >
+            <span className="flex items-center gap-2 text-gray-800">
+              {isSortNew ? (
+                <>
+                  <FaSortAmountUp /> Cũ nhất
+                </>
+              ) : (
+                <>
+                  <FaSortAmountDown />
+                  Mới nhất
+                </>
+              )}
+            </span>
+          </button>
           <SelectItemTrangThai
             title="Trạng thái"
             setItem={setSelectTrangThai}

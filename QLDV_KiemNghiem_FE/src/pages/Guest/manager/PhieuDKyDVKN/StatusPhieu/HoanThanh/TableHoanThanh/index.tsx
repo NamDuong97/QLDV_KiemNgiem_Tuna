@@ -186,7 +186,7 @@ const TableHoanThanh = (props: TableProps) => {
                       }}
                     >
                       <button
-                        onClick={() => handleRedirecPhanTichPage(item)}
+                        onClick={() => handleRedirecPhanTichPage(item?.maId)}
                         className="px-2 py-1 rounded cursor-pointer border border-solid border-blue-500 group hover:bg-blue-500"
                       >
                         <span className="text-base/4 lg:text-xl/6 font-bold text-blue-500 group-hover:text-white">

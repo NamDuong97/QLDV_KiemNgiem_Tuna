@@ -1,10 +1,10 @@
 interface BaseParam {
-PageSize ?: number;
-PageNumber?: number;
-GetAll?: boolean
+  PageSize?: number;
+  PageNumber?: number;
+  GetAll?: boolean;
 }
 
-export interface IParamDangKyMau extends BaseParam{
-    MaLoaiMau?: string;
-
+export interface IParamDangKyMau extends BaseParam {
+  MaLoaiMau?: string;
+  trangThaiPhanCong?: string;
 }

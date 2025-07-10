@@ -83,6 +83,21 @@ export default class phanTichKetQuaServices {
     }
   }
 
+  static async duyetPhanTichKetQuaCUSTOMER(param: any) {
+    try {
+      const response = await _APIInstance.put(
+        API.ADMIN.PHAN_TICH_KET_QUA.REVIEW_PHAN_TICH_KET_QUA_CUSTOMER,
+        param,
+        {
+          headers: { "Content-Type": "application/json" },
+        }
+      );
+      return response;
+    } catch (err: any) {
+      return err;
+    }
+  }
+
   static async deletePhanTichKetQua(param: any) {
     try {
       const response = await _APIInstance.delete(

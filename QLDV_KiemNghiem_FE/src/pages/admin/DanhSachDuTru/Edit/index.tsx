@@ -98,10 +98,10 @@ const Edit = (props: Props) => {
     handleViewResult(resultId);
   };
 
-  const handleCloseModel = () => {
-    onCancel();
-    reset();
-  };
+  // const handleCloseModel = () => {
+  //   onCancel();
+  //   reset();
+  // };
 
   const handleSettled = async (response: any) => {
     if (response?.status === 200) {
