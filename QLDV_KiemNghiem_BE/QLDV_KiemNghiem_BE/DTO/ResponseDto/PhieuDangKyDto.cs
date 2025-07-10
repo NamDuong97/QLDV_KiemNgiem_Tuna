@@ -80,6 +80,11 @@ namespace QLDV_KiemNghiem_BE.DTO.ResponseDto
 
         [StringLength(500)]
         public string? NoiDungTongDuyet { get; set; }
+
+        [NotMapped]
+        public string? MausJson { get; set; } 
+        [NotMapped]
+        public string? PhieuDangKyPhuLieuHoaChatsJson { get; set; }  
         public List<PhieuDangKyMauDto> Maus { get; set; } = new List<PhieuDangKyMauDto>();
         public IEnumerable<PhieuDangKyPhuLieuHoaChatDto> PhieuDangKyPhuLieuHoaChats { get; set; } = new List<PhieuDangKyPhuLieuHoaChatDto>();
     }

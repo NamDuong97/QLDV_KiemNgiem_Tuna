@@ -65,7 +65,28 @@ namespace QLDV_KiemNghiem_BE
             // Shuffle để mật khẩu không luôn có định dạng predictable (chữ hoa, thường, số, đặc biệt)
             return new string(password.OrderBy(x => rand.Next()).ToArray());
         }
+        public static async Task<(string FileName, string Url)> ProcessUpload(IFormFile image, IWebHostEnvironment _env, HttpRequest Request)
+        {
+            if (image == null || image.Length == 0)
+                return (FileName: "0", Url: "0");
 
+            var uploadsFolder = Path.Combine(_env.WebRootPath ?? Path.Combine(_env.ContentRootPath, "wwwroot"), "uploads");
+
+            if (!Directory.Exists(uploadsFolder))
+                Directory.CreateDirectory(uploadsFolder);
+
+            var uniqueFileName = Guid.NewGuid().ToString() + "_"+ Path.GetFileName(image.FileName);
+            var filePath = Path.Combine(uploadsFolder, uniqueFileName);
+
+            using (var stream = new FileStream(filePath, FileMode.Create))
+            {
+                await image.CopyToAsync(stream);
+            }
+
+            var imageUrl = $"{Request?.Scheme}://{Request?.Host}/uploads/{uniqueFileName}";
+
+            return (FileName: uniqueFileName, Url: imageUrl);
+        }
     }
 }
 // Chứa các hàm thường được sử dụng

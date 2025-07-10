@@ -28,7 +28,7 @@ builder.Services.AddScoped<IRepositoryManager, RepositoryManager>();
 builder.Services.AddScoped<IServiceManager, ServiceManager>();
 builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddScoped<ITokenService, TokenService>();
-builder.Services.AddScoped<IUploadFileService, UploadFileService>();
+//builder.Services.AddScoped<IUploadFileService, UploadFileService>();
 //builder.Services.AddSingleton<IUserIdProvider, CustomUserIdProvider>();
 
 
