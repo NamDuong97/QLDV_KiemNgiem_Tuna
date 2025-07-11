@@ -692,7 +692,7 @@ const PhuLieuHoaChat = (props: PhuLieuHoaChatProps) => {
         DieuKienBaoQuan: "",
         GhiChu: "",
       });
-  }, [tableBody, dataEditPLHC, dataCopyPLHC]);
+  }, [tableBody, dataEditPLHC, dataCopyPLHC, reset]);
 
   useEffect(() => {
     if (TenDM_PLHC) {

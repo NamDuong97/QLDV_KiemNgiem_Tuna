@@ -25,6 +25,21 @@ export default class QuanlyPhieuDKYKNServices {
     }
   }
 
+  static async uploadFile(params: any) {
+    try {
+      const response = await _APIInstance.post(
+        API.ADMIN.PHIEU_DKY_DVKM.UPLOAD_FILE,
+        params,
+        {
+          headers: { "Content-Type": "multipart/form-data" },
+        }
+      );
+      return response?.data;
+    } catch (err: any) {
+      return err;
+    }
+  }
+
   static async DanhGiaNhanVien(params: any) {
     // Vừa chạy cho lý do vừa chạy cho duyệt
     try {

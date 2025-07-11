@@ -46,7 +46,7 @@ namespace QLDV_KiemNghiem_BE.Controllers
             return Ok(result);
         }
 
-        [Authorize(Roles = "KHTH")]
+        [Authorize(Policy = "KETOnly")]
         [HttpPost]
         [Route("createHoaDonThuBoSung")]
         public async Task<ActionResult> createHoaDonThuBoSung(HoaDonThuBoSungRequestCreateDto HoaDonThuBoSungDto)

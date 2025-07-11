@@ -26,7 +26,11 @@ namespace QLDV_KiemNghiem_BE.Controllers
                 return BadRequest("Thieu tham so dau vao");
             }
             var mau = await _service.UploadFile.UploadImageAsync(images, Request);
-            return Ok();
+            if (mau)
+            {
+                return Ok(new { Message = "Uploadfile thành công", Status = 200 });
+            }
+            else return BadRequest(new { Message = "Uploadfile thất bại", Status = 400 });
         }
     }
 }

@@ -123,6 +123,16 @@ const trangThaiMauMap: Record<string, TrangThai> = {
     bgColor: "bg-cyan-100",
     textColor: "text-cyan-800",
   },
+  9: {
+    text: "Khách hàng yêu cầu kiểm tra lại",
+    bgColor: "bg-orange-100",
+    textColor: "text-orange-800",
+  },
+  10: {
+    text: "Lãnh đạo phòng hoàn trả mẫu",
+    bgColor: "bg-rose-100",
+    textColor: "text-rose-800",
+  },
 };
 
 const trangThaiChiTietPhieuDeXuatPhongBan: Record<string, TrangThai> = {
@@ -333,7 +343,7 @@ export function renderTrangThaiPhieuDeXuatPhongBan(trangThaiId: string) {
 
   return (
     <span
-      className={`inline-block px-2 py-1 text-xs font-medium rounded-full ${trangThai.bgColor} ${trangThai.textColor}`}
+      className={`inline-block px-2 py-1 text-sm font-medium rounded-full ${trangThai.bgColor} ${trangThai.textColor}`}
     >
       {trangThai.text}
     </span>

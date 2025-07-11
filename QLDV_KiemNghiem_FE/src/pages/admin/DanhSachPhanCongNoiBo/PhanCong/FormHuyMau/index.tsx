@@ -3,6 +3,9 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { useEffect } from "react";
 import yup from "../../../../../configs/yup.custom";
 import { Dialog } from "@mui/material";
+import { useStoreNotification } from "../../../../../configs/stores/useStoreNotification";
+import { queryClient } from "../../../../../lib/reactQuery";
+import { mutationLDPHoanTraMau } from "../../../../../hooks/personnels/queryMau";
 
 interface Props {
   open: boolean;
@@ -34,13 +37,52 @@ const FormHuyMau = (props: Props) => {
     resolver: yupResolver(schema),
   });
 
+  const handleSettled = async (response: any) => {
+    if (response?.status === 200) {
+      await queryClient.refetchQueries({
+        queryKey: ["DanhSachMau"],
+      });
+      handleClose();
+    }
+  };
+  const showNotification = useStoreNotification(
+    (state: any) => state.showNotification
+  );
+
+  const { mutate } = mutationLDPHoanTraMau({
+    queryKey: "mutationLDPHoanTraMau",
+    onSuccess: (data: any) => {
+      console.log("Hoàn trả mẫu thành công:", data);
+      if (data.status === 200) {
+        showNotification({
+          message: "Hoàn trả mẫu thành công",
+          status: 200,
+        });
+        return;
+      } else {
+        showNotification({
+          message: "Hoàn trả mẫu thất bại",
+          status: 500,
+        });
+      }
+    },
+    onError: (error: any) => {
+      console.log("error", error);
+
+      showNotification({
+        message: "Hoàn trả mẫu thất bại",
+        status: 400,
+      });
+    },
+    onSettled: handleSettled,
+  });
+
   const handleNhanXet = (data: any) => {
     const params = {
-      maId: dataID,
+      maMau: dataID,
       message: data.nhanXet,
     };
-    // mutateNhanXet(params);
-    console.log("saveIdTienDo", params);
+    mutate(params);
   };
 
   useEffect(() => {

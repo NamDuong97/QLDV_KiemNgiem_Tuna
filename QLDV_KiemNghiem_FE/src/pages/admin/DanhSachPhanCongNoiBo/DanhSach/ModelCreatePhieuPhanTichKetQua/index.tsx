@@ -15,6 +15,8 @@ import { queryClient } from "../../../../../lib/reactQuery";
 import { usePersonnel } from "../../../../../contexts/PersonelsProvider";
 import { useState } from "react";
 import SelectItemTrangThai from "./SelectItemTrangThai";
+import clsx from "clsx";
+import classes from "../../PhanCong/ModelPhanCong/style.module.scss";
 
 const schema = yup.object({
   ghiChu: yup.string().nullable(),
@@ -155,18 +157,18 @@ const ModelCreatePhieuPhanTichKetQua = ({ open, onClose, dataID }: any) => {
       }}
     >
       <div className="px-6 py-4 border-b border-gray-200 bg-gray-50">
-        <h2 className="text-lg font-semibold text-gray-900">
+        <h2 className="text-xl font-semibold text-gray-900">
           Tạo phiếu phân tích mới cho mẫu ({data?.tenMau})
         </h2>
       </div>
 
-      <DialogContent dividers className="!p-8 bg-gray-50">
+      <DialogContent dividers className="bg-gray-50">
         <form
           id="form-create"
           onSubmit={handleSubmit(handleSave)}
           className="space-y-8"
         >
-          <div>
+          <div className="p-4 border border-gray-300 rounded-lg shadow-[0_4px_4px_rgba(0,0,0,0.25)]">
             <h3 className="text-lg font-semibold text-gray-600">
               Thông tin chung của phiếu phân tích
             </h3>
@@ -213,145 +215,152 @@ const ModelCreatePhieuPhanTichKetQua = ({ open, onClose, dataID }: any) => {
                 {errors.chiTietPhanTichKetQuas.message}
               </p>
             )}
-
-            {fields.map((field, index) => (
-              <div
-                key={field.id}
-                className="grid grid-cols-4 gap-6 p-4 bg-gray-100 rounded-lg"
-              >
-                <div>
-                  <label
-                    htmlFor={`maChiTieu-${index}`}
-                    className="block text-sm font-medium mb-2 text-gray-700"
-                  >
-                    Chỉ tiêu <span className="text-red-500">*</span>
-                  </label>
-                  <SelectItemChiTieu
-                    control={control}
-                    name={`chiTietPhanTichKetQuas.${index}.maChiTieu`}
-                    index={index}
-                    setValue={setValue}
-                    label="chỉ tiêu"
-                    data={chiTieus}
-                    errorMessage={
-                      errors.chiTietPhanTichKetQuas?.[index]?.maChiTieu?.message
-                    }
-                  />
-                </div>
-
-                <div>
-                  <label
-                    htmlFor={`ketQua-${index}`}
-                    className="block text-sm font-medium mb-2 text-gray-700"
-                  >
-                    Kết quả <span className="text-red-500">*</span>
-                  </label>
-                  <input
-                    id={`ketQua-${index}`}
-                    {...register(`chiTietPhanTichKetQuas.${index}.ketQua`)}
-                    className="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-gray-700 focus-within:border-blue-600 focus-within:outline-1 focus:outline-0 focus:ring-blue-200 transition duration-300 ease-in-out"
-                    placeholder="Nhập kết quả"
-                  />
-                  {errors.chiTietPhanTichKetQuas?.[index]?.ketQua && (
-                    <p className="text-red-600 text-xs mt-1 font-medium">
-                      {errors.chiTietPhanTichKetQuas[index].ketQua?.message}
-                    </p>
-                  )}
-                </div>
-
-                <div>
-                  <label
-                    htmlFor={`donVi-${index}`}
-                    className="block text-sm font-medium mb-2 text-gray-700"
-                  >
-                    Đơn vị <span className="text-red-500">*</span>
-                  </label>
-                  <InputSelectDonViTinh
-                    name={`chiTietPhanTichKetQuas.${index}.donVi`}
-                    placeholder="Nhập ĐVT"
-                    data={DonViTinh}
-                    control={control}
-                  />
-                  {errors.chiTietPhanTichKetQuas?.[index]?.donVi && (
-                    <p className="text-red-600 text-xs mt-1 font-medium">
-                      {errors.chiTietPhanTichKetQuas[index].donVi?.message}
-                    </p>
-                  )}
-                </div>
-
-                <div>
-                  <label
-                    htmlFor={`mucChatLuong-${index}`}
-                    className="block text-sm font-medium mb-2 text-gray-700"
-                  >
-                    Mức chất lượng <span className="text-red-500">*</span>
-                  </label>
-                  <input
-                    id={`mucChatLuong-${index}`}
-                    {...register(
-                      `chiTietPhanTichKetQuas.${index}.mucChatLuong`
-                    )}
-                    className="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-gray-700 focus-within:border-blue-600 focus-within:outline-1 focus:outline-0 focus:ring-blue-200 transition duration-300 ease-in-out"
-                    placeholder="Nhập mức chất lượng"
-                  />
-                  {errors.chiTietPhanTichKetQuas?.[index]?.mucChatLuong && (
-                    <p className="text-red-600 text-xs mt-1 font-medium">
-                      {
-                        errors.chiTietPhanTichKetQuas[index].mucChatLuong
+            <div
+              className={clsx(
+                "overflow-y-auto max-h-[300px] space-y-6 p-4",
+                classes.scrollbar_thin
+              )}
+            >
+              {fields.map((field, index) => (
+                <div
+                  key={field.id}
+                  className="grid grid-cols-4 gap-6 p-4 bg-gray-100 border border-gray-300 rounded-lg shadow-[0_2px_2px_rgba(0,0,0,0.25)]"
+                >
+                  <div>
+                    <label
+                      htmlFor={`maChiTieu-${index}`}
+                      className="block text-sm font-medium mb-2 text-gray-700"
+                    >
+                      Chỉ tiêu <span className="text-red-500">*</span>
+                    </label>
+                    <SelectItemChiTieu
+                      control={control}
+                      name={`chiTietPhanTichKetQuas.${index}.maChiTieu`}
+                      index={index}
+                      setValue={setValue}
+                      label="chỉ tiêu"
+                      data={chiTieus}
+                      errorMessage={
+                        errors.chiTietPhanTichKetQuas?.[index]?.maChiTieu
                           ?.message
                       }
-                    </p>
-                  )}
-                </div>
+                    />
+                  </div>
 
-                <div className="col-span-2">
-                  <label
-                    htmlFor={`ghiChuItem-${index}`}
-                    className="block text-sm font-medium mb-2 text-gray-700"
-                  >
-                    Ghi chú <span className="text-red-500">*</span>
-                  </label>
-                  <div className="flex items-center space-x-2">
+                  <div>
+                    <label
+                      htmlFor={`ketQua-${index}`}
+                      className="block text-sm font-medium mb-2 text-gray-700"
+                    >
+                      Kết quả <span className="text-red-500">*</span>
+                    </label>
                     <input
-                      id={`ghiChuItem-${index}`}
-                      {...register(`chiTietPhanTichKetQuas.${index}.ghiChu`)}
+                      id={`ketQua-${index}`}
+                      {...register(`chiTietPhanTichKetQuas.${index}.ketQua`)}
                       className="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-gray-700 focus-within:border-blue-600 focus-within:outline-1 focus:outline-0 focus:ring-blue-200 transition duration-300 ease-in-out"
-                      placeholder="Ghi chú riêng"
+                      placeholder="Nhập kết quả"
                     />
+                    {errors.chiTietPhanTichKetQuas?.[index]?.ketQua && (
+                      <p className="text-red-600 text-xs mt-1 font-medium">
+                        {errors.chiTietPhanTichKetQuas[index].ketQua?.message}
+                      </p>
+                    )}
                   </div>
-                  {errors.chiTietPhanTichKetQuas?.[index]?.ghiChu && (
-                    <p className="text-red-600 text-xs mt-1 font-medium">
-                      {errors.chiTietPhanTichKetQuas[index].ghiChu?.message}
-                    </p>
-                  )}
-                </div>
-                <div className="col-span-1">
-                  <label
-                    htmlFor={`ghiChuItem-${index}`}
-                    className="block text-sm font-medium mb-2 text-gray-700"
-                  >
-                    Trạng thái <span className="text-red-500">*</span>
-                  </label>
-                  <div className="flex items-center space-x-2">
-                    <SelectItemTrangThai
-                      item={statusFilter}
-                      setItem={setStatusFilter}
-                    />
-                  </div>
-                </div>
 
-                <div className="flex items-end justify-center">
-                  <button
-                    type="button"
-                    onClick={() => remove(index)}
-                    className="flex cursor-pointer items-center justify-center px-4 py-2 bg-red-50 text-red-600 rounded-lg hover:bg-red-100 hover:text-red-700 transition duration-300 ease-in-out shadow-sm hover:shadow-md border border-red-200"
-                  >
-                    <DeleteIcon className="mr-2" />
-                    <span>Xóa chỉ tiêu</span>
-                  </button>
+                  <div>
+                    <label
+                      htmlFor={`donVi-${index}`}
+                      className="block text-sm font-medium mb-2 text-gray-700"
+                    >
+                      Đơn vị <span className="text-red-500">*</span>
+                    </label>
+                    <InputSelectDonViTinh
+                      name={`chiTietPhanTichKetQuas.${index}.donVi`}
+                      placeholder="Nhập ĐVT"
+                      data={DonViTinh}
+                      control={control}
+                    />
+                    {errors.chiTietPhanTichKetQuas?.[index]?.donVi && (
+                      <p className="text-red-600 text-xs mt-1 font-medium">
+                        {errors.chiTietPhanTichKetQuas[index].donVi?.message}
+                      </p>
+                    )}
+                  </div>
+
+                  <div>
+                    <label
+                      htmlFor={`mucChatLuong-${index}`}
+                      className="block text-sm font-medium mb-2 text-gray-700"
+                    >
+                      Mức chất lượng <span className="text-red-500">*</span>
+                    </label>
+                    <input
+                      id={`mucChatLuong-${index}`}
+                      {...register(
+                        `chiTietPhanTichKetQuas.${index}.mucChatLuong`
+                      )}
+                      className="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-gray-700 focus-within:border-blue-600 focus-within:outline-1 focus:outline-0 focus:ring-blue-200 transition duration-300 ease-in-out"
+                      placeholder="Nhập mức chất lượng"
+                    />
+                    {errors.chiTietPhanTichKetQuas?.[index]?.mucChatLuong && (
+                      <p className="text-red-600 text-xs mt-1 font-medium">
+                        {
+                          errors.chiTietPhanTichKetQuas[index].mucChatLuong
+                            ?.message
+                        }
+                      </p>
+                    )}
+                  </div>
+
+                  <div className="col-span-2">
+                    <label
+                      htmlFor={`ghiChuItem-${index}`}
+                      className="block text-sm font-medium mb-2 text-gray-700"
+                    >
+                      Ghi chú <span className="text-red-500">*</span>
+                    </label>
+                    <div className="flex items-center space-x-2">
+                      <input
+                        id={`ghiChuItem-${index}`}
+                        {...register(`chiTietPhanTichKetQuas.${index}.ghiChu`)}
+                        className="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-gray-700 focus-within:border-blue-600 focus-within:outline-1 focus:outline-0 focus:ring-blue-200 transition duration-300 ease-in-out"
+                        placeholder="Ghi chú riêng"
+                      />
+                    </div>
+                    {errors.chiTietPhanTichKetQuas?.[index]?.ghiChu && (
+                      <p className="text-red-600 text-xs mt-1 font-medium">
+                        {errors.chiTietPhanTichKetQuas[index].ghiChu?.message}
+                      </p>
+                    )}
+                  </div>
+                  <div className="col-span-1">
+                    <label
+                      htmlFor={`ghiChuItem-${index}`}
+                      className="block text-sm font-medium mb-2 text-gray-700"
+                    >
+                      Trạng thái <span className="text-red-500">*</span>
+                    </label>
+                    <div className="flex items-center space-x-2">
+                      <SelectItemTrangThai
+                        item={statusFilter}
+                        setItem={setStatusFilter}
+                      />
+                    </div>
+                  </div>
+
+                  <div className="flex items-end justify-center">
+                    <button
+                      type="button"
+                      onClick={() => remove(index)}
+                      className="flex cursor-pointer items-center justify-center px-4 py-2 bg-red-50 text-red-600 rounded-lg hover:bg-red-100 hover:text-red-700 transition duration-300 ease-in-out shadow-sm hover:shadow-md border border-red-200"
+                    >
+                      <DeleteIcon className="mr-2" />
+                      <span>Xóa chỉ tiêu</span>
+                    </button>
+                  </div>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
         </form>
       </DialogContent>

@@ -91,7 +91,7 @@ const FormThongTinMau = (props: FormThongTinMauProps) => {
   const dataTest = sessionStorage.getItem("PhieuDangKy");
   const dataPhieuDangky = dataTest ? JSON.parse(dataTest) : null;
   const { userInfo } = useContext(StoreContext);
-  
+
   const [listImage, setListImage] = useState(() => {
     const dataImageTemp = sessionStorage.getItem("ImageTemp");
     return dataImageTemp !== undefined &&
@@ -312,16 +312,14 @@ const FormThongTinMau = (props: FormThongTinMauProps) => {
     ).maId;
     const dataImage: any[] = [];
 
-    console.log("datadatadata", listImage);
-
-    data.phieuDangKyMauHinhAnhs.map((item) =>
+    listImage.map((item: any) =>
       dataImage.push({
         base64: item.base64,
         ghiChu: item.ghiChu,
-        image: item?.image,
+        image: item?.image as File,
+        ten: item.ten,
       })
     );
-    console.log("data", data);
 
     const dataMau = {
       maId: "",
@@ -383,11 +381,12 @@ const FormThongTinMau = (props: FormThongTinMauProps) => {
     ).maId;
 
     const dataImage: any[] = [];
-    data.phieuDangKyMauHinhAnhs.map((item) =>
+    listImage.map((item: any) =>
       dataImage.push({
         base64: item.base64,
         ghiChu: item.ghiChu,
-        image:item.image
+        image: item?.image as File,
+        ten: item.ten,
       })
     );
 
@@ -511,12 +510,11 @@ const FormThongTinMau = (props: FormThongTinMauProps) => {
         ghiChu: "",
         phieuDangKyMauHinhAnhs: [],
       });
-  }, [tableBody, dataEditMaus, dataCopyMaus]);
+  }, [tableBody, dataEditMaus, dataCopyMaus, reset]);
 
   useEffect(() => {
     setValue("phieuDangKyMauHinhAnhs", listImage);
   }, [listImage, setValue]);
-  console.log("listImage", listImage);
 
   return (
     <Box>

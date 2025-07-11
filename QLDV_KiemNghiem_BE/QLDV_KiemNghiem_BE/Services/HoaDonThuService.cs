@@ -73,7 +73,7 @@ namespace QLDV_KiemNghiem_BE.Services
             // Lấy những hóa đơn bổ sung liên quan đến hóa đơn thu
             var hoaDonThuBoSung = await _repositoryManager.HoaDonThuBoSung.FindHoaDonThuBoSungByMaHoaDonThuAsync(maHoaDonThu);
             List<HoaDonThuBoSungProcedureDto> ds = new List<HoaDonThuBoSungProcedureDto>();
-            if(hoaDonThuBoSung!= null)
+            if(HoaDonThuDomain != null && hoaDonThuBoSung!= null)
             {
                 foreach (var item in hoaDonThuBoSung)
                 {
@@ -81,11 +81,12 @@ namespace QLDV_KiemNghiem_BE.Services
                     hoaDonBoSungProcedureDto.ChiTietHoaDonThuBoSungDtos = _mapper.Map<List<ChiTietHoaDonThuBoSungDto>>(item.ChiTietHoaDonThuBoSungs);
                     ds.Add(hoaDonBoSungProcedureDto);
                 }
+                var result = _mapper.Map<HoaDonThuProcedureDto>(HoaDonThuDomain);
+                result.DsHoaDonThuBoSung = ds;
+                return result;
             }
 
-            var result = _mapper.Map<HoaDonThuProcedureDto>(HoaDonThuDomain);
-            result.DsHoaDonThuBoSung = ds;
-            return result;
+            return _mapper.Map<HoaDonThuProcedureDto>(HoaDonThuDomain); ;
         }
         public async Task<ResponseModel1<HoaDonThuDto>> CreateHoaDonThuAsync(HoaDonThuRequestCreateDto hoaDonThuDto, string user, string userId)
         {
@@ -214,19 +215,17 @@ namespace QLDV_KiemNghiem_BE.Services
                 {
                     if (string.IsNullOrEmpty(item.MaID))
                     {
-                        var checkExistCTHDT = await _repositoryManager.ChiTietHoaDonThu.CheckExistChiTietHoaDonThuByMaMauAsync(checkHoaDonThu.MaId, item?.MaMau?? "", false);
+                        var checkExistCTHDT = await _repositoryManager.ChiTietHoaDonThu.CheckExistChiTietHoaDonThuByMaMauAsync(checkHoaDonThu.MaId, false);
                         if (checkExistCTHDT == null)
                         {
                             ChiTietHoaDonThu chiTietHoaDonThu = new ChiTietHoaDonThu()
                             {
                                 MaId = Guid.NewGuid().ToString(),
-                                MaMau = item?.MaMau,
                                 MaHd = checkHoaDonThu.MaId,
                                 ThanhTien = item?.ThanhTien ?? 0,
                                 GhiChu = item?.GhiChu ?? "",
                                 TrangThai = true
                             };
-                            hoaDonThuDto.TongTien += chiTietHoaDonThu.ThanhTien;
                             await _repositoryManager.ChiTietHoaDonThu.CreateChiTietHoaDonThuAsync(chiTietHoaDonThu);
                             chiTietHoaDonThus.Add(chiTietHoaDonThu);
                         }
@@ -243,15 +242,12 @@ namespace QLDV_KiemNghiem_BE.Services
                         if (checkExistCTHDT == null) continue;
                         if (item.IsDel)
                         {
-                            hoaDonThuDto.TongTien -= checkExistCTHDT.ThanhTien;
                             _repositoryManager.ChiTietHoaDonThu.DeleteChiTietHoaDonThuAsync(checkExistCTHDT);
                         }
                         else
                         {
-                            hoaDonThuDto.TongTien -= checkExistCTHDT.ThanhTien;
                             checkExistCTHDT.ThanhTien = item.ThanhTien > 0 ? item.ThanhTien : checkExistCTHDT.ThanhTien;
                             checkExistCTHDT.GhiChu = string.IsNullOrEmpty(item.GhiChu) ? checkExistCTHDT.GhiChu : item.GhiChu;
-                            hoaDonThuDto.TongTien += checkExistCTHDT.ThanhTien;
                             _repositoryManager.ChiTietHoaDonThu.UpdateChiTietHoaDonThuAsync(checkExistCTHDT);
                             chiTietHoaDonThus.Add(checkExistCTHDT);
                         }

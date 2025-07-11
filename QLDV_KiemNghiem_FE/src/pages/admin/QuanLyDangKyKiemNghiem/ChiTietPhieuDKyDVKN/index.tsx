@@ -75,7 +75,7 @@ const ChiTietPhieuDKyDVKN = (props: Props) => {
                       }}
                       className="ml-4 bg-blue-100 hover:bg-blue-200 cursor-pointer px-4 py-2 rounded-md"
                     >
-                      <p className="text-sm font-medium text-blue-700">
+                      <p className="text-base/6 font-medium text-blue-700">
                         Duyệt phiếu
                       </p>
                     </button>
@@ -102,7 +102,7 @@ const ChiTietPhieuDKyDVKN = (props: Props) => {
                       }}
                       className="ml-4 bg-yellow-100 hover:bg-yellow-200 cursor-pointer px-4 py-2 rounded-md"
                     >
-                      <p className="text-sm font-medium text-yellow-700">
+                      <p className="text-base/6 font-medium text-yellow-700">
                         Từ chối
                       </p>
                     </button>
@@ -140,7 +140,7 @@ const ChiTietPhieuDKyDVKN = (props: Props) => {
                       }}
                       className="ml-4 bg-blue-100 hover:bg-blue-200 cursor-pointer px-4 py-2 rounded-md"
                     >
-                      <p className="text-sm font-medium text-blue-700">
+                      <p className="text-base/6 font-medium text-blue-700">
                         Duyệt phiếu
                       </p>
                     </button>
@@ -167,7 +167,7 @@ const ChiTietPhieuDKyDVKN = (props: Props) => {
                       }}
                       className="ml-4 bg-yellow-100 hover:bg-yellow-200 cursor-pointer px-4 py-2 rounded-md"
                     >
-                      <p className="text-sm font-medium text-yellow-700">
+                      <p className="text-base/6 font-medium text-yellow-700">
                         Từ chối
                       </p>
                     </button>
@@ -194,7 +194,7 @@ const ChiTietPhieuDKyDVKN = (props: Props) => {
       case 2: {
         return data?.maus?.length > 0 ? (
           <Box className="overflow-y-auto h-[579px]">
-            <DetailMaus dataMaus={data?.maus} isLoading={isLoading} />{" "}
+            <DetailMaus dataMaus={data?.maus} isLoading={isLoading} />
           </Box>
         ) : (
           <div className="text-center p-5">
@@ -329,12 +329,12 @@ const ChiTietPhieuDKyDVKN = (props: Props) => {
           <Box className="p-5 space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
-                <h3 className="text-base/6 font-medium text-gray-500 mb-4">
+                <h3 className="text-lg/6 font-bold text-violet-500 mb-4">
                   Thông tin phiếu đăng ký
                 </h3>
                 <div className="space-y-4">
                   <div className="flex items-center space-x-2">
-                    <label className="block text-xs text-gray-500">
+                    <label className="block text-base/6 text-gray-500">
                       Trạng thái phiếu
                     </label>
                     {isLoading ? (
@@ -344,7 +344,7 @@ const ChiTietPhieuDKyDVKN = (props: Props) => {
                     )}
                   </div>
                   <div>
-                    <label className="block text-xs text-gray-500">
+                    <label className="block text-base/6 text-gray-500">
                       Ngày đăng ký
                     </label>
                     {isLoading ? (
@@ -358,7 +358,7 @@ const ChiTietPhieuDKyDVKN = (props: Props) => {
 
                   <div className="grid grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-xs text-gray-500">
+                      <label className="block text-base/6 text-gray-500">
                         Hình thức trả kết quả
                       </label>
                       {isLoading ? (
@@ -370,7 +370,7 @@ const ChiTietPhieuDKyDVKN = (props: Props) => {
                       )}
                     </div>
                     <div>
-                      <label className="block text-xs text-gray-500">
+                      <label className="block text-base/6 text-gray-500">
                         Hình thức gửi mẫu
                       </label>
                       {isLoading ? (
@@ -384,7 +384,7 @@ const ChiTietPhieuDKyDVKN = (props: Props) => {
                   </div>
                   <div className="grid grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-xs text-gray-500">
+                      <label className="block text-base/6 text-gray-500">
                         Kết quả
                       </label>
                       {isLoading ? (
@@ -396,7 +396,7 @@ const ChiTietPhieuDKyDVKN = (props: Props) => {
                       )}
                     </div>
                     <div>
-                      <label className="block text-xs text-gray-500">
+                      <label className="block text-base/6 text-gray-500">
                         Ngày giao mẫu
                       </label>
                       {isLoading ? (
@@ -410,7 +410,7 @@ const ChiTietPhieuDKyDVKN = (props: Props) => {
                   </div>
                   {data?.diaChiGiaoMau && (
                     <div>
-                      <label className="block text-xs text-gray-500">
+                      <label className="block text-base/6 text-gray-500">
                         Địa chỉ giao mẫu
                       </label>
                       {isLoading ? (
@@ -427,13 +427,13 @@ const ChiTietPhieuDKyDVKN = (props: Props) => {
 
               {/* Customer Information */}
               <div>
-                <h3 className="text-base/6 font-medium text-gray-500 mb-4">
+                <h3 className="text-lg/6 font-bold text-violet-500 mb-4">
                   Thông tin khách hàng
                 </h3>
                 <div className="space-y-4">
                   <div className="grid grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-xs text-gray-500">
+                      <label className="block text-base/6 text-gray-500">
                         Người gửi mẫu
                       </label>
                       {isLoading ? (
@@ -445,7 +445,7 @@ const ChiTietPhieuDKyDVKN = (props: Props) => {
                       )}
                     </div>
                     <div>
-                      <label className="block text-xs text-gray-500">
+                      <label className="block text-base/6 text-gray-500">
                         Đơn vị gửi mẫu
                       </label>
                       {isLoading ? (
@@ -458,7 +458,7 @@ const ChiTietPhieuDKyDVKN = (props: Props) => {
                     </div>
                   </div>
                   <div>
-                    <label className="block text-xs text-gray-500">
+                    <label className="block text-base/6 text-gray-500">
                       Số điện thoại
                     </label>
                     {isLoading ? (
@@ -470,7 +470,7 @@ const ChiTietPhieuDKyDVKN = (props: Props) => {
                     )}
                   </div>
                   <div>
-                    <label className="block text-xs text-gray-500">Email</label>
+                    <label className="block text-base/6 text-gray-500">Email</label>
                     {isLoading ? (
                       <Skeleton variant="rounded" width={100} height={20} />
                     ) : (
@@ -478,7 +478,7 @@ const ChiTietPhieuDKyDVKN = (props: Props) => {
                     )}
                   </div>
                   <div>
-                    <label className="block text-xs text-gray-500">
+                    <label className="block text-base/6 text-gray-500">
                       Địa chỉ liên hệ
                     </label>
                     {isLoading ? (
@@ -492,7 +492,7 @@ const ChiTietPhieuDKyDVKN = (props: Props) => {
                 </div>
               </div>
               {data?.noiDungDuyetSoBo && (
-                <div className="col-span-full">
+                <div className="col-span-full p-4 rounded-md border border-gray-300 shadow-[0_4px_4px_0_rgba(0,0,0,0.25)]">
                   <label className="text-sm/6 text-gray-500">
                     Nhân viên {dataNhanVien?.hoTen} đánh giá phiếu
                   </label>
@@ -504,7 +504,7 @@ const ChiTietPhieuDKyDVKN = (props: Props) => {
                 </div>
               )}
               {getRoleGroup(role) === "BLD" && data?.noiDungTongDuyet && (
-                <div className="col-span-full">
+                <div className="col-span-full p-4 rounded-md border border-gray-300 shadow-[0_4px_4px_0_rgba(0,0,0,0.25)]">
                   <label className="text-sm/6 text-gray-500">
                     Ban lãnh đạo {dataNhanVienBLD?.hoTen} đánh giá phiếu
                   </label>
@@ -525,17 +525,18 @@ const ChiTietPhieuDKyDVKN = (props: Props) => {
   return (
     <Dialog
       open={open}
-      maxWidth="xl"
+      maxWidth="lg"
       onClose={handleClosePopup}
       sx={{
         ".MuiPaper-root": {
           borderRadius: 2,
         },
       }}
+      fullWidth
     >
-      <div className="w-4xl">
+      <div>
         <div className="px-6 pt-6 pb-4 border-b border-gray-300 flex justify-between items-center">
-          <h1 className="text-xl font-semibold text-gray-800">
+          <h1 className="text-2xl font-semibold capitalize text-gray-800">
             Chi tiết phiếu đăng ký - {data?.soDkpt}
           </h1>
           <button
@@ -548,7 +549,7 @@ const ChiTietPhieuDKyDVKN = (props: Props) => {
         <div className="grid gap-2">
           <div className="flex gap-4 justify-between border-b border-gray-300">
             <div
-              className={`px-6 w-full text-center cursor-pointer py-4 text-base font-[550] relative ${
+              className={`px-6 w-full text-center cursor-pointer py-4 text-lg font-[550] relative ${
                 isTag === 1 ? "text-indigo-600" : "text-gray-500"
               }`}
               onClick={() => setIsTag(1)}
@@ -559,7 +560,7 @@ const ChiTietPhieuDKyDVKN = (props: Props) => {
               )}
             </div>
             <div
-              className={`px-6 py-4 w-full text-center cursor-pointer text-base font-[550] relative ${
+              className={`px-6 py-4 w-full text-center cursor-pointer text-lg font-[550] relative ${
                 isTag === 2 ? "text-indigo-600" : "text-gray-500"
               }`}
               onClick={() => setIsTag(2)}
@@ -570,7 +571,7 @@ const ChiTietPhieuDKyDVKN = (props: Props) => {
               )}
             </div>
             <div
-              className={`px-6 py-4 w-full text-center cursor-pointer text-base font-[550] relative ${
+              className={`px-6 py-4 w-full text-center cursor-pointer text-lg font-[550] relative ${
                 isTag === 3 ? "text-indigo-600" : "text-gray-500"
               }`}
               onClick={() => setIsTag(3)}
@@ -582,7 +583,7 @@ const ChiTietPhieuDKyDVKN = (props: Props) => {
             </div>
             {activeFilter === keyTag.Cho_Xu_Ly && (
               <div
-                className={`px-6 py-4 w-full text-center cursor-pointer text-base font-[550] relative ${
+                className={`px-6 py-4 w-full text-center cursor-pointer text-lg font-[550] relative ${
                   isTag === 4 ? "text-indigo-600" : "text-gray-500"
                 }`}
                 onClick={() => setIsTag(4)}
@@ -595,7 +596,7 @@ const ChiTietPhieuDKyDVKN = (props: Props) => {
             )}
             {activeFilter === keyTag.Ban_Lanh_Dao_Duyet && (
               <div
-                className={`px-6 py-4 w-full text-center cursor-pointer text-base font-[550] relative ${
+                className={`px-6 py-4 w-full text-center cursor-pointer text-lg font-[550] relative ${
                   isTag === 5 ? "text-indigo-600" : "text-gray-500"
                 }`}
                 onClick={() => setIsTag(5)}

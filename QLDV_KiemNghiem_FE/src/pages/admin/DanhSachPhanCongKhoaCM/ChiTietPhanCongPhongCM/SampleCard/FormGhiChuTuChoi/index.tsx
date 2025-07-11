@@ -118,8 +118,8 @@ const FormGhiChuTuChoi = (props: Props) => {
   console.log("getRoleGroup(role)", getRoleGroup(role));
 
   return (
-    <form onSubmit={handleSubmit(handleHuyPhieu)} className="space-y-2">
-      <h4 className="text-base/6 font-semibold text-gray-500">Ghi chú:</h4>
+    <form onSubmit={handleSubmit(handleHuyPhieu)} className="space-y-2 p-6 border border-gray-300 rounded-lg shadow-[0_2px_2px_0_rgba(0,0,0,0.25)] mt-6">
+      <h4 className="text-lg/6 font-semibold text-violet-500">Ghi chú:</h4>
       <div>
         <textarea
           className="w-full border border-gray-300 rounded-lg p-3 min-h-[106px] max-h-[106px] focus-within:outline-1 focus-within:border focus-within:border-blue-300 h-"

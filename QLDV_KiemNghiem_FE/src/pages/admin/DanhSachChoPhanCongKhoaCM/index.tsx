@@ -15,7 +15,7 @@ const DanhSachPhieuChoPhanCongKhoaCM = () => {
       className="px-10 space-y-5 bg-blue-50 p-6 h-screen"
     >
       <h1 className="text-2xl capitalize font-semibold text-gray-800">
-        Danh sách mẫu chờ phân công khoa chuyên môn
+        Phân công khoa chuyên môn và danh sách mẫu
       </h1>
       
       <CardMau />

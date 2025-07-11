@@ -149,7 +149,7 @@ const ModelPhanCong = (props: Props) => {
     <Dialog
       open={open}
       onClose={handleClose}
-      maxWidth="sm"
+      maxWidth="md"
       fullWidth
       sx={{
         ".MuiPaper-root": {
@@ -160,7 +160,7 @@ const ModelPhanCong = (props: Props) => {
       <div className="bg-white">
         <div className="px-6 py-4 border-b border-gray-100">
           <div className="flex justify-between items-center">
-            <h3 className="text-lg font-semibold text-gray-800">
+            <h3 className="text-xl font-semibold text-gray-800">
               Phân công mẫu({sample?.tenMau})
             </h3>
             <button
@@ -184,7 +184,7 @@ const ModelPhanCong = (props: Props) => {
         </div>
         <form onSubmit={handleSubmit(onSubmit)} className="p-6 space-y-6">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-base font-medium text-gray-700 mb-2">
               Chọn nhân viên phân công
             </label>
             <div
@@ -236,7 +236,7 @@ const ModelPhanCong = (props: Props) => {
           </div>
           <div className="grid grid-cols-2 gap-6">
             <div>
-              <label className="text-sm font-medium text-gray-700">
+              <label className="text-base font-medium text-gray-700">
                 Thời gian thực hiện *
               </label>
               <div className="flex items-center gap-2">
@@ -251,7 +251,7 @@ const ModelPhanCong = (props: Props) => {
               )}
             </div>
             <div>
-              <label className="text-sm font-medium text-gray-700">
+              <label className="text-base font-medium text-gray-700">
                 Thời gian trả kết quả *
               </label>
               <div className="flex items-center gap-2">
@@ -269,7 +269,7 @@ const ModelPhanCong = (props: Props) => {
             </div>
           </div>
           <div>
-            <label className="text-sm font-medium text-gray-700">
+            <label className="text-base font-medium text-gray-700">
               Ghi chú *
             </label>
             <div className="flex items-center gap-2">
@@ -286,11 +286,11 @@ const ModelPhanCong = (props: Props) => {
             <button
               type="button"
               onClick={handleClose}
-              className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors cursor-pointer"
+              className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-lg hover:shadow-[0_4px_4px_0_rgba(0,0,0,0.25)] hover:bg-gray-200 transition-colors cursor-pointer"
             >
               Hủy
             </button>
-            <button className="px-4 py-2 text-sm font-medium text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 transition-colors cursor-pointer">
+            <button className="px-4 py-2 text-sm font-medium text-white bg-indigo-600 rounded-lg hover:shadow-[0_4px_4px_0_rgba(0,0,0,0.25)] hover:bg-indigo-700 transition-colors cursor-pointer">
               Xác nhận
             </button>
           </div>
