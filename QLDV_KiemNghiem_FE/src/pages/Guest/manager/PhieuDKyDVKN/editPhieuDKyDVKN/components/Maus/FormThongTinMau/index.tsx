@@ -81,8 +81,6 @@ const FormThongTinMau = (props: FormThongTinMauProps) => {
     settableBody,
     dataEditMaus,
     tableBody,
-    setDataEditMaus,
-    handleRedirectTag2,
     setData,
     dataCopyMaus,
     setDataCopyMaus,
@@ -108,6 +106,7 @@ const FormThongTinMau = (props: FormThongTinMauProps) => {
   const handleClosePopupThemMau = () => setOpenPopupThemMau(false);
   const handleClosePopupThemTieuChuan = () => setOpenPopupThemTieuChuan(false);
 
+  
   const { data: dataDMMau } = useGetDmMauAll({ queryKey: "DmMauAll" });
   const { data: TieuChuanAll } = useGetTieuChuanAll({
     queryKey: "TieuChuanAll",
@@ -479,12 +478,12 @@ const FormThongTinMau = (props: FormThongTinMauProps) => {
         (item: any) =>
           item.maId === dataEditMaus?.maTieuChuan ||
           item.maId === dataCopyMaus?.maTieuChuan
-      ).tenTieuChuan;
+      )?.tenTieuChuan;
       const tenDichVu = dataLoaiDichVuAll.find(
         (item: any) =>
           item.maLoaiDv === dataEditMaus?.loaiDv ||
           item.maLoaiDv === dataCopyMaus?.loaiDv
-      ).tenDichVu;
+      )?.tenDichVu;
       setListImage(phieuDangKyMauHinhAnhs);
       reset({
         tenMau: dataEditMaus?.tenMau || dataCopyMaus?.tenMau || "",
@@ -542,10 +541,11 @@ const FormThongTinMau = (props: FormThongTinMauProps) => {
       });
   }, [tableBody, dataEditMaus, dataCopyMaus]);
 
-  useEffect(() => {
-    setValue("phieuDangKyMauHinhAnhs", listImage);
-  }, [listImage, setValue]);
 
+   useEffect(() => {
+    
+    setValue("phieuDangKyMauHinhAnhs", listImage);
+  }, [listImage ,setValue]);
   return (
     <Box>
       <form

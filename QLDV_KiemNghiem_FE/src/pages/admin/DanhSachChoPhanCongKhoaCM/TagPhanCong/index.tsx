@@ -1,4 +1,3 @@
-import { role } from "../../../../configs/parseJwt";
 import { tagDanhSachPhieuChoPhanCongKhoaCM } from "../CardMau";
 
 interface Props {

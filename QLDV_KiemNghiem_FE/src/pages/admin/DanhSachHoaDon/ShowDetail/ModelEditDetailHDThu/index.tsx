@@ -19,10 +19,10 @@ interface Props {
 
 const ModelEditDetailHDThu = (props: Props) => {
   const { resultId, open, onCancel, idHoaDonThu } = props;
-  // const { data } = useQueryHoaDonThuByID({
-  //   queryKey: "useQueryHoaDonBoSungByID",
-  //   maHoaDonThu: resultId,
-  // });
+  const { data } = useQueryHoaDonThuByID({
+    queryKey: "useQueryHoaDonBoSungByID",
+    maHoaDonThu: resultId,
+  });
   console.log("resultId", resultId);
 
   const schema = yup.object({
@@ -119,6 +119,7 @@ const ModelEditDetailHDThu = (props: Props) => {
       });
     }
   }, [data, reset]);
+  
   console.log("datadata", data);
 
   return (
@@ -175,18 +176,17 @@ const ModelEditDetailHDThu = (props: Props) => {
           </div>
           <div className="flex justify-center gap-6">
             <button
+              type="button"
               onClick={onCancel}
               className="px-4 py-2 text-white bg-yellow-600 cursor-pointer rounded-lg hover:bg-yellow-700 flex items-center space-x-2"
             >
-              {/* <IoClose size={16} /> */}
-              <span>Hủy phiếu</span>
+              <span>Hủy</span>
             </button>
             <button
               onClick={handleSubmit(handleSave)}
               className="px-4 py-2 text-white bg-cyan-600 cursor-pointer rounded-lg hover:bg-cyan-700 flex items-center space-x-2"
             >
-              {/* <Save size={16} /> */}
-              <span>Lưu phiếu</span>
+              <span>Lưu</span>
             </button>
           </div>
         </form>

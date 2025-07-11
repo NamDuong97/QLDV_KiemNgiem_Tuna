@@ -3,13 +3,7 @@ import { useForm } from "react-hook-form";
 import { typeConformationColor } from "../../../../../../constants/typeConfirmation";
 import { queryClient } from "../../../../../../lib/reactQuery";
 import { useStoreNotification } from "../../../../../../configs/stores/useStoreNotification";
-import {
-  duyetPhanTichKetQuaBLD,
-  duyetPhanTichKetQuaLDP,
-} from "../../../../../../hooks/personnels/queryPTKQ";
 import { typeConfirmation } from "../../../../PhanTichKetQua/ShowDetailChoDuyet";
-import { getRoleGroup } from "../../../../../../configs/Role";
-import { role } from "../../../../../../configs/parseJwt";
 import { mutationBLDPheDuyetHoanTraMau } from "../../../../../../hooks/personnels/queryMau";
 
 interface Props {

@@ -73,7 +73,7 @@ namespace QLDV_KiemNghiem_BE.Services
             // Lấy những hóa đơn bổ sung liên quan đến hóa đơn thu
             var hoaDonThuBoSung = await _repositoryManager.HoaDonThuBoSung.FindHoaDonThuBoSungByMaHoaDonThuAsync(maHoaDonThu);
             List<HoaDonThuBoSungProcedureDto> ds = new List<HoaDonThuBoSungProcedureDto>();
-            if(hoaDonThuBoSung!= null)
+            if(HoaDonThuDomain != null && hoaDonThuBoSung!= null)
             {
                 foreach (var item in hoaDonThuBoSung)
                 {
@@ -81,11 +81,12 @@ namespace QLDV_KiemNghiem_BE.Services
                     hoaDonBoSungProcedureDto.ChiTietHoaDonThuBoSungDtos = _mapper.Map<List<ChiTietHoaDonThuBoSungDto>>(item.ChiTietHoaDonThuBoSungs);
                     ds.Add(hoaDonBoSungProcedureDto);
                 }
+                var result = _mapper.Map<HoaDonThuProcedureDto>(HoaDonThuDomain);
+                result.DsHoaDonThuBoSung = ds;
+                return result;
             }
 
-            var result = _mapper.Map<HoaDonThuProcedureDto>(HoaDonThuDomain);
-            result.DsHoaDonThuBoSung = ds;
-            return result;
+            return _mapper.Map<HoaDonThuProcedureDto>(HoaDonThuDomain); ;
         }
         public async Task<ResponseModel1<HoaDonThuDto>> CreateHoaDonThuAsync(HoaDonThuRequestCreateDto hoaDonThuDto, string user, string userId)
         {
