@@ -29,7 +29,7 @@ namespace QLDV_KiemNghiem_BE.Services
         public async Task<LichSuPhanCongMauChoKhoaDto?> FindLichSuPhanCongMauChoKhoaAsync(string maLichSuPhanCongMauChoKhoa)
         {
             if (maLichSuPhanCongMauChoKhoa == null || maLichSuPhanCongMauChoKhoa == "") return null;
-            var LichSuPhanCongMauChoKhoaDomain = await _repositoryManager.LichSuPhanCongMauChoKhoa.FindLichSuPhanCongMauChoKhoaAsync(maLichSuPhanCongMauChoKhoa);
+            var LichSuPhanCongMauChoKhoaDomain = await _repositoryManager.LichSuPhanCongMauChoKhoa.FindLichSuPhanCongMauChoKhoaAsync(maLichSuPhanCongMauChoKhoa, false);
             // Dòng này sẽ tự động mapping đối tượng con của LichSuPhanCongMauChoKhoa là LichSuPhanCongMauChoKhoa sang LichSuPhanCongMauChoKhoaDto
             var result = _mapper.Map<LichSuPhanCongMauChoKhoaDto>(LichSuPhanCongMauChoKhoaDomain);
             return result;
@@ -73,7 +73,7 @@ namespace QLDV_KiemNghiem_BE.Services
                 Data = null
             };
 
-            var LichSuPhanCongMauChoKhoaCheck = await _repositoryManager.LichSuPhanCongMauChoKhoa.FindLichSuPhanCongMauChoKhoaAsync(LichSuPhanCongMauChoKhoaDto.MaId);
+            var LichSuPhanCongMauChoKhoaCheck = await _repositoryManager.LichSuPhanCongMauChoKhoa.FindLichSuPhanCongMauChoKhoaAsync(LichSuPhanCongMauChoKhoaDto.MaId, true);
             if (LichSuPhanCongMauChoKhoaCheck == null)
             {
                 return new ResponseModel1<LichSuPhanCongMauChoKhoaDto>
@@ -100,7 +100,7 @@ namespace QLDV_KiemNghiem_BE.Services
             if (LichSuPhanCongMauChoKhoa == null) return false;
             else
             {
-                var LichSuPhanCongMauChoKhoaDomain = await _repositoryManager.LichSuPhanCongMauChoKhoa.FindLichSuPhanCongMauChoKhoaAsync(LichSuPhanCongMauChoKhoa.MaId);
+                var LichSuPhanCongMauChoKhoaDomain = await _repositoryManager.LichSuPhanCongMauChoKhoa.FindLichSuPhanCongMauChoKhoaAsync(LichSuPhanCongMauChoKhoa.MaId, false);
                 if (LichSuPhanCongMauChoKhoaDomain == null)
                 {
                     return false;
