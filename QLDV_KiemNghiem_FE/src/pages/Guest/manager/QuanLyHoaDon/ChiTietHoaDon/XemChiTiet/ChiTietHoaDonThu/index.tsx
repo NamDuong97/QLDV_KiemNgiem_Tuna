@@ -1,6 +1,6 @@
 import { PenTool, Trash2 } from "react-feather";
-import { queryMauByID } from "../../../../../hooks/personnels/queryMau";
 import { MdReceipt } from "react-icons/md";
+import { queryMauByID } from "../../../../../../../hooks/personnels/queryMau";
 
 interface Props {
   setSaveID: any;

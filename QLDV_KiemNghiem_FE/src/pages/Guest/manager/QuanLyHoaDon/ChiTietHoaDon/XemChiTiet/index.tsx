@@ -5,7 +5,7 @@ import { MdReceipt } from "react-icons/md";
 import { useNavigate } from "react-router";
 import { image } from "../../../../../../constants/image";
 import { ArrowLeft, Eye } from "react-feather";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import ShowDetailHDBS from "../ShowDetailHDBS";
 import { useQueryHoaDonThuByID } from "../../../../../../hooks/personnels/queryHoaDonThu";
 import {
@@ -32,6 +32,16 @@ const XemChiTiet = () => {
     setSaveID(id);
     setOpenModelHDBS(true);
   };
+
+  const handleRenderTongTien = useMemo(() => {
+    return (
+      data?.dsHoaDonThuBoSung?.reduce((a: any, b: any) => a + b?.tongTien, 0) +
+        data?.dsChiTietHoaDonThu?.reduce(
+          (a: any, b: any) => a + b?.thanhTien,
+          0
+        ) || 0
+    );
+  }, [data]);
 
   return (
     <motion.div
@@ -95,7 +105,9 @@ const XemChiTiet = () => {
                   <span className="text-2xl font-bold text-red-900">
                     {data?.tongTien === 0
                       ? "Đang chờ xử lý"
-                      : `${parseInt(data?.tongTien).toLocaleString()} VND`}
+                      : `${parseInt(
+                          handleRenderTongTien
+                        ).toLocaleString()} VND`}
                   </span>
                 </div>
               </div>

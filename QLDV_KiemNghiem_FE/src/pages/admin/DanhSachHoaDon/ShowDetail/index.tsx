@@ -12,6 +12,7 @@ import ModelEditHDBS from "./ModelEditHDBS";
 import {
   useDeleteHoaDonBoSung,
   useQueryHoaDonThuByID,
+  useUpdateHoaDonThu,
 } from "../../../../hooks/personnels/queryHoaDonThu";
 import { queryClient } from "../../../../lib/reactQuery";
 import { useStoreNotification } from "../../../../configs/stores/useStoreNotification";
@@ -80,6 +81,33 @@ const ShowDetail = ({ resultId, onBack, handleOpenPhieuDKy }: any) => {
     onSettled: handleSettled,
   });
 
+  const { mutate: mutateXoaHoaDonThu } = useUpdateHoaDonThu({
+    queryKey: "mutateXoaHoaDonThu",
+    onSuccess: (data: any) => {
+      if (data.status === 200) {
+        showNotification({
+          message: "Cập nhật thành công",
+          status: 200,
+        });
+        return;
+      } else {
+        showNotification({
+          message: "Cập nhật thất bại",
+          status: 500,
+        });
+      }
+    },
+    onError: (error: any) => {
+      console.log("error", error);
+
+      showNotification({
+        message: "Cập nhật thất bại",
+        status: 400,
+      });
+    },
+    onSettled: handleSettled,
+  });
+
   const handleOpenPhieuDKyKM = () => {
     handleOpenPhieuDKy(data?.maPhieuDangKy);
   };
@@ -100,13 +128,34 @@ const ShowDetail = ({ resultId, onBack, handleOpenPhieuDKy }: any) => {
   };
 
   const handeXoaHDBS = () => {
-    mutate(saveID);
+    const params = {
+      maID: data?.maID,
+      ghiChu: "",
+      chiTietHoaDonThuDtos: [
+        {
+          maID: saveID,
+          thanhTien: 0,
+          ghiChu: "",
+          isDel: true,
+        },
+      ],
+    };
+    if (isCTHD) {
+      mutateXoaHoaDonThu(params);
+      return;
+    } else {
+      mutate(saveID);
+      return;
+    }
   };
 
   const handleRenderTongTien = useMemo(() => {
     return (
       data?.dsHoaDonThuBoSung?.reduce((a: any, b: any) => a + b?.tongTien, 0) +
-      data?.dsChiTietHoaDonThu?.reduce((a: any, b: any) => a + b?.thanhTien, 0)
+        data?.dsChiTietHoaDonThu?.reduce(
+          (a: any, b: any) => a + b?.thanhTien,
+          0
+        ) || 0
     );
   }, [data]);
 
@@ -389,21 +438,25 @@ const ShowDetail = ({ resultId, onBack, handleOpenPhieuDKy }: any) => {
           )}
         </div>
       </div>
+
       <ShowDetailHDBS
         open={openModelHDBS}
         handleClose={() => setOpenModelHDBS(false)}
         dataID={saveID}
       />
+
       <ModelCreateHDBS
         open={openCreateModelHDBS}
         handleClose={() => setOpenCreateModelHDBS(false)}
         dataID={saveID}
       />
+
       <ModelEditHDBS
         open={openEditModelHDBS}
         onCancel={() => setOpenEditModelHDBS(false)}
         resultId={saveID}
       />
+
       <ConfirmationModal
         isOpen={openModelXoa}
         onClose={() => setOpenModelXoa(false)}
@@ -412,6 +465,7 @@ const ShowDetail = ({ resultId, onBack, handleOpenPhieuDKy }: any) => {
         message={"Bạn có chắc chắn muốn xóa?"}
         type={TypeConformation.Error}
       />
+
       <ModelEditDetailHDThu
         open={openModelEditDetailHDThu}
         onCancel={() => setOpenModelEditDetailHDThu(false)}

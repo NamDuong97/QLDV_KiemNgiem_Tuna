@@ -71,8 +71,8 @@ const ListImage = (props: Props) => {
         (item: any) => item.base64 !== selectedRow
       );
     }
-    console.log("updatedImages", updatedImages);
 
+    console.log("updatedImages", updatedImages);
     setListImage(updatedImages); // cập nhật state Ảnh
     setSelectedRow(null);
   };

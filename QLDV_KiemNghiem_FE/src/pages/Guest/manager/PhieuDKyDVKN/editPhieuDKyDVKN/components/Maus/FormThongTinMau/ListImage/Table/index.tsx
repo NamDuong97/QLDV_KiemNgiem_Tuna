@@ -1,5 +1,5 @@
 import { Box } from "@mui/material";
-import { Dispatch, SetStateAction } from "react";
+import { Dispatch, SetStateAction, useCallback, useEffect } from "react";
 
 interface TableProps {
   setListImage: Dispatch<SetStateAction<any>>;
@@ -19,15 +19,19 @@ const Tables = (props: TableProps) => {
   } = props;
 
   const handleSelectRow = (name: string) => {
-    console.log("name", name);
-    console.log("listImage", listImage);
-    let tempCheckbox = listImage.map((item: any) =>
+    const dataImageTemp = sessionStorage.getItem("ImageTemp");
+    const temp =
+      dataImageTemp !== undefined &&
+      dataImageTemp !== "undefined" &&
+      dataImageTemp !== null
+        ? JSON.parse(dataImageTemp)
+        : [];
+    let tempCheckbox = temp.map((item: any) =>
       item.base64 === name ? { ...item } : item
     );
-    console.log("tempCheckbox", tempCheckbox);
 
-    // setListImage(tempCheckbox);
-    // setSelectedRow(selectedRow === name ? null : name);
+    setListImage(tempCheckbox);
+    setSelectedRow(selectedRow === name ? null : name);
   };
 
   return (

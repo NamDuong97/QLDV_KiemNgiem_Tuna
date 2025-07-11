@@ -174,7 +174,7 @@ const TableMau = (props: TableMauProps) => {
                       {
                         dataLoaiDichVuAll?.find(
                           (loaiDV: any) => loaiDV.maLoaiDv === item?.loaiDv
-                        ).tenDichVu
+                        )?.tenDichVu
                       }
                     </p>
                   </Box>
@@ -186,7 +186,7 @@ const TableMau = (props: TableMauProps) => {
                         dataTieuChuanAll?.find(
                           (tieuchuan: any) =>
                             tieuchuan.maId === item?.maTieuChuan
-                        ).tenTieuChuan
+                        )?.tenTieuChuan
                       }
                     </p>
                   </Box>
