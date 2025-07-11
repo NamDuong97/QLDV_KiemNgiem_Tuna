@@ -199,6 +199,10 @@ namespace QLDV_KiemNghiem_BE.Services
                 Message = qk > 0 ? "Ban lanh dao duyet mau huy boi lanh đao phong thanh cong!" : "Ban lanh dao duyet mau huy boi lanh đao phong that bai!",
             };
         }
+        public async Task<PhieuDangKyMauThongKeProcedure> CheckPhieuDangKyMauFromTableProcedure(string maMau)
+        {
+            return await _repositoryManager.PhieuDangKyMau.GetThongKePhieuDangKyMauProcedure(maMau);
+        }
         public async Task<ResponseModel1<PhieuDangKyMauDto>> CreatePhieuDangKyMauAsync(PhieuDangKyMauDto PhieuDangKyMauDto, string user)
         {
             // Khoi tao 1 ob PhieuDangKyMauDomain moi kem ID tu dong tang

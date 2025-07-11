@@ -67,6 +67,16 @@ namespace QLDV_KiemNghiem_BE.Controllers
             return Ok(result);
         }
 
+        [Authorize(Policy = "KHTH_BLD_KN")]
+        [HttpGet]
+        [Route("checkPhieuDangKyMauFromTable")]
+        public ActionResult checkPhieuDangKyMauFromTable(string maMau)
+        {
+            var result = _service.PhieuDangKyMau.CheckPhieuDangKyMauFromTableProcedure(maMau);
+            _logger.LogDebug($"get thong ke mau thanh cong");
+            return Ok(result);
+        }
+
         [Authorize(Policy = "KHTHOnly")]
         [HttpPost]
         [Route("createPhieuDangKyMau")]
