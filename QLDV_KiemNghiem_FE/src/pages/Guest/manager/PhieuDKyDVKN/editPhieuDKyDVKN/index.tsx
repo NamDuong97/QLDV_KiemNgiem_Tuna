@@ -15,10 +15,11 @@ import PopupThoatForm from "./components/PopupThoatForm";
 import clsx from "clsx";
 import yup from "../../../../../configs/yup.custom";
 import { FormPhieuDangKy } from "../../../../../models/PhieuDangKy";
-
+import { v4 as uuidv4 } from "uuid";
 import { Inputs } from "../../../../../components/Inputs";
 import InputSelect from "../../../../../components/InputSelect";
 import { image } from "../../../../../constants/image";
+import { base64ToFile, urlToFile } from "../../../../../configs/convertBase64";
 
 const dataHinhThucGuiTra = [
   { value: "Trực tiếp", label: "Trực tiếp" },
@@ -138,10 +139,38 @@ const EditPhieuDKyDVKN = () => {
   const handleGui = (dataForm: FormPhieuDangKy) => {
     const dataMaus: any = [];
     const dataPLHC: any = [];
+    let globalIndex = 0;
+    console.log("data?.maus", data?.maus);
 
+    const formDataAnh = new FormData();
     data?.maus.map((itemMau: any) => {
+      const id = uuidv4();
+      itemMau.phieuDangKyMauHinhAnhs.forEach((itemImage: any) => {
+        var file: any;
+        if (itemImage.pathImg) {
+          file = urlToFile(
+            itemImage.pathImg,
+            itemImage.ten,
+            itemImage.dinhDang
+          );
+        }
+        if (itemImage.base64) {
+          file = base64ToFile(itemImage.base64, itemImage.ten);
+        }
+
+        console.log(itemImage.image instanceof File, itemImage.image);
+        formDataAnh.append(`images[${globalIndex}].maId`, "");
+        formDataAnh.append(`images[${globalIndex}].maMau`, itemMau?.maId || id);
+        formDataAnh.append(
+          `images[${globalIndex}].ghiChu`,
+          itemImage.ghiChu || ""
+        );
+        formDataAnh.append(`images[${globalIndex}].Image`, file);
+        globalIndex++;
+      });
+
       dataMaus.push({
-        maId: data?.maId,
+        maId: itemMau?.maId,
         maDmMau: itemMau.maDmMau,
         tenMau: itemMau.tenMau,
         maTieuChuan: itemMau.maTieuChuan,
@@ -165,22 +194,12 @@ const EditPhieuDKyDVKN = () => {
         maPdkMau: itemMau.maPdkMau ? itemMau.maPdkMau : null,
         loaiDv: itemMau.loaiDv,
         isDel: itemMau.isdel === true ? true : false,
-        phieuDangKyMauHinhAnhs: itemMau.phieuDangKyMauHinhAnhs
-          ? itemMau.phieuDangKyMauHinhAnhs.map((itemImage: any) => {
-              return {
-                maId: itemImage.maId ? itemImage.maId : "",
-                maMau: itemImage.maMau ? itemImage.maMau : "",
-                ten: itemImage.ten,
-                dinhDang: itemImage.dinhDang ? itemImage.dinhDang : "",
-                ghiChu: itemImage.ghiChu,
-                loaiAnh: itemImage.loaiAnh,
-                trangThai: itemImage.trangThai ? itemImage.trangThai : true,
-                isDel: itemImage.isdel === true ? true : false,
-              };
-            })
-          : [],
       });
     });
+
+    console.log("dataMaus", dataMaus);
+    console.log("data", data);
+    console.log("dataAnh", [...formDataAnh]);
 
     data?.phieuDangKyPhuLieuHoaChats.map((itemPLHC: any) =>
       dataPLHC.push({
@@ -220,7 +239,7 @@ const EditPhieuDKyDVKN = () => {
         Maus: dataMaus,
         PhieuDangKyPhuLieuHoaChats: dataPLHC,
       };
-      sessionStorage.setItem("sua-phieuDky", JSON.stringify(dataPhieuDKY));
+      // sessionStorage.setItem("sua-phieuDky", JSON.stringify(dataPhieuDKY));
     } else {
       const dataPhieuDKY: any = {
         maId: data?.maId,
@@ -242,9 +261,9 @@ const EditPhieuDKyDVKN = () => {
         Maus: dataMaus,
         PhieuDangKyPhuLieuHoaChats: dataPLHC,
       };
-      sessionStorage.setItem("sua-phieuDky", JSON.stringify(dataPhieuDKY));
+      // sessionStorage.setItem("sua-phieuDky", JSON.stringify(dataPhieuDKY));
     }
-    handleClickOpenPopupNofitication();
+    // handleClickOpenPopupNofitication();
   };
 
   useEffect(() => {

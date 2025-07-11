@@ -9,7 +9,6 @@ export interface FormMau {
   tenTieuChuan: string;
   tenLoaiDichVu: string;
   thoiGianTieuChuan?: string;
-  ngayDuKienTraKetQua?: string;
   soLo: string;
   donViSanXuat: string;
   ngaySanXuat: string;

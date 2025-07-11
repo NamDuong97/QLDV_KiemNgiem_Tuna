@@ -59,7 +59,6 @@ const ListImage = (props: Props) => {
       (item: any) => item.pathImg === selectedRow
     );
     let updatedImages;
-
     if (existsInDataMau) {
       // Nếu tồn tại trong dataMau => thêm isDel: true
       updatedImages = listImage.map((item: any) =>
@@ -71,8 +70,6 @@ const ListImage = (props: Props) => {
         (item: any) => item.base64 !== selectedRow
       );
     }
-
-    console.log("updatedImages", updatedImages);
     setListImage(updatedImages); // cập nhật state Ảnh
     setSelectedRow(null);
   };
