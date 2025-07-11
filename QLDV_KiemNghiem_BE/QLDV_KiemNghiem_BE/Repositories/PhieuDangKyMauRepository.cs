@@ -6,6 +6,7 @@ using QLDV_KiemNghiem_BE.Interfaces;
 using QLDV_KiemNghiem_BE.Models;
 using QLDV_KiemNghiem_BE.RequestFeatures.PagingRequest;
 using QLDV_KiemNghiem_BE.Shared;
+using System.Linq;
 
 namespace QLDV_KiemNghiem_BE.Repositories
 {
@@ -60,6 +61,13 @@ namespace QLDV_KiemNghiem_BE.Repositories
             // Hàm này xử lý việc phòng KHTH muốn hủy mẫu do khách hủy hoặc k phòng ban nào làm
             int rowCount =  await _context.Database.ExecuteSqlRawAsync("exec sp_ProcessUpdateStatusObjecRelativeFromCancelMau @maMau = {0}, @typeCancel = {1}, @message ={2}, @user ={3}", maMau, typeCancel, message, user);
             return rowCount;    
+        }
+        public async Task<PhieuDangKyMauThongKeProcedure> GetThongKePhieuDangKyMauProcedure(string maMau)
+        {
+            var result = await _context.PhieuDangKyMauThongKeProcedures.
+               FromSqlRaw("exec sp_CheckMauWithForm {0}", maMau).ToListAsync();
+            var kq =  result.FirstOrDefault();
+            return kq!;
         }
         public async Task<int> ProcessUpdateStatusMauWhenBLDAction(string maPDK, string trangThaiId)
         {
