@@ -6,6 +6,7 @@ using QLDV_KiemNghiem_BE.Interfaces;
 using QLDV_KiemNghiem_BE.Models;
 using QLDV_KiemNghiem_BE.RequestFeatures.PagingRequest;
 using QLDV_KiemNghiem_BE.Shared;
+using System.Linq;
 
 namespace QLDV_KiemNghiem_BE.Repositories
 {
@@ -64,8 +65,9 @@ namespace QLDV_KiemNghiem_BE.Repositories
         public async Task<PhieuDangKyMauThongKeProcedure> GetThongKePhieuDangKyMauProcedure(string maMau)
         {
             var result = await _context.PhieuDangKyMauThongKeProcedures.
-               FromSqlRaw("exec sp_CheckMauWithForm {0}", maMau).FirstOrDefaultAsync();
-            return result!;
+               FromSqlRaw("exec sp_CheckMauWithForm {0}", maMau).ToListAsync();
+            var kq =  result.FirstOrDefault();
+            return kq!;
         }
         public async Task<int> ProcessUpdateStatusMauWhenBLDAction(string maPDK, string trangThaiId)
         {

@@ -67,12 +67,12 @@ namespace QLDV_KiemNghiem_BE.Controllers
             return Ok(result);
         }
 
-        [Authorize(Policy = "KHTH_BLD_KN")]
+        //[Authorize(Policy = "KHTH_BLD_KN")]
         [HttpGet]
         [Route("checkPhieuDangKyMauFromTable")]
-        public ActionResult checkPhieuDangKyMauFromTable(string maMau)
+        public async Task<ActionResult> checkPhieuDangKyMauFromTable(string maMau)
         {
-            var result = _service.PhieuDangKyMau.CheckPhieuDangKyMauFromTableProcedure(maMau);
+            var result = await _service.PhieuDangKyMau.CheckPhieuDangKyMauFromTableProcedure(maMau);
             _logger.LogDebug($"get thong ke mau thanh cong");
             return Ok(result);
         }

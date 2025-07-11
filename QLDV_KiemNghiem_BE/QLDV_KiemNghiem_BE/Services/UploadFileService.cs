@@ -25,22 +25,40 @@ namespace QLDV_KiemNghiem_BE.Services
             foreach(var item in images)
             {
                 if(item.Image == null) continue;
-                var image = await PublicFunction.ProcessUpload(item?.Image, _env, request);
+                var image = await PublicFunction.ProcessUpload(item!.Image, _env, request);
                 if(image.FileName == "0" || image.Url == "0") continue;
                 var mau = await _repositoryManager.PhieuDangKyMau.FindPhieuDangKyMauAsync(item?.MaMau ?? "", false);
                 if(mau == null) continue;
-
-                PhieuDangKyMauHinhAnh phieuDangKyMauHinhAnh = new PhieuDangKyMauHinhAnh()
+                if (string.IsNullOrEmpty(item!.MaId))
                 {
-                    MaId = Guid.NewGuid().ToString(),
-                    MaMau = item.MaMau,
-                    DinhDang = Path.GetExtension(image.FileName).TrimStart('.'),
-                    Ten = Path.GetFileNameWithoutExtension(image.FileName),
-                    PathImg = image.Url,
-                    GhiChu = item.GhiChu,
-                    TrangThai = true
-                };
-                await _repositoryManager.PhieuDangKyMauHinhAnh.CreatePhieuDangKyMauHinhAnhAsync(phieuDangKyMauHinhAnh);
+                    PhieuDangKyMauHinhAnh phieuDangKyMauHinhAnh = new PhieuDangKyMauHinhAnh()
+                    {
+                        MaId = Guid.NewGuid().ToString(),
+                        MaMau = item.MaMau,
+                        DinhDang = Path.GetExtension(image.FileName).TrimStart('.'),
+                        Ten = Path.GetFileNameWithoutExtension(image.FileName),
+                        PathImg = image.Url,
+                        GhiChu = item.GhiChu,
+                        TrangThai = true
+                    };
+                    await _repositoryManager.PhieuDangKyMauHinhAnh.CreatePhieuDangKyMauHinhAnhAsync(phieuDangKyMauHinhAnh);
+                }
+                else
+                {
+                    // Neu anh ton tai thi ms xoa cap nhat
+                    var checkExistsHinhAnh = await _repositoryManager.PhieuDangKyMauHinhAnh.FindPhieuDangKyMauHinhAnhAsync(item.MaId);
+                    if(checkExistsHinhAnh!= null)
+                    {
+                        if (item.IsDel)
+                        {
+                            _repositoryManager.PhieuDangKyMauHinhAnh.DeletePhieuDangKyMauHinhAnh(checkExistsHinhAnh);
+                        }
+                        else
+                        {
+                            checkExistsHinhAnh.GhiChu= string.IsNullOrEmpty(item.GhiChu) ? checkExistsHinhAnh.GhiChu : item.GhiChu;
+                        }
+                    }
+                }  
             }
 
             bool check = await _repositoryManager.SaveChangesAsync();
