@@ -7,7 +7,6 @@ import { useNavigate } from "react-router";
 import { APP_ROUTES } from "../../../constants/routers";
 import { useContext } from "react";
 import { StoreContext } from "../../../contexts/storeProvider";
-import { GiTestTubes } from "react-icons/gi";
 
 interface AccountPopupProps {
   openAccountPopup: boolean;

@@ -1,4 +1,3 @@
-import { motion } from "motion/react";
 import DanhSach from "./List";
 import { Align } from "../../../../models/Table";
 

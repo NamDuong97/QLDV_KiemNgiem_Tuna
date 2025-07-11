@@ -1,5 +1,5 @@
 import { Box } from "@mui/material";
-import { Dispatch, SetStateAction, useCallback, useEffect } from "react";
+import { Dispatch, SetStateAction } from "react";
 
 interface TableProps {
   setListImage: Dispatch<SetStateAction<any>>;

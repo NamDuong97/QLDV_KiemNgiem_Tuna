@@ -28,7 +28,6 @@ import { MdAssignment, MdAssignmentInd, MdReceiptLong } from "react-icons/md";
 import { usePersonnel } from "../../contexts/PersonelsProvider";
 import { TbLogout } from "react-icons/tb";
 import { role } from "../../configs/parseJwt";
-import { FaFlask } from "react-icons/fa6";
 import { FaChartLine } from "react-icons/fa";
 import { getChucVuByID } from "../../hooks/personnels/queryChucVu";
 import { getRoleGroup } from "../../configs/Role";

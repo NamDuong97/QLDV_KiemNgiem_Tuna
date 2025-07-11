@@ -81,8 +81,6 @@ const FormThongTinMau = (props: FormThongTinMauProps) => {
     settableBody,
     dataEditMaus,
     tableBody,
-    setDataEditMaus,
-    handleRedirectTag2,
     setData,
     dataCopyMaus,
     setDataCopyMaus,
