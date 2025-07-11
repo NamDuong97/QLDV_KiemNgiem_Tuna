@@ -208,7 +208,6 @@ namespace QLDV_KiemNghiem_BE.Services
                     Data = null
                 };
             }
-            
             if(hoaDonThuDto.ChiTietHoaDonThuDtos.Count()> 0)
             {
                 foreach(var item in hoaDonThuDto.ChiTietHoaDonThuDtos)
@@ -254,7 +253,7 @@ namespace QLDV_KiemNghiem_BE.Services
                     }
                 }
             }
-
+            checkHoaDonThu.GhiChu = string.IsNullOrEmpty(hoaDonThuDto.GhiChu) ? checkHoaDonThu.GhiChu : hoaDonThuDto.GhiChu;
             _repositoryManager.HoaDonThu.UpdateHoaDonThuAsync(checkHoaDonThu);
             bool check = await _repositoryManager.SaveChangesAsync();
             var hoaDonThuReturn = _mapper.Map<HoaDonThuDto>(checkHoaDonThu);

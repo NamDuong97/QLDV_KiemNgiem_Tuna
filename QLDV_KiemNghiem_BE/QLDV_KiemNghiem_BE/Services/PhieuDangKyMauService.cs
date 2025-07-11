@@ -182,7 +182,7 @@ namespace QLDV_KiemNghiem_BE.Services
             }
          
             int qk = await _repositoryManager.PhieuDangKyMau.ProcessCancelMauByLDP(mauDto.MaMau, mauDto.Message, mauDto.Action, user, userId, mauDto.MaKhoa);
-            if(qk > 0)
+            if (qk > 0)
             {
                 NotificationModel notificationModel = new NotificationModel()
                 {
@@ -195,7 +195,7 @@ namespace QLDV_KiemNghiem_BE.Services
             }
             return new ResponseModel1<PhieuDangKyMauDto>
             {
-                KetQua = qk > 0 ? true: false,
+                KetQua = qk > 0 ? true : false,
                 Message = qk > 0 ? "Ban lanh dao duyet mau huy boi lanh đao phong thanh cong!" : "Ban lanh dao duyet mau huy boi lanh đao phong that bai!",
             };
         }
