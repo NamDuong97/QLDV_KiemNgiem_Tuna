@@ -2,7 +2,7 @@
 
 namespace QLDV_KiemNghiem_BE.DTO.RequestDto
 {
-    public class PhieuDangKyMauResponseCancelDto
+    public class PhieuDangKyMauResponseCancelByKHTHDto
     {
         public string MaId { get; set; } = string.Empty;
 

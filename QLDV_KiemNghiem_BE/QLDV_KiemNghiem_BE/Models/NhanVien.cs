@@ -120,6 +120,15 @@ public partial class NhanVien
     [InverseProperty("ManvPhanCongNavigation")]
     public virtual ICollection<LichSuPhanCong> LichSuPhanCongManvPhanCongNavigations { get; set; } = new List<LichSuPhanCong>();
 
+    [InverseProperty("ManvDuyetNavigation")]
+    public virtual ICollection<LichSuPhanCongMauChoKhoa> LichSuPhanCongMauChoKhoaManvDuyetNavigations { get; set; } = new List<LichSuPhanCongMauChoKhoa>();
+
+    [InverseProperty("ManvHuyMauNavigation")]
+    public virtual ICollection<LichSuPhanCongMauChoKhoa> LichSuPhanCongMauChoKhoaManvHuyMauNavigations { get; set; } = new List<LichSuPhanCongMauChoKhoa>();
+
+    [InverseProperty("ManvPhanCongNavigation")]
+    public virtual ICollection<LichSuPhanCongMauChoKhoa> LichSuPhanCongMauChoKhoaManvPhanCongNavigations { get; set; } = new List<LichSuPhanCongMauChoKhoa>();
+
     [InverseProperty("ManvTaoNavigation")]
     public virtual ICollection<Lkct> Lkcts { get; set; } = new List<Lkct>();
 

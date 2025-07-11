@@ -65,7 +65,7 @@ namespace QLDV_KiemNghiem_BE.Services
             };
 
             // Cập nhật trạng thái mẫu này là đã phân công nội bộ
-            var phieuDangKyMau = await _repositoryManager.PhieuDangKyMau.FindPhieuDangKyMauAsync(PhanCongNoiBoDto.MaPdkMau);
+            var phieuDangKyMau = await _repositoryManager.PhieuDangKyMau.FindPhieuDangKyMauAsync(PhanCongNoiBoDto.MaPdkMau, true);
             if(phieuDangKyMau== null)
             {
                 return new ResponseModel1<PhanCongNoiBoDto>
@@ -269,7 +269,7 @@ namespace QLDV_KiemNghiem_BE.Services
             }
 
             // Cập nhật trang thái phân công của mẫu được phân công thành mẫu chờ phân công
-            var checkPhieuDangKyMau = await _repositoryManager.PhieuDangKyMau.FindPhieuDangKyMauAsync(checkPhanCongNoiBo?.MaPdkMau ?? "");
+            var checkPhieuDangKyMau = await _repositoryManager.PhieuDangKyMau.FindPhieuDangKyMauAsync(checkPhanCongNoiBo?.MaPdkMau ?? "", true);
             if (checkPhieuDangKyMau == null)
             {
                 return new ResponseModel1<PhanCongNoiBoDto>

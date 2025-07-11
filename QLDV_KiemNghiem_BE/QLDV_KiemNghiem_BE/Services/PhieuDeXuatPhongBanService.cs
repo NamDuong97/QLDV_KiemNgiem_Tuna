@@ -89,7 +89,7 @@ namespace QLDV_KiemNghiem_BE.Services
                 listMau += item.MaPdkMau + " ";
 
                 // Cập nhật trạng thái của phieudangkymau
-                var mau = await _repositoryManager.PhieuDangKyMau.FindPhieuDangKyMauAsync(item.MaPdkMau);
+                var mau = await _repositoryManager.PhieuDangKyMau.FindPhieuDangKyMauAsync(item.MaPdkMau, true);
                 if(mau == null)
                 {
                     return new ResponseModel1<PhieuDeXuatPhongBanDto>
@@ -207,7 +207,7 @@ namespace QLDV_KiemNghiem_BE.Services
             {
                 foreach (var item in PhieuDeXuatPhongBanDto.ChiTietPhieuDeXuatPhongBans)
                 {
-                    var mau = await _repositoryManager.PhieuDangKyMau.FindPhieuDangKyMauAsync(item.MaPdkMau ?? "");
+                    var mau = await _repositoryManager.PhieuDangKyMau.FindPhieuDangKyMauAsync(item.MaPdkMau ?? "", true);
                     var phieuDangKy = await _repositoryManager.PhieuDangKy.FindPhieuDangKyAsync(mau?.MaPhieuDangKy ?? "");
                     var phieuDeXuatPhongBan = await _repositoryManager.PhieuDeXuatPhongBan.FindPhieuDeXuatPhongBanAsync(item.MaPhieuDeXuat ?? "", true);
                     if (item.MaId == null || item.MaId == "") // Thêm chi tiết

@@ -178,6 +178,18 @@ namespace QLDV_KiemNghiem_BE.DTO.AutoMapper
                  .ForAllMembers(opts => opts.Condition((src, dest, srcMember) =>
                    srcMember != null && (!(srcMember is string str) || !string.IsNullOrWhiteSpace(str))));
 
+            CreateMap<LichSuPhanCongMauChoKhoa, LichSuPhanCongMauChoKhoaDto>().ReverseMap()
+                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) =>
+                   srcMember != null && (!(srcMember is string str) || !string.IsNullOrWhiteSpace(str))));
+
+            CreateMap<LichSuPhanCongMauChoKhoaRequestCreateDto, LichSuPhanCongMauChoKhoa>().ReverseMap()
+               .ForAllMembers(opts => opts.Condition((src, dest, srcMember) =>
+                 srcMember != null && (!(srcMember is string str) || !string.IsNullOrWhiteSpace(str))));
+
+            CreateMap<LichSuPhanCongMauChoKhoaRequestUpdateDto, LichSuPhanCongMauChoKhoa>().ReverseMap()
+                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) =>
+                   srcMember != null && (!(srcMember is string str) || !string.IsNullOrWhiteSpace(str))));
+
             CreateMap<PhieuDuTru, PhieuDuTruDto>().ReverseMap().ForMember(dest => dest.MaId, opt => opt.Ignore())
                   .ForAllMembers(opts => opts.Condition((src, dest, srcMember) =>
                     srcMember != null && (!(srcMember is string str) || !string.IsNullOrWhiteSpace(str))));
