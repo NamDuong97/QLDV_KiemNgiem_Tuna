@@ -34,8 +34,8 @@ namespace QLDV_KiemNghiem_BE.Services
                 {
                     MaId = Guid.NewGuid().ToString(),
                     MaMau = item.MaMau,
-                    DinhDang = image.FileName.Split('.')[1],
-                    Ten = image.FileName.Split('.')[0],
+                    DinhDang = Path.GetExtension(image.FileName).TrimStart('.'),
+                    Ten = Path.GetFileNameWithoutExtension(image.FileName),
                     PathImg = image.Url,
                     GhiChu = item.GhiChu,
                     TrangThai = true

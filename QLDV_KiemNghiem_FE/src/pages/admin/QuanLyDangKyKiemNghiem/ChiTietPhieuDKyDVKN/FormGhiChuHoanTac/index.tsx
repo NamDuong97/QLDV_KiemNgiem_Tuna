@@ -82,12 +82,7 @@ const FormGhiChuHoanTac = (props: Props) => {
 
   return (
     <form onSubmit={handleSubmit(handleDuyet)} className="space-y-2">
-      <h4 className="text-base/6 font-semibold text-gray-500">
-        Ghi chú{" "}
-        {getRoleGroup(role) === "KHTH" && (
-          <span className="font-medium">(Duyệt không thể thu hồi)*</span>
-        )}
-      </h4>
+      <h4 className="text-base/6 font-semibold text-gray-500">Ghi chú</h4>
       <div>
         <textarea
           className="w-full border border-gray-300 rounded-lg p-3 min-h-[106px] max-h-[106px] focus-within:outline-1 focus-within:border focus-within:border-blue-300"

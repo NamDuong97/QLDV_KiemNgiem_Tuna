@@ -11,38 +11,34 @@ interface Props {
 
 const ListImage = (props: Props) => {
   const { errorsMessage, setListImage, listImage } = props;
-  const [selectedRow, setSelectedRow] = useState<string | null>(null);
+  const [selectedRow, setSelectedRow] = useState<any | null>(null);
 
   const [ErrorisTrungLap, setErrorIsTrungLap] = useState(false);
 
   const onDrop = useCallback(
     (acceptedFiles: any) => {
-      console.log("acceptedFiles",)
+      console.log("acceptedFiles");
       acceptedFiles.forEach((file: any) => {
-        console.log("files",file);
         const isDuplicate = listImage.some(
           (img: any) =>
             img.name === file.name &&
             img.size === file.size &&
             img.lastModified === file.lastModified
         );
-
         if (!isDuplicate) {
           const reader = new FileReader();
-         
-        
+
           reader.onabort = () => console.log("file reading was aborted");
-          reader.onerror = () => console.log("file reading has failed"); 
-          reader.onload = (test) => {
+          reader.onerror = () => console.log("file reading has failed");
+          reader.onload = () => {
             const imgData = reader.result as string;
-            console.log("test" , test);
             const newImage = {
               ten: file.name,
               size: file.size,
               lastModified: file.lastModified,
               base64: imgData,
               ghiChu: "",
-              image: file
+              image: file,
             };
             setListImage((prev: any[]) => [...prev, newImage]);
             setErrorIsTrungLap(false);
@@ -66,16 +62,11 @@ const ListImage = (props: Props) => {
   const { getRootProps, getInputProps } = useDropzone({ onDrop });
 
   const handeleRemoveImage = () => {
-    const temp = listImage.filter((item: any) => item.ten === selectedRow);
+    const temp = listImage.filter((item: any) => item.base64 === selectedRow);
     const updatedImages = listImage.filter((item: any) => {
       return !temp.some(
         (subitem: any) =>
-          subitem.base64 === item.base64 &&
-          subitem.ten === item.ten &&
-          subitem.size === item.size &&
-          subitem.lastModified === item.lastModified &&
-          subitem.type === item.type &&
-          subitem.ghiChu === item.ghiChu
+          subitem.base64 === item.base64
       );
     });
     setListImage(updatedImages);

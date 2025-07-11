@@ -13,6 +13,7 @@ export const API = {
       DANH_GIA_BLD: "/api/PhieuDangKy/reviewPhieuDangKyByBLD",
       UNDO_DANH_GIA_BLD: "/api/PhieuDangKy/undoReviewPhieuDangKyByBLD",
       THONG_KE: "/api/PhieuDangKy/getPhieuDangKyThongKe",
+      UPLOAD_FILE: "/api/Upload/upload-image",
     },
     KHOA: {
       GET_KHOA_ALL: "/api/Khoa/getKhoaAll",
@@ -41,7 +42,7 @@ export const API = {
       GET_MAU_BY_ID: "/api/PhieuDangKyMau/getPhieuDangKyMau",
       GET_LOAI_MAU_ALL: "/api/LoaiMau/getLoaiMauAll",
       GET_LOAI_MAU_BY_ID: "/api/LoaiMau/getLoaiMau",
-      HUY_MAU: "/api/PhieuDangKyMau/cancelPhieuDangKyMau",
+      HUY_MAU: "/api/PhieuDangKyMau/cancelPhieuDangKyMauByKHTHBLD",
       THONG_KE_MAUS: "/api/PhieuDangKyMau/getPhieuDangKyMauThongKe",
     },
     MAUS_LUU: {

@@ -8,6 +8,7 @@ import { queryKhoaAll } from "../../../../hooks/personnels/queryKhoa";
 import TagPhanCong from "../TagPhanCong";
 import { useState } from "react";
 import ListMauTuChoi from "./ListMauTuChoi";
+import DanhSachMau from "../DanhSachMau";
 
 export const colorPresets = [
   "bg-red-100 text-red-800 border-red-200 hover:bg-red-200",
@@ -20,8 +21,9 @@ export const colorPresets = [
 ];
 
 export const tagDanhSachPhieuChoPhanCongKhoaCM = {
-  phancong: "Phân công khoa chuyên môn",
-  duyetmautuchoi: "Danh sách mẫu từ chối",
+  phancong: "Mẫu chờ phân công khoa chuyên môn",
+  duyetmautuchoi: "Mẫu do khoa hủy, chờ lãnh đạo duyệt",
+  tatca: "Mẫu kiểm nghiệm",
 };
 
 const CardMau = () => {
@@ -46,6 +48,19 @@ const CardMau = () => {
   // const { data: dataThongKe, isLoading: isLoadingThongKe } = queryThongKe({
   //   queryKey: "queryThongKe",
   // });
+
+  const handleTag = () => {
+    switch (isTag) {
+      case tagDanhSachPhieuChoPhanCongKhoaCM.phancong:
+        return <SampleList departments={departments} />;
+      case tagDanhSachPhieuChoPhanCongKhoaCM.duyetmautuchoi:
+        return <ListMauTuChoi />;
+      case tagDanhSachPhieuChoPhanCongKhoaCM.tatca:
+        return <DanhSachMau />;
+      default:
+        return <SampleList departments={departments} />;
+    }
+  };
 
   return (
     <AnimatePresence mode="wait">
@@ -78,11 +93,7 @@ const CardMau = () => {
         <div className="bg-white p-4 rounded-lg shadow-sm flex justify-between">
           <TagPhanCong setIsTag={setIsTag} isTag={isTag} />
         </div>
-        {isTag === tagDanhSachPhieuChoPhanCongKhoaCM.phancong ? (
-          <SampleList departments={departments} />
-        ) : (
-          <ListMauTuChoi />
-        )}
+        {handleTag()}
       </motion.div>
     </AnimatePresence>
   );

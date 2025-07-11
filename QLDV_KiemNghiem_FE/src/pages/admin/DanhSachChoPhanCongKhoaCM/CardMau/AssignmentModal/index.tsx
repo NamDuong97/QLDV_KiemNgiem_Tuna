@@ -183,18 +183,28 @@ const AssignmentModal = (props: Props) => {
   }, [thoiGianGiaoMau]);
 
   return (
-    <Dialog open={isOpen} onClose={onClose} maxWidth="xl">
+    <Dialog
+      open={isOpen}
+      onClose={onClose}
+      maxWidth="lg"
+      fullWidth
+      sx={{
+        ".MuiPaper-root": {
+          borderRadius: 4,
+        },
+      }}
+    >
       <form
         onSubmit={handleSubmit(handleAssignSubmit)}
-        className="bg-white rounded-lg shadow-xl max-w-4xl w-full"
+        className="bg-white rounded-lg shadow-xl"
       >
         <div className="p-6 border-b border-gray-200 flex justify-between items-center">
-          <h3 className="text-lg font-bold text-gray-900">
+          <h3 className="text-xl font-bold text-gray-900">
             Phân công mẫu cho phòng ban
           </h3>
           <button
             onClick={onClose}
-            className="text-gray-400 hover:text-gray-500"
+            className="text-gray-400 hover:text-gray-500 cursor-pointer"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -216,7 +226,7 @@ const AssignmentModal = (props: Props) => {
         {/* Modal content */}
         <div className="flex-grow overflow-y-auto p-6 space-y-6">
           <div className="flex space-x-2 items-center">
-            <label className="text-sm font-medium text-gray-700">
+            <label className="text-base font-medium text-gray-700">
               Chọn thời gian giao mẫu *
             </label>
             <input
@@ -225,25 +235,27 @@ const AssignmentModal = (props: Props) => {
               className="cursor-pointer py-1 px-4 border border-gray-300 rounded"
             />
             {errors.thoiGianGiaoMau?.message && (
-              <p className="text-xs/4 font-medium text-red-600">
+              <p className="text-sm/4 font-medium text-red-600">
                 {errors.thoiGianGiaoMau?.message}
               </p>
             )}
           </div>
           <div>
-            <h4 className="text-sm font-medium text-gray-700 mb-2">
+            <h4 className="text-base font-medium text-gray-700 mb-2">
               Đã chọn {selectedSamples?.length} mẫu
             </h4>
 
-            <ul className="space-y-4">
+            <ul className="space-y-4 overflow-y-auto max-h-[300px]">
               {selectedSamples?.map((sample: any) => (
                 <li
                   key={sample.maId}
                   className="text-sm text-gray-600 bg-blue-50 p-3 rounded-lg"
                 >
                   <p className="text-gray-700">
-                    Tên mẫu:{sample.tenMau}
-                    <span className="text-gray-400">({sample.soLo})</span>
+                    Tên mẫu:{" "}
+                    <span className="text-violet-500">
+                      {sample.tenMau}({sample.soLo})
+                    </span>
                   </p>
                   <div>
                     <div className="mb-4">
@@ -292,7 +304,7 @@ const AssignmentModal = (props: Props) => {
             <h4 className="text-sm font-medium text-gray-700 mb-4">
               Chọn phòng ban *
             </h4>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-3 gap-4">
               {departments.map((department: any) => (
                 <div
                   key={department.id}
@@ -336,7 +348,7 @@ const AssignmentModal = (props: Props) => {
           <button
             type="button"
             onClick={onClose}
-            className="px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+            className="px-4 py-2 border cursor-pointer border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
           >
             Hủy
           </button>

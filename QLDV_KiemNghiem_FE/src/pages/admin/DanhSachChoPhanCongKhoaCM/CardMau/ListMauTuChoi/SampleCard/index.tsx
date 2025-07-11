@@ -1,4 +1,6 @@
 import { renderTrangThaiMau } from "../../../../../../configs/configAll";
+import { role } from "../../../../../../configs/parseJwt";
+import { getRoleGroup } from "../../../../../../configs/Role";
 import {
   useGetLoaiDichVuAll,
   useGetTieuChuanAll,
@@ -42,8 +44,14 @@ const SampleCardTuChoiMau = ({
 
   return (
     <div
-      onClick={() => onSelect(sample.maId, sample.tenMau)}
-      className={`border rounded-lg overflow-hidden sample-card transition-all cursor-pointer ${
+      onClick={
+        getRoleGroup(role) === "BLD"
+          ? () => onSelect(sample.maId, sample.tenMau)
+          : undefined
+      }
+      className={`border rounded-lg overflow-hidden sample-card transition-all${
+        getRoleGroup(role) === "BLD" && "cursor-pointer"
+      } ${
         isSelected === sample.maId
           ? "border-blue-500 bg-blue-50"
           : "border-gray-200"
@@ -56,13 +64,15 @@ const SampleCardTuChoiMau = ({
             <p className="text-sm text-gray-500">{sample.soLo}</p>
           </div>
 
-          <input
-            type="checkbox"
-            checked={isSelected === sample.maId}
-            onChange={() => {}}
-            onClick={() => onSelect(sample.maId, sample.tenMau)}
-            className="h-5 w-5 text-blue-600 focus:ring-blue-500 border-gray-300 rounded cursor-pointer"
-          />
+          {getRoleGroup(role) === "BLD" && (
+            <input
+              type="checkbox"
+              checked={isSelected === sample.maId}
+              onChange={() => {}}
+              onClick={() => onSelect(sample.maId, sample.tenMau)}
+              className="h-5 w-5 text-blue-600 focus:ring-blue-500 border-gray-300 rounded cursor-pointer"
+            />
+          )}
         </div>
 
         <div className="text-sm text-gray-600 mb-3 space-y-2">
@@ -100,7 +110,7 @@ const SampleCardTuChoiMau = ({
               e.stopPropagation();
               handleXemChiTiet(sample.maPhieuDangKy);
             }}
-            className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-sm font-medium hover:underline text-blue-600`}
+            className={`inline-flex items-center px-2.5 py-0.5 cursor-pointer rounded-full text-sm font-medium hover:underline text-blue-600`}
           >
             Xem chi tiết
           </p>

@@ -13,7 +13,7 @@ const TagPhanCong = (props: Props) => {
     <div className="flex flex-wrap gap-2">
       {role !== "KN" && (
         <button
-          className={`px-3 py-1.5 cursor-pointer text-sm font-medium rounded-md ${
+          className={`px-3 py-1.5 cursor-pointer text-base font-medium rounded-md ${
             isTag === tagPhanCong.Phan_Cong
               ? "bg-indigo-100 text-indigo-800"
               : "text-gray-600 hover:bg-gray-100"
@@ -25,7 +25,7 @@ const TagPhanCong = (props: Props) => {
       )}
 
       <button
-        className={`px-3 py-1.5 cursor-pointer text-sm font-medium rounded-md ${
+        className={`px-3 py-1.5 cursor-pointer text-base font-medium rounded-md ${
           isTag === tagPhanCong.Danh_Sach
             ? "bg-indigo-100 text-indigo-800"
             : "text-gray-600 hover:bg-gray-100"
@@ -36,7 +36,7 @@ const TagPhanCong = (props: Props) => {
       </button>
       {role !== "KN" && (
         <button
-          className={`px-3 py-1.5 cursor-pointer text-sm font-medium rounded-md ${
+          className={`px-3 py-1.5 cursor-pointer text-base font-medium rounded-md ${
             isTag === tagPhanCong.Lich_Su_Phan_Cong
               ? "bg-indigo-100 text-indigo-800"
               : "text-gray-600 hover:bg-gray-100"

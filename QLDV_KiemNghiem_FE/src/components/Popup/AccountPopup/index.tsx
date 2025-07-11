@@ -81,18 +81,6 @@ const AccountPopup = (props: AccountPopupProps) => {
           </p>
         </Box>
         <Box
-          className="flex gap-2 items-center hover:bg-[rgb(230,236,246)] cursor-pointer rounded p-1"
-          onClick={() => {
-            navigate(APP_ROUTES.TUNA_CUSTOMER.QUAN_LY_PHAN_TICH_KET_QUA.to);
-            handleCloseAccountPopup?.();
-          }}
-        >
-          <GiTestTubes className="w-5 h-5 sm:w-6 sm:h-6 text-[#2b89d1]" />
-          <p className="text-cyan-950 text-xs/6 sm:text-base/6 font-medium">
-            Quản lý phiếu phân tích kết quả
-          </p>
-        </Box>
-        <Box
           onClick={logout}
           className="flex gap-2 items-center hover:bg-[rgb(230,236,246)] cursor-pointer rounded p-1"
         >

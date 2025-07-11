@@ -333,7 +333,7 @@ export function renderTrangThaiPhieuDeXuatPhongBan(trangThaiId: string) {
 
   return (
     <span
-      className={`inline-block px-2 py-1 text-xs font-medium rounded-full ${trangThai.bgColor} ${trangThai.textColor}`}
+      className={`inline-block px-2 py-1 text-sm font-medium rounded-full ${trangThai.bgColor} ${trangThai.textColor}`}
     >
       {trangThai.text}
     </span>

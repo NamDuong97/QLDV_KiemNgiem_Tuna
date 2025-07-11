@@ -9,6 +9,8 @@ import SelectItemLoaiMau from "./SelectItemLoaiMau";
 import { FileMinus } from "react-feather";
 import SampleCardTuChoiMau from "./SampleCard";
 import ConfirmationModal from "./ConfirmationModal";
+import { getRoleGroup } from "../../../../../configs/Role";
+import { role } from "../../../../../configs/parseJwt";
 
 function convertToMauPhanCong(data: any): MauPhanCong {
   return {
@@ -115,7 +117,7 @@ const ListMauTuChoi = () => {
               setItem={setSelectLoaiMau}
               item={selectLoaiMau}
             />
-            {selectedSamples && (
+            {getRoleGroup(role) === "BLD" && selectedSamples && (
               <button
                 onClick={() => setIsOpen(true)}
                 className="inline-flex gap-1 items-center justify-center cursor-pointer px-3 py-1.5 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"

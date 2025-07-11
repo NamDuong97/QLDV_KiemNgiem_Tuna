@@ -1,10 +1,4 @@
-import {
-  Home,
-  Clipboard,
-  Archive,
-  Share,
-  FileText,
-} from "react-feather";
+import { Home, Clipboard, Archive, Share, FileText } from "react-feather";
 import { image } from "../../constants/image";
 import {
   danhSachHoaDon,
@@ -197,34 +191,8 @@ const SidebarPersonnal = () => {
                       />
                     </span>
                     <span className="text-start capitalize">
-                      Phân công Khoa chuyên môn
+                      Phân công Khoa và Danh sách mẫu
                     </span>
-                  </button>
-                  <button
-                    onClick={() => {
-                      handleRedirect(quanLyMau);
-                    }}
-                    className={clsx(
-                      "flex items-center space-x-2 sidebar-link px-4 py-3 text-gray-700 rounded-lg",
-                      {
-                        "text-indigo-600 active":
-                          pathname.split("/")[2] ===
-                          APP_ROUTES.TUNA_ADMIN.DANH_SACH_MAU.to.split("/")[2],
-                      }
-                    )}
-                  >
-                    <span className="w-5">
-                      <FaFlask
-                        className={clsx("w-5 h-5 text-gray-500", {
-                          "text-indigo-600":
-                            pathname.split("/")[2] ===
-                            APP_ROUTES.TUNA_ADMIN.DANH_SACH_MAU.to.split(
-                              "/"
-                            )[2],
-                        })}
-                      />
-                    </span>
-                    <span className="text-start capitalize">Danh sách mẫu</span>
                   </button>
                 </>
               )}

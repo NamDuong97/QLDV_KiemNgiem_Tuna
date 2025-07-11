@@ -86,52 +86,52 @@ const DetailPLHCs = (props: Props) => {
           <div key={index} className="space-y-1">
             <div className="grid grid-cols-2 gap-y-4 gap-x-8 text-sm text-gray-700">
               <div>
-                <label className="text-sm/6 text-gray-500">
+                <label className="text-base/6 text-gray-500">
                   Tên Phụ Liệu Hóa Chất
                 </label>
-                <p className="font-semibold text-gray-900">{item?.tenPlhc}</p>
+                <p className="font-semibold text-base/6 text-gray-900">{item?.tenPlhc}</p>
               </div>
 
               <div>
-                <label className="text-sm/6 text-gray-500">Tên hiển thị</label>
-                <p className="font-semibold text-gray-900">
+                <label className="text-base/6 text-gray-500">Tên hiển thị</label>
+                <p className="font-semibold text-base/6 text-gray-900">
                   {item?.tenHienThi}
                 </p>
               </div>
 
               <div>
-                <label className="text-sm/6 text-gray-500">Số Lượng</label>
-                <p className="font-semibold text-gray-900">
+                <label className="text-base/6 text-gray-500">Số Lượng</label>
+                <p className="font-semibold text-base/6 text-gray-900">
                   {item?.soLuong}
                   {item?.donViTinh}
                 </p>
               </div>
 
               <div>
-                <label className="text-sm/6 text-gray-500">Số lô</label>
-                <p className="font-semibold text-gray-900">{item?.soLo}</p>
+                <label className="text-base/6 text-gray-500">Số lô</label>
+                <p className="font-semibold text-base/6 text-gray-900">{item?.soLo}</p>
               </div>
 
               <div>
-                <label className="text-sm/6 text-gray-500">
+                <label className="text-base/6 text-gray-500">
                   Tên nhà cung cấp
                 </label>
-                <p className="font-semibold text-gray-900">
+                <p className="font-semibold text-base/6 text-gray-900">
                   {item?.tenNhaCungCap}
                 </p>
               </div>
 
               <div>
-                <label className="text-sm/6 text-gray-500">Hạn sử dụng</label>
-                <p className="font-semibold text-gray-900">
+                <label className="text-base/6 text-gray-500">Hạn sử dụng</label>
+                <p className="font-semibold text-base/6 text-gray-900">
                   {new Date(item?.ngayHetHan).toLocaleDateString("vi-VN")}
                 </p>
               </div>
 
               <div className="col-span-2">
-                <label className="text-sm/6 text-gray-500">Ghi chú</label>
-                <div className="bg-gray-50 p-4 rounded-lg">
-                  <p className="text-gray-700 font-semibold">{item?.ghiChu}</p>
+                <label className="text-base/6 text-gray-500">Ghi chú</label>
+                <div className="bg-gray-100 p-4 rounded-lg">
+                  <p className="text-gray-700 font-semibold text-base/6">{item?.ghiChu ? item?.ghiChu :"Không có ghi chú"}</p>
                 </div>
               </div>
             </div>
