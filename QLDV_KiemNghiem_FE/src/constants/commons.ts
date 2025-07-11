@@ -44,6 +44,9 @@ export const API = {
       GET_LOAI_MAU_BY_ID: "/api/LoaiMau/getLoaiMau",
       HUY_MAU: "/api/PhieuDangKyMau/cancelPhieuDangKyMauByKHTHBLD",
       THONG_KE_MAUS: "/api/PhieuDangKyMau/getPhieuDangKyMauThongKe",
+      LDP_HOAN_TRA_MAU: "/api/PhieuDangKyMau/cancelPhieuDangKyMauByLDP",
+      BLD_PHE_DUYET_HOAN_TRA_MAU:
+        "/api/PhieuDangKyMau/reviewCancelPhieuDangKyMauByBLD",
     },
     MAUS_LUU: {
       GET_MAUS_LUU_ALL: "/api/PhieuLuuMau/getPhieuLuuMauAll",
@@ -96,6 +99,7 @@ export const API = {
       GET_BY_GUEST: "/api/HoaDonThu/getHoaDonThuOfCustomer?maKH=",
       GET_BY_ID: "/api/HoaDonThu/getHoaDonThuByID?maHoaDonThu=",
       DELETE: "/api/HoaDonThu/deleteHoaDonThu?maHoaDonThu=",
+      UPDATE: "/api/HoaDonThu/updateHoaDonThu",
       HOA_DON_BO_SUNG: {
         GET_ALL: "/api/HoaDonThuBoSung/getHoaDonThuBoSungAll",
         GET_BY_ID:

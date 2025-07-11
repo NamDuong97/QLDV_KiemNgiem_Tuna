@@ -6,11 +6,10 @@ import ChiTietPhieuDKyDVKN from "../../ChiTietPhieuDKyDVKN";
 import removeVietnameseTones from "../../../../../configs/removeVietnameseTones";
 import { getAllDanhSachMau } from "../../../../../hooks/personnels/phanCongKhoa";
 import SelectItemLoaiMau from "./SelectItemLoaiMau";
-import { FileMinus } from "react-feather";
 import SampleCardTuChoiMau from "./SampleCard";
-import ConfirmationModal from "./ConfirmationModal";
-import { getRoleGroup } from "../../../../../configs/Role";
-import { role } from "../../../../../configs/parseJwt";
+import FormLyDoTuChoi from "./formLyDoTuChoi";
+import { TypeConformation } from "../../../../../constants/typeConfirmation";
+import { typeConfirmation } from "../../../PhanTichKetQua/ShowDetailChoDuyet";
 
 function convertToMauPhanCong(data: any): MauPhanCong {
   return {
@@ -28,29 +27,30 @@ function convertToMauPhanCong(data: any): MauPhanCong {
     maPhieuDangKy: data.maPhieuDangKy,
     maLoaiMau: data.maLoaiMau,
     thoiGianTieuChuan: data.thoiGianTieuChuan,
+    tenKhoa: data.tenKhoa,
+    maKhoa: data.maKhoa,
   };
 }
 
-const ListMauTuChoi = () => {
+const ListMauHoanTra = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [isOpen, setIsOpen] = useState(false);
   const [itemsPerPage] = useState(12);
-  const [selectedSamples, setSelectedSamples] = useState<any>(null);
   const [searchQuery, setSearchQuery] = useState("");
-  const [tenMau, setTenMau] = useState("");
-
+  const [save, setSave] = useState({});
+  const [isTypeConform, setIsTypeConform] = useState<string>("");
   const [selectLoaiMau, setSelectLoaiMau] = useState("");
   const params: any = {
     pageNumber: currentPage,
     pageSize: itemsPerPage,
-    trangThaiPhanCong: 3, //Đã bị huỷ bởi khoa chuyên môn - Khi phòng khoa từ chối phân công - không ai nhận
+    trangThaiPhanCong: 10, //Đã bị huỷ bởi khoa chuyên môn - Khi phòng khoa từ chối phân công - không ai nhận
   };
 
   if (selectLoaiMau !== "") {
     params.maLoaiMau = selectLoaiMau;
   }
   const { data, isLoading } = getAllDanhSachMau({
-    queryKey: "AllDanhSachMauTuChoi",
+    queryKey: "ListMauHoanTra",
     params: params,
   });
   const pagination = data?.pagination;
@@ -58,16 +58,15 @@ const ListMauTuChoi = () => {
     data?.data?.map(convertToMauPhanCong) || []
   );
 
-  const filteredSamples: any = samples
-    ?.sort((a: any, b: any) => a.thoiGianTieuChuan - b.thoiGianTieuChuan)
-    ?.filter((sample: any) => {
-      const query = removeVietnameseTones(searchQuery.toLowerCase());
-      const matchesSearch = removeVietnameseTones(
-        sample.tenMau.toLowerCase()
-      ).includes(query);
-      return matchesSearch;
-    });
+  const filteredSamples: any = samples?.filter((sample: any) => {
+    const query = removeVietnameseTones(searchQuery.toLowerCase());
+    const matchesSearch = removeVietnameseTones(
+      sample.tenMau.toLowerCase()
+    ).includes(query);
+    return matchesSearch;
+  });
   const [openXemChiTiet, setOpenXemChiTiet] = useState(false);
+  console.log("filteredSamples", filteredSamples);
 
   const handleCloseXemChiTiet = () => {
     setOpenXemChiTiet(false);
@@ -75,18 +74,6 @@ const ListMauTuChoi = () => {
   };
   const handlePageChange = (_: any, value: number) => {
     setCurrentPage(value);
-  };
-
-  // Handle sample selection
-  const toggleSampleSelection = (sampleId: never, tenMau: any) => {
-    if (sampleId)
-      if (selectedSamples === sampleId) {
-        setSelectedSamples(null);
-        setTenMau("");
-      } else {
-        setSelectedSamples(sampleId);
-        setTenMau(tenMau);
-      }
   };
 
   // Handle search input change
@@ -117,15 +104,6 @@ const ListMauTuChoi = () => {
               setItem={setSelectLoaiMau}
               item={selectLoaiMau}
             />
-            {getRoleGroup(role) === "BLD" && selectedSamples && (
-              <button
-                onClick={() => setIsOpen(true)}
-                className="inline-flex gap-1 items-center justify-center cursor-pointer px-3 py-1.5 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-              >
-                <FileMinus className="w-4 h-4" />
-                Duyệt hoàn trả
-              </button>
-            )}
           </div>
         </div>
 
@@ -164,10 +142,10 @@ const ListMauTuChoi = () => {
                   <SampleCardTuChoiMau
                     key={sample.maId}
                     sample={sample}
-                    isSelected={selectedSamples}
-                    onSelect={toggleSampleSelection}
-                    isLoading={isLoading}
                     handleOpenChiTiet={() => setOpenXemChiTiet(true)}
+                    setIsTypeConform={setIsTypeConform}
+                    setSave={setSave}
+                    setIsOpen={() => setIsOpen(true)}
                   />
                 ))}
               </div>
@@ -200,14 +178,18 @@ const ListMauTuChoi = () => {
         open={openXemChiTiet}
         handleClose={handleCloseXemChiTiet}
       />
-      <ConfirmationModal
+      <FormLyDoTuChoi
         isOpen={isOpen}
         onClose={() => setIsOpen(false)}
-        dataId={selectedSamples}
-        tenMau={tenMau}
+        type={TypeConformation.Info}
+        title={`Xác nhận ${
+          isTypeConform === typeConfirmation.TuChoi ? `từ chối` : `duyệt phiếu`
+        }`}
+        dataSave={save}
+        typeConform={isTypeConform}
       />
     </div>
   );
 };
 
-export default ListMauTuChoi;
+export default ListMauHoanTra;

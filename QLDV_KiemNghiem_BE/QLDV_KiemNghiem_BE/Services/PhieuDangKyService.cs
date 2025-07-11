@@ -268,7 +268,7 @@ namespace QLDV_KiemNghiem_BE.Services
                 // nếu mẫu đã tồn tại thì update hoac delete mẫu này
                 if (checkExistsMau != null)
                 {
-                    var cchdt = await _repositoryManager.ChiTietHoaDonThu.CheckExistChiTietHoaDonThuByMaMauAsync(mau.MaId, hoaDonThu.MaId, true);
+                    var cchdt = await _repositoryManager.ChiTietHoaDonThu.CheckExistChiTietHoaDonThuByMaMauAsync( hoaDonThu.MaId, true);
                     // Xoa mau va hinh anh lien quan
                     if (mau.IsDel)
                     {

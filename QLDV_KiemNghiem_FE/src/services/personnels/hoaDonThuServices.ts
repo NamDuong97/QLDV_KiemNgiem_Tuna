@@ -9,7 +9,7 @@ export default class hoaDonThuServices {
       });
       return response;
     } catch (err: any) {
-      return err;
+      throw err?.response?.data;
     }
   }
 
@@ -20,7 +20,7 @@ export default class hoaDonThuServices {
       );
       return response;
     } catch (err: any) {
-      return err;
+      throw err?.response?.data;
     }
   }
 
@@ -31,7 +31,7 @@ export default class hoaDonThuServices {
       );
       return response;
     } catch (err: any) {
-      return err;
+      throw err?.response?.data;
     }
   }
 
@@ -42,7 +42,7 @@ export default class hoaDonThuServices {
       );
       return response;
     } catch (err: any) {
-      return err;
+      throw err?.response?.data;
     }
   }
 
@@ -54,7 +54,7 @@ export default class hoaDonThuServices {
       );
       return response;
     } catch (err: any) {
-      return err;
+      throw err?.response?.data;
     }
   }
 
@@ -65,7 +65,7 @@ export default class hoaDonThuServices {
       );
       return response;
     } catch (err: any) {
-      return err;
+      throw err?.response?.data;
     }
   }
 
@@ -76,7 +76,7 @@ export default class hoaDonThuServices {
       );
       return response;
     } catch (err: any) {
-      return err;
+      throw err?.response?.data;
     }
   }
 
@@ -88,7 +88,7 @@ export default class hoaDonThuServices {
       );
       return response;
     } catch (err: any) {
-      return err;
+      throw err?.response?.data;
     }
   }
 
@@ -100,7 +100,19 @@ export default class hoaDonThuServices {
       );
       return response;
     } catch (err: any) {
-      return err;
+      throw err?.response?.data;
+    }
+  }
+
+  static async updateHoaDonThu(data: any) {
+    try {
+      const response = await _APIInstance.put(
+        API.ADMIN.HOA_DON_THU.UPDATE,
+        data
+      );
+      return response;
+    } catch (err: any) {
+      throw err?.response?.data;
     }
   }
 }

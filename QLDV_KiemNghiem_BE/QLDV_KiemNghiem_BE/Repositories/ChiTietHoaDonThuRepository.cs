@@ -23,9 +23,9 @@ namespace QLDV_KiemNghiem_BE.Repositories
         {
             return await _context.ChiTietHoaDonThus.FindAsync(maChiTietHoaDonThu);
         }
-        public async Task<ChiTietHoaDonThu?> CheckExistChiTietHoaDonThuByMaMauAsync(string maMau, string MaHoaDon, bool tracking)
+        public async Task<ChiTietHoaDonThu?> CheckExistChiTietHoaDonThuByMaMauAsync( string MaHoaDon, bool tracking)
         {
-            var result = await _context.ChiTietHoaDonThus.Where(item => item.MaHd == MaHoaDon && item.MaMau == maMau).SingleOrDefaultAsync();
+            var result = await _context.ChiTietHoaDonThus.Where(item => item.MaHd == MaHoaDon).SingleOrDefaultAsync();
             if (result != null && tracking)
             {
                 _context.Attach(result);

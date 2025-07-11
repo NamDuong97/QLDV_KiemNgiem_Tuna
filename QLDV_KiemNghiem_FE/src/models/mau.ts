@@ -1,6 +1,6 @@
 export interface Anh {
   base64?: string;
-  image?:File;
+  image?: File;
   ghiChu?: string;
 }
 
@@ -120,4 +120,6 @@ export interface MauPhanCong {
   maPhieuDangKy: string;
   maLoaiMau: string;
   thoiGianTieuChuan: number;
+  tenKhoa: string;
+  maKhoa: string;
 }

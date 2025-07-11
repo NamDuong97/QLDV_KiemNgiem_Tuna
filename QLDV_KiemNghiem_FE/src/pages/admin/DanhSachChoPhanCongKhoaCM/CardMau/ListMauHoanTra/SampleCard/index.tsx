@@ -1,17 +1,17 @@
 import { renderTrangThaiMau } from "../../../../../../configs/configAll";
-import { role } from "../../../../../../configs/parseJwt";
-import { getRoleGroup } from "../../../../../../configs/Role";
 import {
   useGetLoaiDichVuAll,
   useGetTieuChuanAll,
 } from "../../../../../../hooks/customers/usePhieuDKyDVKN";
 import { queryLoaiMauByID } from "../../../../../../hooks/personnels/queryMau";
+import { typeConfirmation } from "../../../../PhanTichKetQua/ShowDetailChoDuyet";
 
 const SampleCardTuChoiMau = ({
   sample,
-  isSelected,
-  onSelect,
   handleOpenChiTiet,
+  setIsTypeConform,
+  setSave,
+  setIsOpen,
 }: any) => {
   const { data: dataTC } = useGetTieuChuanAll({
     queryKey: "TieuChuanAll",
@@ -42,40 +42,31 @@ const SampleCardTuChoiMau = ({
     handleOpenChiTiet();
   };
 
+  const handleClickDuyetHoanTra = (isTypeConform: any, isData: any) => {
+    setIsTypeConform(isTypeConform);
+    setSave(isData);
+    setIsOpen();
+  };
+
   return (
     <div
-      onClick={
-        getRoleGroup(role) === "BLD"
-          ? () => onSelect(sample.maId, sample.tenMau)
-          : undefined
-      }
-      className={`border rounded-lg overflow-hidden sample-card transition-all${
-        getRoleGroup(role) === "BLD" && "cursor-pointer"
-      } ${
-        isSelected === sample.maId
-          ? "border-blue-500 bg-blue-50"
-          : "border-gray-200"
-      }`}
+      className={`border rounded-lg overflow-hidden sample-card transition-all border-gray-200`}
     >
       <div className="p-4">
         <div className="flex justify-between items-start mb-3">
           <div>
-            <h3 className="font-medium text-gray-900 mb-1">{sample.tenMau}</h3>
-            <p className="text-sm text-gray-500">{sample.soLo}</p>
+            <h3 className="font-bold text-blue-600 mb-1">{sample.tenMau}</h3>
           </div>
-
-          {getRoleGroup(role) === "BLD" && (
-            <input
-              type="checkbox"
-              checked={isSelected === sample.maId}
-              onChange={() => {}}
-              onClick={() => onSelect(sample.maId, sample.tenMau)}
-              className="h-5 w-5 text-blue-600 focus:ring-blue-500 border-gray-300 rounded cursor-pointer"
-            />
-          )}
+          <p className="text-sm text-white px-2 py-1 rounded-full bg-rose-500">
+            {sample.soLo}
+          </p>
         </div>
 
         <div className="text-sm text-gray-600 mb-3 space-y-2">
+          <p>
+            {`Khoa:
+              ${sample?.tenKhoa}`}
+          </p>
           <p>
             {`Tiêu Chuẩn:
               ${
@@ -97,7 +88,7 @@ const SampleCardTuChoiMau = ({
 
         <div className="text-sm text-gray-600 mb-3 flex justify-between items-center">
           <p>Số lượng: {`${sample.soLuong} ${sample.donViTinh}`}</p>
-          <p>hạn sử dụng: {formatDate(sample.hanSuDung)}</p>
+          <p>Hạn sử dụng: {formatDate(sample.hanSuDung)}</p>
         </div>
         <div className="text-sm text-gray-600 mb-3 flex justify-between items-center">
           <p>Ngày sản xuất: {formatDate(sample.ngaySanXuat)}</p>
@@ -106,14 +97,35 @@ const SampleCardTuChoiMau = ({
         <div className="text-sm text-gray-600 mb-3 flex justify-between items-center">
           {renderTrangThaiMau(sample.trangThaiPhanCong)}
           <p
-            onClick={(e) => {
-              e.stopPropagation();
-              handleXemChiTiet(sample.maPhieuDangKy);
-            }}
+            onClick={() => handleXemChiTiet(sample.maPhieuDangKy)}
             className={`inline-flex items-center px-2.5 py-0.5 cursor-pointer rounded-full text-sm font-medium hover:underline text-blue-600`}
           >
             Xem chi tiết
           </p>
+        </div>
+        <div className="text-sm text-gray-600 mb-3 flex justify-end gap-4 items-center">
+          <button
+            onClick={() =>
+              handleClickDuyetHoanTra(typeConfirmation.TuChoi, {
+                maMau: sample?.maId,
+                maKhoa: sample?.maKhoa,
+              })
+            }
+            className={`inline-flex items-center px-2.5 py-0.5 cursor-pointer rounded text-sm font-medium text-white bg-yellow-500`}
+          >
+            Từ chối
+          </button>
+          <button
+            onClick={() =>
+              handleClickDuyetHoanTra(typeConfirmation.DuyetPhieu, {
+                maMau: sample?.maId,
+                maKhoa: sample?.maKhoa,
+              })
+            }
+            className={`inline-flex items-center px-2.5 py-0.5 cursor-pointer rounded text-sm font-medium text-white bg-green-500`}
+          >
+            Duyệt
+          </button>
         </div>
       </div>
     </div>

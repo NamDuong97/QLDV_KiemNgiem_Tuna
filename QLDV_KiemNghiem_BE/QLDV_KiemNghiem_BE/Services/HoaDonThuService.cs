@@ -215,19 +215,17 @@ namespace QLDV_KiemNghiem_BE.Services
                 {
                     if (string.IsNullOrEmpty(item.MaID))
                     {
-                        var checkExistCTHDT = await _repositoryManager.ChiTietHoaDonThu.CheckExistChiTietHoaDonThuByMaMauAsync(checkHoaDonThu.MaId, item?.MaMau?? "", false);
+                        var checkExistCTHDT = await _repositoryManager.ChiTietHoaDonThu.CheckExistChiTietHoaDonThuByMaMauAsync(checkHoaDonThu.MaId, false);
                         if (checkExistCTHDT == null)
                         {
                             ChiTietHoaDonThu chiTietHoaDonThu = new ChiTietHoaDonThu()
                             {
                                 MaId = Guid.NewGuid().ToString(),
-                                MaMau = item?.MaMau,
                                 MaHd = checkHoaDonThu.MaId,
                                 ThanhTien = item?.ThanhTien ?? 0,
                                 GhiChu = item?.GhiChu ?? "",
                                 TrangThai = true
                             };
-                            hoaDonThuDto.TongTien += chiTietHoaDonThu.ThanhTien;
                             await _repositoryManager.ChiTietHoaDonThu.CreateChiTietHoaDonThuAsync(chiTietHoaDonThu);
                             chiTietHoaDonThus.Add(chiTietHoaDonThu);
                         }
@@ -244,15 +242,12 @@ namespace QLDV_KiemNghiem_BE.Services
                         if (checkExistCTHDT == null) continue;
                         if (item.IsDel)
                         {
-                            hoaDonThuDto.TongTien -= checkExistCTHDT.ThanhTien;
                             _repositoryManager.ChiTietHoaDonThu.DeleteChiTietHoaDonThuAsync(checkExistCTHDT);
                         }
                         else
                         {
-                            hoaDonThuDto.TongTien -= checkExistCTHDT.ThanhTien;
                             checkExistCTHDT.ThanhTien = item.ThanhTien > 0 ? item.ThanhTien : checkExistCTHDT.ThanhTien;
                             checkExistCTHDT.GhiChu = string.IsNullOrEmpty(item.GhiChu) ? checkExistCTHDT.GhiChu : item.GhiChu;
-                            hoaDonThuDto.TongTien += checkExistCTHDT.ThanhTien;
                             _repositoryManager.ChiTietHoaDonThu.UpdateChiTietHoaDonThuAsync(checkExistCTHDT);
                             chiTietHoaDonThus.Add(checkExistCTHDT);
                         }

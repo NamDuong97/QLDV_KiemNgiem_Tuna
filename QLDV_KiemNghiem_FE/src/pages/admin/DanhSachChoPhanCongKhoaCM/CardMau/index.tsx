@@ -7,8 +7,8 @@ import { queryKhoaAll } from "../../../../hooks/personnels/queryKhoa";
 // import { queryThongKe } from "../../../../hooks/personnels/queryMau";
 import TagPhanCong from "../TagPhanCong";
 import { useState } from "react";
-import ListMauTuChoi from "./ListMauTuChoi";
 import DanhSachMau from "../DanhSachMau";
+import ListMauHoanTra from "./ListMauHoanTra";
 
 export const colorPresets = [
   "bg-red-100 text-red-800 border-red-200 hover:bg-red-200",
@@ -22,7 +22,7 @@ export const colorPresets = [
 
 export const tagDanhSachPhieuChoPhanCongKhoaCM = {
   phancong: "Mẫu chờ phân công khoa chuyên môn",
-  duyetmautuchoi: "Mẫu do khoa hủy, chờ lãnh đạo duyệt",
+  duyetmautuchoi: "Mẫu hoàn trả",
   tatca: "Mẫu kiểm nghiệm",
 };
 
@@ -54,7 +54,7 @@ const CardMau = () => {
       case tagDanhSachPhieuChoPhanCongKhoaCM.phancong:
         return <SampleList departments={departments} />;
       case tagDanhSachPhieuChoPhanCongKhoaCM.duyetmautuchoi:
-        return <ListMauTuChoi />;
+        return <ListMauHoanTra />;
       case tagDanhSachPhieuChoPhanCongKhoaCM.tatca:
         return <DanhSachMau />;
       default:

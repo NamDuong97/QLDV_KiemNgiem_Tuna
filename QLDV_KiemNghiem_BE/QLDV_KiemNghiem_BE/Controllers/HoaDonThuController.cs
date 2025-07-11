@@ -84,7 +84,7 @@ namespace QLDV_KiemNghiem_BE.Controllers
         }
 
         [HttpPut]
-        [Authorize(Roles = "KET")]
+        [Authorize(Policy = "KETOnly")]
         [Route("updateHoaDonThu")]
         public async Task<ActionResult> updateHoaDonThu(HoaDonThuRequestUpdateDto HoaDonThuDto)
         {

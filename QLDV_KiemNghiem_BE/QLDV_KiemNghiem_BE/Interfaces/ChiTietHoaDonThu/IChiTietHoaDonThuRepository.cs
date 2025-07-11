@@ -6,7 +6,7 @@ namespace QLDV_KiemNghiem_BE.Interfaces
     {
         Task<IEnumerable<ChiTietHoaDonThu>> GetChiTietHoaDonThusAllAsync();
         Task<ChiTietHoaDonThu?> FindChiTietHoaDonThuAsync(string maChiTietHoaDonThu);
-        Task<ChiTietHoaDonThu?> CheckExistChiTietHoaDonThuByMaMauAsync(string maMau, string MaHoaDon, bool tracking);
+        Task<ChiTietHoaDonThu?> CheckExistChiTietHoaDonThuByMaMauAsync(string MaHoaDon, bool tracking);
         Task CreateChiTietHoaDonThuAsync(ChiTietHoaDonThu ChiTietHoaDonThu);
         void UpdateChiTietHoaDonThuAsync(ChiTietHoaDonThu ChiTietHoaDonThu);
         void DeleteChiTietHoaDonThuAsync(ChiTietHoaDonThu ChiTietHoaDonThu);

@@ -60,7 +60,6 @@ const DanhSachHoaDon = () => {
           </p>
         </div>
       </div>
-
       <div className="fade-in">{renderContent()}</div>
       <ChiTietPhieuDKyDVKN
         open={openXemChiTiet}
