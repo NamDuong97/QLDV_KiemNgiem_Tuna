@@ -31,6 +31,8 @@ function convertToMauPhanCong(data: any): MauPhanCong {
     maPhieuDangKy: data.maPhieuDangKy,
     maLoaiMau: data.maLoaiMau,
     thoiGianTieuChuan: data.thoiGianTieuChuan,
+    tenKhoa: data?.tenKhoa,
+    maKhoa: data?.maKhoa,
   };
 }
 

@@ -40,6 +40,20 @@ const ToastNotification = () => {
                 )
               );
 
+            connection
+              .invoke("JoinGroup", personnelInfo?.maLoaiTk)
+              .then(() =>
+                console.log(
+                  `Joined group ${personnelInfo?.maLoaiTk}`
+                )
+              )
+              .catch((err: any) =>
+                console.error(
+                  `Joined group ${personnelInfo?.maLoaiTk}`,
+                  err
+                )
+              );
+
             //JoinGroup Khoa
             connection
               .invoke("JoinGroup", personnelInfo?.maKhoa)

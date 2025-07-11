@@ -68,14 +68,14 @@ const FormNhanXet = (props: Props) => {
         <button
           type="button"
           onClick={onCancel}
-          className="px-4 py-2 text-sm font-medium text-white bg-yellow-600 rounded-lg hover:bg-yellow-700 transition-colors"
+          className="px-4 py-2 text-sm font-medium cursor-pointer text-white bg-yellow-600 rounded-lg hover:bg-yellow-700 transition-colors"
         >
           Hủy
         </button>
         <button
           type="submit"
           disabled={isSubmitting}
-          className="px-4 py-2 text-sm font-medium text-white bg-green-600 rounded-lg hover:bg-green-700 transition-colors"
+          className="px-4 py-2 text-sm font-medium text-white cursor-pointer bg-green-600 rounded-lg hover:bg-green-700 transition-colors"
         >
           {isSubmitting ? "Đang gửi..." : "Gửi"}
         </button>

@@ -28,23 +28,38 @@ interface FormTaoPhieu {
 const today = new Date();
 today.setHours(0, 0, 0, 0);
 
-const schema = yup.object().shape({
-  soLuong: yup
-    .number()
-    .typeError("Vui lòng nhập số lượng")
-    .required("Vui lòng nhập số lượng")
-    .min(1, "Số lượng phải lớn hơn 0"),
-  donViTinh: yup.string().required("Vui lòng nhập đơn vị tính"),
-  luuDenNgay: yup
-    .date()
-    .typeError("Vui lòng chọn ngày lưu đến")
-    .required("Vui lòng chọn ngày lưu đến")
-    .min(today, "Ngày lưu đến phải tính từ thời điểm hiện tại"),
-});
-
 const AssignmentModal = (props: Props) => {
   const { isOpen, onClose, selectedSamples } = props;
   const { personnelInfo } = usePersonnel();
+
+  const schema = yup.object().shape({
+    soLuong: yup
+      .number()
+      .typeError("Vui lòng nhập số lượng")
+      .required("Vui lòng nhập số lượng")
+      .min(1, "Số lượng phải lớn hơn 0")
+      .test(
+        "Số lượng nhập không được vượt quá số lượng hiện tại",
+        `Số lượng nhập không được vượt quá số lượng hiện tại là ${selectedSamples?.soLuong} `,
+        (value: any) => {
+          console.log(
+            "value",
+            value,
+            selectedSamples?.soLuong,
+            Number(value),
+            selectedSamples?.soLuong >= Number(value)
+          );
+
+          return selectedSamples?.soLuong >= Number(value) ? true : false;
+        }
+      ),
+    donViTinh: yup.string().required("Vui lòng nhập đơn vị tính"),
+    luuDenNgay: yup
+      .date()
+      .typeError("Vui lòng chọn ngày lưu đến")
+      .required("Vui lòng chọn ngày lưu đến")
+      .min(today, "Ngày lưu đến phải tính từ thời điểm hiện tại"),
+  });
 
   const {
     reset,
@@ -151,7 +166,7 @@ const AssignmentModal = (props: Props) => {
               className="w-full py-2 px-4 border border-gray-300 rounded"
             />
             {errors.soLuong && (
-              <p className="text-xs text-red-600">{errors.soLuong.message}</p>
+              <p className="text-xs text-red-600 mt-2">{errors.soLuong.message}</p>
             )}
           </div>
 
@@ -166,7 +181,7 @@ const AssignmentModal = (props: Props) => {
               control={control}
             />
             {errors.donViTinh && (
-              <p className="text-xs text-red-600">{errors.donViTinh.message}</p>
+              <p className="text-xs text-red-600 mt-2">{errors.donViTinh.message}</p>
             )}
           </div>
 
@@ -180,7 +195,7 @@ const AssignmentModal = (props: Props) => {
               className="w-full py-2 px-4 border border-gray-300 rounded"
             />
             {errors.luuDenNgay && (
-              <p className="text-xs text-red-600">
+              <p className="text-xs text-red-600 mt-2">
                 {errors.luuDenNgay.message}
               </p>
             )}

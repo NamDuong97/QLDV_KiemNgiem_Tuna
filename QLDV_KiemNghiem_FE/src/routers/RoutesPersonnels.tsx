@@ -30,8 +30,6 @@ const SuaPhanCongPhongCM = lazy(
   () => import("../pages/Admin/DanhSachPhanCongKhoaCM/SuaPhanCongPhongCM")
 );
 
-const DanhSachMau = lazy(() => import("../pages/Admin/DanhSachMau"));
-
 const DanhSachMauLuu = lazy(() => import("../pages/Admin/DanhSachMauLuu"));
 const TaoPhieu = lazy(() => import("../pages/Admin/DanhSachMauLuu/TaoPhieu"));
 
@@ -102,10 +100,6 @@ const RoutesPersonnels = () => {
                 .sua_phan_cong_khoa_chuyen_mon
             }
             element={<SuaPhanCongPhongCM />}
-          />
-          <Route
-            path={APP_ROUTES.TUNA_ADMIN.DANH_SACH_MAU.to}
-            element={<DanhSachMau />}
           />
           <Route
             path={APP_ROUTES.TUNA_ADMIN.QUAN_LY_PHIEU_LUU_MAU.to}

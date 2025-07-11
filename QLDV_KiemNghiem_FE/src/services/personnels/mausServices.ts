@@ -41,6 +41,7 @@ export default class mauServices {
       return err;
     }
   }
+
   static async HuyMau(param: any) {
     try {
       const response = await _APIInstance.put(API.ADMIN.MAUS.HUY_MAU, param, {
@@ -55,6 +56,36 @@ export default class mauServices {
   static async getThongKe() {
     try {
       const response = await _APIInstance.get(API.ADMIN.MAUS.THONG_KE_MAUS);
+      return response;
+    } catch (err: any) {
+      return err;
+    }
+  }
+
+  static async LDPHoanTraMau(param: any) {
+    try {
+      const response = await _APIInstance.put(
+        API.ADMIN.MAUS.LDP_HOAN_TRA_MAU,
+        param,
+        {
+          headers: { "Content-Type": "application/json" },
+        }
+      );
+      return response;
+    } catch (err: any) {
+      return err;
+    }
+  }
+
+  static async BLDPheDuyetHoanTraMau(param: any) {
+    try {
+      const response = await _APIInstance.put(
+        API.ADMIN.MAUS.BLD_PHE_DUYET_HOAN_TRA_MAU,
+        param,
+        {
+          headers: { "Content-Type": "application/json" },
+        }
+      );
       return response;
     } catch (err: any) {
       return err;

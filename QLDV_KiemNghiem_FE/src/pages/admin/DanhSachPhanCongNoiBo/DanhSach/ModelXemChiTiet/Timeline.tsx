@@ -22,12 +22,7 @@ const Timeline = ({ events, handleShowTienDo, isLoading }: any) => {
           events?.map((event: any, index: any) => (
             <div
               key={index}
-              className={
-                `mb-4 relative rounded-md hover:shadow-lg transition-all ease-in-out duration-300 cursor-pointer `
-                //   ${
-                //   event.completed === false ? "opacity-50" : ""
-                // }
-              }
+              className={`mb-4 relative rounded-md hover:shadow-[0_2px_2px_0_rgba(0,0,0,0.25)] transition-all ease-in-out duration-300 cursor-pointer border border-gray-200`}
               onClick={() => handleShowTienDo(event?.maID)}
             >
               <div className="timeline-dot absolute -left-6 mt-1.5">

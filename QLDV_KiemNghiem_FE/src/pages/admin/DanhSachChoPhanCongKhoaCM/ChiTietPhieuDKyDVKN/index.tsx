@@ -111,12 +111,12 @@ const ChiTietPhieuDKyDVKN = (props: Props) => {
           <Box className="p-5 space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
-                <h3 className="text-base/6 font-medium text-gray-500 mb-4">
+                <h3 className="text-lg/6 font-bold text-violet-500 mb-4">
                   Thông tin phiếu đăng ký
                 </h3>
                 <div className="space-y-4">
                   <div className="flex items-center space-x-2">
-                    <label className="block text-xs text-gray-500">
+                    <label className="block text-base/6 text-gray-500">
                       Trạng thái phiếu
                     </label>
                     {isLoading ? (
@@ -126,7 +126,7 @@ const ChiTietPhieuDKyDVKN = (props: Props) => {
                     )}
                   </div>
                   <div>
-                    <label className="block text-xs text-gray-500">
+                    <label className="block text-base/6 text-gray-500">
                       Ngày đăng ký
                     </label>
                     {isLoading ? (
@@ -140,7 +140,7 @@ const ChiTietPhieuDKyDVKN = (props: Props) => {
 
                   <div className="grid grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-xs text-gray-500">
+                      <label className="block text-base/6 text-gray-500">
                         Hình thức trả kết quả
                       </label>
                       {isLoading ? (
@@ -152,7 +152,7 @@ const ChiTietPhieuDKyDVKN = (props: Props) => {
                       )}
                     </div>
                     <div>
-                      <label className="block text-xs text-gray-500">
+                      <label className="block text-base/6 text-gray-500">
                         Hình thức gửi mẫu
                       </label>
                       {isLoading ? (
@@ -166,7 +166,7 @@ const ChiTietPhieuDKyDVKN = (props: Props) => {
                   </div>
                   <div className="grid grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-xs text-gray-500">
+                      <label className="block text-base/6 text-gray-500">
                         Kết quả
                       </label>
                       {isLoading ? (
@@ -178,7 +178,7 @@ const ChiTietPhieuDKyDVKN = (props: Props) => {
                       )}
                     </div>
                     <div>
-                      <label className="block text-xs text-gray-500">
+                      <label className="block text-base/6 text-gray-500">
                         Ngày giao mẫu
                       </label>
                       {isLoading ? (
@@ -190,30 +190,32 @@ const ChiTietPhieuDKyDVKN = (props: Props) => {
                       )}
                     </div>
                   </div>
-                  <div>
-                    <label className="block text-xs text-gray-500">
-                      Địa chỉ giao mẫu
-                    </label>
-                    {isLoading ? (
-                      <Skeleton variant="rounded" width={100} height={20} />
-                    ) : (
-                      <p className="font-medium text-gray-900">
-                        {data?.diaChiGiaoMau}
-                      </p>
-                    )}
-                  </div>
+                  {data?.diaChiGiaoMau && (
+                    <div>
+                      <label className="block text-base/6 text-gray-500">
+                        Địa chỉ giao mẫu
+                      </label>
+                      {isLoading ? (
+                        <Skeleton variant="rounded" width={100} height={20} />
+                      ) : (
+                        <p className="font-medium text-gray-900">
+                          {data?.diaChiGiaoMau}
+                        </p>
+                      )}
+                    </div>
+                  )}
                 </div>
               </div>
 
               {/* Customer Information */}
               <div>
-                <h3 className="text-base/6 font-medium text-gray-500 mb-4">
+                <h3 className="text-lg/6 font-bold text-violet-500 mb-4">
                   Thông tin khách hàng
                 </h3>
                 <div className="space-y-4">
                   <div className="grid grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-xs text-gray-500">
+                      <label className="block text-base/6 text-gray-500">
                         Người gửi mẫu
                       </label>
                       {isLoading ? (
@@ -225,7 +227,7 @@ const ChiTietPhieuDKyDVKN = (props: Props) => {
                       )}
                     </div>
                     <div>
-                      <label className="block text-xs text-gray-500">
+                      <label className="block text-base/6 text-gray-500">
                         Đơn vị gửi mẫu
                       </label>
                       {isLoading ? (
@@ -236,38 +238,42 @@ const ChiTietPhieuDKyDVKN = (props: Props) => {
                         </p>
                       )}
                     </div>
-                  </div>
-                  <div>
-                    <label className="block text-xs text-gray-500">
-                      Số điện thoại
-                    </label>
-                    {isLoading ? (
-                      <Skeleton variant="rounded" width={100} height={20} />
-                    ) : (
-                      <p className="font-medium text-gray-900">
-                        {data?.soDienThoai}
-                      </p>
-                    )}
-                  </div>
-                  <div>
-                    <label className="block text-xs text-gray-500">Email</label>
-                    {isLoading ? (
-                      <Skeleton variant="rounded" width={100} height={20} />
-                    ) : (
-                      <p className="font-medium text-gray-900">{data?.email}</p>
-                    )}
-                  </div>
-                  <div>
-                    <label className="block text-xs text-gray-500">
-                      Địa chỉ liên hệ
-                    </label>
-                    {isLoading ? (
-                      <Skeleton variant="rounded" width={100} height={20} />
-                    ) : (
-                      <p className="font-medium text-gray-900">
-                        {data?.diaChiLienHe}
-                      </p>
-                    )}
+                    <div>
+                      <label className="block text-base/6 text-gray-500">
+                        Số điện thoại
+                      </label>
+                      {isLoading ? (
+                        <Skeleton variant="rounded" width={100} height={20} />
+                      ) : (
+                        <p className="font-medium text-gray-900">
+                          {data?.soDienThoai}
+                        </p>
+                      )}
+                    </div>
+                    <div>
+                      <label className="block text-base/6 text-gray-500">
+                        Email
+                      </label>
+                      {isLoading ? (
+                        <Skeleton variant="rounded" width={100} height={20} />
+                      ) : (
+                        <p className="font-medium text-gray-900">
+                          {data?.email}
+                        </p>
+                      )}
+                    </div>
+                    <div className="col-span-full">
+                      <label className="block text-base/6 text-gray-500">
+                        Địa chỉ liên hệ
+                      </label>
+                      {isLoading ? (
+                        <Skeleton variant="rounded" width={100} height={20} />
+                      ) : (
+                        <p className="font-medium text-gray-900">
+                          {data?.diaChiLienHe}
+                        </p>
+                      )}
+                    </div>
                   </div>
                 </div>
               </div>
@@ -281,17 +287,18 @@ const ChiTietPhieuDKyDVKN = (props: Props) => {
   return (
     <Dialog
       open={open}
-      maxWidth="xl"
+      maxWidth="lg"
       onClose={handleClosePopup}
       sx={{
         ".MuiPaper-root": {
           borderRadius: 2,
         },
       }}
+      fullWidth
     >
-      <div className="w-4xl">
+      <div>
         <div className="px-6 pt-6 pb-4 border-b border-gray-300 flex justify-between items-center">
-          <h1 className="text-xl font-semibold text-gray-800">
+          <h1 className="text-2xl font-semibold text-gray-800">
             Chi tiết phiếu đăng ký - {data?.soDkpt}
           </h1>
           <button

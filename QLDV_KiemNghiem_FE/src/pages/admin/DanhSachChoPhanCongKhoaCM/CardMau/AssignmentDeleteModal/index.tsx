@@ -74,14 +74,15 @@ const AssignmentDeleteModal = (props: Props) => {
     <Dialog
       open={isOpen}
       onClose={handleClose}
-      maxWidth="xl"
+      maxWidth="md"
       sx={{
         ".MuiPaper-root": {
           borderRadius: 4,
         },
       }}
+      fullWidth
     >
-      <form className="bg-white rounded-lg shadow-xl max-w-4xl w-full">
+      <form className="bg-white rounded-lg shadow-xl">
         <div className="py-4 pl-6 pr-4 border-b border-gray-200 flex justify-between items-center">
           <h3 className="text-lg font-bold text-gray-900">
             Hủy mẫu kiểm nghiệm

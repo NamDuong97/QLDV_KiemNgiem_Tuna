@@ -108,20 +108,20 @@ const PhanCong = ({ handleDanhSachPhanCong }: any) => {
               )}
             >
               <div className="p-5">
-                <h3 className="font-semibold text-gray-800 text-lg mb-3">
+                <h3 className="font-semibold text-blue-700 text-xl mb-3">
                   {sample.tenMau}
                 </h3>
 
                 <div className="grid grid-cols-2 gap-x-4 gap-y-2 mb-4">
                   <div>
-                    <p className="text-xs text-gray-500">Tiêu chuẩn áp dụng</p>
-                    <p className="text-sm font-medium text-gray-700">
+                    <p className="text-sm text-gray-500">Tiêu chuẩn áp dụng</p>
+                    <p className="text-base/6 font-medium text-gray-700">
                       {sample.tenTieuChuan}
                     </p>
                   </div>
                   <div className="col-span-2">
-                    <p className="text-xs text-gray-500">Dịch vụ kiểm nghiệm</p>
-                    <p className="text-sm font-medium text-gray-700">
+                    <p className="text-sm text-gray-500">Dịch vụ kiểm nghiệm</p>
+                    <p className="text-base/6 font-medium text-gray-700">
                       {
                         dataLDV?.find(
                           (item: any) => item.maLoaiDv === "DVG03-90"
@@ -130,14 +130,14 @@ const PhanCong = ({ handleDanhSachPhanCong }: any) => {
                     </p>
                   </div>
                   <div>
-                    <p className="text-xs text-gray-500">Số lô</p>
-                    <p className="text-sm font-medium text-gray-700">
+                    <p className="text-sm text-gray-500">Số lô</p>
+                    <p className="text-base/6 font-medium text-gray-700">
                       {sample.soLo}
                     </p>
                   </div>
                   <div>
-                    <p className="text-xs text-gray-500">Số lượng</p>
-                    <p className="text-sm font-medium text-gray-700">
+                    <p className="text-sm text-gray-500">Số lượng</p>
+                    <p className="text-base/6 font-medium text-gray-700">
                       {sample.soLuong}
                       {sample.donViTinh}
                     </p>

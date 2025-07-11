@@ -20,6 +20,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { image } from "../../../constants/image";
 import { StoreContext } from "../../../contexts/storeProvider";
 import { v4 as uuidv4 } from "uuid";
+import { mutationUploadFile } from "../../../hooks/personnels/quanLyPhieuDKKM";
 
 const dataHinhThucGuiTra = [
   { value: "Trực tiếp", label: "Trực tiếp" },
@@ -116,7 +117,6 @@ const FormSignUpDVKN = () => {
       await queryClient.invalidateQueries({
         queryKey: ["CreatePhieuDKyDVKN"],
       });
-      sessionStorage.removeItem("PhieuDangKy");
     }
   };
 
@@ -124,6 +124,17 @@ const FormSignUpDVKN = () => {
     queryKey: "CreatePhieuDKyDVKN",
     onSettled: handleOnSettled,
     handleClickOpenPopupNofitication: handleClickOpenPopupNofitication,
+  });
+  const { mutate: mutateUploadFile } = mutationUploadFile({
+    queryKey: "mutationUploadFile",
+    onSettled: handleOnSettled,
+    onSuccess: (data: any) => {
+      if (data?.status) {
+        sessionStorage.removeItem("PhieuDangKy");
+        reset();
+        setData({});
+      }
+    },
   });
 
   const onSubmitPhieuDkyDV = (dataForm: FormPhieuDangKy) => {
@@ -151,26 +162,41 @@ const FormSignUpDVKN = () => {
       sessionStorage.setItem("PhieuDangKy", JSON.stringify(dataFinal));
     }
   };
+
+  function base64ToFile(base64String: any, filename: any) {
+    const arr = base64String.split(",");
+    const mime = arr[0].match(/:(.*?);/)[1];
+    const bstr = atob(arr[1]);
+    let n = bstr.length;
+    const u8arr = new Uint8Array(n);
+
+    while (n--) {
+      u8arr[n] = bstr.charCodeAt(n);
+    }
+
+    return new File([u8arr], filename, { type: mime });
+  }
+
   const handleGui = useCallback(
     async (dataForm: FormPhieuDangKy) => {
-      const id = uuidv4();
       const dataMaus: any[] = [];
       const dataPLHC: any[] = [];
-      const dataAnh: any[] = [];
-
+      const formDataAnh = new FormData();
+      let globalIndex = 0;
       // Xử lý Maus
       data?.Maus?.forEach((itemMau: any) => {
-        const phieuDangKyMauHinhAnhs = (
-          itemMau.phieuDangKyMauHinhAnhs || []
-        ).map((itemImage: any) => {
-          const hinhAnh = {
-            maId: "",
-            maMau: id,
-            ghiChu: itemImage.ghiChu,
-            image: itemImage?.image,
-          };
-          dataAnh.push(hinhAnh); // gom luôn hình ảnh
-          return hinhAnh;
+        const id = uuidv4();
+        itemMau.phieuDangKyMauHinhAnhs.forEach((itemImage: any) => {
+          const file = base64ToFile(itemImage.base64, itemImage.ten);
+          console.log(itemImage.image instanceof File, itemImage.image);
+          formDataAnh.append(`images[${globalIndex}].maId`, "");
+          formDataAnh.append(`images[${globalIndex}].maMau`, id);
+          formDataAnh.append(
+            `images[${globalIndex}].ghiChu`,
+            itemImage.ghiChu || ""
+          );
+          formDataAnh.append(`images[${globalIndex}].Image`, file);
+          globalIndex++;
         });
 
         dataMaus.push({
@@ -198,7 +224,6 @@ const FormSignUpDVKN = () => {
           thoiGianTieuChuan: Number(itemMau.thoiGianTieuChuan),
           maPdkMau: null,
           loaiDv: itemMau.loaiDv,
-          phieuDangKyMauHinhAnhs,
         });
       });
 
@@ -246,8 +271,11 @@ const FormSignUpDVKN = () => {
           hinhThucTraKq: dataForm.HinhThucTraKQ,
           diaChiGiaoMau: dataForm.DiaChiGiaoMau || "",
         };
+        console.log("dataPhieuDKY", dataPhieuDKY);
+        console.log("dataAnh", [...formDataAnh]);
 
-        mutate(dataPhieuDKY);
+        await mutate(dataPhieuDKY);
+        await mutateUploadFile(formDataAnh);
       } else {
         dataPhieuDKY = {
           ...commonData,
@@ -260,7 +288,11 @@ const FormSignUpDVKN = () => {
           hinhThucTraKq: data?.hinhThucTraKq,
           diaChiGiaoMau: data?.diaChiGiaoMau || "",
         };
-        mutate(dataPhieuDKY);
+        console.log("dataPhieuDKY", dataPhieuDKY);
+        console.log("dataAnh", [...formDataAnh]);
+
+        await mutate(dataPhieuDKY);
+        await mutateUploadFile(formDataAnh);
       }
     },
     [userInfo, data, isShow, mutate]

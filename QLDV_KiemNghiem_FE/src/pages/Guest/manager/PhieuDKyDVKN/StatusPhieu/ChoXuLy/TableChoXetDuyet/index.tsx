@@ -18,6 +18,7 @@ import { Dispatch, SetStateAction } from "react";
 import { Align } from "../../../../../../../models/Table";
 import { APP_ROUTES } from "../../../../../../../constants/routers";
 import { Edit } from "react-feather";
+import { formatDate } from "../../../../../../../configs/configAll";
 
 interface TableChoXetDuyetProps {
   tableBody: any;
@@ -140,7 +141,10 @@ const TableChoXetDuyet = (props: TableChoXetDuyetProps) => {
                 </TableCell>
                 <TableCell align="left">
                   <Box className="flex gap-2 items-center justify-start">
-                    <p className="text-sm/4 sm:text-base/4 font-medium">
+                    <p
+                      className="text-sm/4 sm:text-base/4 font-medium text-blue-500 hover:underline"
+                      onClick={() => handleRedirecEditPage(item)}
+                    >
                       {item?.soDkpt}
                     </p>
                   </Box>
@@ -162,14 +166,14 @@ const TableChoXetDuyet = (props: TableChoXetDuyetProps) => {
                 <TableCell align="center">
                   <Box className="flex gap-2 items-center justify-center">
                     <p className="text-sm/4 sm:text-base/4 font-medium">
-                      {item?.ngayGiaoMau}
+                      {formatDate(item?.ngayGiaoMau)}
                     </p>
                   </Box>
                 </TableCell>
                 <TableCell align="center">
                   <Box className="flex gap-2 items-center justify-center">
                     <p className="text-sm/4 sm:text-base/4 font-medium">
-                      {item?.ngayTao}
+                      {formatDate(item?.ngayTao)}
                     </p>
                   </Box>
                 </TableCell>

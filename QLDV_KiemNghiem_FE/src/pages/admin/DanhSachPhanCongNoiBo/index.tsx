@@ -25,7 +25,7 @@ const DanhSachPhanCongNoiBo = () => {
       animate={{ x: 0, opacity: 1 }}
       exit={{ x: 0, opacity: 0 }}
       transition={{ duration: 0.5 }}
-      className={clsx("px-10 space-y-6 bg-blue-50 p-6 h-screen", {
+      className={clsx("px-10 space-y-6 bg-blue-50 p-6", {
         "h-screen": tagPhanCong.Phan_Cong === isTag,
       })}
     >

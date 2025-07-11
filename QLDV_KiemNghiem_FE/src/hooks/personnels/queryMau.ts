@@ -45,8 +45,7 @@ export const queryMauByID = (props: Props) => {
       return response?.data;
     },
     refetchOnWindowFocus: false,
-    staleTime: Infinity,
-    enabled: !!params,
+    staleTime: 5 * 60 * 1000,
   });
 };
 
@@ -75,5 +74,35 @@ export const queryThongKe = (props: Props) => {
     },
     refetchOnWindowFocus: false,
     staleTime: Infinity,
+  });
+};
+
+export const mutationLDPHoanTraMau = (props: Props) => {
+  const { queryKey, onSettled, onSuccess, onError } = props;
+
+  return useMutation({
+    mutationKey: [queryKey],
+    mutationFn: async (params: any) => {
+      const response = await mauServices.LDPHoanTraMau(params);
+      return response;
+    },
+    onSuccess: onSuccess,
+    onError: onError,
+    onSettled: onSettled,
+  });
+};
+
+export const mutationBLDPheDuyetHoanTraMau = (props: Props) => {
+  const { queryKey, onSettled, onSuccess, onError } = props;
+
+  return useMutation({
+    mutationKey: [queryKey],
+    mutationFn: async (params: any) => {
+      const response = await mauServices.BLDPheDuyetHoanTraMau(params);
+      return response;
+    },
+    onSuccess: onSuccess,
+    onError: onError,
+    onSettled: onSettled,
   });
 };

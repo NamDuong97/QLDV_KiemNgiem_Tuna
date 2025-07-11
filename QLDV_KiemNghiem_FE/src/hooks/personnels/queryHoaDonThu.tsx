@@ -128,3 +128,14 @@ export const useUpdateHoaDonBoSung = (props: Props) => {
     onSettled,
   });
 };
+
+export const useUpdateHoaDonThu = (props: Props) => {
+  const { queryKey, onSuccess, onError, onSettled } = props;
+  return useMutation({
+    mutationKey: [queryKey],
+    mutationFn: (data: any) => hoaDonThuServices.updateHoaDonThu(data),
+    onSuccess,
+    onError,
+    onSettled,
+  });
+};

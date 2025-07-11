@@ -228,7 +228,7 @@ const DanhSach = (props: Props) => {
                 <div
                   key={index}
                   className={clsx(
-                    "rounded-xl overflow-hidden cursor-pointer self-start",
+                    "rounded-xl overflow-hidden self-start",
                     classes.sample_item,
                     classes.glass_card
                   )}
