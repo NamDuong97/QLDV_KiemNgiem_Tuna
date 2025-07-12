@@ -34,7 +34,6 @@ import {
   useGetTieuChuanAll,
 } from "../../../../../hooks/customers/usePhieuDKyDVKN";
 import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
-import clsx from "clsx";
 
 interface Props {
   open: boolean;

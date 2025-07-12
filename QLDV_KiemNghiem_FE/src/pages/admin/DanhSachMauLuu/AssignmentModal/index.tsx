@@ -1,5 +1,5 @@
 import { Dialog } from "@mui/material";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
@@ -45,7 +45,7 @@ const AssignmentModal = (props: Props) => {
   const dataGetMau = dataMau?.data?.find(
     (item: any) => item.maId === selectMau
   );
-console.log('CheckMau',CheckMau);
+  console.log("CheckMau", CheckMau);
 
   const schema = yup.object().shape({
     soLuong: yup

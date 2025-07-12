@@ -1,4 +1,4 @@
-import { Box, Skeleton } from "@mui/material";
+import { Box } from "@mui/material";
 import { APP_ROUTES } from "../../../../../../constants/routers";
 import { motion } from "motion/react";
 import { MdReceipt } from "react-icons/md";

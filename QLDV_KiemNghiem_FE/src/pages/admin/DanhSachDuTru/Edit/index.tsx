@@ -7,7 +7,6 @@ import { queryClient } from "../../../../lib/reactQuery";
 import { useStoreNotification } from "../../../../configs/stores/useStoreNotification";
 import {
   getDuTruByID,
-  lamLaiPhieuDuTru,
   updateDuTru,
 } from "../../../../hooks/personnels/queryDuTru";
 import { queryMauByID } from "../../../../hooks/personnels/queryMau";

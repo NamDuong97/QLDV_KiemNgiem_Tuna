@@ -496,10 +496,7 @@ const FormThongTinMau = (props: FormThongTinMauProps) => {
         tenMau: dataEditMaus?.tenMau || dataCopyMaus?.tenMau || "",
         tenTieuChuan: tenTieuChuan || "",
         tenLoaiDichVu: tenDichVu || "",
-        thoiGianTieuChuan:
-          dataEditMaus?.thoiGianTieuChuan ||
-          dataCopyMaus?.thoiGianTieuChuan ||
-          "",
+
         soLo: dataEditMaus?.soLo || dataCopyMaus?.soLo || "",
         donViSanXuat: dataEditMaus?.donViSanXuat || dataCopyMaus?.soLo || "",
         ngaySanXuat:
@@ -526,7 +523,6 @@ const FormThongTinMau = (props: FormThongTinMauProps) => {
         tenMau: "",
         tenTieuChuan: "",
         tenLoaiDichVu: "",
-        thoiGianTieuChuan: "",
         soLo: "",
         donViSanXuat: "",
         ngaySanXuat: "",
@@ -620,29 +616,7 @@ const FormThongTinMau = (props: FormThongTinMauProps) => {
                   }}
                 />
               </Box>
-              <Box className="col-span-12 lg:col-span-6 xl:col-span-4">
-                <Inputs
-                  title="Thời gian dự kiến hoàn thành (Ngày)"
-                  name="thoiGianTieuChuan"
-                  placeholder="Vui lòng chọn Tiêu Chuẩn và Tên Mẫu"
-                  inputRef={register("thoiGianTieuChuan")}
-                  value={
-                    Number(dataThoiGianTieuChuan?.data)
-                      ? Number(dataThoiGianTieuChuan?.data) > 0
-                        ? Number(dataThoiGianTieuChuan?.data)
-                        : "Chờ phản hồi từ trung tâm"
-                      : "Vui lòng chọn Tiêu Chuẩn và Tên Mẫu"
-                  }
-                  errorMessage={errors.thoiGianTieuChuan?.message}
-                  className="h-[42px]"
-                  disabled
-                  sx={{
-                    input: {
-                      padding: "9.5px 14px",
-                    },
-                  }}
-                />
-              </Box>
+
               <Box className="col-span-12 lg:col-span-6 xl:col-span-4">
                 <Inputs
                   title="Hạn sử dụng"

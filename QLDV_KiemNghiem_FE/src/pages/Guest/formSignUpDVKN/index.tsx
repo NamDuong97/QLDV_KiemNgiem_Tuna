@@ -118,6 +118,9 @@ const FormSignUpDVKN = () => {
       await queryClient.invalidateQueries({
         queryKey: ["CreatePhieuDKyDVKN"],
       });
+      await queryClient.invalidateQueries({
+        queryKey: ["dataChoTiepNhanXuLy"],
+      });
     }
   };
 
@@ -208,7 +211,6 @@ const FormSignUpDVKN = () => {
           xuatKetQua: itemMau.xuatKetQua,
           trangThaiNhanMau: itemMau.trangThaiNhanMau,
           ghiChu: itemMau.ghiChu,
-          thoiGianTieuChuan: Number(itemMau.thoiGianTieuChuan),
           maPdkMau: null,
           loaiDv: itemMau.loaiDv,
         });

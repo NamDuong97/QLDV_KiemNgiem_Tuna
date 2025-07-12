@@ -1,6 +1,6 @@
 import { FaSortAmountDown, FaSortAmountUp } from "react-icons/fa";
 import InputSearch2 from "../../../../components/InputSearch2";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import classes from "../PhanCong/style.module.scss";
 import clsx from "clsx";
 import {

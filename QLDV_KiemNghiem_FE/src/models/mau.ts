@@ -8,7 +8,6 @@ export interface FormMau {
   tenMau: string;
   tenTieuChuan: string;
   tenLoaiDichVu: string;
-  thoiGianTieuChuan?: string;
   soLo: string;
   donViSanXuat: string;
   ngaySanXuat: string;
@@ -28,8 +27,6 @@ export interface FormMauEdit {
   tenMau: string;
   tenTieuChuan: string;
   tenLoaiDichVu: string;
-  thoiGianTieuChuan?: string;
-  ngayDuKienTraKetQua?: string;
   soLo: string;
   donViSanXuat: string;
   ngaySanXuat: string;
@@ -97,7 +94,6 @@ export interface Maus {
   nguoiSua: string | null;
   ngayTao: string | null;
   ngaySua: string | null;
-  thoiGianTieuChuan: string | null;
   maPdkMau: string;
   loaiDv: string;
   maLoaiDV: string;

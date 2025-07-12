@@ -16,11 +16,9 @@ import {
 } from "../../../../../../../hooks/customers/usePhieuDKyDVKN";
 import InputSelectDonViTinhPLHC from "./InputSelectDonViTinhPLHC";
 import { DonViTinh } from "../Maus/FormThongTinMau";
-import InputSelectDonViNongDo from "./InputSelectDonViNongDo";
 import { useQueryClient } from "@tanstack/react-query";
 import { StoreContext } from "../../../../../../../contexts/storeProvider";
 import {
-  formatDateNotTime,
   formatDateNotTime2,
 } from "../../../../../../../configs/configAll";
 

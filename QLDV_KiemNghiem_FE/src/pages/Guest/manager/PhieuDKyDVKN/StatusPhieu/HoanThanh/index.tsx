@@ -61,7 +61,12 @@ const HoanThanh = (props: Props) => {
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentItems = {
-    data: dataHoanThanh?.data?.slice(indexOfFirstItem, indexOfLastItem),
+    data: dataHoanThanh?.data
+      ?.sort(
+        (a: any, b: any) =>
+          new Date(b.ngayTao).getTime() - new Date(a.ngayTao).getTime()
+      )
+      ?.slice(indexOfFirstItem, indexOfLastItem),
     isLoading: dataHoanThanh.isLoading,
   };
 

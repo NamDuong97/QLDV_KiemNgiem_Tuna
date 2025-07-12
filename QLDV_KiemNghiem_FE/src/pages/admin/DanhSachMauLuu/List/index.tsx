@@ -7,7 +7,6 @@ import Card from "./Card";
 import InputSearch2 from "../../../../components/InputSearch2";
 import SelectItemTrangThai from "./SelectItemTrangThai";
 import removeVietnameseTones from "../../../../configs/removeVietnameseTones";
-import { useNavigate } from "react-router";
 import ChiTietMauLuu from "../ChiTietMauLuu";
 import SuaMauLuu from "../SuaMauLuu";
 import { queryMauLuuAll } from "../../../../hooks/personnels/queryMauLuu";
