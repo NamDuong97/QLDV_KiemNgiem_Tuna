@@ -86,7 +86,7 @@ namespace QLDV_KiemNghiem_BE.Services
                 return result;
             }
 
-            return _mapper.Map<HoaDonThuProcedureDto>(HoaDonThuDomain); ;
+            return _mapper.Map<HoaDonThuProcedureDto>(HoaDonThuDomain); 
         }
         public async Task<ResponseModel1<HoaDonThuDto>> CreateHoaDonThuAsync(HoaDonThuRequestCreateDto hoaDonThuDto, string user, string userId)
         {
