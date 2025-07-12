@@ -1,22 +1,23 @@
 import { Dialog } from "@mui/material";
-import { useEffect } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
-import { formatDateNotTime2 } from "../../../../../../configs/configAll";
+import { usePersonnel } from "../../../../contexts/PersonelsProvider";
+import { queryClient } from "../../../../lib/reactQuery";
+import { useStoreNotification } from "../../../../configs/stores/useStoreNotification";
+import { createMauLuu } from "../../../../hooks/personnels/queryMauLuu";
+import { formatDateNotTime2 } from "../../../../configs/configAll";
 import { IoClose } from "react-icons/io5";
-import { usePersonnel } from "../../../../../../contexts/PersonelsProvider";
-import { createMauLuu } from "../../../../../../hooks/personnels/queryMauLuu";
-import { useStoreNotification } from "../../../../../../configs/stores/useStoreNotification";
-import { queryClient } from "../../../../../../lib/reactQuery";
 import InputSelectDonViTinh from "./InputSelectDonViTinh";
-import { DonViTinh } from "../../../../../Guest/formSignUpDVKN/components/Maus/FormThongTinMau";
+import { DonViTinh } from "../../../Guest/formSignUpDVKN/components/Maus/FormThongTinMau";
+import { getAllDanhSachMau } from "../../../../hooks/personnels/phanCongKhoa";
+import SelectItemMau from "./SelectItemMau";
+import { queryCheckMau } from "../../../../hooks/personnels/queryMau";
 
 interface Props {
-  samples: any[];
   isOpen: boolean;
   onClose: () => void;
-  selectedSamples: any; // mảng mẫu
 }
 
 interface FormTaoPhieu {
@@ -29,30 +30,29 @@ const today = new Date();
 today.setHours(0, 0, 0, 0);
 
 const AssignmentModal = (props: Props) => {
-  const { isOpen, onClose, selectedSamples } = props;
+  const { isOpen, onClose } = props;
   const { personnelInfo } = usePersonnel();
+  const [selectMau, setSelectMau] = useState("");
+
+  const { data: dataMau } = getAllDanhSachMau({
+    queryKey: "DanhSachMauSampleList",
+    params: { getAll: true, maKhoa: personnelInfo?.maKhoa, luuMau: true },
+  });
+  const { data: CheckMau } = queryCheckMau({
+    queryKey: "queryCheckMau",
+    params: selectMau,
+  });
+  const dataGetMau = dataMau?.data?.find(
+    (item: any) => item.maId === selectMau
+  );
+console.log('CheckMau',CheckMau);
 
   const schema = yup.object().shape({
     soLuong: yup
       .number()
       .typeError("Vui lòng nhập số lượng")
       .required("Vui lòng nhập số lượng")
-      .min(1, "Số lượng phải lớn hơn 0")
-      .test(
-        "Số lượng nhập không được vượt quá số lượng hiện tại",
-        `Số lượng nhập không được vượt quá số lượng hiện tại là ${selectedSamples?.soLuong} `,
-        (value: any) => {
-          console.log(
-            "value",
-            value,
-            selectedSamples?.soLuong,
-            Number(value),
-            selectedSamples?.soLuong >= Number(value)
-          );
-
-          return selectedSamples?.soLuong >= Number(value) ? true : false;
-        }
-      ),
+      .min(1, "Số lượng phải lớn hơn 0"),
     donViTinh: yup.string().required("Vui lòng nhập đơn vị tính"),
     luuDenNgay: yup
       .date()
@@ -77,6 +77,8 @@ const AssignmentModal = (props: Props) => {
       await queryClient.refetchQueries({
         queryKey: ["queryMauLuuAll"],
       });
+      reset();
+      setSelectMau("");
       return;
     }
   };
@@ -103,16 +105,14 @@ const AssignmentModal = (props: Props) => {
 
   const handleAssignSubmit = (data: FormTaoPhieu) => {
     const dataTao = {
-      tenMau: selectedSamples?.tenMau,
-      maPdkMau: selectedSamples?.maId,
+      tenMau: dataGetMau?.tenMau,
+      maPdkMau: selectMau,
       soLuong: data.soLuong,
       donViTinh: data.donViTinh,
       luuDenNgay: formatDateNotTime2(data.luuDenNgay),
-      hanSuDung: selectedSamples?.hanSuDung,
+      hanSuDung: dataGetMau?.hanSuDung,
       manvLuu: personnelInfo?.maId,
     };
-
-    console.log("Submitted data:", dataTao);
     mutate(dataTao);
   };
 
@@ -125,6 +125,15 @@ const AssignmentModal = (props: Props) => {
       });
     }
   }, [isOpen]);
+
+  useEffect(() => {
+    if (selectMau) {
+      reset({
+        soLuong: dataGetMau?.soLuong,
+        donViTinh: dataGetMau?.donViTinh,
+      });
+    }
+  }, [selectMau]);
 
   return (
     <Dialog open={isOpen} onClose={onClose} maxWidth="md">
@@ -146,14 +155,19 @@ const AssignmentModal = (props: Props) => {
         <div className="p-6 space-y-4">
           <div>
             <label className="text-sm font-medium text-gray-700">
-              Tên mẫu đã chọn
+              Tên mẫu *
             </label>
-            <p className="text-sm text-green-600"></p>
-            <p
-              className={`inline-block px-2 py-1 text-sm font-medium rounded-full bg-green-100 text-green-800`}
-            >
-              {selectedSamples?.tenMau}
-            </p>
+            <SelectItemMau
+              title="mẫu lưu"
+              setItem={setSelectMau}
+              item={selectMau}
+              data={dataMau?.data}
+            />
+            {CheckMau?.lm > 0 && (
+              <p className="text-xs text-red-600 mt-2">
+                Mẫu đã được lưu trước đó yêu cầu lưu mẫu khác
+              </p>
+            )}
           </div>
 
           <div>
@@ -166,7 +180,9 @@ const AssignmentModal = (props: Props) => {
               className="w-full py-2 px-4 border border-gray-300 rounded"
             />
             {errors.soLuong && (
-              <p className="text-xs text-red-600 mt-2">{errors.soLuong.message}</p>
+              <p className="text-xs text-red-600 mt-2">
+                {errors.soLuong.message}
+              </p>
             )}
           </div>
 
@@ -181,7 +197,9 @@ const AssignmentModal = (props: Props) => {
               control={control}
             />
             {errors.donViTinh && (
-              <p className="text-xs text-red-600 mt-2">{errors.donViTinh.message}</p>
+              <p className="text-xs text-red-600 mt-2">
+                {errors.donViTinh.message}
+              </p>
             )}
           </div>
 
@@ -211,7 +229,12 @@ const AssignmentModal = (props: Props) => {
             Hủy
           </button>
           <button
-            className={`px-4 py-2 rounded-md text-sm text-white bg-blue-600 hover:bg-blue-700 cursor-pointer`}
+            disabled={CheckMau?.lm > 0 || selectMau === ""}
+            className={`px-4 py-2 rounded-md text-sm text-white ${
+              selectMau === "" || CheckMau?.lm > 0
+                ? "disabled:bg-blue-400 cursor-no-drop"
+                : "bg-blue-600 hover:bg-blue-700 cursor-pointer"
+            }`}
           >
             Tạo phiếu
           </button>

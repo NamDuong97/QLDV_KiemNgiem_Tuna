@@ -92,7 +92,7 @@ const ListImage = (props: Props) => {
             </span>
           </p>
         )}
-        {listImage.filter((item: any) => !item.isDel)?.length < 5 && (
+        {listImage?.filter((item: any) => !item.isDel)?.length < 5 && (
           <Box {...getRootProps()}>
             <p className="px-4 py-1 lg:px-6 lg:py-2 rounded cursor-pointer border border-solid border-blue-500 text-blue-500 group hover:bg-blue-500">
               <span className="text-base/6 md:text-lg/6 font-bold text-blue-500 group-hover:text-white">
@@ -108,14 +108,9 @@ const ListImage = (props: Props) => {
         setListImage={setListImage}
         setSelectedRow={setSelectedRow}
         selectedRow={selectedRow}
-        listImage={listImage.filter((img: any) => !img.isDel)}
+        listImage={listImage?.filter((img: any) => !img.isDel)}
         handleChangeNote={handleChangeNote}
       />
-      {/* {listImage.filter((item: any) => !item.isDel)?.length >= 5 && (
-        <p className="text-[#af1c10] text-lg/6">
-          Ảnh đã được upload tối đa 5 hình
-        </p>
-      )} */}
       {ErrorisTrungLap && (
         <p className="text-[#af1c10] text-lg/6">Ảnh không được trùng lặp</p>
       )}

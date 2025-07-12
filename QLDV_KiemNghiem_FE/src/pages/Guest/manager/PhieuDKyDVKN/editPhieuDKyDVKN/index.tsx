@@ -19,7 +19,7 @@ import { v4 as uuidv4 } from "uuid";
 import { Inputs } from "../../../../../components/Inputs";
 import InputSelect from "../../../../../components/InputSelect";
 import { image } from "../../../../../constants/image";
-import { base64ToFile, urlToFile } from "../../../../../configs/convertBase64";
+import { base64ToFile } from "../../../../../configs/convertBase64";
 
 const dataHinhThucGuiTra = [
   { value: "Trực tiếp", label: "Trực tiếp" },
@@ -29,15 +29,14 @@ const dataHinhThucGuiTra = [
 const EditPhieuDKyDVKN = () => {
   const [openPopupNofitication, setOpenPopupNofitication] = useState(false);
   const [openPopupThoatForm, setOpenPopupThoatForm] = useState(false);
-
   const [isThongTinChung, setThongTinChung] = useState(true);
   const [isMaus, setIsMaus] = useState(false);
   const [isPLHCs, setIsPLHCs] = useState(false);
-
   const dataSession = sessionStorage.getItem("sua-phieuDky");
   const [data, setData] = useState<any>(
     dataSession ? JSON.parse(dataSession) : {}
   );
+  const [formSubmit, setFormSubmit] = useState<any>({}); //lưu giá trị fontdata ảnh và data phiếu đăng ký
 
   let schema = useMemo(() => {
     return yup.object().shape({
@@ -140,37 +139,59 @@ const EditPhieuDKyDVKN = () => {
     const dataMaus: any = [];
     const dataPLHC: any = [];
     let globalIndex = 0;
-    console.log("data?.maus", data?.maus);
-
     const formDataAnh = new FormData();
-    data?.maus.map((itemMau: any) => {
-      const id = uuidv4();
-      itemMau.phieuDangKyMauHinhAnhs.forEach((itemImage: any) => {
-        var file: any;
-        if (itemImage.pathImg) {
-          file = urlToFile(
-            itemImage.pathImg,
-            itemImage.ten,
-            itemImage.dinhDang
-          );
-        }
-        if (itemImage.base64) {
-          file = base64ToFile(itemImage.base64, itemImage.ten);
-        }
 
-        console.log(itemImage.image instanceof File, itemImage.image);
-        formDataAnh.append(`images[${globalIndex}].maId`, "");
-        formDataAnh.append(`images[${globalIndex}].maMau`, itemMau?.maId || id);
-        formDataAnh.append(
-          `images[${globalIndex}].ghiChu`,
-          itemImage.ghiChu || ""
-        );
-        formDataAnh.append(`images[${globalIndex}].Image`, file);
-        globalIndex++;
+    data?.maus?.forEach((itemMau: any) => {
+      const id = itemMau?.maId || uuidv4();
+
+      itemMau.phieuDangKyMauHinhAnhs?.forEach((itemImage: any) => {
+        if (itemImage?.base64) {
+          // Nếu là base64 thì tách ra upload
+          const file: any = base64ToFile(itemImage.base64, itemImage.ten);
+          formDataAnh.append(`images[${globalIndex}].maId`, "");
+          formDataAnh.append(`images[${globalIndex}].maMau`, id);
+          formDataAnh.append(
+            `images[${globalIndex}].ghiChu`,
+            itemImage.ghiChu || ""
+          );
+          formDataAnh.append(`images[${globalIndex}].Image`, file);
+          globalIndex++;
+        } else {
+          formDataAnh.append(
+            `images[${globalIndex}].maId`,
+            itemImage.maId || ""
+          );
+          formDataAnh.append(
+            `images[${globalIndex}].maMau`,
+            itemImage.maMau || ""
+          );
+          formDataAnh.append(`images[${globalIndex}].ten`, itemImage.ten || "");
+          formDataAnh.append(
+            `images[${globalIndex}].dinhDang`,
+            itemImage.dinhDang || ""
+          );
+          formDataAnh.append(
+            `images[${globalIndex}].ghiChu`,
+            itemImage.ghiChu || ""
+          );
+          formDataAnh.append(
+            `images[${globalIndex}].loaiAnh`,
+            itemImage.loaiAnh || ""
+          );
+          formDataAnh.append(
+            `images[${globalIndex}].pathImg`,
+            itemImage.pathImg || ""
+          );
+          formDataAnh.append(
+            `images[${globalIndex}].trangThai`,
+            itemImage.trangThai !== undefined ? itemImage.trangThai : true
+          );
+          formDataAnh.append(`images[${globalIndex}].isDel`, itemImage.isDel);
+        }
       });
 
       dataMaus.push({
-        maId: itemMau?.maId,
+        maId: id,
         maDmMau: itemMau.maDmMau,
         tenMau: itemMau.tenMau,
         maTieuChuan: itemMau.maTieuChuan,
@@ -197,11 +218,8 @@ const EditPhieuDKyDVKN = () => {
       });
     });
 
-    console.log("dataMaus", dataMaus);
-    console.log("data", data);
-    console.log("dataAnh", [...formDataAnh]);
-
-    data?.phieuDangKyPhuLieuHoaChats.map((itemPLHC: any) =>
+    // Xử lý PLHC
+    data?.phieuDangKyPhuLieuHoaChats?.forEach((itemPLHC: any) =>
       dataPLHC.push({
         maId: itemPLHC.maId,
         maPhieuDangKy: itemPLHC.maPhieuDangKy,
@@ -218,8 +236,9 @@ const EditPhieuDKyDVKN = () => {
       })
     );
 
+    let dataPhieuDKY: any;
     if (isThongTinChung) {
-      const dataPhieuDKY: any = {
+      dataPhieuDKY = {
         maId: data?.maId,
         maKh: data?.maKh,
         manvNhanMau: data?.manvNhanMau,
@@ -231,7 +250,7 @@ const EditPhieuDKyDVKN = () => {
         diaChiLienHe: dataForm.DiaChiLienHe,
         hinhThucGuiMau: dataForm.HinhThucGuiMau,
         hinhThucTraKq: dataForm.HinhThucTraKQ,
-        diaChiGiaoMau: dataForm.DiaChiGiaoMau ? dataForm.DiaChiGiaoMau : "",
+        diaChiGiaoMau: dataForm.DiaChiGiaoMau || "",
         trangThaiId: data.trangThaiId,
         ketQuaTiengAnh: dataForm.KetQuaTiengAnh ? true : false,
         ngayGiaoMau: dataForm.NgayGiaoMau,
@@ -239,9 +258,8 @@ const EditPhieuDKyDVKN = () => {
         Maus: dataMaus,
         PhieuDangKyPhuLieuHoaChats: dataPLHC,
       };
-      // sessionStorage.setItem("sua-phieuDky", JSON.stringify(dataPhieuDKY));
     } else {
-      const dataPhieuDKY: any = {
+      dataPhieuDKY = {
         maId: data?.maId,
         maKh: data?.maKh,
         manvNhanMau: data?.manvNhanMau,
@@ -253,7 +271,7 @@ const EditPhieuDKyDVKN = () => {
         diaChiLienHe: data.diaChiLienHe,
         hinhThucGuiMau: data.hinhThucGuiMau,
         hinhThucTraKq: data.hinhThucTraKq,
-        diaChiGiaoMau: data.diaChiGiaoMau ? data.diaChiGiaoMau : "",
+        diaChiGiaoMau: data.diaChiGiaoMau || "",
         trangThaiId: data.trangThaiId,
         ketQuaTiengAnh: data.ketQuaTiengAnh ? true : false,
         ngayGiaoMau: data.ngayGiaoMau,
@@ -261,9 +279,16 @@ const EditPhieuDKyDVKN = () => {
         Maus: dataMaus,
         PhieuDangKyPhuLieuHoaChats: dataPLHC,
       };
-      // sessionStorage.setItem("sua-phieuDky", JSON.stringify(dataPhieuDKY));
     }
-    // handleClickOpenPopupNofitication();
+
+    console.log("dataPhieuDKY", dataPhieuDKY);
+    console.log("formDataAnh", [...formDataAnh]);
+    // Gửi lên server
+    setFormSubmit({
+      dataPhieuDKY,
+      formDataAnh,
+    });
+    handleClickOpenPopupNofitication();
   };
 
   useEffect(() => {
@@ -626,6 +651,7 @@ const EditPhieuDKyDVKN = () => {
       <PopupNofitication
         openPopupNofitication={openPopupNofitication}
         handleClosePopupNofitication={handleClosePopupNofitication}
+        formSubmit={formSubmit}
       />
       <PopupThoatForm
         open={openPopupThoatForm}

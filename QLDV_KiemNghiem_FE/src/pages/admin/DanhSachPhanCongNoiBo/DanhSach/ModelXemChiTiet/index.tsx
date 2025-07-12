@@ -25,11 +25,16 @@ import { queryClient } from "../../../../../lib/reactQuery";
 import FormNhanXet from "./FormNhanXet";
 import ConfirmationModal from "../../../../../components/ConfirmationModal";
 import { TypeConformation } from "../../../../../constants/typeConfirmation";
-import { queryMauByID } from "../../../../../hooks/personnels/queryMau";
+import {
+  queryCheckMau,
+  queryMauByID,
+} from "../../../../../hooks/personnels/queryMau";
 import {
   useGetLoaiDichVuAll,
   useGetTieuChuanAll,
 } from "../../../../../hooks/customers/usePhieuDKyDVKN";
+import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
+import clsx from "clsx";
 
 interface Props {
   open: boolean;
@@ -72,6 +77,7 @@ const ModelXemChiTiet = (props: Props) => {
       queryKey: "useQueryPhieuTienDoAll",
       params: { MaMau: data?.maPdkMau, getAll: true },
     });
+
   const { data: dataShowTienDoID, isLoading: isLoadingTienDoID } =
     useQueryPhieuTienDoByID({
       queryKey: "useQueryPhieuTienDoByID",
@@ -85,6 +91,10 @@ const ModelXemChiTiet = (props: Props) => {
   });
   const dataTieuChuan: any = dataTC;
   const dataLoaiDV: any = dataLDV;
+  const { data: dataCheckMau } = queryCheckMau({
+    queryKey: "queryCheckMau",
+    params: data?.maPdkMau,
+  });
 
   const handleSettled = async (response: any) => {
     if (response?.status === 200 || response?.status === 204) {
@@ -276,7 +286,6 @@ const ModelXemChiTiet = (props: Props) => {
       ghiChu: "",
     });
   }, []);
-  console.log("data", data);
 
   return (
     <Dialog
@@ -317,7 +326,7 @@ const ModelXemChiTiet = (props: Props) => {
         </div>
         <div className="p-6">
           <div className="mb-6 p-4 border border-gray-300 rounded-lg">
-            <h3 className="text-blue-500 font-semibold text-xl/6">
+            <h3 className="text-blue-500 font-semibold text-xl/6 mb-4">
               Thông tin phân công
             </h3>
             <div className="grid grid-cols-4 gap-x-4 gap-y-2 mb-4">
@@ -354,7 +363,10 @@ const ModelXemChiTiet = (props: Props) => {
                 {renderTrangThaiPhanCongNoiBo(data?.trangThai)}
               </div>
               <div>
-                <p className="text-base text-gray-500"> Thời gian trả kết quả</p>
+                <p className="text-base text-gray-500">
+                  {" "}
+                  Thời gian trả kết quả
+                </p>
                 <p className="text-base font-medium text-gray-700">
                   {formatDate(data?.ngayTraKetQua)}
                 </p>
@@ -371,30 +383,24 @@ const ModelXemChiTiet = (props: Props) => {
           </div>
 
           <div className="p-4 border border-gray-300 rounded-lg">
-            <h3 className="text-blue-500 font-semibold text-xl/6 flex items-center gap-2">
-              Thông tin mẫu kiểm nghiệm
-              {isMau ? (
-                <span
-                  className="font-medium text-sm/6 cursor-pointer hover:underline text-yellow-600"
-                  onClick={() => {
-                    setIsMau(false);
-                    setIsThem(false);
-                  }}
-                >
-                  Thu gọn
-                </span>
-              ) : (
-                <span
-                  className="font-medium text-sm/6 cursor-pointer hover:underline text-yellow-600"
-                  onClick={() => {
-                    setIsThem(false);
-                    setIsMau(true);
-                  }}
-                >
-                  Mở rộng
-                </span>
-              )}
-            </h3>
+            <div
+              className={`flex justify-between items-center ${isMau && "mb-4"}`}
+              onClick={() => {
+                setIsMau(!isMau);
+                setIsThem(false);
+              }}
+            >
+              <h3 className="text-blue-500 font-semibold text-xl/6 flex items-center gap-2">
+                Thông tin mẫu kiểm nghiệm
+              </h3>
+              <span className="p-1 hover:bg-gray-300 cursor-pointer">
+                {isMau ? (
+                  <IoIosArrowUp className="w-5 h-5" />
+                ) : (
+                  <IoIosArrowDown className="w-5 h-5" />
+                )}
+              </span>
+            </div>
             {isMau && (
               <>
                 <div className="grid grid-cols-12 gap-4">
@@ -436,7 +442,9 @@ const ModelXemChiTiet = (props: Props) => {
                     <p className="text-base text-gray-500">
                       Thời gian hoàn thành
                     </p>
-                    <p className="text-base font-bold">{dataMau?.thoiGianTieuChuan} ngày</p>
+                    <p className="text-base font-bold">
+                      {dataMau?.thoiGianTieuChuan} ngày
+                    </p>
                   </div>
                   <div className="col-span-3">
                     <p className="text-base text-gray-500">
@@ -459,16 +467,24 @@ const ModelXemChiTiet = (props: Props) => {
                     <p className="text-base font-bold">{`${dataMau?.soLuong} ${dataMau?.donViTinh}`}</p>
                   </div>
                   <div className="col-span-3">
-                    <p className="text-base text-gray-500">Điều kiện bảo quản</p>
-                    <p className="text-base font-bold">{dataMau?.dieuKienBaoQuan}</p>
+                    <p className="text-base text-gray-500">
+                      Điều kiện bảo quản
+                    </p>
+                    <p className="text-base font-bold">
+                      {dataMau?.dieuKienBaoQuan}
+                    </p>
                   </div>
                   <div className="col-span-3">
                     <p className="text-base text-gray-500">Đơn vị sản xuất</p>
-                    <p className="text-base font-bold">{dataMau?.donViSanXuat}</p>
+                    <p className="text-base font-bold">
+                      {dataMau?.donViSanXuat}
+                    </p>
                   </div>
                   <div className="col-span-3">
                     <p className="text-base text-gray-500">Tình trạng mẫu</p>
-                    <p className="text-base font-bold">{dataMau?.tinhTrangMau}</p>
+                    <p className="text-base font-bold">
+                      {dataMau?.tinhTrangMau}
+                    </p>
                   </div>
                   <div className="col-span-3">
                     <p className="text-base text-gray-500">Lưu mẫu</p>
@@ -508,20 +524,23 @@ const ModelXemChiTiet = (props: Props) => {
             )}
           </div>
           <div className="mt-2 p-4 border border-gray-300 rounded-lg">
-            <h3 className="text-blue-500 font-semibold text-xl/6 flex items-center gap-2 mb-3">
-              Báo cáo tiến độ
-              {data?.trangThai === true &&
+            <div className="flex items-center justify-between pr-2">
+              <h3 className="text-blue-500 font-semibold text-xl/6 flex items-center gap-2 mb-4">
+                Báo cáo tiến độ
+              </h3>
+              {dataCheckMau?.complete === 0 &&
+                data?.trangThai === true &&
                 !isChiTietTienDo &&
                 (isThem ? (
                   <span
-                    className="font-medium text-sm/6 cursor-pointer hover:underline text-blue-600"
+                    className="font-medium text-sm/6 cursor-pointer px-4 rounded bg-yellow-600 text-white"
                     onClick={() => setIsThem(false)}
                   >
                     Hủy Tạo phiếu
                   </span>
                 ) : (
                   <span
-                    className="font-medium text-sm/6 cursor-pointer hover:underline text-blue-600"
+                    className="font-medium text-sm/6 cursor-pointer px-4 rounded bg-green-600 text-white"
                     onClick={() => {
                       setIsThem(true);
                       setIsMau(false);
@@ -530,7 +549,7 @@ const ModelXemChiTiet = (props: Props) => {
                     Tạo phiếu tiến độ
                   </span>
                 ))}
-            </h3>
+            </div>
             {isChiTietTienDo ? (
               <div className="mb-6">
                 <h3 className="text-gray-600 font-semibold text-lg/6 flex gap-2">
@@ -638,23 +657,28 @@ const ModelXemChiTiet = (props: Props) => {
                   />
                 ) : (
                   <div className="flex justify-end gap-4">
-                    {(role === "KN_L" || role === "KN_P") && (
-                      <button
-                        onClick={() => setIsPhanHoi(true)}
-                        className="px-4 py-2 text-sm font-medium text-white bg-green-600 rounded-lg hover:bg-green-700 transition-colors cursor-pointer"
-                      >
-                        {dataShowTienDoID?.noiDungDanhGia ? "Sửa phản hồi" : "Phản hồi"}
-                      </button>
+                    {dataCheckMau?.complete === 0 && (
+                      <>
+                        {(role === "KN_L" || role === "KN_P") && (
+                          <button
+                            onClick={() => setIsPhanHoi(true)}
+                            className="px-4 py-2 text-sm font-medium text-white bg-green-600 rounded-lg hover:bg-green-700 transition-colors cursor-pointer"
+                          >
+                            {dataShowTienDoID?.noiDungDanhGia
+                              ? "Sửa phản hồi"
+                              : "Phản hồi"}
+                          </button>
+                        )}
+                        <button
+                          onClick={() => {
+                            setOpenModelXoa(true);
+                          }}
+                          className="px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-lg hover:bg-red-700 transition-colors cursor-pointer"
+                        >
+                          Xóa
+                        </button>
+                      </>
                     )}
-                    <button
-                      onClick={() => {
-                        setOpenModelXoa(true);
-                      }}
-                      className="px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-lg hover:bg-red-700 transition-colors cursor-pointer"
-                    >
-                      Xóa
-                    </button>
-
                     <button
                       onClick={() => {
                         setSaveIdTienDo(null);
@@ -812,6 +836,7 @@ const ModelXemChiTiet = (props: Props) => {
             </button>
             {getRoleGroup(role) === "KN" &&
               data?.trangThai === true &&
+              dataCheckMau?.complete === 0 &&
               role !== "KN" && (
                 <button
                   onClick={() => handleOpenModelSua(dataID)}

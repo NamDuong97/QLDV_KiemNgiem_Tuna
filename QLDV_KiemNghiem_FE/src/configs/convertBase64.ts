@@ -22,9 +22,3 @@ export function base64ToFile(base64String: any, filename: any) {
 
   return new File([u8arr], filename, { type: mime });
 }
-
-export async function urlToFile(url: any, filename: any, mimeType: any) {
-  const res = await fetch(url);
-  const buf = await res.arrayBuffer();
-  return new File([buf], filename, { type: mimeType });
-}

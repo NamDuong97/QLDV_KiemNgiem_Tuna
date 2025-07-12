@@ -489,7 +489,9 @@ const FormThongTinMau = (props: FormThongTinMauProps) => {
           item.maLoaiDv === dataEditMaus?.loaiDv ||
           item.maLoaiDv === dataCopyMaus?.loaiDv
       )?.tenDichVu;
-      setListImage(phieuDangKyMauHinhAnhs);
+
+      setListImage(dataEditMaus ? phieuDangKyMauHinhAnhs : []);
+
       reset({
         tenMau: dataEditMaus?.tenMau || dataCopyMaus?.tenMau || "",
         tenTieuChuan: tenTieuChuan || "",
