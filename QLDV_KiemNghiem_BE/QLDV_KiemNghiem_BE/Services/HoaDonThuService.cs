@@ -270,14 +270,14 @@ namespace QLDV_KiemNghiem_BE.Services
         {
             var phieuDangKy = await _repositoryManager.PhieuDangKy.FindPhieuDangKyAsync(maPhieuDangKy);
             var hoaDonThu = await _repositoryManager.HoaDonThu.CheckExistHoaDonThuByPhieuDangKyAsync(maPhieuDangKy, true);
-            if(hoaDonThu!= null && phieuDangKy != null  && phieuDangKy.PhieuDangKyMaus.Count() > 0)
-            {
-                hoaDonThu.TongTien = 0;
-                foreach (var mau in phieuDangKy.PhieuDangKyMaus)
-                {
-                    hoaDonThu.TongTien += await _repositoryManager.HoaDonThu.GetToTalMoneyOfMau(mau.MaDmMau, mau.MaTieuChuan, mau.MaLoaiDv);
-                }
-            }
+            //if(hoaDonThu!= null && phieuDangKy != null  && phieuDangKy.PhieuDangKyMaus.Count() > 0)
+            //{
+            //    hoaDonThu.TongTien = 0;
+            //    foreach (var mau in phieuDangKy.PhieuDangKyMaus)
+            //    {
+            //        hoaDonThu.TongTien += await _repositoryManager.HoaDonThu.GetToTalMoneyOfMau(mau.MaDmMau, mau.MaTieuChuan, mau.MaLoaiDv);
+            //    }
+            //}
             _repositoryManager.HoaDonThu.UpdateHoaDonThuAsync(hoaDonThu);
             bool check = await _repositoryManager.SaveChangesAsync();
             var hoaDonThuReturn = _mapper.Map<HoaDonThuDto>(hoaDonThu);

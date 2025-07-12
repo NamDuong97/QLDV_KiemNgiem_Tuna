@@ -74,6 +74,7 @@ const TableMau = (props: TableMauProps) => {
   };
 
   const handleEditMaus = (tenMau: string | undefined) => {
+    setDataCopyMaus(null);
     const selectedItem = tableBody.find((item: any) => item.tenMau === tenMau);
     if (dataEditMaus && dataEditMaus.tenMau === selectedItem?.tenMau) {
       setDataEditMaus(null);
@@ -89,6 +90,7 @@ const TableMau = (props: TableMauProps) => {
   };
 
   const handleCopyMaus = (tenMau: string | undefined) => {
+    setDataEditMaus(null);
     const selectedItem = tableBody.find((item: any) => item.tenMau === tenMau);
     if (dataCopyMaus && dataCopyMaus.tenMau === selectedItem?.tenMau) {
       setDataCopyMaus(null);

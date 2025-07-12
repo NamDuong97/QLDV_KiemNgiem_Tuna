@@ -21,6 +21,7 @@ import { image } from "../../../constants/image";
 import { StoreContext } from "../../../contexts/storeProvider";
 import { v4 as uuidv4 } from "uuid";
 import { mutationUploadFile } from "../../../hooks/personnels/quanLyPhieuDKKM";
+import { base64ToFile } from "../../../configs/convertBase64";
 
 const dataHinhThucGuiTra = [
   { value: "Trực tiếp", label: "Trực tiếp" },
@@ -117,6 +118,9 @@ const FormSignUpDVKN = () => {
       await queryClient.invalidateQueries({
         queryKey: ["CreatePhieuDKyDVKN"],
       });
+      await queryClient.invalidateQueries({
+        queryKey: ["dataChoTiepNhanXuLy"],
+      });
     }
   };
 
@@ -163,20 +167,6 @@ const FormSignUpDVKN = () => {
     }
   };
 
-  function base64ToFile(base64String: any, filename: any) {
-    const arr = base64String.split(",");
-    const mime = arr[0].match(/:(.*?);/)[1];
-    const bstr = atob(arr[1]);
-    let n = bstr.length;
-    const u8arr = new Uint8Array(n);
-
-    while (n--) {
-      u8arr[n] = bstr.charCodeAt(n);
-    }
-
-    return new File([u8arr], filename, { type: mime });
-  }
-
   const handleGui = useCallback(
     async (dataForm: FormPhieuDangKy) => {
       const dataMaus: any[] = [];
@@ -187,7 +177,7 @@ const FormSignUpDVKN = () => {
       data?.Maus?.forEach((itemMau: any) => {
         const id = uuidv4();
         itemMau.phieuDangKyMauHinhAnhs.forEach((itemImage: any) => {
-          const file = base64ToFile(itemImage.base64, itemImage.ten);
+          const file: any = base64ToFile(itemImage.base64, itemImage.ten);
           console.log(itemImage.image instanceof File, itemImage.image);
           formDataAnh.append(`images[${globalIndex}].maId`, "");
           formDataAnh.append(`images[${globalIndex}].maMau`, id);
@@ -221,7 +211,6 @@ const FormSignUpDVKN = () => {
           xuatKetQua: itemMau.xuatKetQua,
           trangThaiNhanMau: itemMau.trangThaiNhanMau,
           ghiChu: itemMau.ghiChu,
-          thoiGianTieuChuan: Number(itemMau.thoiGianTieuChuan),
           maPdkMau: null,
           loaiDv: itemMau.loaiDv,
         });

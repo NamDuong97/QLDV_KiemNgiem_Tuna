@@ -16,9 +16,11 @@ import {
 } from "../../../../../../../hooks/customers/usePhieuDKyDVKN";
 import InputSelectDonViTinhPLHC from "./InputSelectDonViTinhPLHC";
 import { DonViTinh } from "../Maus/FormThongTinMau";
-import InputSelectDonViNongDo from "./InputSelectDonViNongDo";
 import { useQueryClient } from "@tanstack/react-query";
 import { StoreContext } from "../../../../../../../contexts/storeProvider";
+import {
+  formatDateNotTime2,
+} from "../../../../../../../configs/configAll";
 
 interface PhuLieuHoaChatProps {
   setData: Dispatch<any>;
@@ -281,17 +283,25 @@ const PhuLieuHoaChat = (props: PhuLieuHoaChatProps) => {
   };
 
   const editPLHC = (data: FormPhuLieuHoaChat) => {
-    const index = dataPhieuDangky?.PLHC.findIndex(
-      (item: any) => item.TenPLHC === dataEditPLHC?.TenPLHC
+    const index = dataPhieuDangky?.phieuDangKyPhuLieuHoaChats?.findIndex(
+      (item: any) => item.tenPlhc === dataEditPLHC?.tenPlhc
     );
-
-    const updatedPLHC = [...dataPhieuDangky?.PLHC];
+    const updatedPLHC = [...dataPhieuDangky?.phieuDangKyPhuLieuHoaChats];
     const maplhc = dataDM_PhuLieuHoaChat.find(
       (item: any) => item.tenDmPlhc === data.TenDM_PLHC
-    ).maId;
+    )?.maId;
+    console.log("dataEditPLHC", dataEditPLHC);
+    console.log(
+      " dataPhieuDangky?.phieuDangKyPhuLieuHoaChats",
+      dataPhieuDangky?.phieuDangKyPhuLieuHoaChats
+    );
 
-    const dataPLHC = {
-      maId: "",
+    const isPLHC = dataPhieuDangky?.phieuDangKyPhuLieuHoaChats.some(
+      (item: any) => item?.maId === dataEditPLHC?.maId && item?.maId !== ""
+    );
+
+    var dataPLHC: any = {
+      maId: dataEditPLHC?.maId ?? "",
       maPhieuDangKy: "",
       maPlhc: maplhc,
       tenPlhc: data.TenPLHC,
@@ -309,8 +319,17 @@ const PhuLieuHoaChat = (props: PhuLieuHoaChatProps) => {
       nguoiSua: "",
       ngayTao: "",
       ngaySua: "",
-      isDel: false,
     };
+    if (isPLHC) {
+      dataPLHC = {
+        ...dataPLHC,
+        isDel: false,
+      };
+    } else {
+      dataPLHC = {
+        ...dataPLHC,
+      };
+    }
 
     if (index !== -1) {
       updatedPLHC[index] = dataPLHC;
@@ -662,29 +681,34 @@ const PhuLieuHoaChat = (props: PhuLieuHoaChatProps) => {
                     errorMessage={errors.NongDo?.message}
                     className="h-[42px]"
                     placeholder="Nhập Nồng độ"
+                    disabled
                     sx={{
+                      "& .Mui-disabled": {
+                        WebkitTextFillColor: "black",
+                      },
                       input: {
                         padding: "9.5px 14px",
                       },
-                      '& input[type="number"]': {
-                        MozAppearance: "textfield",
-                      },
-                      '& input[type="number"]::-webkit-outer-spin-button,& input[type="number"]::-webkit-inner-spin-button':
-                        {
-                          WebkitAppearance: "none",
-                          margin: 0,
-                        },
                     }}
                   />
                 </Box>
                 <Box className="col-span-12 md:col-span-6 lg:col-span-4">
-                  <InputSelectDonViNongDo
+                  <Inputs
                     title="Đơn vị nồng độ"
                     name="DonViNongDo"
-                    control={control}
-                    data={DonViTinh}
+                    inputRef={register("DonViNongDo")}
                     errorMessage={errors.DonViNongDo?.message}
+                    className="h-[42px]"
                     placeholder="Nhập Đơn vị nồng độ"
+                    disabled
+                    sx={{
+                      "& .Mui-disabled": {
+                        WebkitTextFillColor: "black",
+                      },
+                      input: {
+                        padding: "9.5px 14px",
+                      },
+                    }}
                   />
                 </Box>
                 <Box className="col-span-12 md:col-span-6">
@@ -709,7 +733,13 @@ const PhuLieuHoaChat = (props: PhuLieuHoaChatProps) => {
                     inputRef={register("DieuKienBaoQuan")}
                     errorMessage={errors.DieuKienBaoQuan?.message}
                     className="h-[42px]"
+                    disabled
                     placeholder="Nhập Điều kiện bảo quản"
+                    sx={{
+                      "& .Mui-disabled": {
+                        WebkitTextFillColor: "black",
+                      },
+                    }}
                   />
                 </Box>
                 <Box className="col-span-12">
@@ -767,7 +797,9 @@ const PhuLieuHoaChat = (props: PhuLieuHoaChatProps) => {
           dataEditPLHC?.tenNhaCungCap || dataCopyPLHC?.tenNhaCungCap,
         NongDo: dataEditPLHC?.nongDo || dataCopyPLHC?.nongDo,
         DonViNongDo: dataEditPLHC?.donViNongDo || dataCopyPLHC?.donViNongDo,
-        NgayHetHan: dataEditPLHC?.ngayHetHan || dataCopyPLHC?.ngayHetHan,
+        NgayHetHan:
+          formatDateNotTime2(dataEditPLHC?.ngayHetHan) ||
+          formatDateNotTime2(dataCopyPLHC?.ngayHetHan),
         DieuKienBaoQuan:
           dataEditPLHC?.dieuKienBaoQuan || dataCopyPLHC?.dieuKienBaoQuan,
         GhiChu: dataEditPLHC?.ghiChu || dataCopyPLHC?.ghiChu,

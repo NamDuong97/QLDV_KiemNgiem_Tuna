@@ -47,6 +47,7 @@ export const API = {
       LDP_HOAN_TRA_MAU: "/api/PhieuDangKyMau/cancelPhieuDangKyMauByLDP",
       BLD_PHE_DUYET_HOAN_TRA_MAU:
         "/api/PhieuDangKyMau/reviewCancelPhieuDangKyMauByBLD",
+      KIEM_TRA_MAU: "api/PhieuDangKyMau/checkPhieuDangKyMauFromTable",
     },
     MAUS_LUU: {
       GET_MAUS_LUU_ALL: "/api/PhieuLuuMau/getPhieuLuuMauAll",

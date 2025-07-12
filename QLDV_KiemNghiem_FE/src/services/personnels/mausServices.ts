@@ -91,4 +91,15 @@ export default class mauServices {
       return err;
     }
   }
+
+  static async getCheckMau(param: any) {
+    try {
+      const response = await _APIInstance.get(
+        `${API.ADMIN.MAUS.KIEM_TRA_MAU}?maMau=${param}`
+      );
+      return response;
+    } catch (err: any) {
+      return err;
+    }
+  }
 }

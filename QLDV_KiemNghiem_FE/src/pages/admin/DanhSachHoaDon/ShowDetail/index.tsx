@@ -465,7 +465,6 @@ const ShowDetail = ({ resultId, onBack, handleOpenPhieuDKy }: any) => {
         message={"Bạn có chắc chắn muốn xóa?"}
         type={TypeConformation.Error}
       />
-
       <ModelEditDetailHDThu
         open={openModelEditDetailHDThu}
         onCancel={() => setOpenModelEditDetailHDThu(false)}

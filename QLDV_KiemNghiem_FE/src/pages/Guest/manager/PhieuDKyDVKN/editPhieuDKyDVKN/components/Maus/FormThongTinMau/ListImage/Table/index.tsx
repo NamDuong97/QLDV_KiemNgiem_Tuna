@@ -1,5 +1,6 @@
 import { Box } from "@mui/material";
 import { Dispatch, SetStateAction } from "react";
+import { image } from "../../../../../../../../../../constants/image";
 
 interface TableProps {
   setListImage: Dispatch<SetStateAction<any>>;
@@ -45,7 +46,10 @@ const Tables = (props: TableProps) => {
               "border border-solid border-red-500"
             }`}
           >
-            <Box className="flex gap-2 items-center justify-center w-full">
+            <Box
+              className="flex gap-2 items-center justify-center w-full"
+              onClick={() => handleSelectRow(item.base64)}
+            >
               <input
                 type="radio"
                 onChange={() => handleSelectRow(item.base64)}
@@ -54,9 +58,9 @@ const Tables = (props: TableProps) => {
               />
               <div className="grid sm:flex gap-2 w-full">
                 <img
-                  src={item.base64 || item.pathImg}
+                  src={item.base64 || item.pathImg || image.imageTunaLogo}
                   alt={item.ten}
-                  className="object-contain h-[150px]"
+                  className="object-contain h-[150px] shadow-xl border"
                 />
                 <div className="w-full h-[150px] grid">
                   <label className="font-bold">Ghi chú:</label>
@@ -65,7 +69,10 @@ const Tables = (props: TableProps) => {
                     rows={3}
                     placeholder="Nhập ghi chú..."
                     defaultValue={item.ghiChu}
-                    onChange={(e) => handleChangeNote(item.ten, e.target.value)}
+                    onChange={(e) => {
+                      e.stopPropagation();
+                      handleChangeNote(item.ten, e.target.value);
+                    }}
                   />
                 </div>
               </div>

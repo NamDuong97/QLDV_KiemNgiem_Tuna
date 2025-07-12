@@ -29,6 +29,8 @@ import { useStoreNotification } from "../../../../configs/stores/useStoreNotific
 import { usePersonnel } from "../../../../contexts/PersonelsProvider";
 import ModelCreatePhieuDuTru from "./ModelCreatePhieuDuTru";
 import ModelCreatePhieuPhanTichKetQua from "./ModelCreatePhieuPhanTichKetQua";
+import { mutationCheckMau } from "../../../../hooks/personnels/queryMau";
+import ConfirmationCanhBao from "./ConfirmationCanhBao";
 
 interface Props {
   handleTaoPhanCong: () => void;
@@ -38,9 +40,19 @@ const DanhSach = (props: Props) => {
   const { handleTaoPhanCong } = props;
   const { personnelInfo } = usePersonnel();
   const [selectTrangThai, setSelectTrangThai] = useState("");
-
+  const [isSortNew, setIsSortNew] = useState(false);
+  const [selectKhoa, setSelectKhoa] = useState("");
+  const [openModelXemChiTiet, setOpenModelXemChiTiet] = useState(false);
+  const [openModelSua, setOpenModelSua] = useState(false);
+  const [openModelPhanCongLai, setOpenModelPhanCongLai] = useState(false);
+  const [openModelCreate, setOpenModelCreate] = useState(false);
+  const [openModelPTKG, setOpenModelPTKG] = useState(false);
+  const [openModelXoa, setOpenModelXoa] = useState(false);
+  const [openModelCanhBao, setOpenModelCanhBao] = useState(false);
+  const [saveID, setSaveID] = useState("");
+  const [isThem, setIsThem] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
   let params: any = { getAll: true };
-
   const roleGroup = getRoleGroup(role);
 
   if (roleGroup === "KN" && role === "KN") {
@@ -71,22 +83,11 @@ const DanhSach = (props: Props) => {
     ],
     params,
   });
-  console.log("se", selectTrangThai);
 
-  console.log("data", data);
+  const { mutateAsync: mutateCheckMau } = mutationCheckMau({
+    queryKey: "mutationCheckMau",
+  });
 
-  const [isSortNew, setIsSortNew] = useState(false);
-  const [selectKhoa, setSelectKhoa] = useState("");
-  const [openModelXemChiTiet, setOpenModelXemChiTiet] = useState(false);
-  const [openModelSua, setOpenModelSua] = useState(false);
-  const [openModelPhanCongLai, setOpenModelPhanCongLai] = useState(false);
-  const [openModelCreate, setOpenModelCreate] = useState(false);
-  const [openModelPTKG, setOpenModelPTKG] = useState(false);
-  const [openModelXoa, setOpenModelXoa] = useState(false);
-  const [saveID, setSaveID] = useState("");
-  const [isThem, setIsThem] = useState(false);
-
-  const [searchQuery, setSearchQuery] = useState("");
   const filteredSamples: any = data?.filter((sample: any) => {
     const query = removeVietnameseTones(searchQuery.toLowerCase());
     const matchesSearch =
@@ -170,6 +171,68 @@ const DanhSach = (props: Props) => {
       maPhanCongNoiBo: saveID,
     };
     mutate(params);
+  };
+
+  const handleTaoPhieuTienDo = async (assignment: any) => {
+    setSaveID(assignment.maId);
+    setIsThem(true);
+    const data = await mutateCheckMau(assignment.maPdkMau);
+    if (data?.complete > 0) {
+      setOpenModelCanhBao(true);
+    } else {
+      setOpenModelXemChiTiet(true);
+    }
+  };
+
+  const handleModelPTKG = async (assignment: any) => {
+    setSaveID(assignment.maId);
+
+    const data = await mutateCheckMau(assignment.maPdkMau);
+    if (data?.complete > 0) {
+      setOpenModelCanhBao(true);
+    } else {
+      setOpenModelPTKG(true);
+    }
+  };
+
+  const handleModelDuTru = async (assignment: any) => {
+    setSaveID(assignment.maId);
+    const data = await mutateCheckMau(assignment.maPdkMau);
+    if (data?.complete > 0) {
+      setOpenModelCanhBao(true);
+    } else {
+      setOpenModelCreate(true);
+    }
+  };
+
+  const handleModelUpdatePCNB = async (assignment: any) => {
+    setSaveID(assignment.maId);
+    const data = await mutateCheckMau(assignment.maPdkMau);
+    if (data?.complete > 0) {
+      setOpenModelCanhBao(true);
+    } else {
+      setOpenModelSua(true);
+    }
+  };
+
+  const handleModelPhanCongLaiPCNB = async (assignment: any) => {
+    setSaveID(assignment.maId);
+    const data = await mutateCheckMau(assignment.maPdkMau);
+    if (data?.complete > 0) {
+      setOpenModelCanhBao(true);
+    } else {
+      setOpenModelPhanCongLai(true);
+    }
+  };
+
+  const handleModelHuyPhieu = async (assignment: any) => {
+    setSaveID(assignment.maId);
+    const data = await mutateCheckMau(assignment.maPdkMau);
+    if (data?.complete > 0) {
+      setOpenModelCanhBao(true);
+    } else {
+      setOpenModelXoa(true);
+    }
   };
 
   return (
@@ -315,18 +378,15 @@ const DanhSach = (props: Props) => {
                               color: "pink",
                               onClick: (e: any) => {
                                 e.stopPropagation();
-                                setSaveID(assignment.maId);
-                                setOpenModelXemChiTiet(true);
-                                setIsThem(true);
+                                handleTaoPhieuTienDo(assignment);
                               },
                             },
                             {
-                              label: "Tạo phiếu PTKQ",
+                              label: "Tạo phiếu phân tích",
                               color: "violet",
                               onClick: (e: any) => {
                                 e.stopPropagation();
-                                setSaveID(assignment.maId);
-                                setOpenModelPTKG(true);
+                                handleModelPTKG(assignment);
                               },
                             },
                             {
@@ -334,8 +394,7 @@ const DanhSach = (props: Props) => {
                               color: "green",
                               onClick: (e: any) => {
                                 e.stopPropagation();
-                                setSaveID(assignment.maId);
-                                setOpenModelCreate(true);
+                                handleModelDuTru(assignment);
                               },
                             },
                           ].map((btn, idx) => (
@@ -358,25 +417,26 @@ const DanhSach = (props: Props) => {
                               {
                                 label: "Cập nhật",
                                 color: "yellow",
-                                onClick: () => {
-                                  setSaveID(assignment.maId);
-                                  setOpenModelSua(true);
+                                onClick: (e: any) => {
+                                  e.stopPropagation();
+                                  handleModelUpdatePCNB(assignment);
                                 },
                               },
                               {
                                 label: "Hủy phiếu",
                                 color: "rose",
-                                onClick: () => {
-                                  setSaveID(assignment.maId);
-                                  setOpenModelXoa(true);
+                                onClick: (e: any) => {
+                                  e.stopPropagation();
+                                  handleModelHuyPhieu(assignment);
                                 },
                               },
                               {
                                 label: "Phân công lại",
                                 color: "cyan",
-                                onClick: () => {
+                                onClick: (e: any) => {
+                                  e.stopPropagation();
                                   setSaveID(assignment.maId);
-                                  setOpenModelPhanCongLai(true);
+                                  handleModelPhanCongLaiPCNB(assignment);
                                 },
                               },
                             ].map((btn, idx) => (
@@ -450,6 +510,7 @@ const DanhSach = (props: Props) => {
           />
         </div>
       )}
+
       <ModelXemChiTiet
         open={openModelXemChiTiet}
         handleClose={() => setOpenModelXemChiTiet(false)}
@@ -458,32 +519,44 @@ const DanhSach = (props: Props) => {
         setIsThem={setIsThem}
         isThem={isThem}
       />
+
       <ModelSua
         open={openModelSua}
         handleClose={() => setOpenModelSua(false)}
         dataID={saveID}
       />
+
       <ModelPhanCongLai
         open={openModelPhanCongLai}
         handleClose={() => setOpenModelPhanCongLai(false)}
         dataID={saveID}
       />
+
       <ModelCreatePhieuDuTru
         open={openModelCreate}
         handleClose={() => setOpenModelCreate(false)}
         dataID={saveID}
       />
+
       <ModelCreatePhieuPhanTichKetQua
         open={openModelPTKG}
         onClose={() => setOpenModelPTKG(false)}
         dataID={saveID}
       />
+
       <ConfirmationModal
         isOpen={openModelXoa}
         onClose={() => setOpenModelXoa(false)}
         onConfirm={handeHuyPhanCong}
         title={"Xác nhận hủy?"}
         message={"Bạn có chắc chắn muốn hủy?"}
+        type={TypeConformation.Error}
+      />
+      <ConfirmationCanhBao
+        isOpen={openModelCanhBao}
+        onClose={() => setOpenModelCanhBao(false)}
+        title={"Cảnh cáo"}
+        message={"Phiếu phân tích kết quả đã tạo không thể tạo phiếu"}
         type={TypeConformation.Error}
       />
     </>
