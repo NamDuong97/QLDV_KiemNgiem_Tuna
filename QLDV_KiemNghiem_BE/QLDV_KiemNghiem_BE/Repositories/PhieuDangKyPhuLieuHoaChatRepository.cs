@@ -50,6 +50,19 @@ namespace QLDV_KiemNghiem_BE.Repositories
                 return await _context.PhieuDangKyPhuLieuHoaChats.AsNoTracking().FirstOrDefaultAsync(it => it.MaId == maPDKPLHC);
             }
         }
+        public async Task<PhieuDangKyPhuLieuHoaChat?> FindPhieuDangKyPhuLieuHoaChatBySameAsync(string mPLHC, string solo, string nhaCungCap, string Dvt, bool tracking)
+        {
+            if (tracking)
+            {
+                return await _context.PhieuDangKyPhuLieuHoaChats.
+                    FirstOrDefaultAsync(it => it.MaPlhc == mPLHC && it.DonViTinh == Dvt && it.SoLo == solo && it.TenNhaCungCap.ToLower().Trim() == nhaCungCap.ToLower().Trim());
+            }
+            else
+            {
+                return await _context.PhieuDangKyPhuLieuHoaChats.AsNoTracking().
+                    FirstOrDefaultAsync(it => it.MaPlhc == mPLHC && it.DonViTinh == Dvt && it.SoLo == solo && it.TenNhaCungCap.ToLower().Trim() == nhaCungCap.ToLower().Trim());
+            }
+        }
         public async Task CreatePhieuDangKyPhuLieuHoaChatAsync(PhieuDangKyPhuLieuHoaChat phieuDangKyPhuLieuHoaChat)
         {
             await _context.PhieuDangKyPhuLieuHoaChats.AddAsync(phieuDangKyPhuLieuHoaChat);

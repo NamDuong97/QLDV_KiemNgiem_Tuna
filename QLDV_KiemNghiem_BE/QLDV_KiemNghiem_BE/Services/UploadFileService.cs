@@ -24,17 +24,18 @@ namespace QLDV_KiemNghiem_BE.Services
         {
             foreach(var item in images)
             {
-                if(item.Image == null) continue;
-                var image = await PublicFunction.ProcessUpload(item!.Image, _env, request);
-                if(image.FileName == "0" || image.Url == "0") continue;
-                var mau = await _repositoryManager.PhieuDangKyMau.FindPhieuDangKyMauAsync(item?.MaMau ?? "", false);
-                if(mau == null) continue;
                 if (string.IsNullOrEmpty(item!.MaId))
                 {
+                    if (item.Image == null) continue;
+                    var image = await PublicFunction.ProcessUpload(item!.Image, _env, request);
+                    if (image.FileName == "0" || image.Url == "0") continue;
+                    var mau = await _repositoryManager.PhieuDangKyMau.FindPhieuDangKyMauAsync(item?.MaMau ?? "", false);
+                    if (mau == null) continue;
+
                     PhieuDangKyMauHinhAnh phieuDangKyMauHinhAnh = new PhieuDangKyMauHinhAnh()
                     {
                         MaId = Guid.NewGuid().ToString(),
-                        MaMau = item.MaMau,
+                        MaMau = item!.MaMau,
                         DinhDang = Path.GetExtension(image.FileName).TrimStart('.'),
                         Ten = Path.GetFileNameWithoutExtension(image.FileName),
                         PathImg = image.Url,

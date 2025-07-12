@@ -73,7 +73,6 @@ namespace QLDV_KiemNghiem_BE.DTO.ResponseDto
         [Column("MaLoaiDV")]
         [StringLength(50)]
         public string? MaLoaiDv { get; set; }
-
         public int? TrangThaiPhanCong { get; set; }
 
         [Column("NgayNhanMau_PLHC", TypeName = "datetime")]
