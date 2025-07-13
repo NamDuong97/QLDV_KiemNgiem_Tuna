@@ -17,6 +17,7 @@ namespace QLDV_KiemNghiem_BE.Interfaces
         Task<int> ProcessUpdateStatusMauWhenBLDAction(string maPDK, string trangThaiId);
         Task<int> ProcessCancelMauByLDP(string maMau, string message, bool action, string user, string userId, string maKhoa);
         Task<int> CheckPhanCongAllMauInPDK(string maId, string maPhieuDangKy);
+        Task<PhieuDangKyMauThongKeProcedure> GetThongKePhieuDangKyMauProcedure(string maMau);
         Task CreatePhieuDangKyMauAsync(PhieuDangKyMau PhieuDangKyMau);
         void UpdatePhieuDangKyMauAsync(PhieuDangKyMau PhieuDangKyMau);
         void DeletePhieuDangKyMauAsync(PhieuDangKyMau PhieuDangKyMau);

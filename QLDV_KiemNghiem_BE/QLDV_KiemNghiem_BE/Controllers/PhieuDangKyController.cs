@@ -50,7 +50,7 @@ namespace QLDV_KiemNghiem_BE.Controllers
             return Ok(phieuDangKys.datas);
         }
 
-        [Authorize(Roles = "KHTH")]
+        [Authorize(Policy = "KHTHOnly")]
         [HttpPut]
         [Route("reviewPhieuDangKyByKHDT")]
         public async Task<ActionResult> reviewPhieuDangKyByKHDT( RequestReviewPhieuDangKy duyetPhieu)
@@ -84,7 +84,7 @@ namespace QLDV_KiemNghiem_BE.Controllers
             return Ok(result);
         }
 
-        //[Authorize(Roles = "BLD")]
+        [Authorize(Policy = "BLDOnly")]
         [HttpPut]
         [Route("reviewPhieuDangKyByBLD")]
         public async Task<ActionResult> reviewPhieuDangKyByBLD(RequestReviewPhieuDangKy duyetPhieu)
@@ -108,13 +108,13 @@ namespace QLDV_KiemNghiem_BE.Controllers
             return Ok(phieuDangKys);
         }
 
-        //[Authorize(Roles = "BLD")]
+        [Authorize(Policy = "BLDOnly")]
         [HttpPut]
         [Route("undoReviewPhieuDangKyByBLD")]
         public async Task<ActionResult> undoReviewPhieuDangKyByBLD(RequestUndoReviewPhieuDangKy duyetPhieu)
         {
             var user = User.FindFirst(ClaimTypes.Email)?.Value.ToString() ?? "unknow";
-            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value.ToString() ?? "unknow";
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value.ToString() ?? null;
             var phieuDangKys = await _service.PhieuDangKy.UndoReviewPhieuDangKyByBLD(duyetPhieu, user, userId);
             if(phieuDangKys.KetQua)
             {

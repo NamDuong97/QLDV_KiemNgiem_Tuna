@@ -67,6 +67,7 @@ const TablePLHC = (props: TableProps) => {
   };
 
   const handleThemListPLHCEdit = (tenPlhc: string) => {
+    setDataCopyPLHC(null);
     const selectedItem = tableBody.find(
       (item: any) => item.tenPlhc === tenPlhc
     );
@@ -83,6 +84,7 @@ const TablePLHC = (props: TableProps) => {
   };
 
   const handleCopyListPLHC = (tenPlhc: string) => {
+    setDataEditPLHC(null)
     const selectedItem = tableBody.find(
       (item: any) => item.tenPlhc === tenPlhc
     );

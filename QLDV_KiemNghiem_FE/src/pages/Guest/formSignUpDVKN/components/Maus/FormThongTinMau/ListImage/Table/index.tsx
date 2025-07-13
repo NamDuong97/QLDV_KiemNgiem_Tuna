@@ -20,7 +20,7 @@ const Tables = (props: TableProps) => {
 
   const handleSelectRow = (name: string) => {
     let tempCheckbox = listImage.map((item: any) =>
-      item.ten === name ? { ...item } : item
+      item.base64 === name ? { ...item } : item
     );
     setListImage(tempCheckbox);
     setSelectedRow(selectedRow === name ? null : name);
@@ -33,14 +33,14 @@ const Tables = (props: TableProps) => {
           <Box
             key={index}
             className={`cursor-pointer p-2 rounded-md ${
-              selectedRow === item.ten && "border border-solid border-red-500"
+              selectedRow === item.base64 && "border border-solid border-red-500"
             }`}
           >
             <Box className="flex gap-2 items-center justify-center w-full">
               <input
                 type="radio"
-                onChange={() => handleSelectRow(item.ten)}
-                checked={selectedRow === item?.ten}
+                onChange={() => handleSelectRow(item.base64)}
+                checked={selectedRow === item?.base64}
                 className="w-6 h-6 cursor-pointer"
               />
               <div className="grid sm:flex gap-2 w-full">

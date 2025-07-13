@@ -67,7 +67,12 @@ const ChoXuLy = () => {
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentItems = {
-    data: dataChoTiepNhanXuLy?.data?.slice(indexOfFirstItem, indexOfLastItem),
+    data: dataChoTiepNhanXuLy?.data
+      ?.sort(
+        (a: any, b: any) =>
+          new Date(b.ngayTao).getTime() - new Date(a.ngayTao).getTime()
+      )
+      ?.slice(indexOfFirstItem, indexOfLastItem),
     isLoading: dataChoTiepNhanXuLy.isLoading,
   };
 
@@ -79,6 +84,7 @@ const ChoXuLy = () => {
   const handlePageChange = (_: any, value: number) => {
     setCurrentPage(value);
   };
+  console.log("currentItems", currentItems);
 
   return (
     <Box className="grid gap-4">

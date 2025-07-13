@@ -43,7 +43,7 @@ const ChiTietMauLuu = (props: Props) => {
     >
       <div className="bg-white w-2xl">
         <div className="px-6 py-4 border-b border-gray-200 flex justify-between items-center">
-          <h3 className="text-lg font-medium text-gray-900">
+          <h3 className="text-xl font-bold text-gray-900">
             Chi tiết mẫu lưu
           </h3>
           <button
@@ -70,93 +70,93 @@ const ChiTietMauLuu = (props: Props) => {
         <div className="px-6 py-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
-              <h4 className="text-sm font-medium text-gray-500 mb-1">
+              <h4 className="text-base font-medium text-gray-500 mb-1">
                 Tên mẫu
               </h4>
               {isLoading ? (
                 <Skeleton variant="rounded" width={100} height={20} />
               ) : (
-                <p id="viewSampleName" className="text-sm text-gray-900">
+                <p id="viewSampleName" className="text-base font-bold text-gray-900">
                   {data?.tenMau}
                 </p>
               )}
             </div>
             <div>
-              <h4 className="text-sm font-medium text-gray-500 mb-1">
+              <h4 className="text-base font-medium text-gray-500 mb-1">
                 Mã phiếu lưu
               </h4>
               {isLoading ? (
                 <Skeleton variant="rounded" width={100} height={20} />
               ) : (
-                <p id="viewSampleName" className="text-sm text-gray-900">
+                <p id="viewSampleName" className="text-base font-bold text-gray-900">
                   {data?.maPhieuLuu}
                 </p>
               )}
             </div>
             <div>
-              <h4 className="text-sm font-medium text-gray-500 mb-1">
+              <h4 className="text-base font-medium text-gray-500 mb-1">
                 Khối lượng mẫu lưu
               </h4>
               {isLoading ? (
                 <Skeleton variant="rounded" width={100} height={20} />
               ) : (
-                <p id="viewSampleName" className="text-sm text-gray-900">
+                <p id="viewSampleName" className="text-base font-bold text-gray-900">
                   {`${data?.soLuong} ${data?.donViTinh}`}
                 </p>
               )}
             </div>
             <div>
-              <h4 className="text-sm font-medium text-gray-500 mb-1">
+              <h4 className="text-base font-medium text-gray-500 mb-1">
                 Lưu đến ngày
               </h4>
               {isLoading ? (
                 <Skeleton variant="rounded" width={100} height={20} />
               ) : (
-                <p id="viewSampleName" className="text-sm text-gray-900">
+                <p id="viewSampleName" className="text-base font-bold text-gray-900">
                   {formatDate(data?.luuDenNgay)}
                 </p>
               )}
             </div>
 
             <div>
-              <h4 className="text-sm font-medium text-gray-500 mb-1">
+              <h4 className="text-base font-medium text-gray-500 mb-1">
                 Hạn sử dụng
               </h4>
               {isLoading ? (
                 <Skeleton variant="rounded" width={100} height={20} />
               ) : (
-                <p id="viewSampleName" className="text-sm text-gray-900">
+                <p id="viewSampleName" className="text-base font-bold text-gray-900">
                   {formatDate(data?.hanSuDung)}
                 </p>
               )}
             </div>
             <div>
-              <h4 className="text-sm font-medium text-gray-500 mb-1">
+              <h4 className="text-base font-medium text-gray-500 mb-1">
                 Tên người lưu mẫu
               </h4>
               {isLoading ? (
                 <Skeleton variant="rounded" width={100} height={20} />
               ) : (
-                <p id="viewSampleName" className="text-sm text-gray-900">
+                <p id="viewSampleName" className="text-base font-bold text-gray-900">
                   {dataNhanVien?.hoTen}
                 </p>
               )}
             </div>
             <div>
-              <h4 className="text-sm font-medium text-gray-500 mb-1">
+              <h4 className="text-base font-medium text-gray-500 mb-1">
                 Trạng thái
               </h4>
               {isLoading ? (
                 <Skeleton variant="rounded" width={100} height={20} />
               ) : data?.trangThai === "active" ? (
                 <p
-                  className={`inline-block px-2 py-1 text-xs font-medium rounded-full bg-green-100 text-green-800`}
+                  className={`inline-block px-2 py-1 text-base font-medium rounded-full bg-green-100 text-green-800`}
                 >
                   Đã lưu
                 </p>
               ) : (
                 <p
-                  className={`inline-block px-2 py-1 text-xs font-medium rounded-full bg-yellow-100 text-yellow-800`}
+                  className={`inline-block px-2 py-1 text-base font-medium rounded-full bg-yellow-100 text-yellow-800`}
                 >
                   Đã hủy
                 </p>

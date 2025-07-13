@@ -25,11 +25,15 @@ import { queryClient } from "../../../../../lib/reactQuery";
 import FormNhanXet from "./FormNhanXet";
 import ConfirmationModal from "../../../../../components/ConfirmationModal";
 import { TypeConformation } from "../../../../../constants/typeConfirmation";
-import { queryMauByID } from "../../../../../hooks/personnels/queryMau";
+import {
+  queryCheckMau,
+  queryMauByID,
+} from "../../../../../hooks/personnels/queryMau";
 import {
   useGetLoaiDichVuAll,
   useGetTieuChuanAll,
 } from "../../../../../hooks/customers/usePhieuDKyDVKN";
+import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
 
 interface Props {
   open: boolean;
@@ -72,6 +76,7 @@ const ModelXemChiTiet = (props: Props) => {
       queryKey: "useQueryPhieuTienDoAll",
       params: { MaMau: data?.maPdkMau, getAll: true },
     });
+
   const { data: dataShowTienDoID, isLoading: isLoadingTienDoID } =
     useQueryPhieuTienDoByID({
       queryKey: "useQueryPhieuTienDoByID",
@@ -85,6 +90,10 @@ const ModelXemChiTiet = (props: Props) => {
   });
   const dataTieuChuan: any = dataTC;
   const dataLoaiDV: any = dataLDV;
+  const { data: dataCheckMau } = queryCheckMau({
+    queryKey: "queryCheckMau",
+    params: data?.maPdkMau,
+  });
 
   const handleSettled = async (response: any) => {
     if (response?.status === 200 || response?.status === 204) {
@@ -276,13 +285,12 @@ const ModelXemChiTiet = (props: Props) => {
       ghiChu: "",
     });
   }, []);
-  console.log("data", data);
 
   return (
     <Dialog
       open={open}
       onClose={OnClose}
-      maxWidth="lg"
+      maxWidth="xl"
       fullWidth
       sx={{
         ".MuiPaper-root": {
@@ -316,53 +324,56 @@ const ModelXemChiTiet = (props: Props) => {
           </div>
         </div>
         <div className="p-6">
-          <div className="mb-6">
-            <h3 className="text-gray-500 font-semibold text-lg/6">
+          <div className="mb-6 p-4 border border-gray-300 rounded-lg">
+            <h3 className="text-blue-500 font-semibold text-xl/6 mb-4">
               Thông tin phân công
             </h3>
             <div className="grid grid-cols-4 gap-x-4 gap-y-2 mb-4">
               <div>
-                <p className="text-sm text-gray-500">Thời gian làm</p>
+                <p className="text-base text-gray-500">Thời gian làm</p>
                 {isLoading ? (
                   <Skeleton variant="rounded" width={250} height={20} />
                 ) : (
-                  <p className="text-base font-medium text-gray-700">
+                  <p className="text-base font-bold text-gray-700">
                     {formatDate(data?.lamTu)}
                   </p>
                 )}
               </div>
               <div>
-                <p className="text-sm text-gray-500">Thời gian phân công</p>
-                <p className="text-base font-medium text-gray-700">
+                <p className="text-base text-gray-500">Thời gian phân công</p>
+                <p className="text-base font-bold text-gray-700">
                   {formatDate(data?.ngayTao)}
                 </p>
               </div>
               <div>
-                <p className="text-sm text-gray-500">Nhân viên xử lý</p>
-                <p className="text-base font-medium text-gray-700">
+                <p className="text-base text-gray-500">Nhân viên xử lý</p>
+                <p className="text-base font-bold text-gray-700">
                   {data?.tennvXuly}
                 </p>
               </div>
               <div>
-                <p className="text-sm text-gray-500">Nhân viên phân công</p>
-                <p className="text-base font-medium text-gray-700">
+                <p className="text-base text-gray-500">Nhân viên phân công</p>
+                <p className="text-base font-bold text-gray-700">
                   {data?.tennvPhanCong}
                 </p>
               </div>
               <div>
-                <p className="text-sm text-gray-500">Trạng thái phân công</p>
+                <p className="text-base text-gray-500">Trạng thái phân công</p>
                 {renderTrangThaiPhanCongNoiBo(data?.trangThai)}
               </div>
               <div>
-                <p className="text-sm text-gray-500"> Thời gian trả kết quả</p>
+                <p className="text-base text-gray-500">
+                  {" "}
+                  Thời gian trả kết quả
+                </p>
                 <p className="text-base font-medium text-gray-700">
                   {formatDate(data?.ngayTraKetQua)}
                 </p>
               </div>
               {data?.nguoiSua && (
                 <div>
-                  <p className="text-sm text-gray-500">Người sửa</p>
-                  <p className="text-base font-medium text-gray-700">
+                  <p className="text-base text-gray-500">Người sửa</p>
+                  <p className="text-base font-bold text-gray-700">
                     {data?.nguoiSua} - {formatDate(data?.ngaySua)}
                   </p>
                 </div>
@@ -370,41 +381,35 @@ const ModelXemChiTiet = (props: Props) => {
             </div>
           </div>
 
-          <div>
-            <h3 className="text-gray-500 font-semibold text-lg/6 flex items-center gap-2">
-              Thông tin mẫu kiểm nghiệm
-              {isMau ? (
-                <span
-                  className="font-medium text-sm/6 cursor-pointer hover:underline text-blue-600"
-                  onClick={() => {
-                    setIsMau(false);
-                    setIsThem(false);
-                  }}
-                >
-                  Thu gọn
-                </span>
-              ) : (
-                <span
-                  className="font-medium text-sm/6 cursor-pointer hover:underline text-blue-600"
-                  onClick={() => {
-                    setIsThem(false);
-                    setIsMau(true);
-                  }}
-                >
-                  Mở rộng
-                </span>
-              )}
-            </h3>
+          <div className="p-4 border border-gray-300 rounded-lg">
+            <div
+              className={`flex justify-between items-center ${isMau && "mb-4"}`}
+              onClick={() => {
+                setIsMau(!isMau);
+                setIsThem(false);
+              }}
+            >
+              <h3 className="text-blue-500 font-semibold text-xl/6 flex items-center gap-2">
+                Thông tin mẫu kiểm nghiệm
+              </h3>
+              <span className="p-1 hover:bg-gray-300 cursor-pointer">
+                {isMau ? (
+                  <IoIosArrowUp className="w-5 h-5" />
+                ) : (
+                  <IoIosArrowDown className="w-5 h-5" />
+                )}
+              </span>
+            </div>
             {isMau && (
               <>
-                <div className="grid grid-cols-4 gap-4">
-                  <div>
-                    <p className="text-xs text-gray-500">Tên mẫu</p>
-                    <p className="text-sm">{dataMau?.tenMau}</p>
+                <div className="grid grid-cols-12 gap-4">
+                  <div className="col-span-4">
+                    <p className="text-base text-gray-500">Tên mẫu</p>
+                    <p className="text-base font-bold">{dataMau?.tenMau}</p>
                   </div>
-                  <div>
-                    <p className="text-xs text-gray-500">Tiêu chuẩn</p>
-                    <p className="text-sm">
+                  <div className="col-span-4">
+                    <p className="text-base text-gray-500">Tiêu chuẩn</p>
+                    <p className="text-base font-bold">
                       {
                         dataTieuChuan?.find(
                           (item: any) => item.maId === dataMau?.maTieuChuan
@@ -412,9 +417,9 @@ const ModelXemChiTiet = (props: Props) => {
                       }
                     </p>
                   </div>
-                  <div>
-                    <p className="text-xs text-gray-500">Dịch vụ</p>
-                    <p className="text-sm">
+                  <div className="col-span-4">
+                    <p className="text-base text-gray-500">Dịch vụ</p>
+                    <p className="text-base font-bold">
                       {
                         dataLoaiDV?.find(
                           (item: any) => item.maLoaiDv === dataMau?.loaiDv
@@ -422,63 +427,73 @@ const ModelXemChiTiet = (props: Props) => {
                       }
                     </p>
                   </div>
-                  <div>
-                    <p className="text-xs text-gray-500">Số lô</p>
-                    <p className="text-sm">{dataMau?.soLo}</p>
+                  <div className="col-span-3">
+                    <p className="text-base text-gray-500">Số lô</p>
+                    <p className="text-base font-bold">{dataMau?.soLo}</p>
                   </div>
-                  <div>
-                    <p className="text-xs text-gray-500">Ngày sản xuất</p>
-                    <p className="text-sm">
+                  <div className="col-span-3">
+                    <p className="text-base text-gray-500">Ngày sản xuất</p>
+                    <p className="text-base font-bold">
                       {formatDateNotTime(dataMau?.ngaySanXuat)}
                     </p>
                   </div>
-                  <div>
-                    <p className="text-xs text-gray-500">
+                  <div className="col-span-3">
+                    <p className="text-base text-gray-500">
                       Thời gian hoàn thành
                     </p>
-                    <p className="text-sm">{dataMau?.thoiGianTieuChuan} ngày</p>
+                    <p className="text-base font-bold">
+                      {dataMau?.thoiGianTieuChuan} ngày
+                    </p>
                   </div>
-                  <div>
-                    <p className="text-xs text-gray-500">
+                  <div className="col-span-3">
+                    <p className="text-base text-gray-500">
                       Ngày dự kiến trả kết quả
                     </p>
-                    <p className="text-sm">
+                    <p className="text-base font-bold">
                       {dataMau?.ngayTraKetQua
                         ? formatDateNotTime(dataMau?.ngayTraKetQua)
                         : "Đến khi hoàn thành"}
                     </p>
                   </div>
-                  <div>
-                    <p className="text-xs text-gray-500">Hạn sử dụng</p>
-                    <p className="text-sm">
+                  <div className="col-span-3">
+                    <p className="text-base text-gray-500">Hạn sử dụng</p>
+                    <p className="text-base font-bold">
                       {formatDateNotTime(dataMau?.hanSuDung)}
                     </p>
                   </div>
-                  <div>
-                    <p className="text-xs text-gray-500">Số lượng</p>
-                    <p className="text-sm">{`${dataMau?.soLuong} ${dataMau?.donViTinh}`}</p>
+                  <div className="col-span-3">
+                    <p className="text-base text-gray-500">Số lượng</p>
+                    <p className="text-base font-bold">{`${dataMau?.soLuong} ${dataMau?.donViTinh}`}</p>
                   </div>
-                  <div>
-                    <p className="text-xs text-gray-500">Điều kiện bảo quản</p>
-                    <p className="text-sm">{dataMau?.dieuKienBaoQuan}</p>
+                  <div className="col-span-3">
+                    <p className="text-base text-gray-500">
+                      Điều kiện bảo quản
+                    </p>
+                    <p className="text-base font-bold">
+                      {dataMau?.dieuKienBaoQuan}
+                    </p>
                   </div>
-                  <div>
-                    <p className="text-xs text-gray-500">Đơn vị sản xuất</p>
-                    <p className="text-sm">{dataMau?.donViSanXuat}</p>
+                  <div className="col-span-3">
+                    <p className="text-base text-gray-500">Đơn vị sản xuất</p>
+                    <p className="text-base font-bold">
+                      {dataMau?.donViSanXuat}
+                    </p>
                   </div>
-                  <div>
-                    <p className="text-xs text-gray-500">Tình trạng mẫu</p>
-                    <p className="text-sm">{dataMau?.tinhTrangMau}</p>
+                  <div className="col-span-3">
+                    <p className="text-base text-gray-500">Tình trạng mẫu</p>
+                    <p className="text-base font-bold">
+                      {dataMau?.tinhTrangMau}
+                    </p>
                   </div>
-                  <div>
-                    <p className="text-xs text-gray-500">Lưu mẫu</p>
-                    <p className="text-sm">
+                  <div className="col-span-3">
+                    <p className="text-base text-gray-500">Lưu mẫu</p>
+                    <p className="text-base font-bold">
                       {dataMau?.luuMau ? "Có lưu mẫu" : "Không lưu mẫu"}
                     </p>
                   </div>
-                  <div>
-                    <p className="text-xs text-gray-500">Xuất kết quả</p>
-                    <p className="text-sm">
+                  <div className="col-span-3">
+                    <p className="text-base text-gray-500">Xuất kết quả</p>
+                    <p className="text-base font-bold">
                       {dataMau?.xuatKetQua
                         ? "Có xuất kết quả"
                         : "Không xuất kết quả"}
@@ -487,41 +502,44 @@ const ModelXemChiTiet = (props: Props) => {
                 </div>
 
                 <div className="mt-3">
-                  <p className="text-xs text-gray-500">Yêu cầu kiểm nghiệm</p>
-                  <p className="text-sm p-2 bg-blue-50 rounded">
+                  <p className="text-base text-gray-500">Yêu cầu kiểm nghiệm</p>
+                  <p className="text-base font-bold p-2 bg-blue-50 rounded">
                     {dataMau?.yeuCauKiemNghiem}
                   </p>
                 </div>
 
                 <div className="mt-3">
-                  <p className="text-xs text-gray-500">Ghi chú khách hàng</p>
-                  <p className="text-sm p-2 bg-blue-50 rounded">
+                  <p className="text-base text-gray-500">Ghi chú khách hàng</p>
+                  <p className="text-base font-bold p-2 bg-blue-50 rounded">
                     {dataMau?.ghiChu ? dataMau?.ghiChu : "Không có ghi chú"}
                   </p>
                 </div>
 
                 <div className="mt-3">
-                  <p className="text-xs text-gray-500">Ảnh mẫu</p>
+                  <p className="text-base text-gray-500">Ảnh mẫu</p>
                   <ImageGallery images={[]} />
                 </div>
               </>
             )}
           </div>
-          <div className="mt-2">
-            <h3 className="text-gray-500 font-semibold text-lg/6 flex items-center gap-2 mb-3">
-              Báo cáo tiến độ
-              {data?.trangThai === true &&
+          <div className="mt-2 p-4 border border-gray-300 rounded-lg">
+            <div className="flex items-center justify-between pr-2">
+              <h3 className="text-blue-500 font-semibold text-xl/6 flex items-center gap-2 mb-4">
+                Báo cáo tiến độ
+              </h3>
+              {dataCheckMau?.complete === 0 &&
+                data?.trangThai === true &&
                 !isChiTietTienDo &&
                 (isThem ? (
                   <span
-                    className="font-medium text-sm/6 cursor-pointer hover:underline text-blue-600"
+                    className="font-medium text-sm/6 cursor-pointer px-4 rounded bg-yellow-600 text-white"
                     onClick={() => setIsThem(false)}
                   >
                     Hủy Tạo phiếu
                   </span>
                 ) : (
                   <span
-                    className="font-medium text-sm/6 cursor-pointer hover:underline text-blue-600"
+                    className="font-medium text-sm/6 cursor-pointer px-4 rounded bg-green-600 text-white"
                     onClick={() => {
                       setIsThem(true);
                       setIsMau(false);
@@ -530,11 +548,11 @@ const ModelXemChiTiet = (props: Props) => {
                     Tạo phiếu tiến độ
                   </span>
                 ))}
-            </h3>
+            </div>
             {isChiTietTienDo ? (
               <div className="mb-6">
-                <h3 className="text-gray-500 font-semibold text-base/6 flex gap-2">
-                  Thông tin giai đoạn{" "}
+                <h3 className="text-gray-600 font-semibold text-lg/6 flex gap-2">
+                  Thông tin chi tiết giai đoạn{" "}
                   {isLoadingTienDoID ? (
                     <Skeleton variant="rounded" className="w-32" height={24} />
                   ) : (
@@ -543,18 +561,20 @@ const ModelXemChiTiet = (props: Props) => {
                 </h3>
                 <div className="grid grid-cols-3 gap-x-4 gap-y-2 mb-4">
                   <div>
-                    <p className="text-sm text-gray-500">Thời gian thực hiện</p>
+                    <p className="text-base text-gray-500">
+                      Thời gian thực hiện
+                    </p>
                     {isLoading ? (
                       <Skeleton variant="rounded" width={250} height={20} />
                     ) : (
-                      <p className="text-base font-medium text-gray-700">
+                      <p className="text-base font-bold text-gray-700">
                         {formatDate(dataShowTienDoID?.thoiGianTu)} -{" "}
                         {formatDate(dataShowTienDoID?.thoiGianDen)}
                       </p>
                     )}
                   </div>
                   <div>
-                    <p className="text-sm text-gray-500">Nhân viên xử lý</p>
+                    <p className="text-base text-gray-500">Nhân viên xử lý</p>
                     {isLoadingTienDoID ? (
                       <Skeleton
                         variant="rounded"
@@ -562,13 +582,13 @@ const ModelXemChiTiet = (props: Props) => {
                         height={24}
                       />
                     ) : (
-                      <p className="text-base font-medium text-gray-700">
+                      <p className="text-base font-bold text-gray-700">
                         {dataShowTienDoID?.tennvXyLy}
                       </p>
                     )}
                   </div>
                   <div>
-                    <p className="text-sm text-gray-500">Ngày trả kết quả</p>
+                    <p className="text-base text-gray-500">Ngày trả kết quả</p>
                     {isLoadingTienDoID ? (
                       <Skeleton
                         variant="rounded"
@@ -576,13 +596,13 @@ const ModelXemChiTiet = (props: Props) => {
                         height={24}
                       />
                     ) : (
-                      <p className="text-base font-medium text-gray-700">
+                      <p className="text-base font-bold text-gray-700">
                         {formatDateNotTime(dataShowTienDoID?.ngayTraKetQua)}
                       </p>
                     )}
                   </div>
                   <div className="col-span-full">
-                    <p className="text-sm text-gray-500">Nội dung báo cáo</p>
+                    <p className="text-base text-gray-500">Nội dung báo cáo</p>
                     {isLoadingTienDoID ? (
                       <Skeleton
                         variant="rounded"
@@ -590,13 +610,13 @@ const ModelXemChiTiet = (props: Props) => {
                         height={24}
                       />
                     ) : (
-                      <p className="text-base font-medium text-gray-700">
+                      <p className="text-base font-bold text-gray-700 p-4 bg-blue-100 rounded-lg">
                         {dataShowTienDoID?.noiDungBaoCao}
                       </p>
                     )}
                   </div>
                   <div className="col-span-full">
-                    <p className="text-sm text-gray-500">Ghi chú</p>
+                    <p className="text-base text-gray-500">Ghi chú</p>
                     {isLoadingTienDoID ? (
                       <Skeleton
                         variant="rounded"
@@ -604,14 +624,16 @@ const ModelXemChiTiet = (props: Props) => {
                         height={24}
                       />
                     ) : (
-                      <p className="text-base font-medium text-gray-700">
+                      <p className="text-base font-bold text-gray-700 p-4 bg-blue-100 rounded-lg">
                         {dataShowTienDoID?.ghiChu}
                       </p>
                     )}
                   </div>
                   {dataShowTienDoID?.noiDungDanhGia && (
                     <div className="col-span-full">
-                      <p className="text-sm text-gray-500">Nội dung đánh giá</p>
+                      <p className="text-base text-gray-500">
+                        Nội dung đánh giá
+                      </p>
                       {isLoadingTienDoID ? (
                         <Skeleton
                           variant="rounded"
@@ -619,7 +641,7 @@ const ModelXemChiTiet = (props: Props) => {
                           height={24}
                         />
                       ) : (
-                        <p className="text-base font-medium text-gray-700">
+                        <p className="text-base font-bold text-gray-700 p-4 bg-blue-100 rounded-lg">
                           {dataShowTienDoID?.noiDungDanhGia}
                         </p>
                       )}
@@ -634,23 +656,28 @@ const ModelXemChiTiet = (props: Props) => {
                   />
                 ) : (
                   <div className="flex justify-end gap-4">
-                    {(role === "KN_L" || role === "KN_P") && (
-                      <button
-                        onClick={() => setIsPhanHoi(true)}
-                        className="px-4 py-2 text-sm font-medium text-white bg-green-600 rounded-lg hover:bg-green-700 transition-colors cursor-pointer"
-                      >
-                        Phản hồi
-                      </button>
+                    {dataCheckMau?.complete === 0 && (
+                      <>
+                        {(role === "KN_L" || role === "KN_P") && (
+                          <button
+                            onClick={() => setIsPhanHoi(true)}
+                            className="px-4 py-2 text-sm font-medium text-white bg-green-600 rounded-lg hover:bg-green-700 transition-colors cursor-pointer"
+                          >
+                            {dataShowTienDoID?.noiDungDanhGia
+                              ? "Sửa phản hồi"
+                              : "Phản hồi"}
+                          </button>
+                        )}
+                        <button
+                          onClick={() => {
+                            setOpenModelXoa(true);
+                          }}
+                          className="px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-lg hover:bg-red-700 transition-colors cursor-pointer"
+                        >
+                          Xóa
+                        </button>
+                      </>
                     )}
-                    <button
-                      onClick={() => {
-                        setOpenModelXoa(true);
-                      }}
-                      className="px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-lg hover:bg-red-700 transition-colors cursor-pointer"
-                    >
-                      Xóa
-                    </button>
-
                     <button
                       onClick={() => {
                         setSaveIdTienDo(null);
@@ -808,6 +835,7 @@ const ModelXemChiTiet = (props: Props) => {
             </button>
             {getRoleGroup(role) === "KN" &&
               data?.trangThai === true &&
+              dataCheckMau?.complete === 0 &&
               role !== "KN" && (
                 <button
                   onClick={() => handleOpenModelSua(dataID)}

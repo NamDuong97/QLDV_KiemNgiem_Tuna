@@ -103,3 +103,16 @@ export const ThongKePhieuDky = (props: Props) => {
     staleTime: 5 * 60 * 1000,
   });
 };
+
+export const mutationUploadFile = (props: Props) => {
+  const { queryKey, onSuccess } = props;
+  return useMutation({
+    mutationKey: [queryKey],
+    mutationFn: async (params: FormData) => {
+      const response = await QuanlyPhieuDKYKNServices.uploadFile(params);
+      console.log("responseresponse", response);
+      return response;
+    },
+    onSuccess: onSuccess,
+  });
+};

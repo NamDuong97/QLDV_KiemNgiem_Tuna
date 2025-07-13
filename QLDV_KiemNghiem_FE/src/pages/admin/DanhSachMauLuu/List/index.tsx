@@ -7,14 +7,13 @@ import Card from "./Card";
 import InputSearch2 from "../../../../components/InputSearch2";
 import SelectItemTrangThai from "./SelectItemTrangThai";
 import removeVietnameseTones from "../../../../configs/removeVietnameseTones";
-import { useNavigate } from "react-router";
-import { APP_ROUTES } from "../../../../constants/routers";
 import ChiTietMauLuu from "../ChiTietMauLuu";
 import SuaMauLuu from "../SuaMauLuu";
 import { queryMauLuuAll } from "../../../../hooks/personnels/queryMauLuu";
 import { usePersonnel } from "../../../../contexts/PersonelsProvider";
 import { role } from "../../../../configs/parseJwt";
 import ConfirmationModal from "./ConfirmationModal";
+import AssignmentModal from "../AssignmentModal";
 
 interface Props {
   tableHead: any;
@@ -22,7 +21,6 @@ interface Props {
 
 const DanhSach = (props: Props) => {
   const { tableHead } = props;
-  const navigate = useNavigate();
   const { personnelInfo } = usePersonnel();
   const [openModelXoa, setOpenModelXoa] = useState(false);
   const { data, isLoading } = queryMauLuuAll({
@@ -47,7 +45,7 @@ const DanhSach = (props: Props) => {
         removeVietnameseTones(sample?.tenMau?.toLowerCase()).includes(query);
       return matchesSearch;
     });
-
+  const [isAssignModalOpen, setIsAssignModalOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(10);
   const indexOfLastItem = currentPage * itemsPerPage;
@@ -135,11 +133,7 @@ const DanhSach = (props: Props) => {
           />
           {(role === "KN_L" || role === "KN_P") && (
             <button
-              onClick={() =>
-                navigate(
-                  APP_ROUTES.TUNA_ADMIN.QUAN_LY_PHIEU_LUU_MAU.create_mau_luu
-                )
-              }
+              onClick={() => setIsAssignModalOpen(true)}
               type="button"
               className="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg flex items-center transition-all gap-1 cursor-pointer"
             >
@@ -194,6 +188,10 @@ const DanhSach = (props: Props) => {
         onClose={() => setOpenModelXoa(false)}
         dataId={saveID}
         trangThai={trangThai}
+      />
+      <AssignmentModal
+        isOpen={isAssignModalOpen}
+        onClose={() => setIsAssignModalOpen(false)}
       />
     </>
   );

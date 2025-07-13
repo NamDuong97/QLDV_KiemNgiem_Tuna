@@ -101,8 +101,13 @@ namespace QLDV_KiemNghiem_BE.Services
                 }
             }
 
+
             _repositoryManager.HoaDonThuBoSung.CreateHoaDonThuBoSungAsync(hoaDonThuBoSung);
             bool check = await _repositoryManager.SaveChangesAsync();
+            if (check)
+            {
+                int updateTongTien = await _repositoryManager.HoaDonThu.UpdateTongTienHoaDonThu(hoaDonThuBoSung.MaId);
+            }
             var resultDto = _mapper.Map<HoaDonThuBoSungDto>(hoaDonThuBoSung);
             resultDto.ChiTietHoaDonThuBoSungs = _mapper.Map<List<ChiTietHoaDonThuBoSungDto>>(chiTietEntities);
 
@@ -200,7 +205,10 @@ namespace QLDV_KiemNghiem_BE.Services
 
             _repositoryManager.HoaDonThuBoSung.UpdateHoaDonThuBoSungAsync(hoaDonCheck);
             bool success = await _repositoryManager.SaveChangesAsync();
-
+            if (success)
+            {
+                int updateTongTien = await _repositoryManager.HoaDonThu.UpdateTongTienHoaDonThu(hoaDonCheck.MaId);
+            }
             var returnDto = _mapper.Map<HoaDonThuBoSungDto>(hoaDonCheck);
             returnDto.ChiTietHoaDonThuBoSungs = _mapper.Map<List<ChiTietHoaDonThuBoSungDto>>(chiTietList);
 

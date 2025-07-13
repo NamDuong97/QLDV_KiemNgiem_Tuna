@@ -152,7 +152,7 @@ const FormGhiChuDuyet = (props: Props) => {
       <h4 className="text-base/6 font-semibold text-gray-500">
         Ghi chú{" "}
         {getRoleGroup(role) === "KHTH" && (
-          <span className="font-medium">(Duyệt không thể thu hồi)*</span>
+          <span className="font-medium text-red-500">(Duyệt không thể thu hồi)*</span>
         )}
       </h4>
       <div>

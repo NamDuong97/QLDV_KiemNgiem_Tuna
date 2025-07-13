@@ -6,14 +6,17 @@ import { IoMdNotifications } from "react-icons/io";
 import { useStoreNotification } from "../../../../../../../configs/stores/useStoreNotification";
 import { useNavigate } from "react-router";
 import { APP_ROUTES } from "../../../../../../../constants/routers";
+import { mutationUploadFile } from "../../../../../../../hooks/personnels/quanLyPhieuDKKM";
 
 interface Props {
   openPopupNofitication: boolean;
   handleClosePopupNofitication?: () => void;
+  formSubmit: any;
 }
 
 const PopupNofitication = (props: Props) => {
-  const { openPopupNofitication, handleClosePopupNofitication } = props;
+  const { openPopupNofitication, handleClosePopupNofitication, formSubmit } =
+    props;
 
   const navigate = useNavigate();
   const showNotification = useStoreNotification(
@@ -23,9 +26,6 @@ const PopupNofitication = (props: Props) => {
   const handleCloseNofitication = () => {
     handleClosePopupNofitication?.();
   };
-
-  const dataSession = sessionStorage.getItem("sua-phieuDky");
-  const data = dataSession ? JSON.parse(dataSession) : {};
 
   const queryClient = useQueryClient();
   const handleOnSettled = async () => {
@@ -50,9 +50,14 @@ const PopupNofitication = (props: Props) => {
       }
     },
   });
+  const { mutate: mutateUploadFile } = mutationUploadFile({
+    queryKey: "mutationUploadFile",
+    onSettled: handleOnSettled,
+  });
 
   const handleRedirectManagerPhieuDKy = () => {
-    mutate(data);
+    mutate(formSubmit?.dataPhieuDKY);
+    mutateUploadFile(formSubmit?.formDataAnh);
   };
   return (
     <Dialog

@@ -11,6 +11,7 @@ namespace QLDV_KiemNghiem_BE.Interfaces
         Task<IEnumerable<PhieuDangKyPhuLieuHoaChat>> GetPhieuDangKyPhuLieuHoaChatByPhieuDangKyAsync(string maPhieuDangKy);
         Task CreatePhieuDangKyPhuLieuHoaChatAsync(PhieuDangKyPhuLieuHoaChat plhc);
         Task<PhieuDangKyPhuLieuHoaChat?> FindPhieuDangKyPhuLieuHoaChatAsync(string maPDKPLHC, bool tracking);
+        Task<PhieuDangKyPhuLieuHoaChat?> FindPhieuDangKyPhuLieuHoaChatBySameAsync(string mPLHC, string solo, string nhaCungCap, string Dvt, bool tracking);
         Task<PhieuDangKyPhuLieuHoaChat?> GetPhieuDangKyPhuLieuHoaChatAsync(string maPDKPLHC, bool tracking);
         void UpdatePhieuDangKyPhuLieuHoaChatAsync(PhieuDangKyPhuLieuHoaChat plhc);
         void DeletePhieuDangKyPhuLieuHoaChatAsync(PhieuDangKyPhuLieuHoaChat plhc);

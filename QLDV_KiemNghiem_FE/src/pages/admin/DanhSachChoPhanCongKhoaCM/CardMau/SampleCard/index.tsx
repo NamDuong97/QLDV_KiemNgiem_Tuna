@@ -50,8 +50,7 @@ const SampleCard = ({
       <div className="p-4">
         <div className="flex justify-between items-start mb-3">
           <div>
-            <h3 className="font-medium text-gray-900 mb-1">{sample.tenMau}</h3>
-            <p className="text-sm text-gray-500">{sample.soLo}</p>
+            <h3 className="font-bold text-blue-600 mb-1">{sample.tenMau}</h3>
           </div>
 
           <input
@@ -64,6 +63,9 @@ const SampleCard = ({
         </div>
 
         <div className="text-sm text-gray-600 mb-3 space-y-2">
+          <p className="text-sm">
+            Số lô: <span className="">{sample.soLo}</span>
+          </p>
           <p>
             {`Tiêu Chuẩn:
               ${
@@ -85,7 +87,7 @@ const SampleCard = ({
 
         <div className="text-sm text-gray-600 mb-3 flex justify-between items-center">
           <p>Số lượng: {`${sample.soLuong} ${sample.donViTinh}`}</p>
-          <p>hạn sử dụng: {formatDate(sample.hanSuDung)}</p>
+          <p>Hạn sử dụng: {formatDate(sample.hanSuDung)}</p>
         </div>
         <div className="text-sm text-gray-600 mb-3 flex justify-between items-center">
           <p>Ngày sản xuất: {formatDate(sample.ngaySanXuat)}</p>

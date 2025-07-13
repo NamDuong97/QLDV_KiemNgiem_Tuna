@@ -74,6 +74,7 @@ const TableMau = (props: TableMauProps) => {
   };
 
   const handleEditMaus = (tenMau: string | undefined) => {
+    setDataCopyMaus(null);
     const selectedItem = tableBody.find((item: any) => item.tenMau === tenMau);
     if (dataEditMaus && dataEditMaus.tenMau === selectedItem?.tenMau) {
       setDataEditMaus(null);
@@ -89,6 +90,7 @@ const TableMau = (props: TableMauProps) => {
   };
 
   const handleCopyMaus = (tenMau: string | undefined) => {
+    setDataEditMaus(null);
     const selectedItem = tableBody.find((item: any) => item.tenMau === tenMau);
     if (dataCopyMaus && dataCopyMaus.tenMau === selectedItem?.tenMau) {
       setDataCopyMaus(null);
@@ -174,7 +176,7 @@ const TableMau = (props: TableMauProps) => {
                       {
                         dataLoaiDichVuAll?.find(
                           (loaiDV: any) => loaiDV.maLoaiDv === item?.loaiDv
-                        ).tenDichVu
+                        )?.tenDichVu
                       }
                     </p>
                   </Box>
@@ -186,7 +188,7 @@ const TableMau = (props: TableMauProps) => {
                         dataTieuChuanAll?.find(
                           (tieuchuan: any) =>
                             tieuchuan.maId === item?.maTieuChuan
-                        ).tenTieuChuan
+                        )?.tenTieuChuan
                       }
                     </p>
                   </Box>

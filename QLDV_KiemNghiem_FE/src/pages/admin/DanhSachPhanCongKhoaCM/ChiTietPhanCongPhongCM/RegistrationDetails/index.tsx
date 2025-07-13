@@ -41,7 +41,7 @@ const RegistrationDetails = (props: Props) => {
           </button>
         </div>
         <div className="flex items-center space-x-3">
-          <h2 className="text-lg font-semibold text-gray-700">
+          <h2 className="text-xl capitalize font-semibold text-gray-700">
             Chi tiết phiếu phân công:
           </h2>
         </div>
@@ -49,30 +49,28 @@ const RegistrationDetails = (props: Props) => {
 
       <div className="p-6 grid grid-cols-2">
         <div className="">
-          <h3 className="text-base/6 font-medium text-gray-500 mb-4">
+          <h3 className="text-lg/6 font-bold text-violet-500 mb-4">
             Thông tin phiếu phân công
           </h3>
           <div className="space-y-4">
             <div>
-              <label className="block text-sm/6 text-gray-500">
+              <label className="block text-base/6 text-gray-500">
                 Mã phiếu đề xuất
               </label>
               {isLoading ? (
                 <Skeleton variant="rounded" width={100} height={20} />
               ) : (
-                <p className="font-medium text-gray-900">
-                  {data?.maPhieuDeXuat}
-                </p>
+                <p className="font-bold text-gray-900">{data?.maPhieuDeXuat}</p>
               )}
             </div>
             <div>
-              <label className="block text-sm/6 text-gray-500">
+              <label className="block text-base/6 text-gray-500">
                 Khoa tiếp nhận
               </label>
               {isLoading ? (
                 <Skeleton variant="rounded" width={100} height={20} />
               ) : (
-                <p className="font-medium text-gray-900">
+                <p className="font-bold text-gray-900">
                   {
                     datadataKhoa?.find(
                       (item: any) => item?.maId === data?.maKhoaTiepNhan
@@ -82,56 +80,54 @@ const RegistrationDetails = (props: Props) => {
               )}
             </div>
             <div>
-              <label className="block text-sm/6 text-gray-500">
+              <label className="block text-base/6 text-gray-500">
                 Nhân viên đề xuất
               </label>
               {isLoading ? (
                 <Skeleton variant="rounded" width={100} height={20} />
               ) : (
-                <p className="font-medium text-gray-900">
-                  {dataNhanVien?.hoTen}
-                </p>
+                <p className="font-bold text-gray-900">{dataNhanVien?.hoTen}</p>
               )}
             </div>
           </div>
         </div>
         <div className="">
-          <h3 className="text-base/6 font-medium text-gray-500 mb-4">
+          <h3 className="text-lg/6 font-bold text-violet-500 mb-4">
             Thông tin thời gian
           </h3>
           <div className="space-y-4">
             <div>
-              <label className="block text-sm/6 text-gray-500">
+              <label className="block text-base/6 text-gray-500">
                 Thời gian giao mẫu
               </label>
               {isLoading ? (
                 <Skeleton variant="rounded" width={100} height={20} />
               ) : (
-                <p className="font-medium text-gray-900">
+                <p className="font-bold text-gray-900">
                   {formatDate(data?.thoiGianGiaoMau)}
                 </p>
               )}
             </div>
             <div>
-              <label className="block text-sm/6 text-gray-500">Ngày tạo</label>
+              <label className="block text-base/6 text-gray-500">
+                Ngày tạo
+              </label>
               {isLoading ? (
                 <Skeleton variant="rounded" width={100} height={20} />
               ) : (
-                <p className="font-medium text-gray-900">
+                <p className="font-bold text-gray-900">
                   {formatDate(data?.ngayTao)}
                 </p>
               )}
             </div>
             <div>
-              <label className="block text-sm/6 text-gray-500">
+              <label className="block text-base/6 text-gray-500">
                 Trạng thái
               </label>
               {isLoading ? (
                 <Skeleton variant="rounded" width={100} height={20} />
               ) : (
-                <p className="font-medium text-gray-900">
-                  {renderTrangThaiPhieuDeXuatPhongBan(data?.trangThai)}
-                </p>
+                renderTrangThaiPhieuDeXuatPhongBan(data?.trangThai)
               )}
             </div>
           </div>

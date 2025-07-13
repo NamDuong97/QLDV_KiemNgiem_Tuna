@@ -91,7 +91,7 @@ const FormThongTinMau = (props: FormThongTinMauProps) => {
   const dataTest = sessionStorage.getItem("PhieuDangKy");
   const dataPhieuDangky = dataTest ? JSON.parse(dataTest) : null;
   const { userInfo } = useContext(StoreContext);
-  
+
   const [listImage, setListImage] = useState(() => {
     const dataImageTemp = sessionStorage.getItem("ImageTemp");
     return dataImageTemp !== undefined &&
@@ -137,28 +137,6 @@ const FormThongTinMau = (props: FormThongTinMauProps) => {
         }),
       tenTieuChuan: yup.string().required("Yêu cầu chọn Tiêu chuẩn"),
       tenLoaiDichVu: yup.string().required("Yêu cầu chọn Dịch vụ"),
-      thoiGianTieuChuan: yup
-        .string()
-        .when("tenTieuChuan", ([tenTieuChuan], schema) => {
-          return schema.test(
-            "dữ liệu tiêu chuẩn phải có",
-            "Yêu cầu chọn Tên Mẫu và Tiêu Chuẩn",
-            () => {
-              return tenTieuChuan;
-            }
-          );
-        }),
-      ngayDuKienTraKetQua: yup
-        .string()
-        .when(["tenLoaiDichVu", "tenTieuChuan"], ([tenLoaiDichVu], schema) => {
-          return schema.test(
-            "dữ liệu tiêu chuẩn và Dịch vụ phải có",
-            "Yêu cầu chọn Tiêu chuẩn và Dịch vụ",
-            () => {
-              return tenLoaiDichVu;
-            }
-          );
-        }),
       soLo: yup
         .string()
         .required("Yêu cầu nhập Số lô")
@@ -291,14 +269,6 @@ const FormThongTinMau = (props: FormThongTinMauProps) => {
     maDmMau: MaDm_Mau_Id,
     maTieuChuan: MaTieuChuan_Id,
   });
-  const dataNgayTraKQ = MaLoaiDV
-    ? MaLoaiDV.split("-")[1] === "Max"
-      ? "Bàn giao ngay sau khi kiểm nghiệm"
-      : Math.round(
-          (MaLoaiDV.split("-")[1] / 100) *
-            (dataThoiGianTieuChuan?.data > 0 ? dataThoiGianTieuChuan?.data : 0)
-        )
-    : 0;
 
   const handleCreateMau = (data: FormMau) => {
     const MaDm_Mau = dataDMMau?.find(
@@ -312,16 +282,14 @@ const FormThongTinMau = (props: FormThongTinMauProps) => {
     ).maId;
     const dataImage: any[] = [];
 
-    console.log("datadatadata", listImage);
-
-    data.phieuDangKyMauHinhAnhs.map((item) =>
+    listImage.map((item: any) =>
       dataImage.push({
         base64: item.base64,
         ghiChu: item.ghiChu,
-        image: item?.image,
+        image: item?.image as File,
+        ten: item.ten,
       })
     );
-    console.log("data", data);
 
     const dataMau = {
       maId: "",
@@ -383,11 +351,12 @@ const FormThongTinMau = (props: FormThongTinMauProps) => {
     ).maId;
 
     const dataImage: any[] = [];
-    data.phieuDangKyMauHinhAnhs.map((item) =>
+    listImage.map((item: any) =>
       dataImage.push({
         base64: item.base64,
         ghiChu: item.ghiChu,
-        image:item.image
+        image: item?.image as File,
+        ten: item.ten,
       })
     );
 
@@ -458,14 +427,6 @@ const FormThongTinMau = (props: FormThongTinMauProps) => {
         tenMau: dataEditMaus?.tenMau || dataCopyMaus?.tenMau || "",
         tenTieuChuan: tenTieuChuan || "",
         tenLoaiDichVu: tenDichVu || "",
-        thoiGianTieuChuan:
-          dataEditMaus?.thoiGianTieuChuan ||
-          dataCopyMaus?.thoiGianTieuChuan ||
-          "",
-        ngayDuKienTraKetQua:
-          dataEditMaus?.ngayDuKienTraKetQua ||
-          dataCopyMaus?.ngayDuKienTraKetQua ||
-          "",
         soLo: dataEditMaus?.soLo || dataCopyMaus?.soLo || "",
         donViSanXuat: dataEditMaus?.donViSanXuat || dataCopyMaus?.soLo || "",
         ngaySanXuat:
@@ -495,8 +456,6 @@ const FormThongTinMau = (props: FormThongTinMauProps) => {
         tenMau: "",
         tenTieuChuan: "",
         tenLoaiDichVu: "",
-        thoiGianTieuChuan: "",
-        ngayDuKienTraKetQua: "",
         soLo: "",
         donViSanXuat: "",
         ngaySanXuat: "",
@@ -511,12 +470,11 @@ const FormThongTinMau = (props: FormThongTinMauProps) => {
         ghiChu: "",
         phieuDangKyMauHinhAnhs: [],
       });
-  }, [tableBody, dataEditMaus, dataCopyMaus]);
+  }, [tableBody, dataEditMaus, dataCopyMaus, reset]);
 
   useEffect(() => {
     setValue("phieuDangKyMauHinhAnhs", listImage);
   }, [listImage, setValue]);
-  console.log("listImage", listImage);
 
   return (
     <Box>
@@ -585,52 +543,6 @@ const FormThongTinMau = (props: FormThongTinMauProps) => {
                   inputRef={register("ngaySanXuat")}
                   errorMessage={errors.ngaySanXuat?.message}
                   className="h-[42px]"
-                  sx={{
-                    input: {
-                      padding: "9.5px 14px",
-                    },
-                  }}
-                />
-              </Box>
-              <Box className="col-span-12 lg:col-span-6 xl:col-span-4">
-                <Inputs
-                  title="Thời gian dự kiến hoàn thành (Ngày)"
-                  name="thoiGianTieuChuan"
-                  placeholder="Vui lòng chọn Tiêu Chuẩn và Tên Mẫu"
-                  inputRef={register("thoiGianTieuChuan")}
-                  value={
-                    Number(dataThoiGianTieuChuan?.data)
-                      ? Number(dataThoiGianTieuChuan?.data) > 0
-                        ? Number(dataThoiGianTieuChuan?.data)
-                        : "Chờ phản hồi từ trung tâm"
-                      : "Vui lòng chọn Tiêu Chuẩn và Tên Mẫu"
-                  }
-                  errorMessage={errors.thoiGianTieuChuan?.message}
-                  className="h-[42px]"
-                  disabled
-                  sx={{
-                    input: {
-                      padding: "9.5px 14px",
-                    },
-                  }}
-                />
-              </Box>
-              <Box className="col-span-12 lg:col-span-6 xl:col-span-4">
-                <Inputs
-                  title="Ngày dự kiến trả kết quả"
-                  name="ngayDuKienTraKetQua"
-                  placeholder="Vui lòng chọn Tiêu Chuẩn và Dịch vụ"
-                  inputRef={register("ngayDuKienTraKetQua")}
-                  errorMessage={errors.ngayDuKienTraKetQua?.message}
-                  value={
-                    dataNgayTraKQ
-                      ? Number(dataNgayTraKQ) > 0
-                        ? dataNgayTraKQ
-                        : "Bàn giao ngay sau khi kiểm nghiệm"
-                      : "Vui lòng chọn Tiêu Chuẩn và Dịch vụ"
-                  }
-                  className="h-[42px]"
-                  disabled
                   sx={{
                     input: {
                       padding: "9.5px 14px",
@@ -718,6 +630,40 @@ const FormThongTinMau = (props: FormThongTinMauProps) => {
                   }}
                 />
               </Box>
+              <Box className="col-span-12 lg:col-span-6 xl:col-span-4 h-[106px]">
+                <Box className="grid gap-2">
+                  <p className="!font-semibold text-base/6 text-gray_80 whitespace-normal text-cyan-950">
+                    Lưu mẫu
+                  </p>
+                  <Box className="gap-2 flex items-center border border-solid border-gray-300 rounded py-[8px] px-4 w-full">
+                    <input
+                      type="checkbox"
+                      className="w-5 h-5"
+                      {...register("luuMau")}
+                    />
+                    <span className="text-base/6 font-medium">
+                      Cho phép lưu mẫu
+                    </span>
+                  </Box>
+                </Box>
+              </Box>
+              <Box className="col-span-12 lg:col-span-6 xl:col-span-4 h-[106px]">
+                <Box className="grid gap-2">
+                  <p className="!font-semibold text-base/6 text-gray_80 whitespace-normal text-cyan-950">
+                    Xuất kết quả
+                  </p>
+                  <Box className="gap-2 flex items-center border border-solid border-gray-300 rounded py-[8px] px-4 w-full">
+                    <input
+                      type="checkbox"
+                      className="w-5 h-5"
+                      {...register("xuatKetQua")}
+                    />
+                    <span className="text-base/6 font-medium">
+                      Cho phép xuất kết quả
+                    </span>
+                  </Box>
+                </Box>
+              </Box>
               <Box className="col-span-12 lg:col-span-6">
                 <Textarea
                   title="Tình trạng mẫu"
@@ -740,26 +686,7 @@ const FormThongTinMau = (props: FormThongTinMauProps) => {
                   height="h-[213px]"
                 />
               </Box>
-              <Box className="col-span-12 md:col-span-6 pb-6">
-                <Box className="gap-2 flex items-center border border-solid border-gray-300 rounded py-[10px] px-4 w-full">
-                  <input
-                    type="checkbox"
-                    className="w-5 h-5"
-                    {...register("luuMau")}
-                  />
-                  <span className="text-base/6 font-medium">Lưu mẫu</span>
-                </Box>
-              </Box>
-              <Box className="col-span-12 md:col-span-6 gap-2 pb-6">
-                <Box className="gap-2 flex items-center border border-solid border-gray-300 rounded py-[10px] px-4 w-full">
-                  <input
-                    type="checkbox"
-                    className="w-5 h-5"
-                    {...register("xuatKetQua")}
-                  />
-                  <span className="text-base/6 font-medium">Xuất kết quả</span>
-                </Box>
-              </Box>
+
               <Box className="col-span-12">
                 <Textarea
                   title="Ghi chú"

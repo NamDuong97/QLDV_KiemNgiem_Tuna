@@ -14,6 +14,7 @@ import { useNavigate } from "react-router";
 import { Align } from "../../../../../../../models/Table";
 import { APP_ROUTES } from "../../../../../../../constants/routers";
 import { FaEye } from "react-icons/fa";
+import { formatDate } from "../../../../../../../configs/configAll";
 
 interface TableProps {
   tableBody: any;
@@ -125,14 +126,14 @@ const TableDangKiemNghiem = (props: TableProps) => {
                 <TableCell align="center">
                   <Box className="flex gap-2 items-center justify-center">
                     <p className="text-sm/4 sm:text-base/4 font-medium">
-                      {item?.ngayGiaoMau}
+                      {formatDate(item?.ngayGiaoMau)}
                     </p>
                   </Box>
                 </TableCell>
                 <TableCell align="center">
                   <Box className="flex gap-2 items-center justify-center">
                     <p className="text-sm/4 sm:text-base/4 font-medium">
-                      {item?.ngayTao}
+                      {formatDate(item?.ngayTao)}
                     </p>
                   </Box>
                 </TableCell>

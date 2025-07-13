@@ -3,6 +3,7 @@ import {
   useGetLoaiDichVuAll,
   useGetTieuChuanAll,
 } from "../../../../../../hooks/customers/usePhieuDKyDVKN";
+import { image } from "../../../../../../constants/image";
 
 interface MausProps {
   currentItems: any;
@@ -87,17 +88,17 @@ const Maus = (props: MausProps) => {
     <div className="p-6 space-y-4">
       <Box className="space-y-4">
         <div className="space-y-1">
-          <div className="grid grid-cols-2 gap-y-4 gap-x-8 text-sm text-gray-700">
-            <div>
-              <label className="text-sm/6 text-gray-500">Tên mẫu</label>
-              <p className="font-semibold text-gray-900">
+          <div className="grid grid-cols-6 gap-y-4 gap-x-8 text-sm text-gray-700">
+            <div className="col-span-3">
+              <label className="text-base/6 text-gray-500">Tên mẫu</label>
+              <p className="font-semibold text-base/6 text-gray-900">
                 {currentItems?.tenMau}
               </p>
             </div>
 
-            <div>
-              <label className="text-sm/6 text-gray-500">Tiêu chuẩn</label>
-              <p className="font-semibold text-gray-900">
+            <div className="col-span-3">
+              <label className="text-base/6 text-gray-500">Tiêu chuẩn</label>
+              <p className="font-semibold text-base/6 text-gray-900">
                 {
                   dataTieuChuan?.find(
                     (item: any) => item.maId === currentItems?.maTieuChuan
@@ -106,9 +107,9 @@ const Maus = (props: MausProps) => {
               </p>
             </div>
 
-            <div>
-              <label className="text-sm/6 text-gray-500">Dịch vụ</label>
-              <p className="font-semibold text-gray-900">
+            <div className="col-span-3">
+              <label className="text-base/6 text-gray-500">Dịch vụ</label>
+              <p className="font-semibold text-base/6 text-gray-900">
                 {
                   dataLoaiDV?.find(
                     (item: any) => item.maLoaiDv === currentItems?.loaiDv
@@ -117,102 +118,108 @@ const Maus = (props: MausProps) => {
               </p>
             </div>
 
-            <div>
-              <label className="text-sm/6 text-gray-500">Số lô</label>
-              <p className="font-semibold text-gray-900">
+            <div className="col-span-3">
+              <label className="text-base/6 text-gray-500">Số lô</label>
+              <p className="font-semibold text-base/6 text-gray-900">
                 {currentItems?.soLo}
               </p>
             </div>
 
-            <div>
-              <label className="text-sm/6 text-gray-500">Ngày sản xuất</label>
-              <p className="font-semibold text-gray-900">
+            <div className="col-span-2">
+              <label className="text-base/6 text-gray-500">Ngày sản xuất</label>
+              <p className="font-semibold text-base/6 text-gray-900">
                 {new Date(currentItems?.ngaySanXuat).toLocaleDateString(
                   "vi-VN"
                 )}
               </p>
             </div>
 
-            <div>
-              <label className="text-sm/6 text-gray-500">Hạn sử dụng</label>
-              <p className="font-semibold text-gray-900">
+            <div className="col-span-2">
+              <label className="text-base/6 text-gray-500">Hạn sử dụng</label>
+              <p className="font-semibold text-base/6 text-gray-900">
                 {new Date(currentItems?.hanSuDung).toLocaleDateString("vi-VN")}
               </p>
             </div>
 
-            <div>
-              <label className="text-sm/6 text-gray-500">Số lượng</label>
-              <p className="font-semibold text-gray-900">
+            <div className="col-span-2">
+              <label className="text-base/6 text-gray-500">Số lượng</label>
+              <p className="font-semibold text-base/6 text-gray-900">
                 {currentItems?.soLuong}
               </p>
             </div>
 
-            <div>
-              <label className="text-sm/6 text-gray-500">Đơn vị tính</label>
-              <p className="font-semibold text-gray-900">
+            <div className="col-span-2">
+              <label className="text-base/6 text-gray-500">Đơn vị tính</label>
+              <p className="font-semibold text-base/6 text-gray-900">
                 {currentItems?.donViTinh}
               </p>
             </div>
 
-            <div>
-              <label className="text-sm/6 text-gray-500">
+            <div className="col-span-2">
+              <label className="text-base/6 text-gray-500">
                 Điều kiện bảo quản
               </label>
-              <p className="font-semibold text-gray-900">
+              <p className="font-semibold text-base/6 text-gray-900">
                 {currentItems?.dieuKienBaoQuan}
               </p>
             </div>
 
-            <div>
-              <label className="text-sm/6 text-gray-500">Đơn vị sản xuất</label>
-              <p className="font-semibold text-gray-900">
+            <div className="col-span-2">
+              <label className="text-base/6 text-gray-500">
+                Đơn vị sản xuất
+              </label>
+              <p className="font-semibold text-base/6 text-gray-900">
                 {currentItems?.donViSanXuat}
               </p>
             </div>
 
-            <div>
-              <label className="text-sm/6 text-gray-500">Tình trạng mẫu</label>
-              <p className="font-semibold text-gray-900">
+            <div className="col-span-2">
+              <label className="text-base/6 text-gray-500">
+                Tình trạng mẫu
+              </label>
+              <p className="font-semibold text-base/6 text-gray-900">
                 {currentItems?.tinhTrangMau}
               </p>
             </div>
 
-            <div>
-              <label className="text-sm/6 text-gray-500">Lưu mẫu</label>
-              <p className="font-semibold text-gray-900">
+            <div className="col-span-2">
+              <label className="text-base/6 text-gray-500">Lưu mẫu</label>
+              <p className="font-semibold text-base/6 text-gray-900">
                 {currentItems?.luuMau ? "Có lưu mẫu" : "Không lưu mẫu"}
               </p>
             </div>
 
-            <div>
-              <label className="text-sm/6 text-gray-500">Xuất kết quả</label>
-              <p className="font-semibold text-gray-900">
+            <div className="col-span-2">
+              <label className="text-base/6 text-gray-500">Xuất kết quả</label>
+              <p className="font-semibold text-base/6 text-gray-900">
                 {currentItems?.xuatKetQua
                   ? "Có xuất kết quả"
                   : "Không xuất kết quả"}
               </p>
             </div>
-            <div className="col-span-2">
-              <label className="text-sm/6 text-gray-500">
+            <div className="col-span-full">
+              <label className="text-base/6 text-gray-500">
                 Yêu cầu kiểm nghiệm
               </label>
-              <div className="bg-gray-50 p-4 rounded-lg">
-                <p className="text-gray-700 font-semibold">
+              <div className="bg-gray-100 p-4 rounded-lg">
+                <p className="text-gray-700 font-semibold text-base/6">
                   {currentItems?.yeuCauKiemNghiem}
                 </p>
               </div>
             </div>
 
-            <div className="col-span-2">
-              <label className="text-sm/6 text-gray-500">Ghi chú</label>
-              <div className="bg-gray-50 p-4 rounded-lg">
-                <p className="text-gray-700 font-semibold">
-                  {currentItems?.ghiChu}
+            <div className="col-span-full">
+              <label className="text-base/6 text-gray-500">Ghi chú</label>
+              <div className="bg-gray-100 p-4 rounded-lg">
+                <p className="text-gray-700 font-semibold text-base/6">
+                  {currentItems?.ghiChu
+                    ? currentItems?.ghiChu
+                    : "Không có ghi chú"}
                 </p>
               </div>
             </div>
-            <div className="col-span-2">
-              <label className="text-sm/6 text-gray-500">Ảnh</label>
+            <div className="col-span-full">
+              <label className="text-base/6 text-gray-500">Ảnh</label>
               {currentItems?.phieuDangKyMauHinhAnhs?.length > 0 ? (
                 <div className="flex items-center space-x-2">
                   {currentItems?.phieuDangKyMauHinhAnhs.map(
@@ -222,9 +229,9 @@ const Maus = (props: MausProps) => {
                         className="flex gap-2 items-center justify-center w-[200px]"
                       >
                         <img
-                          src={item.base64}
+                          src={item.pathImg || image.imageTunaLogo}
                           alt={item.ten}
-                          className="object-contain"
+                          className="object-contain shadow-[0_4px_4px_0_rgba(0,0,0,0.25)] border border-gray-300 rounded"
                         />
                       </div>
                     )

@@ -45,8 +45,33 @@ export const queryMauByID = (props: Props) => {
       return response?.data;
     },
     refetchOnWindowFocus: false,
-    staleTime: Infinity,
+    staleTime: 5 * 60 * 1000,
     enabled: !!params,
+  });
+};
+
+export const queryCheckMau = (props: Props) => {
+  const { queryKey, params } = props;
+  return useQuery({
+    queryKey: [queryKey, params],
+    queryFn: async () => {
+      const response = await mauServices.getCheckMau(params);
+      return response?.data;
+    },
+    refetchOnWindowFocus: false,
+    staleTime: 5 * 60 * 1000,
+    enabled: !!params,
+  });
+};
+
+export const mutationCheckMau = (props: Props) => {
+  const { queryKey } = props;
+  return useMutation({
+    mutationKey: [queryKey],
+    mutationFn: async (params) => {
+      const response = await mauServices.getCheckMau(params);
+      return response?.data;
+    },
   });
 };
 
@@ -75,5 +100,35 @@ export const queryThongKe = (props: Props) => {
     },
     refetchOnWindowFocus: false,
     staleTime: Infinity,
+  });
+};
+
+export const mutationLDPHoanTraMau = (props: Props) => {
+  const { queryKey, onSettled, onSuccess, onError } = props;
+
+  return useMutation({
+    mutationKey: [queryKey],
+    mutationFn: async (params: any) => {
+      const response = await mauServices.LDPHoanTraMau(params);
+      return response;
+    },
+    onSuccess: onSuccess,
+    onError: onError,
+    onSettled: onSettled,
+  });
+};
+
+export const mutationBLDPheDuyetHoanTraMau = (props: Props) => {
+  const { queryKey, onSettled, onSuccess, onError } = props;
+
+  return useMutation({
+    mutationKey: [queryKey],
+    mutationFn: async (params: any) => {
+      const response = await mauServices.BLDPheDuyetHoanTraMau(params);
+      return response;
+    },
+    onSuccess: onSuccess,
+    onError: onError,
+    onSettled: onSettled,
   });
 };

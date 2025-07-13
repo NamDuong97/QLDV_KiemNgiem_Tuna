@@ -81,11 +81,11 @@ const FormThongTinMau = (props: FormThongTinMauProps) => {
     settableBody,
     dataEditMaus,
     tableBody,
-    setDataEditMaus,
-    handleRedirectTag2,
     setData,
     dataCopyMaus,
     setDataCopyMaus,
+    setDataEditMaus,
+    handleRedirectTag2,
   } = props;
 
   const dataTest = sessionStorage.getItem("sua-phieuDky");
@@ -291,14 +291,6 @@ const FormThongTinMau = (props: FormThongTinMauProps) => {
     maDmMau: MaDm_Mau_Id,
     maTieuChuan: MaTieuChuan_Id,
   });
-  const dataNgayTraKQ = MaLoaiDV
-    ? MaLoaiDV.split("-")[1] === "Max"
-      ? "Bàn giao ngay sau khi kiểm nghiệm"
-      : Math.round(
-          (MaLoaiDV.split("-")[1] / 100) *
-            (dataThoiGianTieuChuan?.data > 0 ? dataThoiGianTieuChuan?.data : 0)
-        )
-    : 0;
 
   const handleCreateMau = (data: FormMau) => {
     const MaDm_Mau = dataDMMau.find(
@@ -374,40 +366,49 @@ const FormThongTinMau = (props: FormThongTinMauProps) => {
 
   const handleEditMau = (data: FormMau) => {
     const index = dataPhieuDangky?.maus.findIndex(
-      (item: any) => item.TenMau === dataEditMaus?.TenMau
+      (item: any) => item.tenMau === dataEditMaus?.tenMau
+    );
+
+    const isMau = dataPhieuDangky?.maus.some(
+      (item: any) => item?.maId === dataEditMaus?.maId && item?.maId !== ""
     );
 
     const updatedMau = [...dataPhieuDangky?.maus];
     const MaDm_Mau = dataDMMau.find(
       (item: any) => item.tenMau === data.tenMau
-    ).maId;
+    )?.maId;
     const maLoaidv = dataLoaiDichVuAll.find(
       (item: any) => item.tenDichVu === data.tenLoaiDichVu
-    ).maId;
+    )?.maId;
 
     const maTieuChuan = dataTieuChuanAll.find(
       (item: any) => item.tenTieuChuan === data.tenTieuChuan
-    ).maId;
+    )?.maId;
 
     const dataImage: any[] = [];
-    data.phieuDangKyMauHinhAnhs.map((item) =>
-      dataImage.push({
-        maId: "",
-        maMau: "",
-        base64: item.base64,
-        ghiChu: item.ghiChu,
-        loaiAnh: "",
-        trangThai: "",
-        nguoiTao: userInfo.maId,
-        nguoiSua: "",
-        ngayTao: "",
-        ngaySua: "",
-        isDel: false,
-      })
-    );
+    data.phieuDangKyMauHinhAnhs.map((item: any) => {
+      if (item?.isDel) {
+        dataImage.push({
+          maId: "",
+          maMau: "",
+          base64: item.base64,
+          ghiChu: item.ghiChu,
+          nguoiTao: userInfo.maId,
+          isDel: item?.isDel,
+        });
+      } else {
+        dataImage.push({
+          maId: "",
+          maMau: "",
+          base64: item.base64,
+          ghiChu: item.ghiChu,
+          nguoiTao: userInfo.maId,
+        });
+      }
+    });
 
-    const dataMau = {
-      maId: "",
+    var dataMau: any = {
+      maId: dataEditMaus?.maId ?? "",
       maDmMau: MaDm_Mau,
       tenMau: data.tenMau,
       maTieuChuan: maTieuChuan,
@@ -436,8 +437,17 @@ const FormThongTinMau = (props: FormThongTinMauProps) => {
       loaiDv: MaLoaiDV,
       maLoaiDV: maLoaidv,
       phieuDangKyMauHinhAnhs: dataImage,
-      isDel: false,
     };
+    if (isMau) {
+      dataMau = {
+        ...dataMau,
+        isDel: false,
+      };
+    } else {
+      dataMau = {
+        ...dataMau,
+      };
+    }
 
     if (index !== -1) {
       updatedMau[index] = dataMau;
@@ -449,7 +459,6 @@ const FormThongTinMau = (props: FormThongTinMauProps) => {
       ...dataPhieuDangky,
       maus: updatedMau,
     };
-    console.log("updatedPhieuDangky", updatedPhieuDangky);
 
     setData(updatedPhieuDangky);
     setDataEditMaus(null);
@@ -461,39 +470,39 @@ const FormThongTinMau = (props: FormThongTinMauProps) => {
 
   useEffect(() => {
     if (dataEditMaus || dataCopyMaus) {
+      const phieuDangKyMauHinhAnhs = (
+        dataEditMaus?.phieuDangKyMauHinhAnhs ||
+        dataCopyMaus?.phieuDangKyMauHinhAnhs ||
+        []
+      ).map((item: any) => ({
+        base64: item.base64 || item.pathImg || "",
+        image: undefined,
+        ghiChu: item.ghiChu || "",
+      }));
       const tenTieuChuan = dataTieuChuanAll.find(
         (item: any) =>
           item.maId === dataEditMaus?.maTieuChuan ||
           item.maId === dataCopyMaus?.maTieuChuan
-      ).tenTieuChuan;
+      )?.tenTieuChuan;
       const tenDichVu = dataLoaiDichVuAll.find(
         (item: any) =>
           item.maLoaiDv === dataEditMaus?.loaiDv ||
           item.maLoaiDv === dataCopyMaus?.loaiDv
-      ).tenDichVu;
-      setListImage(
-        dataCopyMaus?.phieuDangKyMauHinhAnhs ||
-          dataEditMaus?.phieuDangKyMauHinhAnhs
-      );
+      )?.tenDichVu;
+
+      setListImage(dataEditMaus ? phieuDangKyMauHinhAnhs : []);
 
       reset({
         tenMau: dataEditMaus?.tenMau || dataCopyMaus?.tenMau || "",
         tenTieuChuan: tenTieuChuan || "",
         tenLoaiDichVu: tenDichVu || "",
-        thoiGianTieuChuan:
-          dataEditMaus?.thoiGianTieuChuan ||
-          dataCopyMaus?.thoiGianTieuChuan ||
-          "",
-        ngayDuKienTraKetQua:
-          dataEditMaus?.ngayDuKienTraKetQua ||
-          dataCopyMaus?.ngayDuKienTraKetQua ||
-          "",
+
         soLo: dataEditMaus?.soLo || dataCopyMaus?.soLo || "",
         donViSanXuat: dataEditMaus?.donViSanXuat || dataCopyMaus?.soLo || "",
         ngaySanXuat:
           dataEditMaus?.ngaySanXuat || dataCopyMaus?.ngaySanXuat || "",
         hanSuDung: dataEditMaus?.hanSuDung || dataCopyMaus?.hanSuDung || "",
-        soLuong: dataEditMaus?.soLuong || dataCopyMaus?.soLuong || "",
+        soLuong: dataEditMaus?.soLuong || dataCopyMaus?.soLuong || 0,
         donViTinh: dataEditMaus?.donViTinh || dataCopyMaus?.donViTinh || "",
         yeuCauKiemNghiem:
           dataEditMaus?.yeuCauKiemNghiem ||
@@ -507,18 +516,13 @@ const FormThongTinMau = (props: FormThongTinMauProps) => {
         tinhTrangMau:
           dataEditMaus?.tinhTrangMau || dataCopyMaus?.tinhTrangMau || "",
         ghiChu: dataEditMaus?.ghiChu || dataCopyMaus?.ghiChu || "",
-        phieuDangKyMauHinhAnhs:
-          dataEditMaus?.phieuDangKyMauHinhAnhs ||
-          dataCopyMaus?.phieuDangKyMauHinhAnhs ||
-          [],
+        phieuDangKyMauHinhAnhs: phieuDangKyMauHinhAnhs,
       });
     } else
       reset({
         tenMau: "",
         tenTieuChuan: "",
         tenLoaiDichVu: "",
-        thoiGianTieuChuan: "",
-        ngayDuKienTraKetQua: "",
         soLo: "",
         donViSanXuat: "",
         ngaySanXuat: "",
@@ -538,7 +542,6 @@ const FormThongTinMau = (props: FormThongTinMauProps) => {
   useEffect(() => {
     setValue("phieuDangKyMauHinhAnhs", listImage);
   }, [listImage, setValue]);
-
   return (
     <Box>
       <form
@@ -613,52 +616,7 @@ const FormThongTinMau = (props: FormThongTinMauProps) => {
                   }}
                 />
               </Box>
-              <Box className="col-span-12 lg:col-span-6 xl:col-span-4">
-                <Inputs
-                  title="Thời gian dự kiến hoàn thành (Ngày)"
-                  name="thoiGianTieuChuan"
-                  placeholder="Vui lòng chọn Tiêu Chuẩn và Tên Mẫu"
-                  inputRef={register("thoiGianTieuChuan")}
-                  value={
-                    Number(dataThoiGianTieuChuan?.data)
-                      ? Number(dataThoiGianTieuChuan?.data) > 0
-                        ? Number(dataThoiGianTieuChuan?.data)
-                        : "Chờ phản hồi từ trung tâm"
-                      : "Vui lòng chọn Tiêu Chuẩn và Tên Mẫu"
-                  }
-                  errorMessage={errors.thoiGianTieuChuan?.message}
-                  className="h-[42px]"
-                  disabled
-                  sx={{
-                    input: {
-                      padding: "9.5px 14px",
-                    },
-                  }}
-                />
-              </Box>
-              <Box className="col-span-12 lg:col-span-6 xl:col-span-4">
-                <Inputs
-                  title="Ngày dự kiến trả kết quả"
-                  name="ngayDuKienTraKetQua"
-                  placeholder="Vui lòng chọn Tiêu Chuẩn và Dịch vụ"
-                  inputRef={register("ngayDuKienTraKetQua")}
-                  errorMessage={errors.ngayDuKienTraKetQua?.message}
-                  value={
-                    dataNgayTraKQ
-                      ? Number(dataNgayTraKQ) > 0
-                        ? dataNgayTraKQ
-                        : "Bàn giao ngay sau khi kiểm nghiệm"
-                      : "Vui lòng chọn Tiêu Chuẩn và Dịch vụ"
-                  }
-                  className="h-[42px]"
-                  disabled
-                  sx={{
-                    input: {
-                      padding: "9.5px 14px",
-                    },
-                  }}
-                />
-              </Box>
+
               <Box className="col-span-12 lg:col-span-6 xl:col-span-4">
                 <Inputs
                   title="Hạn sử dụng"
@@ -795,6 +753,7 @@ const FormThongTinMau = (props: FormThongTinMauProps) => {
               errorsMessage={errors.phieuDangKyMauHinhAnhs?.message}
               setListImage={setListImage}
               listImage={listImage}
+              dataMau={dataEditMaus || dataCopyMaus}
             />
           </Box>
           <hr className="text-gray-300" />

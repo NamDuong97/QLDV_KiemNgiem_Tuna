@@ -57,6 +57,11 @@ namespace QLDV_KiemNghiem_BE.Repositories
             .FirstOrDefaultAsync();
             return result?.ThanhTien ?? 0;
         }
+        public async Task<int> UpdateTongTienHoaDonThu(string maHD)
+        {
+            var kq = await _context.Database.ExecuteSqlRawAsync("exec sp_UpdateTongTienHoaDonThu {0}", maHD);
+            return kq;
+        }
         public async Task<HoaDonThu?> FindHoaDonThuAsync(string maHoaDonThu, bool track)
         {
             return track ? await _context.HoaDonThus.FirstOrDefaultAsync(it => it.MaId == maHoaDonThu) :

@@ -182,11 +182,28 @@ namespace QLDV_KiemNghiem_BE.Services
             }
          
             int qk = await _repositoryManager.PhieuDangKyMau.ProcessCancelMauByLDP(mauDto.MaMau, mauDto.Message, mauDto.Action, user, userId, mauDto.MaKhoa);
+            if (qk > 0)
+            {
+                NotificationModel notificationModel = new NotificationModel()
+                {
+                    Title = "Ban lanh dao phe duyet hoan tra mau",
+                    Message = $"Nguoi dung {user} da phe duyet hoan tra mau {mauDto.MaMau} thanh cong",
+                    CreatedAt = DateTime.Now,
+                };
+                await _hubContext.Clients.Group("KN_L").SendAsync("receiveNotification", notificationModel);
+                await _hubContext.Clients.Group("KN_P").SendAsync("receiveNotification", notificationModel);
+            }
             return new ResponseModel1<PhieuDangKyMauDto>
             {
-                KetQua = qk > 0 ? true: false,
-                Message = qk > 0 ? "Huy mau thanh cong boi LDP!" : "Huy mau that bai boi LDP",
+                KetQua = qk > 0 ? true : false,
+                Message = qk > 0 ? "Ban lanh dao duyet mau huy boi lanh đao phong thanh cong!" : "Ban lanh dao duyet mau huy boi lanh đao phong that bai!",
             };
+        }
+        public async Task<PhieuDangKyMauThongKeProcedure?> CheckPhieuDangKyMauFromTableProcedure(string maMau)
+        {
+            var checkMau = await _repositoryManager.PhieuDangKyMau.FindPhieuDangKyMauAsync(maMau, false);
+            if (checkMau == null) return null;
+            return await _repositoryManager.PhieuDangKyMau.GetThongKePhieuDangKyMauProcedure(maMau);
         }
         public async Task<ResponseModel1<PhieuDangKyMauDto>> CreatePhieuDangKyMauAsync(PhieuDangKyMauDto PhieuDangKyMauDto, string user)
         {
