@@ -33,7 +33,7 @@ const PopupThemTieuChuan = (props: Props) => {
           if (!value) return true;
           const trimmedValue = value.trim().toLowerCase();
 
-          const isTrungLap = dataTieuChuanAll.find(
+          const isTrungLap = dataTieuChuanAll?.find(
             (item: any) =>
               item.tenTieuChuan?.trim().toLowerCase() === trimmedValue
           );

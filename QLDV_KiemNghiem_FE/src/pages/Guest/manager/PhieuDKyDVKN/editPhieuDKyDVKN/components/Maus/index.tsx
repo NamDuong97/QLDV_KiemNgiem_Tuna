@@ -59,7 +59,7 @@ const Maus = (props: MausProps) => {
   const [dataEditMaus, setDataEditMaus] = useState<any>();
   const [dataCopyMaus, setDataCopyMaus] = useState<any>();
   const [listCheckbox, setListCheckbox] = useState<any[]>([]);
-  const [isTag, setisTag] = useState(1);
+  const [isTag, setisTag] = useState(2);
 
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(3);

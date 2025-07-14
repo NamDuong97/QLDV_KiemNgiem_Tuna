@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import { formatDateNotTime2 } from "../../../../configs/configAll";
 import { Eye } from "react-feather";
 import { MdReceiptLong } from "react-icons/md";
@@ -7,6 +8,19 @@ const Card = ({ result, onView }: any) => {
     e.stopPropagation();
     onView(result?.maID);
   };
+
+  const handleRenderTongTien = useMemo(() => {
+    return (
+      (result?.dsHoaDonThuBoSung?.reduce(
+        (a: any, b: any) => a + b?.tongTien,
+        0
+      ) || 0) +
+        (result?.dsChiTietHoaDonThu?.reduce(
+          (a: any, b: any) => a + b?.thanhTien,
+          0
+        ) || 0) || 0
+    );
+  }, [result]);
 
   return (
     <div
@@ -37,7 +51,9 @@ const Card = ({ result, onView }: any) => {
         <div>
           <p className="text-gray-600">Tổng tiền</p>
           <p className="font-semibold text-lg text-red-600">
-            {parseInt(result?.tongTien).toLocaleString()} VND
+            {handleRenderTongTien === 0 || !handleRenderTongTien
+              ? "Đang chờ xử lý"
+              : `${parseInt(handleRenderTongTien).toLocaleString()} VND`}
           </p>
         </div>
       </div>

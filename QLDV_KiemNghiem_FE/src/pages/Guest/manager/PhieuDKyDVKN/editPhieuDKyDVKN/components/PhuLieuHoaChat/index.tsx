@@ -71,7 +71,7 @@ const PhuLieuHoaChat = (props: PhuLieuHoaChatProps) => {
   const { userInfo } = useContext(StoreContext);
   const dataTest = sessionStorage.getItem("sua-phieuDky");
   const dataPhieuDangky = dataTest ? JSON.parse(dataTest) : null;
-  const [isTag, setisTag] = useState(1);
+  const [isTag, setisTag] = useState(2);
 
   const [tableBody, settableBody] = useState(() => {
     return dataTest ? JSON.parse(dataTest).phieuDangKyPhuLieuHoaChats : [];

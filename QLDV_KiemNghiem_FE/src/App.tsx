@@ -9,7 +9,7 @@ import { SignalRProvider } from "./contexts/SignalRProvider";
 import { useLocation } from "react-router";
 import { NotificationProvider } from "./contexts/NotificationContext";
 import NotificationContainer from "./components/NotificationComponent/NotificationContainer";
-import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
+// import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 function App() {
   const isAdmin = useLocation().pathname.startsWith("/tuna");
   return (
@@ -30,7 +30,7 @@ function App() {
         )}
         <NotificationContainer />
         <HandleSnackbar />
-        <ReactQueryDevtools initialIsOpen={false} />
+        {/* <ReactQueryDevtools initialIsOpen={false} /> */}
       </NotificationProvider>
     </QueryClientProvider>
   );
