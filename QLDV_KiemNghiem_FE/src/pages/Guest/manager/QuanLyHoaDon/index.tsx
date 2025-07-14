@@ -24,7 +24,7 @@ const QuanLyHoaDon = () => {
   const [selectedDateFrom, setSelectedDateFrom] = useState("");
   const [selectedDateTo, setSelectedDateTo] = useState("");
   const queryParams = useMemo(() => {
-    const params: any = { getAll: true, maKH: userInfo?.maId };
+    const params: any = { getAll: true, maKH: userInfo?.maId , IsHoaDonBoSung: true, IsChiTietHoaDon: true};
     if (selectedDateFrom) params.ngayLapFrom = selectedDateFrom;
     if (selectedDateTo) params.ngayLapTo = selectedDateTo;
     return params;

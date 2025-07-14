@@ -50,7 +50,7 @@ namespace QLDV_KiemNghiem_BE.Services
                 };
             }
             // Kiểm tra tài khoản - email đã được verify xác minh chưa
-            if (khachHang?.IsEmailVerify ?? false)
+            if (khachHang?.IsEmailVerify == false)
             {
                 return new LoginResponse
                 {

@@ -9,16 +9,20 @@ const List = ({ onView }: any) => {
   const [selectedDateFrom, setSelectedDateFrom] = useState("");
   const [selectedDateTo, setSelectedDateTo] = useState("");
   const queryParams = useMemo(() => {
-    const params: any = { getAll: true };
+    const params: any = {
+      getAll: true,
+      IsHoaDonBoSung: true,
+      IsChiTietHoaDon: true,
+    };
     if (selectedDateFrom) params.ngayLapFrom = selectedDateFrom;
     if (selectedDateTo) params.ngayLapTo = selectedDateTo;
     return params;
   }, [selectedDateFrom, selectedDateTo]);
+  
   const { data, isLoading } = useQueryHoaDonThuAll({
     queryKey: "useQueryHoaDonThuAll",
     params: queryParams,
   });
-console.log('data',data);
 
   const filteredResults = data?.filter((result: any) => {
     const matchesSearch =

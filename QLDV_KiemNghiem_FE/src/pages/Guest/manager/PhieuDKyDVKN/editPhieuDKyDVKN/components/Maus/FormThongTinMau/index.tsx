@@ -479,12 +479,12 @@ const FormThongTinMau = (props: FormThongTinMauProps) => {
         image: undefined,
         ghiChu: item.ghiChu || "",
       }));
-      const tenTieuChuan = dataTieuChuanAll.find(
+      const tenTieuChuan = dataTieuChuanAll?.find(
         (item: any) =>
           item.maId === dataEditMaus?.maTieuChuan ||
           item.maId === dataCopyMaus?.maTieuChuan
       )?.tenTieuChuan;
-      const tenDichVu = dataLoaiDichVuAll.find(
+      const tenDichVu = dataLoaiDichVuAll?.find(
         (item: any) =>
           item.maLoaiDv === dataEditMaus?.loaiDv ||
           item.maLoaiDv === dataCopyMaus?.loaiDv
@@ -697,6 +697,40 @@ const FormThongTinMau = (props: FormThongTinMauProps) => {
                   }}
                 />
               </Box>
+              <Box className="col-span-12 lg:col-span-6 xl:col-span-4 h-[106px]">
+                <Box className="grid gap-2">
+                  <p className="!font-semibold text-base/6 text-gray_80 whitespace-normal text-cyan-950">
+                    Lưu mẫu
+                  </p>
+                  <Box className="gap-2 flex items-center border border-solid border-gray-300 rounded py-[8px] px-4 w-full">
+                    <input
+                      type="checkbox"
+                      className="w-5 h-5"
+                      {...register("luuMau")}
+                    />
+                    <span className="text-base/6 font-medium">
+                      Cho phép lưu mẫu
+                    </span>
+                  </Box>
+                </Box>
+              </Box>
+              <Box className="col-span-12 lg:col-span-6 xl:col-span-4 h-[106px]">
+                <Box className="grid gap-2">
+                  <p className="!font-semibold text-base/6 text-gray_80 whitespace-normal text-cyan-950">
+                    Xuất kết quả
+                  </p>
+                  <Box className="gap-2 flex items-center border border-solid border-gray-300 rounded py-[8px] px-4 w-full">
+                    <input
+                      type="checkbox"
+                      className="w-5 h-5"
+                      {...register("xuatKetQua")}
+                    />
+                    <span className="text-base/6 font-medium">
+                      Cho phép xuất kết quả
+                    </span>
+                  </Box>
+                </Box>
+              </Box>
               <Box className="col-span-12 lg:col-span-6">
                 <Textarea
                   title="Tình trạng mẫu"
@@ -718,26 +752,6 @@ const FormThongTinMau = (props: FormThongTinMauProps) => {
                   className="max-h-[149px] min-h-[149px]"
                   height="h-[213px]"
                 />
-              </Box>
-              <Box className="col-span-12 md:col-span-6 pb-6">
-                <Box className="gap-2 flex items-center border border-solid border-gray-300 rounded py-[10px] px-4 w-full">
-                  <input
-                    type="checkbox"
-                    className="w-5 h-5"
-                    {...register("luuMau")}
-                  />
-                  <span className="text-base/6 font-medium">Lưu mẫu</span>
-                </Box>
-              </Box>
-              <Box className="col-span-12 md:col-span-6 gap-2 pb-6">
-                <Box className="gap-2 flex items-center border border-solid border-gray-300 rounded py-[10px] px-4 w-full">
-                  <input
-                    type="checkbox"
-                    className="w-5 h-5"
-                    {...register("xuatKetQua")}
-                  />
-                  <span className="text-base/6 font-medium">Xuất kết quả</span>
-                </Box>
               </Box>
               <Box className="col-span-12">
                 <Textarea
