@@ -103,7 +103,7 @@ const XemChiTiet = () => {
                 <div className="flex justify-between items-center">
                   <span className="text-red-800 font-semibold">Tổng tiền:</span>
                   <span className="text-2xl font-bold text-red-900">
-                    {data?.tongTien === 0
+                    {handleRenderTongTien === 0
                       ? "Đang chờ xử lý"
                       : `${parseInt(
                           handleRenderTongTien
