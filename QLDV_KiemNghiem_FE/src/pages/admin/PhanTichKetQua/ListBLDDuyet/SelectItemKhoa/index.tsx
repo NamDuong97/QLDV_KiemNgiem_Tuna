@@ -3,6 +3,7 @@ import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
 import { queryKhoaAll } from "../../../../../hooks/personnels/queryKhoa";
+import { KhoaKiemNghiem } from "../../../../../constants/khoa";
 
 interface Props {
   item?: any;
@@ -16,7 +17,7 @@ export default function SelectItemKhoa(props: Props) {
   const { data } = queryKhoaAll({
     queryKey: "KhoaAll",
   });
-  
+
   const handleChange = (event: SelectChangeEvent) => {
     setItem(event.target.value as string);
   };
@@ -42,11 +43,13 @@ export default function SelectItemKhoa(props: Props) {
           }}
         >
           <MenuItem value="">Tất cả {title}</MenuItem>
-          {data?.map((option: any, index: any) => (
-            <MenuItem key={index} value={option.maId}>
-              {option.tenKhoa}
-            </MenuItem>
-          ))}
+          {data
+            ?.filter((item: any) => KhoaKiemNghiem.includes(item.maId))
+            ?.map((option: any, index: any) => (
+              <MenuItem key={index} value={option.maId}>
+                {option.tenKhoa}
+              </MenuItem>
+            ))}
         </Select>
       </FormControl>
     </Box>

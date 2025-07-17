@@ -70,24 +70,19 @@ const List = ({ onView, onEdit }: any) => {
   return (
     <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
       <div className="px-6 py-4 border-b border-gray-200 bg-gray-50">
-        <div className="flex justify-between items-center">
-          <h2 className="text-lg font-semibold text-gray-900">
-            Danh sách phiếu
-          </h2>
-          <div className="flex items-center space-x-4">
-            <div className="flex gap-4 w-lg">
-              <InputSearch2
-                placeholder="Tìm kiếm tên mẫu hoặc mã dự trù..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-              />
-            </div>
-            <SelectItemTrangThai
-              title="Trạng thái"
-              setItem={setStatusFilter}
-              item={statusFilter}
+        <div className="flex items-center justify-between space-x-4">
+          <div className="flex gap-4 w-lg">
+            <InputSearch2
+              placeholder="Tìm kiếm tên mẫu hoặc mã dự trù..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
             />
           </div>
+          <SelectItemTrangThai
+            title="Trạng thái"
+            setItem={setStatusFilter}
+            item={statusFilter}
+          />
         </div>
       </div>
 

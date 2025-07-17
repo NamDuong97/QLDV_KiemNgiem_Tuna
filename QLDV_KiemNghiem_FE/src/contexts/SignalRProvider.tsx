@@ -17,7 +17,7 @@ export const SignalRProvider = ({
 
   useEffect(() => {
     const conn = new signalR.HubConnectionBuilder()
-      .withUrl("https://localhost:7233/notify")
+      .withUrl("http://103.90.226.217:8080/notify")
       .withAutomaticReconnect()
       .configureLogging(signalR.LogLevel.Information)
       .build();
