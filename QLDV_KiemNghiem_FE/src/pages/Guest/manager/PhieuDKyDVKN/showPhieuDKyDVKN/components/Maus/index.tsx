@@ -117,7 +117,7 @@ const Maus = (props: MausProps) => {
                   value={
                     dataLoaiDV?.find(
                       (itemLoaiDV: any) => itemLoaiDV.maLoaiDv === item.loaiDv
-                    ).tenDichVu
+                    )?.tenDichVu
                   }
                 />
               </Box>
@@ -153,44 +153,6 @@ const Maus = (props: MausProps) => {
                   }}
                   disabled
                   value={item.ngaySanXuat}
-                />
-              </Box>
-              <Box className="col-span-12 md:col-span-6 lg:col-span-4">
-                <Inputs
-                  title="Thời gian mong muốn hoàn thành(Thời gian dự kiến)"
-                  name="thoiGianTieuChuan"
-                  className="h-[42px]"
-                  sx={{
-                    input: {
-                      padding: "9.5px 14px",
-                    },
-                    "& .Mui-disabled": {
-                      WebkitTextFillColor: "black !important",
-                    },
-                  }}
-                  disabled
-                  value={item.thoiGianTieuChuan}
-                />
-              </Box>
-              <Box className="col-span-12 md:col-span-6 lg:col-span-4">
-                <Inputs
-                  title="Ngày dự kiến trả kết quả"
-                  name="ngayDuKienTraKetQua"
-                  className="h-[42px]"
-                  sx={{
-                    input: {
-                      padding: "9.5px 14px",
-                    },
-                    "& .Mui-disabled": {
-                      WebkitTextFillColor: "black !important",
-                    },
-                  }}
-                  disabled
-                  value={
-                    item.thoiGianTieuChuan * item?.loaiDv?.split("-")[1] > 0
-                      ? item.thoiGianTieuChuan * item?.loaiDv?.split("-")[1]
-                      : "Bàn giao ngay sau khi kiểm nghiệm"
-                  }
                 />
               </Box>
               <Box className="col-span-12 md:col-span-6 lg:col-span-4">
@@ -278,6 +240,46 @@ const Maus = (props: MausProps) => {
                   value={item.donViSanXuat}
                 />
               </Box>
+              <Box className="col-span-12 lg:col-span-6 xl:col-span-4 h-[106px]">
+                <Box className="grid gap-2">
+                  <p className="!font-semibold text-base/6 text-gray_80 whitespace-normal text-cyan-950">
+                    Lưu mẫu
+                  </p>
+                  <Box className="gap-2 flex items-center border border-solid border-gray-300 rounded py-[8px] px-4 w-full">
+                    <Inputs
+                      title="Lưu mẫu"
+                      name="luuMau"
+                      className="h-[42px]"
+                      sx={{
+                        input: {
+                          padding: "9.5px 14px",
+                        },
+                        "& .Mui-disabled": {
+                          WebkitTextFillColor: "black !important",
+                        },
+                      }}
+                      disabled
+                      value={item.luuMau ? "Có lưu mẫu" : "Không lưu mẫu"}
+                    />
+                    <span className="text-base/6 font-medium">
+                      Cho phép lưu mẫu
+                    </span>
+                  </Box>
+                </Box>
+              </Box>
+              <Box className="col-span-12 lg:col-span-6 xl:col-span-4 h-[106px]">
+                <Box className="grid gap-2">
+                  <p className="!font-semibold text-base/6 text-gray_80 whitespace-normal text-cyan-950">
+                    Xuất kết quả
+                  </p>
+                  <Box className="gap-2 flex items-center border border-solid border-gray-300 rounded py-[8px] px-4 w-full">
+                    <input type="checkbox" className="w-5 h-5" />
+                    <span className="text-base/6 font-medium">
+                      Cho phép xuất kết quả
+                    </span>
+                  </Box>
+                </Box>
+              </Box>
               <Box className="col-span-12 md:col-span-6 lg:col-span-4">
                 <Textarea
                   title="Tình trạng mẫu"
@@ -331,23 +333,7 @@ const Maus = (props: MausProps) => {
                   value={item.ghiChu}
                 />
               </Box>
-              <Box className="col-span-12 md:col-span-6">
-                <Inputs
-                  title="Lưu mẫu"
-                  name="luuMau"
-                  className="h-[42px]"
-                  sx={{
-                    input: {
-                      padding: "9.5px 14px",
-                    },
-                    "& .Mui-disabled": {
-                      WebkitTextFillColor: "black !important",
-                    },
-                  }}
-                  disabled
-                  value={item.luuMau ? "Có lưu mẫu" : "Không lưu mẫu"}
-                />
-              </Box>
+              <Box className="col-span-12 md:col-span-6"></Box>
               <Box className="col-span-12 md:col-span-6 gap-2">
                 <Inputs
                   title="Xuất kết quả"

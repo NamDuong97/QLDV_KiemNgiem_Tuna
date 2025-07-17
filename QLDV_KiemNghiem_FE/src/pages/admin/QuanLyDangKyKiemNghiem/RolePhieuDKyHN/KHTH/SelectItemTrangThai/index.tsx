@@ -8,7 +8,6 @@ interface Props {
   item?: any;
   setItem?: any;
   title?: any;
-  activeFilter?: string;
 }
 
 export default function SelectItemTrangThai(props: Props) {

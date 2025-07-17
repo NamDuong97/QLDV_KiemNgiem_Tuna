@@ -69,9 +69,6 @@ const ListChoDuyet = ({ onView, onEdit }: any) => {
     <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
       <div className="px-6 py-4 border-b border-gray-200 bg-gray-50">
         <div className="flex justify-between items-center">
-          <h2 className="text-lg font-semibold text-gray-900">
-            Danh sách phiếu đang chờ duyệt
-          </h2>
           <div className="flex items-center space-x-4">
             <div className="relative">
               <input
@@ -86,6 +83,8 @@ const ListChoDuyet = ({ onView, onEdit }: any) => {
                 size={16}
               />
             </div>
+          </div>
+          <div className="flex items-center space-x-4">
             <button
               onClick={() => setIsSortNew(!isSortNew)}
               type="button"
