@@ -275,13 +275,13 @@ const KHTH = (props: Props) => {
               </span>
             )}
           </button>
-          {
+          {activeFilter !== keyTag.Cho_Xu_Ly && (
             <SelectItemTrangThai
               title="Trạng thái"
               setItem={setSelectTrangThai}
               item={selectTrangThai}
             />
-          }
+          )}
         </div>
       </div>
       <div className="bg-white rounded-lg shadow-sm border border-gray-100">

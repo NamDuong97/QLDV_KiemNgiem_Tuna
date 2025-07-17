@@ -49,6 +49,7 @@ const BLD = (props: Props) => {
   const { data, isLoading } = listPhieuDKKM({
     queryKey: "listPhieuDKKM_BLD",
     params: {
+      getAll: true,
       maTrangThaiID: "TT02",
     },
   });

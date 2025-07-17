@@ -224,7 +224,6 @@ const FormThongTinMau = (props: FormThongTinMauProps) => {
         .number()
         .typeError("Yêu cầu nhập Số lượng")
         .required("Yêu cầu nhập Số lượng")
-        .max(100, "Số lượng nhập phải nhỏ hơn hoặc bằng 100")
         .min(0, "Yêu cầu nhập số nguyên lớn hơn 0"),
       donViTinh: yup
         .string()
