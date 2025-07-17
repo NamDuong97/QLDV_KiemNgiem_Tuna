@@ -90,7 +90,7 @@ console.log('currentItems',currentItems);
         />
       </div>
       <div className="p-4 bg-white rounded-lg shadow-sm border border-gray-100 gap-2 flex justify-between">
-        <div className="flex gap-4 w-2xl">
+        <div className="flex gap-4 w-[310px] 2xl:w-2xl">
           <InputSearch2
             placeholder="Tìm kiếm mã phiếu đề xuất..."
             value={searchQuery}

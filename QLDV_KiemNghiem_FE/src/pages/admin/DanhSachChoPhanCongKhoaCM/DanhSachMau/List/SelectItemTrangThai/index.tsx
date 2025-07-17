@@ -52,9 +52,7 @@ export default function SelectItemTrangThai(props: Props) {
   };
 
   return (
-    <Box
-      sx={{ minWidth: 300, maxWidth: 300, ".MuiSelect-select": { padding: 1 } }}
-    >
+    <Box sx={{ ".MuiSelect-select": { padding: 1 } }}>
       <FormControl fullWidth>
         <Select
           value={item}

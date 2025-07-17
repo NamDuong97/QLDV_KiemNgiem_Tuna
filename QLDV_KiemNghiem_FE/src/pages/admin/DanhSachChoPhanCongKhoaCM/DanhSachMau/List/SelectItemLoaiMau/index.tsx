@@ -20,9 +20,7 @@ export default function SelectItemLoaiMau(props: Props) {
   };
 
   return (
-    <Box
-      sx={{ minWidth: 200, maxWidth: 200, ".MuiSelect-select": { padding: 1 } }}
-    >
+    <Box sx={{ ".MuiSelect-select": { padding: 1 } }}>
       <FormControl fullWidth>
         <Select
           value={item}

@@ -174,7 +174,7 @@ const KHTH = (props: Props) => {
         );
       case keyTag.Tat_Ca:
         return (
-          <div className="grid grid-cols-5 space-x-4">
+          <div className="grid grid-cols-4 2xl:grid-cols-5 gap-4">
             <Card
               title="Tổng phiếu"
               value={dataThongKePhieuDky?.tongPhieu}
@@ -231,57 +231,66 @@ const KHTH = (props: Props) => {
   return (
     <>
       {handleThongKe()}
-      <div className="p-4 bg-white rounded-lg shadow-sm border border-gray-100 gap-2 flex justify-between">
-        <div className="flex gap-4 w-2xl">
+      <div className="p-4 bg-white rounded-lg shadow-sm border border-gray-100 grid gap-4">
+        <div className="flex gap-4">
           <InputSearch2
             placeholder="Tìm kiếm số đăng ký phân tích hoặc người gửi mẫu..."
             value={searchQuery}
             onChange={handleSearchChange}
           />
         </div>
-        <div className="flex space-x-4 items-center">
+        <div className="grid grid-cols-8 gap-4">
           {(activeFilter === keyTag.Tat_Ca ||
             activeFilter === keyTag.Nhan_Vien_Duỵet) && (
-            <div className="flex items-center gap-2">
-              <TextField
-                size="small"
-                variant="outlined"
-                type="date"
-                value={selectedDateFrom}
-                onChange={handleChangeDateFrom}
-              />
-              -{" "}
-              <TextField
-                size="small"
-                variant="outlined"
-                type="date"
-                value={selectedDateTo}
-                onChange={handleChangeDateTo}
+            <div className="col-span-4">
+              <div className="flex items-center gap-2 w-full">
+                <TextField
+                  size="small"
+                  variant="outlined"
+                  type="date"
+                  value={selectedDateFrom}
+                  onChange={handleChangeDateFrom}
+                  className="w-full"
+                />
+                -{" "}
+                <TextField
+                  size="small"
+                  variant="outlined"
+                  type="date"
+                  value={selectedDateTo}
+                  onChange={handleChangeDateTo}
+                  className="w-full"
+                />
+              </div>
+            </div>
+          )}
+          <div className="col-span-1">
+            <button
+              onClick={() => setIsSortNew(!isSortNew)}
+              type="button"
+              className="w-full btn btn-outline-primary border border-gray-300 py-[6px] px-2 rounded cursor-pointer hover:bg-blue-50"
+            >
+              {isSortNew ? (
+                <span className="flex items-center gap-2 text-gray-800">
+                  <FaSortAmountUp /> Cũ Nhất
+                </span>
+              ) : (
+                <span className="flex items-center gap-2 text-gray-800">
+                  <FaSortAmountDown /> Mới nhất
+                </span>
+              )}
+            </button>
+          </div>
+          {(activeFilter === keyTag.Tat_Ca ||
+            activeFilter === keyTag.Nhan_Vien_Duỵet) && (
+            <div className="col-span-3">
+              <SelectItemTrangThai
+                title="Trạng thái"
+                setItem={setSelectTrangThai}
+                item={selectTrangThai}
               />
             </div>
           )}
-          <button
-            onClick={() => setIsSortNew(!isSortNew)}
-            type="button"
-            className="btn btn-outline-primary border border-gray-300 py-[6px] px-2 rounded cursor-pointer hover:bg-blue-50"
-          >
-            {isSortNew ? (
-              <span className="flex items-center gap-2 text-gray-800">
-                <FaSortAmountUp /> Cũ Nhất
-              </span>
-            ) : (
-              <span className="flex items-center gap-2 text-gray-800">
-                <FaSortAmountDown /> Mới nhất
-              </span>
-            )}
-          </button>
-          {
-            <SelectItemTrangThai
-              title="Trạng thái"
-              setItem={setSelectTrangThai}
-              item={selectTrangThai}
-            />
-          }
         </div>
       </div>
       <div className="bg-white rounded-lg shadow-sm border border-gray-100">

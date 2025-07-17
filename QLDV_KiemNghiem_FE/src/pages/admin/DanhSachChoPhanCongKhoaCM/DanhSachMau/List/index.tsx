@@ -50,7 +50,7 @@ const DanhSach = (props: Props) => {
     staleTime: 7 * 60 * 1000,
     placeholderData: (prev) => prev,
   });
-  console.log("selectLoaiMau",selectLoaiMau)
+  console.log("selectLoaiMau", selectLoaiMau);
   const { data: dataThongKe, isLoading: isLoadingThongKe } = queryThongKe({
     queryKey: "queryThongKe",
   });
@@ -144,34 +144,41 @@ const DanhSach = (props: Props) => {
           textColor="text-[#FF9587]"
         />
       </div>
-      <div className="p-4 bg-white rounded-lg shadow-sm border border-gray-100  gap-2 flex justify-between">
-        <div className="flex gap-4 w-2xl">
+      <div className="p-4 bg-white rounded-lg shadow-sm border border-gray-100 grid gap-4">
+        <div className="flex gap-4 ">
           <InputSearch2
             placeholder="Tìm kiếm số đăng ký phân tích hoặc người gửi mẫu..."
             value={searchQuery}
             onChange={handleSearchChange}
           />
         </div>
-        <div className="flex space-x-4 items-center">
-          <button
-            onClick={() => setIsSortNew(!isSortNew)}
-            type="button"
-            className="btn btn-outline-primary border border-gray-300 py-[6px] px-2 rounded cursor-pointer hover:bg-blue-50"
-          >
-            <span className="flex items-center gap-2 text-gray-800">
-              {isSortNew ? <FaSortAmountUp /> : <FaSortAmountDown />}Hạn sử dụng
-            </span>
-          </button>
-          <SelectItemLoaiMau
-            title="loại mẫu"
-            setItem={setSelectLoaiMau}
-            item={selectLoaiMau}
-          />
-          <SelectItemTrangThai
-            title="Trạng thái"
-            setItem={setSelectTrangThai}
-            item={selectTrangThai}
-          />
+        <div className="grid grid-cols-7 gap-4">
+          <div className="col-span-1">
+            <button
+              onClick={() => setIsSortNew(!isSortNew)}
+              type="button"
+              className="btn btn-outline-primary border border-gray-300 py-[6px] px-2 rounded cursor-pointer hover:bg-blue-50"
+            >
+              <span className="flex items-center gap-2 text-gray-800">
+                {isSortNew ? <FaSortAmountUp /> : <FaSortAmountDown />}Hạn sử
+                dụng
+              </span>
+            </button>
+          </div>
+          <div className="col-span-3">
+            <SelectItemLoaiMau
+              title="loại mẫu"
+              setItem={setSelectLoaiMau}
+              item={selectLoaiMau}
+            />
+          </div>
+          <div className="col-span-3">
+            <SelectItemTrangThai
+              title="Trạng thái"
+              setItem={setSelectTrangThai}
+              item={selectTrangThai}
+            />
+          </div>
         </div>
       </div>
       <div className="bg-white rounded-lg shadow-sm border border-gray-100">

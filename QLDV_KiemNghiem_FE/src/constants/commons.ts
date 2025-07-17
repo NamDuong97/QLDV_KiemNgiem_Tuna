@@ -148,8 +148,8 @@ export const API = {
     QUEN_MAT_KHAU: "/api/khachhang/forgetPassword",
     REFRESH_TOKEN_KHACH_HANG: "/api/khachhang/getRefreshToken",
     REFRESH_TOKEN_TRUNG_TAM: "/api/nhanvien/getRefreshToken",
-    UPDATE_INFOR: "/api/khachhang/updateKhachHang",
-    DOI_MAT_KHAU: "/api/khachhang/updateKhachHang",
+    UPDATE_INFOR: "/api/KhachHang/updateKhachHang",
+    DOI_MAT_KHAU: "/api/KhachHang/changePassword",
   },
 };
 

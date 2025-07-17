@@ -21,7 +21,7 @@ const ProfileCustomer = () => {
       case 2:
         return <CapNhatTTCN setisShow={setisShow} />;
       case 3:
-        return <DoiMatKhau setisShow={setisShow} />;
+        return <DoiMatKhau setisShow={setisShow} userID={userInfo?.maId} />;
       default:
         return (
           <div className="w-full self-start bg-white rounded-xl grid gap-6 border-[1px] border-gray-300 shadow py-8 px-2 sm:p-8">

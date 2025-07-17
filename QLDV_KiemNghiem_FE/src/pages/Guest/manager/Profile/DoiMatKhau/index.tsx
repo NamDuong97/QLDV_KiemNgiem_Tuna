@@ -8,13 +8,16 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { useContext, useEffect, useMemo } from "react";
 import { StoreContext } from "../../../../../contexts/storeProvider";
 import bcrypt from "bcryptjs";
+import { doiMatKhau } from "../../../../../hooks/customers/useProfile";
+import { useStoreNotification } from "../../../../../configs/stores/useStoreNotification";
 
 interface Props {
   setisShow: React.Dispatch<React.SetStateAction<number>>;
+  userID: any;
 }
 
 const DoiMatKhau = (props: Props) => {
-  const { setisShow } = props;
+  const { setisShow, userID } = props;
   const { userInfo } = useContext(StoreContext);
   let schemaDoiMatKhau = useMemo(() => {
     return yup.object().shape({
@@ -54,8 +57,42 @@ const DoiMatKhau = (props: Props) => {
     resolver: yupResolver(schemaDoiMatKhau),
   });
 
+  const { showNotification } = useStoreNotification();
+
+  const { mutate } = doiMatKhau({
+    queryKey: "doiMatKhau",
+    onSuccess: (res: any) => {
+      const { status } = res;
+      if (status === 200) {
+        showNotification({
+          message: "Đổi mật khẩu thành công",
+          status: 200,
+        });
+        window.location.reload();
+        reset();
+      } else {
+        showNotification({
+          message: "Đổi mật khẩu thất bại",
+          status: 400,
+        });
+      }
+      console.log("res", res);
+    },
+    onError: () => {
+      showNotification({
+        message: "Đổi mật khẩu thất bại",
+        status: 400,
+      });
+    },
+  });
+
   const DoiMatKhau = (data: FormDoiMatKhau) => {
-    console.log("DoiMatKhau", data);
+    const params = {
+      maId: userID,
+      password: data.matKhauMoi,
+    };
+    mutate(params);
+    console.log("DoiMatKhau", params);
   };
 
   useEffect(() => {

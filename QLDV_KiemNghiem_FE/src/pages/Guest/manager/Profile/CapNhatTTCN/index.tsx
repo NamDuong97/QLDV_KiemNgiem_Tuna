@@ -7,6 +7,8 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import yup from "../../../../../configs/yup.custom";
 import { StoreContext } from "../../../../../contexts/storeProvider";
+import { useStoreNotification } from "../../../../../configs/stores/useStoreNotification";
+import { updateInfor } from "../../../../../hooks/customers/useProfile";
 // import { updateInfor } from "../../../../../hooks/customers/useProfile";
 
 interface Props {
@@ -25,10 +27,6 @@ const CapNhatTTCN = (props: Props) => {
         .string()
         .required("Vui lòng nhập số điện thoại")
         .matches(/^[0-9]{10,11}$/, "Số điện thoại không hợp lệ"),
-      email: yup
-        .string()
-        .required("Vui lòng nhập email")
-        .email("Email không hợp lệ"),
       diaChi: yup.string().required("Vui lòng nhập địa chỉ"),
     });
   }, []);
@@ -41,13 +39,46 @@ const CapNhatTTCN = (props: Props) => {
   } = useForm<FormTTCN>({
     resolver: yupResolver(schemaTTCN),
   });
-  // const { mutate } = updateInfor({
-  //   queryKey: "updateInfor",
-  // });
+
+  const { showNotification } = useStoreNotification();
+
+  const { mutate } = updateInfor({
+    queryKey: "updateInfor",
+    onSuccess: (res: any) => {
+      const { status } = res;
+      if (status === 200) {
+        showNotification({
+          message: "Cập nhật thông tin thành công",
+          status: 200,
+        });
+        window.location.reload();
+        reset();
+      } else {
+        showNotification({
+          message: "Cập nhật thông tin thất bại",
+          status: 400,
+        });
+      }
+      console.log("res", res);
+    },
+    onError: () => {
+      showNotification({
+        message: "Cập nhật thông tin thất bại",
+        status: 400,
+      });
+    },
+  });
 
   const onSubmit = (data: FormTTCN) => {
-    console.log("Thông tin cá nhân:", data);
-    // mutate()
+    const params = {
+      maId: userInfo.maId,
+      tenKh: data.congTy,
+      diaChi: data.diaChi,
+      tenNguoiDaiDien: data.hoTen,
+      soDienThoai: data.soDienThoai,
+    };
+    console.log("params:", params);
+    mutate(params);
   };
 
   useEffect(() => {
@@ -56,7 +87,6 @@ const CapNhatTTCN = (props: Props) => {
         hoTen: userInfo.tenNguoiDaiDien || "",
         congTy: userInfo.tenKh || "",
         soDienThoai: userInfo.soDienThoai || "",
-        email: userInfo.email || "",
         diaChi: userInfo.diaChi || "",
       });
   }, []);
@@ -98,16 +128,6 @@ const CapNhatTTCN = (props: Props) => {
             name="soDienThoai"
             inputRef={register("soDienThoai")}
             errorMessage={errors.soDienThoai?.message}
-          />
-        </div>
-
-        <div className="sm:flex items-center lg:gap-44">
-          <p className="w-72 text-base font-semibold text-cyan-900">Email:</p>
-          <Inputs3
-            placeholder="Nhập email..."
-            name="email"
-            inputRef={register("email")}
-            errorMessage={errors.email?.message}
           />
         </div>
 

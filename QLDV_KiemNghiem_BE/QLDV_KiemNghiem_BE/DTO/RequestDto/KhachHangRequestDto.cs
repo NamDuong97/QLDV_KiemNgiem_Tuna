@@ -18,9 +18,6 @@ namespace QLDV_KiemNghiem_BE.DTO.RequestDto
 
         [StringLength(50)]
         public string? SoDienThoai { get; set; }
-        public string? Email { get; set; }
-
-        public string? MatKhau { get; set; }
 
     }
 }
