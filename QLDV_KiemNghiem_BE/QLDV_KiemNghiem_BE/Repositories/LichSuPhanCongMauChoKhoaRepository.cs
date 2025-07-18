@@ -33,6 +33,7 @@ namespace QLDV_KiemNghiem_BE.Repositories
                 return await _context.LichSuPhanCongMauChoKhoas.AsNoTracking().FirstOrDefaultAsync(it => it.MaId == maLichSuPhanCongMauChoKhoa);
             }
         }
+
         public async Task<LichSuPhanCongMauChoKhoa?> FindLichSuPhanCongMauChoKhoaByMaMauAndKhoaAsync(string maMau, string maKhoa, bool track)
         {
             if (track)
