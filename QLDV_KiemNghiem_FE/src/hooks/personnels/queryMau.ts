@@ -36,6 +36,20 @@ export const queryLoaiMauByID = (props: Props) => {
   });
 };
 
+export const queryGetLyDoHuyMayByMau_Khoa = (props: Props) => {
+  const { queryKey, params } = props;
+  return useQuery({
+    queryKey: [queryKey, params],
+    queryFn: async () => {
+      const response = await mauServices.getLyDoHuyMayByMau_Khoa(params);
+      return response?.data;
+    },
+    refetchOnWindowFocus: false,
+    staleTime: Infinity,
+    enabled: !!params,
+  });
+};
+
 export const queryMauByID = (props: Props) => {
   const { queryKey, params } = props;
   return useQuery({
