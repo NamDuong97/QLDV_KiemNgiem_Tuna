@@ -5,11 +5,11 @@ import InputSearch2 from "../../../../../components/InputSearch2";
 import { MauPhanCong } from "../../../../../models/mau";
 import { Pagination, Skeleton } from "@mui/material";
 import ChiTietPhieuDKyDVKN from "../../ChiTietPhieuDKyDVKN";
-import removeVietnameseTones from "../../../../../configs/removeVietnameseTones";
 import { getAllDanhSachMau } from "../../../../../hooks/personnels/phanCongKhoa";
 import SelectItemLoaiMau from "./SelectItemLoaiMau";
 import { FileMinus } from "react-feather";
 import AssignmentDeleteModal from "../AssignmentDeleteModal";
+import useDebounce from "../../../../../hooks/personnels/useDebounce";
 
 interface Props {
   departments: any;
@@ -40,12 +40,15 @@ const SampleList = (props: Props) => {
   const { departments } = props;
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(12);
+  const [searchQuery, setSearchQuery] = useState("");
+  const searchHook = useDebounce(searchQuery);
 
   const [selectLoaiMau, setSelectLoaiMau] = useState("");
   const params: any = {
     pageNumber: currentPage,
     pageSize: itemsPerPage,
     trangThaiPhanCong: 1,
+    search: searchHook,
   };
 
   if (selectLoaiMau !== "") {
@@ -61,20 +64,14 @@ const SampleList = (props: Props) => {
   );
 
   const [selectedSamples, setSelectedSamples] = useState<any[]>([]);
-  const [searchQuery, setSearchQuery] = useState("");
 
   const [isAssignModalOpen, setIsAssignModalOpen] = useState(false);
+
   const [isAssignmentDeleteModalOpen, setIsAssignmentDeleteModalOpen] =
     useState(false);
-  const filteredSamples: any = samples
-    ?.sort((a: any, b: any) => a.thoiGianTieuChuan - b.thoiGianTieuChuan)
-    ?.filter((sample: any) => {
-      const query = removeVietnameseTones(searchQuery.toLowerCase());
-      const matchesSearch = removeVietnameseTones(
-        sample.tenMau.toLowerCase()
-      ).includes(query);
-      return matchesSearch;
-    });
+
+  const filteredSamples: any = samples;
+
   const [openXemChiTiet, setOpenXemChiTiet] = useState(false);
 
   const handleCloseXemChiTiet = () => {
