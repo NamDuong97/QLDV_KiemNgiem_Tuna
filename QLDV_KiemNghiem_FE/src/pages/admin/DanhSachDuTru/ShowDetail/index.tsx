@@ -221,6 +221,14 @@ const ShowDetail = ({ resultId, onEdit, onBack }: any) => {
                     </div>
                   </div>
                 )}
+                {data?.nguoiSua && data?.nguoiSua !== "know" && (
+                  <div className="flex justify-between items-center">
+                    <span className="text-gray-600">Nhân viên sửa:</span>
+                    <div className="text-right">
+                      <div className="font-medium">{data?.nguoiSua}</div>
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
           </div>

@@ -27,8 +27,8 @@ export default function SelectItemMau(props: Props) {
           MenuProps={{
             PaperProps: {
               sx: {
-                height: 250,
-                maxHeight: 250,
+                height: data?.length > 0 ? 250 : "auto",
+                maxHeight: data?.length > 0 ? 250 : "auto",
               },
             },
             anchorOrigin: {
