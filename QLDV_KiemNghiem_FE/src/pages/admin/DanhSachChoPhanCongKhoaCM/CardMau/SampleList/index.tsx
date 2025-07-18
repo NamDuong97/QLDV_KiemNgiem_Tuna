@@ -5,7 +5,6 @@ import InputSearch2 from "../../../../../components/InputSearch2";
 import { MauPhanCong } from "../../../../../models/mau";
 import { Pagination, Skeleton } from "@mui/material";
 import ChiTietPhieuDKyDVKN from "../../ChiTietPhieuDKyDVKN";
-import removeVietnameseTones from "../../../../../configs/removeVietnameseTones";
 import { getAllDanhSachMau } from "../../../../../hooks/personnels/phanCongKhoa";
 import SelectItemLoaiMau from "./SelectItemLoaiMau";
 import { FileMinus } from "react-feather";
