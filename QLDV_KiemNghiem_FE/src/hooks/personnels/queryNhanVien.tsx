@@ -18,8 +18,6 @@ export const queryNhanVienALL = (props: Props) => {
       return response?.data;
     },
     refetchOnWindowFocus: false,
-    staleTime: Infinity,
     enabled: !!params,
   });
 };
-

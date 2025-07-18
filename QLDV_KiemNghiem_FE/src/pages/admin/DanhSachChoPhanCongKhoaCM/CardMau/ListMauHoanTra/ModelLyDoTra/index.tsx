@@ -39,7 +39,6 @@ const ModelLyDoTra = (props: Props) => {
     queryKey: "queryMauByIDModelLyDoTra",
     params: dataModelLyDoTra?.maMau,
   });
-  console.log("data", data);
 
   return (
     <Dialog
