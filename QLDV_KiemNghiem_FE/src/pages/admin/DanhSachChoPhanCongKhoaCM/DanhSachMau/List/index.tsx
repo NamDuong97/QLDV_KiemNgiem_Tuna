@@ -14,6 +14,7 @@ import { queryThongKe } from "../../../../../hooks/personnels/queryMau";
 import { useQuery } from "@tanstack/react-query";
 import phanCongKhoaServices from "../../../../../services/personnels/phanCongKhoa";
 import { IParamDangKyMau } from "../../../../../type/params";
+import useDebounce from "../../../../../hooks/personnels/useDebounce";
 
 interface Props {
   tableHead: any;
@@ -24,12 +25,25 @@ const DanhSach = (props: Props) => {
   const [selectLoaiMau, setSelectLoaiMau] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [selectTrangThai, setSelectTrangThai] = useState("");
+  const [isSortNew, setIsSortNew] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [openXemChiTiet, setOpenXemChiTiet] = useState(false);
+  const searchHook = useDebounce(searchQuery);
   const { data: dataMau, isLoading } = useQuery({
-    queryKey: ["AllDanhSachMau", currentPage, selectTrangThai, selectLoaiMau],
+    queryKey: [
+      "AllDanhSachMau",
+      currentPage,
+      selectTrangThai,
+      selectLoaiMau,
+      searchHook,
+      isSortNew,
+    ],
     queryFn: async () => {
       let params: IParamDangKyMau = {
         PageSize: 10,
         PageNumber: currentPage,
+        search: searchHook,
+        sort: isSortNew,
       };
       if (selectLoaiMau) {
         params = {
@@ -50,7 +64,7 @@ const DanhSach = (props: Props) => {
     staleTime: 7 * 60 * 1000,
     placeholderData: (prev) => prev,
   });
-  console.log("selectLoaiMau", selectLoaiMau);
+
   const { data: dataThongKe, isLoading: isLoadingThongKe } = queryThongKe({
     queryKey: "queryThongKe",
   });
@@ -60,23 +74,14 @@ const DanhSach = (props: Props) => {
       selectLoaiMau !== "" ? item.maLoaiMau === selectLoaiMau : item
     );
   }, [dataMau]);
-  const [searchQuery, setSearchQuery] = useState("");
 
-  const [isSortNew, setIsSortNew] = useState(false);
-  const filteredSamples: any = data
-    ?.sort((a: any, b: any) =>
-      isSortNew
-        ? new Date(a.hanSuDung).getTime() - new Date(b.hanSuDung).getTime()
-        : new Date(b.hanSuDung).getTime() - new Date(a.hanSuDung).getTime()
-    )
-    ?.filter((sample: any) => {
-      const query = removeVietnameseTones(searchQuery.toLowerCase());
-      const matchesSearch =
-        sample?.soLo?.toLowerCase().includes(query) ||
-        removeVietnameseTones(sample?.mau?.toLowerCase()).includes(query);
-      return matchesSearch;
-    });
-  const [openXemChiTiet, setOpenXemChiTiet] = useState(false);
+  const filteredSamples: any = data?.filter((sample: any) => {
+    const query = removeVietnameseTones(searchQuery.toLowerCase());
+    const matchesSearch =
+      sample?.soLo?.toLowerCase().includes(query) ||
+      removeVietnameseTones(sample?.mau?.toLowerCase()).includes(query);
+    return matchesSearch;
+  });
 
   const handleCloseXemChiTiet = () => {
     setOpenXemChiTiet(false);
@@ -151,10 +156,16 @@ const DanhSach = (props: Props) => {
               type="button"
               className="btn btn-outline-primary border border-gray-300 py-[6px] px-2 rounded cursor-pointer hover:bg-blue-50"
             >
-              <span className="flex items-center gap-2 text-gray-800">
-                {isSortNew ? <FaSortAmountUp /> : <FaSortAmountDown />}Hạn sử
-                dụng
-              </span>
+              {isSortNew ? (
+                <span className="flex items-center gap-2 text-gray-800">
+                  <FaSortAmountDown /> Tăng dần
+                </span>
+              ) : (
+                <span className="flex items-center gap-2 text-gray-800">
+                  <FaSortAmountUp />
+                  Giảm dần
+                </span>
+              )}
             </button>
           </div>
           <div className="col-span-3">
