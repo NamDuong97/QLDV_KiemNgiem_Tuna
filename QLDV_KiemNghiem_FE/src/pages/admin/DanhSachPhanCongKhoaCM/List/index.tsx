@@ -33,6 +33,8 @@ const DanhSach = (props: Props) => {
     ?.filter((item: any) =>
       getRoleGroup(role) === "KN"
         ? item.maKhoaTiepNhan === personnelInfo?.maKhoa
+        : selectKhoa !== ""
+        ? item.maKhoaTiepNhan === selectKhoa
         : item
     )
     ?.filter((sample: any) => {
@@ -63,7 +65,9 @@ const DanhSach = (props: Props) => {
         : new Date(b.ngayTao).getTime() - new Date(a.ngayTao).getTime()
     )
     ?.slice(indexOfFirstItem, indexOfLastItem);
-  const totalPages = Math.ceil(currentItems && currentItems?.length / itemsPerPage);
+  const totalPages = Math.ceil(
+    currentItems && currentItems?.length / itemsPerPage
+  );
 
   const handlePageChange = (_: any, value: number) => {
     setCurrentPage(value);
@@ -72,7 +76,6 @@ const DanhSach = (props: Props) => {
   const handleSearchChange = (e: any) => {
     setSearchQuery(e.target.value);
   };
-console.log('currentItems',currentItems);
 
   return (
     <>

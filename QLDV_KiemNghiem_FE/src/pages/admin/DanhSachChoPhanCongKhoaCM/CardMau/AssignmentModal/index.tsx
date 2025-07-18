@@ -141,6 +141,8 @@ const AssignmentModal = (props: Props) => {
         status: 200,
       });
       handleSelectedSamples();
+      setSelectedDepartment(null);
+      reset();
       onClose();
     },
     onError: (err: any) => {
