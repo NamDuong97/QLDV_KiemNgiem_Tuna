@@ -31,7 +31,6 @@ import { role } from "../../configs/parseJwt";
 import { FaChartLine } from "react-icons/fa";
 import { getChucVuByID } from "../../hooks/personnels/queryChucVu";
 import { getRoleGroup } from "../../configs/Role";
-import { getKhoaByID } from "../../hooks/personnels/queryKhoa";
 import { Skeleton } from "@mui/material";
 
 const SidebarPersonnal = () => {
@@ -42,10 +41,6 @@ const SidebarPersonnal = () => {
   const { data, isLoading } = getChucVuByID({
     queryKey: "getChucVuByID",
     params: personnelInfo?.maChucVu,
-  });
-  const { data: dataKhoa } = getKhoaByID({
-    queryKey: "getChucVuByID",
-    params: personnelInfo?.maKhoa,
   });
   const handleRedirect = (value?: string) => {
     switch (value) {
