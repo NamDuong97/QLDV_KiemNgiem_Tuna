@@ -11,6 +11,7 @@ namespace QLDV_KiemNghiem_BE.Interfaces
     {
         Task<(IEnumerable<LichSuPhanCongMauChoKhoaDto> datas, Pagination pagi)> GetLichSuPhanCongMauChoKhoasAllAsync(LichSuPhanCongMauChoKhoaParam param);
         Task<LichSuPhanCongMauChoKhoaDto?> FindLichSuPhanCongMauChoKhoaAsync(string maLichSuPhanCongMauChoKhoa);
+        Task<LichSuPhanCongMauChoKhoaDto?> FindLichSuPhanCongMauChoKhoaByMaMauVaMaKhoaAsync(string maMau, string maKhoa);
         Task<ResponseModel1<LichSuPhanCongMauChoKhoaDto>> CreateLichSuPhanCongMauChoKhoaAsync(LichSuPhanCongMauChoKhoaRequestCreateDto LichSuPhanCongMauChoKhoaDto, string user, string userId);
         Task<ResponseModel1<LichSuPhanCongMauChoKhoaDto>> UpdateLichSuPhanCongMauChoKhoaAsync(LichSuPhanCongMauChoKhoaRequestUpdateDto LichSuPhanCongMauChoKhoaDto, string user, string userId);
         Task<bool> DeleteLichSuPhanCongMauChoKhoaAsync(LichSuPhanCongMauChoKhoa LichSuPhanCongMauChoKhoa);

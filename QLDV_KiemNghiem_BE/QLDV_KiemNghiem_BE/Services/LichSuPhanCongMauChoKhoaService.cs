@@ -34,6 +34,12 @@ namespace QLDV_KiemNghiem_BE.Services
             var result = _mapper.Map<LichSuPhanCongMauChoKhoaDto>(LichSuPhanCongMauChoKhoaDomain);
             return result;
         }
+        public async Task<LichSuPhanCongMauChoKhoaDto?> FindLichSuPhanCongMauChoKhoaByMaMauVaMaKhoaAsync(string maMau, string maKhoa)
+        {
+            var result =  await _repositoryManager.LichSuPhanCongMauChoKhoa.FindLichSuPhanCongMauChoKhoaByMaMauAndKhoaAsync(maMau, maKhoa, false);
+            return _mapper.Map<LichSuPhanCongMauChoKhoaDto>(result);
+        }
+
         public async Task<ResponseModel1<LichSuPhanCongMauChoKhoaDto>> CreateLichSuPhanCongMauChoKhoaAsync(LichSuPhanCongMauChoKhoaRequestCreateDto LichSuPhanCongMauChoKhoaDto, string user, string userId)
         {
             if (LichSuPhanCongMauChoKhoaDto == null) return new ResponseModel1<LichSuPhanCongMauChoKhoaDto>

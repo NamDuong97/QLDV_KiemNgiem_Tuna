@@ -44,6 +44,15 @@ namespace QLDV_KiemNghiem_BE.Controllers
             return Ok(result);
         }
 
+        [HttpGet]
+        [Route("getLichSuPhanCongMauChoKhoaByMauMauVaMaKhoa")]
+        public async Task<ActionResult> getLichSuPhanCongMauChoKhoaByMauMauVaMaKhoa(string maMau, string maKhoa)
+        {
+            var result = await _service.LichSuPhanCongMauChoKhoa.FindLichSuPhanCongMauChoKhoaByMaMauVaMaKhoaAsync(maMau, maKhoa);
+            _logger.LogDebug("lay lich su phan cong mau cho khoa can tim");
+            return Ok(result);
+        }
+
         [HttpPost]
         [Route("createLichSuPhanCongMauChoKhoa")]
         public async Task<ActionResult> createLichSuPhanCongMauChoKhoa(LichSuPhanCongMauChoKhoaRequestCreateDto lichSuPhanCongMauChoKhoaDto)
