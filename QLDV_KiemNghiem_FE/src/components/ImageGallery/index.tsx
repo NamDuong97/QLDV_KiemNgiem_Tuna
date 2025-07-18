@@ -17,9 +17,9 @@ const ImageGallery = (props: Props) => {
             className="w-36 h-36 bg-gray-100 rounded flex items-center justify-center cursor-pointer"
             onClick={() => onImageClick(item)}
           >
-            {item.url ? (
+            {item.pathImg ? (
               <img
-                src={image.imageTunaLogo}
+                src={item.pathImg}
                 alt={`Ảnh mẫu ${index + 1}`}
                 className="h-full w-full object-cover rounded"
               />

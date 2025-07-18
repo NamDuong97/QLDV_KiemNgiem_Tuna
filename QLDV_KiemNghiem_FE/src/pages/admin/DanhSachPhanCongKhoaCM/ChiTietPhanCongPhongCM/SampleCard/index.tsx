@@ -33,8 +33,7 @@ const SampleCard = ({ sample, onImageClick, index }: any) => {
   });
   const dataTC: any = dataTieuChuan;
   const dataLDV: any = dataLoaiDV;
-  console.log('dataMau',dataMau);
-  
+  console.log("dataMau", dataMau);
 
   const handleOnSettled = async (response: any) => {
     if (response.ketQua === true) {
@@ -144,19 +143,27 @@ const SampleCard = ({ sample, onImageClick, index }: any) => {
         </div>
         <div>
           <p className="text-base/6 text-gray-500">Ngày sản xuất</p>
-          <p className="text-base font-semibold">{dataMau?.ngaySanXuat?.slice(0, 10)}</p>
+          <p className="text-base font-semibold">
+            {dataMau?.ngaySanXuat?.slice(0, 10)}
+          </p>
         </div>
         <div>
           <p className="text-base/6 text-gray-500">Thời gian hoàn thành</p>
-          <p className="text-base font-semibold">{dataMau?.thoiGianTieuChuan} ngày</p>
+          <p className="text-base font-semibold">
+            {dataMau?.thoiGianTieuChuan} ngày
+          </p>
         </div>
         <div>
           <p className="text-base/6 text-gray-500">Ngày dự kiến trả kết quả</p>
-          <p className="text-base font-semibold">{formatDateNotTime(dataMau?.ngaySanXuat)}</p>
+          <p className="text-base font-semibold">
+            {formatDateNotTime(dataMau?.ngaySanXuat)}
+          </p>
         </div>
         <div>
           <p className="text-base/6 text-gray-500">Hạn sử dụng</p>
-          <p className="text-base font-semibold">{formatDateNotTime(dataMau?.hanSuDung)}</p>
+          <p className="text-base font-semibold">
+            {formatDateNotTime(dataMau?.hanSuDung)}
+          </p>
         </div>
         <div>
           <p className="text-base/6 text-gray-500">Số lượng</p>
@@ -199,12 +206,18 @@ const SampleCard = ({ sample, onImageClick, index }: any) => {
 
       <div className="mt-3">
         <p className="text-base/6 text-gray-500">Ghi chú khách hàng</p>
-        <p className="text-base font-semibold p-2 bg-blue-50 rounded">{dataMau?.ghiChu}</p>
+        <p className="text-base font-semibold p-2 bg-blue-50 rounded">
+          {dataMau?.ghiChu}
+        </p>
       </div>
 
       <div className="mt-3">
-        <p className="text-base/6 font-semibold text-violet-500">Ghi chú trung tâm</p>
-        <p className="text-base font-semibold p-2 bg-blue-50 rounded">{sample?.ghiChu}</p>
+        <p className="text-base/6 font-semibold text-violet-500">
+          Ghi chú trung tâm
+        </p>
+        <p className="text-base font-semibold p-2 bg-blue-50 rounded">
+          {sample?.ghiChu}
+        </p>
       </div>
 
       <div className="mt-3">

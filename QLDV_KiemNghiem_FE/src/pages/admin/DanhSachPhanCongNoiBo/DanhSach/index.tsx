@@ -68,7 +68,8 @@ const DanhSach = (props: Props) => {
       manvPhanCong: personnelInfo?.maId,
     };
   } else {
-    params = { ...params };
+    params =
+      selectKhoa !== "" ? { ...params, maKhoa: selectKhoa } : { ...params };
   }
   if (selectTrangThai) {
     params.TrangThai = selectTrangThai;
@@ -80,6 +81,7 @@ const DanhSach = (props: Props) => {
       selectTrangThai,
       personnelInfo?.maId,
       personnelInfo?.maKhoa,
+      selectKhoa,
     ],
     params,
   });
@@ -175,11 +177,11 @@ const DanhSach = (props: Props) => {
 
   const handleTaoPhieuTienDo = async (assignment: any) => {
     setSaveID(assignment.maId);
-    setIsThem(true);
     const data = await mutateCheckMau(assignment.maPdkMau);
     if (data?.complete > 0) {
       setOpenModelCanhBao(true);
     } else {
+      setIsThem(true);
       setOpenModelXemChiTiet(true);
     }
   };
@@ -370,44 +372,45 @@ const DanhSach = (props: Props) => {
                       >
                         Xem chi tiết
                       </button>
-                      {assignment?.trangThai === true && (
-                        <>
-                          {[
-                            {
-                              label: "Tạo phiếu tiến độ",
-                              color: "pink",
-                              onClick: (e: any) => {
-                                e.stopPropagation();
-                                handleTaoPhieuTienDo(assignment);
+                      {getRoleGroup(role) === "KN" &&
+                        assignment?.trangThai === true && (
+                          <>
+                            {[
+                              {
+                                label: "Tạo phiếu tiến độ",
+                                color: "pink",
+                                onClick: (e: any) => {
+                                  e.stopPropagation();
+                                  handleTaoPhieuTienDo(assignment);
+                                },
                               },
-                            },
-                            {
-                              label: "Tạo phiếu phân tích",
-                              color: "violet",
-                              onClick: (e: any) => {
-                                e.stopPropagation();
-                                handleModelPTKG(assignment);
+                              {
+                                label: "Tạo phiếu phân tích",
+                                color: "violet",
+                                onClick: (e: any) => {
+                                  e.stopPropagation();
+                                  handleModelPTKG(assignment);
+                                },
                               },
-                            },
-                            {
-                              label: "Tạo phiếu dự trù",
-                              color: "green",
-                              onClick: (e: any) => {
-                                e.stopPropagation();
-                                handleModelDuTru(assignment);
+                              {
+                                label: "Tạo phiếu dự trù",
+                                color: "green",
+                                onClick: (e: any) => {
+                                  e.stopPropagation();
+                                  handleModelDuTru(assignment);
+                                },
                               },
-                            },
-                          ].map((btn, idx) => (
-                            <button
-                              key={idx}
-                              onClick={btn.onClick}
-                              className={`px-2 py-1 text-xs font-medium cursor-pointer text-white bg-${btn.color}-500 hover:bg-${btn.color}-600 rounded-md transition-colors`}
-                            >
-                              {btn.label}
-                            </button>
-                          ))}
-                        </>
-                      )}
+                            ].map((btn, idx) => (
+                              <button
+                                key={idx}
+                                onClick={btn.onClick}
+                                className={`px-2 py-1 text-xs font-medium cursor-pointer text-white bg-${btn.color}-500 hover:bg-${btn.color}-600 rounded-md transition-colors`}
+                              >
+                                {btn.label}
+                              </button>
+                            ))}
+                          </>
+                        )}
 
                       {getRoleGroup(role) === "KN" &&
                         role !== "KN" &&

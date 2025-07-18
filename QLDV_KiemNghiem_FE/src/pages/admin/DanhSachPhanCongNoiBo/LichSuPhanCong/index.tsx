@@ -10,9 +10,9 @@ import ConfirmationModal from "../../../../components/ConfirmationModal";
 import { TypeConformation } from "../../../../constants/typeConfirmation";
 import removeVietnameseTones from "../../../../configs/removeVietnameseTones";
 import { queryLichSuPhanCongAll } from "../../../../hooks/personnels/queryPhanCongNoiBo";
-import { role } from "../../../../configs/parseJwt";
-import { getRoleGroup } from "../../../../configs/Role";
-import SelectItemKhoa from "./SelectItemKhoa";
+// import { role } from "../../../../configs/parseJwt";
+// import { getRoleGroup } from "../../../../configs/Role";
+// import SelectItemKhoa from "./SelectItemKhoa";
 import { queryNhanVienALL } from "../../../../hooks/personnels/queryNhanVien";
 import { ListColors } from "../../../../constants/colors";
 
@@ -29,7 +29,7 @@ const LichSuPhanCong = () => {
   });
 
   const [isSortNew, setIsSortNew] = useState(false);
-  const [selectKhoa, setSelectKhoa] = useState("");
+  // const [selectKhoa, setSelectKhoa] = useState("");
   const [openModelSua, setOpenModelSua] = useState(false);
   const [openModelXoa, setOpenModelXoa] = useState(false);
 
@@ -91,13 +91,13 @@ const LichSuPhanCong = () => {
               </span>
             )}
           </button>
-          {getRoleGroup(role) === "BLD" && (
+          {/* {getRoleGroup(role) === "BLD" && (
             <SelectItemKhoa
               title="Khoa"
               setItem={setSelectKhoa}
               item={selectKhoa}
             />
-          )}
+          )} */}
         </div>
       </div>
       {currentItems?.length > 0 ? (

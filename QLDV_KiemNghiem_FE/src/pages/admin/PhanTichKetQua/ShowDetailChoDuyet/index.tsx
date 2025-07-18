@@ -32,30 +32,32 @@ const ShowDetailChoDuyet = ({ resultId, onEdit, onBack }: any) => {
           Chi tiết phiếu phân tích đang chờ duyệt
         </h2>
         <div className="flex space-x-2">
-          {getRoleGroup(role) === "KN" && role !== "KN" && data?.trangThai === 1  && (
-            <>
-              <button
-                onClick={() => {
-                  setOpen(true);
-                  setIsTypeConform(typeConfirmation.TuChoi);
-                }}
-                className="px-4 py-2 bg-yellow-200 text-yellow-700 rounded-lg hover:bg-yellow-300 cursor-pointer transition-colors flex items-center space-x-2"
-              >
-                <Slash size={16} />
-                <span>Từ chối</span>
-              </button>
-              <button
-                onClick={() => {
-                  setOpen(true);
-                  setIsTypeConform(typeConfirmation.DuyetPhieu);
-                }}
-                className="px-4 py-2 bg-green-200 text-green-700 rounded-lg hover:bg-green-300 cursor-pointer transition-colors flex items-center space-x-2"
-              >
-                <Check size={16} />
-                <span>Duyệt phiếu</span>
-              </button>
-            </>
-          )}
+          {getRoleGroup(role) === "KN" &&
+            role !== "KN" &&
+            data?.trangThai === 1 && (
+              <>
+                <button
+                  onClick={() => {
+                    setOpen(true);
+                    setIsTypeConform(typeConfirmation.TuChoi);
+                  }}
+                  className="px-4 py-2 bg-yellow-200 text-yellow-700 rounded-lg hover:bg-yellow-300 cursor-pointer transition-colors flex items-center space-x-2"
+                >
+                  <Slash size={16} />
+                  <span>Từ chối</span>
+                </button>
+                <button
+                  onClick={() => {
+                    setOpen(true);
+                    setIsTypeConform(typeConfirmation.DuyetPhieu);
+                  }}
+                  className="px-4 py-2 bg-green-200 text-green-700 rounded-lg hover:bg-green-300 cursor-pointer transition-colors flex items-center space-x-2"
+                >
+                  <Check size={16} />
+                  <span>Duyệt phiếu</span>
+                </button>
+              </>
+            )}
           {getRoleGroup(role) === "BLD" && data?.trangThai === 2 && (
             <>
               <button
@@ -345,7 +347,7 @@ const ShowDetailChoDuyet = ({ resultId, onEdit, onBack }: any) => {
                 <div className="text-2xl font-bold text-green-900">
                   {
                     data?.phieuPhanTichKetQuaChiTietDtos?.filter(
-                      (d: any) => d.trangThai === "Đạt"
+                      (d: any) => d.trangThai == "Đạt"
                     ).length
                   }
                 </div>
@@ -357,7 +359,7 @@ const ShowDetailChoDuyet = ({ resultId, onEdit, onBack }: any) => {
                 <div className="text-2xl font-bold text-red-900">
                   {
                     data?.phieuPhanTichKetQuaChiTietDtos?.filter(
-                      (d: any) => d.trangThai === "Không đạt"
+                      (d: any) => d.trangThai === "Chưa đạt"
                     ).length
                   }
                 </div>

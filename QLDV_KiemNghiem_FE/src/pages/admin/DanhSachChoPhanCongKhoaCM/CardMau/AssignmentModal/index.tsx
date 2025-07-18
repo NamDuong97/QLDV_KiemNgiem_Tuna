@@ -8,6 +8,7 @@ import { maNhanVien } from "../../../../../configs/parseJwt";
 import { createPhieuPhanCongKhoa } from "../../../../../hooks/personnels/phanCongKhoa";
 import { queryClient } from "../../../../../lib/reactQuery";
 import { useStoreNotification } from "../../../../../configs/stores/useStoreNotification";
+import { KhoaKiemNghiem } from "../../../../../constants/khoa";
 
 interface Props {
   samples: MauPhanCong[];
@@ -92,12 +93,9 @@ const AssignmentModal = (props: Props) => {
             if (!value) return false;
             const now = new Date();
             const inputDate = new Date(value);
-
             // Xóa thời gian để chỉ so sánh theo ngày
             now.setHours(0, 0, 0, 0);
             inputDate.setHours(0, 0, 0, 0);
-            console.log("now <= date", now <= inputDate, now, inputDate);
-
             return now <= inputDate;
           }
         ),
@@ -305,40 +303,42 @@ const AssignmentModal = (props: Props) => {
               Chọn phòng ban *
             </h4>
             <div className="grid grid-cols-3 gap-4">
-              {departments.map((department: any) => (
-                <div
-                  key={department.id}
-                  className={`border rounded-lg p-4 cursor-pointer transition-all ${
-                    department.color
-                  } ${
-                    selectedDepartment === department.id
-                      ? "ring-2 ring-blue-500"
-                      : "border-gray-200"
-                  }`}
-                  onClick={() => handleDepartmentSelect(department.id)}
-                >
-                  <div className="flex items-center justify-between">
-                    <h5 className="font-medium">{department.name}</h5>
-                    {selectedDepartment === department.id && (
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        className="h-5 w-5 text-blue-600"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth="2"
-                          d="M5 13l4 4L19 7"
-                        />
-                      </svg>
-                    )}
+              {departments
+                ?.filter((item: any) => KhoaKiemNghiem.includes(item?.id))
+                .map((department: any) => (
+                  <div
+                    key={department.id}
+                    className={`border rounded-lg p-4 cursor-pointer transition-all ${
+                      department.color
+                    } ${
+                      selectedDepartment === department.id
+                        ? "ring-2 ring-blue-500"
+                        : "border-gray-200"
+                    }`}
+                    onClick={() => handleDepartmentSelect(department.id)}
+                  >
+                    <div className="flex items-center justify-between">
+                      <h5 className="font-medium">{department.name}</h5>
+                      {selectedDepartment === department.id && (
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          className="h-5 w-5 text-blue-600"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth="2"
+                            d="M5 13l4 4L19 7"
+                          />
+                        </svg>
+                      )}
+                    </div>
+                    <p className="text-sm mt-1">{department.description}</p>
                   </div>
-                  <p className="text-sm mt-1">{department.description}</p>
-                </div>
-              ))}
+                ))}
             </div>
           </div>
         </div>

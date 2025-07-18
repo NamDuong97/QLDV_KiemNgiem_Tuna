@@ -481,17 +481,13 @@ const SidebarPersonnal = () => {
             alt="Avatar"
           />
           <div className="ml-3">
-            <p className="text-sm font-medium text-gray-700">
+            <p className="text-sm font-bold text-gray-700">
               {personnelInfo?.hoTen}
             </p>
             {isLoading ? (
               <Skeleton variant="rounded" width={171} height={32} />
             ) : (
-              <p className="text-xs text-gray-500">{`${data?.tenChucVu} ${
-                getRoleGroup(role) !== "BLD" && getRoleGroup(role) !== "KHTH"
-                  ? dataKhoa?.tenKhoa
-                  : ""
-              }`}</p>
+              <p className="text-xs text-gray-500">{data?.tenChucVu}</p>
             )}
           </div>
         </div>

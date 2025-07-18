@@ -95,14 +95,13 @@ const DanhSach = (props: Props) => {
     <>
       <div className="grid gap-6 grid-cols-3">
         <Card
-          title="Tổng mẫu kiểm nghiệm"
-          value={data?.length || 0}
-          icon={<Clipboard className="w-6 h-6" />}
-          isLoading={isLoading}
-          bgColor="bg-indigo-100"
-          textColor="text-indigo-600"
+          title="Số mẫu chưa được phân công"
+          value={dataThongKe?.mauChoPhanCong}
+          icon={<ImWarning className="w-6 h-6" />}
+          isLoading={isLoadingThongKe}
+          bgColor="bg-red-100"
+          textColor="text-red-600"
         />
-
         <Card
           title="Số mẫu đã hoàn thành"
           value={dataThongKe?.mauHoanThanh}
@@ -119,14 +118,7 @@ const DanhSach = (props: Props) => {
           bgColor="bg-yellow-100"
           textColor="text-yellow-600"
         />
-        <Card
-          title="Số mẫu chưa được phân công"
-          value={dataThongKe?.mauChoPhanCong}
-          icon={<ImWarning className="w-6 h-6" />}
-          isLoading={isLoadingThongKe}
-          bgColor="bg-red-100"
-          textColor="text-red-600"
-        />
+
         <Card
           title="Số mẫu hủy bởi khách hàng"
           value={dataThongKe?.mauHuyBoiKhach}
