@@ -23,6 +23,16 @@ export default class mauServices {
       return err;
     }
   }
+  static async getLyDoHuyMayByMau_Khoa(param: any) {
+    try {
+      const response = await _APIInstance.get(
+        `${API.ADMIN.MAUS.LY_DO_HUY_MAU}?maMau=${param?.maMau}&maKhoa=${param?.maKhoa}`
+      );
+      return response;
+    } catch (err: any) {
+      throw err;
+    }
+  }
   static async getLoaiMauAll() {
     try {
       const response = await _APIInstance.get(API.ADMIN.MAUS.GET_LOAI_MAU_ALL);

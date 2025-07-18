@@ -48,6 +48,8 @@ export const API = {
       BLD_PHE_DUYET_HOAN_TRA_MAU:
         "/api/PhieuDangKyMau/reviewCancelPhieuDangKyMauByBLD",
       KIEM_TRA_MAU: "api/PhieuDangKyMau/checkPhieuDangKyMauFromTable",
+      LY_DO_HUY_MAU:
+        "/api/LichSuPhanCongMauChoKhoa/getLichSuPhanCongMauChoKhoaByMauMauVaMaKhoa",
     },
     MAUS_LUU: {
       GET_MAUS_LUU_ALL: "/api/PhieuLuuMau/getPhieuLuuMauAll",

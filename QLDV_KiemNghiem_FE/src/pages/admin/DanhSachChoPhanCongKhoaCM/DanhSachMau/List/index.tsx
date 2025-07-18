@@ -2,7 +2,7 @@ import { useMemo, useState } from "react";
 import { FaMicroscope, FaSortAmountDown, FaSortAmountUp } from "react-icons/fa";
 import TableQuanLyPhieuDKyDVHN from "../Table";
 import { Pagination } from "@mui/material";
-import { CheckCircle, Clipboard, Clock, User } from "react-feather";
+import { CheckCircle, Clock, User } from "react-feather";
 import Card from "./Card";
 import InputSearch2 from "../../../../../components/InputSearch2";
 import SelectItemTrangThai from "./SelectItemTrangThai";

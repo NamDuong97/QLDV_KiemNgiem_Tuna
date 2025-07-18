@@ -1,4 +1,11 @@
 import { Box, Dialog, Skeleton } from "@mui/material";
+import {
+  queryGetLyDoHuyMayByMau_Khoa,
+  queryMauByID,
+} from "../../../../../../hooks/personnels/queryMau";
+import { getKhoaByID } from "../../../../../../hooks/personnels/queryKhoa";
+import { getInforNhanVien } from "../../../../../../hooks/personnels/access/useAccess";
+import { formatDateNotTime } from "../../../../../../configs/configAll";
 
 interface Props {
   isOpen: any;
@@ -8,7 +15,32 @@ interface Props {
 
 const ModelLyDoTra = (props: Props) => {
   const { isOpen, handleClose, dataModelLyDoTra } = props;
-  const isLoading = false;
+
+  const { data, isLoading } = queryGetLyDoHuyMayByMau_Khoa({
+    queryKey: "queryGetLyDoHuyMayByMau_Khoa",
+    params: {
+      maMau: dataModelLyDoTra?.maMau,
+      maKhoa: dataModelLyDoTra?.maKhoa,
+    },
+  });
+  const { data: dataKhoa } = getKhoaByID({
+    queryKey: "getKhoaByIDModelLyDoTra",
+    params: dataModelLyDoTra?.maKhoa,
+  });
+  const { data: nhanVienHuyMau } = getInforNhanVien({
+    queryKey: "getInforNhanVienManvHuyMau",
+    params: data?.manvHuyMau,
+  });
+  const { data: nhanVienPhanCong } = getInforNhanVien({
+    queryKey: "getInforNhanVienManvPhanCong",
+    params: data?.manvPhanCong,
+  });
+  const { data: mauData } = queryMauByID({
+    queryKey: "queryMauByIDModelLyDoTra",
+    params: dataModelLyDoTra?.maMau,
+  });
+  console.log("data", data);
+
   return (
     <Dialog
       open={isOpen}
@@ -21,7 +53,7 @@ const ModelLyDoTra = (props: Props) => {
         <div className="px-6 py-4 border-b border-gray-100">
           <div className="flex justify-between items-center">
             <h3 className="text-lg font-semibold text-gray-800">
-              Lý do trả mẫu
+              Lý do trả mẫu <span className="text-blue-500">{mauData?.tenMau}</span>
             </h3>
             <button
               type="button"
@@ -120,7 +152,9 @@ const ModelLyDoTra = (props: Props) => {
                     {isLoading ? (
                       <Skeleton variant="rounded" width={100} height={20} />
                     ) : (
-                      <p className="font-bold text-gray-900">dfd</p>
+                      <p className="font-bold text-gray-900">
+                        {dataKhoa?.tenKhoa}
+                      </p>
                     )}
                   </div>
 
@@ -132,7 +166,9 @@ const ModelLyDoTra = (props: Props) => {
                       {isLoading ? (
                         <Skeleton variant="rounded" width={100} height={20} />
                       ) : (
-                        <p className="font-bold text-gray-900">sfdfd</p>
+                        <p className="font-bold text-gray-900">
+                          {nhanVienHuyMau?.hoTen}
+                        </p>
                       )}
                     </div>
                     <div>
@@ -142,19 +178,11 @@ const ModelLyDoTra = (props: Props) => {
                       {isLoading ? (
                         <Skeleton variant="rounded" width={100} height={20} />
                       ) : (
-                        <p className="font-bold text-gray-900">fdsfds</p>
+                        <p className="font-bold text-gray-900">
+                          {nhanVienPhanCong?.hoTen}
+                        </p>
                       )}
                     </div>
-                  </div>
-                  <div>
-                    <label className="block text-base/6 text-gray-500">
-                      Ngày khoa yêu cầu hoàn trả
-                    </label>
-                    {isLoading ? (
-                      <Skeleton variant="rounded" width={100} height={20} />
-                    ) : (
-                      <p className="font-bold text-gray-900">dsffds</p>
-                    )}
                   </div>
                 </div>
               </div>
@@ -168,13 +196,25 @@ const ModelLyDoTra = (props: Props) => {
                   <div className="grid grid-cols-1 gap-4">
                     <div>
                       <label className="block text-base/6 text-gray-500">
+                        Ngày khoa yêu cầu hoàn trả
+                      </label>
+                      {isLoading ? (
+                        <Skeleton variant="rounded" width={100} height={20} />
+                      ) : (
+                        <p className="font-bold text-gray-900">
+                          {formatDateNotTime(data?.thoiGianHuyMau)}
+                        </p>
+                      )}
+                    </div>
+                    <div>
+                      <label className="block text-base/6 text-gray-500">
                         Nội dung hủy mẫu
                       </label>
                       {isLoading ? (
                         <Skeleton variant="rounded" width={100} height={20} />
                       ) : (
                         <p className="font-bold text-gray-900 p-1 bg-blue-100 rounded">
-                          dá
+                          {data?.noiDungHuyMau}
                         </p>
                       )}
                     </div>
