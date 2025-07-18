@@ -11,19 +11,19 @@ export default class profileServices {
       });
       return reponse;
     } catch (res: any) {
-      return res.response.data;
+      throw res.response.data;
     }
   }
   static async doiMatKhau(params: any) {
     try {
-      const reponse = _APIInstance.put(API.CUSTOMER.UPDATE_INFOR, params, {
+      const reponse = _APIInstance.put(API.CUSTOMER.DOI_MAT_KHAU, params, {
         headers: {
           "Content-Type": "application/json",
         },
       });
       return reponse;
     } catch (res: any) {
-      return res.response.data;
+      throw res.response.data;
     }
   }
 }

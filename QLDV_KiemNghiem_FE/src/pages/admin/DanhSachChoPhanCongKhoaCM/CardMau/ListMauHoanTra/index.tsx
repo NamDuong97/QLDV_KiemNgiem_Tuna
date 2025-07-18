@@ -10,6 +10,7 @@ import SampleCardTuChoiMau from "./SampleCard";
 import FormLyDoTuChoi from "./formLyDoTuChoi";
 import { TypeConformation } from "../../../../../constants/typeConfirmation";
 import { typeConfirmation } from "../../../PhanTichKetQua/ShowDetailChoDuyet";
+import ModelLyDoTra from "./ModelLyDoTra";
 
 function convertToMauPhanCong(data: any): MauPhanCong {
   return {
@@ -35,11 +36,13 @@ function convertToMauPhanCong(data: any): MauPhanCong {
 const ListMauHoanTra = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [isOpen, setIsOpen] = useState(false);
+  const [isOpenModelLyDoTra, setIsOpenModelLyDoTra] = useState(false);
   const [itemsPerPage] = useState(12);
   const [searchQuery, setSearchQuery] = useState("");
   const [save, setSave] = useState({});
   const [isTypeConform, setIsTypeConform] = useState<string>("");
   const [selectLoaiMau, setSelectLoaiMau] = useState("");
+  const [dataModelLyDoTra, setDataModelLyDoTra] = useState({});
   const params: any = {
     pageNumber: currentPage,
     pageSize: itemsPerPage,
@@ -146,6 +149,8 @@ const ListMauHoanTra = () => {
                     setIsTypeConform={setIsTypeConform}
                     setSave={setSave}
                     setIsOpen={() => setIsOpen(true)}
+                    setDataModelLyDoTra={setDataModelLyDoTra}
+                    setIsOpenModelLyDoTra={setIsOpenModelLyDoTra}
                   />
                 ))}
               </div>
@@ -177,6 +182,11 @@ const ListMauHoanTra = () => {
       <ChiTietPhieuDKyDVKN
         open={openXemChiTiet}
         handleClose={handleCloseXemChiTiet}
+      />
+      <ModelLyDoTra
+        isOpen={isOpenModelLyDoTra}
+        handleClose={() => setIsOpenModelLyDoTra(false)}
+        dataModelLyDoTra={dataModelLyDoTra}
       />
       <FormLyDoTuChoi
         isOpen={isOpen}

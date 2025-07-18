@@ -285,6 +285,7 @@ const ModelXemChiTiet = (props: Props) => {
       ghiChu: "",
     });
   }, []);
+  console.log("dataMau", dataMau);
 
   return (
     <Dialog
@@ -438,24 +439,6 @@ const ModelXemChiTiet = (props: Props) => {
                     </p>
                   </div>
                   <div className="col-span-3">
-                    <p className="text-base text-gray-500">
-                      Thời gian hoàn thành
-                    </p>
-                    <p className="text-base font-bold">
-                      {dataMau?.thoiGianTieuChuan} ngày
-                    </p>
-                  </div>
-                  <div className="col-span-3">
-                    <p className="text-base text-gray-500">
-                      Ngày dự kiến trả kết quả
-                    </p>
-                    <p className="text-base font-bold">
-                      {dataMau?.ngayTraKetQua
-                        ? formatDateNotTime(dataMau?.ngayTraKetQua)
-                        : "Đến khi hoàn thành"}
-                    </p>
-                  </div>
-                  <div className="col-span-3">
                     <p className="text-base text-gray-500">Hạn sử dụng</p>
                     <p className="text-base font-bold">
                       {formatDateNotTime(dataMau?.hanSuDung)}
@@ -517,7 +500,7 @@ const ModelXemChiTiet = (props: Props) => {
 
                 <div className="mt-3">
                   <p className="text-base text-gray-500">Ảnh mẫu</p>
-                  <ImageGallery images={[]} />
+                  <ImageGallery images={dataMau?.phieuDangKyMauHinhAnhs} />
                 </div>
               </>
             )}
@@ -527,7 +510,8 @@ const ModelXemChiTiet = (props: Props) => {
               <h3 className="text-blue-500 font-semibold text-xl/6 flex items-center gap-2 mb-4">
                 Báo cáo tiến độ
               </h3>
-              {dataCheckMau?.complete === 0 &&
+              {getRoleGroup(role) === "KN" &&
+                dataCheckMau?.complete === 0 &&
                 data?.trangThai === true &&
                 !isChiTietTienDo &&
                 (isThem ? (
@@ -551,7 +535,7 @@ const ModelXemChiTiet = (props: Props) => {
             </div>
             {isChiTietTienDo ? (
               <div className="mb-6">
-                <h3 className="text-gray-600 font-semibold text-lg/6 flex gap-2">
+                <h3 className="text-red-600 font-semibold text-lg/6 flex gap-2">
                   Thông tin chi tiết giai đoạn{" "}
                   {isLoadingTienDoID ? (
                     <Skeleton variant="rounded" className="w-32" height={24} />
@@ -668,14 +652,16 @@ const ModelXemChiTiet = (props: Props) => {
                               : "Phản hồi"}
                           </button>
                         )}
-                        <button
-                          onClick={() => {
-                            setOpenModelXoa(true);
-                          }}
-                          className="px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-lg hover:bg-red-700 transition-colors cursor-pointer"
-                        >
-                          Xóa
-                        </button>
+                        {getRoleGroup(role) === "KN" && (
+                          <button
+                            onClick={() => {
+                              setOpenModelXoa(true);
+                            }}
+                            className="px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-lg hover:bg-red-700 transition-colors cursor-pointer"
+                          >
+                            Xóa
+                          </button>
+                        )}
                       </>
                     )}
                     <button
@@ -817,12 +803,14 @@ const ModelXemChiTiet = (props: Props) => {
                 <p className="mt-2 text-gray-500">
                   Chưa có phiếu tiến độ nào được cập nhật
                 </p>
-                <button
-                  onClick={() => setIsThem(true)}
-                  className="cursor-pointer mt-4 px-4 py-2 text-sm font-medium text-indigo-600 bg-indigo-50 rounded-lg hover:bg-indigo-100 transition-all"
-                >
-                  Tạo phiếu tiến độ
-                </button>
+                {getRoleGroup(role) === "KN" && (
+                  <button
+                    onClick={() => setIsThem(true)}
+                    className="cursor-pointer mt-4 px-4 py-2 text-sm font-medium text-indigo-600 bg-indigo-50 rounded-lg hover:bg-indigo-100 transition-all"
+                  >
+                    Tạo phiếu tiến độ
+                  </button>
+                )}
               </div>
             )}
           </div>

@@ -65,7 +65,7 @@ const ModelCreatePhieuPhanTichKetQua = ({ open, onClose, dataID }: any) => {
           mucChatLuong: "",
           donVi: "",
           ghiChu: "",
-          trangThai: "Đat",
+          trangThai: "Đạt",
         },
       ],
     },
@@ -200,7 +200,7 @@ const ModelCreatePhieuPhanTichKetQua = ({ open, onClose, dataID }: any) => {
                     mucChatLuong: "",
                     donVi: "",
                     ghiChu: "",
-                    trangThai: "Đat",
+                    trangThai: "Đạt",
                   })
                 }
                 className="px-4 py-2 cursor-pointer bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center space-x-2"

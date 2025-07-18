@@ -2,7 +2,6 @@ export interface FormTTCN {
   hoTen: string;
   congTy: string;
   soDienThoai: string;
-  email: string;
   diaChi: string;
 }
 

@@ -12,6 +12,8 @@ const SampleCardTuChoiMau = ({
   setIsTypeConform,
   setSave,
   setIsOpen,
+  setDataModelLyDoTra,
+  setIsOpenModelLyDoTra,
 }: any) => {
   const { data: dataTC } = useGetTieuChuanAll({
     queryKey: "TieuChuanAll",
@@ -46,6 +48,14 @@ const SampleCardTuChoiMau = ({
     setIsTypeConform(isTypeConform);
     setSave(isData);
     setIsOpen();
+  };
+
+  const handleOpenModelLyDoTra = (item: any) => {
+    setIsOpenModelLyDoTra(true);
+    setDataModelLyDoTra({
+      maMau: item?.maId,
+      maKhoa: item?.maKhoa,
+    });
   };
 
   return (
@@ -96,12 +106,20 @@ const SampleCardTuChoiMau = ({
         </div>
         <div className="text-sm text-gray-600 mb-3 flex justify-between items-center">
           {renderTrangThaiMau(sample.trangThaiPhanCong)}
-          <p
-            onClick={() => handleXemChiTiet(sample.maPhieuDangKy)}
-            className={`inline-flex items-center px-2.5 py-0.5 cursor-pointer rounded-full text-sm font-medium hover:underline text-blue-600`}
-          >
-            Xem chi tiết
-          </p>
+          <div className="flex items-center gap-2">
+            <p
+              onClick={() => handleXemChiTiet(sample.maPhieuDangKy)}
+              className={`inline-flex items-center px-2.5 py-0.5 cursor-pointer rounded-full text-sm font-medium hover:underline text-blue-600`}
+            >
+              Xem chi tiết
+            </p>
+            <p
+              onClick={() => handleOpenModelLyDoTra(sample)}
+              className={`inline-flex items-center px-2.5 py-0.5 cursor-pointer rounded-full text-sm font-medium hover:underline text-blue-600`}
+            >
+              Lý do
+            </p>
+          </div>
         </div>
         <div className="text-sm text-gray-600 mb-3 flex justify-end gap-4 items-center">
           <button

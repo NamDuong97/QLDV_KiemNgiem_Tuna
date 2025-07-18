@@ -42,6 +42,18 @@ const data = [
     maTrangThai: 8,
     tenTrangThai: "Đã hoàn thành kiểm nghiệm",
   },
+  {
+    maTrangThai: 9,
+    tenTrangThai: "Khách hàng yêu cầu kiểm tra lại",
+  },
+  {
+    maTrangThai: 10,
+    tenTrangThai: "Lãnh đạo phòng hoàn trả mẫu",
+  },
+  {
+    maTrangThai: 11,
+    tenTrangThai: "Tạm ngưng kiểm nghiệm",
+  },
 ];
 
 export default function SelectItemTrangThai(props: Props) {
@@ -52,9 +64,7 @@ export default function SelectItemTrangThai(props: Props) {
   };
 
   return (
-    <Box
-      sx={{ minWidth: 300, maxWidth: 300, ".MuiSelect-select": { padding: 1 } }}
-    >
+    <Box sx={{ ".MuiSelect-select": { padding: 1 } }}>
       <FormControl fullWidth>
         <Select
           value={item}

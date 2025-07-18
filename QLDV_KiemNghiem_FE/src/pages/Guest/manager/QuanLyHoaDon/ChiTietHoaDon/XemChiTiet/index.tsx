@@ -35,7 +35,7 @@ const XemChiTiet = () => {
 
   const handleRenderTongTien = useMemo(() => {
     return (
-      data?.dsHoaDonThuBoSung?.reduce((a: any, b: any) => a + b?.tongTien, 0) +
+      data?.dsHoaDonThuBoSung.filter((item: any) => item.active)?.reduce((a: any, b: any) => a + b?.tongTien, 0) +
         data?.dsChiTietHoaDonThu?.reduce(
           (a: any, b: any) => a + b?.thanhTien,
           0

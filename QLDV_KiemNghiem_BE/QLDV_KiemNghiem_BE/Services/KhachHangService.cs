@@ -318,10 +318,6 @@ namespace QLDV_KiemNghiem_BE.Services
             }
             KhachHangCheck.NgaySua = DateTime.Now;
             KhachHangCheck.NguoiSua = user;
-            // Mã hoá pasword
-            KhachHangDto.MatKhau = BCrypt.Net.BCrypt.HashPassword(KhachHangDto.MatKhau);
-            if(KhachHangCheck.MatKhau != KhachHangDto.MatKhau)
-                KhachHangCheck.NgaySuaMatKhau = DateTime.Now;
 
             _mapper.Map(KhachHangDto, KhachHangCheck);
             _repositoryManager.KhachHang.UpdateKhachHangAsync(KhachHangCheck);
