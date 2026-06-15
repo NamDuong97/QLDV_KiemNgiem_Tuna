@@ -3,4 +3,3 @@
 Thành viên dự án
 Trần Doãn Nam,
 Nguyễn Anh Tuấn,
-Bùi Phạm Anh Thuận
