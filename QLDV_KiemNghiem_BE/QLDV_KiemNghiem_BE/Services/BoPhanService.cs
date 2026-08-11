@@ -19,8 +19,9 @@ namespace QLDV_KiemNghiem_BE.Services
         }
         public async Task<IEnumerable<BoPhanDto>> GetBoPhansAllAsync()
         {
-            // Thêm comment để test review
+            // Thêm comment để test review 
             var BoPhanDomains = await _repositoryManager.BoPhan.GetBoPhansAllAsync();
+            // Them comment de test review 2
             var result = _mapper.Map<IEnumerable<BoPhanDto>>(BoPhanDomains);
             return result;
         }
